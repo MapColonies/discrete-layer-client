@@ -1,3 +1,4 @@
+/* eslint-disable */
 import CONFIG from '../config';
 
 const getParamsString = (params: {[key: string]: string | boolean | number}) : string  => {
