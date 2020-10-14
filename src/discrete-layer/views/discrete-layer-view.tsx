@@ -19,6 +19,7 @@ import { ResponseState } from '../../common/models/ResponseState';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
+/* eslint-disable */
 const wmtsOptions = getWMTSOptions({
   attributions: CONFIG.WMTS_LAYER.ATTRIBUTIONS,
   url: CONFIG.WMTS_LAYER.URL,
@@ -39,6 +40,7 @@ const xyzOptions = getXYZOptions({
   attributions: CONFIG.XYZ_LAYER.ATTRIBUTIONS,
   url: CONFIG.XYZ_LAYER.URL,
 });
+/* eslint-enable */
 
 const tileOtions = { opacity: 0.5 };
 

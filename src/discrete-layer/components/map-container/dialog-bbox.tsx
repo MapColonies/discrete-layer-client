@@ -15,7 +15,7 @@ import {
 } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
-import APP_CONFIG from '../../../common/config';
+import CONFIG from '../../../common/config';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
 const useStyle = makeStyles((theme: Theme) =>
@@ -63,12 +63,14 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
       [values.topRightLon, values.bottomLeftLat]
     );
 
-    if (yDistance > APP_CONFIG.BOUNDARIES.MAX_Y_KM) {
+    // eslint-disable-next-line
+    if (yDistance > CONFIG.BOUNDARIES.MAX_Y_KM) {
       errors.latDistance = intl.formatMessage({
         id: 'custom-bbox.form-error.y-distance.text',
       });
     }
-    if (xDistance > APP_CONFIG.BOUNDARIES.MAX_X_KM) {
+    // eslint-disable-next-line
+    if (xDistance > CONFIG.BOUNDARIES.MAX_X_KM) {
       errors.lonDistance = intl.formatMessage({
         id: 'custom-bbox.form-error.x-distance.text',
       });
