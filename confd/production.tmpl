@@ -1,0 +1,10 @@
+window._env_ = {
+  MAP_SERVER: '{{ getv "/configuration/mapServer/url" "http://10.28.11.125" }}',
+  PUBLISH_POINT: '{{ getv "/configuration/mapServer/publishPoint" "blue_m_flat2d-v001" }}',
+  CHANNEL: {{ getv "/configuration/mapServer/channel" "1002" }},
+  VERSION: {{ getv "/configuration/mapServer/version" "1" }},
+  REQUEST: '{{ getv "/configuration/mapServer/request" "ImageryMaps" }}',
+  SERVICE_PROTOCOL: '{{ getv "/configuration/service/protocol" "http://" }}',
+  SERVICE_NAME: '{{ getv "/configuration/service/url" "localhost:8000" }}',
+  ACTIVE_LAYER: '{{ getv "/configuration/activeLayer" "OSM_DEFAULT" }}'
+};

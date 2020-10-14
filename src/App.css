@@ -1,0 +1,3 @@
+.mdc-text-field--fullwidth:not(.mdc-text-field--textarea):not(.mdc-text-field--disabled) {
+    background-color: whitesmoke !important;
+}

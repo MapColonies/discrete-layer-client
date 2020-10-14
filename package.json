@@ -1,0 +1,140 @@
+{
+  "name": "discrete-layer-client",
+  "version": "0.1.0",
+  "bugs": {
+    "url": "https://github.com/MapColonies/discrete-layer-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MapColonies/discrete-layer-client.git"
+  },
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && yarn run copyconf",
+    "test": "react-scripts test --env=jsdom-fourteen --verbose",
+    "test:coverage": "react-scripts test --env=jsdom-fourteen --verbose --coverage --watchAll",
+    "eject": "react-scripts eject",
+    "release": "standard-version",
+    "eslint:fix": "npx eslint --fix",
+    "eslint:check": "npx eslint . --ext .ts,.tsx",
+    "prettier:fix": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "confd": "node ./confd/generate-config.js",
+    "confd:prod": "node ./confd/generate-config.js --environment production",
+    "confd:prod:indocker": "node ./confd/generate-config.js --environment production --indocker",
+    "copyconf": "copyfiles ./confd/* ./build"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(ol|ol-mapbox-style)/).*/"
+    ],
+    "moduleNameMapper": {
+      "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
+      "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
+      "(map|collapsible-list|tooltip|icon).css": "<rootDir>/src/__mocks__/styleMock.js",
+      "(ag-grid|ag-theme-alpine).css": "<rootDir>/src/__mocks__/styleMock.js"
+    },
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/dist/",
+      "<rootDir>/src/__mocks__/",
+      "<rootDir>/src/coverage/",
+      "<rootDir>/src/common/models"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "@map-colonies/eslint-config/react",
+      "@map-colonies/eslint-config/jest",
+      "@map-colonies/eslint-config/ts-base"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    }
+  },
+  "private": true,
+  "dependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@map-colonies/react-components": "3.1.1",
+    "@map-colonies/react-core": "3.1.0",
+    "@material-ui/core": "^4.11.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^10.4.9",
+    "@testing-library/user-event": "^7.2.1",
+    "@turf/bbox": "^6.0.1",
+    "@turf/bbox-polygon": "^6.0.1",
+    "@turf/boolean-point-in-polygon": "^6.0.1",
+    "@turf/distance": "6.2.0-alpha.2",
+    "@turf/helpers": "^6.1.4",
+    "@turf/intersect": "^6.1.3",
+    "@types/geojson": "^7946.0.7",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.44",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "ag-grid-community": "^24.0.0",
+    "ag-grid-react": "^24.0.0",
+    "axios": "^0.19.2",
+    "date-fns": "^2.14.0",
+    "enzyme-to-json": "^3.6.1",
+    "formik": "^2.1.5",
+    "mobx": "^5.15.4",
+    "mobx-react-lite": "^2.0.7",
+    "mobx-state-tree": "^3.16.0",
+    "moment": "^2.29.0",
+    "mutationobserver-shim": "^0.3.7",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-intl": "^5.7.1",
+    "react-scripts": "3.4.1",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@map-colonies/eslint-config": "^1.0.3",
+    "@types/enzyme": "^3.10.5",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/ol": "^6.3.1",
+    "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
+    "commitlint": "^9.1.0",
+    "copyfiles": "^2.4.0",
+    "cz-conventional-changelog": "^3.2.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "eslint-plugin-import": "^2.22.0",
+    "husky": "^4.2.5",
+    "jest-environment-jsdom-fourteen": "^1.0.1",
+    "jest-enzyme": "^7.1.2",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "react-test-renderer": "^16.13.1",
+    "standard-version": "^8.0.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

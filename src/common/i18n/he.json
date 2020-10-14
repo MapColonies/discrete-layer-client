@@ -1,0 +1,25 @@
+{
+    "general.ok-btn.text": "אישור",
+    "general.cancel-btn.text": "בטל",
+    "general.error.label": "שגיא",
+
+    "polygon-selection.draw-btn.tooltip": "צייר אזור ליצוא",
+    "polygon-selection.cancel-btn.tooltip": "בטל ציור",
+    "polygon-selection.cancel-btn.text": "בטל ציור",
+    "polygon-selection.draw-btn.text": "צייר אזור",
+    "polygon-selection.box-menu_option.text": "מלבן",
+    "polygon-selection.box_coorinate-menu_option.text": "מלבן לפי נק'",
+    "polygon-selection.clear-menu_option.text": "נקה",
+
+    "custom-bbox.dialog.title": "הגדר קואורדינטות אזור היצוא",
+    "custom-bbox.dialog-field.top_right_lat.label": "רוחב נק' ימין עליונה",
+    "custom-bbox.dialog-field.top_right_lon.label": "ארך נק' ימין עליונה",
+    "custom-bbox.dialog-field.bottom_left_lat.label": "רוחב נק' שמאל תחתונה",
+    "custom-bbox.dialog-field.bottom_left_lon.label": "ארך נק' שמאל תחתונה",
+    "custom-bbox.form-error.x-distance.text": "ארך מעל המותר",
+    "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
+
+    "snack.message.success": "יצוא התחיל בהצלחה",
+    "snack.message.failed": "יצוא ניכשל",
+    "snack.dismiss-btn.text": "אישור"
+}
