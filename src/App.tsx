@@ -27,7 +27,7 @@ import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
 import APP_CONFIG from './common/config';
 
-const CONFIG: any = APP_CONFIG;
+const CONFIG: any = APP_CONFIG as any;
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
