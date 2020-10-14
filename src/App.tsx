@@ -25,7 +25,9 @@ import '@map-colonies/react-core/dist/linear-progress/styles';
 
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
-import CONFIG from './common/config';
+import APP_CONFIG from './common/config';
+
+const CONFIG: any = APP_CONFIG;
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
