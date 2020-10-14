@@ -7,7 +7,7 @@ import {
   TileOsm,
   getWMTSOptions,
   getWMSOptions,
-  getXYZOptions
+  getXYZOptions,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { Snackbar, SnackbarAction } from '@map-colonies/react-core';
@@ -20,12 +20,12 @@ import { ResponseState } from '../../common/models/ResponseState';
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
 const wmtsOptions = getWMTSOptions({
-    attributions: CONFIG.WMTS_LAYER.ATTRIBUTIONS,
-    url: CONFIG.WMTS_LAYER.URL,
-    layer: CONFIG.WMTS_LAYER.LAYER,
-    projection: CONFIG.WMTS_LAYER.PROJECTION,
-    format: CONFIG.WMTS_LAYER.FORMAT,
-  });
+  attributions: CONFIG.WMTS_LAYER.ATTRIBUTIONS,
+  url: CONFIG.WMTS_LAYER.URL,
+  layer: CONFIG.WMTS_LAYER.LAYER,
+  projection: CONFIG.WMTS_LAYER.PROJECTION,
+  format: CONFIG.WMTS_LAYER.FORMAT,
+});
 
 const wmsOptions = getWMSOptions({
   attributions: CONFIG.WMS_LAYER.ATTRIBUTIONS,
@@ -35,12 +35,12 @@ const wmsOptions = getWMSOptions({
   transition: CONFIG.WMS_LAYER.TRANSITION,
 });
 
-const xyzOptions =  getXYZOptions({
+const xyzOptions = getXYZOptions({
   attributions: CONFIG.XYZ_LAYER.ATTRIBUTIONS,
   url: CONFIG.XYZ_LAYER.URL,
 });
 
-const tileOtions = {opacity:0.5};
+const tileOtions = { opacity: 0.5 };
 
 interface SnackDetails {
   message: string;
@@ -49,10 +49,12 @@ interface SnackDetails {
 const DiscreteLayerView: React.FC = observer(() => {
   const { discreteLayersStore: discreteLayersStore } = useStore();
   const [snackOpen, setSnackOpen] = useState(false);
-  const [snackDetails, setSnackDetails] = useState<SnackDetails>({message:''});
+  const [snackDetails, setSnackDetails] = useState<SnackDetails>({
+    message: '',
+  });
   const intl = useIntl();
-  useEffect(()=>{
-    switch(discreteLayersStore.state){
+  useEffect(() => {
+    switch (discreteLayersStore.state) {
       case ResponseState.ERROR:
         setSnackOpen(true);
         setSnackDetails({
@@ -63,12 +65,12 @@ const DiscreteLayerView: React.FC = observer(() => {
         setSnackOpen(true);
         setSnackDetails({
           message: 'snack.message.success',
-        })
+        });
         break;
       default:
         break;
     }
-  },[discreteLayersStore.state]);
+  }, [discreteLayersStore.state]);
 
   return (
     <MapContainer
@@ -78,8 +80,8 @@ const DiscreteLayerView: React.FC = observer(() => {
       )}
       filters={[
         <>
-          {
-            !!snackDetails.message && <Snackbar
+          {!!snackDetails.message && (
+            <Snackbar
               open={snackOpen}
               onClose={(evt): void => setSnackOpen(false)}
               message={intl.formatMessage({ id: snackDetails.message })}
@@ -91,34 +93,33 @@ const DiscreteLayerView: React.FC = observer(() => {
                 />
               }
             />
-          }
-        </>
+          )}
+        </>,
       ]}
       mapContent={
         <>
-          {
-            CONFIG.ACTIVE_LAYER === 'OSM_DEFAULT' && <TileLayer>
+          {CONFIG.ACTIVE_LAYER === 'OSM_DEFAULT' && (
+            <TileLayer>
               <TileOsm />
             </TileLayer>
-          }
-          {
-            CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && <TileLayer>
-              <TileWMTS options={wmtsOptions}/>
-            </TileLayer> 
-          }
-          {
-            CONFIG.ACTIVE_LAYER === 'WMS_LAYER' && <TileLayer options={tileOtions}>
-              <TileWMS options={wmsOptions}/>
+          )}
+          {CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && (
+            <TileLayer>
+              <TileWMTS options={wmtsOptions} />
             </TileLayer>
-          }
+          )}
+          {CONFIG.ACTIVE_LAYER === 'WMS_LAYER' && (
+            <TileLayer options={tileOtions}>
+              <TileWMS options={wmsOptions} />
+            </TileLayer>
+          )}
 
-          {
-            CONFIG.ACTIVE_LAYER === 'XYZ_LAYER' &&<TileLayer options={tileOtions}>
-              <TileXYZ options={xyzOptions}/>
-            </TileLayer> 
-          }
+          {CONFIG.ACTIVE_LAYER === 'XYZ_LAYER' && (
+            <TileLayer options={tileOtions}>
+              <TileXYZ options={xyzOptions} />
+            </TileLayer>
+          )}
         </>
-      
       }
     />
   );

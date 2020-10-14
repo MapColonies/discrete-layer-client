@@ -5,13 +5,11 @@ import '../../../__mocks__/confEnvShim';
 import { MapContainer } from './map-container';
 import { MapWrapper } from './map-wrapper';
 
-
 const polygonSelectedFn = jest.fn();
 const polygonResetFn = jest.fn();
-const DEFAULT_FILTERS_NUM =1;
+const DEFAULT_FILTERS_NUM = 1;
 
 describe('MapContainer component', () => {
-  
   afterEach(() => {
     polygonSelectedFn.mockClear();
     polygonResetFn.mockClear();
@@ -23,7 +21,7 @@ describe('MapContainer component', () => {
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
         filters={[]}
-        mapContent={(<span>test</span>)}
+        mapContent={<span>test</span>}
       />
     );
 
@@ -36,25 +34,29 @@ describe('MapContainer component', () => {
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
         filters={undefined}
-        mapContent={(<span>test</span>)}
+        mapContent={<span>test</span>}
       />
     );
 
-    expect(wrapper.find('.filtersContainer').children()).toHaveLength(DEFAULT_FILTERS_NUM); 
+    expect(wrapper.find('.filtersContainer').children()).toHaveLength(
+      DEFAULT_FILTERS_NUM
+    );
   });
 
   it('transfered FILTERS added to container with default one', () => {
-    const filtersArr = [<span>fliter1</span>, <span>fliter2</span>]
+    const filtersArr = [<span>fliter1</span>, <span>fliter2</span>];
     const wrapper = shallow(
       <MapContainer
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
         filters={filtersArr}
-        mapContent={(<span>test</span>)}
+        mapContent={<span>test</span>}
       />
     );
 
-    expect(wrapper.find('.filtersContainer').children()).toHaveLength(DEFAULT_FILTERS_NUM + filtersArr.length); 
+    expect(wrapper.find('.filtersContainer').children()).toHaveLength(
+      DEFAULT_FILTERS_NUM + filtersArr.length
+    );
   });
 
   it('MapContent prop elements transfered to MapWrapper component', () => {
@@ -63,10 +65,10 @@ describe('MapContainer component', () => {
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
         filters={undefined}
-        mapContent={(<span>test</span>)}
+        mapContent={<span>test</span>}
       />
     );
 
-    expect(wrapper.find(MapWrapper).children()).toHaveLength(1); 
+    expect(wrapper.find(MapWrapper).children()).toHaveLength(1);
   });
 });

@@ -6,10 +6,9 @@ if (!window._env_) {
       CHANNEL: 1002,
       VERSION: 1,
       REQUEST: 'REQUEST',
-      SERVICE_PROTOCOL: 'SERVICE_PROTOCOL', 
+      SERVICE_PROTOCOL: 'SERVICE_PROTOCOL',
       SERVICE_NAME: 'SERVICE_NAME',
-      ACTIVE_LAYER: 'ACTIVE_LAYER'
-      
+      ACTIVE_LAYER: 'ACTIVE_LAYER',
     };
   })(void 0);
 }

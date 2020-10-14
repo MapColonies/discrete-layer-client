@@ -2,13 +2,14 @@ import React from 'react';
 import { Geometry } from 'geojson';
 import rewind from '@turf/rewind';
 import { Polygon } from 'geojson';
-import { Map,
+import {
+  Map,
   VectorSource,
   GeoJSONFeature,
   VectorLayer,
   DrawInteraction,
-  DrawType
- } from '@map-colonies/react-components';
+  DrawType,
+} from '@map-colonies/react-components';
 import './map-wrapper.css';
 
 interface MapWrapperProps {

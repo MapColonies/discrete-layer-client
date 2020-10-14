@@ -15,5 +15,4 @@ export const searchParams = types
     },
   }));
 
-export interface IConflictSearchParams
-  extends Instance<typeof searchParams> {}
+export interface IConflictSearchParams extends Instance<typeof searchParams> {}

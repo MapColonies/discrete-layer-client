@@ -12,26 +12,32 @@ import CONFIG from './common/config';
 const store = rootStore.create(
   {},
   {
-    fetch: async (url: string, method: Method, params: Record<string, unknown>) =>
+    fetch: async (
+      url: string,
+      method: Method,
+      params: Record<string, unknown>
+    ) =>
       // Axios.post(url, params, { baseURL: `${CONFIG.SERVICE_PROTOCOL}${CONFIG.SERVICE_NAME}` }).then((res) => res.data as SearchResponse),
 
       Axios.request({
-        url, 
-        method, 
+        url,
+        method,
         data: params,
-        baseURL: `${(CONFIG.SERVICE_PROTOCOL as string)}${(CONFIG.SERVICE_NAME as string)}` 
+        baseURL: `${CONFIG.SERVICE_PROTOCOL as string}${
+          CONFIG.SERVICE_NAME as string
+        }`,
       }).then((res) => res.data as SearchResponse),
   }
 );
 
 // REMARK IIFE to discard language presentation logic
-((): void=>{
-  const lang = CONFIG.I18N.DEFAULT_LANGUAGE;//navigator.language.split(/[-_]/)[0];  // language without region code
+((): void => {
+  const lang = CONFIG.I18N.DEFAULT_LANGUAGE; //navigator.language.split(/[-_]/)[0];  // language without region code
 
   document.documentElement.lang = lang;
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if(lang === 'he'){
-    document.body.dir = 'rtl';  
+  if (lang === 'he') {
+    document.body.dir = 'rtl';
   }
 })();
 ReactDOM.render(
@@ -39,8 +45,7 @@ ReactDOM.render(
     <StoreProvider value={store}>
       <App />
     </StoreProvider>
-  </React.StrictMode>
-  ,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

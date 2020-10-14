@@ -38,13 +38,13 @@ const download = (uri, filename) => {
   const protocol = url.parse(uri).protocol.slice(0, -1);
 
   return new Promise((resolve, reject) => {
-    const onError = e => {
+    const onError = (e) => {
       fs.unlink(filename);
       reject(e);
     };
 
     require(protocol)
-      .get(uri, function(response) {
+      .get(uri, function (response) {
         if (response.statusCode >= 200 && response.statusCode < 300) {
           const fileStream = fs.createWriteStream(filename, { mode: 0o755 });
           fileStream.on('error', onError);
@@ -62,7 +62,7 @@ const download = (uri, filename) => {
 
 const downloadIfNotExists = (uri, filename) => {
   console.log(`Checking if ${filename} exists.`);
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (fs.existsSync(filename)) {
       console.log(`${filename} exists, proceeding to the next stage.`);
       resolve();
@@ -76,14 +76,14 @@ const downloadIfNotExists = (uri, filename) => {
 
 const copyFile = (src, dest, mutationFunc) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(src, 'utf8', function(err, data) {
+    fs.readFile(src, 'utf8', function (err, data) {
       if (err) {
         reject(err);
         return;
       }
       const result = mutationFunc ? mutationFunc(data) : data;
 
-      fs.writeFile(dest, result, 'utf8', function(err) {
+      fs.writeFile(dest, result, 'utf8', function (err) {
         if (err) {
           reject(err);
         } else {
@@ -94,7 +94,7 @@ const copyFile = (src, dest, mutationFunc) => {
   });
 };
 
-const createDirIfNotExists = dir => {
+const createDirIfNotExists = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
@@ -110,9 +110,8 @@ const createDevConfdConfigFile = (env, isInDocker) => {
   }
   console.log('Creating a development toml file.');
   const tmplCopy = copyFile(confdTmplPath, devTmplPath);
-  const tomlCopy = copyFile(confdConfigPath, devConfigPath, data => {
-
-    return !isInDocker ? data : data.replace('dest = "public/','dest = "');
+  const tomlCopy = copyFile(confdConfigPath, devConfigPath, (data) => {
+    return !isInDocker ? data : data.replace('dest = "public/', 'dest = "');
     //data.replace(/dest = .*/g, `dest = "config/${env}.json"`)
   });
 
@@ -144,9 +143,7 @@ const help = () => {
   console.log(
     '--environment <environment name>			generate js config file instead of default.'
   );
-  console.log(
-    '--indocker			generate js config file in different location.'
-  );
+  console.log('--indocker			generate js config file in different location.');
   console.log('--help			shows this help page.');
   console.log();
   process.exit(0);
@@ -162,7 +159,7 @@ const main = () => {
     .then(() => createDevConfdConfigFile(env, isInDocker))
     // .then(createTargetDir())
     .then(() => runConfd())
-    .catch(err => {
+    .catch((err) => {
       console.error('Failed to generate the configuration');
       console.error(err);
       process.exit(1);

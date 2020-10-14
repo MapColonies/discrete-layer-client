@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Polygon } from 'geojson';
-import { DrawType } from  '@map-colonies/react-components'; 
+import { DrawType } from '@map-colonies/react-components';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { MapWrapper } from './map-wrapper';
 import './map-container.css';
@@ -12,9 +12,7 @@ export interface MapContainerProps {
   filters?: React.ReactNode[];
 }
 
-export const MapContainer: React.FC<MapContainerProps> = (
-  props
-) => {
+export const MapContainer: React.FC<MapContainerProps> = (props) => {
   const [drawType, setDrawType] = useState<DrawType>();
   const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
 

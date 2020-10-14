@@ -7,7 +7,6 @@ import { Button, TextField } from '@map-colonies/react-core';
 import '../../../__mocks__/confEnvShim';
 import { DialogBBox } from './dialog-bbox';
 
-
 global.MutationObserver = window.MutationObserver;
 
 const setOpenFn = jest.fn();
@@ -31,15 +30,19 @@ jest.mock('react-intl', () => {
   /* eslint-enable */
 });
 
-const updateField = (wrapper: ShallowWrapper, fieldName: string, value: number) => {
+const updateField = (
+  wrapper: ShallowWrapper,
+  fieldName: string,
+  value: number
+) => {
   const fieldWrapper = wrapper.find(TextField).find({ name: fieldName });
-  
+
   act(() => {
     fieldWrapper.at(0).simulate('change', {
       // simulate changing e.target.name and e.target.value
       target: {
         name: fieldName,
-        value
+        value,
       },
     });
   });
@@ -56,17 +59,14 @@ const getFieldValue = (wrapper: ShallowWrapper, fieldName: string) => {
 };
 
 /* eslint-disable */
-const getButtonById = (wrapper: ShallowWrapper,id: string):ShallowWrapper => {
-  return wrapper
-    .findWhere((n) => {
-      return n.type() === Button && 
-            n.prop('children').props['id'] === id;
-    });
+const getButtonById = (wrapper: ShallowWrapper, id: string): ShallowWrapper => {
+  return wrapper.findWhere((n) => {
+    return n.type() === Button && n.prop('children').props['id'] === id;
+  });
 };
 /* eslint-enable */
 
 describe('DialogBBox component', () => {
-
   afterEach(() => {
     setOpenFn.mockClear();
     polygonUpdate.mockClear();
@@ -108,7 +108,7 @@ describe('DialogBBox component', () => {
     await waitFor(() => {
       for (const field in fields) {
         // eslint-disable-next-line
-        expect(getFieldValue(wrapper,field)).toEqual((fields as any)[field]);
+        expect(getFieldValue(wrapper, field)).toEqual((fields as any)[field]);
       }
     });
   });
@@ -134,12 +134,10 @@ describe('DialogBBox component', () => {
         onSetOpen={setOpenFn}
         onPolygonUpdate={polygonUpdate}
       />
-    ); 
+    );
 
-    act(()=>{
-      wrapper
-        .find('form')
-        .simulate('submit');
+    act(() => {
+      wrapper.find('form').simulate('submit');
     });
 
     wrapper.update();
@@ -162,9 +160,8 @@ describe('DialogBBox component', () => {
   //   };
   //   .
   //   .
-  //   .  
+  //   .
   //   console.log('ERROR --->', wrapper.find('#errorContainer').length);
   //   expect(wrapper.find('#errorContainer')).toBeDefined();
   // });
-
 });

@@ -3,7 +3,11 @@ import { IntlProvider } from 'react-intl';
 import './App.css';
 
 // Import from react core components
-import { ThemeProvider as RMWCThemeProvider, RMWCProvider, Themes } from '@map-colonies/react-core';
+import {
+  ThemeProvider as RMWCThemeProvider,
+  RMWCProvider,
+  Themes,
+} from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
 import '@map-colonies/react-core/dist/theme/styles';
@@ -27,21 +31,21 @@ const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
   const theme = prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
-  
-  useLayoutEffect(()=>{
+
+  useLayoutEffect(() => {
     setLang(document.documentElement.lang);
-  },[]);
+  }, []);
 
   return (
     <IntlProvider locale={lang} messages={MESSAGES[lang]}>
-      <RMWCProvider 
+      <RMWCProvider
         typography={{
           body1: 'span',
           body2: ({ children, ...rest }) => (
             <span>
               <b>{children}</b>
             </span>
-          )
+          ),
         }}
       >
         <RMWCThemeProvider options={theme}>

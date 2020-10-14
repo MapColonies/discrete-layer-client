@@ -1,15 +1,15 @@
 export class Fill {
-  constructor() { }
+  constructor() {}
 }
 
 export class Stroke {
-  constructor() { }
+  constructor() {}
 }
 
 export class Circle {
-  constructor() { }
+  constructor() {}
 }
 
 export class Style {
-  constructor() { }
+  constructor() {}
 }

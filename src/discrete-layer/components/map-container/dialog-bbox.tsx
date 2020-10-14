@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as  turf from '@turf/helpers';
+import * as turf from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogContent,
   TextField,
-  Button
+  Button,
 } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
@@ -21,15 +21,14 @@ import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({
     spacer: {
-      marginRight: '16px'
+      marginRight: '16px',
     },
     errorContainer: {
       display: 'flex',
       alignItems: 'center',
       marginRight: 'auto',
       color: theme.palette.error.main,
-    }
-
+    },
   })
 );
 
@@ -56,26 +55,30 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
 
     const yDistance = distance(
       [values.bottomLeftLon, values.bottomLeftLat],
-      [values.bottomLeftLon, values.topRightLat]);
+      [values.bottomLeftLon, values.topRightLat]
+    );
 
     const xDistance = distance(
       [values.bottomLeftLon, values.bottomLeftLat],
-      [values.topRightLon, values.bottomLeftLat]);
+      [values.topRightLon, values.bottomLeftLat]
+    );
 
     if (yDistance > CONFIG.BOUNDARIES.MAX_Y_KM) {
-      errors.latDistance = intl.formatMessage({ id: 'custom-bbox.form-error.y-distance.text' });
+      errors.latDistance = intl.formatMessage({
+        id: 'custom-bbox.form-error.y-distance.text',
+      });
     }
     if (xDistance > CONFIG.BOUNDARIES.MAX_X_KM) {
-      errors.lonDistance = intl.formatMessage({ id: 'custom-bbox.form-error.x-distance.text' });
+      errors.lonDistance = intl.formatMessage({
+        id: 'custom-bbox.form-error.x-distance.text',
+      });
     }
-  }
-  catch (err) {
+  } catch (err) {
     errors.latDistance = 'Not valid coordinates';
   }
 
   return errors;
 };
-
 
 interface DialogBBoxProps {
   isOpen: boolean;
@@ -83,9 +86,7 @@ interface DialogBBoxProps {
   onPolygonUpdate: (polygon: Polygon) => void;
 }
 
-export const DialogBBox: React.FC<DialogBBoxProps> = (
-  props
-) => {
+export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
   const { isOpen, onSetOpen, onPolygonUpdate } = props;
   const classes = useStyle();
   const intl = useIntl();
@@ -96,7 +97,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
       topRightLat: 0,
       topRightLon: 0,
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       const err = validate(values, intl);
       if (!err.latDistance && !err.lonDistance) {
         const line = turf.lineString([
@@ -110,21 +111,22 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
         handleClose(false);
         setFormErrors({
           latDistance: '',
-          lonDistance: ''
+          lonDistance: '',
         });
-      }
-      else {
+      } else {
         setFormErrors(err);
       }
-
     },
   });
 
-  const [formErrors, setFormErrors] = useState({ latDistance: '', lonDistance: '' });
+  const [formErrors, setFormErrors] = useState({
+    latDistance: '',
+    lonDistance: '',
+  });
 
   const handleClose = (isOpened: boolean): void => {
     onSetOpen(isOpened);
-  }
+  };
   return (
     <Dialog open={isOpen} preventOutsideDismiss={true}>
       <DialogTitle>
@@ -134,7 +136,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
         <form onSubmit={formik.handleSubmit}>
           <Box style={{ display: 'flex', marginBottom: '16px' }}>
             <TextField
-              label={intl.formatMessage({ id: 'custom-bbox.dialog-field.top_right_lat.label' })}
+              label={intl.formatMessage({
+                id: 'custom-bbox.dialog-field.top_right_lat.label',
+              })}
               id="topRightLat"
               name="topRightLat"
               type="number"
@@ -143,7 +147,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
               className={classes.spacer}
             />
             <TextField
-              label={intl.formatMessage({ id: 'custom-bbox.dialog-field.top_right_lon.label' })}
+              label={intl.formatMessage({
+                id: 'custom-bbox.dialog-field.top_right_lon.label',
+              })}
               id="topRightLon"
               name="topRightLon"
               type="number"
@@ -155,7 +161,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
           </Box>
           <Box style={{ display: 'flex' }}>
             <TextField
-              label={intl.formatMessage({ id: 'custom-bbox.dialog-field.bottom_left_lat.label' })}
+              label={intl.formatMessage({
+                id: 'custom-bbox.dialog-field.bottom_left_lat.label',
+              })}
               id="bottomLeftLat"
               name="bottomLeftLat"
               type="number"
@@ -164,7 +172,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
               className={classes.spacer}
             />
             <TextField
-              label={intl.formatMessage({ id: 'custom-bbox.dialog-field.bottom_left_lon.label' })}
+              label={intl.formatMessage({
+                id: 'custom-bbox.dialog-field.bottom_left_lon.label',
+              })}
               id="bottomLeftLon"
               name="bottomLeftLon"
               type="number"
@@ -174,15 +184,27 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
             />
             <BBoxCorner corner={Corner.BOTTOM_LEFT} />
           </Box>
-          <Box style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', gap: '16px' }}>
-            {
-              (!!formErrors.latDistance || !!formErrors.lonDistance) ?
-                <div id="errorContainer" className={classes.errorContainer}>
-                  {`${intl.formatMessage({ id: 'general.error.label' })}: ${formErrors.latDistance} ${formErrors.lonDistance}`}
-                </div> :
-                null
-            }
-            <Button type="button" onClick={(): void => { handleClose(false); }}>
+          <Box
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: '16px',
+              gap: '16px',
+            }}
+          >
+            {!!formErrors.latDistance || !!formErrors.lonDistance ? (
+              <div id="errorContainer" className={classes.errorContainer}>
+                {`${intl.formatMessage({ id: 'general.error.label' })}: ${
+                  formErrors.latDistance
+                } ${formErrors.lonDistance}`}
+              </div>
+            ) : null}
+            <Button
+              type="button"
+              onClick={(): void => {
+                handleClose(false);
+              }}
+            >
               <FormattedMessage id="general.cancel-btn.text" />
             </Button>
             <Button raised type="submit">
@@ -192,6 +214,5 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (
         </form>
       </DialogContent>
     </Dialog>
-
   );
-}
+};

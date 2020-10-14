@@ -25,7 +25,7 @@ const useStyle = makeStyles((theme: Theme) =>
     },
 
     bboxLeftBottomCorner: {
-      "&::before": {
+      '&::before': {
         margin: '-1em',
         borderRadius: '50%',
         position: 'absolute',
@@ -34,11 +34,11 @@ const useStyle = makeStyles((theme: Theme) =>
         background: '#95a',
         content: "''",
         bottom: 0,
-        left: 0
-      }
+        left: 0,
+      },
     },
     bboxLeftTopCorner: {
-      "&::before": {
+      '&::before': {
         margin: '-1em',
         borderRadius: '50%',
         position: 'absolute',
@@ -47,11 +47,11 @@ const useStyle = makeStyles((theme: Theme) =>
         background: '#95a',
         content: "''",
         top: 0,
-        left: 0
-      }
+        left: 0,
+      },
     },
     bboxRightTopCorner: {
-      "&::before": {
+      '&::before': {
         margin: '-1em',
         borderRadius: '50%',
         position: 'absolute',
@@ -60,11 +60,11 @@ const useStyle = makeStyles((theme: Theme) =>
         background: '#95a',
         content: "''",
         top: 0,
-        right: 0
-      }
+        right: 0,
+      },
     },
     bboxRightBottomCorner: {
-      "&::before": {
+      '&::before': {
         margin: '-1em',
         borderRadius: '50%',
         position: 'absolute',
@@ -73,15 +73,17 @@ const useStyle = makeStyles((theme: Theme) =>
         background: '#95a',
         content: "''",
         bottom: 0,
-        right: 0
-      }
+        right: 0,
+      },
     },
-
   })
 );
 
-const getCornerClass = (classes: Record<string,string>, cornerToIndicate: Corner): string => {
-  switch(cornerToIndicate){
+const getCornerClass = (
+  classes: Record<string, string>,
+  cornerToIndicate: Corner
+): string => {
+  switch (cornerToIndicate) {
     case Corner.TOP_RIGHT:
       return classes.bboxRightTopCorner;
     case Corner.TOP_LEFT:
@@ -95,10 +97,16 @@ const getCornerClass = (classes: Record<string,string>, cornerToIndicate: Corner
   }
 };
 
-export const BBoxCorner: React.FC<BBoxCornerProps> = ({ corner, className }) => {
+export const BBoxCorner: React.FC<BBoxCornerProps> = ({
+  corner,
+  className,
+}) => {
   const classes = useStyle();
-  const bboxCorner = useMemo(() => getCornerClass(classes, corner), [classes, corner]);
+  const bboxCorner = useMemo(() => getCornerClass(classes, corner), [
+    classes,
+    corner,
+  ]);
   return (
     <div className={`${classes.bbox} ${bboxCorner} ${className ?? ''}`}></div>
   );
-}
+};

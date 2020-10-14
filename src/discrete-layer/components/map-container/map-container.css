@@ -11,7 +11,7 @@
   top: 12px;
 }
 
-body[dir="rtl"] .filtersPosition {
+body[dir='rtl'] .filtersPosition {
   position: absolute;
   z-index: 1000;
   left: unset;

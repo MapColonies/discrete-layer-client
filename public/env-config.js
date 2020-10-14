@@ -6,5 +6,5 @@ window._env_ = {
   REQUEST: 'ImageryMaps',
   SERVICE_PROTOCOL: 'http://',
   SERVICE_NAME: 'localhost:8000',
-  ACTIVE_LAYER: 'OSM_DEFAULT'
+  ACTIVE_LAYER: 'OSM_DEFAULT',
 };
