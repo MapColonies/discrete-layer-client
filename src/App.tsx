@@ -25,13 +25,11 @@ import '@map-colonies/react-core/dist/linear-progress/styles';
 
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
-import APP_CONFIG from './common/config';
-
-const CONFIG: any = APP_CONFIG as any;
+import CONFIG from './common/config';
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
+  const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE as string);
   const theme = prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
 
   useLayoutEffect(() => {
