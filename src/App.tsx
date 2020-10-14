@@ -1,4 +1,4 @@
-// eslint @typescript-eslint/no-unsafe-member-access: 0 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, no-unsafe-member-access */
 import React, { useState, useLayoutEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import './App.css';
