@@ -99,6 +99,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </>,
       ]}
       mapContent={
+        /* eslint-disable */
         <>
           {CONFIG.ACTIVE_LAYER === 'OSM_DEFAULT' && (
             <TileLayer>
@@ -122,6 +123,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             </TileLayer>
           )}
         </>
+        /* eslint-enable */
       }
     />
   );

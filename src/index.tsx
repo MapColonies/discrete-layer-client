@@ -9,6 +9,7 @@ import { StoreProvider, rootStore } from './discrete-layer/models/rootStore';
 import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
 
+/* eslint-disable */
 const store = rootStore.create(
   {},
   {
@@ -53,3 +54,4 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+/* eslint-enable */
