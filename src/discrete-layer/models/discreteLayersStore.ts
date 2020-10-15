@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import { types, Instance, flow, getParent } from 'mobx-state-tree';
 import { ApiHttpResponse } from '../../common/models/api-response';
-import { ResponseState } from '../../common/models/ResponseState';
-// import MOCK_EXPORTED_PACKAGES from '../../__mocks-data__/exportedPackages';
+import { ResponseState } from '../../common/models/response-state.enum';
+// import MOCK_SEARCH_RESULTS from '../../__mocks-data__/search-results.mock';
 import { searchParams } from './search-params';
 import { IRootStore } from './rootStore';
 import { ILayerImage } from './layerImage';
@@ -41,7 +41,7 @@ export const discreteLayersStore = types
           console.log('Fetch layers images--->');
           self.state = ResponseState.IDLE;
           const result = yield self.root.fetch('/searchLayerImages', 'GET', {});
-          // const result = yield Promise.resolve(MOCK_EXPORTED_PACKAGES);
+          // const result = yield Promise.resolve(MOCK_SEARCH_RESULTS);
           self.layersImages = result;
         } catch (error) {
           console.error(error);

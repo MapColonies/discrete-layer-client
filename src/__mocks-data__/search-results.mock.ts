@@ -1,4 +1,4 @@
-const MOCK_EXPORTED_PACKAGES = [
+const MOCK_SEARCH_RESULTS = [
   {
     fileName: 'kuku',
     sizeEst: 23,
@@ -19,4 +19,4 @@ const MOCK_EXPORTED_PACKAGES = [
   },
 ];
 
-export default MOCK_EXPORTED_PACKAGES;
+export default MOCK_SEARCH_RESULTS;

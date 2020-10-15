@@ -1,7 +1,7 @@
 import { Method } from 'axios';
 import { types, Instance, getEnv } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
-import { ResponseState } from '../../common/models/ResponseState';
+import { ResponseState } from '../../common/models/response-state.enum';
 import { discreteLayersStore, SearchResponse } from './discreteLayersStore';
 
 type FetchAction = (

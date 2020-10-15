@@ -15,7 +15,7 @@ import { useIntl } from 'react-intl';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
 import CONFIG from '../../common/config';
-import { ResponseState } from '../../common/models/ResponseState';
+import { ResponseState } from '../../common/models/response-state.enum';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
