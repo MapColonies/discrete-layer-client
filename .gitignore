@@ -6,6 +6,7 @@ confd/**
 !confd/*.js
 !confd/*.tmpl
 !confd/*.toml
+public/env-config.js
 
 # dependencies
 /node_modules
