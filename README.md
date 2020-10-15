@@ -16,7 +16,7 @@ In the project directory, you can run:
 
 ### `yarn run confd:prod`
 
-Regenerates
+Generates (MUST)
 
 ```
 public/env-config.js
