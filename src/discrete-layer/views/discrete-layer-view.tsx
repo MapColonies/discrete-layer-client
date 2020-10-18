@@ -8,14 +8,17 @@ import {
   getWMTSOptions,
   getWMSOptions,
   getXYZOptions,
+  Box,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { Snackbar, SnackbarAction } from '@map-colonies/react-core';
+import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, List, ListItem, Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
 import CONFIG from '../../common/config';
 import { ResponseState } from '../../common/models/response-state.enum';
+import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
+import './discrete-layer-view.css';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
@@ -51,6 +54,7 @@ interface SnackDetails {
 const DiscreteLayerView: React.FC = observer(() => {
   const { discreteLayersStore: discreteLayersStore } = useStore();
   const [snackOpen, setSnackOpen] = useState(false);
+  const [resultsOpen, setResultsOpen] = useState(false);
   const [snackDetails, setSnackDetails] = useState<SnackDetails>({
     message: '',
   });
@@ -82,6 +86,43 @@ const DiscreteLayerView: React.FC = observer(() => {
       )}
       filters={[
         <>
+          <Button
+            raised
+          >
+            FILTERS
+          </Button>
+
+          <Box className="drawerPosition">
+            <Drawer dismissible open={resultsOpen}>
+              <DrawerHeader>
+                <DrawerTitle>DrawerHeader</DrawerTitle>
+                <DrawerSubtitle>Subtitle</DrawerSubtitle>
+              </DrawerHeader>
+              <DrawerContent>
+                <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div>
+                {/* <List>
+                  <ListItem>Cookies</ListItem>
+                  <ListItem>Pizza</ListItem>
+                  <ListItem>Icecream</ListItem>
+                </List> */}
+              </DrawerContent>
+            </Drawer>
+
+            {/* Optional DrawerAppContent */}
+            {/* <DrawerAppContent
+              style={{ minHeight: '15rem', padding: '1rem' }}
+            >
+              DrawerAppContent is an optional component that will resize
+              content when the dismissible drawer is open and closed. It
+              must be placed directly after the Drawer component.
+            </DrawerAppContent> */}
+          </Box>
+
+          <DrawerOpener
+            isOpen={resultsOpen}
+            onClick={setResultsOpen}
+          />
+
           {!!snackDetails.message && (
             <Snackbar
               open={snackOpen}
@@ -96,7 +137,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
             />
           )}
-        </>,
+      </>,
       ]}
       mapContent={
         /* eslint-disable */

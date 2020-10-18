@@ -1,0 +1,22 @@
+.drawerOpenerPosition{
+  height: 64px; 
+  padding: 20px 4px;
+  font-weight: 900;
+  position: absolute;
+  top: 100px;
+  left: -8px;
+}
+
+body[dir='rtl'] .drawerOpenerPosition {
+  right: -8px;
+  left: unset;
+}
+
+.spacer {
+  margin-left: 280px
+}
+
+body[dir='rtl'] .spacer {
+  margin-right: 280px;
+  margin-left: unset;
+}

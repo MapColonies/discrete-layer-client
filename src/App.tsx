@@ -22,6 +22,7 @@ import '@map-colonies/react-core/dist/textfield/styles';
 import '@map-colonies/react-core/dist/snackbar/styles';
 import '@map-colonies/react-core/dist/icon/styles';
 import '@map-colonies/react-core/dist/linear-progress/styles';
+import '@map-colonies/react-core/dist/drawer/styles';
 
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
