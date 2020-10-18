@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DialogBBox component renders correctly 1`] = `
+<Function
+  open={false}
+  preventOutsideDismiss={true}
+>
+  <Function>
+    <FormattedMessage
+      id="custom-bbox.dialog.title"
+    />
+  </Function>
+  <Function>
+    <form
+      onSubmit={[Function]}
+    >
+      <Component
+        style={
+          Object {
+            "display": "flex",
+            "marginBottom": "16px",
+          }
+        }
+      >
+        <Function
+          className="makeStyles-spacer-1"
+          id="topRightLat"
+          label="Top Right Lat"
+          name="topRightLat"
+          onChange={[Function]}
+          type="number"
+          value={0}
+        />
+        <Function
+          className="makeStyles-spacer-1"
+          id="topRightLon"
+          label="Top Right Lon"
+          name="topRightLon"
+          onChange={[Function]}
+          type="number"
+          value={0}
+        />
+        <BBoxCorner
+          corner="TOP_RIGHT"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "display": "flex",
+          }
+        }
+      >
+        <Function
+          className="makeStyles-spacer-1"
+          id="bottomLeftLat"
+          label="Bottom Left Lat"
+          name="bottomLeftLat"
+          onChange={[Function]}
+          type="number"
+          value={0}
+        />
+        <Function
+          className="makeStyles-spacer-1"
+          id="bottomLeftLon"
+          label="Bottom Left Lon"
+          name="bottomLeftLon"
+          onChange={[Function]}
+          type="number"
+          value={0}
+        />
+        <BBoxCorner
+          corner="BOTTOM_LEFT"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "display": "flex",
+            "gap": "16px",
+            "justifyContent": "flex-end",
+            "marginTop": "16px",
+          }
+        }
+      >
+        <withRipple(Function)
+          onClick={[Function]}
+          type="button"
+        >
+          <FormattedMessage
+            id="general.cancel-btn.text"
+          />
+        </withRipple(Function)>
+        <withRipple(Function)
+          raised={true}
+          type="submit"
+        >
+          <FormattedMessage
+            id="general.ok-btn.text"
+          />
+        </withRipple(Function)>
+      </Component>
+    </form>
+  </Function>
+</Function>
+`;

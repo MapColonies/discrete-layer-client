@@ -1,0 +1,13 @@
+[template]
+src = "production.tmpl"
+dest = "public/env-config.js"
+keys = [
+  "/configuration/mapServer/url",
+  "/configuration/mapServer/publishPoint",
+  "/configuration/mapServer/channel",
+  "/configuration/mapServer/version",
+  "/configuration/mapServer/request",
+  "/configuration/service/protocol",
+  "/configuration/service/url",
+  "/configuration/activeLayer"
+]

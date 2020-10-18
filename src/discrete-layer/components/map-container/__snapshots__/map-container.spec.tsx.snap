@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapContainer component renders correctly 1`] = `
+<div
+  className="map"
+>
+  <div
+    className="filtersPosition"
+  >
+    <div
+      className="filtersContainer"
+    >
+      <PolygonSelectionUi
+        isSelectionEnabled={false}
+        onCancelDraw={[Function]}
+        onPolygonUpdate={[Function]}
+        onReset={[Function]}
+        onStartDraw={[Function]}
+      />
+    </div>
+  </div>
+  <MapWrapper
+    onPolygonSelection={[Function]}
+  >
+    <span>
+      test
+    </span>
+  </MapWrapper>
+</div>
+`;

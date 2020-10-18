@@ -1,0 +1,23 @@
+.ol-zoom {
+  top: 2.5em;
+  right: 0.5em;
+  left: unset;
+}
+
+body[dir='rtl'] .ol-full-screen {
+  right: unset;
+  left: 0.5em;
+}
+
+body[dir='rtl'] .ol-zoom {
+  right: unset;
+  left: 0.5em;
+}
+
+.mdc-dialog__title + .mdc-dialog__content {
+  padding-top: 20px;
+}
+
+.mdc-dialog__actions {
+  padding-right: 24px;
+}

@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapWrapper component renders correctly 1`] = `
+<Component
+  allowFullScreen={true}
+  showMousePosition={true}
+>
+  <Component>
+    <Component>
+      <Component
+        geometry={
+          Object {
+            "coordinates": Array [
+              Array [
+                Array [
+                  100,
+                  0,
+                ],
+                Array [
+                  101,
+                  0,
+                ],
+                Array [
+                  101,
+                  1,
+                ],
+                Array [
+                  100,
+                  1,
+                ],
+                Array [
+                  100,
+                  0,
+                ],
+              ],
+            ],
+            "type": "Polygon",
+          }
+        }
+      />
+    </Component>
+  </Component>
+  <span>
+    test
+  </span>
+  <Component
+    drawType="BOX"
+    onPolygonSelected={[Function]}
+  />
+</Component>
+`;

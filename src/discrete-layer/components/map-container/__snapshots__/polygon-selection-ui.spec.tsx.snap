@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Polygon Selection component renders correctly 1`] = `
+<Component
+  position="relative"
+>
+  <Tooltip
+    align="bottomLeft"
+    content="Draw an Area to export"
+  >
+    <withRipple(Function)
+      className="makeStyles-drawingButton-1"
+      onClick={[Function]}
+      raised={true}
+    >
+      <FormattedMessage
+        id="polygon-selection.draw-btn.text"
+      />
+    </withRipple(Function)>
+  </Tooltip>
+  <DialogBBox
+    isOpen={false}
+    onPolygonUpdate={[Function]}
+    onSetOpen={[Function]}
+  />
+  <Function
+    className="makeStyles-fullWidth-2"
+    onClose={[Function]}
+    open={false}
+  >
+    <Function
+      onClick={[Function]}
+    >
+      <FormattedMessage
+        id="polygon-selection.box-menu_option.text"
+      />
+    </Function>
+    <Function
+      onClick={[Function]}
+    >
+      <FormattedMessage
+        id="polygon-selection.box_coorinate-menu_option.text"
+      />
+    </Function>
+    <Function
+      onClick={[Function]}
+    >
+      <FormattedMessage
+        id="polygon-selection.clear-menu_option.text"
+      />
+    </Function>
+  </Function>
+</Component>
+`;
