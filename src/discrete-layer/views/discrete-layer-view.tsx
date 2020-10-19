@@ -47,6 +47,8 @@ const xyzOptions = getXYZOptions({
 
 const tileOtions = { opacity: 0.5 };
 
+const mapActionsWidth = '400px';
+
 interface SnackDetails {
   message: string;
 }
@@ -55,6 +57,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const { discreteLayersStore: discreteLayersStore } = useStore();
   const [snackOpen, setSnackOpen] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [snackDetails, setSnackDetails] = useState<SnackDetails>({
     message: '',
   });
@@ -84,29 +87,48 @@ const DiscreteLayerView: React.FC = observer(() => {
       handlePolygonReset={discreteLayersStore.searchParams.resetLocation.bind(
         discreteLayersStore.searchParams
       )}
+      mapActionsWidth={mapActionsWidth}
+      handleOtherDrawers={()=>setFiltersOpen(false)}
       filters={[
         <>
           <Button
-            raised
+            outlined
+            theme={['primaryBg', 'onPrimary']}
+            onClick={()=>{setFiltersOpen(!filtersOpen)}}
           >
             FILTERS
           </Button>
+          {filtersOpen && (
+            <Box className="drawerPosition" style={{  height: '300px', width: mapActionsWidth}}>
+              <Drawer dismissible open={filtersOpen}>
+                <DrawerHeader>
+                  <DrawerTitle>FILTERS</DrawerTitle>
+                  <DrawerSubtitle>Subtitle</DrawerSubtitle>
+                </DrawerHeader>
+                <DrawerContent>
+                  <div style={{backgroundColor: 'green', height: '100%', width:'100%'}}></div>
+                </DrawerContent>
+              </Drawer>
 
-          <Box className="drawerPosition">
-            <Drawer dismissible open={resultsOpen}>
-              <DrawerHeader>
-                <DrawerTitle>DrawerHeader</DrawerTitle>
-                <DrawerSubtitle>Subtitle</DrawerSubtitle>
-              </DrawerHeader>
-              <DrawerContent>
-                <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div>
-                {/* <List>
-                  <ListItem>Cookies</ListItem>
-                  <ListItem>Pizza</ListItem>
-                  <ListItem>Icecream</ListItem>
-                </List> */}
-              </DrawerContent>
-            </Drawer>
+            </Box>)
+          }
+
+          {resultsOpen && (
+            <Box className="drawerPosition" style={{  height: '600px', width: mapActionsWidth, zIndex:-1}}>
+              <Drawer dismissible open={resultsOpen}>
+                <DrawerHeader>
+                  <DrawerTitle>RESULTS</DrawerTitle>
+                  <DrawerSubtitle>Subtitle</DrawerSubtitle>
+                </DrawerHeader>
+                <DrawerContent>
+                  <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div>
+                  {/* <List>
+                    <ListItem>Cookies</ListItem>
+                    <ListItem>Pizza</ListItem>
+                    <ListItem>Icecream</ListItem>
+                  </List> */}
+                </DrawerContent>
+              </Drawer>
 
             {/* Optional DrawerAppContent */}
             {/* <DrawerAppContent
@@ -116,7 +138,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               content when the dismissible drawer is open and closed. It
               must be placed directly after the Drawer component.
             </DrawerAppContent> */}
-          </Box>
+            </Box>)
+          }
 
           <DrawerOpener
             isOpen={resultsOpen}

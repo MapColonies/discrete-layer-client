@@ -4,19 +4,19 @@
   font-weight: 900;
   position: absolute;
   top: 100px;
-  left: -8px;
+  left: -20px;
 }
 
 body[dir='rtl'] .drawerOpenerPosition {
-  right: -8px;
+  right: -20px;
   left: unset;
 }
 
 .spacer {
-  margin-left: 280px
+  margin-left: calc(100% + 20px);
 }
 
 body[dir='rtl'] .spacer {
-  margin-right: 280px;
+  margin-right: calc(100% + 20px);
   margin-left: unset;
 }
