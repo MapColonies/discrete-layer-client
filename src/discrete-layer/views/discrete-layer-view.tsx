@@ -11,7 +11,7 @@ import {
   Box,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, List, ListItem, Snackbar, SnackbarAction } from '@map-colonies/react-core';
+import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
@@ -54,7 +54,7 @@ interface SnackDetails {
 }
 
 const DiscreteLayerView: React.FC = observer(() => {
-  const { discreteLayersStore: discreteLayersStore } = useStore();
+  const { discreteLayersStore } = useStore();
   const [snackOpen, setSnackOpen] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -88,13 +88,13 @@ const DiscreteLayerView: React.FC = observer(() => {
         discreteLayersStore.searchParams
       )}
       mapActionsWidth={mapActionsWidth}
-      handleOtherDrawers={()=>setFiltersOpen(false)}
+      handleOtherDrawers={(): void => setFiltersOpen(false)}
       filters={[
         <>
           <Button
             outlined
             theme={['primaryBg', 'onPrimary']}
-            onClick={()=>{setFiltersOpen(!filtersOpen)}}
+            onClick={(): void => setFiltersOpen(!filtersOpen)}
           >
             FILTERS
           </Button>
@@ -122,22 +122,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </DrawerHeader>
                 <DrawerContent>
                   <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div>
-                  {/* <List>
-                    <ListItem>Cookies</ListItem>
-                    <ListItem>Pizza</ListItem>
-                    <ListItem>Icecream</ListItem>
-                  </List> */}
                 </DrawerContent>
               </Drawer>
-
-            {/* Optional DrawerAppContent */}
-            {/* <DrawerAppContent
-              style={{ minHeight: '15rem', padding: '1rem' }}
-            >
-              DrawerAppContent is an optional component that will resize
-              content when the dismissible drawer is open and closed. It
-              must be placed directly after the Drawer component.
-            </DrawerAppContent> */}
             </Box>)
           }
 

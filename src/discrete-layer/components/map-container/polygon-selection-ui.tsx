@@ -1,14 +1,9 @@
 import React from 'react';
 import { Polygon } from 'geojson';
-import { Menu, MenuItem, Button, Tooltip, Drawer, DrawerContent } from '@map-colonies/react-core';
-import '@map-colonies/react-core/dist/button/styles';
-import '@map-colonies/react-core/dist/tooltip/styles';
-import '@map-colonies/react-core/dist/menu/styles';
-
+import { Menu, MenuItem, Button, Drawer, DrawerContent } from '@map-colonies/react-core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-
 import { Box, DrawType } from '@map-colonies/react-components';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { DialogBBox } from './dialog-bbox';
 
 const WIDTH_SPACING_FACTOR = 18;
@@ -39,7 +34,6 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const intl = useIntl();
   const {
     isSelectionEnabled,
     onCancelDraw,

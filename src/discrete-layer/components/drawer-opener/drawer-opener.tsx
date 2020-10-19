@@ -13,7 +13,7 @@ export const DrawerOpener: React.FC<DrawerOpenerProps> = (props) => {
   const theme = useTheme();
   return (
     <Box 
-      onClick={() => onClick(!isOpen)} 
+      onClick={(): void => onClick(!isOpen)} 
       style={{
         backgroundColor: theme.primary,
         color: theme.onPrimary,
