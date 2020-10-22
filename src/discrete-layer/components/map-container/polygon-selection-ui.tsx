@@ -1,10 +1,11 @@
 import React from 'react';
 import { Polygon } from 'geojson';
-import { Menu, MenuItem, Button, Drawer, DrawerContent } from '@map-colonies/react-core';
+import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, DrawType } from '@map-colonies/react-components';
 import { FormattedMessage } from 'react-intl';
 import { DialogBBox } from './dialog-bbox';
+import './polygon-selection-ui.css';
 
 const WIDTH_SPACING_FACTOR = 18;
 const useStyle = makeStyles((theme: Theme) =>
@@ -70,6 +71,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
           outlined
           theme={['primaryBg', 'onPrimary']}
           onClick={handleClick}
+          icon="category"
         >
           <FormattedMessage id="polygon-selection.draw-btn.text" />
         </Button>
@@ -79,43 +81,58 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
           onPolygonUpdate={onPolygonUpdate}
         ></DialogBBox>
         <Box style={{
-          height:'150px', 
-          width: mapActionsWidth, 
-          position:'absolute',
-          left: '-8px',
-          top: '50px'}}
+          height:'210px', 
+          width: mapActionsWidth}}
+          className="drawerContainer"
         >
           <Drawer dismissible style={{width:'100%'}} open={Boolean(anchorEl) && menuOpen}>
             <DrawerContent >
-              <Menu
-                className={classes.fullWidth}
-                open={true}
-                onClose={handleClose}
-              >
-                <MenuItem
+              <List>
+                <ListItem
                   onClick={(): void => {
                     onStartDraw(DrawType.BOX);
                     handleClose();
                   }}
                 >
-                  <FormattedMessage id="polygon-selection.box-menu_option.text" />
-                </MenuItem>
-                <MenuItem
+                  <ListItemGraphic icon="crop_square" />
+                  <ListItemText>
+                    <FormattedMessage id="polygon-selection.box-menu_option.text" />
+                  </ListItemText>
+                </ListItem>
+                <ListItem
                   onClick={(): void => {
-                    setOpen(true);
+                    onStartDraw(DrawType.POLYGON);
+                    handleClose();
                   }}
                 >
-                  <FormattedMessage id="polygon-selection.box_coorinate-menu_option.text" />
-                </MenuItem>
-                <MenuItem
+                  <ListItemGraphic icon="format_shapes" />
+                  <ListItemText>
+                    <FormattedMessage id="polygon-selection.polygon-menu_option.text" />
+                  </ListItemText>
+                </ListItem>
+                <ListItem
+                  onClick={(): void => {
+                    setOpen(true);
+                    handleClose();
+                  }}
+                >
+                  <ListItemGraphic icon="settings_overscan" />
+                  <ListItemText>
+                    <FormattedMessage id="polygon-selection.box_coorinate-menu_option.text" />
+                  </ListItemText>
+                </ListItem>
+                <ListItem
                   onClick={(): void => {
                     onReset();
                     handleClose();
                   }}
                 >
-                  <FormattedMessage id="polygon-selection.clear-menu_option.text" />
-                </MenuItem>
-              </Menu>
+                  <ListItemGraphic icon="delete" />
+                    <ListItemText>
+                      <FormattedMessage id="polygon-selection.clear-menu_option.text" />
+                    </ListItemText>
+                  </ListItem>
+              </List>
             </DrawerContent>
           </Drawer>
         </Box>

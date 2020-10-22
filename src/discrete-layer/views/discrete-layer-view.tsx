@@ -95,6 +95,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             outlined
             theme={['primaryBg', 'onPrimary']}
             onClick={(): void => setFiltersOpen(!filtersOpen)}
+            icon="filter_alt"
           >
             FILTERS
           </Button>
