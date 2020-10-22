@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Polygon } from 'geojson';
 import { DrawType } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { MapWrapper } from './map-wrapper';
 import './map-container.css';
-import { useTheme } from '@map-colonies/react-core';
 
 export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
