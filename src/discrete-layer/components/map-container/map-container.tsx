@@ -10,7 +10,7 @@ export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
   handlePolygonReset: () => void;
   handleOtherDrawers: () => void;
-  mapActionsWidth: string,
+  mapActionsWidth: string;
   mapContent?: React.ReactNode;
   filters?: React.ReactNode[];
 }
