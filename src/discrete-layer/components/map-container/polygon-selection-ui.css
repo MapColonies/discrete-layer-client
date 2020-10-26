@@ -1,0 +1,10 @@
+.drawerContainer{
+  position: absolute;
+  left: -8px;
+  top: 50px;
+}
+
+body[dir='rtl'] .drawerContainer {
+  left: unset;
+  right: -8px;
+}

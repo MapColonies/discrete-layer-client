@@ -8,14 +8,17 @@ import {
   getWMTSOptions,
   getWMSOptions,
   getXYZOptions,
+  Box,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { Snackbar, SnackbarAction } from '@map-colonies/react-core';
+import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
 import CONFIG from '../../common/config';
 import { ResponseState } from '../../common/models/response-state.enum';
+import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
+import './discrete-layer-view.css';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
@@ -44,13 +47,17 @@ const xyzOptions = getXYZOptions({
 
 const tileOtions = { opacity: 0.5 };
 
+const mapActionsWidth = '400px';
+
 interface SnackDetails {
   message: string;
 }
 
 const DiscreteLayerView: React.FC = observer(() => {
-  const { discreteLayersStore: discreteLayersStore } = useStore();
+  const { discreteLayersStore } = useStore();
   const [snackOpen, setSnackOpen] = useState(false);
+  const [resultsOpen, setResultsOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [snackDetails, setSnackDetails] = useState<SnackDetails>({
     message: '',
   });
@@ -80,8 +87,52 @@ const DiscreteLayerView: React.FC = observer(() => {
       handlePolygonReset={discreteLayersStore.searchParams.resetLocation.bind(
         discreteLayersStore.searchParams
       )}
+      mapActionsWidth={mapActionsWidth}
+      handleOtherDrawers={(): void => setFiltersOpen(false)}
       filters={[
         <>
+          <Button
+            outlined
+            theme={['primaryBg', 'onPrimary']}
+            onClick={(): void => setFiltersOpen(!filtersOpen)}
+            icon="filter_alt"
+          >
+            FILTERS
+          </Button>
+          {filtersOpen && (
+            <Box className="drawerPosition" style={{  height: '300px', width: mapActionsWidth}}>
+              <Drawer dismissible open={filtersOpen}>
+                <DrawerHeader>
+                  <DrawerTitle>FILTERS</DrawerTitle>
+                  <DrawerSubtitle>Subtitle</DrawerSubtitle>
+                </DrawerHeader>
+                <DrawerContent>
+                  <div style={{backgroundColor: 'green', height: '100%', width:'100%'}}></div>
+                </DrawerContent>
+              </Drawer>
+
+            </Box>)
+          }
+
+          {resultsOpen && (
+            <Box className="drawerPosition" style={{  height: '600px', width: mapActionsWidth, zIndex:-1}}>
+              <Drawer dismissible open={resultsOpen}>
+                <DrawerHeader>
+                  <DrawerTitle>RESULTS</DrawerTitle>
+                  <DrawerSubtitle>Subtitle</DrawerSubtitle>
+                </DrawerHeader>
+                <DrawerContent>
+                  <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div>
+                </DrawerContent>
+              </Drawer>
+            </Box>)
+          }
+
+          <DrawerOpener
+            isOpen={resultsOpen}
+            onClick={setResultsOpen}
+          />
+
           {!!snackDetails.message && (
             <Snackbar
               open={snackOpen}
@@ -96,7 +147,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
             />
           )}
-        </>,
+      </>,
       ]}
       mapContent={
         /* eslint-disable */

@@ -7,16 +7,13 @@
 .filtersPosition {
   position: absolute;
   z-index: 1000;
-  left: 12px;
+  left: 24px;
   top: 12px;
 }
 
 body[dir='rtl'] .filtersPosition {
-  position: absolute;
-  z-index: 1000;
   left: unset;
-  right: 12px;
-  top: 12px;
+  right: 24px;
 }
 
 .filtersContainer {

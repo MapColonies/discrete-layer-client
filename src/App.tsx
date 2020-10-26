@@ -22,6 +22,7 @@ import '@map-colonies/react-core/dist/textfield/styles';
 import '@map-colonies/react-core/dist/snackbar/styles';
 import '@map-colonies/react-core/dist/icon/styles';
 import '@map-colonies/react-core/dist/linear-progress/styles';
+import '@map-colonies/react-core/dist/drawer/styles';
 
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
@@ -31,7 +32,7 @@ const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   // eslint-disable-next-line
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
-  const theme = prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
+  const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
 
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);

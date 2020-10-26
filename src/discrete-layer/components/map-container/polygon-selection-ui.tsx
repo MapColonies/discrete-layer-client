@@ -1,15 +1,11 @@
 import React from 'react';
 import { Polygon } from 'geojson';
-import { Menu, MenuItem, Button, Tooltip } from '@map-colonies/react-core';
-import '@map-colonies/react-core/dist/button/styles';
-import '@map-colonies/react-core/dist/tooltip/styles';
-import '@map-colonies/react-core/dist/menu/styles';
-
+import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-
 import { Box, DrawType } from '@map-colonies/react-components';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { DialogBBox } from './dialog-bbox';
+import './polygon-selection-ui.css';
 
 const WIDTH_SPACING_FACTOR = 18;
 const useStyle = makeStyles((theme: Theme) =>
@@ -19,17 +15,18 @@ const useStyle = makeStyles((theme: Theme) =>
     },
     fullWidth: {
       width: '100%',
-      marginTop: '36px',
     },
   })
 );
 
 export interface PolygonSelectionUiProps {
   isSelectionEnabled: boolean;
+  mapActionsWidth: string;
   onStartDraw: (type: DrawType) => void;
   onCancelDraw: () => void;
   onReset: () => void;
   onPolygonUpdate: (polygon: Polygon) => void;
+  handleOtherDrawers: () => void;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
@@ -37,17 +34,21 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
 ) => {
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const intl = useIntl();
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const {
     isSelectionEnabled,
     onCancelDraw,
     onStartDraw,
     onReset,
     onPolygonUpdate,
+    handleOtherDrawers,
+    mapActionsWidth,
   } = props;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
+    setMenuOpen(!menuOpen);
+    handleOtherDrawers();
   };
 
   const handleClose = (): void => {
@@ -58,68 +59,83 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
 
   if (isSelectionEnabled) {
     return (
-      <Tooltip
-        content={intl.formatMessage({
-          id: 'polygon-selection.cancel-btn.tooltip',
-        })}
-        align={'bottomLeft'}
-      >
-        <Button className={classes.drawingButton} raised onClick={onCancelDraw}>
-          <FormattedMessage id="polygon-selection.cancel-btn.text" />
-        </Button>
-      </Tooltip>
+      <Button className={classes.drawingButton} raised onClick={onCancelDraw}>
+        <FormattedMessage id="polygon-selection.cancel-btn.text" />
+      </Button>
     );
   } else {
     return (
       <Box position="relative">
-        <Tooltip
-          content={intl.formatMessage({
-            id: 'polygon-selection.draw-btn.tooltip',
-          })}
-          align={'bottomLeft'}
+        <Button
+          className={classes.drawingButton}
+          outlined
+          theme={['primaryBg', 'onPrimary']}
+          onClick={handleClick}
+          icon="category"
         >
-          <Button
-            className={classes.drawingButton}
-            raised
-            onClick={handleClick}
-          >
-            <FormattedMessage id="polygon-selection.draw-btn.text" />
-          </Button>
-        </Tooltip>
+          <FormattedMessage id="polygon-selection.draw-btn.text" />
+        </Button>
         <DialogBBox
           isOpen={open}
           onSetOpen={setOpen}
           onPolygonUpdate={onPolygonUpdate}
         ></DialogBBox>
-        <Menu
-          className={classes.fullWidth}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
+        <Box style={{
+          height:'210px', 
+          width: mapActionsWidth}}
+          className="drawerContainer"
         >
-          <MenuItem
-            onClick={(): void => {
-              onStartDraw(DrawType.BOX);
-              handleClose();
-            }}
-          >
-            <FormattedMessage id="polygon-selection.box-menu_option.text" />
-          </MenuItem>
-          <MenuItem
-            onClick={(): void => {
-              setOpen(true);
-            }}
-          >
-            <FormattedMessage id="polygon-selection.box_coorinate-menu_option.text" />
-          </MenuItem>
-          <MenuItem
-            onClick={(): void => {
-              onReset();
-              handleClose();
-            }}
-          >
-            <FormattedMessage id="polygon-selection.clear-menu_option.text" />
-          </MenuItem>
-        </Menu>
+          <Drawer dismissible style={{width:'100%'}} open={Boolean(anchorEl) && menuOpen}>
+            <DrawerContent >
+              <List>
+                <ListItem
+                  onClick={(): void => {
+                    onStartDraw(DrawType.BOX);
+                    handleClose();
+                  }}
+                >
+                  <ListItemGraphic icon="crop_square" />
+                  <ListItemText>
+                    <FormattedMessage id="polygon-selection.box-menu_option.text" />
+                  </ListItemText>
+                </ListItem>
+                <ListItem
+                  onClick={(): void => {
+                    onStartDraw(DrawType.POLYGON);
+                    handleClose();
+                  }}
+                >
+                  <ListItemGraphic icon="format_shapes" />
+                  <ListItemText>
+                    <FormattedMessage id="polygon-selection.polygon-menu_option.text" />
+                  </ListItemText>
+                </ListItem>
+                <ListItem
+                  onClick={(): void => {
+                    setOpen(true);
+                    handleClose();
+                  }}
+                >
+                  <ListItemGraphic icon="settings_overscan" />
+                  <ListItemText>
+                    <FormattedMessage id="polygon-selection.box_coorinate-menu_option.text" />
+                  </ListItemText>
+                </ListItem>
+                <ListItem
+                  onClick={(): void => {
+                    onReset();
+                    handleClose();
+                  }}
+                >
+                  <ListItemGraphic icon="delete" />
+                    <ListItemText>
+                      <FormattedMessage id="polygon-selection.clear-menu_option.text" />
+                    </ListItemText>
+                  </ListItem>
+              </List>
+            </DrawerContent>
+          </Drawer>
+        </Box>
       </Box>
     );
   }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Polygon } from 'geojson';
 import { DrawType } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { MapWrapper } from './map-wrapper';
 import './map-container.css';
@@ -8,6 +9,8 @@ import './map-container.css';
 export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
   handlePolygonReset: () => void;
+  handleOtherDrawers: () => void;
+  mapActionsWidth: string;
   mapContent?: React.ReactNode;
   filters?: React.ReactNode[];
 }
@@ -15,7 +18,8 @@ export interface MapContainerProps {
 export const MapContainer: React.FC<MapContainerProps> = (props) => {
   const [drawType, setDrawType] = useState<DrawType>();
   const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
-
+  const theme = useTheme();
+  
   const onPolygonSelection = (polygon: Polygon): void => {
     setSelectionPolygon(polygon);
     setDrawType(undefined);
@@ -29,7 +33,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 
   return (
     <div className="map">
-      <div className="filtersPosition">
+      <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
         <div className="filtersContainer">
           <PolygonSelectionUi
             onCancelDraw={(): void => setDrawType(undefined)}
@@ -37,6 +41,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
             onStartDraw={setDrawType}
             isSelectionEnabled={drawType !== undefined}
             onPolygonUpdate={onPolygonSelection}
+            mapActionsWidth = {props.mapActionsWidth}
+            handleOtherDrawers={props.handleOtherDrawers}
           />
           {props.filters?.map((filter, index) => (
             <div key={index} className="filtersMargin">

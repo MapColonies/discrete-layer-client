@@ -8,6 +8,7 @@
   "polygon-selection.cancel-btn.text": "Cancel Draw",
   "polygon-selection.draw-btn.text": "Draw AOI",
   "polygon-selection.box-menu_option.text": "Box",
+  "polygon-selection.polygon-menu_option.text": "Polygon",
   "polygon-selection.box_coorinate-menu_option.text": "Box by coordinates",
   "polygon-selection.clear-menu_option.text": "Clear",
 
