@@ -12,7 +12,8 @@ import {
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
-import { useIntl } from 'react-intl';
+import { DateTimeRangePickerFormControl, SupportedLocales } from '@map-colonies/react-components';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
 import CONFIG from '../../common/config';
@@ -97,17 +98,34 @@ const DiscreteLayerView: React.FC = observer(() => {
             onClick={(): void => setFiltersOpen(!filtersOpen)}
             icon="filter_alt"
           >
-            FILTERS
+            <FormattedMessage id="filters.title" />
           </Button>
           {filtersOpen && (
             <Box className="drawerPosition" style={{  height: '300px', width: mapActionsWidth}}>
               <Drawer dismissible open={filtersOpen}>
                 <DrawerHeader>
-                  <DrawerTitle>FILTERS</DrawerTitle>
-                  <DrawerSubtitle>Subtitle</DrawerSubtitle>
+                  <DrawerTitle>
+                    <FormattedMessage id="filters.title" />
+                  </DrawerTitle>
+                  <DrawerSubtitle>
+                    <FormattedMessage id="filters.sub-title" />
+                  </DrawerSubtitle>
                 </DrawerHeader>
-                <DrawerContent>
-                  <div style={{backgroundColor: 'green', height: '100%', width:'100%'}}></div>
+                <DrawerContent style={{padding: '0px 16px'}}>
+                  <DateTimeRangePickerFormControl 
+                    width={'100%'} 
+                    renderAsButton={false} 
+                    onChange={(dateRange): void => {
+                      console.log('DateTimeRangePickerFormControl--->',dateRange.from, dateRange.to);
+                    }}
+                    local={{
+                      setText: intl.formatMessage({ id: 'filters.date-picker.set-btn.text' }),
+                      startPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.start-time.label' }),
+                      endPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.end-time.label' }),
+                      calendarLocale: SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]
+                    }}
+                  />
+                  {/* <div style={{backgroundColor: 'green', height: '100%', width:'100%'}}></div> */}
                 </DrawerContent>
               </Drawer>
 
