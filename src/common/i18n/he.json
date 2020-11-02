@@ -20,6 +20,12 @@
   "custom-bbox.form-error.x-distance.text": "ארך מעל המותר",
   "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
 
+  "filters.title": "מסננים",
+  "filters.sub-title": " ",
+  "filters.date-picker.set-btn.text": "אישור",
+  "filters.date-picker.start-time.label": "זמן התחלה",
+  "filters.date-picker.end-time.label": "זמן סיום",
+
   "snack.message.success": "יצוא התחיל בהצלחה",
   "snack.message.failed": "יצוא ניכשל",
   "snack.dismiss-btn.text": "אישור"
