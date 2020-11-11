@@ -20,7 +20,8 @@ import CONFIG from '../../common/config';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
 import './discrete-layer-view.css';
-import { GridComponent } from '../components/grid';
+import { GridComponent } from '../../common/components/grid';
+import { LayersResultsComponent } from '../components/layers-results/layers-results';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
@@ -141,7 +142,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                   <DrawerSubtitle>Subtitle</DrawerSubtitle>
                 </DrawerHeader>
                 <DrawerContent>
-                  <GridComponent></GridComponent>
+                  {/* <GridComponent></GridComponent> */}
+                  <LayersResultsComponent 
+                    style={{height: '450px',width: '100%'}}
+                  />
                   {/* <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div> */}
                 </DrawerContent>
               </Drawer>

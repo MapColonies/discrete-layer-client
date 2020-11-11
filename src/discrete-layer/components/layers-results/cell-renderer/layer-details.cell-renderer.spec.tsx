@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ICellRendererParams, Column, RowNode, GridApi, ColumnApi } from 'ag-grid-community';
-import { LinkRenderer } from './link.cell-renderer';
+import { LayerDetailsRenderer } from './layer-details.cell-renderer';
 
 /* eslint-disable */
 const mockDataBase:ICellRendererParams = {
