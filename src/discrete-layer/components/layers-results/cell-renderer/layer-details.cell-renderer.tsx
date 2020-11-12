@@ -52,27 +52,27 @@ const detailsPropsLayout = new Array<DetailsProp[]>(
   ],
   [
     {
-      propName: 'collected',
+      propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
       formater: dateRenderer,
     },
     {
-      propName: 'collected',
+      propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
       formater: dateRenderer,
     },
     {
-      propName: 'collected',
+      propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
       formater: dateRenderer,
     },
     {
-      propName: 'collected',
+      propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
       formater: dateRenderer,
     },
     {
-      propName: 'collected',
+      propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
       formater: dateRenderer,
     },

@@ -1,21 +1,22 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
 import { Icon } from '@map-colonies/react-core';
 import { useTheme } from '@map-colonies/react-core';
 import './details-expander.cell-renderer.css';
+import { IGridRowDataDetailsExt } from '..';
 
 export const DetailsExanderRenderer: React.FC<ICellRendererParams> = (
   props
 ) => {
-  const value: boolean = (props.data as any).isVisible; 
+  const value: boolean = (props.data as IGridRowDataDetailsExt).isVisible; 
   const theme = useTheme();
   
-  const handleCollapseExpand = () => {
+  const handleCollapseExpand = (): void => {
     console.log('handleCollapseExpand');
-    const rowNode = props.api.getRowNode(props.data.id + '_details');
-    rowNode.setDataValue('isVisible', !rowNode.data.isVisible);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const rowNode = props.api.getRowNode(`${props.data?.id as string}_details`);
+    rowNode.setDataValue('isVisible', !(rowNode.data as IGridRowDataDetailsExt).isVisible);
     props.api.onFilterChanged();
   };
 

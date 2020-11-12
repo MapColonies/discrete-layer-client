@@ -23,7 +23,7 @@ export const discreteLayersStore = types
       Object.values(ResponseState)
     ),
     searchParams: types.optional(searchParams, {}),
-    layersImages: types.maybe(types.frozen<any>([])),
+    layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
   })
   .views((self) => ({
     get root(): IRootStore {

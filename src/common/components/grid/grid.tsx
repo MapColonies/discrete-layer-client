@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { Box } from '@map-colonies/react-components';
 import { AgGridReact } from 'ag-grid-react';
@@ -5,12 +6,13 @@ import {
   GridReadyEvent,
   GridApi,
   GridOptions,
+  RowNode,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { DetailsExanderRenderer } from './cell-renderer/details-expander.cell-renderer';
 
-export interface GridComponentOptions extends GridOptions {};
+const DFAULT_DTAILS_ROW_HEIGHT = 150;
 
 interface GridComponentProps {
   gridOptions?: GridComponentOptions;
@@ -18,34 +20,26 @@ interface GridComponentProps {
   style?: CSSProperties;
 }
 
+export interface GridComponentOptions extends GridOptions {
+  detailsRowCellRenderer?: string;
+  detailsRowHeight?: number;
+};
+export interface IGridRowDataDetailsExt {
+  rowHeight: number;
+  fullWidth: boolean;
+  isVisible: boolean;
+}
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [gridApi, setGridApi] = useState<GridApi>();
   const [rowData, setRowData] = useState<any[]>();
-
-  useEffect(()=>{
-    const result: any[] = [];
-    props.rowData?.forEach((element,idx) => {
-      result.push({
-        ...element,
-        isVisible:true
-      });
-      result.push({
-        ...element, 
-        fullWidth: true,
-        id: element.id.toString() + '_details',
-        isVisible: false,
-        rowHeight: 150
-      });
-    });
-    setRowData(result);
-  },[props.rowData]);
   
+
   const onGridReady = (params: GridReadyEvent): void => {
     setGridApi(params.api);
   };
 
-  const gridOptions: GridOptions = {
+  const gridOptionsFromProps: GridComponentOptions = {
     ...props.gridOptions,
     onGridReady: onGridReady,
     columnDefs: [
@@ -54,18 +48,62 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
         hide: true,
       },
       ...props.gridOptions?.columnDefs as [],
-      {
-        headerName: '',
-        width: 60,
-        cellRenderer: 'detailsExanderRenderer',
-        suppressMovable: true,
-      },
+      props.gridOptions?.detailsRowCellRenderer !== undefined ? 
+        {
+          headerName: '',
+          width: 60,
+          cellRenderer: 'detailsExanderRenderer',
+          suppressMovable: true,
+        } : 
+        {
+          hide: true,
+        },
    ],
+   getRowHeight: props.gridOptions?.detailsRowCellRenderer !== undefined ? (params: RowNode): number => {
+    return (params.data as IGridRowDataDetailsExt).rowHeight;
+   } : undefined,
+   isExternalFilterPresent: props.gridOptions?.detailsRowCellRenderer !== undefined ? (): boolean => true : undefined,
+   doesExternalFilterPass: props.gridOptions?.detailsRowCellRenderer !== undefined ? (node): boolean => {
+      return (node.data as IGridRowDataDetailsExt).isVisible;
+      //return gridOptions.api.getValue("isVisible", node.rowNode);
+    } : undefined,
+    isFullWidthCell: props.gridOptions?.detailsRowCellRenderer !== undefined ? (rowNode): boolean => {
+      // checked the fullWidth attribute that was set while creating the data
+      return (rowNode.data as IGridRowDataDetailsExt).fullWidth;
+    } : undefined,
+    fullWidthCellRenderer: props.gridOptions?.detailsRowCellRenderer ?? undefined,
+
    frameworkComponents: {
     ...props.gridOptions?.frameworkComponents as {[key: string]: any},
     detailsExanderRenderer: DetailsExanderRenderer,
    }
   };
+
+  const {detailsRowCellRenderer, detailsRowHeight, ...gridOptions} = gridOptionsFromProps;
+
+  useEffect(()=>{
+    const result: any[] = [];
+    if(props.gridOptions?.detailsRowCellRenderer !== undefined){
+      props.rowData?.forEach((element,idx) => {
+        result.push({
+          ...element,
+          isVisible:true
+        });
+        result.push({
+          ...element, 
+          fullWidth: true,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          id: `${element.id as string}_details`,
+          isVisible: false,
+          rowHeight: props.gridOptions?.detailsRowHeight ?? DFAULT_DTAILS_ROW_HEIGHT,
+        });
+      });
+    }
+    else {
+      result.push(...(props.rowData as []));
+    }
+    setRowData(result);
+  },[props.rowData, props.gridOptions]);
 
   return (
     <Box

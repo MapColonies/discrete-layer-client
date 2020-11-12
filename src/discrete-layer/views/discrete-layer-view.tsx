@@ -14,14 +14,13 @@ import { observer } from 'mobx-react-lite';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { DateTimeRangePickerFormControl, SupportedLocales } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { ResponseState } from '../../common/models/response-state.enum';
+import CONFIG from '../../common/config';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
-import CONFIG from '../../common/config';
-import { ResponseState } from '../../common/models/response-state.enum';
 import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
-import './discrete-layer-view.css';
-import { GridComponent } from '../../common/components/grid';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
+import './discrete-layer-view.css';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
@@ -142,7 +141,6 @@ const DiscreteLayerView: React.FC = observer(() => {
                   <DrawerSubtitle>Subtitle</DrawerSubtitle>
                 </DrawerHeader>
                 <DrawerContent>
-                  {/* <GridComponent></GridComponent> */}
                   <LayersResultsComponent 
                     style={{height: '450px',width: '100%'}}
                   />

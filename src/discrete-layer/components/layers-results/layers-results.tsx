@@ -1,28 +1,29 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { GridComponent, GridComponentOptions } from '../../../common/components/grid';
+import { ILayerImage } from '../../models/layerImage';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 
-const createMockData = (count: number, prefix: string) => {
-  const rowData = [];
+const createMockData = (count: number, prefix: string): ILayerImage[] => {
+  const rowData: ILayerImage[] = [];
   for (let i = 0; i < count; i++) {
-    const item: any = {};
-
-    // item.isVisible = true;
-    item.id = i;
-    // put in a column for each letter of the alphabet
-    item.name = prefix + ' ("name",' + i + ')';
-    item.collected = new Date();
-    
-    rowData.push(item);
-    // rowData.push({
-    //   ...item, 
-    //   fullWidth: true,
-    //   id: i.toString() + '_details',
-    //   isVisible: false,
-    //   rowHeight: 150
-    // });
-
+    rowData.push({
+      id: i.toString(),
+      name: `${prefix}  ("name",${i})`,
+      creationDate: new Date(),
+      description: '',
+      geojson: {
+        type: 'Polygon',
+        coordinates: [[[]]],
+      },
+      referenceSystem: '',
+      imagingTimeStart: new Date(),
+      imagingTimeEnd: new Date(),
+      type: '',
+      source: '',
+      category: '',
+      thumbnail: '',
+    });
   }
   return rowData;
 };
@@ -34,50 +35,37 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
-const rowData = createMockData(100, 'body');
-const colDef = [
-  {
-    headerName: 'Name',
-    width: 200,
-    field: 'name',
-    suppressMovable: true,
-  },
-  {
-    headerName: 'Collected',
-    width: 120,
-    field: 'collected',
-    suppressMovable: true,
-  }
-];
-
+const rowData = createMockData(pageSize * pageSize, 'body');
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (props) => {
   const intl = useIntl();
-
+  const colDef = [
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.name.label',
+      }),
+      width: 200,
+      field: 'name',
+      suppressMovable: true,
+    },
+    {
+      headerName:  intl.formatMessage({
+        id: 'results.fields.creation-date.label',
+      }),
+      width: 120,
+      field: 'creationDate',
+      suppressMovable: true,
+    }
+  ];
   const gridOptions: GridComponentOptions = {
-    // onGridReady: onGridReady,
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,
-    getRowNodeId: (data) => {
+    getRowNodeId: (data: ILayerImage) => {
       return data.id;
     },
-    getRowHeight: (params: any) => {
-      return params.data.rowHeight;
-    },
-    isFullWidthCell: (rowNode) => {
-      // in this example, we check the fullWidth attribute that we set
-      // while creating the data. what check you do to decide if you
-      // want a row full width is up to you, as long as you return a boolean
-      // for this method.
-      return rowNode.data.fullWidth;
-    },
-    isExternalFilterPresent: () => {return true;},
-    doesExternalFilterPass: (node) => {
-      return node.data.isVisible;
-      //return gridOptions.api.getValue("isVisible", node.rowNode);
-    },
-    fullWidthCellRenderer: 'detailsRenderer',
+    detailsRowCellRenderer: 'detailsRenderer',
+    detailsRowHeight: 150,
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
