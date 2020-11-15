@@ -10,7 +10,7 @@ import {
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { DetailsExanderRenderer } from './cell-renderer/details-expander.cell-renderer';
+import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
 export const DETAILS_ROW_ID_SUFFIX = '_details';
@@ -53,7 +53,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
         {
           headerName: '',
           width: 60,
-          cellRenderer: 'detailsExanderRenderer',
+          cellRenderer: 'detailsExpanderRenderer',
           suppressMovable: true,
         } : 
         {
@@ -76,7 +76,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
 
    frameworkComponents: {
     ...props.gridOptions?.frameworkComponents as {[key: string]: any},
-    detailsExanderRenderer: DetailsExanderRenderer,
+    detailsExpanderRenderer: DetailsExpanderRenderer,
    }
   };
 

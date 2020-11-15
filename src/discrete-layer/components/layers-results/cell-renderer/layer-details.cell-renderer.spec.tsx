@@ -10,10 +10,13 @@ const mockDataBase:ICellRendererParams = {
   getValue: () => {},
   setValue: () => {},
   formatValue: () => {},
-  data: {link: ''} as any,
+  data: {
+    name: '',
+    creationDate: new Date('Sun Nov 15 2020 18:06:06 GMT+0200'),
+  } as any,
   node: new RowNode(),
   colDef: {},
-  column: new Column({},null,'link',false),
+  column: new Column({},null,'name',false),
   $scope: null,
   rowIndex: 1,
   api: new GridApi(),
@@ -26,49 +29,32 @@ const mockDataBase:ICellRendererParams = {
 };
 /* eslint-enable */
 
-// describe('AgGrid LinkRenderer component', () => {
-//   it('renders correctly', () => {
-//     const mockData = {
-//       ...mockDataBase
-//     };
+const NUM_SPAN_PER_FIELD = 2;
+const NUM_FIEDLS = 10;
 
-//     const wrapper = shallow(
-//       <LinkRenderer {...mockData} />
-//     );
+describe('AgGrid LayerDetailsRenderer component', () => {
+  it('renders correctly', () => {
+    const mockData = {
+      ...mockDataBase
+    };
 
-//     expect(wrapper).toMatchSnapshot();
-//   });
+    const wrapper = shallow(
+      <LayerDetailsRenderer {...mockData} />
+    );
 
-//   it('value of link rendered as href', () => {
-//     const value = 'http://kuku.com/1';
-//     const mockData = {
-//       ...mockDataBase,
-//       value,
-//       data: { link: value },
-//     };
+    expect(wrapper).toMatchSnapshot();
+  });
 
-//     const wrapper = shallow(
-//       <LinkRenderer {...mockData} />
-//     );
-    
-//     const linkContainer = wrapper.find('a');
-//     expect(linkContainer.props().href).toBe(value);
-//   });
+  it('data fields presented as TOTAL_PARTS = NUM_SPAN_PER_FIELD * NUM_FIEDLS', () => {
+    const mockData = {
+      ...mockDataBase
+    };
 
-//   it('empty link value not renders an <a>', () => {
-//     const value = '';
-//     const mockData = {
-//       ...mockDataBase,
-//       value,
-//       data: { link: value },
-//     };
+    const wrapper = shallow(
+      <LayerDetailsRenderer {...mockData} />
+    );
 
-//     const wrapper = shallow(
-//       <LinkRenderer {...mockData} />
-//     );
-    
-//     const linkContainer = wrapper.find('a');
-//     expect(linkContainer).toEqual({});
-//   });
-
-// });
+    const spans = wrapper.find('span');
+    expect(spans).toHaveLength(NUM_SPAN_PER_FIELD * NUM_FIEDLS);
+  });
+});

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AgGrid DetailsExanderRenderer component renders correctly 1`] = `
+exports[`AgGrid DetailsExpanderRenderer component renders correctly 1`] = `
 <Component
   className="expanderContainer"
   onClick={[Function]}

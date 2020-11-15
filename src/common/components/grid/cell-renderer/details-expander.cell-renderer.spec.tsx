@@ -1,9 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ICellRendererParams, Column, RowNode, GridApi, ColumnApi } from 'ag-grid-community';
-import { DetailsExanderRenderer } from './details-expander.cell-renderer';
-import { Icon } from '@map-colonies/react-core';
+import { DETAILS_ROW_ID_SUFFIX } from '../grid';
+import { DetailsExpanderRenderer } from './details-expander.cell-renderer';
 
+const ID = '1';
 /* eslint-disable */
 const mockDataBase:ICellRendererParams = {
   value: '',
@@ -11,7 +12,10 @@ const mockDataBase:ICellRendererParams = {
   getValue: () => {},
   setValue: () => {},
   formatValue: () => {},
-  data: {isVisible:true },
+  data: {
+    isVisible:true,
+    id: ID, 
+  },
   node: new RowNode(),
   colDef: {},
   column: new Column({},null,'isVisible',true),
@@ -27,41 +31,43 @@ const mockDataBase:ICellRendererParams = {
 };
 /* eslint-enable */
 
-describe('AgGrid DetailsExanderRenderer component', () => {
+describe('AgGrid DetailsExpanderRenderer component', () => {
   it('renders correctly', () => {
     const mockData = {
       ...mockDataBase
     };
 
     const wrapper = shallow(
-      <DetailsExanderRenderer {...mockData} />
+      <DetailsExpanderRenderer {...mockData} />
     );
 
     expect(wrapper).toMatchSnapshot();
   });
 
   it('when component clicked detail row was found in grid rowdata', () => {
-    const value='1';
     const mockData = {
       ...mockDataBase,
-      value,
-      data: { id: '1' },
     };
 
-    const spyGetRonNode = jest.spyOn(mockData.api, 'getRowNode');
+    // eslint-disable-next-line
+    jest.spyOn(mockData.api, 'onFilterChanged').mockImplementation(() => {});
+    const spyGetRonNode = jest.spyOn(mockData.api, 'getRowNode').mockImplementation(() => {
+      const val = new RowNode();
+      // eslint-disable-next-line
+      val.setDataValue = (propName, val) => {};
+      val.data = {
+        isVisible: false
+      };
+      return val;
+    });
 
     const wrapper = shallow(
-      <DetailsExanderRenderer {...mockData} />
+      <DetailsExpanderRenderer {...mockData} />
     );
-
-    wrapper.update();
     
-    const fieldWrapper = wrapper.find(Icon);
-    console.log(fieldWrapper, '------', fieldWrapper.length, '---', wrapper.text()); 
-
-    const iconContainer = wrapper.find(Icon);
+    const iconContainer = wrapper.find('.expanderContainer');
     iconContainer.simulate('click');
-    expect(spyGetRonNode).toHaveBeenCalled();
+    expect(spyGetRonNode).toHaveBeenCalledWith(`${ID}${DETAILS_ROW_ID_SUFFIX}`);
   });
 
 });

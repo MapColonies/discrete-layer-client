@@ -26,7 +26,7 @@ export interface PolygonSelectionUiProps {
   onCancelDraw: () => void;
   onReset: () => void;
   onPolygonUpdate: (polygon: Polygon) => void;
-  handleOtherDrawers: () => void;
+  handleOtherDrawers?: () => void;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
@@ -48,7 +48,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
     setMenuOpen(!menuOpen);
-    handleOtherDrawers();
+    if(handleOtherDrawers) handleOtherDrawers();
   };
 
   const handleClose = (): void => {

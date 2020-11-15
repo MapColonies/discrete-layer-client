@@ -6,7 +6,7 @@ import { useTheme } from '@map-colonies/react-core';
 import { DETAILS_ROW_ID_SUFFIX, IGridRowDataDetailsExt } from '../grid';
 import './details-expander.cell-renderer.css';
 
-export const DetailsExanderRenderer: React.FC<ICellRendererParams> = (
+export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (
   props
 ) => {
   const value: boolean = (props.data as IGridRowDataDetailsExt).isVisible; 

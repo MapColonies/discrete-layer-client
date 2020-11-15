@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { DrawType } from '@map-colonies/react-components';
-import { MenuItem, Menu, Button } from '@map-colonies/react-core';
+import { Button, Drawer, ListItemText } from '@map-colonies/react-core';
 // eslint-disable-next-line
 import '../../../__mocks__/confEnvShim';
 import { PolygonSelectionUi } from './polygon-selection-ui';
@@ -63,11 +63,9 @@ describe('Polygon Selection component', () => {
       />
     );
 
-    expect(wrapper.find(Menu).prop('open')).toBe(false);
-
     wrapper.find(Button).simulate('click', { currentTarget: {} });
 
-    expect(wrapper.find(Menu).prop('open')).toBe(true);
+    expect(wrapper.find(Drawer).prop('open')).toBe(true);
   });
 
   it('Box drawing menu items call start draw with correct params on click and closes the menu', () => {
@@ -85,17 +83,16 @@ describe('Polygon Selection component', () => {
 
     openMenuButton.simulate('click', { currentTarget: {} });
 
-    wrapper
+    const item = wrapper
       .findWhere((n) => {
         return (
-          n.type() === MenuItem &&
+          n.type() === ListItemText &&
           n.prop('children').props['id'] ===
             'polygon-selection.box-menu_option.text'
         );
-      })
-      .simulate('click');
+      });
+    item.parent().simulate('click');
 
-    expect(wrapper.find(Menu).prop('open')).toBe(false);
     expect(startDraw).toHaveBeenCalledWith(DrawType.BOX);
     expect(startDraw).toHaveBeenCalledTimes(1);
   });
@@ -114,17 +111,16 @@ describe('Polygon Selection component', () => {
     const openMenuButton = wrapper.find(Button);
     openMenuButton.simulate('click', { currentTarget: {} });
 
-    wrapper
+    const item = wrapper
       .findWhere((n) => {
         return (
-          n.type() === MenuItem &&
+          n.type() === ListItemText &&
           n.prop('children').props['id'] ===
             'polygon-selection.box_coorinate-menu_option.text'
         );
-      })
-      .simulate('click');
+      });
+    item.parent().simulate('click');
 
-    // expect(wrapper.find(Menu).prop('open')).toBe(false);
     expect(wrapper.find(DialogBBox).prop('isOpen')).toBe(true);
   });
 
@@ -142,17 +138,17 @@ describe('Polygon Selection component', () => {
     const openMenuButton = wrapper.find(Button);
     openMenuButton.simulate('click', { currentTarget: {} });
 
-    wrapper
+    const item = wrapper
       .findWhere((n) => {
         return (
-          n.type() === MenuItem &&
+          n.type() === ListItemText &&
           n.prop('children').props['id'] ===
             'polygon-selection.clear-menu_option.text'
         );
-      })
-      .simulate('click');
+      });
+    item.parent().simulate('click');
 
-    expect(wrapper.find(Menu).prop('open')).toBe(false);
+    // expect(wrapper.find(Menu).prop('open')).toBe(false);
     expect(resetDraw).toHaveBeenCalledTimes(1);
   });
 
