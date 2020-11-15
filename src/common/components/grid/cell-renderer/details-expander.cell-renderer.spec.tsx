@@ -1,7 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ICellRendererParams, Column, RowNode, GridApi, ColumnApi } from 'ag-grid-community';
-import { LinkRenderer } from './link.cell-renderer';
+import { DetailsExanderRenderer } from './details-expander.cell-renderer';
+import { Icon } from '@map-colonies/react-core';
 
 /* eslint-disable */
 const mockDataBase:ICellRendererParams = {
@@ -10,10 +11,10 @@ const mockDataBase:ICellRendererParams = {
   getValue: () => {},
   setValue: () => {},
   formatValue: () => {},
-  data: {link: ''} as any,
+  data: {isVisible:true },
   node: new RowNode(),
   colDef: {},
-  column: new Column({},null,'link',false),
+  column: new Column({},null,'isVisible',true),
   $scope: null,
   rowIndex: 1,
   api: new GridApi(),
@@ -26,49 +27,41 @@ const mockDataBase:ICellRendererParams = {
 };
 /* eslint-enable */
 
-// describe('AgGrid LinkRenderer component', () => {
-//   it('renders correctly', () => {
-//     const mockData = {
-//       ...mockDataBase
-//     };
+describe('AgGrid DetailsExanderRenderer component', () => {
+  it('renders correctly', () => {
+    const mockData = {
+      ...mockDataBase
+    };
 
-//     const wrapper = shallow(
-//       <LinkRenderer {...mockData} />
-//     );
+    const wrapper = shallow(
+      <DetailsExanderRenderer {...mockData} />
+    );
 
-//     expect(wrapper).toMatchSnapshot();
-//   });
+    expect(wrapper).toMatchSnapshot();
+  });
 
-//   it('value of link rendered as href', () => {
-//     const value = 'http://kuku.com/1';
-//     const mockData = {
-//       ...mockDataBase,
-//       value,
-//       data: { link: value },
-//     };
+  it('when component clicked detail row was found in grid rowdata', () => {
+    const value='1';
+    const mockData = {
+      ...mockDataBase,
+      value,
+      data: { id: '1' },
+    };
 
-//     const wrapper = shallow(
-//       <LinkRenderer {...mockData} />
-//     );
+    const spyGetRonNode = jest.spyOn(mockData.api, 'getRowNode');
+
+    const wrapper = shallow(
+      <DetailsExanderRenderer {...mockData} />
+    );
+
+    wrapper.update();
     
-//     const linkContainer = wrapper.find('a');
-//     expect(linkContainer.props().href).toBe(value);
-//   });
+    const fieldWrapper = wrapper.find(Icon);
+    console.log(fieldWrapper, '------', fieldWrapper.length, '---', wrapper.text()); 
 
-//   it('empty link value not renders an <a>', () => {
-//     const value = '';
-//     const mockData = {
-//       ...mockDataBase,
-//       value,
-//       data: { link: value },
-//     };
+    const iconContainer = wrapper.find(Icon);
+    iconContainer.simulate('click');
+    expect(spyGetRonNode).toHaveBeenCalled();
+  });
 
-//     const wrapper = shallow(
-//       <LinkRenderer {...mockData} />
-//     );
-    
-//     const linkContainer = wrapper.find('a');
-//     expect(linkContainer).toEqual({});
-//   });
-
-// });
+});
