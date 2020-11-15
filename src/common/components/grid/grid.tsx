@@ -12,7 +12,8 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { DetailsExanderRenderer } from './cell-renderer/details-expander.cell-renderer';
 
-const DFAULT_DTAILS_ROW_HEIGHT = 150;
+const DEFAULT_DTAILS_ROW_HEIGHT = 150;
+export const DETAILS_ROW_ID_SUFFIX = '_details';
 
 interface GridComponentProps {
   gridOptions?: GridComponentOptions;
@@ -93,9 +94,9 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
           ...element, 
           fullWidth: true,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          id: `${element.id as string}_details`,
+          id: `${element.id as string}${DETAILS_ROW_ID_SUFFIX}`,
           isVisible: false,
-          rowHeight: props.gridOptions?.detailsRowHeight ?? DFAULT_DTAILS_ROW_HEIGHT,
+          rowHeight: props.gridOptions?.detailsRowHeight ?? DEFAULT_DTAILS_ROW_HEIGHT,
         });
       });
     }
