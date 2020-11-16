@@ -26,7 +26,7 @@ export interface PolygonSelectionUiProps {
   onCancelDraw: () => void;
   onReset: () => void;
   onPolygonUpdate: (polygon: Polygon) => void;
-  handleOtherDrawers: () => void;
+  handleOtherDrawers?: () => void;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
@@ -48,7 +48,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
     setMenuOpen(!menuOpen);
-    handleOtherDrawers();
+    if(handleOtherDrawers) handleOtherDrawers();
   };
 
   const handleClose = (): void => {
@@ -80,62 +80,65 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
           onSetOpen={setOpen}
           onPolygonUpdate={onPolygonUpdate}
         ></DialogBBox>
-        <Box style={{
-          height:'210px', 
-          width: mapActionsWidth}}
-          className="drawerContainer"
-        >
-          <Drawer dismissible style={{width:'100%'}} open={Boolean(anchorEl) && menuOpen}>
-            <DrawerContent >
-              <List>
-                <ListItem
-                  onClick={(): void => {
-                    onStartDraw(DrawType.BOX);
-                    handleClose();
-                  }}
-                >
-                  <ListItemGraphic icon="crop_square" />
-                  <ListItemText>
-                    <FormattedMessage id="polygon-selection.box-menu_option.text" />
-                  </ListItemText>
-                </ListItem>
-                <ListItem
-                  onClick={(): void => {
-                    onStartDraw(DrawType.POLYGON);
-                    handleClose();
-                  }}
-                >
-                  <ListItemGraphic icon="format_shapes" />
-                  <ListItemText>
-                    <FormattedMessage id="polygon-selection.polygon-menu_option.text" />
-                  </ListItemText>
-                </ListItem>
-                <ListItem
-                  onClick={(): void => {
-                    setOpen(true);
-                    handleClose();
-                  }}
-                >
-                  <ListItemGraphic icon="settings_overscan" />
-                  <ListItemText>
-                    <FormattedMessage id="polygon-selection.box_coorinate-menu_option.text" />
-                  </ListItemText>
-                </ListItem>
-                <ListItem
-                  onClick={(): void => {
-                    onReset();
-                    handleClose();
-                  }}
-                >
-                  <ListItemGraphic icon="delete" />
+        {menuOpen && (
+          <Box style={{
+            height:'210px', 
+            width: mapActionsWidth}}
+            className="drawerContainer"
+          >
+            <Drawer dismissible style={{width:'100%'}} open={Boolean(anchorEl) && menuOpen}>
+              <DrawerContent >
+                <List>
+                  <ListItem
+                    onClick={(): void => {
+                      onStartDraw(DrawType.BOX);
+                      handleClose();
+                    }}
+                  >
+                    <ListItemGraphic icon="crop_square" />
                     <ListItemText>
-                      <FormattedMessage id="polygon-selection.clear-menu_option.text" />
+                      <FormattedMessage id="polygon-selection.box-menu_option.text" />
                     </ListItemText>
                   </ListItem>
-              </List>
-            </DrawerContent>
-          </Drawer>
-        </Box>
+                  <ListItem
+                    onClick={(): void => {
+                      onStartDraw(DrawType.POLYGON);
+                      handleClose();
+                    }}
+                  >
+                    <ListItemGraphic icon="format_shapes" />
+                    <ListItemText>
+                      <FormattedMessage id="polygon-selection.polygon-menu_option.text" />
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem
+                    onClick={(): void => {
+                      setOpen(true);
+                      handleClose();
+                    }}
+                  >
+                    <ListItemGraphic icon="settings_overscan" />
+                    <ListItemText>
+                      <FormattedMessage id="polygon-selection.box_coorinate-menu_option.text" />
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem
+                    onClick={(): void => {
+                      onReset();
+                      handleClose();
+                    }}
+                  >
+                    <ListItemGraphic icon="delete" />
+                      <ListItemText>
+                        <FormattedMessage id="polygon-selection.clear-menu_option.text" />
+                      </ListItemText>
+                    </ListItem>
+                </List>
+              </DrawerContent>
+            </Drawer>
+            
+          </Box>)
+        }
       </Box>
     );
   }

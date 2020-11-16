@@ -26,6 +26,10 @@
   "filters.date-picker.start-time.label": "זמן התחלה",
   "filters.date-picker.end-time.label": "זמן סיום",
 
+  "results.fields.name.label": "שם",
+  "results.fields.creation-date.label": "תאריך יצירה",
+  "results.nodata": "אין תוצאות",
+
   "snack.message.success": "יצוא התחיל בהצלחה",
   "snack.message.failed": "יצוא ניכשל",
   "snack.dismiss-btn.text": "אישור"

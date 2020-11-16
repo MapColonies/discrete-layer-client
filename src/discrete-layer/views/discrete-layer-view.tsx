@@ -14,11 +14,12 @@ import { observer } from 'mobx-react-lite';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { DateTimeRangePickerFormControl, SupportedLocales } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { ResponseState } from '../../common/models/response-state.enum';
+import CONFIG from '../../common/config';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
-import CONFIG from '../../common/config';
-import { ResponseState } from '../../common/models/response-state.enum';
 import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
+import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import './discrete-layer-view.css';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
@@ -125,7 +126,6 @@ const DiscreteLayerView: React.FC = observer(() => {
                       calendarLocale: SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]
                     }}
                   />
-                  {/* <div style={{backgroundColor: 'green', height: '100%', width:'100%'}}></div> */}
                 </DrawerContent>
               </Drawer>
 
@@ -140,7 +140,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                   <DrawerSubtitle>Subtitle</DrawerSubtitle>
                 </DrawerHeader>
                 <DrawerContent>
-                  <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div>
+                  <LayersResultsComponent 
+                    style={{height: '450px',width: '100%'}}
+                  />
                 </DrawerContent>
               </Drawer>
             </Box>)

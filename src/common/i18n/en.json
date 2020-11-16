@@ -26,6 +26,10 @@
   "filters.date-picker.start-time.label": "Start of time",
   "filters.date-picker.end-time.label": "End of time",
 
+  "results.fields.name.label": "Name",
+  "results.fields.creation-date.label": "Created",
+  "results.nodata": "No results to show",
+
   "snack.message.success": "Export SUCCEEDED",
   "snack.message.failed": "Export FAILED",
   "snack.dismiss-btn.text": "Dismiss"

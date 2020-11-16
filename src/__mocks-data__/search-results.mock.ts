@@ -1,22 +1,25 @@
-const MOCK_SEARCH_RESULTS = [
-  {
-    fileName: 'kuku',
-    sizeEst: 23,
-    tilesEst: 120,
-    status: 'FINISHED',
-    link: 'https://packages/kuku.gpkg',
-    date: new Date('2020-10-01T03:24:00'),
-    progress: 100,
-  },
-  {
-    fileName: 'muku',
-    sizeEst: 345,
-    tilesEst: 2000,
-    status: 'INPROGRESS',
-    link: 'https://packages/muku.gpkg',
-    date: new Date('2020-09-30T02:24:00'),
-    progress: 80,
-  },
-];
+import { ILayerImage } from "../discrete-layer/models/layerImage";
 
-export default MOCK_SEARCH_RESULTS;
+export const createMockData = (count: number, prefix: string): ILayerImage[] => {
+  const rowData: ILayerImage[] = [];
+  for (let i = 0; i < count; i++) {
+    rowData.push({
+      id: i.toString(),
+      name: `${prefix}  ("name",${i})`,
+      creationDate: new Date(),
+      description: '',
+      geojson: {
+        type: 'Polygon',
+        coordinates: [[[]]],
+      },
+      referenceSystem: '',
+      imagingTimeStart: new Date(),
+      imagingTimeEnd: new Date(),
+      type: '',
+      source: '',
+      category: '',
+      thumbnail: '',
+    });
+  }
+  return rowData;
+};
