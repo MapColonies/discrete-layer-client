@@ -13,6 +13,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
+const EXPANDER_COLUMN_WIDTH = 60;
 export const DETAILS_ROW_ID_SUFFIX = '_details';
 
 interface GridComponentProps {
@@ -52,7 +53,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       props.gridOptions?.detailsRowCellRenderer !== undefined ? 
         {
           headerName: '',
-          width: 60,
+          width: EXPANDER_COLUMN_WIDTH,
           cellRenderer: 'detailsExpanderRenderer',
           suppressMovable: true,
         } : 

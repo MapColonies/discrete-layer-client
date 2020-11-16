@@ -148,7 +148,6 @@ describe('Polygon Selection component', () => {
       });
     item.parent().simulate('click');
 
-    // expect(wrapper.find(Menu).prop('open')).toBe(false);
     expect(resetDraw).toHaveBeenCalledTimes(1);
   });
 

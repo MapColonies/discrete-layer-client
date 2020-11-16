@@ -126,7 +126,6 @@ const DiscreteLayerView: React.FC = observer(() => {
                       calendarLocale: SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]
                     }}
                   />
-                  {/* <div style={{backgroundColor: 'green', height: '100%', width:'100%'}}></div> */}
                 </DrawerContent>
               </Drawer>
 
@@ -144,7 +143,6 @@ const DiscreteLayerView: React.FC = observer(() => {
                   <LayersResultsComponent 
                     style={{height: '450px',width: '100%'}}
                   />
-                  {/* <div style={{backgroundColor: 'red', height: '100%', width:'100%'}}></div> */}
                 </DrawerContent>
               </Drawer>
             </Box>)

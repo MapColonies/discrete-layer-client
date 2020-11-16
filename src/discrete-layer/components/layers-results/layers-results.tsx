@@ -1,33 +1,9 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { GridComponent, GridComponentOptions } from '../../../common/components/grid';
+import { createMockData } from '../../../__mocks-data__/search-results.mock';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
-
-const createMockData = (count: number, prefix: string): ILayerImage[] => {
-  const rowData: ILayerImage[] = [];
-  for (let i = 0; i < count; i++) {
-    rowData.push({
-      id: i.toString(),
-      name: `${prefix}  ("name",${i})`,
-      creationDate: new Date(),
-      description: '',
-      geojson: {
-        type: 'Polygon',
-        coordinates: [[[]]],
-      },
-      referenceSystem: '',
-      imagingTimeStart: new Date(),
-      imagingTimeEnd: new Date(),
-      type: '',
-      source: '',
-      category: '',
-      thumbnail: '',
-    });
-  }
-  return rowData;
-};
-
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
