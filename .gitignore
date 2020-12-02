@@ -6,6 +6,9 @@ confd/**
 !confd/*.tmpl
 !confd/*.toml
 public/env-config.js
+public/[cC]esium
+public/fonts
+
 
 # dependencies
 /node_modules
