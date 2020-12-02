@@ -6,6 +6,12 @@ exports[`MapContainer component renders correctly 1`] = `
 >
   <div
     className="filtersPosition"
+    style={
+      Object {
+        "backgroundColor": "#2979ff",
+        "width": undefined,
+      }
+    }
   >
     <div
       className="filtersContainer"

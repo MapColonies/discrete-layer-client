@@ -45,7 +45,7 @@
     "moduleNameMapper": {
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
       "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
-      "(map|collapsible-list|tooltip|icon).css": "<rootDir>/src/__mocks__/styleMock.js",
+      "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(ag-grid|ag-theme-alpine).css": "<rootDir>/src/__mocks__/styleMock.js"
     },
     "snapshotSerializers": [
