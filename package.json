@@ -34,9 +34,10 @@
     "confd:prod": "node ./confd/generate-config.js --environment production",
     "confd:prod:indocker": "node ./confd/generate-config.js --environment production --indocker",
     "copyconf": "copyfiles ./confd/* ./build",
-    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:md-fonst",
+    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:md-fonst && yarn run copyassets:components",
     "copyassets:cesium": "copyfiles -u 3 \"./node_modules/cesium/Build/Cesium/**/*\" \"./public\"",
-    "copyassets:md-fonst": "copyfiles -u 3 \"./node_modules/material-design-icons/iconfont/*\" \"./public/fonts/material-icons\""
+    "copyassets:md-fonst": "copyfiles -u 3 \"./node_modules/material-design-icons/iconfont/*\" \"./public/fonts/material-icons\"",
+    "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\""
   },
   "jest": {
     "transformIgnorePatterns": [

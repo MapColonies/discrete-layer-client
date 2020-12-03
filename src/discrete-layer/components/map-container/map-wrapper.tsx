@@ -12,8 +12,6 @@ import {
 } from '@map-colonies/react-components';
 import './map-wrapper.css';
 
-import { CesiumMap, CesiumDrawingsDataSource, CesiumColor, Proj } from '@map-colonies/react-components';
-
 interface MapWrapperProps {
   drawType?: DrawType;
   selectionPolygon?: Polygon;
@@ -27,33 +25,21 @@ export const MapWrapper: React.FC<MapWrapperProps> = (props) => {
   };
 
   return (
-      <CesiumMap projection={Proj.WGS84}>
-        <CesiumDrawingsDataSource
-          drawings={[]}
-          material={CesiumColor.YELLOW.withAlpha(0.5)}
-          outlineColor={CesiumColor.AQUA}
-          drawState={{
-            drawing: false,
-            type: DrawType.UNKNOWN,
-            handler: ()=>{},
-          }}
+    <Map allowFullScreen={true} showMousePosition={true}>
+      {props.selectionPolygon && (
+        <VectorLayer>
+          <VectorSource>
+            <GeoJSONFeature geometry={props.selectionPolygon} />
+          </VectorSource>
+        </VectorLayer>
+      )}
+      {props.children}
+      {props.drawType !== undefined && (
+        <DrawInteraction
+          drawType={props.drawType}
+          onPolygonSelected={handlePolygonSelected}
         />
-      </CesiumMap>
-    // <Map allowFullScreen={true} showMousePosition={true}>
-    //   {props.selectionPolygon && (
-    //     <VectorLayer>
-    //       <VectorSource>
-    //         <GeoJSONFeature geometry={props.selectionPolygon} />
-    //       </VectorSource>
-    //     </VectorLayer>
-    //   )}
-    //   {props.children}
-    //   {props.drawType !== undefined && (
-    //     <DrawInteraction
-    //       drawType={props.drawType}
-    //       onPolygonSelected={handlePolygonSelected}
-    //     />
-    //   )}
-    // </Map>
+      )}
+    </Map>
   );
 };

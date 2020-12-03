@@ -6,6 +6,23 @@ import { PolygonSelectionUi } from './polygon-selection-ui';
 import { MapWrapper } from './map-wrapper';
 import './map-container.css';
 
+// CESIUM START
+import { CesiumMap, 
+        CesiumDrawingsDataSource,
+        CesiumColor,
+        CesiumPolygonHierarchy,
+        CesiumSceneMode,
+        Proj,
+        IDrawingEvent,
+        IDrawing
+       } from '@map-colonies/react-components';
+
+interface IDrawingObject {
+  type: DrawType;
+  handler: (drawing: IDrawingEvent) => void;
+}
+// CESIUM END
+
 export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
   handlePolygonReset: () => void;
@@ -16,6 +33,107 @@ export interface MapContainerProps {
 }
 
 export const MapContainer: React.FC<MapContainerProps> = (props) => {
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>({
+    type: DrawType.UNKNOWN,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    handler: (drawing: IDrawingEvent) => {},
+  });
+  const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
+    {
+      coordinates: new CesiumPolygonHierarchy(),
+      name: '',
+      id: '',
+      type: DrawType.UNKNOWN,
+    },
+  ]);
+  
+  const createDrawPrimitive = (type: DrawType): IDrawingObject => {
+    return {
+      type: type,
+      handler: (drawing: IDrawingEvent): void => {
+        const timeStamp = new Date().getTime().toString();
+
+        setIsDrawing(false);
+
+        console.log('primitive-->',drawing.primitive);
+        setDrawEntities([
+          {
+            coordinates: drawing.primitive,
+            name: `${type.toString()}_${timeStamp}`,
+            id: timeStamp,
+            type: drawing.type,
+          },
+        ]);
+      },
+    };
+  };
+  
+  const setDrawType = (drawType: DrawType): void =>{
+    setIsDrawing(true);
+    setDrawPrimitive(createDrawPrimitive(drawType));
+  }
+
+  // const [drawType, setDrawType] = useState<DrawType>();
+  const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
+  const theme = useTheme();
+  
+  const onPolygonSelection = (polygon: Polygon): void => {
+    // setSelectionPolygon(polygon);
+    // setDrawType(undefined);
+    props.handlePolygonSelected(polygon);
+  };
+
+  const onReset = (): void => {
+    setSelectionPolygon(undefined);
+    props.handlePolygonReset();
+  };
+
+  return (
+    <div className="map">
+      <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
+        <div className="filtersContainer">
+          <PolygonSelectionUi
+            onCancelDraw={(): void => {}}
+            // onCancelDraw={(): void => setDrawType(undefined)}
+            onReset={onReset}
+            onStartDraw={setDrawType}
+            // isSelectionEnabled={drawType !== undefined}
+            isSelectionEnabled={false}
+            onPolygonUpdate={onPolygonSelection}
+            mapActionsWidth = {props.mapActionsWidth}
+            handleOtherDrawers={props.handleOtherDrawers}
+          />
+          {props.filters?.map((filter, index) => (
+            <div key={index} className="filtersMargin">
+              {filter}
+            </div>
+          ))}
+        </div>
+      </div>
+      <CesiumMap 
+        projection={Proj.WGS84}  
+        center={[34.9578094, 32.8178637]}
+        zoom={8}
+        sceneMode={CesiumSceneMode.SCENE2D}
+      >
+        <CesiumDrawingsDataSource
+          drawings={drawEntities}
+          material={CesiumColor.YELLOW.withAlpha(0.5)}
+          outlineColor={CesiumColor.AQUA}
+          drawState={{
+            drawing: isDrawing,
+            type: drawPrimitive.type,
+            handler: drawPrimitive.handler,
+          }}
+        />
+      </CesiumMap>
+    </div>
+  );
+};
+
+
+export const MapContainerOL: React.FC<MapContainerProps> = (props) => {
   const [drawType, setDrawType] = useState<DrawType>();
   const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
   const theme = useTheme();
