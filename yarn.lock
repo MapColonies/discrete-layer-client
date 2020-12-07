@@ -1507,17 +1507,21 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@file:../shared-components/packages/react-components":
-  version "3.2.0"
+"@map-colonies/react-components@3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.3.0.tgz#e9d260eb12433077e63cb03f3985823604a29d09"
+  integrity sha512-yF5xASNDFcoZKn98PZqTF4uNzKbM3Ixq7ay5fEywVhO0CLlAzpHOFSxQIYRNTpLhkfw4+3Q1hvqEBwhJ3MX4CQ==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
-    "@map-colonies/react-core" "^3.1.0"
+    "@map-colonies/react-core" "^3.2.0"
     "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/pickers" "^3.2.10"
     "@testing-library/jest-dom" "^4.2.4"
     "@testing-library/react" "^9.3.2"
     "@testing-library/user-event" "^7.1.2"
+    "@turf/bbox" "^6.0.1"
+    "@turf/bbox-polygon" "^6.0.1"
     "@turf/helpers" "^6.1.4"
     "@turf/rewind" "^5.1.5"
     "@types/geojson" "^7946.0.7"
@@ -1540,35 +1544,10 @@
     rimraf "3.0.2"
     typescript "~3.7.2"
 
-"@map-colonies/react-core@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-3.1.0.tgz#4e8cc8358129ed4f717de17f9480eeeb472f6409"
-  integrity sha512-VzxLbuLcoM/YBVlzx/Lr/6WmayfhrvL/kGlLyGcMnzVGzDN0jLF9ZHMAORWlhbZQ1dDaFrMfX/IUX1o18ZxY5Q==
-  dependencies:
-    "@testing-library/jest-dom" "^4.2.4"
-    "@testing-library/react" "^9.3.2"
-    "@testing-library/user-event" "^7.1.2"
-    "@types/classnames" "^2.2.7"
-    "@types/jest" "^24.0.0"
-    "@types/node" "^12.0.0"
-    "@types/rc-tooltip" "3.7.1"
-    "@types/react" "^16.9.0"
-    "@types/react-dom" "^16.9.0"
-    "@types/react-router-dom" "^5.1.5"
-    classnames "^2.2.6"
-    copyfiles "2.3.0"
-    cross-env "7.0.2"
-    material-components-web "^5.1.0"
-    rc-tooltip "3.7.3"
-    react "^16.13.1"
-    react-dom "^16.13.1"
-    react-router-dom "^5.2.0"
-    react-scripts "3.4.1"
-    rimraf "3.0.2"
-    typescript "~3.7.2"
-
-"@map-colonies/react-core@file:../shared-components/packages/react-ui-components":
-  version "3.1.0"
+"@map-colonies/react-core@3.2.0", "@map-colonies/react-core@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-3.2.0.tgz#cd78a496957363112243c8bcc7d26045199aa353"
+  integrity sha512-KBNz5dc+zCDxFzTyDu94ZkJATnbVRY9OXz12p7PQpFC5gvXB1ZJ2w3VAz6lH19SzPZkdgVA/7d96RMrHWMjuog==
   dependencies:
     "@testing-library/jest-dom" "^4.2.4"
     "@testing-library/react" "^9.3.2"

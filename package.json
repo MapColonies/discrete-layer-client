@@ -73,8 +73,8 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/react-components": "file:../shared-components/packages/react-components",
-    "@map-colonies/react-core": "file:../shared-components/packages/react-ui-components",
+    "@map-colonies/react-components": "3.3.0",
+    "@map-colonies/react-core": "3.2.0",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^10.4.9",

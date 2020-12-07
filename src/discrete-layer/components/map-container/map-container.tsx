@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Polygon } from 'geojson';
+import { Feature, Polygon } from 'geojson';
 import { DrawType } from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { MapWrapper } from './map-wrapper';
 import './map-container.css';
 
-// CESIUM START
+// CESIUM START 
 import { CesiumMap, 
         CesiumDrawingsDataSource,
         CesiumColor,
-        CesiumPolygonHierarchy,
         CesiumSceneMode,
         Proj,
         IDrawingEvent,
@@ -41,7 +40,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
   });
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
-      coordinates: new CesiumPolygonHierarchy(),
+      coordinates: [],
       name: '',
       id: '',
       type: DrawType.UNKNOWN,
@@ -56,7 +55,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 
         setIsDrawing(false);
 
-        console.log('primitive-->',drawing.primitive);
+        console.log('primitive-->',drawing.primitive, 'geometry-->', (drawing.geojson as Feature).geometry);
         setDrawEntities([
           {
             coordinates: drawing.primitive,
