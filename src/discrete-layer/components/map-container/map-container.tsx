@@ -47,11 +47,13 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     },
   ]);
   
+  const getTimeStamp = (): string => new Date().getTime().toString();
+
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
       type: type,
       handler: (drawing: IDrawingEvent): void => {
-        const timeStamp = new Date().getTime().toString();
+        const timeStamp = getTimeStamp();
 
         setIsDrawing(false);
 
@@ -76,17 +78,28 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
   }
 
   // const [drawType, setDrawType] = useState<DrawType>();
-  const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
+  // const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
   const theme = useTheme();
   
-  const onPolygonSelection = (polygon: Polygon): void => {
+  const onPolygonSelection = (polygon: IDrawingEvent): void => {
     // setSelectionPolygon(polygon);
-    // setDrawType(undefined);
-    props.handlePolygonSelected(polygon); 
+    // setDrawType(undefined); 
+
+    const timeStamp = getTimeStamp();
+    setDrawEntities([
+      {
+        coordinates: polygon.primitive,
+        name: `${DrawType.BOX.toString()}_${timeStamp}`,
+        id: timeStamp,
+        type: DrawType.BOX,
+        geojson: polygon.geojson,
+      },
+    ]);
+    props.handlePolygonSelected((polygon.geojson as Feature).geometry as Polygon); 
   };
 
   const onReset = (): void => {
-    setSelectionPolygon(undefined);
+    // setSelectionPolygon(undefined);
     props.handlePolygonReset();
   };
 
@@ -143,48 +156,48 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 };
 
 
-export const MapContainerOL: React.FC<MapContainerProps> = (props) => {
-  const [drawType, setDrawType] = useState<DrawType>();
-  const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
-  const theme = useTheme();
+// export const MapContainerOL: React.FC<MapContainerProps> = (props) => {
+//   const [drawType, setDrawType] = useState<DrawType>();
+//   const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
+//   const theme = useTheme();
   
-  const onPolygonSelection = (polygon: Polygon): void => {
-    setSelectionPolygon(polygon);
-    setDrawType(undefined);
-    props.handlePolygonSelected(polygon);
-  };
+//   const onPolygonSelection = (polygon: Polygon): void => {
+//     setSelectionPolygon(polygon);
+//     setDrawType(undefined);
+//     props.handlePolygonSelected(polygon);
+//   };
 
-  const onReset = (): void => {
-    setSelectionPolygon(undefined);
-    props.handlePolygonReset();
-  };
+//   const onReset = (): void => {
+//     setSelectionPolygon(undefined);
+//     props.handlePolygonReset();
+//   };
 
-  return (
-    <div className="map">
-      <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
-        <div className="filtersContainer">
-          <PolygonSelectionUi
-            onCancelDraw={(): void => setDrawType(undefined)}
-            onReset={onReset}
-            onStartDraw={setDrawType}
-            isSelectionEnabled={drawType !== undefined}
-            onPolygonUpdate={onPolygonSelection}
-            mapActionsWidth = {props.mapActionsWidth}
-            handleOtherDrawers={props.handleOtherDrawers}
-          />
-          {props.filters?.map((filter, index) => (
-            <div key={index} className="filtersMargin">
-              {filter}
-            </div>
-          ))}
-        </div>
-      </div>
-      <MapWrapper
-        children={props.mapContent}
-        onPolygonSelection={onPolygonSelection}
-        drawType={drawType}
-        selectionPolygon={selectionPolygon}
-      />
-    </div>
-  );
-};
+//   return (
+//     <div className="map">
+//       <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
+//         <div className="filtersContainer">
+//           <PolygonSelectionUi
+//             onCancelDraw={(): void => setDrawType(undefined)}
+//             onReset={onReset}
+//             onStartDraw={setDrawType}
+//             isSelectionEnabled={drawType !== undefined}
+//             onPolygonUpdate={onPolygonSelection}
+//             mapActionsWidth = {props.mapActionsWidth}
+//             handleOtherDrawers={props.handleOtherDrawers}
+//           />
+//           {props.filters?.map((filter, index) => (
+//             <div key={index} className="filtersMargin">
+//               {filter}
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//       <MapWrapper
+//         children={props.mapContent}
+//         onPolygonSelection={onPolygonSelection}
+//         drawType={drawType}
+//         selectionPolygon={selectionPolygon}
+//       />
+//     </div>
+//   );
+// };

@@ -4,6 +4,7 @@ import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
 import { Polygon } from 'geojson';
+import { Rectangle } from 'cesium';
 import { useFormik } from 'formik';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -13,7 +14,7 @@ import {
   TextField,
   Button,
 } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
@@ -85,7 +86,7 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
 interface DialogBBoxProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
-  onPolygonUpdate: (polygon: Polygon) => void;
+  onPolygonUpdate: (polygon: IDrawingEvent) => void;
 }
 
 export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
@@ -108,7 +109,39 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
         ]);
         const polygon = bboxPolygon(bbox(line));
 
-        onPolygonUpdate(polygon.geometry);
+        const rect = Rectangle.fromDegrees(values.bottomLeftLon, values.bottomLeftLat, values.topRightLon, values.topRightLat);
+        
+        onPolygonUpdate({
+          // primitive: rect,
+          primitive: undefined,
+          type: DrawType.BOX,
+          // geojson: polygon,
+          geojson: {
+            type : 'FeatureCollection',
+            features: [
+              { 
+                type : 'Feature', 
+                properties : {  
+                  type : 'top_right',
+                }, 
+                geometry : { 
+                  type : 'Point', 
+                  coordinates : [ values.topRightLon, values.topRightLat ] 
+                }
+              },
+              { 
+                type : 'Feature', 
+                properties : {  
+                  type : 'bottom_left',
+                }, 
+                geometry : { 
+                  type : 'Point', 
+                  coordinates : [ values.bottomLeftLon, values.bottomLeftLat ]  
+                }
+              }
+            ]
+          }
+        });
         handleClose(false);
         setFormErrors({
           latDistance: '',
