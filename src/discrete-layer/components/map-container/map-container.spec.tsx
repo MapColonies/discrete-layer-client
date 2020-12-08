@@ -7,7 +7,9 @@ import { MapWrapper } from './map-wrapper';
 
 const polygonSelectedFn = jest.fn();
 const polygonResetFn = jest.fn();
+const otherDrawersFn = jest.fn();
 const DEFAULT_FILTERS_NUM = 1;
+const mapActionsWidth = '100px';
 
 describe('MapContainer component', () => {
   afterEach(() => {
@@ -20,6 +22,8 @@ describe('MapContainer component', () => {
       <MapContainer
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
+        handleOtherDrawers={otherDrawersFn}
+        mapActionsWidth={mapActionsWidth}
         filters={[]}
         mapContent={<span>test</span>}
       />
@@ -33,6 +37,8 @@ describe('MapContainer component', () => {
       <MapContainer
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
+        handleOtherDrawers={otherDrawersFn}
+        mapActionsWidth={mapActionsWidth}
         filters={undefined}
         mapContent={<span>test</span>}
       />
@@ -49,6 +55,8 @@ describe('MapContainer component', () => {
       <MapContainer
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
+        handleOtherDrawers={otherDrawersFn}
+        mapActionsWidth={mapActionsWidth}
         filters={filtersArr}
         mapContent={<span>test</span>}
       />
@@ -64,11 +72,13 @@ describe('MapContainer component', () => {
       <MapContainer
         handlePolygonSelected={polygonSelectedFn}
         handlePolygonReset={polygonResetFn}
+        handleOtherDrawers={otherDrawersFn}
+        mapActionsWidth={mapActionsWidth}
         filters={undefined}
         mapContent={<span>test</span>}
       />
     );
 
-    expect(wrapper.find(MapWrapper).children()).toHaveLength(1);
+    expect(wrapper.children()).toHaveLength(2); // one is drawing layer, second is transfered
   });
 });

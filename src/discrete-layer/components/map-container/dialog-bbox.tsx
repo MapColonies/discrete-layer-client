@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import * as turf from '@turf/helpers';
-import bbox from '@turf/bbox';
-import bboxPolygon from '@turf/bbox-polygon';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
-import { Polygon } from 'geojson';
-import { Rectangle } from 'cesium';
 import { useFormik } from 'formik';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -14,7 +10,7 @@ import {
   TextField,
   Button,
 } from '@map-colonies/react-core';
-import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
+import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
@@ -103,26 +99,16 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     onSubmit: (values) => {
       const err = validate(values, intl);
       if (!err.latDistance && !err.lonDistance) {
-        const line = turf.lineString([
-          [values.bottomLeftLon, values.bottomLeftLat],
-          [values.topRightLon, values.topRightLat],
-        ]);
-        const polygon = bboxPolygon(bbox(line));
-
-        const rect = Rectangle.fromDegrees(values.bottomLeftLon, values.bottomLeftLat, values.topRightLon, values.topRightLat);
-        
         onPolygonUpdate({
-          // primitive: rect,
           primitive: undefined,
           type: DrawType.BOX,
-          // geojson: polygon,
           geojson: {
             type : 'FeatureCollection',
             features: [
               { 
                 type : 'Feature', 
                 properties : {  
-                  type : 'top_right',
+                  type : BboxCorner.TOP_RIGHT,
                 }, 
                 geometry : { 
                   type : 'Point', 
@@ -132,7 +118,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               { 
                 type : 'Feature', 
                 properties : {  
-                  type : 'bottom_left',
+                  type : BboxCorner.BOTTOM_LEFT
                 }, 
                 geometry : { 
                   type : 'Point', 

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Feature, Polygon } from 'geojson';
+import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
+import * as turf from '@turf/helpers';
+import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
 import { DrawType } from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
 import { PolygonSelectionUi } from './polygon-selection-ui';
@@ -95,7 +98,20 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         geojson: polygon.geojson,
       },
     ]);
-    props.handlePolygonSelected((polygon.geojson as Feature).geometry as Polygon); 
+
+    const line = turf.lineString([
+      [
+        ((polygon.geojson as FeatureCollection).features[1] as Feature<Point>).geometry.coordinates[0],
+        ((polygon.geojson as FeatureCollection).features[1] as Feature<Point>).geometry.coordinates[1]
+      ],
+      [
+        ((polygon.geojson as FeatureCollection).features[0] as Feature<Point>).geometry.coordinates[0],
+        ((polygon.geojson as FeatureCollection).features[0] as Feature<Point>).geometry.coordinates[1],
+      ],
+    ]);
+    const boxPolygon = bboxPolygon(bbox(line));
+
+    props.handlePolygonSelected((boxPolygon as Feature).geometry as Polygon); 
   };
 
   const onReset = (): void => {
@@ -140,6 +156,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         zoom={8}
         sceneMode={CesiumSceneMode.SCENE2D}
       >
+        {props.mapContent}
         <CesiumDrawingsDataSource
           drawings={drawEntities}
           material={CesiumColor.YELLOW.withAlpha(0.5)}
