@@ -56,6 +56,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         setIsDrawing(false);
 
         console.log('primitive-->',drawing.primitive, 'geometry-->', (drawing.geojson as Feature).geometry);
+        props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
+
         setDrawEntities([
           {
             coordinates: drawing.primitive,
@@ -80,7 +82,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
   const onPolygonSelection = (polygon: Polygon): void => {
     // setSelectionPolygon(polygon);
     // setDrawType(undefined);
-    props.handlePolygonSelected(polygon);
+    props.handlePolygonSelected(polygon); 
   };
 
   const onReset = (): void => {
@@ -88,17 +90,26 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     props.handlePolygonReset();
   };
 
+  const onCancelDraw = (): void => {
+    setIsDrawing(false);
+    setDrawPrimitive({
+      type: DrawType.UNKNOWN,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      handler: (drawing: IDrawingEvent) => {}
+    });
+  };
+
+
   return (
     <div className="map">
       <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
         <div className="filtersContainer">
           <PolygonSelectionUi
-            onCancelDraw={(): void => {}}
-            // onCancelDraw={(): void => setDrawType(undefined)}
+            onCancelDraw={onCancelDraw}
             onReset={onReset}
             onStartDraw={setDrawType}
             // isSelectionEnabled={drawType !== undefined}
-            isSelectionEnabled={false}
+            isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
             mapActionsWidth = {props.mapActionsWidth}
             handleOtherDrawers={props.handleOtherDrawers}

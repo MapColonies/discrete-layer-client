@@ -53,6 +53,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
 
   const handleClose = (): void => {
     setAnchorEl(null);
+    setMenuOpen(!menuOpen);
   };
 
   const [open, setOpen] = React.useState(false);
