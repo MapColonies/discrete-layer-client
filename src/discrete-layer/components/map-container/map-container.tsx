@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
+import { find } from 'lodash';
 import * as turf from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
-import { DrawType } from '@map-colonies/react-components';
+import { 
+  DrawType, 
+  BboxCorner,
+  CesiumMap, 
+  CesiumDrawingsDataSource,
+  CesiumColor,
+  CesiumSceneMode,
+  IDrawingEvent,
+  IDrawing
+} from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
+import CONFIG from '../../../common/config';
 import { PolygonSelectionUi } from './polygon-selection-ui';
-import { MapWrapper } from './map-wrapper';
 import './map-container.css';
-
-// CESIUM START 
-import { CesiumMap, 
-        CesiumDrawingsDataSource,
-        CesiumColor,
-        CesiumSceneMode,
-        Proj,
-        IDrawingEvent,
-        IDrawing
-       } from '@map-colonies/react-components';
 
 interface IDrawingObject {
   type: DrawType;
   handler: (drawing: IDrawingEvent) => void;
 }
-// CESIUM END
+
+const getTimeStamp = (): string => new Date().getTime().toString();
+const noDrawing: IDrawingObject = {
+  type: DrawType.UNKNOWN,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  handler: (drawing: IDrawingEvent) => {},
+}
 
 export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
@@ -36,11 +42,7 @@ export interface MapContainerProps {
 
 export const MapContainer: React.FC<MapContainerProps> = (props) => {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>({
-    type: DrawType.UNKNOWN,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    handler: (drawing: IDrawingEvent) => {},
-  });
+  const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -49,9 +51,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       type: DrawType.UNKNOWN,
     },
   ]);
+  const theme = useTheme();
   
-  const getTimeStamp = (): string => new Date().getTime().toString();
-
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
       type: type,
@@ -79,16 +80,27 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     setIsDrawing(true);
     setDrawPrimitive(createDrawPrimitive(drawType));
   }
-
-  // const [drawType, setDrawType] = useState<DrawType>();
-  // const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
-  const theme = useTheme();
-  
+ 
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
-    // setSelectionPolygon(polygon);
-    // setDrawType(undefined); 
-
     const timeStamp = getTimeStamp();
+    const bottomLeftPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat)=>{
+      return feat.properties?.type === BboxCorner.BOTTOM_LEFT;
+    });
+    const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat)=>{
+      return feat.properties?.type === BboxCorner.TOP_RIGHT;
+    });
+    const line = turf.lineString([
+      [
+        (bottomLeftPoint as Feature<Point>).geometry.coordinates[0],
+        (bottomLeftPoint as Feature<Point>).geometry.coordinates[1]
+      ],
+      [
+        (rightTopPoint as Feature<Point>).geometry.coordinates[0],
+        (rightTopPoint as Feature<Point>).geometry.coordinates[1],
+      ],
+    ]);
+    const boxPolygon = bboxPolygon(bbox(line));
+
     setDrawEntities([
       {
         coordinates: polygon.primitive,
@@ -99,35 +111,18 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       },
     ]);
 
-    const line = turf.lineString([
-      [
-        ((polygon.geojson as FeatureCollection).features[1] as Feature<Point>).geometry.coordinates[0],
-        ((polygon.geojson as FeatureCollection).features[1] as Feature<Point>).geometry.coordinates[1]
-      ],
-      [
-        ((polygon.geojson as FeatureCollection).features[0] as Feature<Point>).geometry.coordinates[0],
-        ((polygon.geojson as FeatureCollection).features[0] as Feature<Point>).geometry.coordinates[1],
-      ],
-    ]);
-    const boxPolygon = bboxPolygon(bbox(line));
-
     props.handlePolygonSelected((boxPolygon as Feature).geometry as Polygon); 
   };
 
   const onReset = (): void => {
-    // setSelectionPolygon(undefined);
+    setDrawEntities([]);
     props.handlePolygonReset();
   };
 
   const onCancelDraw = (): void => {
     setIsDrawing(false);
-    setDrawPrimitive({
-      type: DrawType.UNKNOWN,
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      handler: (drawing: IDrawingEvent) => {}
-    });
+    setDrawPrimitive(noDrawing);
   };
-
 
   return (
     <div className="map">
@@ -137,7 +132,6 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
             onCancelDraw={onCancelDraw}
             onReset={onReset}
             onStartDraw={setDrawType}
-            // isSelectionEnabled={drawType !== undefined}
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
             mapActionsWidth = {props.mapActionsWidth}
@@ -151,9 +145,9 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         </div>
       </div>
       <CesiumMap 
-        projection={Proj.WGS84}  
-        center={[34.9578094, 32.8178637]}
-        zoom={8}
+        projection={CONFIG.MAP.PROJECTION}  
+        center={CONFIG.MAP.CENTER as [number,number]}
+        zoom={CONFIG.MAP.ZOOM}
         sceneMode={CesiumSceneMode.SCENE2D}
       >
         {props.mapContent}
@@ -171,50 +165,3 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     </div>
   );
 };
-
-
-// export const MapContainerOL: React.FC<MapContainerProps> = (props) => {
-//   const [drawType, setDrawType] = useState<DrawType>();
-//   const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
-//   const theme = useTheme();
-  
-//   const onPolygonSelection = (polygon: Polygon): void => {
-//     setSelectionPolygon(polygon);
-//     setDrawType(undefined);
-//     props.handlePolygonSelected(polygon);
-//   };
-
-//   const onReset = (): void => {
-//     setSelectionPolygon(undefined);
-//     props.handlePolygonReset();
-//   };
-
-//   return (
-//     <div className="map">
-//       <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
-//         <div className="filtersContainer">
-//           <PolygonSelectionUi
-//             onCancelDraw={(): void => setDrawType(undefined)}
-//             onReset={onReset}
-//             onStartDraw={setDrawType}
-//             isSelectionEnabled={drawType !== undefined}
-//             onPolygonUpdate={onPolygonSelection}
-//             mapActionsWidth = {props.mapActionsWidth}
-//             handleOtherDrawers={props.handleOtherDrawers}
-//           />
-//           {props.filters?.map((filter, index) => (
-//             <div key={index} className="filtersMargin">
-//               {filter}
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//       <MapWrapper
-//         children={props.mapContent}
-//         onPolygonSelection={onPolygonSelection}
-//         drawType={drawType}
-//         selectionPolygon={selectionPolygon}
-//       />
-//     </div>
-//   );
-// };

@@ -1,3 +1,5 @@
+import { Proj } from "@map-colonies/react-components";
+
 /*eslint-disable */
 const MAP_SERVER = (window as any)._env_.MAP_SERVER;
 const PUBLISH_POINT = (window as any)._env_.PUBLISH_POINT;
@@ -23,17 +25,23 @@ const EXPORTER_CONFIG = {
     MIN_ZOOM: 1,
     MAX_ZOOM: 21,
   },
+  MAP: {
+    CENTER: [34.9578094, 32.8178637],
+    ZOOM: 8,
+    PROJECTION: Proj.WGS84,
+  },
   ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_DEFAULT'
   WMTS_LAYER: {
     ATTRIBUTIONS:
-      'Tiles © <a href="https://services.arcgisonline.com/arcgis/rest/' +
-      'services/Demographics/USA_Population_Density/MapServer/">ArcGIS</a>',
+      'Tiles © <a href="http://basemap.nationalmap.gov">basemap</a>',
     URL:
-      'https://services.arcgisonline.com/arcgis/rest/' +
-      'services/Demographics/USA_Population_Density/MapServer/WMTS/',
-    LAYER: '0',
+      'https://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/WMTS/',
+    LAYER: 'USGSShadedReliefOnly',
+    STYLE: 'default',
     PROJECTION: 'EPSG:3857',
     FORMAT: 'image/png',
+    TILE_MATRIX_SET_ID: 'default028mm',
+    MAXIMUM_LEVEL: 19
   },
   WMS_LAYER: {
     ATTRIBUTIONS: `Tiles © <a href="${MAP_SERVER}">GEE</a>`,

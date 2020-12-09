@@ -1,5 +1,4 @@
 import React from 'react';
-import { Polygon } from 'geojson'; 
 import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';

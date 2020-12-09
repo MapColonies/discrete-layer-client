@@ -9,6 +9,7 @@ import {
   getWMSOptions,
   getXYZOptions,
   Box,
+  CesiumWMTSLayer,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
@@ -25,13 +26,24 @@ import './discrete-layer-view.css';
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
 /* eslint-disable */
-const wmtsOptions = getWMTSOptions({
-  attributions: CONFIG.WMTS_LAYER.ATTRIBUTIONS,
+const wmtsOptions = {
   url: CONFIG.WMTS_LAYER.URL,
   layer: CONFIG.WMTS_LAYER.LAYER,
-  projection: CONFIG.WMTS_LAYER.PROJECTION,
+  style: CONFIG.WMTS_LAYER.STYLE,
   format: CONFIG.WMTS_LAYER.FORMAT,
-});
+  tileMatrixSetID: CONFIG.WMTS_LAYER.TILE_MATRIX_SET_ID,
+  // tileMatrixLabels : ['default028mm:0', 'default028mm:1', 'default028mm:2' ...], 
+  maximumLevel: CONFIG.WMTS_LAYER.MAXIMUM_LEVEL,
+  // credit: new Credit('U. S. Geological Survey'),
+}
+
+// const wmtsOptions = getWMTSOptions({
+//   attributions: CONFIG.WMTS_LAYER.ATTRIBUTIONS,
+//   url: CONFIG.WMTS_LAYER.URL,
+//   layer: CONFIG.WMTS_LAYER.LAYER,
+//   projection: CONFIG.WMTS_LAYER.PROJECTION,
+//   format: CONFIG.WMTS_LAYER.FORMAT,
+// });
 
 const wmsOptions = getWMSOptions({
   attributions: CONFIG.WMS_LAYER.ATTRIBUTIONS,
@@ -178,9 +190,10 @@ const DiscreteLayerView: React.FC = observer(() => {
             </TileLayer>
           )}
           {CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && (
-            <TileLayer>
-              <TileWMTS options={wmtsOptions} />
-            </TileLayer>
+            <CesiumWMTSLayer options={wmtsOptions} />
+            // <TileLayer>
+            //   <TileWMTS options={wmtsOptions} />
+            // </TileLayer>
           )}
           {CONFIG.ACTIVE_LAYER === 'WMS_LAYER' && (
             <TileLayer options={tileOtions}>
