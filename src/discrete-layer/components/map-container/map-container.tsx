@@ -52,6 +52,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     },
   ]);
   const theme = useTheme();
+  const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
+  const [showDefaulImagery] = useState<false | undefined>(CONFIG.ACTIVE_LAYER === 'OSM_DEFAULT'? undefined: false);
   
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
@@ -146,9 +148,10 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       </div>
       <CesiumMap 
         projection={CONFIG.MAP.PROJECTION}  
-        center={CONFIG.MAP.CENTER as [number,number]}
+        center={center}
         zoom={CONFIG.MAP.ZOOM}
         sceneMode={CesiumSceneMode.SCENE2D}
+        imageryProvider={showDefaulImagery}
       >
         {props.mapContent}
         <CesiumDrawingsDataSource
