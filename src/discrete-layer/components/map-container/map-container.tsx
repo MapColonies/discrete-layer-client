@@ -85,20 +85,20 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
  
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
     const timeStamp = getTimeStamp();
-    const bottomLeftPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat)=>{
+    const bottomLeftPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
       return feat.properties?.type === BboxCorner.BOTTOM_LEFT;
-    });
-    const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat)=>{
+    }) as Feature<Point>;
+    const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
       return feat.properties?.type === BboxCorner.TOP_RIGHT;
-    });
+    }) as Feature<Point>;
     const line = turf.lineString([
       [
-        (bottomLeftPoint as Feature<Point>).geometry.coordinates[0],
-        (bottomLeftPoint as Feature<Point>).geometry.coordinates[1]
+        bottomLeftPoint.geometry.coordinates[0],
+        bottomLeftPoint.geometry.coordinates[1]
       ],
       [
-        (rightTopPoint as Feature<Point>).geometry.coordinates[0],
-        (rightTopPoint as Feature<Point>).geometry.coordinates[1],
+        rightTopPoint.geometry.coordinates[0],
+        rightTopPoint.geometry.coordinates[1],
       ],
     ]);
     const boxPolygon = bboxPolygon(bbox(line));
