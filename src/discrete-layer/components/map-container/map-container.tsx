@@ -66,7 +66,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 
         setIsDrawing(false);
 
-        console.log('primitive-->',drawing.primitive, 'geometry-->', (drawing.geojson as Feature).geometry);
+        // console.log('primitive-->',drawing.primitive, 'geometry-->', (drawing.geojson as Feature).geometry);
         props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
 
         setDrawEntities([
