@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "yarn run copyassets:all && react-scripts start",
-    "build": "react-scripts build && yarn run copyconf && yarn run copyassets:all",
+    "build": "react-scripts --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
     "test": "react-scripts test --env=jsdom-fourteen --verbose",
     "test:coverage": "react-scripts test --env=jsdom-fourteen --verbose --coverage --watchAll",
     "eject": "react-scripts eject",
