@@ -29,7 +29,10 @@ const noDrawing: IDrawingObject = {
   type: DrawType.UNKNOWN,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handler: (drawing: IDrawingEvent) => {},
-}
+};
+const DRAWING_MATERIAL_OPACITY = 0.5;
+const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
+const DRAWING_OUTLINE_COLOR = CesiumColor.AQUA;
 
 export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
@@ -156,8 +159,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         {props.mapContent}
         <CesiumDrawingsDataSource
           drawings={drawEntities}
-          material={CesiumColor.YELLOW.withAlpha(0.5)}
-          outlineColor={CesiumColor.AQUA}
+          material={DRAWING_MATERIAL_COLOR}
+          outlineColor={DRAWING_OUTLINE_COLOR}
           drawState={{
             drawing: isDrawing,
             type: drawPrimitive.type,

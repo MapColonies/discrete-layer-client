@@ -3,7 +3,6 @@ import { shallow } from 'enzyme';
 // eslint-disable-next-line
 import '../../../__mocks__/confEnvShim';
 import { MapContainer } from './map-container';
-import { MapWrapper } from './map-wrapper';
 
 const polygonSelectedFn = jest.fn();
 const polygonResetFn = jest.fn();
