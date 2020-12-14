@@ -20,8 +20,8 @@ jobs:
     - run: npm install
     - run: npm run build --if-present
     - run: npm test unit
-      env:
-        CI: ""
+    #  env:
+    #    CI: ""
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
