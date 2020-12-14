@@ -30,6 +30,6 @@ jobs:
         file: ./Dockerfile
         push: false
         tags: exporter-worker:latest
-   #- name: Image digest
-   #  run: echo ${{ steps.docker_build.outputs.digest }}
+    - name: Image digest
+      run: echo "bla"
         
