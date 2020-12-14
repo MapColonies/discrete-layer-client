@@ -34,6 +34,7 @@ exports[`MapContainer component renders correctly 1`] = `
         32.8178637,
       ]
     }
+    imageryProvider={false}
     projection="EPSG:4326"
     sceneMode={2}
     zoom={8}
