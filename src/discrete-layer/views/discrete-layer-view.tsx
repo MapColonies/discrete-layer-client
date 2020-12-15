@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  TileLayer,
-  TileWMTS,
-  TileWMS,
-  TileXYZ,
-  TileOsm,
-  getWMTSOptions,
-  getWMSOptions,
-  getXYZOptions,
   Box,
+  CesiumWMTSLayer,
+  RCesiumWMTSLayerOptions,
+  RCesiumWMSLayerOptions,
+  CesiumWMSLayer,
+  RCesiumXYZLayerOptions,
+  CesiumXYZLayer,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
@@ -25,26 +23,23 @@ import './discrete-layer-view.css';
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
 /* eslint-disable */
-const wmtsOptions = getWMTSOptions({
-  attributions: CONFIG.WMTS_LAYER.ATTRIBUTIONS,
+const wmtsOptions: RCesiumWMTSLayerOptions = {
   url: CONFIG.WMTS_LAYER.URL,
   layer: CONFIG.WMTS_LAYER.LAYER,
-  projection: CONFIG.WMTS_LAYER.PROJECTION,
+  style: CONFIG.WMTS_LAYER.STYLE,
   format: CONFIG.WMTS_LAYER.FORMAT,
-});
+  tileMatrixSetID: CONFIG.WMTS_LAYER.TILE_MATRIX_SET_ID,
+  maximumLevel: CONFIG.WMTS_LAYER.MAXIMUM_LEVEL,
+};
 
-const wmsOptions = getWMSOptions({
-  attributions: CONFIG.WMS_LAYER.ATTRIBUTIONS,
+const wmsOptions: RCesiumWMSLayerOptions = {
   url: CONFIG.WMS_LAYER.URL,
-  params: CONFIG.WMS_LAYER.PARAMS,
-  serverType: CONFIG.WMS_LAYER.SERVERTYPE as ServerType,
-  transition: CONFIG.WMS_LAYER.TRANSITION,
-});
+  layers: CONFIG.WMS_LAYER.PARAMS.LAYERS,
+};
 
-const xyzOptions = getXYZOptions({
-  attributions: CONFIG.XYZ_LAYER.ATTRIBUTIONS,
+const xyzOptions: RCesiumXYZLayerOptions = {
   url: CONFIG.XYZ_LAYER.URL,
-});
+};
 /* eslint-enable */
 
 const tileOtions = { opacity: 0.5 };
@@ -172,26 +167,15 @@ const DiscreteLayerView: React.FC = observer(() => {
       mapContent={
         /* eslint-disable */
         <>
-          {CONFIG.ACTIVE_LAYER === 'OSM_DEFAULT' && (
-            <TileLayer>
-              <TileOsm />
-            </TileLayer>
-          )}
           {CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && (
-            <TileLayer>
-              <TileWMTS options={wmtsOptions} />
-            </TileLayer>
+            <CesiumWMTSLayer options={wmtsOptions} />
           )}
           {CONFIG.ACTIVE_LAYER === 'WMS_LAYER' && (
-            <TileLayer options={tileOtions}>
-              <TileWMS options={wmsOptions} />
-            </TileLayer>
+            <CesiumWMSLayer options={wmsOptions} alpha={tileOtions.opacity} />
           )}
 
           {CONFIG.ACTIVE_LAYER === 'XYZ_LAYER' && (
-            <TileLayer options={tileOtions}>
-              <TileXYZ options={xyzOptions} />
-            </TileLayer>
+            <CesiumXYZLayer options={xyzOptions} alpha={tileOtions.opacity}/>
           )}
         </>
         /* eslint-enable */

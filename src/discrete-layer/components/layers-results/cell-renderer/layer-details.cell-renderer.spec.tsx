@@ -1,8 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ICellRendererParams, Column, RowNode, GridApi, ColumnApi } from 'ag-grid-community';
+import timezoneMock from 'timezone-mock';
+// eslint-disable-next-line
+import '../../../../__mocks__/confEnvShim';
 import { LayerDetailsRenderer } from './layer-details.cell-renderer';
-
 /* eslint-disable */
 const mockDataBase:ICellRendererParams = {
   value: '',
@@ -12,7 +14,7 @@ const mockDataBase:ICellRendererParams = {
   formatValue: () => {},
   data: {
     name: '',
-    creationDate: new Date('Sun Nov 15 2020 18:06:06 GMT+0200'),
+    creationDate: new Date('2020-12-06T13:39:55.400Z'),
   } as any,
   node: new RowNode(),
   colDef: {},
@@ -33,6 +35,10 @@ const NUM_SPAN_PER_FIELD = 2;
 const NUM_FIEDLS = 10;
 
 describe('AgGrid LayerDetailsRenderer component', () => {
+  beforeAll(() => {
+    timezoneMock.register('US/Eastern');
+  });
+
   it('renders correctly', () => {
     const mockData = {
       ...mockDataBase
@@ -56,5 +62,8 @@ describe('AgGrid LayerDetailsRenderer component', () => {
 
     const spans = wrapper.find('span');
     expect(spans).toHaveLength(NUM_SPAN_PER_FIELD * NUM_FIEDLS);
+  });
+  afterAll(() => {
+    timezoneMock.unregister();
   });
 });

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Polygon } from 'geojson';
 import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Box, DrawType } from '@map-colonies/react-components';
+import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { FormattedMessage } from 'react-intl';
 import { DialogBBox } from './dialog-bbox';
 import './polygon-selection-ui.css';
@@ -25,7 +24,7 @@ export interface PolygonSelectionUiProps {
   onStartDraw: (type: DrawType) => void;
   onCancelDraw: () => void;
   onReset: () => void;
-  onPolygonUpdate: (polygon: Polygon) => void;
+  onPolygonUpdate: (polygon: IDrawingEvent) => void;
   handleOtherDrawers?: () => void;
 }
 
@@ -53,6 +52,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
 
   const handleClose = (): void => {
     setAnchorEl(null);
+    setMenuOpen(!menuOpen);
   };
 
   const [open, setOpen] = React.useState(false);

@@ -9,7 +9,7 @@ exports[`MapContainer component renders correctly 1`] = `
     style={
       Object {
         "backgroundColor": "#2979ff",
-        "width": undefined,
+        "width": "100px",
       }
     }
   >
@@ -17,7 +17,9 @@ exports[`MapContainer component renders correctly 1`] = `
       className="filtersContainer"
     >
       <PolygonSelectionUi
+        handleOtherDrawers={[MockFunction]}
         isSelectionEnabled={false}
+        mapActionsWidth="100px"
         onCancelDraw={[Function]}
         onPolygonUpdate={[Function]}
         onReset={[Function]}
@@ -25,12 +27,56 @@ exports[`MapContainer component renders correctly 1`] = `
       />
     </div>
   </div>
-  <MapWrapper
-    onPolygonSelection={[Function]}
+  <Component
+    center={
+      Array [
+        34.9578094,
+        32.8178637,
+      ]
+    }
+    imageryProvider={false}
+    projection="EPSG:4326"
+    sceneMode={2}
+    zoom={8}
   >
     <span>
       test
     </span>
-  </MapWrapper>
+    <Component
+      drawState={
+        Object {
+          "drawing": false,
+          "handler": [Function],
+          "type": "UNKNOWN",
+        }
+      }
+      drawings={
+        Array [
+          Object {
+            "coordinates": Array [],
+            "id": "",
+            "name": "",
+            "type": "UNKNOWN",
+          },
+        ]
+      }
+      material={
+        Color {
+          "alpha": 0.5,
+          "blue": 0,
+          "green": 1,
+          "red": 1,
+        }
+      }
+      outlineColor={
+        Color {
+          "alpha": 1,
+          "blue": 1,
+          "green": 1,
+          "red": 0,
+        }
+      }
+    />
+  </Component>
 </div>
 `;

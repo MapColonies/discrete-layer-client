@@ -20,8 +20,8 @@
     }
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && yarn run copyconf",
+    "start": "yarn run copyassets:all && react-scripts start",
+    "build": "react-scripts --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
     "test": "react-scripts test --env=jsdom-fourteen --verbose",
     "test:coverage": "react-scripts test --env=jsdom-fourteen --verbose --coverage --watchAll",
     "eject": "react-scripts eject",
@@ -33,7 +33,11 @@
     "confd": "node ./confd/generate-config.js",
     "confd:prod": "node ./confd/generate-config.js --environment production",
     "confd:prod:indocker": "node ./confd/generate-config.js --environment production --indocker",
-    "copyconf": "copyfiles ./confd/* ./build"
+    "copyconf": "copyfiles ./confd/* ./build",
+    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:md-fonst && yarn run copyassets:components",
+    "copyassets:cesium": "copyfiles -u 3 \"./node_modules/cesium/Build/Cesium/**/*\" \"./public\"",
+    "copyassets:md-fonst": "copyfiles -u 3 \"./node_modules/material-design-icons/iconfont/*\" \"./public/fonts/material-icons\"",
+    "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\""
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -43,6 +47,7 @@
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
       "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
       "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control).css": "<rootDir>/src/__mocks__/styleMock.js",
+      "(drawHelper|coordinates-tracker.tool|scale-tracker.tool).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(ag-grid|ag-theme-alpine).css": "<rootDir>/src/__mocks__/styleMock.js"
     },
     "snapshotSerializers": [
@@ -69,8 +74,8 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/react-components": "3.1.2",
-    "@map-colonies/react-core": "3.1.0",
+    "@map-colonies/react-components": "3.3.2",
+    "@map-colonies/react-core": "3.2.0",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^10.4.9",
@@ -92,6 +97,7 @@
     "date-fns": "^2.14.0",
     "enzyme-to-json": "^3.6.1",
     "formik": "^2.1.5",
+    "lodash": "^4.17.20",
     "mobx": "^5.15.4",
     "mobx-react-lite": "^2.0.7",
     "mobx-state-tree": "^3.16.0",
@@ -107,6 +113,7 @@
     "@map-colonies/eslint-config": "^1.0.3",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/lodash": "^4.14.165",
     "@types/ol": "^6.3.1",
     "@types/react-test-renderer": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
@@ -123,7 +130,8 @@
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
     "react-test-renderer": "^16.13.1",
-    "standard-version": "^8.0.2"
+    "standard-version": "^8.0.2",
+    "timezone-mock": "^1.1.3"
   },
   "browserslist": {
     "production": [

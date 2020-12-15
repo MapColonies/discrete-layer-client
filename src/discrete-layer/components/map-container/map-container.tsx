@@ -1,10 +1,38 @@
 import React, { useState } from 'react';
-import { Polygon } from 'geojson';
-import { DrawType } from '@map-colonies/react-components';
+import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
+import { find } from 'lodash';
+import { lineString } from '@turf/helpers';
+import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
+import { 
+  DrawType, 
+  BboxCorner,
+  CesiumMap, 
+  CesiumDrawingsDataSource,
+  CesiumColor,
+  CesiumSceneMode,
+  IDrawingEvent,
+  IDrawing
+} from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
+import CONFIG from '../../../common/config';
 import { PolygonSelectionUi } from './polygon-selection-ui';
-import { MapWrapper } from './map-wrapper';
 import './map-container.css';
+
+interface IDrawingObject {
+  type: DrawType;
+  handler: (drawing: IDrawingEvent) => void;
+}
+
+const getTimeStamp = (): string => new Date().getTime().toString();
+const noDrawing: IDrawingObject = {
+  type: DrawType.UNKNOWN,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  handler: (drawing: IDrawingEvent) => {},
+};
+const DRAWING_MATERIAL_OPACITY = 0.5;
+const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
+const DRAWING_OUTLINE_COLOR = CesiumColor.AQUA;
 
 export interface MapContainerProps {
   handlePolygonSelected: (polygon: Polygon) => void;
@@ -16,19 +44,88 @@ export interface MapContainerProps {
 }
 
 export const MapContainer: React.FC<MapContainerProps> = (props) => {
-  const [drawType, setDrawType] = useState<DrawType>();
-  const [selectionPolygon, setSelectionPolygon] = useState<Polygon>();
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
+  const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
+    {
+      coordinates: [],
+      name: '',
+      id: '',
+      type: DrawType.UNKNOWN,
+    },
+  ]);
   const theme = useTheme();
+  const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
+  const [showDefaulImagery] = useState<false | undefined>(CONFIG.ACTIVE_LAYER === 'OSM_DEFAULT'? undefined: false);
   
-  const onPolygonSelection = (polygon: Polygon): void => {
-    setSelectionPolygon(polygon);
-    setDrawType(undefined);
-    props.handlePolygonSelected(polygon);
+  const createDrawPrimitive = (type: DrawType): IDrawingObject => {
+    return {
+      type: type,
+      handler: (drawing: IDrawingEvent): void => {
+        const timeStamp = getTimeStamp();
+
+        setIsDrawing(false);
+
+        props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
+
+        setDrawEntities([
+          {
+            coordinates: drawing.primitive,
+            name: `${type.toString()}_${timeStamp}`,
+            id: timeStamp,
+            type: drawing.type,
+          },
+        ]);
+      },
+    };
+  };
+  
+  const setDrawType = (drawType: DrawType): void =>{
+    setIsDrawing(true);
+    setDrawPrimitive(createDrawPrimitive(drawType));
+  }
+ 
+  const onPolygonSelection = (polygon: IDrawingEvent): void => {
+    const timeStamp = getTimeStamp();
+    const bottomLeftPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
+      return feat.properties?.type === BboxCorner.BOTTOM_LEFT;
+    }) as Feature<Point>;
+    const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
+      return feat.properties?.type === BboxCorner.TOP_RIGHT;
+    }) as Feature<Point>;
+    const line = lineString([
+      [
+        bottomLeftPoint.geometry.coordinates[0],
+        bottomLeftPoint.geometry.coordinates[1]
+      ],
+      [
+        rightTopPoint.geometry.coordinates[0],
+        rightTopPoint.geometry.coordinates[1],
+      ],
+    ]);
+    const boxPolygon = bboxPolygon(bbox(line));
+
+    setDrawEntities([
+      {
+        coordinates: polygon.primitive,
+        name: `${DrawType.BOX.toString()}_${timeStamp}`,
+        id: timeStamp,
+        type: DrawType.BOX,
+        geojson: polygon.geojson,
+      },
+    ]);
+
+    props.handlePolygonSelected((boxPolygon as Feature).geometry as Polygon); 
   };
 
   const onReset = (): void => {
-    setSelectionPolygon(undefined);
+    setDrawEntities([]);
     props.handlePolygonReset();
+  };
+
+  const onCancelDraw = (): void => {
+    setIsDrawing(false);
+    setDrawPrimitive(noDrawing);
   };
 
   return (
@@ -36,10 +133,10 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
         <div className="filtersContainer">
           <PolygonSelectionUi
-            onCancelDraw={(): void => setDrawType(undefined)}
+            onCancelDraw={onCancelDraw}
             onReset={onReset}
             onStartDraw={setDrawType}
-            isSelectionEnabled={drawType !== undefined}
+            isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
             mapActionsWidth = {props.mapActionsWidth}
             handleOtherDrawers={props.handleOtherDrawers}
@@ -51,12 +148,25 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
           ))}
         </div>
       </div>
-      <MapWrapper
-        children={props.mapContent}
-        onPolygonSelection={onPolygonSelection}
-        drawType={drawType}
-        selectionPolygon={selectionPolygon}
-      />
+      <CesiumMap 
+        projection={CONFIG.MAP.PROJECTION}  
+        center={center}
+        zoom={CONFIG.MAP.ZOOM}
+        sceneMode={CesiumSceneMode.SCENE2D}
+        imageryProvider={showDefaulImagery}
+      >
+        {props.mapContent}
+        <CesiumDrawingsDataSource
+          drawings={drawEntities}
+          material={DRAWING_MATERIAL_COLOR}
+          outlineColor={DRAWING_OUTLINE_COLOR}
+          drawState={{
+            drawing: isDrawing,
+            type: drawPrimitive.type,
+            handler: drawPrimitive.handler,
+          }}
+        />
+      </CesiumMap>
     </div>
   );
 };
