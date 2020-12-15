@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { find } from 'lodash';
-import * as turf from '@turf/helpers';
+import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { 
@@ -66,7 +66,6 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 
         setIsDrawing(false);
 
-        // console.log('primitive-->',drawing.primitive, 'geometry-->', (drawing.geojson as Feature).geometry);
         props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
 
         setDrawEntities([
@@ -94,7 +93,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
       return feat.properties?.type === BboxCorner.TOP_RIGHT;
     }) as Feature<Point>;
-    const line = turf.lineString([
+    const line = lineString([
       [
         bottomLeftPoint.geometry.coordinates[0],
         bottomLeftPoint.geometry.coordinates[1]
