@@ -3,6 +3,7 @@ import moment from 'moment';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
+import CONFIG from '../../../../common/config';
 import './layer-details.cell-renderer.css';
 
 interface FormatterFunc {
@@ -19,7 +20,7 @@ const stringRenderer: FormatterFunc = (val): string => val !== undefined ? val.t
 const dateRenderer: FormatterFunc = (date): string => {
   // eslint-disable-next-line
   return (date !== undefined && ("toISOString" in (date as any)))
-    ? moment(date).format('DD/MM/YYYY HH:mm')
+    ? moment(date).format(CONFIG.LOCALE.DATE_TIME_FORMAT)
     : '-';
 }
 
