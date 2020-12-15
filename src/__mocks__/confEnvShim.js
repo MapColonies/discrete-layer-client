@@ -9,6 +9,9 @@ if (!window._env_) {
       SERVICE_PROTOCOL: 'SERVICE_PROTOCOL',
       SERVICE_NAME: 'SERVICE_NAME',
       ACTIVE_LAYER: 'ACTIVE_LAYER',
+      LOCALE: {
+        DATE_TIME_FORMAT: 'DD/MM/YYYY HH:mm',
+      },
     };
   })(void 0);
 }
