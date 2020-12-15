@@ -2,6 +2,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { ICellRendererParams, Column, RowNode, GridApi, ColumnApi } from 'ag-grid-community';
 import timezoneMock from 'timezone-mock';
+// eslint-disable-next-line
+import '../../../../__mocks__/confEnvShim';
 import { LayerDetailsRenderer } from './layer-details.cell-renderer';
 /* eslint-disable */
 const mockDataBase:ICellRendererParams = {
