@@ -7,6 +7,8 @@ import {
   CesiumWMSLayer,
   RCesiumXYZLayerOptions,
   CesiumXYZLayer,
+  CesiumOSMLayer,
+  RCesiumOSMLayerOptions,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, Snackbar, SnackbarAction } from '@map-colonies/react-core';
@@ -40,6 +42,10 @@ const wmsOptions: RCesiumWMSLayerOptions = {
 const xyzOptions: RCesiumXYZLayerOptions = {
   url: CONFIG.XYZ_LAYER.URL,
 };
+
+const osmOptions: RCesiumOSMLayerOptions = {
+  url: CONFIG.OSM_LAYER.URL,
+}
 /* eslint-enable */
 
 const tileOtions = { opacity: 0.5 };
@@ -167,6 +173,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       mapContent={
         /* eslint-disable */
         <>
+          {CONFIG.ACTIVE_LAYER === 'OSM_LAYER' && (
+            <CesiumOSMLayer options={osmOptions} />
+          )}
           {CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && (
             <CesiumWMTSLayer options={wmtsOptions} />
           )}
