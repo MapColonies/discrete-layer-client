@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { GridComponent, GridComponentOptions } from '../../../common/components/grid';
-import { createMockData } from '../../../__mocks-data__/search-results.mock';
+import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../__mocks-data__/search-results.mock';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 
@@ -11,7 +11,7 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
-const rowData = createMockData(pageSize * pageSize, 'body');
+const rowData = MOCK_DATA_IMAGERY_LAYERS_ISRAEL;//createMockData(pageSize * pageSize, 'body');
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (props) => {
   const intl = useIntl();

@@ -14,6 +14,11 @@ export const layerImage = types.model({
   source: types.string,
   category: types.string,
   thumbnail: types.string,
+  properties: types.maybe(types.frozen<{
+    protocol: 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER',
+    url: string,
+    meta?: string,
+  }>()),
 });
 
 export interface ILayerImage extends Instance<typeof layerImage> {}
