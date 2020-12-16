@@ -130,13 +130,12 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     setDrawPrimitive(noDrawing);
   };
 
-  const generateSelectedLayers = () => {
+  const generateSelectedLayers = ():JSX.Element[] => {
     const arr = MOCK_DATA_IMAGERY_LAYERS_ISRAEL.map((layer)=>{
-      return <CesiumXYZLayer options={{url: layer.properties.url}}/>
+      return <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/>
     });
 
     return arr;
-
   };
 
   return (
