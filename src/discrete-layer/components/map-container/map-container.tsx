@@ -18,7 +18,6 @@ import { useTheme } from '@map-colonies/react-core';
 import CONFIG from '../../../common/config';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import './map-container.css';
-import { CesiumXYZLayer } from '@map-colonies/react-components/dist/cesium-map/layers/xyz.layer';
 
 interface IDrawingObject {
   type: DrawType;
