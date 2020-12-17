@@ -18,7 +18,6 @@ import { useTheme } from '@map-colonies/react-core';
 import CONFIG from '../../../common/config';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import './map-container.css';
-import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../__mocks-data__/search-results.mock';
 import { CesiumXYZLayer } from '@map-colonies/react-components/dist/cesium-map/layers/xyz.layer';
 
 interface IDrawingObject {
@@ -130,14 +129,6 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     setDrawPrimitive(noDrawing);
   };
 
-  const generateSelectedLayers = ():JSX.Element[] => {
-    const arr = MOCK_DATA_IMAGERY_LAYERS_ISRAEL.map((layer)=>{
-      return <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/>
-    });
-
-    return arr;
-  };
-
   return (
     <div className="map">
       <div className="filtersPosition" style={{backgroundColor: theme.primary, width: props.mapActionsWidth}}>
@@ -166,7 +157,6 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         imageryProvider={false}
       >
         {props.mapContent}
-        {generateSelectedLayers()}
         <CesiumDrawingsDataSource
           drawings={drawEntities}
           material={DRAWING_MATERIAL_COLOR}

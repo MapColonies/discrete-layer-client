@@ -21,6 +21,7 @@ import { MapContainer } from '../components/map-container';
 import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import './discrete-layer-view.css';
+import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 
 type ServerType = 'geoserver' | 'carmentaserver' | 'mapserver' | 'qgis';
 
@@ -129,7 +130,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   />
                 </DrawerContent>
               </Drawer>
-
+              {/* <div style={{  height: '300px', width: '300px', backgroundColor:'red'}}></div> */}
             </Box>)
           }
 
@@ -186,6 +187,11 @@ const DiscreteLayerView: React.FC = observer(() => {
           {CONFIG.ACTIVE_LAYER === 'XYZ_LAYER' && (
             <CesiumXYZLayer options={xyzOptions} alpha={tileOtions.opacity}/>
           )}
+          {
+            MOCK_DATA_IMAGERY_LAYERS_ISRAEL.map((layer)=>{
+              return <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/>
+            })
+          }
         </>
         /* eslint-enable */
       }
