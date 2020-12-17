@@ -26,3 +26,18 @@ body[dir='rtl'] .filtersPosition {
   display: flex;
   gap: 8px;
 }
+
+.drawerPosition{
+  overflow: hidden; 
+  position: absolute;
+  top: 60px;
+  left: 0px;
+}
+
+.drawerPosition .mdc-drawer{
+  width: 100%;
+} 
+body[dir='rtl'] .drawerPosition {
+  right: 0px;
+  left: unset;
+}
