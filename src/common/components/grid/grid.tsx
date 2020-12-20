@@ -51,7 +51,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
         node.setSelected(true, false, true);
       }
     });
-    setTimeout(()=>{(params.api as any).updatingSelectionCustom = false},100);
+    setTimeout(()=>{(params.api as any).updatingSelectionCustom = false},0);
   };
 
   const gridOptionsFromProps: GridComponentOptions = {
