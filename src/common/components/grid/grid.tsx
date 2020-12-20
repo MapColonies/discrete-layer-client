@@ -7,6 +7,7 @@ import {
   GridApi,
   GridOptions,
   RowNode,
+  ValueFormatterParams,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -22,6 +23,7 @@ interface GridComponentProps {
   style?: CSSProperties;
 }
 
+export interface GridValueFormatterParams extends ValueFormatterParams{}
 export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;

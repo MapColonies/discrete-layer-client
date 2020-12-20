@@ -1,9 +1,10 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { GridComponent, GridComponentOptions } from '../../../common/components/grid';
+import { GridComponent, GridComponentOptions, GridValueFormatterParams } from '../../../common/components/grid';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../__mocks-data__/search-results.mock';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
+import { dateFormatter } from './type-formatters/type-formatters';
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
@@ -31,6 +32,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (pr
       width: 120,
       field: 'creationDate',
       suppressMovable: true,
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
     }
   ];
   const gridOptions: GridComponentOptions = {
