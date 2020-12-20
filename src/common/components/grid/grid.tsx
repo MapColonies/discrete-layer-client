@@ -11,6 +11,7 @@ import {
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { ILayerImage } from '../../../discrete-layer/models/layerImage';
 import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
@@ -43,9 +44,20 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     setGridApi(params.api);
   };
 
+  const onFirstDataRendered = (params: GridReadyEvent): void => {
+    params.api.forEachNode(node => {
+      if((node.data as ILayerImage).selected === true){
+        (params.api as any).updatingSelectionCustom = true;
+        node.setSelected(true, false, true);
+      }
+    });
+    setTimeout(()=>{(params.api as any).updatingSelectionCustom = false},100);
+  };
+
   const gridOptionsFromProps: GridComponentOptions = {
     ...props.gridOptions,
     onGridReady: onGridReady,
+    onFirstDataRendered: onFirstDataRendered,
     columnDefs: [
       {
         field: 'isVisible',

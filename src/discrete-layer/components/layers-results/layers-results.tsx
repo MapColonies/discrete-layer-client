@@ -1,8 +1,9 @@
-import React from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { GridComponent, GridComponentOptions, GridValueFormatterParams } from '../../../common/components/grid';
-import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../__mocks-data__/search-results.mock';
 import { ILayerImage } from '../../models/layerImage';
+import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
 
@@ -12,11 +13,24 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
-const rowData = MOCK_DATA_IMAGERY_LAYERS_ISRAEL;//createMockData(pageSize * pageSize, 'body');
 
-export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (props) => {
+export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
+  const { discreteLayersStore } = useStore();
+  const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
+
+  useEffect(()=>{
+    if(discreteLayersStore.layersImages){
+      setlayersImages(discreteLayersStore.layersImages);
+    }
+  },[]);
+  
   const colDef = [
+    {
+      checkboxSelection: true,
+      width: 20,
+      field: 'selected',
+    },
     {
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
@@ -50,13 +64,21 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (pr
     frameworkComponents: {
       detailsRenderer: LayerDetailsRenderer
     },
+    rowSelection: 'multiple',
+    suppressRowClickSelection: true,
+    onRowSelected: (event): void => {
+      if((event.api as any).updatingSelectionCustom !== true){
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        discreteLayersStore.showLayer(event.data.id, event.node.isSelected());
+      }
+    }
   };
 
   return (
     <GridComponent
       gridOptions={gridOptions}
-      rowData={rowData}
+      rowData={layersImages}
       style={props.style}
     />
   );
-};
+});

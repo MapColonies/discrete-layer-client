@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CesiumWMTSLayer,
   CesiumWMSLayer,
@@ -6,30 +6,40 @@ import {
   CesiumOSMLayer,
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
+import { Geometry } from 'geojson';
 import CONFIG from '../../common/config';
-import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { osmOptions, wmsOptions, wmtsOptions, xyzOptions } from '../../common/helpers/layer-options';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
+import { ILayerImage } from '../models/layerImage';
 
 const tileOtions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
+  const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
 
-  // TODO REMOVE: EXAMLPE HOW TO TRIGGER SNACK  
   useEffect(()=>{
-    setTimeout(()=>{
-      discreteLayersStore.getLayersImages();
-    }, 7000); 
-  },[]);
+    if(discreteLayersStore.layersImages){
+      setlayersImages(discreteLayersStore.layersImages);
+    }
+  },[discreteLayersStore.layersImages]);
+
+  const handlePolygonSelected = (geometry: Geometry): void => {
+    discreteLayersStore.searchParams.setLocation(geometry);
+    void discreteLayersStore.getLayersImages();
+  };
+
+  const handlePolygonReset = (): void => {
+    // discreteLayersStore.searchParams.resetLocation.bind(discreteLayersStore.searchParams)();
+    discreteLayersStore.searchParams.resetLocation();
+    discreteLayersStore.clearLayersImages();
+  }
 
   return (
     <MapContainer
-      handlePolygonSelected={discreteLayersStore.searchParams.setLocation}
-      handlePolygonReset={discreteLayersStore.searchParams.resetLocation.bind(
-        discreteLayersStore.searchParams
-      )}
+      handlePolygonSelected={handlePolygonSelected}
+      handlePolygonReset={handlePolygonReset}
       mapContent={
         /* eslint-disable */
         <>
@@ -47,8 +57,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             <CesiumXYZLayer options={xyzOptions} alpha={tileOtions.opacity}/>
           )}
           {
-            MOCK_DATA_IMAGERY_LAYERS_ISRAEL.map((layer)=>{
-              return <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/>
+            layersImages.map((layer)=>{
+              return (layer.properties?.url && layer?.id && layer?.selected) ? <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/> : null;
             })
           }
         </>

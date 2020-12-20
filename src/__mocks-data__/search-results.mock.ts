@@ -21,6 +21,7 @@ export const createMockData = (count: number, prefix: string): ILayerImage[] => 
       category: '',
       thumbnail: '',
       properties: undefined,
+      selected: false,
     });
   }
   return rowData;
