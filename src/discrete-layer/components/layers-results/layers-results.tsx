@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { GridComponent, GridComponentOptions, GridValueFormatterParams } from '../../../common/components/grid';
+import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams } from '../../../common/components/grid';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
@@ -23,6 +23,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     if(discreteLayersStore.layersImages){
       setlayersImages(discreteLayersStore.layersImages);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   
   const colDef = [
@@ -66,10 +67,10 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     rowSelection: 'multiple',
     suppressRowClickSelection: true,
-    onRowSelected: (event): void => {
+    onRowSelected: (event: GridRowSelectedEvent): void => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if((event.api as any).updatingSelectionCustom !== true){
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        discreteLayersStore.showLayer(event.data.id, event.node.isSelected());
+        discreteLayersStore.showLayer((event.data as ILayerImage).id, event.node.isSelected());
       }
     }
   };

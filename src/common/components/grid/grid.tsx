@@ -8,6 +8,7 @@ import {
   GridOptions,
   RowNode,
   ValueFormatterParams,
+  RowSelectedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -22,9 +23,10 @@ interface GridComponentProps {
   gridOptions?: GridComponentOptions;
   rowData?: any[];
   style?: CSSProperties;
-}
+};
 
-export interface GridValueFormatterParams extends ValueFormatterParams{}
+export interface GridRowSelectedEvent extends RowSelectedEvent{};
+export interface GridValueFormatterParams extends ValueFormatterParams{};
 export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;
@@ -33,7 +35,7 @@ export interface IGridRowDataDetailsExt {
   rowHeight: number;
   fullWidth: boolean;
   isVisible: boolean;
-}
+};
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [gridApi, setGridApi] = useState<GridApi>();

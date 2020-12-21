@@ -24,6 +24,7 @@ import './map-container.css';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { LayersResultsComponent } from '../layers-results/layers-results';
 import { DrawerOpener } from '../drawer-opener/drawer-opener';
+import { SelectedLayersContainer } from './selected-layers-container';
 
 interface IDrawingObject {
   type: DrawType;
@@ -219,6 +220,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         imageryProvider={false}
       >
         {props.mapContent}
+        <SelectedLayersContainer/>
         <CesiumDrawingsDataSource
           drawings={drawEntities}
           material={DRAWING_MATERIAL_COLOR}
