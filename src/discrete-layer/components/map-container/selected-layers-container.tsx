@@ -4,9 +4,12 @@ import { useStore } from '../../models/rootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { CesiumXYZLayer } from '@map-colonies/react-components';
 
+interface CacheMap {
+  [key: string]: JSX.Element | undefined
+}
 
-function usePrevious(value: any): any {
-  const ref = useRef();
+function usePrevious(value: ILayerImage[]): ILayerImage[] | undefined {
+  const ref = useRef<ILayerImage[]>();
   useEffect(() => {
     ref.current = value;
   });
@@ -17,7 +20,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const prevLayersImages = usePrevious(layersImages);
-  const cacheRef = useRef({})
+  const cacheRef = useRef({} as CacheMap);
   
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
@@ -26,25 +29,20 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   }, [discreteLayersStore.layersImages]);
 
 
-  const getLayer = (layer: ILayerImage) => {
+  const getLayer = (layer: ILayerImage) : JSX.Element | null | undefined  => {
     const cache = cacheRef.current;
-    if(layer.selected){
-      // @ts-ignore
+    if(layer.selected === true){
       if(cache[layer.id] !== undefined){
-        // @ts-ignore
-        return cache[layer.id] as JSX.Element;
+        return cache[layer.id];
       } else{
-        // @ts-ignore
-        cache[layer.id] = <CesiumXYZLayer options={{url: layer.properties.url}}/>;
-        // @ts-ignore
-        return cache[layer.id] as JSX.Element;
+        cache[layer.id] = <CesiumXYZLayer options={{url: layer.properties?.url as string}}/>;
+        return cache[layer.id];
       }
     }
     else{
       const prevLayer = (prevLayersImages as []).find((item: ILayerImage) => item.id === layer.id) as ILayerImage | undefined;
-      if(prevLayer && prevLayer.selected){
-        // @ts-ignore
-        delete cache[ layer.id];
+      if(prevLayer?.selected === true){
+        delete cache[layer.id];
         return null;
       }
     }

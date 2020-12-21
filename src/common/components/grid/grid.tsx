@@ -17,6 +17,7 @@ import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-r
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
 const EXPANDER_COLUMN_WIDTH = 60;
+const UPDATE_TIMEOUT = 0;
 export const DETAILS_ROW_ID_SUFFIX = '_details';
 
 interface GridComponentProps {
@@ -49,11 +50,13 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const onFirstDataRendered = (params: GridReadyEvent): void => {
     params.api.forEachNode(node => {
       if((node.data as ILayerImage).selected === true){
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (params.api as any).updatingSelectionCustom = true;
         node.setSelected(true, false, true);
       }
     });
-    setTimeout(()=>{(params.api as any).updatingSelectionCustom = false},0);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    setTimeout(()=>{(params.api as any).updatingSelectionCustom = false}, UPDATE_TIMEOUT);
   };
 
   const gridOptionsFromProps: GridComponentOptions = {

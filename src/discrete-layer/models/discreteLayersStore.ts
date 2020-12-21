@@ -41,6 +41,8 @@ export const discreteLayersStore = types
           self.state = ResponseState.IDLE;
           // const result = yield self.root.fetch('/searchLayerImages', 'GET', {});
           // const result = yield Promise.resolve(createMockData(20,'mock'));
+          
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
           self.layersImages = result.map(item => ({...item, selected:false}));
