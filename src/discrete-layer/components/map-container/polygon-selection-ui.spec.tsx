@@ -30,6 +30,7 @@ jest.mock('react-intl', () => {
 const startDraw = jest.fn();
 const cancelDraw = jest.fn();
 const resetDraw = jest.fn();
+const MAP_ACTION_WIDTH = '300px';
 
 describe('Polygon Selection component', () => {
   afterEach(() => {
@@ -46,6 +47,7 @@ describe('Polygon Selection component', () => {
         onReset={() => {}}
         onStartDraw={() => {}}
         onPolygonUpdate={(polygon) => {}}
+        mapActionsWidth={MAP_ACTION_WIDTH}
       />
     );
 
@@ -60,6 +62,7 @@ describe('Polygon Selection component', () => {
         onReset={resetDraw}
         isSelectionEnabled={false}
         onPolygonUpdate={(polygon) => {}}
+        mapActionsWidth={MAP_ACTION_WIDTH}
       />
     );
 
@@ -76,6 +79,7 @@ describe('Polygon Selection component', () => {
         onReset={resetDraw}
         isSelectionEnabled={false}
         onPolygonUpdate={(polygon) => {}}
+        mapActionsWidth={MAP_ACTION_WIDTH}
       />
     );
 
@@ -105,6 +109,7 @@ describe('Polygon Selection component', () => {
         onReset={resetDraw}
         isSelectionEnabled={false}
         onPolygonUpdate={(polygon) => {}}
+        mapActionsWidth={MAP_ACTION_WIDTH}
       />
     );
 
@@ -132,6 +137,7 @@ describe('Polygon Selection component', () => {
         onReset={resetDraw}
         isSelectionEnabled={false}
         onPolygonUpdate={(polygon) => {}}
+        mapActionsWidth={MAP_ACTION_WIDTH}
       />
     );
 
@@ -159,6 +165,7 @@ describe('Polygon Selection component', () => {
         onReset={resetDraw}
         isSelectionEnabled={true}
         onPolygonUpdate={(polygon) => {}}
+        mapActionsWidth={MAP_ACTION_WIDTH}
       />
     );
 

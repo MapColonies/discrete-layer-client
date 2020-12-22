@@ -9,7 +9,7 @@ exports[`MapContainer component renders correctly 1`] = `
     style={
       Object {
         "backgroundColor": "#2979ff",
-        "width": "100px",
+        "width": "400px",
       }
     }
   >
@@ -17,31 +17,55 @@ exports[`MapContainer component renders correctly 1`] = `
       className="filtersContainer"
     >
       <PolygonSelectionUi
-        handleOtherDrawers={[MockFunction]}
+        handleOtherDrawers={[Function]}
         isSelectionEnabled={false}
-        mapActionsWidth="100px"
+        mapActionsWidth="400px"
         onCancelDraw={[Function]}
         onPolygonUpdate={[Function]}
         onReset={[Function]}
         onStartDraw={[Function]}
       />
+      <div
+        className="filtersMargin"
+      >
+        <withRipple(Function)
+          icon="filter_alt"
+          onClick={[Function]}
+          outlined={true}
+          theme={
+            Array [
+              "primaryBg",
+              "onPrimary",
+            ]
+          }
+        >
+          <FormattedMessage
+            id="filters.title"
+          />
+        </withRipple(Function)>
+        <DrawerOpener
+          isOpen={false}
+          onClick={[Function]}
+        />
+      </div>
     </div>
   </div>
   <Component
     center={
       Array [
-        34.9578094,
-        32.8178637,
+        34.811,
+        31.908,
       ]
     }
     imageryProvider={false}
     projection="EPSG:4326"
     sceneMode={2}
-    zoom={8}
+    zoom={14}
   >
     <span>
       test
     </span>
+    <Memo(wrappedComponent) />
     <Component
       drawState={
         Object {
