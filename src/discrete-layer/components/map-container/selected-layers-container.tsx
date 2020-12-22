@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { CesiumXYZLayer } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../models/rootStore';
 import { ILayerImage } from '../../models/layerImage';
-import { CesiumXYZLayer } from '@map-colonies/react-components';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
+import { Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { ResponseState } from '../../../common/models/response-state.enum';
 import { useStore } from '../../models/rootStore';
-import { Snackbar, SnackbarAction } from '@map-colonies/react-core';
 
 interface SnackDetails {
   message: string;

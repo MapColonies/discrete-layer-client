@@ -17,14 +17,14 @@ import {
   DateTimeRangePickerFormControl,
   SupportedLocales
 } from '@map-colonies/react-components';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, useTheme } from '@map-colonies/react-core';
 import CONFIG from '../../../common/config';
-import { PolygonSelectionUi } from './polygon-selection-ui';
-import './map-container.css';
-import { FormattedMessage, useIntl } from 'react-intl';
 import { LayersResultsComponent } from '../layers-results/layers-results';
 import { DrawerOpener } from '../drawer-opener/drawer-opener';
+import { PolygonSelectionUi } from './polygon-selection-ui';
 import { SelectedLayersContainer } from './selected-layers-container';
+import './map-container.css';
 
 interface IDrawingObject {
   type: DrawType;
