@@ -2468,6 +2468,14 @@
   dependencies:
     "@turf/helpers" "6.x"
 
+"@turf/bbox@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/bbox/-/bbox-5.0.0.tgz#c179e533328120ca29b5dbd215a5f54e5c7940d3"
+  integrity sha1-wXnlMzKBIMoptdvSFaX1Tlx5QNM=
+  dependencies:
+    "@turf/helpers" "5.0.0"
+    "@turf/meta" "5.0.0"
+
 "@turf/bbox@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@turf/bbox/-/bbox-6.0.1.tgz#b966075771475940ee1c16be2a12cf389e6e923a"
@@ -2507,6 +2515,11 @@
     "@turf/helpers" "^6.2.0-alpha.2"
     "@turf/invariant" "^6.2.0-alpha.2"
 
+"@turf/helpers@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-5.0.0.tgz#732cb570e6aebca9ef7375e8e42fafa8e16e5d47"
+  integrity sha1-cyy1cOauvKnvc3Xo5C+vqOFuXUc=
+
 "@turf/helpers@6.x", "@turf/helpers@^6.1.4":
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-6.1.4.tgz#d6fd7ebe6782dd9c87dca5559bda5c48ae4c3836"
@@ -2531,6 +2544,11 @@
     "@turf/invariant" "6.x"
     martinez-polygon-clipping "^0.4.3"
 
+"@turf/invariant@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-5.0.0.tgz#da9b4d7b044cffa300d654b3e0444969fc19d850"
+  integrity sha1-2ptNewRM/6MA1lSz4ERJafwZ2FA=
+
 "@turf/invariant@6.x":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-6.1.2.tgz#6013ed6219f9ac2edada9b31e1dfa5918eb0a2f7"
@@ -2552,6 +2570,20 @@
   dependencies:
     "@turf/helpers" "^6.2.0-alpha.2"
 
+"@turf/linestring-to-polygon@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/linestring-to-polygon/-/linestring-to-polygon-5.0.0.tgz#d8c33d879fcbc71224fd6a69d41978562d2005e8"
+  integrity sha1-2MM9h5/LxxIk/Wpp1Bl4Vi0gBeg=
+  dependencies:
+    "@turf/bbox" "5.0.0"
+    "@turf/helpers" "5.0.0"
+    "@turf/invariant" "5.0.0"
+
+"@turf/meta@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-5.0.0.tgz#75b100e9854cd7b2fa63e68561e1298dac09d7b4"
+  integrity sha1-dbEA6YVM17L6Y+aFYeEpjawJ17Q=
+
 "@turf/meta@6.x":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-6.0.2.tgz#eb92951126d24a613ac1b7b99d733fcc20fd30cf"
@@ -2565,6 +2597,14 @@
   integrity sha1-OxrUhe4MOwsXdRMqMsOE1T5LpT0=
   dependencies:
     "@turf/helpers" "^5.1.5"
+
+"@turf/polygon-to-line@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@turf/polygon-to-line/-/polygon-to-line-6.0.3.tgz#a7c5416f61651d5d25ff51ee006522725cb1adf1"
+  integrity sha512-cJUy7VYLAhgnTBOtYFjNzh5bSlAS/qM8gUHXRGrIxI22RUJk4FXs/X2MEJ4Ki2flCiSeOjRIUEawEslNe7w7RA==
+  dependencies:
+    "@turf/helpers" "6.x"
+    "@turf/invariant" "6.x"
 
 "@turf/rewind@^5.1.5":
   version "5.1.5"

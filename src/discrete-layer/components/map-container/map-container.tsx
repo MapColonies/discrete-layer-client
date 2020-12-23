@@ -25,6 +25,7 @@ import { DrawerOpener } from '../drawer-opener/drawer-opener';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { SelectedLayersContainer } from './selected-layers-container';
 import './map-container.css';
+import { LayersFootprints } from './layers-footprints';
 
 interface IDrawingObject {
   type: DrawType;
@@ -221,6 +222,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       >
         {props.mapContent}
         <SelectedLayersContainer/>
+        <LayersFootprints/>
         <CesiumDrawingsDataSource
           drawings={drawEntities}
           material={DRAWING_MATERIAL_COLOR}
