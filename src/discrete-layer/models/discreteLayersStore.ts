@@ -37,8 +37,8 @@ export const discreteLayersStore = types
         LayersImagesResponse
       > {
         try {
-          console.log('Fetch layers images--->');
           self.state = ResponseState.IDLE;
+          // TODO: MOCK should be replaced by actual API call
           // const result = yield self.root.fetch('/searchLayerImages', 'GET', {});
           // const result = yield Promise.resolve(createMockData(20,'mock'));
           

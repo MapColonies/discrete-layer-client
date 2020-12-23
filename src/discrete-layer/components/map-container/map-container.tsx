@@ -64,8 +64,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
-  // const [showDefaulImagery] = useState<false | undefined>(CONFIG.ACTIVE_LAYER === 'OSM_LAYER'? undefined: false);
-  
+    
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
       type: type,
