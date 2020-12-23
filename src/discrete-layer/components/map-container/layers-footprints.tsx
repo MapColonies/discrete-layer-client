@@ -13,6 +13,7 @@ export const LayersFootprints: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersFootprints, setlayersFootprints] = useState<FeatureCollection>();
 
+  // REMARK: Layers footprint boundingboxes  
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
       const footprintsCollection: FeatureCollection = {
@@ -50,19 +51,55 @@ export const LayersFootprints: React.FC = observer(() => {
     }
   }, [discreteLayersStore.layersImages]);
 
+  // REMARK: Layers feature footprint as is
+  // useEffect(() => {
+  //   if (discreteLayersStore.layersImages) {
+  //     const footprintsCollection: FeatureCollection = {
+  //       type: 'FeatureCollection',
+  //       features: []
+  //     }
+  //     const footPrintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
+  //       const footPrint: Feature = {
+  //         type: 'Feature',
+  //         geometry: { 
+  //           ...(layer.geojson as Geometry),
+  //         },
+  //         properties: {
+  //           name: layer.name,
+  //           description: layer.description,
+  //         },
+  //       }
+  //       return footPrint;
+  //     });
+  //     footprintsCollection.features.push(...footPrintsFeaturesArray);
+  //     setlayersFootprints(footprintsCollection);
+  //   }
+  // }, [discreteLayersStore.layersImages]);
+
   return (
     <CesiumGeojsonLayer
       data={layersFootprints}
       // markerColor={Color.RED}
       onLoad={(g): void => {
         
+        // REMARK: Unified boundingboxes of footprints
         g.entities.values.forEach(item => {
           // @ts-ignore
           item.polyline.width = 6.0;
           // @ts-ignore
           item.polyline.material = Color.RED;
-  
         });
+
+        // REMARK: footprints as is
+        // g.entities.values.forEach(item => {
+        //   if(item.polygon){
+        //     // @ts-ignore
+        //     item.polygon.outlineColor = Color.RED;
+        //     // @ts-ignore
+        //     item.polygon.material = Color.fromRandom({alpha: 0.4});
+        //   }
+        // });
+
 
         // // @ts-ignore
         // g.entities.values[1].polygon.material = Color.TRANSPARENT; //Color.RED.withAlpha(0.4);
