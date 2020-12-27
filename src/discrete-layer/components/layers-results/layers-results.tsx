@@ -1,9 +1,11 @@
-import React from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { GridComponent, GridComponentOptions } from '../../../common/components/grid';
-import { createMockData } from '../../../__mocks-data__/search-results.mock';
+import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams } from '../../../common/components/grid';
 import { ILayerImage } from '../../models/layerImage';
+import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
+import { dateFormatter } from './type-formatters/type-formatters';
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
@@ -11,11 +13,25 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
-const rowData = createMockData(pageSize * pageSize, 'body');
 
-export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (props) => {
+export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
+  const { discreteLayersStore } = useStore();
+  const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
+
+  useEffect(()=>{
+    if(discreteLayersStore.layersImages){
+      setlayersImages(discreteLayersStore.layersImages);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+  
   const colDef = [
+    {
+      checkboxSelection: true,
+      width: 20,
+      field: 'selected',
+    },
     {
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
@@ -31,6 +47,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (pr
       width: 120,
       field: 'creationDate',
       suppressMovable: true,
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -48,13 +65,21 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = (pr
     frameworkComponents: {
       detailsRenderer: LayerDetailsRenderer
     },
+    rowSelection: 'multiple',
+    suppressRowClickSelection: true,
+    onRowSelected: (event: GridRowSelectedEvent): void => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if((event.api as any).updatingSelectionCustom !== true){
+        discreteLayersStore.showLayer((event.data as ILayerImage).id, event.node.isSelected());
+      }
+    }
   };
 
   return (
     <GridComponent
       gridOptions={gridOptions}
-      rowData={rowData}
+      rowData={layersImages}
       style={props.style}
     />
   );
-};
+});

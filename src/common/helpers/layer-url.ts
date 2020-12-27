@@ -15,7 +15,7 @@ const fullUrls : {[key : string] : string} = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'XYZ_LAYER': CONFIG.XYZ_LAYER.URL,
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  'OSM_DEFAULT': 'NOT_VALID_URL'
+  'OSM_LAYER': CONFIG.OSM_LAYER.URL
 };
 
 export const getLayerUrl = () : string => {

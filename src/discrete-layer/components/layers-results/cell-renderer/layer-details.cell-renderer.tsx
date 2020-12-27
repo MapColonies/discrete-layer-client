@@ -1,14 +1,9 @@
 import React from 'react';
-import moment from 'moment';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
-import CONFIG from '../../../../common/config';
+import { dateFormatter, FormatterFunc, stringFormatter } from '../type-formatters/type-formatters';
 import './layer-details.cell-renderer.css';
-
-interface FormatterFunc {
-  (source: string | Date | undefined): string 
-}
 
 interface DetailsProp {
   propName: string,
@@ -16,67 +11,59 @@ interface DetailsProp {
   formater: FormatterFunc
 }
 
-const stringRenderer: FormatterFunc = (val): string => val !== undefined ? val.toString() : '';
-const dateRenderer: FormatterFunc = (date): string => {
-  // eslint-disable-next-line
-  return (date !== undefined && ("toISOString" in (date as any)))
-    ? moment(date).format(CONFIG.LOCALE.DATE_TIME_FORMAT)
-    : '-';
-}
-
 const detailsPropsLayout = new Array<DetailsProp[]>(
   [
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringRenderer,
+      formater: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringRenderer,
+      formater: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringRenderer,
+      formater: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringRenderer,
+      formater: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringRenderer,
+      formater: stringFormatter,
     },
   ],
   [
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateRenderer,
+      formater: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateRenderer,
+      formater: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateRenderer,
+      formater: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateRenderer,
+      formater: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateRenderer,
+      formater: dateFormatter,
     },
   ]
 );

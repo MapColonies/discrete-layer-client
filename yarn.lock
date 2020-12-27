@@ -1507,10 +1507,10 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.3.2":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.3.2.tgz#3dc0c67e39f9e6fe6f1e3a9e79ad9c4e3892e9ac"
-  integrity sha512-Ny/YEZHmBxZ8fVsuxUlC7klggsq+JI4h7xyhDr/QnUFLkACEWen/RJy+9ghuDuIQtKoBwctRpLQpGMJmqsR3dw==
+"@map-colonies/react-components@3.3.3":
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.3.3.tgz#66cdeb061e5d18b87a241963262986009056bd46"
+  integrity sha512-CSSpmybcuR5tg889AOVfwrseeFrw7kI2VneT/d5GIpEgkSOo6usxKcpK1Sd2WbRx7IJy3UqyBxon2DOHA5GUwg==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
     "@map-colonies/react-core" "^3.2.0"

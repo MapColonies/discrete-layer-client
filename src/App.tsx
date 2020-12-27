@@ -24,6 +24,7 @@ import '@map-colonies/react-core/dist/icon/styles';
 import '@map-colonies/react-core/dist/linear-progress/styles';
 import '@map-colonies/react-core/dist/drawer/styles';
 
+import { SnackContainer } from './discrete-layer/components/snack-container/snack-container';
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
 import CONFIG from './common/config';
@@ -54,6 +55,7 @@ const App: React.FC = () => {
         <RMWCThemeProvider options={theme}>
           <CssBaseline />
           <DiscreteLayerView />
+          <SnackContainer />
         </RMWCThemeProvider>
       </RMWCProvider>
     </IntlProvider>

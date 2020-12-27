@@ -29,11 +29,11 @@ const EXPORTER_CONFIG = {
     MAX_ZOOM: 21,
   },
   MAP: {
-    CENTER: [34.9578094, 32.8178637],
-    ZOOM: 8,
+    CENTER: [34.811, 31.908],
+    ZOOM: 14,
     PROJECTION: Proj.WGS84,
   },
-  ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_DEFAULT'
+  ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER'
   WMTS_LAYER: {
     ATTRIBUTIONS:
       'Tiles © <a href="http://basemap.nationalmap.gov">basemap</a>',
@@ -61,6 +61,9 @@ const EXPORTER_CONFIG = {
   XYZ_LAYER: {
     ATTRIBUTIONS: `Tiles © <a href="${MAP_SERVER}">GEE</a>`,
     URL: `${MAP_SERVER}/${PUBLISH_POINT}/query?request=${REQUEST}&channel=${CHANNEL}&version=${VERSION}&x={x}&y={y}&z={z}`,
+  },
+  OSM_LAYER: {
+    URL: `https://a.tile.openstreetmap.org/`,
   },
 };
 

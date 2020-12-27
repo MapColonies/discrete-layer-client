@@ -5,6 +5,7 @@
   position: absolute;
   top: 100px;
   left: -20px;
+  cursor: pointer;
 }
 
 body[dir='rtl'] .drawerOpenerPosition {
