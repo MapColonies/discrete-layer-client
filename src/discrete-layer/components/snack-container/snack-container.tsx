@@ -35,8 +35,6 @@ export const SnackContainer: React.FC = observer(() => {
     }
   }, [discreteLayersStore.state]);
 
-  // setTimeout(()=>{setSnackOpen(true)}, 5000);
-
   return (
     <>
       {!!snackDetails.message && (
@@ -44,12 +42,10 @@ export const SnackContainer: React.FC = observer(() => {
           open={snackOpen}
           onClose={(evt): void => setSnackOpen(false)}
           message={intl.formatMessage({ id: snackDetails.message })}
-          // message={intl.formatMessage({ id: 'snack.message.success' })}
           dismissesOnAction
           action={
             <SnackbarAction
               label={intl.formatMessage({ id: 'snack.dismiss-btn.text' })}
-              onClick={(): void => console.log('dismiss clicked')}
             />
           }
         />

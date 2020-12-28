@@ -32,13 +32,9 @@ export const MOCK_DATA_IMAGERY_LAYERS_ISRAEL = [
     id: 1,
     name: `Weizmann Institute of Science (Rehovot, Israel)`,
     creationDate: new Date('2018-02-13T13:39:55.400Z'),
-    description: `<img width="50%" src="http://oin-hotosm.s3.amazonaws.com/5a852c072553e6000ce5ac8d/0/7950e2de-5d9e-49aa-adec-6e92384be0b9_thumb.png"/>
-                  <p>
-                    Geojson type is <strong>LineString</strong>
-                  </p>
-                `,
+    description: '',
     geojson: {
-      type: 'LineString',
+      type: 'Polygon',
       coordinates: [
         [34.8076891807199, 31.9042863434239],
         [34.816135996859, 31.9042863434239],

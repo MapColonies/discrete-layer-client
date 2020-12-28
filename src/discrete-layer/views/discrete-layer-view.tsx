@@ -22,7 +22,6 @@ const DiscreteLayerView: React.FC = () => {
   };
 
   const handlePolygonReset = (): void => {
-    // discreteLayersStore.searchParams.resetLocation.bind(discreteLayersStore.searchParams)();
     discreteLayersStore.searchParams.resetLocation();
     discreteLayersStore.clearLayersImages();
   }
