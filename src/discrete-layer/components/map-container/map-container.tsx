@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { find } from 'lodash';
-import { lineString } from '@turf/helpers';
+import { lineString, polygon } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { 
@@ -72,8 +72,22 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         const timeStamp = getTimeStamp();
 
         setIsDrawing(false);
-
-        props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
+        
+        // props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
+        if(drawing.type === 'BOX')
+        {
+          // @ts-ignore
+          props.handlePolygonSelected(polygon([...(drawing.geojson as Feature).geometry.coordinates]));
+        }
+        else{
+          // @ts-ignore
+          props.handlePolygonSelected(polygon([
+            [
+              ...((drawing.geojson as Feature).geometry as Polygon).coordinates.map(item => item[0]),
+              ((drawing.geojson as Feature).geometry as Polygon).coordinates[0][0]
+            ]
+          ]));
+        }
 
         setDrawEntities([
           {

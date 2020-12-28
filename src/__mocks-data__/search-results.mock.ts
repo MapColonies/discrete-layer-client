@@ -35,13 +35,13 @@ export const MOCK_DATA_IMAGERY_LAYERS_ISRAEL = [
     description: '',
     geojson: {
       type: 'Polygon',
-      coordinates: [
+      coordinates: [[
         [34.8076891807199, 31.9042863434239],
         [34.816135996859, 31.9042863434239],
         [34.816135996859,31.9118071956932],
         [34.8076891807199,31.9118071956932],
         [34.8076891807199,31.9042863434239],
-      ],
+      ]],
     },
     referenceSystem: '',
     imagingTimeStart: new Date(),
