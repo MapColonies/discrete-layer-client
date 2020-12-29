@@ -73,21 +73,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 
         setIsDrawing(false);
         
-        // props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
-        if(drawing.type === 'BOX')
-        {
-          // @ts-ignore
-          props.handlePolygonSelected(polygon([...(drawing.geojson as Feature).geometry.coordinates]));
-        }
-        else{
-          // @ts-ignore
-          props.handlePolygonSelected(polygon([
-            [
-              ...((drawing.geojson as Feature).geometry as Polygon).coordinates.map(item => item[0]),
-              ((drawing.geojson as Feature).geometry as Polygon).coordinates[0][0]
-            ]
-          ]));
-        }
+        props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
 
         setDrawEntities([
           {
