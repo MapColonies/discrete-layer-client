@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { find } from 'lodash';
-import { lineString, polygon } from '@turf/helpers';
+import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { 
@@ -40,7 +40,6 @@ const noDrawing: IDrawingObject = {
 };
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
-const DRAWING_OUTLINE_COLOR = CesiumColor.AQUA;
 const mapActionsWidth = '400px';
 
 export interface MapContainerProps {
@@ -223,8 +222,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         <LayersFootprints/>
         <CesiumDrawingsDataSource
           drawings={drawEntities}
-          material={DRAWING_MATERIAL_COLOR}
-          outlineColor={DRAWING_OUTLINE_COLOR}
+          drawingMaterial={DRAWING_MATERIAL_COLOR}
           drawState={{
             drawing: isDrawing,
             type: drawPrimitive.type,

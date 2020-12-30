@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { CesiumGeojsonLayer } from '@map-colonies/react-components';
+import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
 import { Feature, FeatureCollection, Geometry, Polygon } from 'geojson';
 import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
-// TODO WRAP in components
-import { Color } from 'cesium';
 import { useStore } from '../../models/rootStore';
 
 export const LayersFootprints: React.FC = observer(() => {
@@ -79,7 +77,7 @@ export const LayersFootprints: React.FC = observer(() => {
   return (
     <CesiumGeojsonLayer
       data={layersFootprints}
-      // markerColor={Color.RED}
+      // markerColor={CesiumColor.RED}
       onLoad={(g): void => {
         
         // REMARK: Unified boundingboxes of footprints
@@ -87,24 +85,24 @@ export const LayersFootprints: React.FC = observer(() => {
           // @ts-ignore
           item.polyline.width = 6.0;
           // @ts-ignore
-          item.polyline.material = Color.RED;
+          item.polyline.material = CesiumColor.RED;
         });
 
         // REMARK: footprints as is
         // g.entities.values.forEach(item => {
         //   if(item.polygon){
         //     // @ts-ignore
-        //     item.polygon.outlineColor = Color.RED;
+        //     item.polygon.outlineColor = CesiumColor.RED;
         //     // @ts-ignore
-        //     item.polygon.material = Color.fromRandom({alpha: 0.4});
+        //     item.polygon.material = CesiumColor.fromRandom({alpha: 0.4});
         //   }
         // });
 
 
         // // @ts-ignore
-        // g.entities.values[1].polygon.material = Color.TRANSPARENT; //Color.RED.withAlpha(0.4);
+        // g.entities.values[1].polygon.material = CesiumColor.TRANSPARENT; //CesiumColor.RED.withAlpha(0.4);
         // // @ts-ignore
-        // g.entities.values[1].polygon.outlineColor = Color.RED;
+        // g.entities.values[1].polygon.outlineColor = CesiumColor.RED;
         // // @ts-ignore
         // g.entities.values[1].polygon.outlineWidth = 6.0;
       }}
