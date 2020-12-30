@@ -66,12 +66,21 @@ exports[`MapContainer component renders correctly 1`] = `
       test
     </span>
     <Memo(wrappedComponent) />
+    <Memo(wrappedComponent) />
     <Component
       drawState={
         Object {
           "drawing": false,
           "handler": [Function],
           "type": "UNKNOWN",
+        }
+      }
+      drawingMaterial={
+        Color {
+          "alpha": 0.5,
+          "blue": 0,
+          "green": 1,
+          "red": 1,
         }
       }
       drawings={
@@ -83,22 +92,6 @@ exports[`MapContainer component renders correctly 1`] = `
             "type": "UNKNOWN",
           },
         ]
-      }
-      material={
-        Color {
-          "alpha": 0.5,
-          "blue": 0,
-          "green": 1,
-          "red": 1,
-        }
-      }
-      outlineColor={
-        Color {
-          "alpha": 1,
-          "blue": 1,
-          "green": 1,
-          "red": 0,
-        }
       }
     />
   </Component>
