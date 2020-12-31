@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
 import { Feature, FeatureCollection, Geometry, Polygon } from 'geojson';
+import { ConstantProperty } from 'cesium';
 import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { useStore } from '../../models/rootStore';
+
+const FOOTPRINT_BORDER_COLOR = CesiumColor.RED;
+const FOOTPRINT_BORDER_WIDTH = 6.0;
 
 export const LayersFootprints: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
@@ -18,7 +22,7 @@ export const LayersFootprints: React.FC = observer(() => {
         type: 'FeatureCollection',
         features: []
       }
-      const footPrintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
+      const footprintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
         let geometry: Geometry = layer.geojson as Geometry;
         switch(layer.geojson?.type){
           case 'Polygon':
@@ -32,7 +36,7 @@ export const LayersFootprints: React.FC = observer(() => {
             break;
         }
         
-        const footPrint: Feature = {
+        const footprint: Feature = {
           type: 'Feature',
           geometry: { 
             ...geometry,
@@ -42,9 +46,9 @@ export const LayersFootprints: React.FC = observer(() => {
             description: layer.description,
           },
         }
-        return footPrint;
+        return footprint;
       });
-      footprintsCollection.features.push(...footPrintsFeaturesArray);
+      footprintsCollection.features.push(...footprintsFeaturesArray);
       setlayersFootprints(footprintsCollection);
     }
   }, [discreteLayersStore.layersImages]);
@@ -56,8 +60,8 @@ export const LayersFootprints: React.FC = observer(() => {
   //       type: 'FeatureCollection',
   //       features: []
   //     }
-  //     const footPrintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
-  //       const footPrint: Feature = {
+  //     const footprintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
+  //       const footprint: Feature = {
   //         type: 'Feature',
   //         geometry: { 
   //           ...(layer.geojson as Geometry),
@@ -67,9 +71,9 @@ export const LayersFootprints: React.FC = observer(() => {
   //           description: layer.description,
   //         },
   //       }
-  //       return footPrint;
+  //       return footprint;
   //     });
-  //     footprintsCollection.features.push(...footPrintsFeaturesArray);
+  //     footprintsCollection.features.push(...footprintsFeaturesArray);
   //     setlayersFootprints(footprintsCollection);
   //   }
   // }, [discreteLayersStore.layersImages]);
@@ -77,22 +81,24 @@ export const LayersFootprints: React.FC = observer(() => {
   return (
     <CesiumGeojsonLayer
       data={layersFootprints}
-      // markerColor={CesiumColor.RED}
-      onLoad={(g): void => {
+      onLoad={(geoJsonDataSouce): void => {
         
         // REMARK: Unified boundingboxes of footprints
-        g.entities.values.forEach(item => {
-          // @ts-ignore
-          item.polyline.width = 6.0;
-          // @ts-ignore
-          item.polyline.material = CesiumColor.RED;
+        geoJsonDataSouce.entities.values.forEach(item => {
+          if(item.polyline) {
+            (item.polyline.width as ConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
+            // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            item.polyline.material = FOOTPRINT_BORDER_COLOR;
+          }
         });
 
         // REMARK: footprints as is
-        // g.entities.values.forEach(item => {
+        // geoJsonDataSouce.entities.values.forEach(item => {
         //   if(item.polygon){
         //     // @ts-ignore
-        //     item.polygon.outlineColor = CesiumColor.RED;
+        //     item.polygon.outlineColor = FOOTPRINT_BORDER_COLOR;
         //     // @ts-ignore
         //     item.polygon.material = CesiumColor.fromRandom({alpha: 0.4});
         //   }
@@ -100,11 +106,11 @@ export const LayersFootprints: React.FC = observer(() => {
 
 
         // // @ts-ignore
-        // g.entities.values[1].polygon.material = CesiumColor.TRANSPARENT; //CesiumColor.RED.withAlpha(0.4);
+        // geoJsonDataSouce.entities.values[1].polygon.material = CesiumColor.TRANSPARENT; //CesiumColor.RED.withAlpha(0.4);
         // // @ts-ignore
-        // g.entities.values[1].polygon.outlineColor = CesiumColor.RED;
+        // geoJsonDataSouce.entities.values[1].polygon.outlineColor = FOOTPRINT_BORDER_COLOR;
         // // @ts-ignore
-        // g.entities.values[1].polygon.outlineWidth = 6.0;
+        // geoJsonDataSouce.entities.values[1].polygon.outlineWidth = 6.0;
       }}
       // onError={action('onError')}
     />

@@ -58,6 +58,7 @@ export const discreteLayersStore = types
       }
     );
 
+    // TODO: Remove when actual API is integrated
     function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
       return layers.filter((layer) => {
         let layerBBoxPolygon: Polygon;
