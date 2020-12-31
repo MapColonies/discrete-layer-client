@@ -25,6 +25,7 @@ import { DrawerOpener } from '../drawer-opener/drawer-opener';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { SelectedLayersContainer } from './selected-layers-container';
 import './map-container.css';
+import { LayersFootprints } from './layers-footprints';
 
 interface IDrawingObject {
   type: DrawType;
@@ -39,7 +40,6 @@ const noDrawing: IDrawingObject = {
 };
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
-const DRAWING_OUTLINE_COLOR = CesiumColor.AQUA;
 const mapActionsWidth = '400px';
 
 export interface MapContainerProps {
@@ -64,7 +64,6 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
-    
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
       type: type,
@@ -72,7 +71,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
         const timeStamp = getTimeStamp();
 
         setIsDrawing(false);
-
+        
         props.handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
 
         setDrawEntities([
@@ -220,10 +219,10 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       >
         {props.mapContent}
         <SelectedLayersContainer/>
+        <LayersFootprints/>
         <CesiumDrawingsDataSource
           drawings={drawEntities}
-          material={DRAWING_MATERIAL_COLOR}
-          outlineColor={DRAWING_OUTLINE_COLOR}
+          drawingMaterial={DRAWING_MATERIAL_COLOR}
           drawState={{
             drawing: isDrawing,
             type: drawPrimitive.type,

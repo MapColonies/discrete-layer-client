@@ -1,5 +1,10 @@
 /* eslint-disable camelcase */
 import { types, Instance, flow, getParent } from 'mobx-state-tree';
+import lineStringToPolygon from '@turf/linestring-to-polygon';
+import intersect from '@turf/intersect';
+import bboxPolygon from '@turf/bbox-polygon';
+import bbox from '@turf/bbox';
+import { LineString, MultiPolygon, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
@@ -45,13 +50,41 @@ export const discreteLayersStore = types
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
-          self.layersImages = result.map(item => ({...item, selected:false}));
+          self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false}));
         } catch (error) {
           console.error(error);
           self.state = ResponseState.ERROR;
         }
       }
     );
+
+    // TODO: Remove when actual API is integrated
+    function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
+      return layers.filter((layer) => {
+        let layerBBoxPolygon: Polygon;
+        switch(layer.geojson?.type){
+          case 'Polygon':
+            layerBBoxPolygon = layer.geojson;
+            break;
+          case 'MultiPolygon':
+            layerBBoxPolygon = bboxPolygon(bbox(layer.geojson as MultiPolygon)).geometry;
+            break;
+          case 'LineString':
+            layerBBoxPolygon = lineStringToPolygon(layer.geojson as LineString).geometry;
+            break;
+          default:
+            throw(new Error('Unknow Geojson feature type'));
+        }
+        const intersection = intersect(
+          layerBBoxPolygon, 
+          {
+            ...(self.searchParams.geojson as Polygon)
+          }
+        );
+        return intersection ? true : false;
+      });
+
+    }
 
     function clearLayersImages(): void {
       self.layersImages = [];
