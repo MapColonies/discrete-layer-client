@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams, GridCellMouseOverEvent } from '../../../common/components/grid';
+import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent } from '../../../common/components/grid';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
@@ -75,6 +75,9 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer((event.data as ILayerImage).id);
+    },
+    onCellMouseOut(event: GridCellMouseOutEvent) {
+      discreteLayersStore.highlightLayer('');
     }
   };
 

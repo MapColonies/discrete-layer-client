@@ -10,6 +10,7 @@ import {
   ValueFormatterParams,
   RowSelectedEvent,
   CellMouseOverEvent,
+  CellMouseOutEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -27,6 +28,7 @@ interface GridComponentProps {
   style?: CSSProperties;
 };
 
+export interface GridCellMouseOutEvent extends CellMouseOutEvent{};
 export interface GridCellMouseOverEvent extends CellMouseOverEvent{};
 export interface GridRowSelectedEvent extends RowSelectedEvent{};
 export interface GridValueFormatterParams extends ValueFormatterParams{};

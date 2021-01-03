@@ -220,8 +220,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
       >
         {props.mapContent}
         <SelectedLayersContainer/>
-        <LayersFootprints/>
         <HighlightedLayer/>
+        <LayersFootprints/>
         <CesiumDrawingsDataSource
           drawings={drawEntities}
           drawingMaterial={DRAWING_MATERIAL_COLOR}
