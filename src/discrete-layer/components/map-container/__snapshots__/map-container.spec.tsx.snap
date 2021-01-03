@@ -67,6 +67,7 @@ exports[`MapContainer component renders correctly 1`] = `
     </span>
     <Memo(wrappedComponent) />
     <Memo(wrappedComponent) />
+    <Memo(wrappedComponent) />
     <Component
       drawState={
         Object {
