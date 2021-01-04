@@ -23,6 +23,7 @@ import '@map-colonies/react-core/dist/snackbar/styles';
 import '@map-colonies/react-core/dist/icon/styles';
 import '@map-colonies/react-core/dist/linear-progress/styles';
 import '@map-colonies/react-core/dist/drawer/styles';
+import '@map-colonies/react-core/dist/checkbox/styles';
 
 import { SnackContainer } from './discrete-layer/components/snack-container/snack-container';
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';

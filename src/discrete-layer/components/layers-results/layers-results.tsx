@@ -5,6 +5,7 @@ import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFor
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
+import { RowSelectionRenderer } from './cell-renderer/row-selection.cell-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
 
 interface LayersResultsComponentProps {
@@ -28,9 +29,15 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   
   const colDef = [
     {
-      checkboxSelection: true,
+      // checkboxSelection: true,
       width: 20,
       field: 'selected',
+      cellRenderer: 'rowSelectionRenderer',
+      cellRendererParams: {
+        onClick: (id: string, value: any): void => {
+          discreteLayersStore.showLayer(id, value);
+        }
+      }
     },
     {
       headerName: intl.formatMessage({
@@ -63,7 +70,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      detailsRenderer: LayerDetailsRenderer
+      detailsRenderer: LayerDetailsRenderer,
+      rowSelectionRenderer: RowSelectionRenderer,
     },
     rowSelection: 'multiple',
     suppressRowClickSelection: true,

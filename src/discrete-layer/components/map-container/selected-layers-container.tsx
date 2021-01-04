@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CesiumXYZLayer } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/rootStore';
 import { ILayerImage } from '../../models/layerImage';
 
@@ -8,18 +9,10 @@ interface CacheMap {
   [key: string]: JSX.Element | undefined
 }
 
-function usePrevious(value: ILayerImage[]): ILayerImage[] | undefined {
-  const ref = useRef<ILayerImage[]>();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 export const SelectedLayersContainer: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
-  const prevLayersImages = usePrevious(layersImages);
+  const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as CacheMap);
   
   useEffect(() => {

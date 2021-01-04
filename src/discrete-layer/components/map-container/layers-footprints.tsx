@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
 import { FeatureCollection } from 'geojson';
 import { ConstantProperty } from 'cesium';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/rootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
@@ -12,6 +13,9 @@ const FOOTPRINT_BORDER_WIDTH = 6.0;
 export const LayersFootprints: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersFootprints, setlayersFootprints] = useState<FeatureCollection>();
+
+  const prevLayersFootprints = usePrevious<FeatureCollection | undefined>(layersFootprints);
+  const cacheRef = useRef({} as FeatureCollection | undefined);
 
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
@@ -27,9 +31,19 @@ export const LayersFootprints: React.FC = observer(() => {
     }
   }, [discreteLayersStore.layersImages]);
 
+  const getFootprints = (): FeatureCollection | undefined => {
+    let cache = cacheRef.current;
+    if (prevLayersFootprints?.features.length === layersFootprints?.features.length) {
+      return cache;
+    } else {
+      cache = layersFootprints;
+      return cache;
+    }
+  }
+
   return (
     <CesiumGeojsonLayer
-      data={layersFootprints}
+      data={getFootprints()}
       onLoad={(geoJsonDataSouce): void => {
         
         geoJsonDataSouce.entities.values.forEach(item => {
