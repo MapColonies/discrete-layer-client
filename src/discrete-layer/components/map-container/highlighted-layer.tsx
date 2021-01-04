@@ -16,7 +16,7 @@ export const HighlightedLayer: React.FC = observer(() => {
     const footprintsCollection: FeatureCollection = {
       type: 'FeatureCollection',
       features: []
-    }
+    };
     const layer = discreteLayersStore.highlightedLayer;
     if(layer){
       const footprint = getLayerFootprint(layer, true);
@@ -46,7 +46,6 @@ export const HighlightedLayer: React.FC = observer(() => {
           }
         });
       }}
-      // onError={action('onError')}
     />
   );
 });
