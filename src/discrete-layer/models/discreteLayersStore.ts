@@ -28,6 +28,7 @@ export const discreteLayersStore = types
     ),
     searchParams: types.optional(searchParams, {}),
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
+    highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
   })
   .views((self) => ({
     get root(): IRootStore {
@@ -94,10 +95,15 @@ export const discreteLayersStore = types
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, selected: isShow} : el);
     }
 
+    function highlightLayer(id: string): void {
+      self.highlightedLayer = self.layersImages?.find(el => el.id === id);
+    }
+
     return {
       getLayersImages,
       clearLayersImages,
-      showLayer
+      showLayer,
+      highlightLayer,
     };
   });
 

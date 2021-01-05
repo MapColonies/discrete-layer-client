@@ -6,32 +6,29 @@ import { ConstantProperty } from 'cesium';
 import { useStore } from '../../models/rootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
-const FOOTPRINT_BORDER_COLOR = CesiumColor.RED;
-const FOOTPRINT_BORDER_WIDTH = 6.0;
+const FOOTPRINT_BORDER_COLOR = CesiumColor.BLUE;
+const FOOTPRINT_BORDER_WIDTH = 12.0;
 
-export const LayersFootprints: React.FC = observer(() => {
+export const HighlightedLayer: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersFootprints, setlayersFootprints] = useState<FeatureCollection>();
-
   useEffect(() => {
-    if (discreteLayersStore.layersImages) {
-      const footprintsCollection: FeatureCollection = {
-        type: 'FeatureCollection',
-        features: []
-      }
-      const footprintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
-        return getLayerFootprint(layer, false);
-      });
-      footprintsCollection.features.push(...footprintsFeaturesArray);
-      setlayersFootprints(footprintsCollection);
+    const footprintsCollection: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: []
+    };
+    const layer = discreteLayersStore.highlightedLayer;
+    if(layer){
+      const footprint = getLayerFootprint(layer, true);
+      footprintsCollection.features.push(footprint);
     }
-  }, [discreteLayersStore.layersImages]);
+    setlayersFootprints(footprintsCollection);
+  }, [discreteLayersStore.highlightedLayer]);
 
   return (
     <CesiumGeojsonLayer
       data={layersFootprints}
       onLoad={(geoJsonDataSouce): void => {
-        
         geoJsonDataSouce.entities.values.forEach(item => {
           if(item.polyline) {
             (item.polyline.width as ConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
@@ -49,7 +46,6 @@ export const LayersFootprints: React.FC = observer(() => {
           }
         });
       }}
-      // onError={action('onError')}
     />
   );
 });
