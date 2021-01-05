@@ -1,3 +1,32 @@
 .mdc-text-field--fullwidth:not(.mdc-text-field--textarea):not(.mdc-text-field--disabled) {
   background-color: whitesmoke !important;
 }
+
+.mdc-checkbox .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background::before,
+.mdc-checkbox .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background::before {
+  background-color: #2979ff;
+  /* @alternate */
+  background-color: var(--mdc-theme-primary, #2979ff);
+}
+.mdc-checkbox.mdc-checkbox--selected .mdc-checkbox__ripple::before, .mdc-checkbox.mdc-checkbox--selected .mdc-checkbox__ripple::after {
+  background-color: #2979ff;
+  /* @alternate */
+  background-color: var(--mdc-theme-primary, #2979ff);
+}
+
+.mdc-checkbox.mdc-ripple-upgraded--background-focused.mdc-checkbox--selected .mdc-checkbox__ripple::before,
+.mdc-checkbox.mdc-ripple-upgraded--background-focused.mdc-checkbox--selected .mdc-checkbox__ripple::after {
+  background-color: #2979ff;
+  /* @alternate */
+  background-color: var(--mdc-theme-primary, #2979ff);
+}
+
+.mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  border-color: #2979ff;
+  /* @alternate */
+  border-color: var(--mdc-theme-primary, #2979ff);
+  background-color: #2979ff;
+  /* @alternate */
+  background-color: var(--mdc-theme-primary, #2979ff);
+}

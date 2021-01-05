@@ -4,7 +4,7 @@ import { Checkbox } from '@map-colonies/react-core';
 import './row-selection.cell-renderer.css';
 
 interface ISelectionCellRendererParams extends ICellRendererParams {
-  onClick:  (id: string, value: any) => void;
+  onClick:  (id: string, value: boolean) => void;
 }
 
 export const RowSelectionRenderer: React.FC<ISelectionCellRendererParams> = (props) => {

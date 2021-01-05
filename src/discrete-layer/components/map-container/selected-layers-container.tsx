@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CesiumXYZLayer } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
+import { isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/rootStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -18,6 +19,9 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
       setlayersImages(discreteLayersStore.layersImages);
+      if(isEmpty(discreteLayersStore.layersImages)) {
+        cacheRef.current = {};
+      }
     }
   }, [discreteLayersStore.layersImages]);
 

@@ -1,13 +1,3 @@
 .ag-cell .mdc-checkbox {
     position: unset;
 }
-
-.mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
-.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
-  border-color: #018786;
-  /* @alternate */
-  border-color: var(--mdc-theme-primary, #018786);
-  background-color: #018786;
-  /* @alternate */
-  background-color: var(--mdc-theme-primary, #018786);
-}

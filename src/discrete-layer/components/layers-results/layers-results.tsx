@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent } from '../../../common/components/grid';
+import { find, isObject } from 'lodash';
+import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridReadyEvent } from '../../../common/components/grid';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
@@ -14,6 +15,7 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
+const UPDATE_TIMEOUT = 0;
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
@@ -34,7 +36,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'selected',
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
-        onClick: (id: string, value: any): void => {
+        onClick: (id: string, value: boolean): void => {
           discreteLayersStore.showLayer(id, value);
         }
       }
@@ -75,6 +77,26 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     rowSelection: 'multiple',
     suppressRowClickSelection: true,
+    onFirstDataRendered: (params: GridReadyEvent): void => {
+      const selectionFieldName = 'selected';
+      const columns = params.columnApi.getAllColumns();
+      const selectionCol = find(columns, (column) => {
+        const colDef = column.getColDef();
+        return (colDef.checkboxSelection === true && colDef.field === selectionFieldName);
+      });
+
+      if(isObject(selectionCol)){
+        params.api.forEachNode(node => {
+          if((node.data as ILayerImage)[selectionFieldName] === true){
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            (params.api as any).updatingSelectionCustom = true;
+            node.setSelected(true, false, true);
+          }
+        });
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        setTimeout(()=>{(params.api as any).updatingSelectionCustom = false}, UPDATE_TIMEOUT);
+      }
+    },
     onRowSelected: (event: GridRowSelectedEvent): void => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if((event.api as any).updatingSelectionCustom !== true){

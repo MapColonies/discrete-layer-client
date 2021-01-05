@@ -3,7 +3,7 @@ import React, { CSSProperties, useEffect, useState } from 'react';
 import { Box } from '@map-colonies/react-components';
 import { AgGridReact } from 'ag-grid-react';
 import {
-  GridReadyEvent,
+  GridReadyEvent as AgGridReadyEvent,
   GridApi,
   GridOptions,
   RowNode,
@@ -14,12 +14,10 @@ import {
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { ILayerImage } from '../../../discrete-layer/models/layerImage';
 import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
 const EXPANDER_COLUMN_WIDTH = 60;
-const UPDATE_TIMEOUT = 0;
 export const DETAILS_ROW_ID_SUFFIX = '_details';
 
 interface GridComponentProps {
@@ -28,6 +26,7 @@ interface GridComponentProps {
   style?: CSSProperties;
 };
 
+export interface GridReadyEvent extends AgGridReadyEvent{};
 export interface GridCellMouseOutEvent extends CellMouseOutEvent{};
 export interface GridCellMouseOverEvent extends CellMouseOverEvent{};
 export interface GridRowSelectedEvent extends RowSelectedEvent{};
@@ -51,22 +50,9 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     setGridApi(params.api);
   };
 
-  const onFirstDataRendered = (params: GridReadyEvent): void => {
-    params.api.forEachNode(node => {
-      if((node.data as ILayerImage).selected === true){
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (params.api as any).updatingSelectionCustom = true;
-        node.setSelected(true, false, true);
-      }
-    });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    setTimeout(()=>{(params.api as any).updatingSelectionCustom = false}, UPDATE_TIMEOUT);
-  };
-
   const gridOptionsFromProps: GridComponentOptions = {
     ...props.gridOptions,
     onGridReady: onGridReady,
-    onFirstDataRendered: onFirstDataRendered,
     columnDefs: [
       {
         field: 'isVisible',
