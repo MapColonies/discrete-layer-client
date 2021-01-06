@@ -18,6 +18,7 @@ const DiscreteLayerView: React.FC = () => {
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     discreteLayersStore.searchParams.setLocation(geometry);
+    void discreteLayersStore.clearLayersImages();
     void discreteLayersStore.getLayersImages();
   };
 

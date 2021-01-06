@@ -1,8 +1,9 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { find, isObject } from 'lodash';
 import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridReadyEvent } from '../../../common/components/grid';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
@@ -22,12 +23,40 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const { discreteLayersStore } = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
 
+  const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
+  const cacheRef = useRef({} as ILayerImage[]);
+
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
       setlayersImages(discreteLayersStore.layersImages);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[discreteLayersStore.layersImages]);
+
+  const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
+    let res = false;
+    if (source && target &&
+        source.length === target.length) {
+          let matchesRes = true;
+          source.forEach((srcFeat: ILayerImage) => {
+            const match = target.find((targetFeat: ILayerImage) => {
+              return targetFeat.id === srcFeat.id;
+            });
+            matchesRes = matchesRes && isObject(match);
+          });
+          res = matchesRes;
+    }
+    
+    return res;
+  };
+
+  const getRowData = (): ILayerImage[] | undefined => {
+    if (isSameRowData(prevLayersImages, layersImages)) {
+      return cacheRef.current;
+    } else {
+      cacheRef.current = layersImages;
+      return cacheRef.current;
+    }
+  }
   
   const colDef = [
     {
@@ -114,7 +143,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   return (
     <GridComponent
       gridOptions={gridOptions}
-      rowData={layersImages}
+      rowData={getRowData()}
       style={props.style}
     />
   );
