@@ -25,7 +25,7 @@ export const layerImage = types.model({
   selected: types.maybe(types.boolean),
 });
 
-export interface ILayerImage extends Instance<typeof layerImage> {}
+export interface ILayerImage extends Instance<typeof layerImage> {};
 
 export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature => {
   if(isBbox){
@@ -48,6 +48,7 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
         ...geometry,
       },
       properties: {
+        id: layer.id,
         name: layer.name,
         description: layer.description,
       }
@@ -60,6 +61,7 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
         ...(layer.geojson as Geometry),
       },
       properties: {
+        id: layer.id,
         name: layer.name,
         description: layer.description,
       },

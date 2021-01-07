@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
-import { FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection } from 'geojson';
 import { ConstantProperty } from 'cesium';
+import { isObject, get } from 'lodash';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/rootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
@@ -12,6 +14,9 @@ const FOOTPRINT_BORDER_WIDTH = 6.0;
 export const LayersFootprints: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersFootprints, setlayersFootprints] = useState<FeatureCollection>();
+
+  const prevLayersFootprints = usePrevious<FeatureCollection | undefined>(layersFootprints);
+  const cacheRef = useRef({} as FeatureCollection | undefined);
 
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
@@ -27,9 +32,36 @@ export const LayersFootprints: React.FC = observer(() => {
     }
   }, [discreteLayersStore.layersImages]);
 
+  const isSameFeatureCollection = (source: FeatureCollection | undefined, target: FeatureCollection | undefined): boolean => {
+    let res = false;
+    if (source && target &&
+        source.features.length === target.features.length) {
+          let matchesRes = true;
+          source.features.forEach((srcFeat: Feature) => {
+            const match = target.features.find((targetFeat: Feature) => {
+              return get(targetFeat,'properties.id') === get(srcFeat, 'properties.id');
+            });
+            matchesRes = matchesRes && isObject(match);
+          });
+          res = matchesRes;
+    }
+    
+    return res;
+  };
+
+  const getFootprints = (): FeatureCollection | undefined => {
+    let cache = cacheRef.current;
+    if (isSameFeatureCollection(prevLayersFootprints, layersFootprints)) {
+      return cache;
+    } else {
+      cache = layersFootprints;
+      return cache;
+    }
+  }
+
   return (
     <CesiumGeojsonLayer
-      data={layersFootprints}
+      data={getFootprints()}
       onLoad={(geoJsonDataSouce): void => {
         
         geoJsonDataSouce.entities.values.forEach(item => {

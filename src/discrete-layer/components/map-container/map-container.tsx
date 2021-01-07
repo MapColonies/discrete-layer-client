@@ -83,6 +83,10 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
             type: drawing.type,
           },
         ]);
+
+        if(!resultsOpen){
+          setResultsOpen(true);
+        }
       },
     };
   };

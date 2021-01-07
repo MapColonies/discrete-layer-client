@@ -1,10 +1,13 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { GridComponent, GridComponentOptions, GridRowSelectedEvent, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent } from '../../../common/components/grid';
+import { isObject } from 'lodash';
+import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent } from '../../../common/components/grid';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
+import { RowSelectionRenderer } from './cell-renderer/row-selection.cell-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
 
 interface LayersResultsComponentProps {
@@ -19,18 +22,51 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const { discreteLayersStore } = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
 
+  const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
+  const cacheRef = useRef({} as ILayerImage[]);
+
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
       setlayersImages(discreteLayersStore.layersImages);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[discreteLayersStore.layersImages]);
+
+  const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
+    let res = false;
+    if (source && target &&
+        source.length === target.length) {
+          let matchesRes = true;
+          source.forEach((srcFeat: ILayerImage) => {
+            const match = target.find((targetFeat: ILayerImage) => {
+              return targetFeat.id === srcFeat.id;
+            });
+            matchesRes = matchesRes && isObject(match);
+          });
+          res = matchesRes;
+    }
+    
+    return res;
+  };
+
+  const getRowData = (): ILayerImage[] | undefined => {
+    if (isSameRowData(prevLayersImages, layersImages)) {
+      return cacheRef.current;
+    } else {
+      cacheRef.current = layersImages;
+      return cacheRef.current;
+    }
+  }
   
   const colDef = [
     {
-      checkboxSelection: true,
       width: 20,
       field: 'selected',
+      cellRenderer: 'rowSelectionRenderer',
+      cellRendererParams: {
+        onClick: (id: string, value: boolean): void => {
+          discreteLayersStore.showLayer(id, value);
+        }
+      }
     },
     {
       headerName: intl.formatMessage({
@@ -63,16 +99,11 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      detailsRenderer: LayerDetailsRenderer
+      detailsRenderer: LayerDetailsRenderer,
+      rowSelectionRenderer: RowSelectionRenderer,
     },
     rowSelection: 'multiple',
     suppressRowClickSelection: true,
-    onRowSelected: (event: GridRowSelectedEvent): void => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if((event.api as any).updatingSelectionCustom !== true){
-        discreteLayersStore.showLayer((event.data as ILayerImage).id, event.node.isSelected());
-      }
-    },
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer((event.data as ILayerImage).id);
     },
@@ -84,7 +115,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   return (
     <GridComponent
       gridOptions={gridOptions}
-      rowData={layersImages}
+      rowData={getRowData()}
       style={props.style}
     />
   );
