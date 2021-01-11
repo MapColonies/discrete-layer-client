@@ -9,7 +9,7 @@ public/env-config.js
 public/[cC]esium
 public/fonts
 public/assets
-
+public/mock
 
 # dependencies
 /node_modules
