@@ -3,7 +3,7 @@ import { types, Instance } from 'mobx-state-tree';
 import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
-// import convex from '@turf/convex';
+import convex from '@turf/convex';
 
 export const layerImage = types.model({
   id: types.string,
@@ -56,9 +56,9 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
     };
   }
   else {
-    const geometry: Geometry = layer.geojson as Geometry;
+    let geometry: Geometry = layer.geojson as Geometry;
     // @ts-ignore
-    // geometry = (polygonToLine(convex(geometry)) as Feature).geometry;
+    geometry = (polygonToLine(convex(geometry)) as Feature).geometry;
     return {
       type: 'Feature',
       geometry: { 
