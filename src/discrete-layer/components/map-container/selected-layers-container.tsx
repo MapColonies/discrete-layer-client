@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { CesiumXYZLayer } from '@map-colonies/react-components';
+import { Cesium3DTileset, CesiumXYZLayer } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -25,6 +25,16 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     }
   }, [discreteLayersStore.layersImages]);
 
+  const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
+    switch(layer.properties?.protocol){
+      case 'XYZ_LAYER':
+        return <CesiumXYZLayer options={{url: layer.properties.url}}/>
+      case '3D_LAYER':
+        return <Cesium3DTileset url={layer.properties.url}/>
+      default:
+        return undefined;
+    }
+  }
 
   const getLayer = (layer: ILayerImage) : JSX.Element | null | undefined  => {
     const cache = cacheRef.current;
@@ -32,7 +42,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       if(cache[layer.id] !== undefined){
         return cache[layer.id];
       } else{
-        cache[layer.id] = <CesiumXYZLayer options={{url: layer.properties?.url as string}}/>;
+        cache[layer.id] = generateLayerComponent(layer);
         return cache[layer.id];
       }
     }

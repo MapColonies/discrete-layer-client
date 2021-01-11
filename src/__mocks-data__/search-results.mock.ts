@@ -231,4 +231,60 @@ export const MOCK_DATA_IMAGERY_LAYERS_ISRAEL = [
       meta: 'http://oin-hotosm.s3.amazonaws.com/5b25fa612b6a08001185f80f/0/5b25fa612b6a08001185f810_meta.json'
     },
   },
+  {
+    id: 7,
+    name: `Solar tower 3D (Rehovot, Israel)`,
+    creationDate: new Date('2021-01-07T10:39:55.400Z'),
+    description: '',
+    geojson: {
+      type:'Polygon',
+      coordinates:[[
+        [34.81576, 31.91132],
+        [34.81901, 31.91126],
+        [34.81904, 31.90932],
+        [34.81569, 31.90938],
+        [34.81576, 31.91132],
+      ]],
+    },
+    referenceSystem: '',
+    imagingTimeStart: new Date(),
+    imagingTimeEnd: new Date(),
+    type: '',
+    source: '',
+    category: '',
+    thumbnail: '',
+    properties: {
+      protocol: '3D_LAYER',
+      url: '/mock/Rehovot_solar_tileset/L16_31023/L16_31023.json',
+      meta: 'NOT_DEFINED'
+    },
+  },
+  {
+    id: 8,
+    name: `Trees 3D (Rehovot, Israel)`,
+    creationDate: new Date('2021-01-07T10:39:55.400Z'),
+    description: '',
+    geojson: {
+      type:'Polygon',
+      coordinates:[[
+        [34.82720, 31.91292],
+        [34.83051, 31.91287],
+        [34.83042, 31.91093],
+        [34.82717, 31.91097],
+        [34.82720, 31.91292],
+      ]],
+    },
+    referenceSystem: '',
+    imagingTimeStart: new Date(),
+    imagingTimeEnd: new Date(),
+    type: '',
+    source: '',
+    category: '',
+    thumbnail: '',
+    properties: {
+      protocol: '3D_LAYER',
+      url: '/mock/Rehovot_solar_tileset/L16_31023/L16_31023.json',
+      meta: 'NOT_DEFINED'
+    },
+  },
 ];

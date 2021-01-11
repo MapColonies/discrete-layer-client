@@ -3,6 +3,7 @@ import { types, Instance } from 'mobx-state-tree';
 import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
+import convex from '@turf/convex';
 
 export const layerImage = types.model({
   id: types.string,
@@ -18,7 +19,7 @@ export const layerImage = types.model({
   category: types.string,
   thumbnail: types.string,
   properties: types.maybe(types.frozen<{
-    protocol: 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER',
+    protocol: 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER' | '3D_LAYER',
     url: string,
     meta?: string,
   }>()),
@@ -55,10 +56,13 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
     };
   }
   else {
+    let geometry: Geometry = layer.geojson as Geometry;
+    // @ts-ignore
+    geometry = (polygonToLine(convex(geometry)) as Feature).geometry;
     return {
       type: 'Feature',
       geometry: { 
-        ...(layer.geojson as Geometry),
+        ...geometry,
       },
       properties: {
         id: layer.id,
