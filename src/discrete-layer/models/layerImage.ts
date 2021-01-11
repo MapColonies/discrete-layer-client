@@ -56,7 +56,7 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
     };
   }
   else {
-    let geometry: Geometry = layer.geojson as Geometry;
+    const geometry: Geometry = layer.geojson as Geometry;
     // @ts-ignore
     // geometry = (polygonToLine(convex(geometry)) as Feature).geometry;
     return {
