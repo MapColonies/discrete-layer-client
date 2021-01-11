@@ -7,7 +7,7 @@ import { useStore } from '../../models/rootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
 const FOOTPRINT_BORDER_COLOR = CesiumColor.BLUE;
-const FOOTPRINT_BORDER_WIDTH = 12.0;
+const FOOTPRINT_BORDER_WIDTH = 6.0;
 
 export const HighlightedLayer: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
@@ -19,7 +19,7 @@ export const HighlightedLayer: React.FC = observer(() => {
     };
     const layer = discreteLayersStore.highlightedLayer;
     if(layer){
-      const footprint = getLayerFootprint(layer, true);
+      const footprint = getLayerFootprint(layer, false);
       footprintsCollection.features.push(footprint);
     }
     setlayersFootprints(footprintsCollection);

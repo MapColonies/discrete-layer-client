@@ -9,7 +9,7 @@ import { useStore } from '../../models/rootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
 const FOOTPRINT_BORDER_COLOR = CesiumColor.RED;
-const FOOTPRINT_BORDER_WIDTH = 6.0;
+const FOOTPRINT_BORDER_WIDTH = 2.0;
 
 export const LayersFootprints: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
@@ -70,7 +70,8 @@ export const LayersFootprints: React.FC = observer(() => {
             // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            item.polyline.material = FOOTPRINT_BORDER_COLOR;
+            item.polyline.material = CesiumColor.fromRandom({alpha: 0.4});
+            // item.polyline.material = FOOTPRINT_BORDER_COLOR;
           }
           if(item.polygon){
             (item.polygon.outlineColor as ConstantProperty).setValue(FOOTPRINT_BORDER_COLOR);
