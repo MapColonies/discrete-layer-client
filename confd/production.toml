@@ -2,6 +2,7 @@
 src = "production.tmpl"
 dest = "public/env-config.js"
 keys = [
+  "/configuration/ui/language",
   "/configuration/mapServer/url",
   "/configuration/mapServer/publishPoint",
   "/configuration/mapServer/channel",
@@ -9,5 +10,21 @@ keys = [
   "/configuration/mapServer/request",
   "/configuration/service/protocol",
   "/configuration/service/url",
-  "/configuration/activeLayer"
+  "/configuration/active/layer",
+  "/configuration/active/layer/properties/mapurlpath",
+  "/configuration/active/layer/properties/url/pattern",
+  "/configuration/active/layer/properties/url/pattern/params/service",
+  "/configuration/active/layer/properties/url/pattern/params/layers",
+  "/configuration/active/layer/properties/url/pattern/params/tiled",
+  "/configuration/active/layer/properties/url/pattern/params/matrixset",
+  "/configuration/active/layer/properties/url/pattern/params/style",
+  "/configuration/active/layer/properties/url/pattern/params/projection",
+  "/configuration/active/layer/properties/url/pattern/params/format",
+  "/configuration/map/center",
+  "/configuration/map/zoom",
+  "/configuration/logger/http/host",
+  "/configuration/logger/http/port",
+  "/configuration/logger/http/path",
+  "/configuration/logger/level",
+  "/configuration/logger/log2console",
 ]

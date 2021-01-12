@@ -12,7 +12,7 @@ export const wmtsOptions: RCesiumWMTSLayerOptions = {
   layer: CONFIG.WMTS_LAYER.LAYER,
   style: CONFIG.WMTS_LAYER.STYLE,
   format: CONFIG.WMTS_LAYER.FORMAT,
-  tileMatrixSetID: CONFIG.WMTS_LAYER.TILE_MATRIX_SET_ID,
+  tileMatrixSetID: CONFIG.WMTS_LAYER.MATRIX_SET,
   maximumLevel: CONFIG.WMTS_LAYER.MAXIMUM_LEVEL,
 };
 
@@ -27,5 +27,5 @@ export const xyzOptions: RCesiumXYZLayerOptions = {
 
 export const osmOptions: RCesiumOSMLayerOptions = {
   url: CONFIG.OSM_LAYER.URL,
-}
-  /* eslint-enable */
+};
+/* eslint-enable */
