@@ -1,7 +1,7 @@
 import { Proj } from '@map-colonies/react-components';
 
 /*eslint-disable */
-const LANGUAGE = (window as any)._env_.LANGUAGE;
+const LANGUAGE = (window as any)._env_.LANGUAGE as string;
 const MAP_SERVER = (window as any)._env_.MAP_SERVER;
 const PUBLISH_POINT = (window as any)._env_.PUBLISH_POINT;
 const CHANNEL = (window as any)._env_.CHANNEL;
