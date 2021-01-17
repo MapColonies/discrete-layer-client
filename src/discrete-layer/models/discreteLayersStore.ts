@@ -51,7 +51,7 @@ export const discreteLayersStore = types
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
-          self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false}));
+          self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
         } catch (error) {
           console.error(error);
           self.state = ResponseState.ERROR;
@@ -91,8 +91,8 @@ export const discreteLayersStore = types
       self.layersImages = [];
     }
 
-    function showLayer(id: string, isShow: boolean): void {
-      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, selected: isShow} : el);
+    function showLayer(id: string, isShow: boolean, order: number | null): void {
+      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, selected: isShow, order} : el);
     }
 
     function highlightLayer(id: string): void {

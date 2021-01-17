@@ -28,6 +28,7 @@
 
   "results.fields.name.label": "Name",
   "results.fields.creation-date.label": "Created",
+  "results.fields.order.label": "Order",
   "results.nodata": "No results to show",
 
   "snack.message.success": "Export SUCCEEDED",

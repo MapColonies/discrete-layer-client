@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isObject } from 'lodash';
-import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent } from '../../../common/components/grid';
+import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridRowNode } from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
@@ -24,6 +24,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
 
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
+  const selectedLayersRef = useRef(0);
 
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
@@ -53,6 +54,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       return cacheRef.current;
     } else {
       cacheRef.current = layersImages;
+      selectedLayersRef.current = 0;
       return cacheRef.current;
     }
   }
@@ -63,10 +65,20 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'selected',
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
-        onClick: (id: string, value: boolean): void => {
-          discreteLayersStore.showLayer(id, value);
+        onClick: (id: string, value: boolean, node: GridRowNode): void => {
+          (value) ? selectedLayersRef.current++ : selectedLayersRef.current--;
+          const order = value ? selectedLayersRef.current : null;
+          setTimeout(()=> node.setDataValue('order', order), 0) ;
+          discreteLayersStore.showLayer(id, value, order);
         }
       }
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.order.label',
+      }),
+      width: 50,
+      field: 'order',
     },
     {
       headerName: intl.formatMessage({
