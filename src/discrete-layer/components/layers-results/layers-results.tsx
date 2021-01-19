@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isObject } from 'lodash';
 import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridRowNode } from '../../../common/components/grid';
@@ -16,6 +16,8 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
+const emidiateExecution = 0;
+const intialOrder = 0;
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
@@ -24,7 +26,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
 
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
-  const selectedLayersRef = useRef(0);
+  const selectedLayersRef = useRef(intialOrder);
 
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
@@ -54,10 +56,12 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       return cacheRef.current;
     } else {
       cacheRef.current = layersImages;
-      selectedLayersRef.current = 0;
+      selectedLayersRef.current = intialOrder;
       return cacheRef.current;
     }
   }
+
+  const getMax = (valuesArr: number[]) => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
   
   const colDef = [
     {
@@ -66,22 +70,23 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          setTimeout(()=> node.setDataValue('selected', value), 0);
+          setTimeout(()=> node.setDataValue('selected', value), emidiateExecution);
           if(value) {
             selectedLayersRef.current++;
           }
           else {
             const orders: number[] = [];
-            // @ts-ignore
-            node.gridApi.forEachNode((item)=> {
-              if(item.data.selected && item.data.id !== id){
-                orders.push(item.data.order);
+            // eslint-disable-next-line
+            (node as any).gridApi.forEachNode((item: GridRowNode)=> {
+              const rowData = item.data as {[key: string]: string | boolean | number};
+              if(rowData.selected === true && rowData.id !== id) {
+                orders.push(rowData.order as number);
               }
             });
-            selectedLayersRef.current = (orders.length) ? Math.max.apply(Math, orders) : selectedLayersRef.current-1;
+            selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          setTimeout(()=> node.setDataValue('order', order), 0) ;
+          setTimeout(()=> node.setDataValue('order', order), emidiateExecution) ;
           discreteLayersStore.showLayer(id, value, order);
         }
       }
