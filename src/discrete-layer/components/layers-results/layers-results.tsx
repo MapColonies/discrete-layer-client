@@ -66,7 +66,19 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          (value) ? selectedLayersRef.current++ : selectedLayersRef.current--;
+          if(value) {
+            selectedLayersRef.current++;
+          }
+          else {
+            const orders: number[] = [];
+            // @ts-ignore
+            node.gridApi.forEachNode((item)=> {
+              if(item.data.selected){
+                orders.push(item.data.order);
+              }
+            });
+            selectedLayersRef.current = (orders.length) ? Math.max.apply(Math, orders) : selectedLayersRef.current--;
+          }
           const order = value ? selectedLayersRef.current : null;
           setTimeout(()=> node.setDataValue('order', order), 0) ;
           discreteLayersStore.showLayer(id, value, order);
