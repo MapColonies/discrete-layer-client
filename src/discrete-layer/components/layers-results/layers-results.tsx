@@ -66,6 +66,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
+          setTimeout(()=> node.setDataValue('selected', value), 0) ;
           if(value) {
             selectedLayersRef.current++;
           }
@@ -73,7 +74,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
             const orders: number[] = [];
             // @ts-ignore
             node.gridApi.forEachNode((item)=> {
-              if(item.data.selected){
+              if(item.data.selected && item.data.id !== id){
                 orders.push(item.data.order);
               }
             });
