@@ -16,7 +16,7 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
-const emidiateExecution = 0;
+const immediateExecution = 0;
 const intialOrder = 0;
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
@@ -70,7 +70,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          setTimeout(()=> node.setDataValue('selected', value), emidiateExecution);
+          setTimeout(()=> node.setDataValue('selected', value), immediateExecution);
           if(value) {
             selectedLayersRef.current++;
           }
@@ -86,7 +86,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          setTimeout(()=> node.setDataValue('order', order), emidiateExecution) ;
+          setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
           discreteLayersStore.showLayer(id, value, order);
         }
       }
