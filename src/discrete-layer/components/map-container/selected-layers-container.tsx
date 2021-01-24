@@ -28,9 +28,9 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
     switch(layer.properties?.protocol){
       case 'XYZ_LAYER':
-        return <CesiumXYZLayer options={{url: layer.properties.url}}/>
+        return <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/>
       case '3D_LAYER':
-        return <Cesium3DTileset url={layer.properties.url}/>
+        return <Cesium3DTileset key={layer.id} url={layer.properties.url}/>
       default:
         return undefined;
     }

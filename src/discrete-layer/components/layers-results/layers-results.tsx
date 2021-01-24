@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isObject } from 'lodash';
-import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent } from '../../../common/components/grid';
+import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridRowNode } from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/rootStore';
@@ -16,6 +16,8 @@ interface LayersResultsComponentProps {
 
 const pagination = true;
 const pageSize = 10;
+const immediateExecution = 0;
+const intialOrder = 0;
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
@@ -24,6 +26,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
 
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
+  const selectedLayersRef = useRef(intialOrder);
 
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
@@ -53,9 +56,12 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       return cacheRef.current;
     } else {
       cacheRef.current = layersImages;
+      selectedLayersRef.current = intialOrder;
       return cacheRef.current;
     }
   }
+
+  const getMax = (valuesArr: number[]) => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
   
   const colDef = [
     {
@@ -63,10 +69,34 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'selected',
       cellRenderer: 'rowSelectionRenderer',
       cellRendererParams: {
-        onClick: (id: string, value: boolean): void => {
-          discreteLayersStore.showLayer(id, value);
+        onClick: (id: string, value: boolean, node: GridRowNode): void => {
+          setTimeout(()=> node.setDataValue('selected', value), immediateExecution);
+          if(value) {
+            selectedLayersRef.current++;
+          }
+          else {
+            const orders: number[] = [];
+            // eslint-disable-next-line
+            (node as any).gridApi.forEachNode((item: GridRowNode)=> {
+              const rowData = item.data as {[key: string]: string | boolean | number};
+              if(rowData.selected === true && rowData.id !== id) {
+                orders.push(rowData.order as number);
+              }
+            });
+            selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
+          }
+          const order = value ? selectedLayersRef.current : null;
+          setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
+          discreteLayersStore.showLayer(id, value, order);
         }
       }
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.order.label',
+      }),
+      width: 50,
+      field: 'order',
     },
     {
       headerName: intl.formatMessage({

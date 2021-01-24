@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Checkbox } from '@map-colonies/react-core';
 import './row-selection.cell-renderer.css';
+import { GridRowNode } from '../../../../common/components/grid';
 
 interface ISelectionCellRendererParams extends ICellRendererParams {
-  onClick:  (id: string, value: boolean) => void;
+  onClick:  (id: string, value: boolean, node: GridRowNode) => void;
 }
 
 export const RowSelectionRenderer: React.FC<ISelectionCellRendererParams> = (props) => {
@@ -17,7 +18,7 @@ export const RowSelectionRenderer: React.FC<ISelectionCellRendererParams> = (pro
         (evt): void => {
           setChecked(evt.currentTarget.checked);
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          props.onClick(props.data.id, evt.currentTarget.checked);
+          props.onClick(props.data.id, evt.currentTarget.checked, props.node);
         }}
     />
  );

@@ -40,6 +40,7 @@ export interface IGridRowDataDetailsExt {
   fullWidth: boolean;
   isVisible: boolean;
 };
+export interface GridRowNode extends RowNode {};
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [gridApi, setGridApi] = useState<GridApi>();

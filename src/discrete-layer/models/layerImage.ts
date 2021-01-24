@@ -24,6 +24,7 @@ export const layerImage = types.model({
     meta?: string,
   }>()),
   selected: types.maybe(types.boolean),
+  order: types.maybe(types.frozen<number | null>()),
 });
 
 export interface ILayerImage extends Instance<typeof layerImage> {};
