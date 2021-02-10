@@ -5,6 +5,7 @@ import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
 import { LineString, MultiPolygon, Polygon } from 'geojson';
+import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
@@ -48,10 +49,40 @@ export const discreteLayersStore = types
           // const result = yield self.root.fetch('/searchLayerImages', 'GET', {});
           // const result = yield Promise.resolve(createMockData(20,'mock'));
           
+          // *** communicate with pycsw directly - CORS
+          // const result = yield self.root.fetch('http://127.0.0.1:54532/?version=2.0.2&service=CSW&request=GetRecords&typeNames=csw:Record&ElementSetName=full&resultType=results&outputSchema=http://schema.mapcolonies.com&outputFormat=application/json', 'GET', {});
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
           self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
+          
+          // *** communicate with pycsw with cswClient - CORS
+          // const cswClient = new CswClient(
+          //   'http://127.0.0.1:56477/?version=2.0.2&service=CSW',
+          //   self.root.fetch as IRequestExecutor,
+          //   {
+          //     shemas: [],
+          //     nameSpaces: {
+          //       namespacePrefixes: {
+          //         'http://schema.mapcolonies.com': 'mc',
+          //       },
+          //     },
+          //     credentials: {},
+          //   });
+          // const options = {
+          //   filter: [
+          //     {
+          //       field: 'mcgc:geojson',
+          //       bbox: {
+          //         llat: 31.9042863434239,
+          //         llon: 34.8076891807199,
+          //         ulat: 31.913197,
+          //         ulon: 34.810811,
+          //       },
+          //     },
+          //   ],
+          // };
+          // self.layersImages = yield cswClient.GetRecords(1, 10, options, 'http://schema.mapcolonies.com');
         } catch (error) {
           console.error(error);
           self.state = ResponseState.ERROR;

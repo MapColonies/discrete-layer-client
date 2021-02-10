@@ -20,7 +20,8 @@
     }
   },
   "scripts": {
-    "postinstall": "patch-package",
+    "postinstall": "yarn run patch:deps & patch-package",
+    "patch:deps": "(cd ./node_modules/@map-colonies/csw-client && patch-package --patch-dir ./dist/patches)",
     "start": "yarn run copyassets:all && react-scripts start",
     "build": "react-scripts --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
     "test": "react-scripts test --env=jsdom-fourteen --verbose",
@@ -75,6 +76,7 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
+    "@map-colonies/csw-client": "^1.0.1",
     "@map-colonies/react-components": "3.3.6",
     "@map-colonies/react-core": "3.2.0",
     "@material-ui/core": "^4.11.0",

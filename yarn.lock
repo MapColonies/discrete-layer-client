@@ -1495,6 +1495,18 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@map-colonies/csw-client@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@map-colonies/csw-client/-/csw-client-1.0.1.tgz#bc140650cd62a98a6f753da17e7fe2c56412c8d3"
+  integrity sha512-7wjNPUgLgc9qEBlWo+qg9t9ndSq1a9/HEf8mGZ0BoVNB81sXFSMxObrWBj6bWxyo7LL1l5+yQRD1MjTMgUtLng==
+  dependencies:
+    copyfiles "2.3.0"
+    jsonix "~2.3.2"
+    ogc-schemas "^2.6.1"
+    patch-package "^6.2.2"
+    w3c-schemas "^1.4.0"
+    xmlserializer "^0.6.1"
+
 "@map-colonies/eslint-config@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@map-colonies/eslint-config/-/eslint-config-1.0.3.tgz#5727f23d3df3279988b0d16cc895f0a9194fc272"
@@ -3480,6 +3492,11 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+
+amdefine@0.x.x:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-0.1.1.tgz#b5c75c532052dccd6a39c0064c772c8d57a06cd2"
+  integrity sha1-tcdcUyBS3M1qOcAGTHcsjVegbNI=
 
 ansi-colors@^3.0.0:
   version "3.2.4"
@@ -9186,6 +9203,24 @@ jsonify@~0.0.0:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
   integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
 
+jsonix@>=2.4.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jsonix/-/jsonix-3.0.0.tgz#6752e86e03239d37f403e424cb56252e1976fe3a"
+  integrity sha512-3I3CwAR5YRLGEApVjTYIDVzjryfvQq1sdEu8FLLCirGYBA9j0qDhIFHjtxEEyV0UApRgdAG8l4Za0VllZENHyA==
+  dependencies:
+    amdefine "0.x.x"
+    xmldom ">=0.1.21"
+    xmlhttprequest "1.x.x"
+
+jsonix@~2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/jsonix/-/jsonix-2.3.2.tgz#3a56df9ec7fc8c129267ccf8e13d829ebda5fd2d"
+  integrity sha1-Olbfnsf8jBKSZ8z44T2Cnr2l/S0=
+  dependencies:
+    amdefine "0.x.x"
+    xmldom "0.x.x"
+    xmlhttprequest "1.x.x"
+
 jsonparse@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/jsonparse/-/jsonparse-1.3.1.tgz#3f4dae4a91fac315f71062f8521cc239f1366280"
@@ -10643,6 +10678,14 @@ obuf@^1.0.0, obuf@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
+
+ogc-schemas@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/ogc-schemas/-/ogc-schemas-2.6.1.tgz#0834b00d8038f56fedd206467f34c130e9976f92"
+  integrity sha1-CDSwDYA49W/t0gZGfzTBMOmXb5I=
+  dependencies:
+    jsonix ">=2.4.0"
+    w3c-schemas ">=1.4.0"
 
 ol-mapbox-style@^6.1.1:
   version "6.1.4"
@@ -14670,6 +14713,13 @@ w3c-hr-time@^1.0.1:
   dependencies:
     browser-process-hrtime "^1.0.0"
 
+w3c-schemas@>=1.4.0, w3c-schemas@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/w3c-schemas/-/w3c-schemas-1.4.0.tgz#f4dafe92d97af56a99b3faa1520f592df2998428"
+  integrity sha1-9Nr+ktl69WqZs/qhUg9ZLfKZhCg=
+  dependencies:
+    jsonix ">=2.4.0"
+
 w3c-xmlserializer@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/w3c-xmlserializer/-/w3c-xmlserializer-1.1.2.tgz#30485ca7d70a6fd052420a3d12fd90e6339ce794"
@@ -15133,6 +15183,21 @@ xmlchars@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
+
+xmldom@0.x.x, xmldom@>=0.1.21:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.4.0.tgz#8771e482a333af44587e30ce026f0998c23f3830"
+  integrity sha512-2E93k08T30Ugs+34HBSTQLVtpi6mCddaY8uO+pMNk1pqSjV5vElzn4mmh6KLxN3hki8rNcHSYzILoh3TEWORvA==
+
+xmlhttprequest@1.x.x:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
+  integrity sha1-Z/4HXFwk/vOfnWX197f+dRcZaPw=
+
+xmlserializer@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/xmlserializer/-/xmlserializer-0.6.1.tgz#14099f60272e16cb608be3758992f998070cc29a"
+  integrity sha512-FNb0eEqqUUbnuvxuHqNuKH8qCGKqxu+558Zi8UzOoQk8Z9LdvpONK+v7m3gpKVHrk5Aq+0nNLsKxu/6OYh7Umw==
 
 xregexp@^4.3.0:
   version "4.3.0"
