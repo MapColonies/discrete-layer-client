@@ -1495,9 +1495,12 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@map-colonies/csw-client@file:../csw-client":
-  version "1.0.0"
+"@map-colonies/csw-client@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@map-colonies/csw-client/-/csw-client-1.0.1.tgz#bc140650cd62a98a6f753da17e7fe2c56412c8d3"
+  integrity sha512-7wjNPUgLgc9qEBlWo+qg9t9ndSq1a9/HEf8mGZ0BoVNB81sXFSMxObrWBj6bWxyo7LL1l5+yQRD1MjTMgUtLng==
   dependencies:
+    copyfiles "2.3.0"
     jsonix "~2.3.2"
     ogc-schemas "^2.6.1"
     patch-package "^6.2.2"
