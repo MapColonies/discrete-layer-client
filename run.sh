@@ -18,7 +18,7 @@ do
 done
 
 if [ $ENTERYPOINT -eq 1 ]; then
-	docker run --rm -it --entrypoint /bin/sh -p 3000:80 --name exporterclientcontainer exporterclient:v1
+	docker run --rm -it --entrypoint /bin/sh -p 3000:80 --name discretelayersclientcontainer discretelayersclient:v1
 else
-	docker run --rm -p 3000:80 --name exporterclientcontainer exporterclient:v1 &
+	docker run --rm -p 3000:80 --name discretelayersclientcontainer discretelayersclient:v1 &
 fi
