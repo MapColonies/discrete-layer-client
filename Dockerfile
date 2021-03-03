@@ -29,13 +29,11 @@ RUN mkdir public && mkdir ../confd
 COPY --from=prepare /confd/confd ../confd
 COPY ./confd ../confd/
 COPY --from=prepare /opt/myapp/build ./
-
-#give every user required permissions
-# RUN chmod -R +w /var/cache/nginx && chmod 777 . && \
-#     chmod -R 777 ../confd
+RUN chgrp -R 0 /var/cache/nginx/ && \
+    chmod -R g=u /var/cache/nginx/ && chmod -R g=u /usr/share/nginx/
 
 # create new user 
-RUN useradd -ms /bin/bash user && usermod -a -G root user
+RUN adduser -S user -G root  
 USER user
 
 CMD ["/entrypoint.sh"]
