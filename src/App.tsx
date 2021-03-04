@@ -55,7 +55,6 @@ const App: React.FC = () => {
         <RMWCThemeProvider options={theme}>
           <CssBaseline />
           <DiscreteLayerView />
-          <h1>ALEX</h1>
           <SnackContainer />
         </RMWCThemeProvider>
       </RMWCProvider>
