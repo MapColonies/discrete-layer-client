@@ -26,9 +26,9 @@ RUN chmod +x /entrypoint.sh
 
 WORKDIR /usr/share/nginx/html
 RUN mkdir public && mkdir ../confd
+COPY --from=prepare /opt/myapp/build/ ./
 COPY --from=prepare /confd/confd ../confd
 COPY ./confd ../confd/
-COPY --from=prepare /opt/myapp/build ./
 RUN chgrp -R 0 /var/cache/nginx/ && \
     chmod -R g=u /var/cache/nginx/ && chmod -R g=u /usr/share/nginx/
 
