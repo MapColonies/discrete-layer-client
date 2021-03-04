@@ -41,7 +41,6 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    // eslint-disable-next-line
     <IntlProvider locale={lang} messages={MESSAGES[lang]}>
       <RMWCProvider
         typography={{
@@ -56,6 +55,7 @@ const App: React.FC = () => {
         <RMWCThemeProvider options={theme}>
           <CssBaseline />
           <DiscreteLayerView />
+          <h1>ALEX</h1>
           <SnackContainer />
         </RMWCThemeProvider>
       </RMWCProvider>
