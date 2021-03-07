@@ -9,6 +9,7 @@ WORKDIR /opt/myapp
 COPY package*.json yarn.lock ./
 RUN yarn install --production
 COPY . .
+RUN yarn run postinstall
 RUN yarn build
 
 
