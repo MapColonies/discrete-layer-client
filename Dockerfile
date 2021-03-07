@@ -25,12 +25,13 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 WORKDIR /usr/share/nginx/html
-RUN mkdir public && mkdir ../confd
+RUN mkdir public
+COPY --from=prepare /opt/myapp/public/ ./
 COPY --from=prepare /opt/myapp/build/ ./
-COPY --from=prepare /confd/confd ../confd
-COPY ./confd ../confd/
+RUN mv ./confd ../
+COPY --from=prepare /confd/confd ../confd/
 RUN chgrp -R 0 /var/cache/nginx/ && \
-    chmod -R g=u /var/cache/nginx/ && chmod -R g=u /usr/share/nginx/
+  chmod -R g=u /var/cache/nginx/ && chmod -R g=u /usr/share/nginx/
 
 # create new user 
 RUN adduser -S user -G root  
