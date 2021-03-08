@@ -41,7 +41,6 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    // eslint-disable-next-line
     <IntlProvider locale={lang} messages={MESSAGES[lang]}>
       <RMWCProvider
         typography={{
