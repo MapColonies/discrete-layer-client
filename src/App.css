@@ -30,3 +30,8 @@
   /* @alternate */
   background-color: var(--mdc-theme-primary, #2979ff);
 }
+
+.app-container {
+  background-color: var(--mdc-theme-background);
+  color: var(--mdc-theme-on-surface);
+}

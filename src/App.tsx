@@ -24,17 +24,26 @@ import '@map-colonies/react-core/dist/linear-progress/styles';
 import '@map-colonies/react-core/dist/drawer/styles';
 import '@map-colonies/react-core/dist/checkbox/styles';
 import './App.css';
+import './App.dark-theme.css';
+import './App.light-theme.css';
 
 import { SnackContainer } from './discrete-layer/components/snack-container/snack-container';
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
 import CONFIG from './common/config';
+import { CustomTheme } from './theming/custom.theme';
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   // eslint-disable-next-line
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
-  const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
+  // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
+  const theme = {
+    ...Themes.darkTheme,
+    custom: {
+      ...CustomTheme.darkTheme
+    }
+  };
 
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
@@ -52,7 +61,7 @@ const App: React.FC = () => {
           ),
         }}
       >
-        <RMWCThemeProvider options={theme}>
+        <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme}>
           <CssBaseline />
           <DiscreteLayerView />
           <SnackContainer />

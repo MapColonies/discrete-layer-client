@@ -12,6 +12,7 @@ import {
   CesiumMap,
   CesiumSceneMode,
   BboxCorner,
+  Box,
 } from '@map-colonies/react-components';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { find } from 'lodash';
@@ -22,7 +23,7 @@ import CONFIG from '../../common/config';
 import { osmOptions, wmsOptions, wmtsOptions, xyzOptions } from '../../common/helpers/layer-options';
 import { useStore } from '../models/rootStore';
 import { MapContainer } from '../components/map-container';
-import { IconButton, TabBar, Tab } from '@map-colonies/react-core';
+import { IconButton, Icon, TabBar, Tab, useTheme, Typography } from '@map-colonies/react-core';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -170,6 +171,7 @@ const tileOtions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = () => {
   const { discreteLayersStore } = useStore();
+  const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
@@ -291,17 +293,31 @@ const DiscreteLayerView: React.FC = () => {
 
   return (
     <>
-      <div style={{height: '44px', display: 'flex', alignItems: 'center'}}>
+      <Box style={{
+        height: '52px',
+        paddingTop: '4px',
+        display: 'flex', 
+        alignItems: 'center',
+        }}>
+        <Box style={{padding: '0 12px 0 12px'}}>
+          <Typography use="body2">Catalog</Typography>
+        </Box>
         <TabBar
           activeTabIndex={activeTabView}
-          onActivate={evt => setActiveTabView(evt.detail.index)}
-          style={{width: '180px'}}
+          onActivate={(evt): void => setActiveTabView(evt.detail.index)}
+          style={{
+            width: '180px',
+            // @ts-ignore
+            '--gc-tab-active-background': theme.custom?.GC_TAB_ACTIVE_BACKGROUND
+          }}
         >
-          <Tab icon="star_border" />
+          <Tab icon="star_border" style={{
+            // background: `linear-gradient(to top,rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0.25)) ${theme.background}`
+          }}/>
           <Tab icon="favorite_border" />
         </TabBar>
 
-        <div style={{paddingLeft: '400px'}}>
+        <Box style={{paddingLeft: '400px', height: 'calc(100% - 8px)'}}>
           <PolygonSelectionUi
             onCancelDraw={()=>{}}
             onReset={handlePolygonReset}
@@ -309,12 +325,7 @@ const DiscreteLayerView: React.FC = () => {
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
           />
-
-          {/* <IconButton style={{width: '40px'}} icon="crop_square" label="Filter" onClick={ (): void => {setDrawType(DrawType.BOX)}}/>
-          <IconButton style={{width: '40px'}} icon="format_shapes" label="Filter" onClick={ (): void => {setDrawType(DrawType.POLYGON)}}/>
-          <IconButton style={{width: '40px'}} icon="settings_overscan" label="Filter" onClick={ (): void => {}}/>
-          <IconButton style={{width: '40px'}} icon="delete" label="Filter" onClick={ handlePolygonReset }/> */}
-        </div>
+        </Box>
 
         { 
         // <PolygonSelectionUi
@@ -336,12 +347,14 @@ const DiscreteLayerView: React.FC = () => {
         // /> 
         }
       
-      </div>
-      <div style={{display: 'flex', position: 'relative', height: 'calc(100vh - 44px)'}}>
-        <div style={{width: '20%', height: '100%', backgroundColor: 'red', position: 'relative'}}>
-
-          <IconButton style={{position: 'absolute', top: '20px', right: '20px', width: '40px'}} icon="filter_list" label="FILTER" onClick={ (): void => {handleFilter()}}/>
-          
+      </Box>
+      <Box style={{display: 'flex', position: 'relative', height: 'calc(100vh - 52px)'}}>
+        <Box style={{
+          width: '20%',
+          height: '100%',
+          backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
+          position: 'relative'}}
+        >
           <div style={{display: activeTabView === 0 ? 'block': 'none'}}>
             <h1>CATALOG</h1>
           </div>
@@ -355,7 +368,14 @@ const DiscreteLayerView: React.FC = () => {
             />
           </div>
 
-        </div>
+          <IconButton 
+            style={{position: 'absolute', top: '20px', right: '20px', width: '40px'}} 
+            icon="filter_list" 
+            label="FILTER"
+            onClick={ (): void => {handleFilter()}}
+          />
+
+        </Box>
         <div style={{left: '20%', width: '80%', position: 'absolute', height: '100%'}}>
           {
           // <MapContainer
@@ -407,7 +427,7 @@ const DiscreteLayerView: React.FC = () => {
         
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
 
-      </div>
+      </Box>
 
 
     </>
