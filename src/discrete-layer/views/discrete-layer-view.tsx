@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   CesiumWMTSLayer,
   CesiumWMSLayer,
@@ -21,7 +22,7 @@ import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import CONFIG from '../../common/config';
 import { osmOptions, wmsOptions, wmtsOptions, xyzOptions } from '../../common/helpers/layer-options';
-import { useStore } from '../models/rootStore';
+import { useQuery, useStore } from "../models/RootStore"
 import { MapContainer } from '../components/map-container';
 import { IconButton, Icon, TabBar, Tab, useTheme, Typography } from '@map-colonies/react-core';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
@@ -35,6 +36,7 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import { Filters } from '../components/filters/filters';
+import { Home } from './test/Home';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -170,7 +172,8 @@ const getTimeStamp = (): string => new Date().getTime().toString();
 const tileOtions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = () => {
-  const { discreteLayersStore } = useStore();
+  const { loading, error, data, query, setQuery } = useQuery();
+  const store = useStore();
   const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
@@ -210,15 +213,21 @@ const DiscreteLayerView: React.FC = () => {
 
   const [activeTabView, setActiveTabView] = React.useState(0);
 
+  useEffect(() => {
+    let o =  data;
+  }, [data]);
+
   const handlePolygonSelected = (geometry: Geometry): void => {
-    discreteLayersStore.searchParams.setLocation(geometry);
-    void discreteLayersStore.clearLayersImages();
-    void discreteLayersStore.getLayersImages();
+    store.discreteLayersStore.searchParams.setLocation(geometry);
+    void store.discreteLayersStore.clearLayersImages();
+    void store.discreteLayersStore.getLayersImages();
+
+    setQuery(store.queryCatalogItems());
   };
 
   const handlePolygonReset = (): void => {
-    discreteLayersStore.searchParams.resetLocation();
-    discreteLayersStore.clearLayersImages();
+    store.discreteLayersStore.searchParams.resetLocation();
+    store.discreteLayersStore.clearLayersImages();
 
     setDrawEntities([]);
   }
@@ -357,6 +366,7 @@ const DiscreteLayerView: React.FC = () => {
         >
           <div style={{display: activeTabView === 0 ? 'block': 'none'}}>
             <h1>CATALOG</h1>
+            <Home />
           </div>
 
           <div style={{display: activeTabView === 1 ? 'block': 'none'}}>

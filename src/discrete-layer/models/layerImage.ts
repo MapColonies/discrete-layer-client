@@ -4,8 +4,10 @@ import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import convex from '@turf/convex';
+import { ModelBase } from "./ModelBase"
+import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 
-export const layerImage = types.model({
+export const layerImage = ModelBase.props({
   id: types.string,
   name: types.string,
   description: types.string,

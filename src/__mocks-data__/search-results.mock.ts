@@ -4,6 +4,7 @@ import { ILayerImage } from "../discrete-layer/models/layerImage";
 export const createMockData = (count: number, prefix: string): ILayerImage[] => {
   const rowData: ILayerImage[] = [];
   for (let i = 0; i < count; i++) {
+    // @ts-ignore
     rowData.push({
       id: i.toString(),
       name: `${prefix}  ("name",${i})`,

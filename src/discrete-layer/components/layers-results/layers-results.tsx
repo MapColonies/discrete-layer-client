@@ -5,7 +5,7 @@ import { isObject } from 'lodash';
 import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridRowNode } from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
-import { useStore } from '../../models/rootStore';
+import { useStore } from '../../models/RootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 import { RowSelectionRenderer } from './cell-renderer/row-selection.cell-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';

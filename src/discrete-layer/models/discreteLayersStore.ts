@@ -10,8 +10,11 @@ import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { searchParams } from './search-params';
-import { IRootStore } from './rootStore';
+import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
+import { ModelBase } from "./ModelBase"
+import { yellow } from '@material-ui/core/colors';
+import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -21,8 +24,8 @@ export interface SearchResult {
 
 export type SearchResponse = ApiHttpResponse<SearchResult>;
 
-export const discreteLayersStore = types
-  .model({
+export const discreteLayersStore = ModelBase
+  .props({
     state: types.enumeration<ResponseState>(
       'State',
       Object.values(ResponseState)
@@ -32,6 +35,9 @@ export const discreteLayersStore = types
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
   })
   .views((self) => ({
+    get store(): IRootStore {
+      return self.__getStore<RootStoreType>()
+    },
     get root(): IRootStore {
       return getParent(self);
     },
@@ -55,6 +61,18 @@ export const discreteLayersStore = types
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
           self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
+
+          // const layers = [];
+          // self.root.layerMetadata.data_.forEach((layer)=> {
+          //   layers.push(layer) 
+          // });
+          // self.root.layerMetadata3DS.data_.forEach((layer)=> {
+          //   layers.push(layer) 
+          // });
+          // // @ts-ignore
+          // const result = yield Promise.resolve(layers);
+          // // @ts-ignore
+          // self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
           
           // *** communicate with pycsw with cswClient - CORS
           // const cswClient = new CswClient(

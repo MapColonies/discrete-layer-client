@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'mobx-react-lite/batchingForReactDom';
+// import 'mobx-react-lite/batchingForReactDom';
+import { createHttpClient } from "mst-gql"
 import './index.css';
 import Axios, { Method } from 'axios';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { StoreProvider, rootStore } from './discrete-layer/models/rootStore';
+import { StoreProvider, rootStore } from './discrete-layer/models/RootStore';
 import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
 
@@ -18,8 +19,6 @@ const store = rootStore.create(
       method: Method,
       params: Record<string, unknown>
     ) =>
-      // Axios.post(url, params, { baseURL: `${CONFIG.SERVICE_PROTOCOL}${CONFIG.SERVICE_NAME}` }).then((res) => res.data as SearchResponse),
-
       Axios.request({
         url,
         method,
@@ -28,6 +27,9 @@ const store = rootStore.create(
           CONFIG.SERVICE_NAME as string
         }`,
       }).then((res) => res.data as SearchResponse),
+    
+    // gqlHttpClient: createHttpClient(`${CONFIG.SERVICE_PROTOCOL as string}${CONFIG.SERVICE_NAME as string}`),
+    gqlHttpClient: createHttpClient("http://localhost:3001/graphql")
   }
 );
 

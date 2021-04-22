@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
 import { FeatureCollection } from 'geojson';
 import { ConstantProperty } from 'cesium';
-import { useStore } from '../../models/rootStore';
+import { useStore } from '../../models/RootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
 const FOOTPRINT_BORDER_COLOR = CesiumColor.BLUE;

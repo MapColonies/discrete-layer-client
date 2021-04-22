@@ -5,7 +5,7 @@ import { Feature, FeatureCollection } from 'geojson';
 import { ConstantProperty } from 'cesium';
 import { isObject, get } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { useStore } from '../../models/rootStore';
+import { useStore } from '../../models/RootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
 const FOOTPRINT_BORDER_COLOR = CesiumColor.RED;

@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Snackbar, SnackbarAction } from '@map-colonies/react-core';
 import { ResponseState } from '../../../common/models/response-state.enum';
-import { useStore } from '../../models/rootStore';
+import { useStore } from '../../models/RootStore';
 
 interface SnackDetails {
   message: string;

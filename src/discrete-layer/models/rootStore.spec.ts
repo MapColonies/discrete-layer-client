@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 // eslint-disable-next-line
 import '../../__mocks__/confEnvShim';
-import { useStore } from './rootStore';
+import { useStore } from './RootStore';
 jest.mock('react', () => {
   return {
     useContext: jest.fn(),
-    createContext: jest.fn().mockImplementation(() => ({ provider: {} })),
+    createStoreContext: jest.fn().mockImplementation(() => ({ provider: {} })),
   };
 });
 

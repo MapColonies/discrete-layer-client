@@ -3,7 +3,7 @@ import { Cesium3DTileset, CesiumXYZLayer } from '@map-colonies/react-components'
 import { observer } from 'mobx-react-lite';
 import { isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { useStore } from '../../models/rootStore';
+import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 
 interface CacheMap {
