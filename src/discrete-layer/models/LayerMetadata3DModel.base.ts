@@ -6,7 +6,7 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
-import { LinkModelSelector } from "./LinkModel.base"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -51,6 +51,8 @@ export const LayerMetadata3DModelBase = ModelBase
     geometry: types.union(types.undefined, types.null, types.frozen()),
     version: types.union(types.undefined, types.null, types.string),
     accuracyLE90: types.union(types.undefined, types.null, types.string),
+    selected: types.union(types.undefined, types.null, types.boolean),
+    order: types.union(types.undefined, types.null, types.number),
   })
   .views(self => ({
     get store() {
@@ -92,9 +94,11 @@ export class LayerMetadata3DModelSelector extends QueryBuilder {
   get version() { return this.__attr(`version`) }
   get accuracyLE90() { return this.__attr(`accuracyLE90`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
+  get selected() { return this.__attr(`selected`) }
+  get order() { return this.__attr(`order`) }
 }
 export function selectFromLayerMetadata3D() {
   return new LayerMetadata3DModelSelector()
 }
 
-export const layerMetadata3DModelPrimitives = selectFromLayerMetadata3D().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.accuracyLE90
+export const layerMetadata3DModelPrimitives = selectFromLayerMetadata3D().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.accuracyLE90.selected.order.links(linkModelPrimitives)

@@ -103,7 +103,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         id: 'results.fields.name.label',
       }),
       width: 200,
-      field: 'name',
+      field: 'sourceName',
       suppressMovable: true,
     },
     {

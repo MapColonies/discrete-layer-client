@@ -4,7 +4,7 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
-import { LineString, MultiPolygon, Polygon } from 'geojson';
+import { Geometry, LineString, MultiPolygon, Polygon } from 'geojson';
 import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -108,19 +108,24 @@ export const discreteLayersStore = ModelBase
       }
     );
 
+    function setLayersImages(data: ILayerImage[]): void {
+      self.layersImages = filterBySearchParams(data).map(item => ({...item, selected:false, order:null}));
+    }
+
     // TODO: Remove when actual API is integrated
     function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
       return layers.filter((layer) => {
         let layerBBoxPolygon: Polygon;
-        switch(layer.geojson?.type){
+        const geometry: Geometry = layer.geometry as Geometry;
+        switch(geometry.type){
           case 'Polygon':
-            layerBBoxPolygon = layer.geojson;
+            layerBBoxPolygon = layer.geometry as Polygon;
             break;
           case 'MultiPolygon':
-            layerBBoxPolygon = bboxPolygon(bbox(layer.geojson as MultiPolygon)).geometry;
+            layerBBoxPolygon = bboxPolygon(bbox(geometry)).geometry;
             break;
           case 'LineString':
-            layerBBoxPolygon = lineStringToPolygon(layer.geojson as LineString).geometry;
+            layerBBoxPolygon = lineStringToPolygon(geometry).geometry;
             break;
           default:
             throw(new Error('Unknow Geojson feature type'));
@@ -150,6 +155,7 @@ export const discreteLayersStore = ModelBase
 
     return {
       getLayersImages,
+      setLayersImages,
       clearLayersImages,
       showLayer,
       highlightLayer,

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Cesium3DTileset, CesiumXYZLayer } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
+import { LinkModelType } from '../../models/LinkModel';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined
@@ -26,11 +27,12 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   }, [discreteLayersStore.layersImages]);
 
   const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
-    switch(layer.properties?.protocol){
+    const layerLink: LinkModelType = get(layer,'links[0]') as LinkModelType;
+    switch(layerLink.protocol){
       case 'XYZ_LAYER':
-        return <CesiumXYZLayer key={layer.id} options={{url: layer.properties.url}}/>
+        return <CesiumXYZLayer key={layer.id} options={{url: layerLink.url as string}}/>
       case '3D_LAYER':
-        return <Cesium3DTileset key={layer.id} url={layer.properties.url}/>
+        return <Cesium3DTileset key={layer.id} url={layerLink.url as string}/>
       default:
         return undefined;
     }

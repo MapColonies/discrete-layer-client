@@ -1,5 +1,6 @@
-import { Instance } from "mobx-state-tree"
+import { Instance, types } from "mobx-state-tree"
 import { LayerMetadata3DModelBase } from "./LayerMetadata3DModel.base"
+import { momentDateType } from "./moment-date.type"
 
 /* The TypeScript type of an instance of LayerMetadata3DModel */
 export interface LayerMetadata3DModelType extends Instance<typeof LayerMetadata3DModel.Type> {}
@@ -17,3 +18,12 @@ export const LayerMetadata3DModel = LayerMetadata3DModelBase
       console.log(JSON.stringify(self))
     }
   }))
+  .props({
+    /* eslint-disable */
+    /* tslint:disable */
+    insertDate: types.maybe(momentDateType),
+    creationDate: types.maybe(momentDateType),
+    updateDate: types.maybe(momentDateType),
+    /* tslint:enable */
+    /* eslint-enable */
+  })

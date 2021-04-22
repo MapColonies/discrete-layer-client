@@ -37,6 +37,7 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import { Filters } from '../components/filters/filters';
 import { Home } from './test/Home';
+import { ILayerImage } from '../models/layerImage';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -214,13 +215,15 @@ const DiscreteLayerView: React.FC = () => {
   const [activeTabView, setActiveTabView] = React.useState(0);
 
   useEffect(() => {
-    let o =  data;
+    const layers: ILayerImage[] = ((data as any)?.catalogItems || []) as ILayerImage[];
+
+    store.discreteLayersStore.setLayersImages(layers);
   }, [data]);
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
     void store.discreteLayersStore.clearLayersImages();
-    void store.discreteLayersStore.getLayersImages();
+    // void store.discreteLayersStore.getLayersImages();
 
     setQuery(store.queryCatalogItems());
   };
