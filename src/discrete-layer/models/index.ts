@@ -2,6 +2,7 @@
 /* eslint-disable */
 /* tslint:disable */
 
+export * from "./SensorTypeEnum"
 export * from "./LayerMetadataMixedModelSelector"
 export * from "./LinkModel"
 export * from "./LayerMetadataModel"

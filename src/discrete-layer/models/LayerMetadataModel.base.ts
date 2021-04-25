@@ -7,6 +7,7 @@ import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { SensorTypeEnumType } from "./SensorTypeEnum"
 import { RootStoreType } from "./index"
 
 
@@ -44,13 +45,12 @@ export const LayerMetadataModelBase = ModelBase
     updateDate: types.union(types.undefined, types.null, types.string),
     resolution: types.union(types.undefined, types.null, types.number),
     ep90: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, types.string),
+    sensorType: types.union(types.undefined, types.null, SensorTypeEnumType),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.string),
     dsc: types.union(types.undefined, types.null, types.string),
     geometry: types.union(types.undefined, types.null, types.frozen()),
     version: types.union(types.undefined, types.null, types.string),
-
     selected: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
   })
@@ -92,13 +92,12 @@ export class LayerMetadataModelSelector extends QueryBuilder {
   get dsc() { return this.__attr(`dsc`) }
   get geometry() { return this.__attr(`geometry`) }
   get version() { return this.__attr(`version`) }
-  links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
   get selected() { return this.__attr(`selected`) }
   get order() { return this.__attr(`order`) }
+  links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
 export function selectFromLayerMetadata() {
   return new LayerMetadataModelSelector()
 }
 
 export const layerMetadataModelPrimitives = selectFromLayerMetadata().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.selected.order.links(linkModelPrimitives)
-

@@ -14,6 +14,7 @@ import { layerMetadata3DModelPrimitives, LayerMetadata3DModelSelector } from "./
 
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./LayerMetadataMixedModelSelector" // *****ALEX CHANGE
 
+import { SensorType } from "./SensorTypeEnum"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
