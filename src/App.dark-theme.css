@@ -36,5 +36,13 @@
 }
 
 .dark-theme button.rmwc-icon.rmwc-icon--ligature:hover{
-  opacity: 0.7;
+  color: var(--mdc-theme-text-primary-on-background);
+}
+
+/* FABS CUSTOMIZATION */
+.dark-theme .mdc-theme--on-surface .mdc-fab__icon{
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+.dark-theme .mdc-theme--on-surface.mdc-fab{
+  color: var(--mdc-theme-text-icon-on-dark) !important;
 }

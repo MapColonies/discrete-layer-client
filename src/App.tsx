@@ -23,6 +23,7 @@ import '@map-colonies/react-core/dist/icon/styles';
 import '@map-colonies/react-core/dist/linear-progress/styles';
 import '@map-colonies/react-core/dist/drawer/styles';
 import '@map-colonies/react-core/dist/checkbox/styles';
+import '@map-colonies/react-core/dist/fab/styles';
 import './App.css';
 import './App.dark-theme.css';
 import './App.light-theme.css';
@@ -40,6 +41,7 @@ const App: React.FC = () => {
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
   const theme = {
     ...Themes.darkTheme,
+    textIconOnDark: '#AFBFDA',
     custom: {
       ...CustomTheme.darkTheme
     }

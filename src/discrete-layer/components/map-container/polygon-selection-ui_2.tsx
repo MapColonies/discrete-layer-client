@@ -1,10 +1,21 @@
-import React from 'react';
-import { IconButton, useTheme } from '@map-colonies/react-core';
+import React, {useState} from 'react';
+import { IconButton, Select, TextField, useTheme } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { DialogBBox } from './dialog-bbox';
 import './polygon-selection-ui.css';
 
-const WIDTH_SPACING_FACTOR = 18;
+export const Devider: React.FC = () => {
+  const theme = useTheme();
+  return (
+    <Box style={{
+      width:'1px',
+      borderWidth:'0 0 0 1px',
+      borderColor: theme.textIconOnDark as string,
+      borderStyle: 'solid',
+      height: '70%',
+    }}/>
+  );
+}
 
 export interface PolygonSelectionUiProps {
   isSelectionEnabled: boolean;
@@ -17,7 +28,6 @@ export interface PolygonSelectionUiProps {
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   props
 ) => {
-  const theme = useTheme();
   const {
     isSelectionEnabled,
     onCancelDraw,
@@ -26,23 +36,51 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
     onPolygonUpdate,
   } = props;
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
 
   return (
     <Box 
+      id="searchContainer"
       position="relative" 
       style={{
-        backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
         height: '100%',
         display: 'flex',
         gap: '4px',
-        borderRadius: '6px'
+        alignItems: 'center',
+        padding: '0 16px 0 16px'
       }}
     >
-      <IconButton style={{width: '40px'}} icon="crop_square" label="BOX" onClick={ (): void => {onStartDraw(DrawType.BOX);}}/>
-      <IconButton style={{width: '40px'}} icon="format_shapes" label="POLYGON" onClick={ (): void => {onStartDraw(DrawType.POLYGON);}}/>
-      <IconButton style={{width: '40px'}} icon="settings_overscan" label="BBOX_CORNERS" onClick={ (): void => {setOpen(true);}}/>
-      <IconButton style={{width: '40px'}} icon="delete" label="CLEAR" onClick={onReset}/>
+      <IconButton 
+        // icon="location_searching" 
+        className="icon-Coordinates"
+        label="POINT"/>
+      <Devider/>
+      <IconButton 
+        // icon="crop_square" 
+        className="icon-Rectangle"
+        label="BOX" 
+        onClick={ (): void => {onStartDraw(DrawType.BOX);}}/>
+      <IconButton 
+        // icon="format_shapes" 
+        className="icon-Polygon"
+        label="POLYGON" 
+        onClick={ (): void => {onStartDraw(DrawType.POLYGON);}}/>
+      <IconButton 
+        icon="settings_overscan" 
+        label="BBOX_CORNERS" 
+        onClick={ (): void => {setOpen(true);}}/>
+      <Devider/>
+      <IconButton icon="delete" label="CLEAR" onClick={onReset}/>
+      <Devider/>
+      <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
+        <Select
+          enhanced
+          options={['Cookies', 'Pizza', 'Icecream']}
+        />
+      </Box>
+      <TextField fullwidth style={{padding: '0 6px 0 6px'}}/>
+      <IconButton icon="search" label="SEARCH" className="searcIconBtn"/>
       <DialogBBox
         isOpen={open}
         onSetOpen={setOpen}

@@ -24,7 +24,7 @@ import CONFIG from '../../common/config';
 import { osmOptions, wmsOptions, wmtsOptions, xyzOptions } from '../../common/helpers/layer-options';
 import { useQuery, useStore } from "../models/RootStore"
 import { MapContainer } from '../components/map-container';
-import { IconButton, Icon, TabBar, Tab, useTheme, Typography } from '@map-colonies/react-core';
+import { IconButton, Icon, TabBar, Tab, useTheme, Typography, Fab } from '@map-colonies/react-core';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -36,8 +36,10 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import { Filters } from '../components/filters/filters';
-import { Home } from './test/Home';
 import { ILayerImage } from '../models/layerImage';
+import { Home } from './test/Home';
+import './discrete-layer-view.css';
+import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -213,6 +215,7 @@ const DiscreteLayerView: React.FC = () => {
   }, [CONFIG.ACTIVE_LAYER]);
 
   const [activeTabView, setActiveTabView] = React.useState(0);
+  const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
 
   useEffect(() => {
     const layers: ILayerImage[] = ((data as any)?.catalogItems || []) as ILayerImage[];
@@ -303,18 +306,91 @@ const DiscreteLayerView: React.FC = () => {
     setActiveTabView(1);
   };
 
+  const tabViews = [
+    {
+      idx: 0,
+      title: 'Catalog',
+      iconClassName: 'icon-Catalog',
+    },
+    {
+      idx: 1,
+      title: 'Search results',
+      iconClassName: 'icon-Search-History',
+    }
+  ];
+
+  const getActiveTabHeader = (tabIdx: number) => {
+    const tabView = find(tabViews, (tab)=>{
+      return tab.idx === tabIdx;
+    });
+    return (
+      <div className="tabHeaderContainer">
+        <div className="tabTitleContainer" style={{backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND}}>
+          <div className="tabTitle" style={{
+            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
+            borderBottomColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND
+          }}>
+            <IconButton 
+              className={`operationIcon ${tabView?.iconClassName}`}
+              label="DELETE"
+              onClick={ (): void => {}}
+            />
+            <Typography use="headline6" tag="span">
+              {tabView?.title}
+            </Typography>
+          </div>
+        </div>
+
+        <div className="tabOperationsContainer" style={{backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE}}>
+          <div className="tabOperations" style={{
+            backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND,
+            borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND
+          }}>
+            <IconButton 
+              className="operationIcon icon-Delete"
+              label="DELETE"
+              onClick={ (): void => {}}
+            />
+            <IconButton 
+              className="operationIcon icon-Filter"
+              // icon="filter_list" 
+              label="FILTER"
+              onClick={ (): void => {handleFilter()}}
+            />
+            <IconButton 
+              className="operationIcon icon-Arrows-Left"
+              label="EXPANDER"
+              onClick={ (): void => {}}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <Box style={{
-        height: '52px',
-        paddingTop: '4px',
-        display: 'flex', 
-        alignItems: 'center',
-        }}>
-        <Box style={{padding: '0 12px 0 12px'}}>
-          <Typography use="body2">Catalog</Typography>
+      <Box className="headerContainer">
+        <Box className="headerViewsSwitcher">
+          <Box style={{padding: '0 12px 0 12px'}}>
+            <Typography use="body2">Catalog App</Typography>
+          </Box>
+          <Box className="headerViewsSwitcherContainer">
+            {tabViews.map((tab) => {
+              return <Fab 
+                key={tab.idx}
+                className={`${tab.iconClassName} tabViewIcon`}
+                mini 
+                onClick={(evt): void => setActiveTabView(tab.idx)}
+                style={{ 
+                  backgroundColor: activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE, 
+                }}
+                theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
+              />;
+            })}
+          </Box>
         </Box>
-        <TabBar
+        {/* <TabBar
           activeTabIndex={activeTabView}
           onActivate={(evt): void => setActiveTabView(evt.detail.index)}
           style={{
@@ -327,9 +403,9 @@ const DiscreteLayerView: React.FC = () => {
             // background: `linear-gradient(to top,rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0.25)) ${theme.background}`
           }}/>
           <Tab icon="favorite_border" />
-        </TabBar>
+        </TabBar> */}
 
-        <Box style={{paddingLeft: '400px', height: 'calc(100% - 8px)'}}>
+        <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
             onCancelDraw={()=>{}}
             onReset={handlePolygonReset}
@@ -360,36 +436,50 @@ const DiscreteLayerView: React.FC = () => {
         }
       
       </Box>
-      <Box style={{display: 'flex', position: 'relative', height: 'calc(100vh - 52px)'}}>
-        <Box style={{
-          width: '20%',
-          height: '100%',
-          backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
-          position: 'relative'}}
-        >
-          <div style={{display: activeTabView === 0 ? 'block': 'none'}}>
-            <h1>CATALOG</h1>
-            <Home />
-          </div>
+      <Box className="mainViewContainer">
+        <Box className="sidePanelParentContainer">
+          <Box 
+            className="sidePanelContainer"
+            style={{
+              backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
+              height: detailsPanelExpanded ? '50%': '75%'
+            }}
+          >
+            <Box className="tabContentContainer" style={{display: activeTabView === 0 ? 'block': 'none'}}>
+              {
+                getActiveTabHeader(activeTabView)
+              }
+              <Home />
+            </Box>
 
-          <div style={{display: activeTabView === 1 ? 'block': 'none'}}>
-            <h1>
-              SEARCH RESULTS
-            </h1>
-            <LayersResultsComponent 
-              style={{height: '450px',width: '100%'}}
+            <Box className="tabContentContainer"  style={{display: activeTabView === 1 ? 'block': 'none'}}>
+              {
+                getActiveTabHeader(activeTabView)
+              }
+              <LayersResultsComponent 
+                style={{
+                  height: 'calc(100% - 50px)',
+                  width: 'calc(100% - 8px)'
+                }}
+              />
+            </Box>
+          </Box>
+          
+          <Box className="sidePanelContainer" style={{
+            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
+            height: detailsPanelExpanded ? '50%': '25%',
+            marginTop: '8px'
+          }}>
+            <IconButton 
+              className={`operationIcon ${!detailsPanelExpanded ? 'icon-Expand-Panel': 'icon-Collapce-Panel'}`}
+              label="EXPANDER"
+              onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
             />
-          </div>
-
-          <IconButton 
-            style={{position: 'absolute', top: '20px', right: '20px', width: '40px'}} 
-            icon="filter_list" 
-            label="FILTER"
-            onClick={ (): void => {handleFilter()}}
-          />
-
+            <LayersDetailsComponent/>
+          </Box>
         </Box>
-        <div style={{left: '20%', width: '80%', position: 'absolute', height: '100%'}}>
+        
+        <Box className="mapAppContainer">
           {
           // <MapContainer
           //   handlePolygonSelected={handlePolygonSelected}
@@ -436,7 +526,7 @@ const DiscreteLayerView: React.FC = () => {
                 />
             </CesiumMap>
           }
-        </div>      
+        </Box>      
         
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
 

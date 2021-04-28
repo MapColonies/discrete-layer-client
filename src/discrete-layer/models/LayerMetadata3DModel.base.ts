@@ -7,7 +7,6 @@ import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
-import { SensorTypeEnumType } from "./SensorTypeEnum"
 import { RootStoreType } from "./index"
 
 
@@ -45,7 +44,7 @@ export const LayerMetadata3DModelBase = ModelBase
     updateDate: types.union(types.undefined, types.null, types.string),
     resolution: types.union(types.undefined, types.null, types.number),
     ep90: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, SensorTypeEnumType),
+    sensorType: types.union(types.undefined, types.null, types.string),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.string),
     dsc: types.union(types.undefined, types.null, types.string),
@@ -94,9 +93,9 @@ export class LayerMetadata3DModelSelector extends QueryBuilder {
   get geometry() { return this.__attr(`geometry`) }
   get version() { return this.__attr(`version`) }
   get accuracyLE90() { return this.__attr(`accuracyLE90`) }
+  links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
   get selected() { return this.__attr(`selected`) }
   get order() { return this.__attr(`order`) }
-  links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
 export function selectFromLayerMetadata3D() {
   return new LayerMetadata3DModelSelector()
