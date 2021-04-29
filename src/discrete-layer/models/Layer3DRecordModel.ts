@@ -1,19 +1,17 @@
 import { Instance, types } from "mobx-state-tree"
-import { LayerMetadataModelBase } from "./LayerMetadataModel.base"
+import { Layer3DRecordModelBase } from "./Layer3DRecordModel.base"
 import { momentDateType } from "./moment-date.type"
 
-/* The TypeScript type of an instance of LayerMetadataModel */
-export interface LayerMetadataModelType extends Instance<typeof LayerMetadataModel.Type> {}
+/* The TypeScript type of an instance of Layer3DRecordModel */
+export interface Layer3DRecordModelType extends Instance<typeof Layer3DRecordModel.Type> {}
 
-/* A graphql query fragment builders for LayerMetadataModel */
-export { selectFromLayerMetadata, layerMetadataModelPrimitives, LayerMetadataModelSelector } from "./LayerMetadataModel.base"
-
-
+/* A graphql query fragment builders for Layer3DRecordModel */
+export { selectFromLayer3DRecord, layer3DRecordModelPrimitives, Layer3DRecordModelSelector } from "./Layer3DRecordModel.base"
 
 /**
- * LayerMetadataModel
+ * Layer3DRecordModel
  */
-export const LayerMetadataModel = LayerMetadataModelBase
+export const Layer3DRecordModel = Layer3DRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {

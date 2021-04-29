@@ -7,19 +7,19 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "m
 
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
-import { LayerMetadataModel, LayerMetadataModelType } from "./LayerMetadataModel"
-import { layerMetadataModelPrimitives, LayerMetadataModelSelector } from "./LayerMetadataModel.base"
-import { LayerMetadata3DModel, LayerMetadata3DModelType } from "./LayerMetadata3DModel"
-import { layerMetadata3DModelPrimitives, LayerMetadata3DModelSelector } from "./LayerMetadata3DModel.base"
+import { LayerRasterRecordModel, LayerRasterRecordModelType } from "./LayerRasterRecordModel"
+import { layerRasterRecordModelPrimitives, LayerRasterRecordModelSelector } from "./LayerRasterRecordModel.base"
+import { Layer3DRecordModel, Layer3DRecordModelType } from "./Layer3DRecordModel"
+import { layer3DRecordModelPrimitives, Layer3DRecordModelSelector } from "./Layer3DRecordModel.base"
 
-import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./LayerMetadataMixedModelSelector" // *****ALEX CHANGE
+import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
 import { SensorType } from "./SensorTypeEnum"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  layerMetadata: ObservableMap<string, LayerMetadataModelType>
-  layerMetadata3DS: ObservableMap<string, LayerMetadata3DModelType> // *****ALEX CHANGE
+  layerRasterRecords: ObservableMap<string, LayerRasterRecordModelType>,
+  layer3DRecords: ObservableMap<string, Layer3DRecordModelType>
 }
 
 
@@ -27,7 +27,8 @@ type Refs = {
 * Enums for the names of base graphql actions
 */
 export enum RootStoreBaseQueries {
-queryCatalogItems="queryCatalogItems"
+queryCatalogItems="queryCatalogItems",
+queryCatalogItemsByType="queryCatalogItemsByType"
 }
 
 
@@ -36,14 +37,19 @@ queryCatalogItems="queryCatalogItems"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Link', () => LinkModel], ['LayerMetadata', () => LayerMetadataModel], ['LayerMetadata3D', () => LayerMetadata3DModel]], ['LayerMetadata', 'LayerMetadata3D'], "js")) // *****ALEX CHANGE
+  .extend(configureStoreMixin([['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['Layer3DRecord', () => Layer3DRecordModel]], ['LayerRasterRecord', 'Layer3DRecord'], "js"))
   .props({
-    layerMetadata: types.optional(types.map(types.late((): any => LayerMetadataModel)), {}),
-    layerMetadata3DS: types.optional(types.map(types.late((): any => LayerMetadata3DModel)), {}), // *****ALEX CHANGE
+    layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
+    layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {})
   })
   .actions(self => ({
     queryCatalogItems(variables?: {  }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ catalogItems: LayerMetadataMixedUnion[]}>(`query catalogItems { catalogItems {
+        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryCatalogItemsByType(variables: { itemType: string }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ catalogItemsByType: LayerMetadataMixedUnion[]}>(`query catalogItemsByType($itemType: String!) { catalogItemsByType(itemType: $itemType) {
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

@@ -11,55 +11,48 @@ import { Layer } from "./Layer"
 export const Home = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
     store.queryCatalogItems()
-    // store.queryTodos()
 
-    // store.queryTodos({},`
-    // ... on Todo {
+    // store.queryCatalogItems({},`
+    // ... on LayerRasterRecord {
     //   __typename
-    //   id
-    //   text
-    //   complete
+    //   sourceName
+    //   creationDate
+    //   geometry 
+    //   type
+    //   links {
+    //     __typename
+    //     name
+    //     description
+    //     protocol
+    //     url
+    //   }
     // }
-    // ... on TodoWithAlex {
-    //   __typename
-    //   id
-    //   text
-    //   complete
-    //   alex
+    // ... on Layer3DRecord {
+    //    __typename
+    //   sourceName
+    //   creationDate
+    //   geometry
+    //   type
+    //   links {
+    //     __typename
+    //     name
+    //     description
+    //     protocol
+    //     url
+    //   }
+    //   accuracyLE90
+    // }
     // }`)
   );
 
   const store = useStore();
 
-  const getTodos = () => {
-    const comps: any[] = [];
-    
-    // store.discreteLayersStore.showLayer('id', true, null);
-    
-    store.layerMetadata.data_.forEach((layer)=> {
-      // @ts-ignore
-      comps.push(<Layer key={layer.get().value.id} layer={layer.get().value as LayerMetadataMixedUnion} />)
-    })
-    return comps;
-  }
-
-  // const getTodosWithAlexes = () => {
-  //   let comps: string = '';
-  //   store.todoWithAlexes.data_.forEach((todo, key)=> {
-  //     // @ts-ignore
-  //     comps += key + '  ' + todo.get().value.complete
-  //   })
-  //   return comps;
-  // }
-
   if (error) return <Error>{error.message}</Error>
   if (data){
     return (
       <>
-        {/* <h1>WITH ALEX[0] {getTodosWithAlexes()}</h1> */}
         <ul>
           {
-            // getTodos()
             data.catalogItems.map((layer) => (
               <Layer key={layer.id} layer={layer} />
             ))
@@ -75,7 +68,3 @@ export const Home = observer(() => {
   }
   return (<><Loading /></>)
 })
-
-// export const Home = () => {
-//   return <h1>HERE</h1>
-// }

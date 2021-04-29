@@ -12,13 +12,13 @@ import { RootStoreType } from "./index"
 
 
 /**
- * LayerMetadataBase
- * auto generated base class for the model LayerMetadataModel.
+ * Layer3DRecordBase
+ * auto generated base class for the model Layer3DRecordModel.
  */
-export const LayerMetadataModelBase = ModelBase
-  .named('LayerMetadata')
+export const Layer3DRecordModelBase = ModelBase
+  .named('Layer3DRecord')
   .props({
-    __typename: types.optional(types.literal("LayerMetadata"), "LayerMetadata"),
+    __typename: types.optional(types.literal("Layer3DRecord"), "Layer3DRecord"),
     typeName: types.union(types.undefined, types.null, types.string),
     schema: types.union(types.undefined, types.null, types.string),
     mdSource: types.union(types.undefined, types.null, types.string),
@@ -51,6 +51,7 @@ export const LayerMetadataModelBase = ModelBase
     dsc: types.union(types.undefined, types.null, types.string),
     geometry: types.union(types.undefined, types.null, types.frozen()),
     version: types.union(types.undefined, types.null, types.string),
+    accuracyLE90: types.union(types.undefined, types.null, types.string),
     selected: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
   })
@@ -60,7 +61,7 @@ export const LayerMetadataModelBase = ModelBase
     }
   }))
 
-export class LayerMetadataModelSelector extends QueryBuilder {
+export class Layer3DRecordModelSelector extends QueryBuilder {
   get typeName() { return this.__attr(`typeName`) }
   get schema() { return this.__attr(`schema`) }
   get mdSource() { return this.__attr(`mdSource`) }
@@ -92,12 +93,13 @@ export class LayerMetadataModelSelector extends QueryBuilder {
   get dsc() { return this.__attr(`dsc`) }
   get geometry() { return this.__attr(`geometry`) }
   get version() { return this.__attr(`version`) }
+  get accuracyLE90() { return this.__attr(`accuracyLE90`) }
   get selected() { return this.__attr(`selected`) }
   get order() { return this.__attr(`order`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
-export function selectFromLayerMetadata() {
-  return new LayerMetadataModelSelector()
+export function selectFromLayer3DRecord() {
+  return new Layer3DRecordModelSelector()
 }
 
-export const layerMetadataModelPrimitives = selectFromLayerMetadata().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.selected.order.links(linkModelPrimitives)
+export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.accuracyLE90.selected.order.links(linkModelPrimitives)

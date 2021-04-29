@@ -7,17 +7,18 @@ import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { SensorTypeEnumType } from "./SensorTypeEnum"
 import { RootStoreType } from "./index"
 
 
 /**
- * LayerMetadata3DBase
- * auto generated base class for the model LayerMetadata3DModel.
+ * LayerRasterRecordBase
+ * auto generated base class for the model LayerRasterRecordModel.
  */
-export const LayerMetadata3DModelBase = ModelBase
-  .named('LayerMetadata3D')
+export const LayerRasterRecordModelBase = ModelBase
+  .named('LayerRasterRecord')
   .props({
-    __typename: types.optional(types.literal("LayerMetadata3D"), "LayerMetadata3D"),
+    __typename: types.optional(types.literal("LayerRasterRecord"), "LayerRasterRecord"),
     typeName: types.union(types.undefined, types.null, types.string),
     schema: types.union(types.undefined, types.null, types.string),
     mdSource: types.union(types.undefined, types.null, types.string),
@@ -44,13 +45,12 @@ export const LayerMetadata3DModelBase = ModelBase
     updateDate: types.union(types.undefined, types.null, types.string),
     resolution: types.union(types.undefined, types.null, types.number),
     ep90: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, types.string),
+    sensorType: types.union(types.undefined, types.null, SensorTypeEnumType),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.string),
     dsc: types.union(types.undefined, types.null, types.string),
     geometry: types.union(types.undefined, types.null, types.frozen()),
     version: types.union(types.undefined, types.null, types.string),
-    accuracyLE90: types.union(types.undefined, types.null, types.string),
     selected: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
   })
@@ -60,7 +60,7 @@ export const LayerMetadata3DModelBase = ModelBase
     }
   }))
 
-export class LayerMetadata3DModelSelector extends QueryBuilder {
+export class LayerRasterRecordModelSelector extends QueryBuilder {
   get typeName() { return this.__attr(`typeName`) }
   get schema() { return this.__attr(`schema`) }
   get mdSource() { return this.__attr(`mdSource`) }
@@ -92,13 +92,12 @@ export class LayerMetadata3DModelSelector extends QueryBuilder {
   get dsc() { return this.__attr(`dsc`) }
   get geometry() { return this.__attr(`geometry`) }
   get version() { return this.__attr(`version`) }
-  get accuracyLE90() { return this.__attr(`accuracyLE90`) }
-  links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
   get selected() { return this.__attr(`selected`) }
   get order() { return this.__attr(`order`) }
+  links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
-export function selectFromLayerMetadata3D() {
-  return new LayerMetadata3DModelSelector()
+export function selectFromLayerRasterRecord() {
+  return new LayerRasterRecordModelSelector()
 }
 
-export const layerMetadata3DModelPrimitives = selectFromLayerMetadata3D().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.accuracyLE90.selected.order.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.selected.order.links(linkModelPrimitives)
