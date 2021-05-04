@@ -33,5 +33,24 @@
 
   "snack.message.success": "יצוא התחיל בהצלחה",
   "snack.message.failed": "יצוא ניכשל",
-  "snack.dismiss-btn.text": "אישור"
+  "snack.dismiss-btn.text": "אישור",
+
+  "tab-views.search-results": "תוצאות חיפוש",
+  "tab-views.catalog": "קטלוג",
+
+  "fields-categories.main": " ",
+  "fields-categories.general": "ראשי",
+  "fields-categories.geo": "מידע גיאוגרפי",
+
+  "field-names.raster.id": "מזהה",
+  "field-names.raster.source": "מקור",
+  "field-names.raster.creation-date": "תאריך יצירה",
+  "field-names.raster.type": "סוג",
+
+  "field-names.3d.id": "מזהה",
+  "field-names.3d.source": "מקור",
+  "field-names.3d.creation-date": "תאריך יצירה",
+  "field-names.3d.type": "סוג",
+  "field-names.3d.accuracyLE90": "דיוק"
+
 }

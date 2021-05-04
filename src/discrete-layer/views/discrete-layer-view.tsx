@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { observer } from 'mobx-react-lite';
 import {
   CesiumWMTSLayer,
   CesiumWMSLayer,
@@ -174,7 +176,7 @@ const getTimeStamp = (): string => new Date().getTime().toString();
 
 const tileOtions = { opacity: 0.5 };
 
-const DiscreteLayerView: React.FC = () => {
+const DiscreteLayerView: React.FC = observer(() => {
   const { loading, error, data, query, setQuery } = useQuery();
   const store = useStore();
   const theme = useTheme();
@@ -309,12 +311,12 @@ const DiscreteLayerView: React.FC = () => {
   const tabViews = [
     {
       idx: 0,
-      title: 'Catalog',
+      title: 'tab-views.catalog',
       iconClassName: 'icon-Catalog',
     },
     {
       idx: 1,
-      title: 'Search results',
+      title: 'tab-views.search-results',
       iconClassName: 'icon-Search-History',
     }
   ];
@@ -332,11 +334,11 @@ const DiscreteLayerView: React.FC = () => {
           }}>
             <IconButton 
               className={`operationIcon ${tabView?.iconClassName}`}
-              label="DELETE"
+              label="TABICON"
               onClick={ (): void => {}}
             />
             <Typography use="headline6" tag="span">
-              {tabView?.title}
+              <FormattedMessage id={tabView?.title}></FormattedMessage>
             </Typography>
           </div>
         </div>
@@ -367,6 +369,16 @@ const DiscreteLayerView: React.FC = () => {
       </div>
     );
   };
+
+  // TODO: should be taken from selected item in store
+  // const [layerToPresent, setLayerToPresent] = useState<ILayerImage | null>(null);
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   setLayerToPresent(store.discreteLayersStore.highlightedLayer); 
+  // }, [store.discreteLayersStore.highlightedLayer]);
+  
+  const layerToPresent = store.discreteLayersStore.highlightedLayer;
+  // const layerToPresent = (store.discreteLayersStore !== null && store.discreteLayersStore.layersImages !== undefined) ? store.discreteLayersStore.layersImages[0] : null;
 
   return (
     <>
@@ -465,17 +477,21 @@ const DiscreteLayerView: React.FC = () => {
             </Box>
           </Box>
           
-          <Box className="sidePanelContainer" style={{
+          <Box className="sidePanelContainer sideDetailsPanel" style={{
             backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
             height: detailsPanelExpanded ? '50%': '25%',
-            marginTop: '8px'
           }}>
-            <IconButton 
-              className={`operationIcon ${!detailsPanelExpanded ? 'icon-Expand-Panel': 'icon-Collapce-Panel'}`}
-              label="EXPANDER"
-              onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
-            />
-            <LayersDetailsComponent/>
+            <Box style={{display: 'flex', paddingTop: '8px'}}>
+              <Typography use="headline6" tag="div" className="detailsTitle">
+                {layerToPresent?.sourceName}
+              </Typography>
+              <IconButton 
+                className={`operationIcon ${!detailsPanelExpanded ? 'icon-Expand-Panel': 'icon-Collapce-Panel'}`}
+                label="EXPANDER"
+                onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
+              />
+            </Box>
+            <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded}/>
           </Box>
         </Box>
         
@@ -535,6 +551,6 @@ const DiscreteLayerView: React.FC = () => {
 
     </>
   );
-};
+});
 
 export default DiscreteLayerView;

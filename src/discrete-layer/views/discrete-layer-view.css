@@ -7,7 +7,7 @@
 }
 
 .sidePanelParentContainer{
-  width: 20%;
+  width: 25%;
   display: flex;
   flex-direction: column;
 }
@@ -22,15 +22,15 @@ body[dir='rtl'] .sidePanelContainer {
 }
 
 .mapAppContainer{
-  left: calc(20% + 8px);
-  width: calc(80% - 8px);
+  left: calc(25% + 8px);
+  width: calc(75% - 8px);
   position: absolute;
   height: calc(100% - 8px);
   padding-bottom: 8px;
 }
 
 body[dir='rtl'] .mapAppContainer {
-  right: calc(20% + 8px);
+  right: calc(25% + 8px);
   left: unset;
 }
 
@@ -141,4 +141,27 @@ body[dir='rtl'] .tabOperations{
 
 body[dir='rtl'] .tabContentContainer {
   padding: 0 8px 8px 0;
+}
+
+.detailsTitle{
+  color: var(--mdc-theme-text-primary-on-dark);
+  white-Space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: auto;
+}
+
+body[dir='rtl'] .detailsTitle{
+  margin-right: unset;
+  margin-left: auto;
+}
+
+.sideDetailsPanel{
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+body[dir='rtl'] .sideDetailsPanel{
+  padding-left: unset;
+  padding-right: 20px;
 }
