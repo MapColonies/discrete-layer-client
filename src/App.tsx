@@ -41,7 +41,6 @@ const App: React.FC = () => {
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
   const theme = {
     ...Themes.darkTheme,
-    textIconOnDark: '#AFBFDA',
     custom: {
       ...CustomTheme.darkTheme
     }
