@@ -312,12 +312,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     {
       idx: 0,
       title: 'tab-views.catalog',
-      iconClassName: 'icon-Catalog',
+      iconClassName: 'mc-icon-Catalog',
     },
     {
       idx: 1,
       title: 'tab-views.search-results',
-      iconClassName: 'icon-Search-History',
+      iconClassName: 'mc-icon-Search-History',
     }
   ];
 
@@ -349,18 +349,18 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND
           }}>
             <IconButton 
-              className="operationIcon icon-Delete"
+              className="operationIcon mc-icon-Delete"
               label="DELETE"
               onClick={ (): void => {}}
             />
             <IconButton 
-              className="operationIcon icon-Filter"
+              className="operationIcon mc-icon-Filter"
               // icon="filter_list" 
               label="FILTER"
               onClick={ (): void => {handleFilter()}}
             />
             <IconButton 
-              className="operationIcon icon-Arrows-Left"
+              className="operationIcon mc-icon-Arrows-Left"
               label="EXPANDER"
               onClick={ (): void => {}}
             />
@@ -486,7 +486,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {layerToPresent?.sourceName}
               </Typography>
               <IconButton 
-                className={`operationIcon ${!detailsPanelExpanded ? 'icon-Expand-Panel': 'icon-Collapce-Panel'}`}
+                className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel': 'mc-icon-Collapce-Panel'}`}
                 label="EXPANDER"
                 onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
               />

@@ -53,17 +53,17 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
     >
       <IconButton 
         // icon="location_searching" 
-        className="icon-Coordinates"
+        className="mc-icon-Coordinates"
         label="POINT"/>
       <Devider/>
       <IconButton 
         // icon="crop_square" 
-        className="icon-Rectangle"
+        className="mc-icon-Rectangle"
         label="BOX" 
         onClick={ (): void => {onStartDraw(DrawType.BOX);}}/>
       <IconButton 
         // icon="format_shapes" 
-        className="icon-Polygon"
+        className="mc-icon-Polygon"
         label="POLYGON" 
         onClick={ (): void => {onStartDraw(DrawType.POLYGON);}}/>
       <IconButton 
