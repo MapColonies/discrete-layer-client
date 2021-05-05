@@ -1,11 +1,11 @@
 import React from 'react';
 import { Method } from 'axios';
 import { types, Instance, getEnv } from 'mobx-state-tree';
-import { createStoreContext, createUseQueryHook } from "mst-gql"
+import { createStoreContext, createUseQueryHook } from 'mst-gql';
 import { useContext } from 'react';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { discreteLayersStore, SearchResponse } from './discreteLayersStore';
-import { RootStoreBase } from "./RootStore.base"
+import { RootStoreBase } from './RootStore.base';
 
 type FetchAction = (
   url: string,
