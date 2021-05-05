@@ -25,10 +25,21 @@ body[dir='rtl'] .categoryFieldsContainer {
 .categoryField{
   flex: 40%;
   padding: 2px 0;
+  display: flex;
+}
+.categoryFullWidthField{
+  flex: 100%;
+  padding: 2px 0;
+  display: flex;
 }
 .detailsFieldLabel{
   color: var(--mdc-theme-text-icon-on-dark);
+  flex: 0 0 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+
 .detailsFieldValue{
   color: var(--mdc-theme-text-primary-on-dark);
   margin-left: 12px;

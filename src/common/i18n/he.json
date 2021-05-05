@@ -46,11 +46,23 @@
   "field-names.raster.source": "מקור",
   "field-names.raster.creation-date": "תאריך יצירה",
   "field-names.raster.type": "סוג",
+  "field-names.raster.dsc": "תאור",
+  "field-names.raster.links": "קישורים",
+  "field-names.raster.link.name": "שם",
+  "field-names.raster.link.description": "תאור",
+  "field-names.raster.link.protocol": "פרוטוקול",
+  "field-names.raster.link.url": "קישור",
 
   "field-names.3d.id": "מזהה",
   "field-names.3d.source": "מקור",
   "field-names.3d.creation-date": "תאריך יצירה",
   "field-names.3d.type": "סוג",
-  "field-names.3d.accuracyLE90": "דיוק"
+  "field-names.3d.accuracyLE90": "דיוק",
+  "field-names.3d.dsc": "תאור",
+  "field-names.3d.links": "קישורים",
+  "field-names.3d.link.name": "שם",
+  "field-names.3d.link.description": "תאור",
+  "field-names.3d.link.protocol": "פרוטוקול",
+  "field-names.3d.link.url": "קישור"
 
 }

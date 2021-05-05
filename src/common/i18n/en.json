@@ -46,10 +46,22 @@
   "field-names.raster.source": "Source",
   "field-names.raster.creation-date": "Creation date",
   "field-names.raster.type": "Type",
+  "field-names.raster.dsc": "Description",
+  "field-names.raster.links": "Links",
+  "field-names.raster.link.name": "Name",
+  "field-names.raster.link.description": "Description",
+  "field-names.raster.link.protocol": "Protocol",
+  "field-names.raster.link.url": "URL",
 
   "field-names.3d.id": "ID",
   "field-names.3d.source": "Source",
   "field-names.3d.creation-date": "Creation date",
   "field-names.3d.type": "Type",
-  "field-names.3d.accuracyLE90": "Accuracy"
+  "field-names.3d.accuracyLE90": "Accuracy",
+  "field-names.3d.dsc": "Description",
+  "field-names.3d.links": "Links",
+  "field-names.3d.link.name": "Name",
+  "field-names.3d.link.description": "Description",
+  "field-names.3d.link.protocol": "Protocol",
+  "field-names.3d.link.url": "URL"
 }

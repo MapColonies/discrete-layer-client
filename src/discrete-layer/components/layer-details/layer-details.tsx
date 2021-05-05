@@ -1,196 +1,87 @@
 import React from 'react';
+import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel } from '../../models';
+import { Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
-import { dateFormatter } from '../layers-results/type-formatters/type-formatters';
+import { FieldCategory, LayerRasterRecorModelFieldsInfo, Layer3DRecorModelFieldsInfo, IRecordFieldInfo, IRecordCategoryFieldsInfo } from './layer-details.field-info';
+
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
+import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentors';
+import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentors';
+import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentors';
+import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentors';
 
 import './layer-details.css';
-
-export enum FieldCategory {
-  MAIN = 0,
-  GENERAL = 1,
-  GEO_INFO = 2,
-}
-
-export const LayerRasterRecorModelFieldsInfo = [
-  {
-    category: FieldCategory.MAIN,
-    categoryTitle: 'fields-categories.main',
-    fields: [
-      {
-        fieldName: 'id',
-        label: 'field-names.raster.id',
-      },
-      {
-        fieldName: 'source',
-        label: 'field-names.raster.source',
-      },
-      // {
-      //   fieldName: 'sourceName',
-      //   isBrief: true,
-      //   category: 'MAIN',
-      //   label: 'SourceName',
-      // },
-      {
-        fieldName: 'creationDate',
-        label: 'field-names.raster.creation-date',
-      },
-    ]
-  },
-  {
-    category: FieldCategory.GENERAL,
-    categoryTitle: 'fields-categories.general',
-    fields: [
-      {
-        fieldName: 'type',
-        label: 'field-names.raster.type',
-      },
-    ]
-  },
-  
-
- 
-  // {
-  //   fieldName: 'updateDate',
-  //   isBrief: true,
-  //   category: 'MAIN',
-  //   label: 'UpdateDate',
-  // }
-  // resolution?: number;
-  // ep90?: number;
-  // sensorType?: SensorType;
-  // rms?: number;
-  // scale?: string;
-  // dsc?: string;
-  // geometry?: GeoJSON;
-  // id?: string;
-  // version?: string;
-
-  // typeName: String
-  // schema: String
-  // mdSource: String
-  // xml: String
-  // anyText: String
-  // insertDate: DateTime
-  // wktGeometry: String
-  // links: [Link]
-  // anyTextTsvector: String
-  // description: String
-  // wkbGeometry: String
-  // identifier: String
-  // title: String
-  // type: String
-  // srs: String
-  // producerName: String
-  // projectName: String
-  // creationDate: DateTime
-  // classification: String
-  // keywords: String
-  // id: ID!
-  // sourceName: String!
-  // source: String
-  // updateDate: String
-  // resolution: Float
-  // ep90: Float
-  // sensorType: SensorType
-  // rms: Float
-  // scale: String
-  // dsc: String
-  // geometry: GeoJSONFeature
-  // version: String
-  // selected: Boolean
-  // order: Float
-];
-
-export const Layer3DRecorModelFieldsInfo = [
-  {
-    category: FieldCategory.MAIN,
-    categoryTitle: 'fields-categories.main',
-    fields: [
-      {
-        fieldName: 'id',
-        label: 'field-names.3d.id',
-      },
-      {
-        fieldName: 'source',
-        label: 'field-names.3d.source',
-      },
-      {
-        fieldName: 'creationDate',
-        label: 'field-names.3d.creation-date',
-      },
-    ]
-  },
-  {
-    category: FieldCategory.GENERAL,
-    categoryTitle: 'fields-categories.general',
-    fields: [
-      {
-        fieldName: 'type',
-        label: 'field-names.3d.type',
-      },
-    ]
-  },
-  {
-    category: FieldCategory.GEO_INFO,
-    categoryTitle: 'fields-categories.geo',
-    fields: [
-      {
-        fieldName: 'accuracyLE90',
-        label: 'field-names.3d.accuracyLE90',
-      },
-    ]
-  },
-];
+import { FieldLabelComponent } from './field-label';
+import { get } from 'lodash';
 
 interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
 }
 
+const getBasicType = (fieldName:string, layerRecord: LayerMetadataMixedUnion | LinkModelType): string => {
+  let recordModel;
+  switch(layerRecord.__typename){
+    case 'Layer3DRecord':
+      recordModel = Layer3DRecordModel;
+      break;
+    case 'Link':
+      recordModel = LinkModel;
+      break;
+    default:
+      recordModel = LayerRasterRecordModel;
+      break;
+  }
+  
+  const typeString = get(recordModel,`properties.${fieldName}.name`) as string;
+  if(fieldName.toLowerCase().includes('url')){
+    return 'url';
+  }
+  else {
+    return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
+  }
+}
+
+export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown): JSX.Element => {
+  const fieldName = fieldInfo.fieldName;
+  const basicType = getBasicType(fieldName, layerRecord);
+  // console.log(`${fieldName} -->`, modelProps[fieldName].name, '-->', basicType);
+
+  switch(basicType){
+    case 'string':
+    case 'identifier':
+      return (
+        <StringValuePresentorComponent value={fieldValue as string}></StringValuePresentorComponent>
+      );
+    case 'url':
+      return (
+        <UrlValuePresentorComponent value={fieldValue as string}></UrlValuePresentorComponent>
+      );
+    case 'momentDateType':
+      return (
+        <DateValuePresentorComponent value={fieldValue as moment.Moment}></DateValuePresentorComponent>
+      );
+    default:
+      if(basicType.includes('LinkModel')){
+        return (
+          <LinksValuePresentorComponent value={fieldValue  as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
+        );
+      }
+      else{
+        return (
+          <UnknownValuePresentorComponent value={basicType}></UnknownValuePresentorComponent>
+        );
+      }
+  }
+};
+
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props :LayersDetailsComponentProps) => {
   const { isBrief, layerRecord } = props;
 
-  const getValuePresentor = (layerRecord: LayerMetadataMixedUnion, fieldName: string, fieldValue: any) => {
-    const getBasicType = (typeString: string): string => {
-      return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
-    }
-
-    let recordModel;
-    switch(layerRecord.__typename){
-      case 'Layer3DRecord':
-        recordModel = Layer3DRecordModel;
-        break;
-      default:
-        recordModel = LayerRasterRecordModel;
-        break;
-    }
-
-    const modelProps: any = recordModel.properties as any;
-    // console.log(`${fieldName} -->`, modelProps[fieldName]);
-    const basicType = getBasicType(modelProps[fieldName].name);
-
-    switch(basicType){
-      case 'string':
-      case 'identifier':
-        return (
-          <span className="detailsFieldValue">{fieldValue}</span> 
-        )
-      case 'momentDateType':
-        return (
-          <span className="detailsFieldValue">
-            {
-              dateFormatter(fieldValue)
-            }
-          </span> 
-        )
-  
-    }
-  };
-
-  const getCategoryFields = (layerRecord: LayerMetadataMixedUnion) => {
+  const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
     let fieldsInfo;
     switch(layerRecord.__typename){
       case 'Layer3DRecord':
@@ -201,7 +92,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
         break;
     }
       
-    if(isBrief){
+    if(isBrief === true){
       return fieldsInfo.filter((item) => item.category === FieldCategory.MAIN);
     }
     return fieldsInfo;
@@ -212,7 +103,10 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       {
         layerRecord && getCategoryFields(layerRecord).map(category => {
           return (
-            <Box className="categoryFieldsParentContainer">
+            <Box 
+              key={category.category}
+              className="categoryFieldsParentContainer"
+            >
               <Typography use="headline6" tag="div" className="categoryFieldsTitle">
                 <FormattedMessage id={category.categoryTitle} />
               </Typography>
@@ -220,17 +114,17 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                 {
                   category.fields.map(fieldInfo => {
                     return (
-                      <Box className="categoryField">
-                        <span className="detailsFieldLabel">
-                          <FormattedMessage id={fieldInfo.label} />:
-                        </span>
+                      <Box 
+                        key={fieldInfo.fieldName}
+                        className={(fieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}
+                      >
+                        <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
                         {
-                          getValuePresentor(layerRecord, fieldInfo.fieldName, (layerRecord as any)[fieldInfo.fieldName])
+                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName))
                         }
                       </Box>
                     )
                   })
-                  // JSON.stringify(layerRecord)
                 }
               </Box>
             </Box>
