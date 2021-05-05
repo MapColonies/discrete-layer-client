@@ -14,6 +14,7 @@ import {
   BboxCorner,
   Box,
 } from '@map-colonies/react-components';
+import { IconButton, useTheme, Typography, Fab } from '@map-colonies/react-core';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { find } from 'lodash';
 import { lineString } from '@turf/helpers';
@@ -21,22 +22,21 @@ import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import CONFIG from '../../common/config';
 import { useQuery, useStore } from "../models/RootStore"
-import { IconButton, useTheme, Typography, Fab } from '@map-colonies/react-core';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
 import { PolygonSelectionUi } from '../components/map-container/polygon-selection-ui_2';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
+import { Filters } from '../components/filters/filters';
+import { LayersDetailsComponent } from '../components/layer-details/layer-details';
+import { ILayerImage } from '../models/layerImage';
+import { Home } from './test/Home';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
-import { Filters } from '../components/filters/filters';
-import { ILayerImage } from '../models/layerImage';
-import { Home } from './test/Home';
 import './discrete-layer-view.css';
-import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
