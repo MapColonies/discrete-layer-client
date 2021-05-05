@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -15,7 +16,6 @@ import { UnknownValuePresentorComponent } from './field-value-presentors/unknown
 
 import './layer-details.css';
 import { FieldLabelComponent } from './field-label';
-import { get } from 'lodash';
 
 interface LayersDetailsComponentProps {
   isBrief?: boolean;
