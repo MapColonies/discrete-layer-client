@@ -6,8 +6,10 @@ export interface FormatterFunc {
   (source: string | Date | moment.Moment | undefined): string;
 }
 
-export const stringFormatter: FormatterFunc = (val): string =>
-  val !== undefined ? val.toString() : '';
+export const stringFormatter: FormatterFunc = (val): string =>{
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
+  return val !== undefined ? val.toString() : '';
+}
 
 export const dateFormatter: FormatterFunc = (date): string => {
   // eslint-disable-next-line

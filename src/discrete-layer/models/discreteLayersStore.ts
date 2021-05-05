@@ -4,7 +4,7 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
-import { Geometry, LineString, MultiPolygon, Polygon } from 'geojson';
+import { Geometry, Polygon } from 'geojson';
 import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -13,8 +13,6 @@ import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from "./ModelBase"
-import { yellow } from '@material-ui/core/colors';
-import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {

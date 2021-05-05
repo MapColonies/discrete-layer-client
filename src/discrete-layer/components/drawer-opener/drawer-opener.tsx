@@ -15,8 +15,8 @@ export const DrawerOpener: React.FC<DrawerOpenerProps> = (props) => {
     <Box 
       onClick={(): void => onClick(!isOpen)} 
       style={{
-        backgroundColor: theme.primary,
-        color: theme.onPrimary,
+        backgroundColor: theme.primary as string,
+        color: theme.onPrimary as string,
       }} 
       className={`drawerOpenerPosition ${isOpen ? 'spacer' : ''}`}
     >

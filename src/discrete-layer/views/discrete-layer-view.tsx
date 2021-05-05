@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect } from 'react';
+import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import {
-  CesiumWMTSLayer,
-  CesiumWMSLayer,
-  CesiumXYZLayer,
-  CesiumOSMLayer,
   DrawType,
   IDrawingEvent,
   IDrawing,
@@ -23,10 +20,8 @@ import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import CONFIG from '../../common/config';
-import { osmOptions, wmsOptions, wmtsOptions, xyzOptions } from '../../common/helpers/layer-options';
 import { useQuery, useStore } from "../models/RootStore"
-import { MapContainer } from '../components/map-container';
-import { IconButton, Icon, TabBar, Tab, useTheme, Typography, Fab } from '@map-colonies/react-core';
+import { IconButton, useTheme, Typography, Fab } from '@map-colonies/react-core';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -176,7 +171,13 @@ const getTimeStamp = (): string => new Date().getTime().toString();
 
 const tileOtions = { opacity: 0.5 };
 
+enum TabViews {
+  CATALOG,
+  SEARCH_RESULTS,
+}
+
 const DiscreteLayerView: React.FC = observer(() => {
+  // eslint-disable-next-line
   const { loading, error, data, query, setQuery } = useQuery();
   const store = useStore();
   const theme = useTheme();
@@ -195,35 +196,21 @@ const DiscreteLayerView: React.FC = observer(() => {
   const memoizedLayers =  useMemo(() => {
     return(
     <>
-      {/* {CONFIG.ACTIVE_LAYER === 'OSM_LAYER' && (
-        <CesiumOSMLayer options={osmOptions} />
-      )}
-      {CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && (
-        <CesiumWMTSLayer options={wmtsOptions} />
-      )}
-      {CONFIG.ACTIVE_LAYER === 'WMS_LAYER' && (
-        <CesiumWMSLayer options={wmsOptions} alpha={tileOtions.opacity} />
-      )}
-
-      {CONFIG.ACTIVE_LAYER === 'XYZ_LAYER' && (
-        <CesiumXYZLayer options={xyzOptions} alpha={tileOtions.opacity}/>
-      )} */}
-
       <SelectedLayersContainer/>
       <HighlightedLayer/>
       <LayersFootprints/>
     </>
   );
-  }, [CONFIG.ACTIVE_LAYER]);
+  }, []);
 
-  const [activeTabView, setActiveTabView] = React.useState(0);
+  const [activeTabView, setActiveTabView] = React.useState(TabViews.CATALOG);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
 
   useEffect(() => {
-    const layers: ILayerImage[] = ((data as any)?.catalogItems || []) as ILayerImage[];
+    const layers = get(data,'catalogItems', []) as ILayerImage[];
 
     store.discreteLayersStore.setLayersImages(layers);
-  }, [data]);
+  }, [data, store.discreteLayersStore]);
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
@@ -263,7 +250,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           },
         ]);
 
-        setActiveTabView(1);
+        setActiveTabView(TabViews.SEARCH_RESULTS);
       },
     };
   };
@@ -305,37 +292,36 @@ const DiscreteLayerView: React.FC = observer(() => {
       },
     ]);
 
-    setActiveTabView(1);
+    setActiveTabView(TabViews.SEARCH_RESULTS);
   };
 
   const tabViews = [
     {
-      idx: 0,
+      idx: TabViews.CATALOG,
       title: 'tab-views.catalog',
       iconClassName: 'mc-icon-Catalog',
     },
     {
-      idx: 1,
+      idx: TabViews.SEARCH_RESULTS,
       title: 'tab-views.search-results',
       iconClassName: 'mc-icon-Search-History',
     }
   ];
 
-  const getActiveTabHeader = (tabIdx: number) => {
+  const getActiveTabHeader = (tabIdx: number): JSX.Element => {
     const tabView = find(tabViews, (tab)=>{
       return tab.idx === tabIdx;
     });
     return (
       <div className="tabHeaderContainer">
-        <div className="tabTitleContainer" style={{backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND}}>
+        <div className="tabTitleContainer" style={{backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string}}>
           <div className="tabTitle" style={{
-            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
-            borderBottomColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND
+            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
+            borderBottomColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             <IconButton 
-              className={`operationIcon ${tabView?.iconClassName}`}
+              className={`operationIcon ${tabView?.iconClassName as string}`}
               label="TABICON"
-              onClick={ (): void => {}}
             />
             <Typography use="headline6" tag="span">
               <FormattedMessage id={tabView?.title}></FormattedMessage>
@@ -343,26 +329,23 @@ const DiscreteLayerView: React.FC = observer(() => {
           </div>
         </div>
 
-        <div className="tabOperationsContainer" style={{backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE}}>
+        <div className="tabOperationsContainer" style={{backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string}}>
           <div className="tabOperations" style={{
-            backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND,
-            borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND
+            backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string,
+            borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             <IconButton 
               className="operationIcon mc-icon-Delete"
               label="DELETE"
-              onClick={ (): void => {}}
             />
             <IconButton 
               className="operationIcon mc-icon-Filter"
-              // icon="filter_list" 
               label="FILTER"
               onClick={ (): void => {handleFilter()}}
             />
             <IconButton 
               className="operationIcon mc-icon-Arrows-Left"
               label="EXPANDER"
-              onClick={ (): void => {}}
             />
           </div>
         </div>
@@ -395,76 +378,41 @@ const DiscreteLayerView: React.FC = observer(() => {
                 mini 
                 onClick={(evt): void => setActiveTabView(tab.idx)}
                 style={{ 
-                  backgroundColor: activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE, 
+                  backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
                 }}
                 theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
               />;
             })}
           </Box>
         </Box>
-        {/* <TabBar
-          activeTabIndex={activeTabView}
-          onActivate={(evt): void => setActiveTabView(evt.detail.index)}
-          style={{
-            width: '180px',
-            // @ts-ignore
-            '--gc-tab-active-background': theme.custom?.GC_TAB_ACTIVE_BACKGROUND
-          }}
-        >
-          <Tab icon="star_border" style={{
-            // background: `linear-gradient(to top,rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0.25)) ${theme.background}`
-          }}/>
-          <Tab icon="favorite_border" />
-        </TabBar> */}
 
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
-            onCancelDraw={()=>{}}
+            onCancelDraw={(): void=>{ console.log('****** onCancelDraw  **** called')}}
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
           />
         </Box>
-
-        { 
-        // <PolygonSelectionUi
-        //   // onCancelDraw={onCancelDraw}
-        //   // onReset={onReset}
-        //   // onStartDraw={setDrawType}
-        //   // isSelectionEnabled={isDrawing}
-        //   // onPolygonUpdate={onPolygonSelection}
-        //   // mapActionsWidth = {mapActionsWidth}
-        //   // handleOtherDrawers={(): void => setFiltersOpen(false)}
-        //   onCancelDraw={()=>{}}
-        //   onReset={()=>{}}
-        //   onStartDraw={setDrawType}
-        //   isSelectionEnabled={isDrawing}
-        //   onPolygonUpdate={()=>{}}
-        //   mapActionsWidth = {'400px'}
-        //   handleOtherDrawers={(): void => {}}
-
-        // /> 
-        }
-      
       </Box>
       <Box className="mainViewContainer">
         <Box className="sidePanelParentContainer">
           <Box 
             className="sidePanelContainer"
             style={{
-              backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
+              backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
               height: detailsPanelExpanded ? '50%': '75%'
             }}
           >
-            <Box className="tabContentContainer" style={{display: activeTabView === 0 ? 'block': 'none'}}>
+            <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block': 'none'}}>
               {
                 getActiveTabHeader(activeTabView)
               }
               <Home />
             </Box>
 
-            <Box className="tabContentContainer"  style={{display: activeTabView === 1 ? 'block': 'none'}}>
+            <Box className="tabContentContainer"  style={{display: activeTabView === TabViews.SEARCH_RESULTS ? 'block': 'none'}}>
               {
                 getActiveTabHeader(activeTabView)
               }
@@ -478,7 +426,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>
           
           <Box className="sidePanelContainer sideDetailsPanel" style={{
-            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE,
+            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
             height: detailsPanelExpanded ? '50%': '25%',
           }}>
             <Box style={{display: 'flex', paddingTop: '8px'}}>
@@ -496,31 +444,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         
         <Box className="mapAppContainer">
-          {
-          // <MapContainer
-          //   handlePolygonSelected={handlePolygonSelected}
-          //   handlePolygonReset={handlePolygonReset}
-          //   mapContent={
-          //     /* eslint-disable */
-          //     <>
-          //       {CONFIG.ACTIVE_LAYER === 'OSM_LAYER' && (
-          //         <CesiumOSMLayer options={osmOptions} />
-          //       )}
-          //       {CONFIG.ACTIVE_LAYER === 'WMTS_LAYER' && (
-          //         <CesiumWMTSLayer options={wmtsOptions} />
-          //       )}
-          //       {CONFIG.ACTIVE_LAYER === 'WMS_LAYER' && (
-          //         <CesiumWMSLayer options={wmsOptions} alpha={tileOtions.opacity} />
-          //       )}
-
-          //       {CONFIG.ACTIVE_LAYER === 'XYZ_LAYER' && (
-          //         <CesiumXYZLayer options={xyzOptions} alpha={tileOtions.opacity}/>
-          //       )}
-          //     </>
-          //     /* eslint-enable */
-          //   }
-          // />
-          }
           {
             <CesiumMap 
               projection={CONFIG.MAP.PROJECTION}  
@@ -542,13 +465,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                 />
             </CesiumMap>
           }
-        </Box>      
-        
+        </Box>
+
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
-
       </Box>
-
-
     </>
   );
 });

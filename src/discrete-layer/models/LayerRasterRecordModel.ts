@@ -11,10 +11,11 @@ export { selectFromLayerRasterRecord, layerRasterRecordModelPrimitives, LayerRas
 /**
  * LayerRasterRecordModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const LayerRasterRecordModel = LayerRasterRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

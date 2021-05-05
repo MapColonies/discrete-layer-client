@@ -36,6 +36,7 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
   }
   else {
     let geometry: Geometry = layer.geometry as Geometry;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     geometry = (polygonToLine(convex(geometry)) as Feature).geometry;
     return {

@@ -61,7 +61,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     }
   }
 
-  const getMax = (valuesArr: number[]) => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+  const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
   
   const colDef = [
     {

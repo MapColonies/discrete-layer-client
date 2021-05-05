@@ -28,7 +28,7 @@ export const baseRootStore = RootStoreBase
   }))
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))
@@ -45,6 +45,7 @@ export const useQuery = createUseQueryHook(rootStoreContext, React)
 export const StoreProvider = rootStoreContext.Provider;
 export const useStore = (): IRootStore | IBaseRootStore => {
   const store = useContext(rootStoreContext);
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (store === null) {
     throw new Error('Store cannot be null, please add a context provider');
   }

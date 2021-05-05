@@ -11,10 +11,11 @@ export { selectFromLayer3DRecord, layer3DRecordModelPrimitives, Layer3DRecordMod
 /**
  * Layer3DRecordModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const Layer3DRecordModel = Layer3DRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

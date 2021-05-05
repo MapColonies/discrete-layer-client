@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* tslint:disable */
 import * as React from "react"
 import { observer } from "mobx-react"
 

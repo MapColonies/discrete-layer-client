@@ -141,7 +141,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
 
   return (
     <div className="map">
-      <div className="filtersPosition" style={{backgroundColor: theme.primary, width: mapActionsWidth}}>
+      <div className="filtersPosition" style={{backgroundColor: theme.primary as string, width: mapActionsWidth}}>
         <div className="filtersContainer">
           <PolygonSelectionUi
             onCancelDraw={onCancelDraw}

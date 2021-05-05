@@ -1,3 +1,6 @@
+/* eslint-disable */
+/* tslint:disable */
+
 import React from "react"
 import { observer } from "mobx-react"
 import { useQuery, useStore } from "../../models/RootStore"
