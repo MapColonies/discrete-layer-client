@@ -1,0 +1,167 @@
+.mainViewContainer{
+  display: flex;
+  position: relative;
+  height: calc(100vh - 52px);
+  margin: 0 8px 0 8px;
+  padding-bottom: 8px;
+}
+
+.sidePanelParentContainer{
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidePanelContainer{
+  border-radius: 12px;
+}
+
+body[dir='rtl'] .sidePanelContainer {
+  margin-right: unset;
+  margin-left: 8px;
+}
+
+.mapAppContainer{
+  left: calc(25% + 8px);
+  width: calc(75% - 8px);
+  position: absolute;
+  height: calc(100% - 8px);
+  padding-bottom: 8px;
+}
+
+body[dir='rtl'] .mapAppContainer {
+  right: calc(25% + 8px);
+  left: unset;
+}
+
+.tabViewIcon {
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+}
+
+.headerContainer{
+  height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.headerViewsSwitcher{
+  width: 20%;
+  display: flex;
+  align-items: center;
+}
+
+.headerViewsSwitcherContainer{
+  display: flex;
+  width: 180px;
+  gap: 12px;
+}
+
+.headerSearchOptionsContainer{
+  margin: 8px auto 0 auto;
+  height: 64px;
+  z-index: 1;
+  background-color: var(--mdc-theme-background);
+  border-radius: 64px;
+}
+
+/* TabContent */
+.tabHeaderContainer{
+  display: flex;
+  height: 50px;
+}
+
+.tabTitleContainer{
+  flex-grow: 1;
+  flex-basis: 0;
+  background-color: red;
+}
+
+.tabTitle{
+  border-bottom-right-radius: 16px;
+  border-bottom-width: 2px;
+  border-bottom-color: red;
+  border-bottom-style: solid;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.tabTitleText{
+  font-size: 18px;
+}
+
+body[dir='rtl'] .tabTitle{
+  border-bottom-right-radius: unset;
+  border-bottom-left-radius: 16px;
+}
+
+
+.tabOperationsContainer{
+  flex-grow: 1;
+  flex-basis: 0;
+  border-top-right-radius: 8px;
+}
+
+body[dir='rtl'] .tabOperationsContainer{
+  border-top-right-radius: unset;
+  border-top-left-radius: 8px;
+}
+
+.tabOperations{
+  border-top-right-radius: 8px;
+  border-top-left-radius: 16px;
+  border-top-color: red;
+  border-top-style: solid;
+  background-color: red;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.operationIcon{
+  padding: 8px 8px;
+}
+
+
+body[dir='rtl'] .tabOperations{
+  border-top-right-radius: unset;
+  border-top-left-radius: unset;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 16px;
+}
+
+.tabContentContainer {
+  padding: 0 0 8px 8px;
+  height: 100%;
+}
+
+body[dir='rtl'] .tabContentContainer {
+  padding: 0 8px 8px 0;
+}
+
+.detailsTitle{
+  color: var(--mdc-theme-text-primary-on-dark);
+  white-Space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: auto;
+}
+
+body[dir='rtl'] .detailsTitle{
+  margin-right: unset;
+  margin-left: auto;
+}
+
+.sideDetailsPanel{
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+body[dir='rtl'] .sideDetailsPanel{
+  padding-left: unset;
+  padding-right: 20px;
+}

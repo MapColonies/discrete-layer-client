@@ -5,7 +5,7 @@ import { isObject } from 'lodash';
 import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridRowNode } from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
-import { useStore } from '../../models/rootStore';
+import { useStore } from '../../models/RootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 import { RowSelectionRenderer } from './cell-renderer/row-selection.cell-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
@@ -61,7 +61,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     }
   }
 
-  const getMax = (valuesArr: number[]) => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+  const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
   
   const colDef = [
     {
@@ -103,7 +103,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         id: 'results.fields.name.label',
       }),
       width: 200,
-      field: 'name',
+      field: 'sourceName',
       suppressMovable: true,
     },
     {

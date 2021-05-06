@@ -1,0 +1,51 @@
+.categoryFieldsParentContainer{
+  display: flex;
+  flex-wrap: wrap;
+}
+.categoryFieldsTitle{
+  flex: 100%;
+  color: var(--mdc-theme-text-icon-on-dark);
+  font-size: 16px;
+  font-weight: 600;
+}
+.categoryFieldsContainer{
+  display: flex;
+  flex-wrap: wrap;
+  flex: 100%;
+  gap: 10%;
+  margin-left: 16px;
+  margin-bottom: '8px';
+}
+
+body[dir='rtl'] .categoryFieldsContainer {
+  margin-left: unset;
+  margin-right: 16px;
+}
+
+.categoryField{
+  flex: 40%;
+  padding: 2px 0;
+  display: flex;
+}
+.categoryFullWidthField{
+  flex: 100%;
+  padding: 2px 0;
+  display: flex;
+}
+.detailsFieldLabel{
+  color: var(--mdc-theme-text-icon-on-dark);
+  flex: 0 0 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.detailsFieldValue{
+  color: var(--mdc-theme-text-primary-on-dark);
+  margin-left: 12px;
+}
+
+body[dir='rtl'] .detailsFieldValue{
+  margin-left: unset;
+  margin-right: 12px;
+}

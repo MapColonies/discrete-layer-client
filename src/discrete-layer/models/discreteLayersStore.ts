@@ -4,14 +4,15 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
-import { LineString, MultiPolygon, Polygon } from 'geojson';
+import { Geometry, Polygon } from 'geojson';
 import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { searchParams } from './search-params';
-import { IRootStore } from './rootStore';
+import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
+import { ModelBase } from "./ModelBase"
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -21,8 +22,8 @@ export interface SearchResult {
 
 export type SearchResponse = ApiHttpResponse<SearchResult>;
 
-export const discreteLayersStore = types
-  .model({
+export const discreteLayersStore = ModelBase
+  .props({
     state: types.enumeration<ResponseState>(
       'State',
       Object.values(ResponseState)
@@ -32,6 +33,9 @@ export const discreteLayersStore = types
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
   })
   .views((self) => ({
+    get store(): IRootStore {
+      return self.__getStore<RootStoreType>()
+    },
     get root(): IRootStore {
       return getParent(self);
     },
@@ -55,6 +59,18 @@ export const discreteLayersStore = types
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
           self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
+
+          // const layers = [];
+          // self.root.layerMetadata.data_.forEach((layer)=> {
+          //   layers.push(layer) 
+          // });
+          // self.root.layerMetadata3DS.data_.forEach((layer)=> {
+          //   layers.push(layer) 
+          // });
+          // // @ts-ignore
+          // const result = yield Promise.resolve(layers);
+          // // @ts-ignore
+          // self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
           
           // *** communicate with pycsw with cswClient - CORS
           // const cswClient = new CswClient(
@@ -90,19 +106,24 @@ export const discreteLayersStore = types
       }
     );
 
+    function setLayersImages(data: ILayerImage[]): void {
+      self.layersImages = filterBySearchParams(data).map(item => ({...item, selected:false, order:null}));
+    }
+
     // TODO: Remove when actual API is integrated
     function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
       return layers.filter((layer) => {
         let layerBBoxPolygon: Polygon;
-        switch(layer.geojson?.type){
+        const geometry: Geometry = layer.geometry as Geometry;
+        switch(geometry.type){
           case 'Polygon':
-            layerBBoxPolygon = layer.geojson;
+            layerBBoxPolygon = layer.geometry as Polygon;
             break;
           case 'MultiPolygon':
-            layerBBoxPolygon = bboxPolygon(bbox(layer.geojson as MultiPolygon)).geometry;
+            layerBBoxPolygon = bboxPolygon(bbox(geometry)).geometry;
             break;
           case 'LineString':
-            layerBBoxPolygon = lineStringToPolygon(layer.geojson as LineString).geometry;
+            layerBBoxPolygon = lineStringToPolygon(geometry).geometry;
             break;
           default:
             throw(new Error('Unknow Geojson feature type'));
@@ -132,6 +153,7 @@ export const discreteLayersStore = types
 
     return {
       getLayersImages,
+      setLayersImages,
       clearLayersImages,
       showLayer,
       highlightLayer,

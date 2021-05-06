@@ -4,25 +4,20 @@ import { ILayerImage } from "../discrete-layer/models/layerImage";
 export const createMockData = (count: number, prefix: string): ILayerImage[] => {
   const rowData: ILayerImage[] = [];
   for (let i = 0; i < count; i++) {
+    // @ts-ignore
     rowData.push({
       id: i.toString(),
-      name: `${prefix}  ("name",${i})`,
+      sourceName: `${prefix}  ("name",${i})`,
       creationDate: new Date(),
       description: '',
-      geojson: {
+      geometry: {
         type: 'Polygon',
         coordinates: [[[]]],
       },
-      referenceSystem: '',
-      imagingTimeStart: new Date(),
-      imagingTimeEnd: new Date(),
       type: '',
       source: '',
-      category: '',
-      thumbnail: '',
-      properties: undefined,
       selected: false,
-      order: null
+      order: null,
     });
   }
   return rowData;

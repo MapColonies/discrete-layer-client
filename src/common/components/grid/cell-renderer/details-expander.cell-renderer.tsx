@@ -25,7 +25,7 @@ export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (
   return (
     <Box className="expanderContainer" onClick={handleCollapseExpand}>
       <Icon 
-        style={{color: theme.primary}} 
+        style={{color: (theme.primary as string)}} 
         icon={{ icon: 'expand_more', size: 'xsmall' }}
       />
     </Box>

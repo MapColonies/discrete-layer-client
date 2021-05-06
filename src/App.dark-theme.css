@@ -1,0 +1,48 @@
+/* TABS CUSTOMIZATION */
+.dark-theme .mdc-tab-indicator__content--underline {
+  border-top-style: unset;
+}
+
+.dark-theme .mdc-tab--active {
+  background: var(--gc-tab-active-background);
+  border-radius: 6px 6px 0 0;
+}
+
+.dark-theme .mdc-tab .mdc-tab__icon{
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.dark-theme .mdc-tab.mdc-tab--active .mdc-tab__icon{
+  color: var(--mdc-theme-text-primary-on-background);
+}
+
+.dark-theme .mdc-tab__ripple.mdc-ripple-upgraded--background-focused::before, 
+.dark-theme .mdc-tab__ripple:not(.mdc-ripple-upgraded):focus::before {
+  opacity: 0;
+}
+
+/* ICONSBUTTONS CUSTOMIZATION */
+.dark-theme button.rmwc-icon.rmwc-icon--ligature{
+  color: var(--mdc-theme-text-icon-on-dark);
+  background-color: unset;
+  border-width: 0px;
+  border-style: outset;
+  /* border-image: initial; */
+  cursor: pointer;
+}
+
+.dark-theme button.rmwc-icon.rmwc-icon--ligature:focus {
+  outline: unset;
+}
+
+.dark-theme button.rmwc-icon.rmwc-icon--ligature:hover{
+  color: var(--mdc-theme-text-primary-on-background);
+}
+
+/* FABS CUSTOMIZATION */
+.dark-theme .mdc-theme--on-surface .mdc-fab__icon{
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+.dark-theme .mdc-theme--on-surface.mdc-fab{
+  color: var(--mdc-theme-text-icon-on-dark) !important;
+}

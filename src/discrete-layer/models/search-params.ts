@@ -1,8 +1,9 @@
 import { types, Instance } from 'mobx-state-tree';
 import { Geometry } from 'geojson';
+import { ModelBase } from "./ModelBase"
 
-export const searchParams = types
-  .model({
+export const searchParams = ModelBase
+  .props({
     geojson: types.maybe(types.frozen<Geometry>()),
   })
   .actions((self) => ({
