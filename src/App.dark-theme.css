@@ -46,3 +46,8 @@
 .dark-theme .mdc-theme--on-surface.mdc-fab{
   color: var(--mdc-theme-text-icon-on-dark) !important;
 }
+
+/* AG-GRID CUSTOMIZATIONS */
+.dark-theme .ag-theme-alpine-dark .ag-header {
+  border-bottom: unset;
+}

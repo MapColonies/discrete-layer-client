@@ -13,8 +13,11 @@ import {
   CellMouseOutEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
+import { useTheme } from '@map-colonies/react-core';
+import { GridThemes } from './themes/themes';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
 const EXPANDER_COLUMN_WIDTH = 60;
@@ -44,9 +47,9 @@ export interface GridRowNode extends RowNode {};
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [gridApi, setGridApi] = useState<GridApi>();
-  const [rowData, setRowData] = useState<any[]>();
+  const [rowData, setRowData] = useState<any[]>()
+  const theme = useTheme();
   
-
   const onGridReady = (params: GridReadyEvent): void => {
     setGridApi(params.api);
   };
@@ -117,10 +120,15 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     setRowData(result);
   },[props.rowData, props.gridOptions]);
 
+  const agGridThemeOverrides = GridThemes.getTheme(theme);
+
   return (
     <Box
-      className="ag-theme-alpine"
-      style={props.style}
+      className={theme.type === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine' }
+      style={{
+        ...props.style,
+        ...agGridThemeOverrides
+      }}
     >
       <AgGridReact
         gridOptions={gridOptions}

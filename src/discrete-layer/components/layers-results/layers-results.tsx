@@ -7,8 +7,9 @@ import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
-import { RowSelectionRenderer } from './cell-renderer/row-selection.cell-renderer';
+import { FootprintRenderer } from './cell-renderer/footprint.cell-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
+import { LayerImageRenderer } from './cell-renderer/layer-image.cell-renderer';
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
@@ -67,7 +68,34 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     {
       width: 20,
       field: 'selected',
-      cellRenderer: 'rowSelectionRenderer',
+      cellRenderer: 'rowFootprintRenderer',
+      cellRendererParams: {
+        onClick: (id: string, value: boolean, node: GridRowNode): void => {
+          // setTimeout(()=> node.setDataValue('selected', value), immediateExecution);
+          // if(value) {
+          //   selectedLayersRef.current++;
+          // }
+          // else {
+          //   const orders: number[] = [];
+          //   // eslint-disable-next-line
+          //   (node as any).gridApi.forEachNode((item: GridRowNode)=> {
+          //     const rowData = item.data as {[key: string]: string | boolean | number};
+          //     if(rowData.selected === true && rowData.id !== id) {
+          //       orders.push(rowData.order as number);
+          //     }
+          //   });
+          //   selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
+          // }
+          // const order = value ? selectedLayersRef.current : null;
+          // setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
+          // discreteLayersStore.showLayer(id, value, order);
+        }
+      }
+    },
+    {
+      width: 20,
+      field: 'layerImageShown',
+      cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
           setTimeout(()=> node.setDataValue('selected', value), immediateExecution);
@@ -97,6 +125,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       }),
       width: 50,
       field: 'order',
+      hide: true
     },
     {
       headerName: intl.formatMessage({
@@ -123,14 +152,15 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     getRowNodeId: (data: ILayerImage) => {
       return data.id;
     },
-    detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 150,
+    // detailsRowCellRenderer: 'detailsRenderer',
+    // detailsRowHeight: 150,
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      detailsRenderer: LayerDetailsRenderer,
-      rowSelectionRenderer: RowSelectionRenderer,
+      // detailsRenderer: LayerDetailsRenderer,
+      rowFootprintRenderer: FootprintRenderer,
+      rowLayerImageRenderer: LayerImageRenderer,
     },
     rowSelection: 'multiple',
     suppressRowClickSelection: true,
