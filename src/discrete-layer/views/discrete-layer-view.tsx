@@ -209,7 +209,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     const layers = get(data,'catalogItems', []) as ILayerImage[];
 
-    store.discreteLayersStore.setLayersImages(layers);
+    store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
   const handlePolygonSelected = (geometry: Geometry): void => {
@@ -360,9 +360,9 @@ const DiscreteLayerView: React.FC = observer(() => {
   //   setLayerToPresent(store.discreteLayersStore.highlightedLayer); 
   // }, [store.discreteLayersStore.highlightedLayer]);
   
-  const layerToPresent = store.discreteLayersStore.highlightedLayer;
+  // const layerToPresent = store.discreteLayersStore.highlightedLayer;
   // const layerToPresent = (store.discreteLayersStore !== null && store.discreteLayersStore.layersImages !== undefined) ? store.discreteLayersStore.layersImages[0] : null;
-
+  const layerToPresent = store.discreteLayersStore.selectedLayer;
   return (
     <>
       <Box className="headerContainer">

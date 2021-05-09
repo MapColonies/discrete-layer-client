@@ -12,9 +12,7 @@ interface ILayerImageCellRendererParams extends ICellRendererParams {
 
 export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  // const [checked, setChecked] = useState<boolean>(props.data.selected as boolean);
-  
-  const [layerImageShown, setLayerImageShown] = useState<boolean>(false);
+  const [layerImageShown, setLayerImageShown] = useState<boolean>(props.data.layerImageShown as boolean);
   return (
     <Box  style={{    
         display: 'flex',

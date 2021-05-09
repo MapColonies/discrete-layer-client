@@ -1,0 +1,9 @@
+.ag-theme-alpine-dark .ag-header-cell[col-id="footPrintShown"]{
+  padding-left: 0px;
+  padding-right: 18px;
+}
+
+body[dir='rtl'] .ag-theme-alpine-dark .ag-header-cell[col-id="footPrintShown"]{
+  padding-right: 0px;
+  padding-left: 18px;
+}

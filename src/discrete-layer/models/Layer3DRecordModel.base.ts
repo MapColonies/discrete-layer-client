@@ -52,8 +52,6 @@ export const Layer3DRecordModelBase = ModelBase
     geometry: types.union(types.undefined, types.null, types.frozen()),
     version: types.union(types.undefined, types.null, types.string),
     accuracyLE90: types.union(types.undefined, types.null, types.string),
-    selected: types.union(types.undefined, types.null, types.boolean),
-    order: types.union(types.undefined, types.null, types.number),
   })
   .views(self => ({
     get store() {
@@ -94,12 +92,10 @@ export class Layer3DRecordModelSelector extends QueryBuilder {
   get geometry() { return this.__attr(`geometry`) }
   get version() { return this.__attr(`version`) }
   get accuracyLE90() { return this.__attr(`accuracyLE90`) }
-  get selected() { return this.__attr(`selected`) }
-  get order() { return this.__attr(`order`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
 export function selectFromLayer3DRecord() {
   return new Layer3DRecordModelSelector()
 }
 
-export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.accuracyLE90.selected.order.links(linkModelPrimitives)
+export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.accuracyLE90.links(linkModelPrimitives)

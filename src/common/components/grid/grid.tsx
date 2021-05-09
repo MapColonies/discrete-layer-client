@@ -4,7 +4,7 @@ import { Box } from '@map-colonies/react-components';
 import { AgGridReact } from 'ag-grid-react';
 import {
   GridReadyEvent as AgGridReadyEvent,
-  GridApi,
+  GridApi as AgGridApi,
   GridOptions,
   RowNode,
   ValueFormatterParams,
@@ -29,6 +29,7 @@ interface GridComponentProps {
   style?: CSSProperties;
 };
 
+export interface GridApi extends AgGridApi{};
 export interface GridReadyEvent extends AgGridReadyEvent{};
 export interface GridCellMouseOutEvent extends CellMouseOutEvent{};
 export interface GridCellMouseOverEvent extends CellMouseOverEvent{};
@@ -46,7 +47,7 @@ export interface IGridRowDataDetailsExt {
 export interface GridRowNode extends RowNode {};
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
-  const [gridApi, setGridApi] = useState<GridApi>();
+  const [gridApi, setGridApi] = useState<AgGridApi>();
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
   
