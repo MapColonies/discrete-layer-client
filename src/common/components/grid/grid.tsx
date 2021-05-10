@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { Box } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { AgGridReact } from 'ag-grid-react';
 import {
   GridReadyEvent as AgGridReadyEvent,
@@ -12,12 +13,14 @@ import {
   CellMouseOverEvent,
   CellMouseOutEvent,
 } from 'ag-grid-community';
+import { GRID_MESSAGES } from '../../i18n';
+import CONFIG from '../../config';
+import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
+import { GridThemes } from './themes/themes';
+
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
-import { useTheme } from '@map-colonies/react-core';
-import { GridThemes } from './themes/themes';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
 const EXPANDER_COLUMN_WIDTH = 60;
@@ -92,7 +95,8 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
    frameworkComponents: {
     ...props.gridOptions?.frameworkComponents as {[key: string]: any},
     detailsExpanderRenderer: DetailsExpanderRenderer,
-   }
+   },
+   localeText: GRID_MESSAGES[CONFIG.I18N.DEFAULT_LANGUAGE]
   };
 
   const {detailsRowCellRenderer, detailsRowHeight, ...gridOptions} = gridOptionsFromProps;
