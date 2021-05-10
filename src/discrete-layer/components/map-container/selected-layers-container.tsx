@@ -40,7 +40,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
 
   const getLayer = (layer: ILayerImage) : JSX.Element | null | undefined  => {
     const cache = cacheRef.current;
-    if(layer.selected === true){
+    if(layer.layerImageShown === true){
       if(cache[layer.id] !== undefined){
         return cache[layer.id];
       } else{
@@ -50,7 +50,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     }
     else{
       const prevLayer = (prevLayersImages as []).find((item: ILayerImage) => item.id === layer.id) as ILayerImage | undefined;
-      if(prevLayer?.selected === true){
+      if(prevLayer?.layerImageShown === true){
         delete cache[layer.id];
         return null;
       }

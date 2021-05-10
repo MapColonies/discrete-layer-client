@@ -52,7 +52,7 @@
       "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
       "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(drawHelper|coordinates-tracker.tool|scale-tracker.tool|scene-modes|base-maps|settings).css": "<rootDir>/src/__mocks__/styleMock.js",
-      "(ag-grid|ag-theme-alpine).css": "<rootDir>/src/__mocks__/styleMock.js"
+      "(ag-grid|ag-theme-alpine|ag-theme-alpine-dark).css": "<rootDir>/src/__mocks__/styleMock.js"
     },
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

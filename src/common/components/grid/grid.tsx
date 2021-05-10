@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { Box } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { AgGridReact } from 'ag-grid-react';
 import {
   GridReadyEvent as AgGridReadyEvent,
-  GridApi,
+  GridApi as AgGridApi,
   GridOptions,
   RowNode,
   ValueFormatterParams,
@@ -12,9 +13,14 @@ import {
   CellMouseOverEvent,
   CellMouseOutEvent,
 } from 'ag-grid-community';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { GRID_MESSAGES } from '../../i18n';
+import CONFIG from '../../config';
 import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
+import { GridThemes } from './themes/themes';
+
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const DEFAULT_DTAILS_ROW_HEIGHT = 150;
 const EXPANDER_COLUMN_WIDTH = 60;
@@ -26,6 +32,7 @@ interface GridComponentProps {
   style?: CSSProperties;
 };
 
+export interface GridApi extends AgGridApi{};
 export interface GridReadyEvent extends AgGridReadyEvent{};
 export interface GridCellMouseOutEvent extends CellMouseOutEvent{};
 export interface GridCellMouseOverEvent extends CellMouseOverEvent{};
@@ -43,10 +50,10 @@ export interface IGridRowDataDetailsExt {
 export interface GridRowNode extends RowNode {};
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
-  const [gridApi, setGridApi] = useState<GridApi>();
-  const [rowData, setRowData] = useState<any[]>();
+  const [gridApi, setGridApi] = useState<AgGridApi>();
+  const [rowData, setRowData] = useState<any[]>()
+  const theme = useTheme();
   
-
   const onGridReady = (params: GridReadyEvent): void => {
     setGridApi(params.api);
   };
@@ -88,7 +95,8 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
    frameworkComponents: {
     ...props.gridOptions?.frameworkComponents as {[key: string]: any},
     detailsExpanderRenderer: DetailsExpanderRenderer,
-   }
+   },
+   localeText: GRID_MESSAGES[CONFIG.I18N.DEFAULT_LANGUAGE]
   };
 
   const {detailsRowCellRenderer, detailsRowHeight, ...gridOptions} = gridOptionsFromProps;
@@ -117,10 +125,15 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     setRowData(result);
   },[props.rowData, props.gridOptions]);
 
+  const agGridThemeOverrides = GridThemes.getTheme(theme);
+
   return (
     <Box
-      className="ag-theme-alpine"
-      style={props.style}
+      className={theme.type === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine' }
+      style={{
+        ...props.style,
+        ...agGridThemeOverrides
+      }}
     >
       <AgGridReact
         gridOptions={gridOptions}

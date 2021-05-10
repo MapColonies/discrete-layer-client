@@ -46,3 +46,25 @@
 .dark-theme .mdc-theme--on-surface.mdc-fab{
   color: var(--mdc-theme-text-icon-on-dark) !important;
 }
+
+/* AG-GRID CUSTOMIZATIONS */
+.dark-theme .ag-theme-alpine-dark {
+  color: var(--ag-foreground-color, #fff);
+}
+
+.dark-theme .ag-theme-alpine-dark .ag-header {
+  border-bottom: unset;
+}
+
+.dark-theme .ag-theme-alpine-dark .ag-row-selected {
+  border-radius: 100px;
+  color: var(--mdc-theme-text-primary-on-dark, #fff);
+}
+
+.dark-theme .ag-theme-alpine-dark .ag-row-hover {
+  border-radius: 100px;
+}
+
+.dark-theme .ag-theme-alpine-dark .ag-root-wrapper-body .ag-checkbox-input-wrapper {
+  background: none;
+}

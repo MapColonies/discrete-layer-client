@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Checkbox } from '@map-colonies/react-core';
-import './row-selection.cell-renderer.css';
 import { GridRowNode } from '../../../../common/components/grid';
+import './footprint.cell-renderer.css';
 
-interface ISelectionCellRendererParams extends ICellRendererParams {
+interface IFootprintCellRendererParams extends ICellRendererParams {
   onClick:  (id: string, value: boolean, node: GridRowNode) => void;
 }
 
-export const RowSelectionRenderer: React.FC<ISelectionCellRendererParams> = (props) => {
+export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const [checked, setChecked] = useState<boolean>(props.data.selected as boolean);
+  const [checked, setChecked] = useState<boolean>(props.data.footPrintShown as boolean);
   return (
     <Checkbox 
       checked={checked}

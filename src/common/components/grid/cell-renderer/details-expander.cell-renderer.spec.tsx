@@ -1,6 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ICellRendererParams, Column, RowNode, GridApi, ColumnApi } from 'ag-grid-community';
+// eslint-disable-next-line
+import '../../../../__mocks__/confEnvShim';
 import { DETAILS_ROW_ID_SUFFIX } from '../grid';
 import { DetailsExpanderRenderer } from './details-expander.cell-renderer';
 

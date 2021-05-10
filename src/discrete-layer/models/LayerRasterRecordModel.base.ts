@@ -51,8 +51,6 @@ export const LayerRasterRecordModelBase = ModelBase
     dsc: types.union(types.undefined, types.null, types.string),
     geometry: types.union(types.undefined, types.null, types.frozen()),
     version: types.union(types.undefined, types.null, types.string),
-    selected: types.union(types.undefined, types.null, types.boolean),
-    order: types.union(types.undefined, types.null, types.number),
   })
   .views(self => ({
     get store() {
@@ -92,12 +90,10 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get dsc() { return this.__attr(`dsc`) }
   get geometry() { return this.__attr(`geometry`) }
   get version() { return this.__attr(`version`) }
-  get selected() { return this.__attr(`selected`) }
-  get order() { return this.__attr(`order`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
 export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.selected.order.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().typeName.schema.mdSource.xml.anyText.insertDate.wktGeometry.anyTextTsvector.description.wkbGeometry.identifier.title.type.srs.producerName.projectName.creationDate.classification.keywords.sourceName.source.updateDate.resolution.ep90.sensorType.rms.scale.dsc.geometry.version.links(linkModelPrimitives)

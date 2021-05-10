@@ -2,13 +2,28 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isObject } from 'lodash';
-import { GridComponent, GridComponentOptions, GridValueFormatterParams, GridCellMouseOverEvent, GridCellMouseOutEvent, GridRowNode } from '../../../common/components/grid';
+import CONFIG from '../../../common/config';
+import { 
+  GridComponent,
+  GridComponentOptions,
+  GridValueFormatterParams,
+  GridCellMouseOverEvent,
+  GridCellMouseOutEvent,
+  GridRowNode,
+  GridRowSelectedEvent, 
+  GridApi
+} from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
-import { RowSelectionRenderer } from './cell-renderer/row-selection.cell-renderer';
+import { FootprintRenderer } from './cell-renderer/footprint.cell-renderer';
+import { HeaderFootprintRenderer } from './header-renderer/footprint.header-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
+import { LayerImageRenderer } from './cell-renderer/layer-image.cell-renderer';
+import CustomTooltip from './tooltip-renderer/name.tooltip-renderer';
+
+import './layers-results.css';
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
@@ -66,11 +81,30 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const colDef = [
     {
       width: 20,
-      field: 'selected',
-      cellRenderer: 'rowSelectionRenderer',
+      field: 'footPrintShown',
+      cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          setTimeout(()=> node.setDataValue('selected', value), immediateExecution);
+          // TODO: Implement footprint hide
+          console.log('*** IMPLEMENT FOOTPRINT HID ***');
+         }
+      },
+      headerComponent: 'headerFootprintRenderer',
+      headerComponentParams: { 
+        onClick: (value: boolean, gridApi: GridApi): void => { 
+          gridApi.forEachNode((item: GridRowNode)=> {
+            setTimeout(()=> item.setDataValue('footPrintShown', value), immediateExecution) ;
+          });
+        }  
+      }
+    },
+    {
+      width: 20,
+      field: 'layerImageShown',
+      cellRenderer: 'rowLayerImageRenderer',
+      cellRendererParams: {
+        onClick: (id: string, value: boolean, node: GridRowNode): void => {
+          setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
           if(value) {
             selectedLayersRef.current++;
           }
@@ -79,7 +113,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
             // eslint-disable-next-line
             (node as any).gridApi.forEachNode((item: GridRowNode)=> {
               const rowData = item.data as {[key: string]: string | boolean | number};
-              if(rowData.selected === true && rowData.id !== id) {
+              if(rowData.layerImageShown === true && rowData.id !== id) {
                 orders.push(rowData.order as number);
               }
             });
@@ -97,6 +131,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       }),
       width: 50,
       field: 'order',
+      hide: true
     },
     {
       headerName: intl.formatMessage({
@@ -105,6 +140,9 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       width: 200,
       field: 'sourceName',
       suppressMovable: true,
+      tooltipComponent: 'customTooltip',
+      tooltipField: 'sourceName',
+      tooltipComponentParams: { color: '#ececec' }
     },
     {
       headerName:  intl.formatMessage({
@@ -117,28 +155,38 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     }
   ];
   const gridOptions: GridComponentOptions = {
+    enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,
     getRowNodeId: (data: ILayerImage) => {
       return data.id;
     },
-    detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 150,
+    // detailsRowCellRenderer: 'detailsRenderer',
+    // detailsRowHeight: 150,
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      detailsRenderer: LayerDetailsRenderer,
-      rowSelectionRenderer: RowSelectionRenderer,
+      // detailsRenderer: LayerDetailsRenderer,
+      rowFootprintRenderer: FootprintRenderer,
+      rowLayerImageRenderer: LayerImageRenderer,
+      customTooltip: CustomTooltip,
+      headerFootprintRenderer: HeaderFootprintRenderer,
     },
-    rowSelection: 'multiple',
-    suppressRowClickSelection: true,
+    tooltipShowDelay: 0,
+    tooltipMouseTrack: false,
+    rowSelection: 'single',
+    suppressCellSelection: true,
+    // suppressRowClickSelection: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer((event.data as ILayerImage).id);
     },
     onCellMouseOut(event: GridCellMouseOutEvent) {
       discreteLayersStore.highlightLayer('');
+    },
+    onRowClicked(event: GridRowSelectedEvent) {
+      discreteLayersStore.selectLayer((event.data as ILayerImage).id);
     }
   };
 

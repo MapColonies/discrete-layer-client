@@ -31,6 +31,7 @@ export const discreteLayersStore = ModelBase
     searchParams: types.optional(searchParams, {}),
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
+    selectedLayer: types.maybe(types.frozen<ILayerImage>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -58,20 +59,8 @@ export const discreteLayersStore = ModelBase
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
-          self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
+          self.layersImages = filterBySearchParams(result).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
 
-          // const layers = [];
-          // self.root.layerMetadata.data_.forEach((layer)=> {
-          //   layers.push(layer) 
-          // });
-          // self.root.layerMetadata3DS.data_.forEach((layer)=> {
-          //   layers.push(layer) 
-          // });
-          // // @ts-ignore
-          // const result = yield Promise.resolve(layers);
-          // // @ts-ignore
-          // self.layersImages = filterBySearchParams(result).map(item => ({...item, selected:false, order:null}));
-          
           // *** communicate with pycsw with cswClient - CORS
           // const cswClient = new CswClient(
           //   'http://127.0.0.1:56477/?version=2.0.2&service=CSW',
@@ -107,7 +96,7 @@ export const discreteLayersStore = ModelBase
     );
 
     function setLayersImages(data: ILayerImage[]): void {
-      self.layersImages = filterBySearchParams(data).map(item => ({...item, selected:false, order:null}));
+      self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
     }
 
     // TODO: Remove when actual API is integrated
@@ -144,11 +133,15 @@ export const discreteLayersStore = ModelBase
     }
 
     function showLayer(id: string, isShow: boolean, order: number | null): void {
-      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, selected: isShow, order} : el);
+      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, layerImageShown: isShow, order} : el);
     }
 
     function highlightLayer(id: string): void {
       self.highlightedLayer = self.layersImages?.find(el => el.id === id);
+    }
+
+    function selectLayer(id: string): void {
+      self.selectedLayer = self.layersImages?.find(el => el.id === id);
     }
 
     return {
@@ -157,6 +150,7 @@ export const discreteLayersStore = ModelBase
       clearLayersImages,
       showLayer,
       highlightLayer,
+      selectLayer,
     };
   });
 
