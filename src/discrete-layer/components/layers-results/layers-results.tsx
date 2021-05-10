@@ -84,7 +84,10 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'footPrintShown',
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
-        onClick: (id: string, value: boolean, node: GridRowNode): void => { }
+        onClick: (id: string, value: boolean, node: GridRowNode): void => {
+          // TODO: Implement footprint hide
+          console.log('*** IMPLEMENT FOOTPRINT HID ***');
+         }
       },
       headerComponent: 'headerFootprintRenderer',
       headerComponentParams: { 

@@ -1,7 +1,7 @@
 import { IOptions } from "@map-colonies/react-core";
 import { get } from 'lodash';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line
 export class GridThemes {
   // lightTheme: {
   // },
