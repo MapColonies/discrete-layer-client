@@ -139,6 +139,32 @@ const BASE_MAPS = {
             credit: 'thunderforest',
           }
         },
+        // {
+        //   id: 'AZURE_RASTER_WMTS',
+        //   type:  'WMTS_LAYER' as LayerType,
+        //   opacity: 1,
+        //   zIndex: 0,
+        //   options: {
+        //     url: 'http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/full_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png',
+        //     format: 'png',
+        //     layer: 'full_il',
+        //     style: 'default',
+        //     tileMatrixSetID: 'newGrids'
+        //   }
+        // },
+        // {
+        //   id: 'AZURE_RASTER_WMTS_BLUEMARBEL_IL',
+        //   type:  'WMTS_LAYER' as LayerType,
+        //   opacity: 1,
+        //   zIndex: 0,
+        //   options: {
+        //     url: 'http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/bluemarble_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png',
+        //     format: 'png',
+        //     layer: 'bluemarble_il',
+        //     style: 'default',
+        //     tileMatrixSetID: 'newGrids'
+        //   }
+        // },
         {
           id: 'VECTOR_TILES_GPS_1',
           type:  'XYZ_LAYER' as LayerType,
@@ -171,7 +197,7 @@ const getTimeStamp = (): string => new Date().getTime().toString();
 
 const tileOtions = { opacity: 0.5 };
 
-enum TabViews {
+export enum TabViews {
   CATALOG,
   SEARCH_RESULTS,
 }
@@ -353,6 +379,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   };
 
+  const handleTabViewChange = (targetViewIdx: TabViews): void => {
+    store.discreteLayersStore.setTabviewData(activeTabView);
+    setActiveTabView(targetViewIdx);
+    store.discreteLayersStore.restoreTabviewData(targetViewIdx);
+  };
+
   // TODO: should be taken from selected item in store
   // const [layerToPresent, setLayerToPresent] = useState<ILayerImage | null>(null);
   // useEffect(() => {
@@ -376,7 +408,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 key={tab.idx}
                 className={`${tab.iconClassName} tabViewIcon`}
                 mini 
-                onClick={(evt): void => setActiveTabView(tab.idx)}
+                onClick={(evt): void => handleTabViewChange(tab.idx)}
                 style={{ 
                   backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
                 }}

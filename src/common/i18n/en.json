@@ -38,6 +38,8 @@
   "tab-views.search-results": "Search results",
   "tab-views.catalog": "Catalog",
 
+  "details-panel.no-selection": "No selection",
+
   "fields-categories.main": " ",
   "fields-categories.general": "General",
   "fields-categories.geo": "Geo Info",

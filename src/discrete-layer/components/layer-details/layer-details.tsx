@@ -131,6 +131,13 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
           )
         })
       }
+      {
+        !layerRecord && <Box>
+          <Typography use="headline2" tag="div" className="noSelection" >
+            <FormattedMessage id="details-panel.no-selection" />
+          </Typography>
+        </Box>
+      }
     </>
   )
 };
