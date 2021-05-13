@@ -14,8 +14,6 @@ export const HeaderFootprintRenderer: React.FC<IFootprintCellRendererParams> = (
   return (
     <Checkbox 
       checked={checked}
-      // TODO: should be supported on component level, currently not
-      ripple={false}
       onClick={
         (evt): void => {
           setChecked(evt.currentTarget.checked);

@@ -1,7 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
+import { useIntl } from 'react-intl';
 import { IconButton, Select, TextField, useTheme } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
+import { get } from 'lodash';
+import { enumKeys } from '../../../common/helpers/enums';
+import { useStore } from '../../models/RootStore';
+import { RecordType } from '../../models/RecordTypeEnum';
 import { DialogBBox } from './dialog-bbox';
+
 import './polygon-selection-ui.css';
 
 export const Devider: React.FC = () => {
@@ -25,6 +31,7 @@ export interface PolygonSelectionUiProps {
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
 }
 
+
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   props
 ) => {
@@ -36,7 +43,19 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
     onPolygonUpdate,
   } = props;
 
+  const intl = useIntl();
+  const { discreteLayersStore } = useStore();
   const [open, setOpen] = useState(false);
+  const recordTypeOptions = useMemo(() => {
+    const options = [];
+    for (const value of enumKeys(RecordType)) {
+      options.push({
+          label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
+          value: RecordType[value]
+      });
+    }
+    return options;
+  }, []);
 
   return (
     <Box 
@@ -72,10 +91,18 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
       <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
         <Select
           enhanced
-          options={['Cookies', 'Pizza', 'Icecream']}
+          defaultValue={RecordType.RECORD_ALL.toString()}
+          options={recordTypeOptions}
+          onChange={
+            (evt): void => {
+              discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
+            }
+          }
         />
       </Box>
-      <TextField fullwidth style={{padding: '0 6px 0 6px'}}/>
+      <Box id="searchTerm">
+        <TextField fullwidth style={{padding: '0 6px 0 6px'}}/>
+      </Box>
       <IconButton icon="search" label="SEARCH" className="searcIconBtn"/>
       <DialogBBox
         isOpen={open}

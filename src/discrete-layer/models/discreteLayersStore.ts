@@ -9,10 +9,11 @@ import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
+import { TabViews } from '../views/discrete-layer-view';
 import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
-import { ModelBase } from "./ModelBase"
+import { ModelBase } from './ModelBase';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -21,6 +22,12 @@ export interface SearchResult {
 }
 
 export type SearchResponse = ApiHttpResponse<SearchResult>;
+
+export interface ITabViewData {
+  idx: TabViews,
+  selectedLayer?: ILayerImage,
+  filters?: unknown
+}
 
 export const discreteLayersStore = ModelBase
   .props({
@@ -32,6 +39,7 @@ export const discreteLayersStore = ModelBase
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
+    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -144,6 +152,22 @@ export const discreteLayersStore = ModelBase
       self.selectedLayer = self.layersImages?.find(el => el.id === id);
     }
 
+    function setTabviewData(tabView: TabViews): void {
+      if(self.tabViews) {
+        const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
+
+        self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer;
+      } 
+    }
+
+    function restoreTabviewData(tabView: TabViews): void {
+      if(self.tabViews) {
+        const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
+
+        self.selectedLayer = self.tabViews[idxTabViewToUpdate].selectedLayer;
+      } 
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -151,6 +175,8 @@ export const discreteLayersStore = ModelBase
       showLayer,
       highlightLayer,
       selectLayer,
+      setTabviewData,
+      restoreTabviewData,
     };
   });
 
