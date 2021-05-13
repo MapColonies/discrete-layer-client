@@ -238,11 +238,32 @@ const DiscreteLayerView: React.FC = observer(() => {
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
+  const buildFilters =  () => {
+    const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
+    return [
+      {
+        field: 'mc:boundingBox',
+        bbox: {
+          llon: coordinates[0][0],
+          llat: coordinates[0][1],
+          ulon: coordinates[2][0],
+          ulat: coordinates[2][1],
+        },
+      },
+      {
+        field: 'mc:type',
+        eq: store.discreteLayersStore.searchParams.recordType,
+      },
+    ];
+  };
+
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
     void store.discreteLayersStore.clearLayersImages();
     // void store.discreteLayersStore.getLayersImages();
 
+    // TODO: build query params: FILTERS and SORTS
+    const filters = buildFilters();
     setQuery(store.queryCatalogItems());
   };
 

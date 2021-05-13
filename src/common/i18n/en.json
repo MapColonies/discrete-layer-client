@@ -3,6 +3,10 @@
   "general.cancel-btn.text": "Cancel",
   "general.error.label": "Error",
 
+  "record-type.raster.label": "Raster",
+  "record-type.3d.label": "3D",
+  "record-type.all.label": "All",
+
   "polygon-selection.draw-btn.tooltip": "Draw an Area to export",
   "polygon-selection.cancel-btn.tooltip": "Cancel the ongoing draw",
   "polygon-selection.cancel-btn.text": "Cancel Draw",
