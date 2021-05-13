@@ -9,11 +9,11 @@ import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
+import { TabViews } from '../views/discrete-layer-view';
 import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
-import { ModelBase } from "./ModelBase"
-import { TabViews } from '../views/discrete-layer-view';
+import { ModelBase } from './ModelBase';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
