@@ -29,7 +29,7 @@ const store = rootStore.create(
       }).then((res) => res.data as SearchResponse),
     
     // gqlHttpClient: createHttpClient(`${CONFIG.SERVICE_PROTOCOL as string}${CONFIG.SERVICE_NAME as string}`),
-    gqlHttpClient: createHttpClient("http://localhost:3001/graphql")
+    gqlHttpClient: createHttpClient("http://localhost:8080/graphql")
   }
 );
 

@@ -3,7 +3,7 @@
 
 import React from "react"
 import { observer } from "mobx-react"
-import { useQuery, useStore } from "../../models/RootStore"
+import { useQuery, useStore } from "../../models/RootStore";
 import { LayerMetadataMixedUnion } from "../../models/LayerMetadataMixedModelSelector"
 
 import { Error } from "./Error"
@@ -13,7 +13,7 @@ import { Layer } from "./Layer"
 
 export const Home = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
-    store.queryCatalogItems()
+    store.querySearch({})
 
     // store.queryCatalogItems({},`
     // ... on LayerRasterRecord {
@@ -56,7 +56,7 @@ export const Home = observer(() => {
       <>
         <ul>
           {
-            data.catalogItems.map((layer) => (
+            data.search.map((layer) => (
               <Layer key={layer.id} layer={layer} />
             ))
           }

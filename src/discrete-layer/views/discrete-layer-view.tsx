@@ -233,7 +233,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
 
   useEffect(() => {
-    const layers = get(data,'catalogItems', []) as ILayerImage[];
+    const layers = get(data,'search', []) as ILayerImage[];
 
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
@@ -264,7 +264,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
     // TODO: build query params: FILTERS and SORTS
     const filters = buildFilters();
-    setQuery(store.queryCatalogItems());
+    setQuery(store.querySearch({}));
   };
 
   const handlePolygonReset = (): void => {

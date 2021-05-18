@@ -3,9 +3,9 @@
   "general.cancel-btn.text": "בטל",
   "general.error.label": "שגיא",
 
-  "record-type.raster.label": "Raster",
-  "record-type.3d.label": "3D",
-  "record-type.all.label": "All",
+  "record-type.record_raster.label": "Raster",
+  "record-type.record_3d.label": "3D",
+  "record-type.record_all.label": "All",
 
   "polygon-selection.draw-btn.tooltip": "צייר אזור ליצוא",
   "polygon-selection.cancel-btn.tooltip": "בטל ציור",

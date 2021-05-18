@@ -10,11 +10,10 @@ export { selectFromLink, linkModelPrimitives, LinkModelSelector } from "./LinkMo
 /**
  * LinkModel
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const LinkModel = LinkModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log(): void {
+    log() {
       console.log(JSON.stringify(self))
     }
   }))
