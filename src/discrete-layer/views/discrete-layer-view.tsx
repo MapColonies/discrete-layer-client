@@ -264,7 +264,11 @@ const DiscreteLayerView: React.FC = observer(() => {
 
     // TODO: build query params: FILTERS and SORTS
     const filters = buildFilters();
-    setQuery(store.querySearch({}));
+    setQuery(store.querySearch({
+      opts: {
+        filter: filters
+      }
+    }));
   };
 
   const handlePolygonReset = (): void => {

@@ -20,6 +20,7 @@ export const Layer3DRecordModelBase = ModelBase
   .named('Layer3DRecord')
   .props({
     __typename: types.optional(types.literal("Layer3DRecord"), "Layer3DRecord"),
+    id: types.identifier,
     source: types.union(types.undefined, types.null, types.string),
     sourceName: types.union(types.undefined, types.null, types.string),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
@@ -30,7 +31,6 @@ export const Layer3DRecordModelBase = ModelBase
     scale: types.union(types.undefined, types.null, types.string),
     dsc: types.union(types.undefined, types.null, types.string),
     geometry: types.union(types.undefined, types.null, types.frozen()),
-    id: types.string, //union(types.undefined, types.null, types.string),
     version: types.union(types.undefined, types.null, types.string),
     typeName: types.union(types.undefined, types.null, types.string),
     schema: types.union(types.undefined, types.null, types.string),
@@ -59,6 +59,7 @@ export const Layer3DRecordModelBase = ModelBase
   }))
 
 export class Layer3DRecordModelSelector extends QueryBuilder {
+  get id() { return this.__attr(`id`) }
   get source() { return this.__attr(`source`) }
   get sourceName() { return this.__attr(`sourceName`) }
   get updateDate() { return this.__attr(`updateDate`) }
@@ -69,7 +70,6 @@ export class Layer3DRecordModelSelector extends QueryBuilder {
   get scale() { return this.__attr(`scale`) }
   get dsc() { return this.__attr(`dsc`) }
   get geometry() { return this.__attr(`geometry`) }
-  get id() { return this.__attr(`id`) }
   get version() { return this.__attr(`version`) }
   get typeName() { return this.__attr(`typeName`) }
   get schema() { return this.__attr(`schema`) }

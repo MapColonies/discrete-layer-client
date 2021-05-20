@@ -13,6 +13,7 @@ export const Layer = observer(({ layer }: { layer: LayerMetadataMixedUnion  }) =
   return (
     <li>
       <p>{layer.sourceName} || {(layer as any).accuracyLE90}</p>
+      <span>{layer.dsc || layer.type}</span>
       {error && <span>Failed to update</span>}
       {loading && <span>(updating)</span>}
     </li>
