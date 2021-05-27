@@ -24,7 +24,6 @@ import { LayerImageRenderer } from './cell-renderer/layer-image.cell-renderer';
 import CustomTooltip from './tooltip-renderer/name.tooltip-renderer';
 
 import './layers-results.css';
-import { ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
