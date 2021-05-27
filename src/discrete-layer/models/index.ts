@@ -4,9 +4,9 @@
 
 export * from "./LayerMetadataMixedModelSelector"
 export * from "./Layer3DRecordModel"
+export * from "./RecordTypeEnum"
 export * from "./SensorTypeEnum"
 export * from "./LinkModel"
-export * from "./RecordTypeEnum"
 export * from "./LayerRasterRecordModel"
 export * from "./RootStore"
 // export * from "./reactUtils"

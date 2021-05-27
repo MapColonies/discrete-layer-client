@@ -14,8 +14,8 @@ import { layerRasterRecordModelPrimitives, LayerRasterRecordModelSelector } from
 
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
-import { SensorType } from "./SensorTypeEnum"
 import { RecordType } from "./RecordTypeEnum"
+import { SensorType } from "./SensorTypeEnum"
 
 export type SearchOptions = {
   filter?: FilterField[]

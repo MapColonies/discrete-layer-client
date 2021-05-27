@@ -24,7 +24,7 @@ export default forwardRef((props: ITooltipParams, ref) => {
       style={{ backgroundColor: color}}
     >
       <p>
-        <span>{data.sourceName}</span>
+        <span>{data.productName}</span>
       </p>
       {/* <p>
         <span>Country: </span> {data.country}

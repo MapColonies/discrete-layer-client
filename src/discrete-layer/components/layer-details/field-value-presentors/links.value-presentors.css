@@ -5,3 +5,11 @@
 .linksFieldsContainer{
   padding-top: 16px;
 }
+.linkFieldsSeparator{
+  border-bottom: 1px dashed;
+  margin-right: 12px;
+}
+body[dir='rtl'] .linkFieldsSeparator{
+  margin-right: unset;
+  margin-left: 12px;
+}

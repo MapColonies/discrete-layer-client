@@ -1,3 +1,10 @@
+import { Layer3DRecordModelType } from '../../models/Layer3DRecordModel';
+import { ILayerImage } from '../../models/layerImage';
+import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
+import { LinkModelType } from '../../models/LinkModel';
+
+export type FieldInfoName = keyof Layer3DRecordModelType | keyof LayerRasterRecordModelType | keyof LinkModelType;
+
 export enum FieldCategory {
   MAIN,
   GENERAL,
@@ -5,7 +12,7 @@ export enum FieldCategory {
 }
 
 export interface IRecordFieldInfo {
-  fieldName: string,
+  fieldName: FieldInfoName,
   label: string,
   fullWidth?: boolean,
   subFields?: IRecordFieldInfo[],
@@ -18,7 +25,7 @@ export interface IRecordCategoryFieldsInfo {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const LayerRasterRecorModelFieldsInfo = [
+export const LayerRasterRecorModelFieldsInfo: IRecordCategoryFieldsInfo[] = [
   {
     category: FieldCategory.MAIN,
     categoryTitle: 'fields-categories.main',
@@ -28,18 +35,28 @@ export const LayerRasterRecorModelFieldsInfo = [
         label: 'field-names.raster.id',
       },
       {
-        fieldName: 'source',
-        label: 'field-names.raster.source',
+        fieldName: 'productId',
+        label: 'field-names.raster.productId',
       },
-      // {
-      //   fieldName: 'sourceName',
-      //   isBrief: true,
-      //   category: 'MAIN',
-      //   label: 'SourceName',
-      // },
       {
-        fieldName: 'creationDate',
-        label: 'field-names.raster.creation-date',
+        fieldName: 'productVersion',
+        label: 'field-names.raster.productVersion',
+      },
+      {
+        fieldName: 'productType',
+        label: 'field-names.raster.productType',
+      },
+      {
+        fieldName: 'type',
+        label: 'field-names.raster.type',
+      },
+      {
+        fieldName: 'resolution',
+        label: 'field-names.raster.resolution',
+      },
+      {
+        fieldName: 'updateDate',
+        label: 'field-names.raster.update-date',
       },
     ]
   },
@@ -48,12 +65,23 @@ export const LayerRasterRecorModelFieldsInfo = [
     categoryTitle: 'fields-categories.general',
     fields: [
       {
-        fieldName: 'type',
-        label: 'field-names.raster.type',
+        fieldName: 'description',
+        label: 'field-names.raster.description',
+        fullWidth: true,
       },
       {
-        fieldName: 'dsc',
-        label: 'field-names.raster.dsc',
+        fieldName: 'sensorType',
+        label: 'field-names.raster.sensor-type',
+        fullWidth: true,
+      },
+      {
+        fieldName: 'region',
+        label: 'field-names.raster.region',
+        fullWidth: true,
+      },
+      {
+        fieldName: 'classification',
+        label: 'field-names.raster.classification',
         fullWidth: true,
       },
       {
@@ -82,66 +110,47 @@ export const LayerRasterRecorModelFieldsInfo = [
             fullWidth: true,
           },
         ]
-      }
+      },
+      {
+        fieldName: 'creationDate',
+        label: 'field-names.raster.creation-date',
+      },
+      {
+        fieldName: 'ingestionDate',
+        label: 'field-names.raster.ingestion-date',
+      },
+      {
+        fieldName: 'sourceDateStart',
+        label: 'field-names.raster.source-start-date',
+      },
+      {
+        fieldName: 'sourceDateEnd',
+        label: 'field-names.raster.source-end-date',
+      },
     ]
   },
-  
-
- 
-  // {
-  //   fieldName: 'updateDate',
-  //   isBrief: true,
-  //   category: 'MAIN',
-  //   label: 'UpdateDate',
-  // }
-  // resolution?: number;
-  // ep90?: number;
-  // sensorType?: SensorType;
-  // rms?: number;
-  // scale?: string;
-  // dsc?: string;
-  // geometry?: GeoJSON;
-  // id?: string;
-  // version?: string;
-
-  // typeName: String
-  // schema: String
-  // mdSource: String
-  // xml: String
-  // anyText: String
-  // insertDate: DateTime
-  // wktGeometry: String
-  // links: [Link]
-  // anyTextTsvector: String
-  // description: String
-  // wkbGeometry: String
-  // identifier: String
-  // title: String
-  // type: String
-  // srs: String
-  // producerName: String
-  // projectName: String
-  // creationDate: DateTime
-  // classification: String
-  // keywords: String
-  // id: ID!
-  // sourceName: String!
-  // source: String
-  // updateDate: String
-  // resolution: Float
-  // ep90: Float
-  // sensorType: SensorType
-  // rms: Float
-  // scale: String
-  // dsc: String
-  // geometry: GeoJSONFeature
-  // version: String
-  // selected: Boolean
-  // order: Float
+  {
+    category: FieldCategory.GEO_INFO,
+    categoryTitle: 'fields-categories.geo',
+    fields: [
+      {
+        fieldName: 'accuracyCE90',
+        label: 'field-names.raster.accuracyCE90',
+      },
+      {
+        fieldName: 'srsId',
+        label: 'field-names.raster.srs',
+      },
+      {
+        fieldName: 'srsName',
+        label: 'field-names.raster.srs-name',
+      },
+    ]
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Layer3DRecorModelFieldsInfo = [
+export const Layer3DRecorModelFieldsInfo: IRecordCategoryFieldsInfo[] = [
   {
     category: FieldCategory.MAIN,
     categoryTitle: 'fields-categories.main',
@@ -151,12 +160,28 @@ export const Layer3DRecorModelFieldsInfo = [
         label: 'field-names.3d.id',
       },
       {
-        fieldName: 'source',
-        label: 'field-names.3d.source',
+        fieldName: 'productId',
+        label: 'field-names.3d.productId',
       },
       {
-        fieldName: 'creationDate',
-        label: 'field-names.3d.creation-date',
+        fieldName: 'productVersion',
+        label: 'field-names.3d.productVersion',
+      },
+      {
+        fieldName: 'productType',
+        label: 'field-names.3d.productType',
+      },
+      {
+        fieldName: 'type',
+        label: 'field-names.3d.type',
+      },
+      {
+        fieldName: 'resolution',
+        label: 'field-names.3d.resolution',
+      },
+      {
+        fieldName: 'updateDate',
+        label: 'field-names.3d.update-date',
       },
     ]
   },
@@ -165,12 +190,23 @@ export const Layer3DRecorModelFieldsInfo = [
     categoryTitle: 'fields-categories.general',
     fields: [
       {
-        fieldName: 'type',
-        label: 'field-names.3d.type',
+        fieldName: 'description',
+        label: 'field-names.3d.description',
+        fullWidth: true,
       },
       {
-        fieldName: 'dsc',
-        label: 'field-names.3d.dsc',
+        fieldName: 'sensorType',
+        label: 'field-names.3d.sensor-type',
+        fullWidth: true,
+      },
+      {
+        fieldName: 'region',
+        label: 'field-names.3d.region',
+        fullWidth: true,
+      },
+      {
+        fieldName: 'classification',
+        label: 'field-names.3d.classification',
         fullWidth: true,
       },
       {
@@ -199,7 +235,23 @@ export const Layer3DRecorModelFieldsInfo = [
             fullWidth: true,
           },
         ]
-      }
+      },
+      {
+        fieldName: 'creationDate',
+        label: 'field-names.3d.creation-date',
+      },
+      {
+        fieldName: 'ingestionDate',
+        label: 'field-names.3d.ingestion-date',
+      },
+      {
+        fieldName: 'sourceDateStart',
+        label: 'field-names.3d.source-start-date',
+      },
+      {
+        fieldName: 'sourceDateEnd',
+        label: 'field-names.3d.source-end-date',
+      },
     ]
   },
   {
@@ -207,8 +259,20 @@ export const Layer3DRecorModelFieldsInfo = [
     categoryTitle: 'fields-categories.geo',
     fields: [
       {
+        fieldName: 'accuracyCE90',
+        label: 'field-names.3d.accuracyCE90',
+      },
+      {
         fieldName: 'accuracyLE90',
         label: 'field-names.3d.accuracyLE90',
+      },
+      {
+        fieldName: 'srsId',
+        label: 'field-names.3d.srs',
+      },
+      {
+        fieldName: 'srsName',
+        label: 'field-names.3d.srs-name',
       },
     ]
   },

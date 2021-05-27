@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@map-colonies/react-components';
-import { get } from 'lodash';
+import { get, isString } from 'lodash';
 import { LinkModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { getValuePresentor } from '../layer-details';
@@ -20,17 +20,24 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
       {
         value?.map(link => {
           return(
-            fieldInfo?.subFields?.map((subFieldInfo: IRecordFieldInfo) => {
-              return (
-                <Box key={subFieldInfo.fieldName} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
-                  <FieldLabelComponent value={subFieldInfo.label}></FieldLabelComponent>
-                  {
-                    getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName))
-                  }
-                </Box>
-              )
-            }))
-        })
+            <>
+              {
+                fieldInfo?.subFields?.map((subFieldInfo: IRecordFieldInfo) => {
+                  return (
+                    isString(get(link,subFieldInfo.fieldName)) && <Box key={subFieldInfo.fieldName as string} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
+                      <FieldLabelComponent value={subFieldInfo.label}></FieldLabelComponent>
+                      {
+                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName))
+                      }
+                    </Box>
+                  )
+                })
+              }
+              <Box className="linkFieldsSeparator"></Box>
+            </>
+            )
+          }
+        )
       }
       </Box>
     </Box>

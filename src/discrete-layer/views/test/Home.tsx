@@ -9,11 +9,24 @@ import { LayerMetadataMixedUnion } from "../../models/LayerMetadataMixedModelSel
 import { Error } from "./Error"
 import { Loading } from "./Loading"
 import { Layer } from "./Layer"
+import { RecordType } from "../../models/RecordTypeEnum";
 
 
 export const Home = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
-    store.querySearch({})
+    // store.querySearch({})
+    store.querySearch({
+      start: 1,
+      end: 10,
+      opts: {
+        filter: [
+          {
+            field: 'mc:type',
+            eq: RecordType.RECORD_RASTER
+          }
+        ]
+      }
+    })
 
     // store.queryCatalogItems({},`
     // ... on LayerRasterRecord {

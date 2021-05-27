@@ -265,6 +265,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     // TODO: build query params: FILTERS and SORTS
     const filters = buildFilters();
     setQuery(store.querySearch({
+      start: 1,
+      end: 10,
       opts: {
         filter: filters
       }
@@ -488,7 +490,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             <Box style={{display: 'flex', paddingTop: '8px'}}>
               <Typography use="headline6" tag="div" className="detailsTitle">
-                {layerToPresent?.sourceName}
+                {layerToPresent?.productName}
               </Typography>
               <IconButton 
                 className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel': 'mc-icon-Collapce-Panel'}`}
@@ -496,7 +498,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                 onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
               />
             </Box>
-            <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded}/>
+            <Box className="detailsContent">
+              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded}/>
+            </Box>
           </Box>
         </Box>
         

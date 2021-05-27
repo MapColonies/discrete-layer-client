@@ -9,7 +9,7 @@ export type ILayerImage = LayerMetadataMixedUnion
 
 export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature => {
   if(isBbox){
-    let geometry: Geometry = layer.geometry as Geometry;
+    let geometry: Geometry = layer.footprint as Geometry;
     switch(geometry.type){
       case 'Polygon':
         geometry = (polygonToLine(geometry) as Feature).geometry;
@@ -29,13 +29,13 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
       },
       properties: {
         id: layer.id,
-        name: layer.sourceName,
-        description: layer.dsc,
+        name: layer.productName,
+        description: layer.description,
       }
     };
   }
   else {
-    let geometry: Geometry = layer.geometry as Geometry;
+    let geometry: Geometry = layer.footprint as Geometry;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     geometry = (polygonToLine(convex(geometry)) as Feature).geometry;
@@ -46,8 +46,8 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean) : Feature
       },
       properties: {
         id: layer.id,
-        name: layer.sourceName,
-        description: layer.dsc,
+        name: layer.productName,
+        description: layer.description,
       },
     };
   }
