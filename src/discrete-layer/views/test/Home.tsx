@@ -3,17 +3,30 @@
 
 import React from "react"
 import { observer } from "mobx-react"
-import { useQuery, useStore } from "../../models/RootStore"
+import { useQuery, useStore } from "../../models/RootStore";
 import { LayerMetadataMixedUnion } from "../../models/LayerMetadataMixedModelSelector"
 
 import { Error } from "./Error"
 import { Loading } from "./Loading"
 import { Layer } from "./Layer"
+import { RecordType } from "../../models/RecordTypeEnum";
 
 
 export const Home = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
-    store.queryCatalogItems()
+    // store.querySearch({})
+    store.querySearch({
+      start: 1,
+      end: 10,
+      opts: {
+        filter: [
+          {
+            field: 'mc:type',
+            eq: RecordType.RECORD_RASTER
+          }
+        ]
+      }
+    })
 
     // store.queryCatalogItems({},`
     // ... on LayerRasterRecord {
@@ -56,7 +69,7 @@ export const Home = observer(() => {
       <>
         <ul>
           {
-            data.catalogItems.map((layer) => (
+            data.search.map((layer) => (
               <Layer key={layer.id} layer={layer} />
             ))
           }

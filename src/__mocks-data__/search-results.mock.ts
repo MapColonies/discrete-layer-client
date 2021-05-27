@@ -7,15 +7,15 @@ export const createMockData = (count: number, prefix: string): ILayerImage[] => 
     // @ts-ignore
     rowData.push({
       id: i.toString(),
-      sourceName: `${prefix}  ("name",${i})`,
+      productName: `${prefix}  ("name",${i})`,
       creationDate: new Date(),
-      description: '',
-      geometry: {
+      // description: '',
+      footprint: {
         type: 'Polygon',
         coordinates: [[[]]],
       },
-      type: '',
-      source: '',
+      // type: '',
+      // source: '',
       // footPrintShown: true,
       order: null,
     });

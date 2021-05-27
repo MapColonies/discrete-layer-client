@@ -111,10 +111,10 @@ export const discreteLayersStore = ModelBase
     function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
       return layers.filter((layer) => {
         let layerBBoxPolygon: Polygon;
-        const geometry: Geometry = layer.geometry as Geometry;
+        const geometry: Geometry = layer.footprint as Geometry;
         switch(geometry.type){
           case 'Polygon':
-            layerBBoxPolygon = layer.geometry as Polygon;
+            layerBBoxPolygon = layer.footprint as Polygon;
             break;
           case 'MultiPolygon':
             layerBBoxPolygon = bboxPolygon(bbox(geometry)).geometry;

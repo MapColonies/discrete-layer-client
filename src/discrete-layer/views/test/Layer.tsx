@@ -8,11 +8,12 @@ import { useQuery} from "../../models/RootStore"
 
 
 export const Layer = observer(({ layer }: { layer: LayerMetadataMixedUnion  }) => {
-  const { setQuery, loading, error } = useQuery()
+  const { setQuery, loading, error } = useQuery();
 
   return (
     <li>
-      <p>{layer.sourceName} || {(layer as any).accuracyLE90}</p>
+      <p>{layer.productName} || {(layer as any).accuracyLE90}</p>
+      <span>{layer.description || layer.type}</span>
       {error && <span>Failed to update</span>}
       {loading && <span>(updating)</span>}
     </li>

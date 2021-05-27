@@ -114,7 +114,7 @@ exports[`AgGrid LayerDetailsRenderer component renders correctly 1`] = `
         : 
       </span>
       <span>
-        06/12/2020 08:39
+        06/12/2020
       </span>
     </Component>
     <Component
@@ -133,7 +133,7 @@ exports[`AgGrid LayerDetailsRenderer component renders correctly 1`] = `
         : 
       </span>
       <span>
-        06/12/2020 08:39
+        06/12/2020
       </span>
     </Component>
     <Component
@@ -152,7 +152,7 @@ exports[`AgGrid LayerDetailsRenderer component renders correctly 1`] = `
         : 
       </span>
       <span>
-        06/12/2020 08:39
+        06/12/2020
       </span>
     </Component>
     <Component
@@ -171,7 +171,7 @@ exports[`AgGrid LayerDetailsRenderer component renders correctly 1`] = `
         : 
       </span>
       <span>
-        06/12/2020 08:39
+        06/12/2020
       </span>
     </Component>
     <Component
@@ -190,7 +190,7 @@ exports[`AgGrid LayerDetailsRenderer component renders correctly 1`] = `
         : 
       </span>
       <span>
-        06/12/2020 08:39
+        06/12/2020
       </span>
     </Component>
   </Component>

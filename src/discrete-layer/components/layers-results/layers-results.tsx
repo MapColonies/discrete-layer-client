@@ -104,7 +104,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
+          // setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
           if(value) {
             selectedLayersRef.current++;
           }
@@ -120,7 +120,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
+          // setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
           discreteLayersStore.showLayer(id, value, order);
         }
       }
@@ -138,18 +138,18 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         id: 'results.fields.name.label',
       }),
       width: 200,
-      field: 'sourceName',
+      field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
-      tooltipField: 'sourceName',
+      tooltipField: 'productName',
       tooltipComponentParams: { color: '#ececec' }
     },
     {
       headerName:  intl.formatMessage({
-        id: 'results.fields.creation-date.label',
+        id: 'results.fields.update-date.label',
       }),
       width: 120,
-      field: 'creationDate',
+      field: 'updateDate',
       suppressMovable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
     }

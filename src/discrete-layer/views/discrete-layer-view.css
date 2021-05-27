@@ -165,3 +165,8 @@ body[dir='rtl'] .sideDetailsPanel{
   padding-left: unset;
   padding-right: 20px;
 }
+
+.detailsContent{
+  height: calc(100% - 60px);
+  overflow: auto;
+}
