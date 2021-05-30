@@ -2,6 +2,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { observer } from 'mobx-react-lite';
 import {
   DrawType,
@@ -468,7 +469,9 @@ const DiscreteLayerView: React.FC = observer(() => {
               {
                 getActiveTabHeader(activeTabView)
               }
+              <PerfectScrollbar className="detailsContent">
               <Home />
+              </PerfectScrollbar>
             </Box>
 
             <Box className="tabContentContainer"  style={{display: activeTabView === TabViews.SEARCH_RESULTS ? 'block': 'none'}}>
@@ -498,9 +501,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                 onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
               />
             </Box>
-            <Box className="detailsContent">
+            <PerfectScrollbar className="detailsContent">
               <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded}/>
-            </Box>
+            </PerfectScrollbar>
           </Box>
         </Box>
         
