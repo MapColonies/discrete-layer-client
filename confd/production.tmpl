@@ -7,7 +7,7 @@ window._env_ = {
   VERSION: '{{ getv "/configuration/mapServer/version" "1" }}',
   REQUEST: '{{ getv "/configuration/mapServer/request" "ImageryMaps" }}',
   SERVICE_PROTOCOL: '{{ getv "/configuration/service/protocol" "http://" }}',
-  SERVICE_NAME: '{{ getv "/configuration/service/url" "localhost:8000" }}',
+  SERVICE_NAME: '{{ getv "/configuration/service/url" "localhost:8080/graphql" }}',
   ACTIVE_LAYER: '{{ getv "/configuration/activeLayer" "OSM_LAYER" }}',
   ACTIVE_LAYER_PROPERTIES: {
     urlPattern: MAP_SERVER + '{{ getv "/configuration/active/layer/properties/mapurlpath" "/service" }}',

@@ -7,6 +7,7 @@ export const CustomTheme = {
     GC_ALTERNATIVE_SURFACE: '#2D3748',
 
     GC_SELECTION_BACKGROUND: '#455570',
+    GC_HOVER_BACKGROUND: 'rgba(33, 150, 243, 0.1)',
   },
 };
   
