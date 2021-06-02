@@ -277,6 +277,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handlePolygonReset = (): void => {
     store.discreteLayersStore.searchParams.resetLocation();
     store.discreteLayersStore.clearLayersImages();
+    store.discreteLayersStore.selectLayer(undefined);
 
     setDrawEntities([]);
   }
@@ -304,7 +305,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           },
         ]);
 
-        setActiveTabView(TabViews.SEARCH_RESULTS);
+        handleTabViewChange(TabViews.SEARCH_RESULTS);
       },
     };
   };
@@ -346,7 +347,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       },
     ]);
 
-    setActiveTabView(TabViews.SEARCH_RESULTS);
+    handleTabViewChange(TabViews.SEARCH_RESULTS);
   };
 
   const tabViews = [

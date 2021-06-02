@@ -3,7 +3,7 @@
 
 import React, {useEffect, useState} from "react";
 import { observer } from "mobx-react";
-import { changeNodeAtPath } from 'react-sortable-tree';
+import { changeNodeAtPath, getNodeAtPath } from 'react-sortable-tree';
 
 import { TreeComponent, TreeItem } from "../../../common/components/tree";
 
@@ -15,10 +15,13 @@ import _ from 'lodash';
 import { RecordType } from "../../models/RecordTypeEnum";
 import { Error } from "./Error"
 import { Loading } from "./Loading"
-import { Layer } from "./Layer"
 import { FootprintRenderer } from "./icon-renderers/footprint.icon-renderer";
 import { LayerImageRenderer } from "./icon-renderers/layer-image.icon-renderer";
 import { groupBy } from "../../../common/helpers/group-by";
+import { ILayerImage } from "../../models/layerImage";
+
+// @ts-ignore
+const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 
 export const CatalogTreeComponent = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
@@ -69,7 +72,8 @@ export const CatalogTreeComponent = observer(() => {
     // }`)
   );
 
-  const store = useStore();
+  const { discreteLayersStore } = useStore();
+  const [selectionPaths, setSelectionPaths] = useState<Array<string | number>[]>([]);
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>(
     [
       { 
@@ -118,13 +122,6 @@ export const CatalogTreeComponent = observer(() => {
 
     return (
       <>
-        {/* <ul>
-          {
-            data.search.map((layer) => (
-              <Layer key={layer.id} layer={layer} />
-            ))
-          }
-        </ul> */}
         {loading ? (
           <Loading />
         ) : (
@@ -132,7 +129,7 @@ export const CatalogTreeComponent = observer(() => {
         )}
 
         <div style={{ 
-          height: 400,
+          height: '100%',
           margin: '0 12px'
         }}>
           <TreeComponent
@@ -150,12 +147,38 @@ export const CatalogTreeComponent = observer(() => {
               // return !nextParent || nextParent.isDirectory
             }}
             generateNodeProps={rowInfo => ({
-              onClick: (evt: any) => {
+              onClick: (evt: MouseEvent) => {
                 if(!rowInfo.node.isGroup){
-                  // @ts-ignore
-                  const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
-                  const newTreeData = changeNodeAtPath({
-                    treeData: treeRawData,
+                  let newTreeData = treeRawData;
+                  if(evt.ctrlKey){
+                    // Add to current selection
+                    setSelectionPaths([...selectionPaths, rowInfo.path]);
+                  }
+                  else{
+                    // Remove prev selection
+                    selectionPaths.forEach(path => {
+                      const selRowInfo = getNodeAtPath({
+                        treeData: newTreeData,
+                        path,
+                        getNodeKey: keyFromTreeIndex,
+                        ignoreCollapsed: false,
+                      });
+
+                      newTreeData = changeNodeAtPath({
+                        treeData: newTreeData,
+                        path: path,
+                        newNode: {
+                          ...selRowInfo?.node,
+                          isSelected: false
+                        },
+                        getNodeKey: keyFromTreeIndex
+                      });
+                    });
+                    setSelectionPaths([rowInfo.path]);
+                  }
+                  
+                  newTreeData = changeNodeAtPath({
+                    treeData: newTreeData,
                     path: rowInfo.path,
                     newNode: {
                       ...rowInfo.node,
@@ -163,9 +186,25 @@ export const CatalogTreeComponent = observer(() => {
                     },
                     getNodeKey: keyFromTreeIndex
                   });
+
                   setTreeRawData(newTreeData);
+                  discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
                   console.log('****** SELECTED NODE *******',rowInfo.node);
                 }
+              },
+              onMouseOver: (evt: MouseEvent) => {
+                if(!rowInfo.node.isGroup){
+                  const highlitedRowInfo = getNodeAtPath({
+                    treeData: treeRawData,
+                    path: rowInfo.path,
+                    getNodeKey: keyFromTreeIndex
+                  });
+
+                  discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
+                }
+              },
+              onMouseOut: (evt: MouseEvent) => {
+                discreteLayersStore.highlightLayer(undefined);
               },
               icons: rowInfo.node.isGroup
                 ? [

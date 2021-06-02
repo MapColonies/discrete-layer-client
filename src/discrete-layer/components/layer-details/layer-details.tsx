@@ -42,6 +42,9 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   if(fieldNameStr.toLowerCase().includes('url')){
     return 'url';
   }
+  else if (fieldNameStr.toLowerCase().includes('links')){
+    return 'links';
+  }
   else {
     return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
   }
@@ -60,6 +63,10 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       return (
         <StringValuePresentorComponent value={fieldValue as string}></StringValuePresentorComponent>
       );
+    case 'links':
+      return (
+        <LinksValuePresentorComponent value={fieldValue  as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
+      );
     case 'url':
       return (
         <UrlValuePresentorComponent value={fieldValue as string}></UrlValuePresentorComponent>
@@ -73,16 +80,9 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
         <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
       );
     default:
-      if(basicType.includes('LinkModel')){
-        return (
-          <LinksValuePresentorComponent value={fieldValue  as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
-        );
-      }
-      else{
-        return (
-          <UnknownValuePresentorComponent value={basicType}></UnknownValuePresentorComponent>
-        );
-      }
+      return (
+        <UnknownValuePresentorComponent value={basicType}></UnknownValuePresentorComponent>
+      );
   }
 };
 
