@@ -1,9 +1,9 @@
 import React, { CSSProperties } from 'react';
 import { useTheme } from '@map-colonies/react-core';
 import SortableTree, { ThemeProps, ReactSortableTreeProps, TreeItem as RSTTreeItem } from 'react-sortable-tree';
+import CONFIG from '../../config';
 import { TreeThemes } from './themes/themes';
 import FileExplorerTheme from './renderers';
-import CONFIG from '../../config';
 
 export interface TreeItem extends RSTTreeItem{};
 
