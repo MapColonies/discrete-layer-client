@@ -101,6 +101,7 @@
     "@types/node": "^12.12.44",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
+    "@types/react-sortable-tree": "^0.3.13",
     "ag-grid-community": "^24.0.0",
     "ag-grid-react": "^24.0.0",
     "axios": "^0.21.1",
@@ -123,6 +124,7 @@
     "react-intl": "^5.7.1",
     "react-perfect-scrollbar": "^1.5.8",
     "react-scripts": "3.4.1",
+    "react-sortable-tree": "^2.8.0",
     "typescript": "^3.7.5"
   },
   "devDependencies": {

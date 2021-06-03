@@ -31,7 +31,7 @@ import { LayersResultsComponent } from '../components/layers-results/layers-resu
 import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 import { ILayerImage } from '../models/layerImage';
-import { Home } from './test/Home';
+import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -277,6 +277,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handlePolygonReset = (): void => {
     store.discreteLayersStore.searchParams.resetLocation();
     store.discreteLayersStore.clearLayersImages();
+    store.discreteLayersStore.selectLayer(undefined);
 
     setDrawEntities([]);
   }
@@ -304,7 +305,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           },
         ]);
 
-        setActiveTabView(TabViews.SEARCH_RESULTS);
+        handleTabViewChange(TabViews.SEARCH_RESULTS);
       },
     };
   };
@@ -346,7 +347,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       },
     ]);
 
-    setActiveTabView(TabViews.SEARCH_RESULTS);
+    handleTabViewChange(TabViews.SEARCH_RESULTS);
   };
 
   const tabViews = [
@@ -470,7 +471,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 getActiveTabHeader(activeTabView)
               }
               <PerfectScrollbar className="detailsContent">
-              <Home />
+                <CatalogTreeComponent />
               </PerfectScrollbar>
             </Box>
 

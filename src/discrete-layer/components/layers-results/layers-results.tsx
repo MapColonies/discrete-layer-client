@@ -180,13 +180,13 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     suppressCellSelection: true,
     // suppressRowClickSelection: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
-      discreteLayersStore.highlightLayer((event.data as ILayerImage).id);
+      discreteLayersStore.highlightLayer(event.data as ILayerImage);
     },
     onCellMouseOut(event: GridCellMouseOutEvent) {
-      discreteLayersStore.highlightLayer('');
+      discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayer((event.data as ILayerImage).id);
+      discreteLayersStore.selectLayer(event.data as ILayerImage);
     }
   };
 

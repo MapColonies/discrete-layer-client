@@ -1,0 +1,234 @@
+.rowWrapper {
+  height: 100%;
+  box-sizing: border-box;
+  cursor: move;
+  display: flex;
+}
+.rowWrapper:hover {
+  /* opacity: 0.7; */
+  background-color: var(--rst-hover-background-color);
+  border-radius: 100px;
+}
+.rowWrapper:active {
+  opacity: 1;
+}
+.rowSelected {
+  border-radius: 100px;
+  background-color: var(--rst-selected-background-color, rgba(33, 150, 243, 0.3));
+}
+.rowWrapperDragDisabled {
+  cursor: default;
+}
+.row {
+  height: 100%;
+  white-space: nowrap;
+  display: flex;
+  position: relative;
+}
+.row > * {
+  box-sizing: border-box;
+}
+/** * The outline of where the element will go if dropped, displayed while dragging */
+.rowLandingPad, .rowCancelPad {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+.rowLandingPad *, .rowCancelPad * {
+  opacity: 0 !important;
+}
+.rowLandingPad::before, .rowCancelPad::before {
+  background-color: lightblue;
+  border: 2px dotted black;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+/** * Alternate appearance of the landing pad when the dragged location is invalid */
+.rowCancelPad::before {
+  background-color: #e6a8ad;
+}
+/** * Nodes matching the search conditions are highlighted */
+.rowSearchMatch {
+  box-shadow: inset 0 -7px 7px -3px #0080ff;
+}
+/** * The node that matches the search conditions and is currently focused */
+.rowSearchFocus {
+  box-shadow: inset 0 -7px 7px -3px #fc6421;
+}
+.rowContents, .rowLabel, .rowToolbar, .toolbarButton {
+  display: inline-block;
+  vertical-align: middle;
+}
+.rowContents {
+  position: relative;
+  height: 100%;
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rowLabel {
+  flex: 0 1 auto;
+  padding-right: 20px;
+  padding-left: 8px;
+  width: var(--rst-node-label-width);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body[dir=rtl] .rowLabel {
+  padding-left: 20px;
+  padding-right: 8px;
+}
+.rowToolbar {
+  flex: 0 1 auto;
+  display: flex;
+}
+.descendantCount {
+  text-align: center;
+  flex-grow: 1;
+}
+.collapseButton, .expandButton {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  z-index: 2;
+  position: absolute;
+  top: 45%;
+  width: var(--rst-expander-size);
+  height: var(--rst-expander-size);
+  transform: translate3d(-50%, -50%, 0);
+  cursor: pointer;
+}
+.collapseButton::after, .expandButton::after {
+  content: '';
+  position: absolute;
+  transform-origin: 7px 4px;
+  transform: translate3d(-50%, -20%, 0);
+  border: solid transparent 10px;
+  border-left-width: 7px;
+  border-right-width: 7px;
+  border-top-color: gray;
+}
+.collapseButton:hover::after, .expandButton:hover::after {
+  /* border-top-color: black; */
+}
+.collapseButton:focus, .expandButton:focus {
+  outline: none;
+}
+.collapseButton:focus::after, .expandButton:focus::after {
+  filter: drop-shadow(0 0 1px #83bef9) drop-shadow(0 0 1px #83bef9) drop-shadow(0 0 1px #83bef9);
+}
+.expandButton::after {
+  transform: translate3d(-50%, -20%, 0) rotateZ(-90deg);
+}
+.rst__rtl .ReactVirtualized__Grid .ReactVirtualized__Grid__innerScrollContainer .expandButton::after {
+  transform: translate3d(-50%, -20%, 0) rotateZ(90deg);
+}
+/** * Line for under a node with children */
+.lineChildren {
+  height: 100%;
+  display: inline-block;
+}
+/* ========================================================================== Scaffold Line-overlaid blocks used for showing the tree structure ========================================================================== */
+.lineBlock, .absoluteLineBlock {
+  height: 100%;
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+}
+.absoluteLineBlock {
+  position: absolute;
+  top: 0;
+}
+/* Highlight line for pointing to dragged row destination ========================================================================== */
+/** * +--+--+ * | | | * | | | * | | | * +--+--+ */
+.highlightLineVertical {
+  z-index: 3;
+}
+.highlightLineVertical::before {
+  position: absolute;
+  content: '';
+  background-color: var(--rst-hover-background-color);
+  width: var(--rst-highlight-line-size);
+  margin-left: var(--rst-highlight-line-size) / -2;
+  left: 50%;
+  top: 0;
+  height: 100%;
+}
+@keyframes arrow-pulse {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+ }
+  30% {
+    transform: translate(0, 300%);
+    opacity: 1;
+ }
+  70% {
+    transform: translate(0, 700%);
+    opacity: 1;
+ }
+  100% {
+    transform: translate(0, 1000%);
+    opacity: 0;
+ }
+}
+.highlightLineVertical::after {
+  content: '';
+  position: absolute;
+  height: 0;
+  margin-left: -1 * var(--rst-highlight-line-size) / 2;
+  left: 50%;
+  top: 0;
+  border-left: var(--rst-highlight-line-size) / 2 solid transparent;
+  border-right: var(--rst-highlight-line-size) / 2 solid transparent;
+  border-top: var(--rst-highlight-line-size) / 2 solid white;
+  animation: arrow-pulse 1s infinite linear both;
+}
+/** * +-----+ * | | * | +--+ * | | | * +--+--+ */
+.highlightTopLeftCorner::before {
+  z-index: 3;
+  content: '';
+  position: absolute;
+  border-top: solid var(--rst-highlight-line-size) var(--rst-hover-background-color);
+  border-left: solid var(--rst-highlight-line-size) var(--rst-hover-background-color);
+  box-sizing: border-box;
+  height: calc(50% + var(--rst-highlight-line-size) / 2);
+  top: 50%;
+  margin-top: var(--rst-highlight-line-size) / -2;
+  right: 0;
+  width: calc(50% + var(--rst-highlight-line-size) / 2);
+}
+/** * +--+--+ * | | | * | | | * | +->| * +-----+ */
+.highlightBottomLeftCorner {
+  z-index: 3;
+}
+.highlightBottomLeftCorner::before {
+  content: '';
+  position: absolute;
+  border-bottom: solid var(--rst-highlight-line-size) var(--rst-hover-background-color);
+  border-left: solid var(--rst-highlight-line-size) var(--rst-hover-background-color);
+  box-sizing: border-box;
+  height: calc(100% + var(--rst-highlight-line-size) / 2);
+  top: 0;
+  right: 7px;
+  width: calc(50% - 7px - var(--rst-highlight-line-size) / 2);
+}
+.highlightBottomLeftCorner::after {
+  content: '';
+  position: absolute;
+  height: 0;
+  right: 0;
+  top: 100%;
+  margin-top: -7px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 7px solid var(--rst-hover-background-color);
+}

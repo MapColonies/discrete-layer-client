@@ -104,7 +104,8 @@ export const discreteLayersStore = ModelBase
     );
 
     function setLayersImages(data: ILayerImage[]): void {
-      self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      self.layersImages = data.map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
     }
 
     // TODO: Remove when actual API is integrated
@@ -144,12 +145,12 @@ export const discreteLayersStore = ModelBase
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, layerImageShown: isShow, order} : el);
     }
 
-    function highlightLayer(id: string): void {
-      self.highlightedLayer = self.layersImages?.find(el => el.id === id);
+    function highlightLayer(layer: ILayerImage | undefined): void {
+      self.highlightedLayer =  layer ? {...layer} : undefined;
     }
 
-    function selectLayer(id: string): void {
-      self.selectedLayer = self.layersImages?.find(el => el.id === id);
+    function selectLayer(layer: ILayerImage | undefined): void {
+      self.selectedLayer =  layer ? {...layer} : undefined;
     }
 
     function setTabviewData(tabView: TabViews): void {
