@@ -194,12 +194,6 @@ export const CatalogTreeComponent = observer(() => {
               },
               onMouseOver: (evt: MouseEvent) => {
                 if(!rowInfo.node.isGroup){
-                  const highlitedRowInfo = getNodeAtPath({
-                    treeData: treeRawData,
-                    path: rowInfo.path,
-                    getNodeKey: keyFromTreeIndex
-                  });
-
                   discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
                 }
               },
