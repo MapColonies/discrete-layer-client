@@ -10,7 +10,8 @@ import {
   GridCellMouseOverEvent,
   GridCellMouseOutEvent,
   GridRowNode,
-  GridRowSelectedEvent, 
+  GridRowSelectedEvent,
+  GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -85,8 +86,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          // TODO: Implement footprint hide
-          console.log('*** IMPLEMENT FOOTPRINT HID ***');
+          discreteLayersStore.showFootprint(id, value);
          }
       },
       headerComponent: 'headerFootprintRenderer',
@@ -187,7 +187,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     onRowClicked(event: GridRowSelectedEvent) {
       discreteLayersStore.selectLayer(event.data as ILayerImage);
-    }
+    },
+    onGridReady(params: GridReadyEvent) {
+      params.api.forEachNode( (node) => {
+        if ((node.data as ILayerImage).id === discreteLayersStore.selectedLayer?.id) {
+          params.api.selectNode(node, true);
+        }
+      });
+    },
   };
 
   return (

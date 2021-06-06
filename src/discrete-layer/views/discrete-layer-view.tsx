@@ -275,11 +275,13 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handlePolygonReset = (): void => {
-    store.discreteLayersStore.searchParams.resetLocation();
-    store.discreteLayersStore.clearLayersImages();
-    store.discreteLayersStore.selectLayer(undefined);
-
-    setDrawEntities([]);
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      store.discreteLayersStore.searchParams.resetLocation();
+      store.discreteLayersStore.clearLayersImages();
+      store.discreteLayersStore.selectLayer(undefined);
+  
+      setDrawEntities([]);
+    }
   }
 
   const handleFilter = (): void => {
@@ -291,7 +293,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       type: type,
       handler: (drawing: IDrawingEvent): void => {
         const timeStamp = getTimeStamp();
-
+        
+        handleTabViewChange(TabViews.SEARCH_RESULTS);
+        
         setIsDrawing(false);
         
         handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
@@ -305,7 +309,6 @@ const DiscreteLayerView: React.FC = observer(() => {
           },
         ]);
 
-        handleTabViewChange(TabViews.SEARCH_RESULTS);
       },
     };
   };
@@ -410,8 +413,8 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     store.discreteLayersStore.setTabviewData(activeTabView);
-    setActiveTabView(targetViewIdx);
     store.discreteLayersStore.restoreTabviewData(targetViewIdx);
+    setActiveTabView(targetViewIdx);
   };
 
   // TODO: should be taken from selected item in store
@@ -475,7 +478,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               </PerfectScrollbar>
             </Box>
 
-            <Box className="tabContentContainer"  style={{display: activeTabView === TabViews.SEARCH_RESULTS ? 'block': 'none'}}>
+            {activeTabView === TabViews.SEARCH_RESULTS && <Box className="tabContentContainer">
               {
                 getActiveTabHeader(activeTabView)
               }
@@ -486,6 +489,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 }}
               />
             </Box>
+            }
           </Box>
           
           <Box className="sidePanelContainer sideDetailsPanel" style={{
@@ -520,7 +524,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               >
                 {memoizedLayers}
                 <CesiumDrawingsDataSource
-                  drawings={drawEntities}
+                  drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
                   drawingMaterial={DRAWING_MATERIAL_COLOR}
                   drawState={{
                     drawing: isDrawing,

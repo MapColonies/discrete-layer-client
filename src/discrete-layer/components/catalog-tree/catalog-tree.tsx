@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { observer } from "mobx-react";
 import { changeNodeAtPath, getNodeAtPath } from 'react-sortable-tree';
 
@@ -22,6 +22,8 @@ import { ILayerImage } from "../../models/layerImage";
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
+const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+const intialOrder = 0;
 
 export const CatalogTreeComponent = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
@@ -74,30 +76,15 @@ export const CatalogTreeComponent = observer(() => {
 
   const { discreteLayersStore } = useStore();
   const [selectionPaths, setSelectionPaths] = useState<Array<string | number>[]>([]);
-  const [treeRawData, setTreeRawData] = useState<TreeItem[]>(
-    [
-      { 
-        title: 'Chicken',
-        isGroup: true,
-        children: [
-          { title: 'Egg' },
-          { title: 'Kukureku' },
-        ] 
-      },
-      {
-        title: 'Fish',
-        isGroup: true,
-        children: [
-          { title: 'fingerline' }
-        ]
-      },
-    ],
-  );
+  const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
+  const selectedLayersRef = useRef(intialOrder);
 
   useEffect(()=>{
     if(data && data.search){
-      const arr: any[] = [];
+      const arr: ILayerImage[] = [];
       data.search.forEach((item) => arr.push({...item}));
+
+      discreteLayersStore.setLayersImages(arr, false);
   
       const treeData = groupBy(arr, {keys: ['region']});
       setTreeRawData(treeData.map(item=> {
@@ -218,25 +205,31 @@ export const CatalogTreeComponent = observer(() => {
                     />,
                   ]
                 : [
-                    // <div
-                    //   style={{
-                    //     border: 'solid 1px black',
-                    //     fontSize: 8,
-                    //     textAlign: 'center',
-                    //     marginRight: 10,
-                    //     width: 12,
-                    //     height: 16,
-                    //   }}
-                    // >
-                    //   F
-                    // </div>,
                     <FootprintRenderer
-                      data={rowInfo.node}
-                      onClick={(data) => console.log('******FOOTPRINT TREE NODE DATA*****', data)}
+                      data={(rowInfo.node as any) as ILayerImage}
+                      onClick={(data, value) => {
+                        discreteLayersStore.showFootprint(data.id, value);
+                      }}
                     />,
                     <LayerImageRenderer
-                      data={rowInfo.node}
-                      onClick={(data) => console.log('****** LAYER TREE NODE DATA*****', data)}
+                      data={(rowInfo.node as any) as ILayerImage}
+                      onClick={(data, value) => {
+                        if(value) {
+                          selectedLayersRef.current++;
+                        }
+                        else {
+                          const orders: number[] = [];
+                          // eslint-disable-next-line
+                          discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
+                            if(item.layerImageShown === true && data.id !== item.id) {
+                              orders.push(item.order as number);
+                            }
+                          });
+                          selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
+                        }
+                        const order = value ? selectedLayersRef.current : null;
+                        discreteLayersStore.showLayer(data.id, value, order);
+                      }}
                     />
                   ],
               buttons: [

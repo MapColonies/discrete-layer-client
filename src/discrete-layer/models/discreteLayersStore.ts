@@ -26,6 +26,7 @@ export type SearchResponse = ApiHttpResponse<SearchResult>;
 export interface ITabViewData {
   idx: TabViews,
   selectedLayer?: ILayerImage,
+  layersImages?: ILayerImage[],
   filters?: unknown
 }
 
@@ -103,9 +104,15 @@ export const discreteLayersStore = ModelBase
       }
     );
 
-    function setLayersImages(data: ILayerImage[]): void {
+    function setLayersImages(data: ILayerImage[], showFootprint = true): void {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
-      self.layersImages = data.map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      self.layersImages = data.map(item => ({
+          ...item,
+          footPrintShown: showFootprint,
+          layerImageShown:false,
+          order:null
+        })
+      );
     }
 
     // TODO: Remove when actual API is integrated
@@ -145,6 +152,10 @@ export const discreteLayersStore = ModelBase
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, layerImageShown: isShow, order} : el);
     }
 
+    function showFootprint(id: string, isShow: boolean): void {
+      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, footPrintShown: isShow} : el);
+    }
+
     function highlightLayer(layer: ILayerImage | undefined): void {
       self.highlightedLayer =  layer ? {...layer} : undefined;
     }
@@ -158,6 +169,7 @@ export const discreteLayersStore = ModelBase
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
         self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer;
+        self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
       } 
     }
 
@@ -166,6 +178,7 @@ export const discreteLayersStore = ModelBase
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
         self.selectedLayer = self.tabViews[idxTabViewToUpdate].selectedLayer;
+        self.layersImages = self.tabViews[idxTabViewToUpdate].layersImages??[];
       } 
     }
 
@@ -178,6 +191,7 @@ export const discreteLayersStore = ModelBase
       selectLayer,
       setTabviewData,
       restoreTabviewData,
+      showFootprint,
     };
   });
 

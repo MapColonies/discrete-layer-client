@@ -19,7 +19,8 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
-      setlayersImages(discreteLayersStore.layersImages);
+      // @ts-ignore
+      setlayersImages(discreteLayersStore.layersImages.slice().sort((curr, next) => curr.order - next.order));
       if(isEmpty(discreteLayersStore.layersImages)) {
         cacheRef.current = {};
       }
