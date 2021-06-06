@@ -266,8 +266,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     // TODO: build query params: FILTERS and SORTS
     const filters = buildFilters();
     setQuery(store.querySearch({
-      start: 1,
-      end: 10,
       opts: {
         filter: filters
       }

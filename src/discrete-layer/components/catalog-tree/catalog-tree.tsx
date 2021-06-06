@@ -29,8 +29,6 @@ export const CatalogTreeComponent = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
     // store.querySearch({})
     store.querySearch({
-      start: 1,
-      end: 10,
       opts: {
         filter: [
           {
