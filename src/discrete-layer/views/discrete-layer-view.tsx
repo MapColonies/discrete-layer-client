@@ -478,7 +478,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               </PerfectScrollbar>
             </Box>
 
-            {activeTabView === TabViews.SEARCH_RESULTS && <Box className="tabContentContainer"  style={{display: activeTabView === TabViews.SEARCH_RESULTS ? 'block': 'none'}}>
+            {activeTabView === TabViews.SEARCH_RESULTS && <Box className="tabContentContainer">
               {
                 getActiveTabHeader(activeTabView)
               }
