@@ -50,17 +50,11 @@ export interface IGridRowDataDetailsExt {
 export interface GridRowNode extends RowNode {};
 
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
-  const [gridApi, setGridApi] = useState<AgGridApi>();
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
   
-  const onGridReady = (params: GridReadyEvent): void => {
-    setGridApi(params.api);
-  };
-
   const gridOptionsFromProps: GridComponentOptions = {
     ...props.gridOptions,
-    onGridReady: onGridReady,
     columnDefs: [
       {
         field: 'isVisible',

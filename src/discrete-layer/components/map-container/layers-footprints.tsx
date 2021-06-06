@@ -24,7 +24,9 @@ export const LayersFootprints: React.FC = observer(() => {
         type: 'FeatureCollection',
         features: []
       }
-      const footprintsFeaturesArray = discreteLayersStore.layersImages.map((layer) => {
+      const footprintsFeaturesArray = discreteLayersStore.layersImages
+      .filter((layer) => layer.footPrintShown )
+      .map((layer) => {
         return getLayerFootprint(layer, false);
       });
       footprintsCollection.features.push(...footprintsFeaturesArray);
