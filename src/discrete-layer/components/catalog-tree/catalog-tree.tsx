@@ -12,13 +12,13 @@ import { LayerMetadataMixedUnion } from "../../models/LayerMetadataMixedModelSel
 
 import _ from 'lodash';
 
+import { groupBy } from "../../../common/helpers/group-by";
+import { ILayerImage } from "../../models/layerImage";
 import { RecordType } from "../../models/RecordTypeEnum";
 import { Error } from "./Error"
 import { Loading } from "./Loading"
 import { FootprintRenderer } from "./icon-renderers/footprint.icon-renderer";
 import { LayerImageRenderer } from "./icon-renderers/layer-image.icon-renderer";
-import { groupBy } from "../../../common/helpers/group-by";
-import { ILayerImage } from "../../models/layerImage";
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -29,8 +29,6 @@ export const CatalogTreeComponent = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
     // store.querySearch({})
     store.querySearch({
-      start: 1,
-      end: 10,
       opts: {
         filter: [
           {
