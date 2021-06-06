@@ -12,13 +12,13 @@ import { LayerMetadataMixedUnion } from "../../models/LayerMetadataMixedModelSel
 
 import _ from 'lodash';
 
+import { groupBy } from "../../../common/helpers/group-by";
+import { ILayerImage } from "../../models/layerImage";
 import { RecordType } from "../../models/RecordTypeEnum";
 import { Error } from "./Error"
 import { Loading } from "./Loading"
 import { FootprintRenderer } from "./icon-renderers/footprint.icon-renderer";
 import { LayerImageRenderer } from "./icon-renderers/layer-image.icon-renderer";
-import { groupBy } from "../../../common/helpers/group-by";
-import { ILayerImage } from "../../models/layerImage";
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
