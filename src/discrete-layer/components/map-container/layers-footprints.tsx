@@ -1,15 +1,61 @@
+/* eslint-disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
+import {
+  VerticalOrigin as CesiumVerticalOrigin,
+  LabelStyle as CesiumLabelStyle,
+  Cartesian2 as CesiumCartesian2,
+  Cartesian3 as CesiumCartesian3,
+  BoundingSphere as CesiumBoundingSphere,
+  Ellipsoid as CesiumEllipsoid,
+  ConstantPositionProperty as CesiumConstantPositionProperty,
+
+} from 'cesium';
 import { Feature, FeatureCollection } from 'geojson';
 import { ConstantProperty } from 'cesium';
 import { isObject, get } from 'lodash';
+import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { getLayerFootprint } from '../../models/layerImage';
 
-const FOOTPRINT_BORDER_COLOR = CesiumColor.RED;
 const FOOTPRINT_BORDER_WIDTH = 2.0;
+
+function upperLeft(points: CesiumCartesian3[]): CesiumCartesian3 {
+  let top = points[0];
+  for(let i = 1; i < points.length; i++) {
+      const temp = points[i];
+      if(temp.y < top.y || (temp.y === top.y && temp.x < top.x)) {
+          top = temp;
+      }
+  }
+  return top;
+}
+
+function upperRight(points: CesiumCartesian3[]): CesiumCartesian3 {
+  let top = points[0];
+  for(let i = 1; i < points.length; i++) {
+      const temp = points[i];
+      if(temp.x < top.x || (temp.x === top.x && temp.y < top.y)) {
+          top = temp;
+      }
+  }
+  return top;
+}
+
+function getLabelPosition(points: CesiumCartesian3[]): CesiumConstantPositionProperty {
+  //**********  https://sandcastle.cesium.com/index.html?src=GeoJSON%20and%20TopoJSON.html
+  const center = CONFIG.I18N.DEFAULT_LANGUAGE == 'he' ? upperRight(points) : upperLeft(points);
+  // **** Get center of "polygon" points ****
+  // const center = CesiumBoundingSphere.fromPoints(points).center;
+  // CesiumEllipsoid.WGS84.scaleToGeodeticSurface(center, center);
+  return new CesiumConstantPositionProperty(center);
+
+}
 
 export const LayersFootprints: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
@@ -17,6 +63,7 @@ export const LayersFootprints: React.FC = observer(() => {
 
   const prevLayersFootprints = usePrevious<FeatureCollection | undefined>(layersFootprints);
   const cacheRef = useRef({} as FeatureCollection | undefined);
+  const cacheColorsRef = useRef({} as Record<string,CesiumColor>);
 
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
@@ -59,29 +106,66 @@ export const LayersFootprints: React.FC = observer(() => {
       cache = layersFootprints;
       return cache;
     }
-  }
+  };
+
+  const getColor = (id: string, options?: Record<string, unknown>): CesiumColor => {
+    const colorHash = cacheColorsRef.current;
+    let color = colorHash[id];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition,@typescript-eslint/strict-boolean-expressions
+    if (!color) {
+      color = CesiumColor.fromRandom(options);
+      colorHash[id] = color;
+    }
+    return color;
+  };
 
   return (
     <CesiumGeojsonLayer
       data={getFootprints()}
       onLoad={(geoJsonDataSouce): void => {
         
-        geoJsonDataSouce.entities.values.forEach(item => {
-          if(item.polyline) {
+        geoJsonDataSouce.entities.values.forEach((item) => {
+          let positions = null;
+          let bckColor = null; 
+          if (item.polyline) {
+            const color = getColor(get(item,'properties.id'),  { alpha: 1 });
             (item.polyline.width as ConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
             // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            item.polyline.material = CesiumColor.fromRandom({alpha: 0.4});
-            // item.polyline.material = FOOTPRINT_BORDER_COLOR;
+            item.polyline.material = color;
+
+            positions = item.polyline.positions?.getValue() as CesiumCartesian3[];
+            bckColor = color;
           }
-          if(item.polygon){
-            (item.polygon.outlineColor as ConstantProperty).setValue(FOOTPRINT_BORDER_COLOR);
-            // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            item.polygon.material = CesiumColor.fromRandom({alpha: 0.4});
+          if (item.polygon) {
+            const color = getColor(get(item,'properties.id'), { blue: 1, alpha: 1});
+
+            item.polygon.outlineColor = color;
+            item.polygon.material = CesiumColor.fromAlpha(color, 0.10);
+            positions = item.polygon.hierarchy.getValue().positions;
+            bckColor = color;
           }
+
+          
+          console.log('positions', positions);
+          item.position = getLabelPosition(positions);
+          
+          const label = {
+            text: item.properties.id.getValue().toString().substring(0,4),
+            font: '12px Roboto, Helvetica, Arial, sans-serif',
+            fillColor: CesiumColor.WHITE,
+            // outlineColor: CesiumColor.WHITE,
+            // outlineWidth: 4,
+            // style: CesiumLabelStyle.FILL_AND_OUTLINE,
+            style: CesiumLabelStyle.FILL,
+            verticalOrigin: CesiumVerticalOrigin.BOTTOM,
+            pixelOffset: new CesiumCartesian2(0, 8),
+            backgroundColor:  bckColor,
+            showBackground: true,
+          };
+
+          item.label = label;
         });
       }}
       // onError={action('onError')}
