@@ -19,7 +19,7 @@ export const HighlightedLayer: React.FC = observer(() => {
     };
     const layer = discreteLayersStore.highlightedLayer;
     if(layer){
-      const footprint = getLayerFootprint(layer, false);
+      const footprint = getLayerFootprint(layer, false, true);
       footprintsCollection.features.push(footprint);
     }
     setlayersFootprints(footprintsCollection);
