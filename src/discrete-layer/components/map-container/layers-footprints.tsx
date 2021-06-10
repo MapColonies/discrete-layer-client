@@ -4,19 +4,20 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
-import { CesiumGeojsonLayer, CesiumColor } from '@map-colonies/react-components';
-import {
-  VerticalOrigin as CesiumVerticalOrigin,
-  LabelStyle as CesiumLabelStyle,
-  Cartesian2 as CesiumCartesian2,
-  Cartesian3 as CesiumCartesian3,
-  BoundingSphere as CesiumBoundingSphere,
-  Ellipsoid as CesiumEllipsoid,
-  ConstantPositionProperty as CesiumConstantPositionProperty,
+import { 
+  CesiumGeojsonLayer, 
+  CesiumColor,
+  CesiumVerticalOrigin,
+  CesiumLabelStyle,
+  CesiumCartesian2,
+  CesiumCartesian3,
+  CesiumBoundingSphere,
+  CesiumEllipsoid,
+  CesiumConstantPositionProperty,
+  CesiumConstantProperty
 
-} from 'cesium';
+} from '@map-colonies/react-components';
 import { Feature, FeatureCollection } from 'geojson';
-import { ConstantProperty } from 'cesium';
 import { isObject, get } from 'lodash';
 import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -129,7 +130,7 @@ export const LayersFootprints: React.FC = observer(() => {
           let bckColor = null; 
           if (item.polyline) {
             const color = getColor(get(item,'properties.id'),  { alpha: 1 });
-            (item.polyline.width as ConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
+            (item.polyline.width as CesiumConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
             // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
