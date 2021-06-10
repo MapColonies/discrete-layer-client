@@ -1612,10 +1612,10 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.4.0.tgz#c8be3928412d54ba6ece2007d337e5ea5b88da22"
-  integrity sha512-Y1WOlEYKQ/bXDXoJ/Gu6cgN/pKLl0cPyHrE/FvEy5wRGVIBmjZrODbovJ1E2aHB4WAptuaI6sIiS8X4HYG00mA==
+"@map-colonies/react-components@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.5.0.tgz#70637ee2546256d011533958fb21c1dbebc72515"
+  integrity sha512-QOG9BHM7Cb0faXB8Ke06FXE0PL1WSbe4vPY3LFya+bqxhWZuzWUOoHokhlF47l9gbxsCulGSpj1dNDJnhuIWhg==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
     "@map-colonies/react-core" "^3.3.0"
@@ -1635,7 +1635,7 @@
     "@types/ol" "^6.3.1"
     "@types/react" "^16.9.0"
     "@types/react-dom" "^16.9.0"
-    cesium "^1.77.0"
+    cesium "^1.82.0"
     copy-webpack-plugin "^6.3.1"
     copyfiles "2.3.0"
     cross-env "7.0.2"
@@ -5092,10 +5092,10 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-cesium@^1.77.0:
-  version "1.80.0"
-  resolved "https://registry.yarnpkg.com/cesium/-/cesium-1.80.0.tgz#811339a383800ac9fd19ccddc2e62cca14626bbf"
-  integrity sha512-g0TWaU6uibOf5iskfmyVK4RfEkwLCR+JqWbtMwHP0aHRO9knqrX+jQ8SCaxnSVSFf8d362Lu1LtGj0zdLIIdDA==
+cesium@^1.82.0:
+  version "1.82.1"
+  resolved "https://registry.yarnpkg.com/cesium/-/cesium-1.82.1.tgz#ca231d4dee8bc02126dfbd57e9474b7bd65d8f40"
+  integrity sha512-BpyQ3KF6ZPPicW5L3khPJA0fKWL1ViA5cV1hFa/8zWiJ/1ix3+kyzrvaAlUdy/knn9xY70ePnNYwokIs+d2znw==
 
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"

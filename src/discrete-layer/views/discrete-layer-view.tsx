@@ -14,6 +14,8 @@ import {
   CesiumSceneMode,
   BboxCorner,
   Box,
+  CesiumGeographicTilingScheme,
+  CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
 import { IconButton, useTheme, Typography, Fab } from '@map-colonies/react-core';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
@@ -41,7 +43,12 @@ import './discrete-layer-view.css';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
+const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
+const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
+  color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
+  dashLength: 5
+});
 const BASE_MAPS = {
   maps: [
     {
@@ -140,32 +147,6 @@ const BASE_MAPS = {
             credit: 'thunderforest',
           }
         },
-        // {
-        //   id: 'AZURE_RASTER_WMTS',
-        //   type:  'WMTS_LAYER' as LayerType,
-        //   opacity: 1,
-        //   zIndex: 0,
-        //   options: {
-        //     url: 'http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/full_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png',
-        //     format: 'png',
-        //     layer: 'full_il',
-        //     style: 'default',
-        //     tileMatrixSetID: 'newGrids'
-        //   }
-        // },
-        // {
-        //   id: 'AZURE_RASTER_WMTS_BLUEMARBEL_IL',
-        //   type:  'WMTS_LAYER' as LayerType,
-        //   opacity: 1,
-        //   zIndex: 0,
-        //   options: {
-        //     url: 'http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/bluemarble_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png',
-        //     format: 'png',
-        //     layer: 'bluemarble_il',
-        //     style: 'default',
-        //     tileMatrixSetID: 'newGrids'
-        //   }
-        // },
         {
           id: 'VECTOR_TILES_GPS_1',
           type:  'XYZ_LAYER' as LayerType,
@@ -175,6 +156,43 @@ const BASE_MAPS = {
             url: 'https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png',
             layers: '',
             credit: 'openstreetmap',
+          }
+        },
+      ],
+      baseVectorLayers: [],
+    },
+    {
+      id: '4th',
+      title: '4th MapProxy',
+      isCurrent: true,
+      thumbnail: '',
+      baseRasteLayers: [
+        {
+          id: 'AZURE_RASTER_WMTS_FULL_IL',
+          type:  'WMTS_LAYER' as LayerType,
+          opacity: 1,
+          zIndex: 0,
+          options: {
+            url: 'http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/full_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png',
+            format : 'image/png',
+            layer: 'full_il',
+            style: 'default',
+            tileMatrixSetID: 'newGrids',
+            tilingScheme: new CesiumGeographicTilingScheme()
+          }
+        },
+        {
+          id: 'AZURE_RASTER_WMTS_BLUEMARBEL_IL',
+          type:  'WMTS_LAYER' as LayerType,
+          opacity: 1,
+          zIndex: 0,
+          options: {
+            url : 'http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/bluemarble_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png',
+            layer : 'bluemarble_il',
+            style : 'default',
+            format : 'image/png',
+            tileMatrixSetID : 'newGrids',
+            tilingScheme: new CesiumGeographicTilingScheme()
           }
         },
       ],
@@ -529,6 +547,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                     type: drawPrimitive.type,
                     handler: drawPrimitive.handler,
                   }}
+                  hollow={true}
+                  outlineWidth={2}
+                  material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
                 />
             </CesiumMap>
           }
