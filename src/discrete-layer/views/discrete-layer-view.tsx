@@ -43,9 +43,10 @@ import './discrete-layer-view.css';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
+const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
 const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
-  color: CesiumColor.DARKSLATEGRAY.withAlpha(0.8), //new CesiumColor( 116, 135, 136, 1),
+  color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
   dashLength: 5
 });
 const BASE_MAPS = {
@@ -548,7 +549,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   }}
                   hollow={true}
                   outlineWidth={2}
-                  material={ DRAWING_FINAL_MATERIAL as any }
+                  material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
                 />
             </CesiumMap>
           }
