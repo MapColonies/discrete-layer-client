@@ -17,7 +17,6 @@ import {
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
-import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 import { FootprintRenderer } from './cell-renderer/footprint.cell-renderer';
 import { HeaderFootprintRenderer } from './header-renderer/footprint.header-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';

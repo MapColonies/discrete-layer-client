@@ -298,11 +298,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   
       setDrawEntities([]);
     }
-  }
+  };
 
   const handleFilter = (): void => {
     setIsFilter(!isFilter);
-  }
+  };
 
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
@@ -332,7 +332,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const setDrawType = (drawType: DrawType): void =>{
     setIsDrawing(true);
     setDrawPrimitive(createDrawPrimitive(drawType));
-  }
+  };
 
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
     const timeStamp = getTimeStamp();
@@ -383,9 +383,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   ];
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
+
     const tabView = find(tabViews, (tab)=>{
       return tab.idx === tabIdx;
     });
+
     return (
       <div className="tabHeaderContainer">
         <div className="tabTitleContainer" style={{backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string}}>

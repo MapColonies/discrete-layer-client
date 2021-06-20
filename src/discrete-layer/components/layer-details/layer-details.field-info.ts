@@ -1,5 +1,4 @@
 import { Layer3DRecordModelType } from '../../models/Layer3DRecordModel';
-import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { LinkModelType } from '../../models/LinkModel';
 
