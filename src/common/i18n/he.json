@@ -1,7 +1,9 @@
 {
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
-  "general.error.label": "שגיא",
+  "general.error.label": "שגיאה",
+  "general.title.add": "הוספת יישות",
+  "general.title.edit": "עריכת יישות",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",

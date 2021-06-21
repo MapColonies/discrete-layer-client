@@ -40,6 +40,8 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { FilterField } from '../models/RootStore.base';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -228,6 +230,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [isOpen, setOpen] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
@@ -257,7 +260,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
-  const buildFilters =  () => {
+  const buildFilters =  (): FilterField[] => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
     return [
       {
@@ -298,6 +301,10 @@ const DiscreteLayerView: React.FC = observer(() => {
   
       setDrawEntities([]);
     }
+  };
+
+  const handleClick = (): void => {
+    setOpen(true);
   };
 
   const handleFilter = (): void => {
@@ -410,6 +417,17 @@ const DiscreteLayerView: React.FC = observer(() => {
             backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string,
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
+            <IconButton
+              className="operationIcon mc-icon-Bests"
+              label="ADD"
+              onClick={ (): void => { handleClick() } }
+            />
+            {
+              isOpen && <EntityDialogComponent
+                isOpen={isOpen}
+                onSetOpen={setOpen}>
+              </EntityDialogComponent>
+            }
             <IconButton 
               className="operationIcon mc-icon-Delete"
               label="DELETE"
@@ -417,7 +435,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <IconButton 
               className="operationIcon mc-icon-Filter"
               label="FILTER"
-              onClick={ (): void => {handleFilter()}}
+              onClick={ (): void => { handleFilter() } }
             />
             <IconButton 
               className="operationIcon mc-icon-Arrows-Left"
@@ -518,6 +536,20 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Typography use="headline6" tag="div" className="detailsTitle">
                 {layerToPresent?.productName}
               </Typography>
+              {
+                layerToPresent && <IconButton
+                  className="operationIcon mc-icon-Status-Approves"
+                  label="EDIT"
+                  onClick={ (): void => { handleClick() } }
+                />
+              }
+              {
+                isOpen && <EntityDialogComponent
+                  isOpen={isOpen}
+                  onSetOpen={setOpen}
+                  layerRecord={layerToPresent}>
+                </EntityDialogComponent>
+              }
               <IconButton 
                 className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel': 'mc-icon-Collapce-Panel'}`}
                 label="EXPANDER"

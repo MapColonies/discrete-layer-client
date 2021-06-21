@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotchLabel component renders correctly 1`] = `
+<span
+  style={
+    Object {
+      "backgroundColor": "white",
+      "padding": "0 4px 0 4px",
+    }
+  }
+>
+  Test label
+</span>
+`;
