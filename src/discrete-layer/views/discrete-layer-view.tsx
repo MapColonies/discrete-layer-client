@@ -557,7 +557,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Box>
             <PerfectScrollbar className="detailsContent">
-              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded}/>
+              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode='View'/>
             </PerfectScrollbar>
           </Box>
         </Box>

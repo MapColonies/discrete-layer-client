@@ -19,6 +19,8 @@ interface EntityDialogComponentProps {
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, layerRecord } = props;
 
+  const mode = (layerRecord === undefined) ? 'New' : 'Edit';
+
   const formik = useFormik({
     initialValues: {},
     onSubmit: values => {}
@@ -34,12 +36,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
         <Box id="entityDialog">
           <Dialog open={isOpen} preventOutsideDismiss={true}>
             <DialogTitle>
-              <FormattedMessage id="general.title.add"/>
+              <FormattedMessage id={ mode === 'New' ? 'general.title.new' : 'general.title.edit' }/>
             </DialogTitle>
             <DialogContent>
               <form onSubmit={formik.handleSubmit}>
                 <PerfectScrollbar className="content">
-                  <LayersDetailsComponent layerRecord={layerRecord}/>
+                  <LayersDetailsComponent layerRecord={layerRecord} mode={mode}/>
                 </PerfectScrollbar>
                 <Box className="buttons">
                   <Button type="button" onClick={(): void => { handleClose(false); }}>

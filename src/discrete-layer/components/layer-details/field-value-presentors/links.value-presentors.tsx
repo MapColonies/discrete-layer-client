@@ -13,7 +13,7 @@ interface LinksValuePresentorProps {
   fieldInfo?: IRecordFieldInfo;
 }
 
-export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = ({value, fieldInfo}) => {
+export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = ({ value, fieldInfo }) => {
   return (
     <Box className="detailsFieldValue detailsLinksFieldValue">
       <Box className="linksFieldsContainer">
@@ -27,7 +27,7 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
                     isString(get(link,subFieldInfo.fieldName)) && <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
                       <FieldLabelComponent value={subFieldInfo.label}></FieldLabelComponent>
                       {
-                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName))
+                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName), 'View')
                       }
                     </Box>
                   )

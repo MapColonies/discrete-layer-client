@@ -7,7 +7,7 @@ interface DateValuePresentorProps {
   value?: moment.Moment;
 }
 
-export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({value}) => {
+export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ value }) => {
   return (
     <Box className="detailsFieldValue">
       {dateFormatter(value)}

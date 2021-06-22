@@ -5,7 +5,7 @@ interface StringValuePresentorProps {
   value?: string;
 }
 
-export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = ({value}) => {
+export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = ({ value }) => {
   return (
     <Box className="detailsFieldValue">
       {value}

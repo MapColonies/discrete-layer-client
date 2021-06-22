@@ -2,7 +2,7 @@
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
   "general.error.label": "שגיאה",
-  "general.title.add": "הוספת יישות",
+  "general.title.new": "הוספת יישות",
   "general.title.edit": "עריכת יישות",
 
   "record-type.record_raster.label": "Raster",
