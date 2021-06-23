@@ -36,7 +36,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
         <DialogTitle>
           <FormattedMessage id={ mode === 'New' ? 'general.title.new' : 'general.title.edit' }/>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
             <PerfectScrollbar className="content">
               <LayersDetailsComponent layerRecord={layerRecord} mode={mode}/>
