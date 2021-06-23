@@ -423,7 +423,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             <IconButton
-              className="operationIcon mc-icon-Bests"
+              className="operationIcon mc-icon-Bests glow"
               label="NEW"
               onClick={ (): void => { handleNewEntityDialogClick() } }
             />
@@ -543,7 +543,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Typography>
               {
                 layerToPresent && <IconButton
-                  className="operationIcon mc-icon-Status-Approves"
+                  className="operationIcon mc-icon-Status-Approves glow"
                   label="EDIT"
                   onClick={ (): void => { handleEditEntityDialogClick() } }
                 />
