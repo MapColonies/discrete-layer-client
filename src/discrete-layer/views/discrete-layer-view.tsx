@@ -230,7 +230,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [isOpen, setOpen] = useState<boolean>(false);
+  const [isNewEntityDialogOpen, setNewEntityDialogOpen] = useState<boolean>(false);
+  const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
@@ -303,8 +304,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   };
 
-  const handleClick = (): void => {
-    setOpen(true);
+  const handleNewEntityDialogClick = (): void => {
+    setNewEntityDialogOpen(!isNewEntityDialogOpen);
+  };
+
+  const handleEditEntityDialogClick = (): void => {
+    setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
 
   const handleFilter = (): void => {
@@ -419,13 +424,13 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             <IconButton
               className="operationIcon mc-icon-Bests"
-              label="ADD"
-              onClick={ (): void => { handleClick() } }
+              label="NEW"
+              onClick={ (): void => { handleNewEntityDialogClick() } }
             />
             {
-              isOpen && <EntityDialogComponent
-                isOpen={isOpen}
-                onSetOpen={setOpen}>
+              isNewEntityDialogOpen && <EntityDialogComponent
+                isOpen={isNewEntityDialogOpen}
+                onSetOpen={setNewEntityDialogOpen}>
               </EntityDialogComponent>
             }
             <IconButton 
@@ -540,13 +545,13 @@ const DiscreteLayerView: React.FC = observer(() => {
                 layerToPresent && <IconButton
                   className="operationIcon mc-icon-Status-Approves"
                   label="EDIT"
-                  onClick={ (): void => { handleClick() } }
+                  onClick={ (): void => { handleEditEntityDialogClick() } }
                 />
               }
               {
-                isOpen && <EntityDialogComponent
-                  isOpen={isOpen}
-                  onSetOpen={setOpen}
+                isEditEntityDialogOpen && <EntityDialogComponent
+                  isOpen={isEditEntityDialogOpen}
+                  onSetOpen={setEditEntityDialogOpen}
                   layerRecord={layerToPresent}>
                 </EntityDialogComponent>
               }

@@ -31,31 +31,27 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
   };
 
   return (
-    <>
-      return (
-        <Box id="entityDialog">
-          <Dialog open={isOpen} preventOutsideDismiss={true}>
-            <DialogTitle>
-              <FormattedMessage id={ mode === 'New' ? 'general.title.new' : 'general.title.edit' }/>
-            </DialogTitle>
-            <DialogContent>
-              <form onSubmit={formik.handleSubmit}>
-                <PerfectScrollbar className="content">
-                  <LayersDetailsComponent layerRecord={layerRecord} mode={mode}/>
-                </PerfectScrollbar>
-                <Box className="buttons">
-                  <Button type="button" onClick={(): void => { handleClose(false); }}>
-                    <FormattedMessage id="general.cancel-btn.text"/>
-                  </Button>
-                  <Button raised type="submit">
-                    <FormattedMessage id="general.ok-btn.text"/>
-                  </Button>
-                </Box>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </Box>
-      )
-    </>
-  )
+    <Box id="entityDialog">
+      <Dialog open={isOpen} preventOutsideDismiss={true}>
+        <DialogTitle>
+          <FormattedMessage id={ mode === 'New' ? 'general.title.new' : 'general.title.edit' }/>
+        </DialogTitle>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit} className="form">
+            <PerfectScrollbar className="content">
+              <LayersDetailsComponent layerRecord={layerRecord} mode={mode}/>
+            </PerfectScrollbar>
+            <Box className="buttons">
+              <Button type="button" onClick={(): void => { handleClose(false); }}>
+                <FormattedMessage id="general.cancel-btn.text"/>
+              </Button>
+              <Button raised type="submit">
+                <FormattedMessage id="general.ok-btn.text"/>
+              </Button>
+            </Box>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </Box>
+  );
 };
