@@ -10,6 +10,7 @@ export { selectFromCategoryConfig, categoryConfigModelPrimitives, CategoryConfig
 /**
  * CategoryConfigModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const CategoryConfigModel = CategoryConfigModelBase
   .actions(self => ({
     // This is an auto-generated example action.

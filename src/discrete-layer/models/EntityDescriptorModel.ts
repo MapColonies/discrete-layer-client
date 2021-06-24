@@ -10,6 +10,7 @@ export { selectFromEntityDescriptor, entityDescriptorModelPrimitives, EntityDesc
 /**
  * EntityDescriptorModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntityDescriptorModel = EntityDescriptorModelBase
   .actions(self => ({
     // This is an auto-generated example action.

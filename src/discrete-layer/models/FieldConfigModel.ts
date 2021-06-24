@@ -10,6 +10,7 @@ export { selectFromFieldConfig, fieldConfigModelPrimitives, FieldConfigModelSele
 /**
  * FieldConfigModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const FieldConfigModel = FieldConfigModelBase
   .actions(self => ({
     // This is an auto-generated example action.
