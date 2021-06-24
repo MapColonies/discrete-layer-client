@@ -1,16 +1,17 @@
 import React from 'react';
 import { Box } from '@map-colonies/react-components';
-import { Mode } from '../../../../common/helpers/mode.enum';
+import { Mode } from '../../../../common/models/mode.enum';
 import { TextField } from '@map-colonies/react-core';
+import { IRecordFieldInfo } from '../layer-details.field-info';
 
 interface StringValuePresentorProps {
-  value?: string;
-  fieldName: string;
   mode: Mode;
+  fieldInfo: IRecordFieldInfo;
+  value?: string;
 }
 
-export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = ({ value, fieldName, mode }) => {
-  if (mode === Mode.VIEW) {
+export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = ({ mode, fieldInfo, value }) => {
+  if (mode === Mode.VIEW || fieldInfo.isManuallyEditable !== true) {
     return (
       <Box className="detailsFieldValue">
         {value}
@@ -20,8 +21,8 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
     return (
       <Box className="detailsFieldValue">
         <TextField
-          id={fieldName}
-          name={fieldName}
+          id={fieldInfo.fieldName as string}
+          name={fieldInfo.fieldName as string}
           type="text"
           value={value !== undefined ? value : ''}
         />

@@ -2,17 +2,18 @@ import React from 'react';
 import moment from 'moment';
 import { Box } from '@map-colonies/react-components';
 import { dateFormatter } from '../../layers-results/type-formatters/type-formatters';
-import { Mode } from '../../../../common/helpers/mode.enum';
+import { Mode } from '../../../../common/models/mode.enum';
 import { TextField } from '@map-colonies/react-core';
+import { IRecordFieldInfo } from '../layer-details.field-info';
 
 interface DateValuePresentorProps {
-  value?: moment.Moment;
-  fieldName: string;
   mode: Mode;
+  fieldInfo: IRecordFieldInfo;
+  value?: moment.Moment;
 }
 
-export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ value, fieldName, mode }) => {
-  if (mode === Mode.VIEW) {
+export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value }) => {
+  if (mode === Mode.VIEW || fieldInfo.isManuallyEditable !== true) {
     return (
       <Box className="detailsFieldValue">
         { dateFormatter(value) }
@@ -22,8 +23,8 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     return (
       <Box className="detailsFieldValue">
         <TextField
-          id={fieldName}
-          name={fieldName}
+          id={fieldInfo.fieldName as string}
+          name={fieldInfo.fieldName as string}
           type="datetime-local"
           value={value !== undefined ? dateFormatter(value) : ''}
         />

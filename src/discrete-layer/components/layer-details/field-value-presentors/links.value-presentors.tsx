@@ -5,7 +5,7 @@ import { LinkModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { getValuePresentor } from '../layer-details';
 import { FieldLabelComponent } from '../field-label';
-import { Mode } from '../../../../common/helpers/mode.enum';
+import { Mode } from '../../../../common/models/mode.enum';
 
 import './links.value-presentors.css';
 

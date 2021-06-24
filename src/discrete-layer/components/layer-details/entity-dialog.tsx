@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import { LayersDetailsComponent } from './layer-details';
 
 import './entity-dialog.css';
-import { Mode } from '../../../common/helpers/mode.enum';
+import { Mode } from '../../../common/models/mode.enum';
 
 interface EntityDialogComponentProps {
   isOpen: boolean;

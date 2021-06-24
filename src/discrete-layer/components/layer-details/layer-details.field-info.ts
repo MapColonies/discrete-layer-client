@@ -15,6 +15,7 @@ export interface IRecordFieldInfo {
   label: string,
   fullWidth?: boolean,
   subFields?: IRecordFieldInfo[],
+  isManuallyEditable?: boolean,
 }
 
 export interface IRecordCategoryFieldsInfo {
@@ -67,6 +68,7 @@ export const LayerRasterRecorModelFieldsInfo: IRecordCategoryFieldsInfo[] = [
         fieldName: 'description',
         label: 'field-names.raster.description',
         fullWidth: true,
+        isManuallyEditable: true
       },
       {
         fieldName: 'sensorType',
@@ -192,6 +194,7 @@ export const Layer3DRecorModelFieldsInfo: IRecordCategoryFieldsInfo[] = [
         fieldName: 'description',
         label: 'field-names.3d.description',
         fullWidth: true,
+        isManuallyEditable: true
       },
       {
         fieldName: 'sensorType',

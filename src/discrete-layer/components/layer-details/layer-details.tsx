@@ -6,7 +6,7 @@ import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
-import { Mode } from '../../../common/helpers/mode.enum';
+import { Mode } from '../../../common/models/mode.enum';
 import { FieldCategory, LayerRasterRecorModelFieldsInfo, Layer3DRecorModelFieldsInfo, IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
@@ -63,7 +63,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
     case 'number':
     case 'SensorType':
       return (
-        <StringValuePresentorComponent value={fieldValue as string} fieldName={fieldName as string} mode={mode}></StringValuePresentorComponent>
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string}></StringValuePresentorComponent>
       );
     case 'links':
       return (
@@ -75,7 +75,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       );
     case 'momentDateType':
       return (
-        <DateValuePresentorComponent value={fieldValue as moment.Moment} fieldName={fieldName as string} mode={mode}></DateValuePresentorComponent>
+        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as moment.Moment}></DateValuePresentorComponent>
       );
     case 'RecordType':
       return(
