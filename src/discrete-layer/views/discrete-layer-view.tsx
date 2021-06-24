@@ -42,6 +42,7 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { FilterField } from '../models/RootStore.base';
+import { Mode } from '../../common/helpers/mode.enum';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -562,7 +563,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Box>
             <PerfectScrollbar className="detailsContent">
-              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode='View'/>
+              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
             </PerfectScrollbar>
           </Box>
         </Box>

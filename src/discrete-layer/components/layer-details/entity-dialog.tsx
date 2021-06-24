@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import { LayersDetailsComponent } from './layer-details';
 
 import './entity-dialog.css';
+import { Mode } from '../../../common/helpers/mode.enum';
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -19,7 +20,7 @@ interface EntityDialogComponentProps {
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, layerRecord } = props;
 
-  const mode = (layerRecord === undefined) ? 'New' : 'Edit';
+  const mode = (layerRecord === undefined) ? Mode.NEW : Mode.EDIT;
 
   const formik = useFormik({
     initialValues: {},
@@ -34,7 +35,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
-          <FormattedMessage id={ mode === 'New' ? 'general.title.new' : 'general.title.edit' }/>
+          <FormattedMessage id={ mode === Mode.NEW ? 'general.title.new' : 'general.title.edit' }/>
         </DialogTitle>
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">

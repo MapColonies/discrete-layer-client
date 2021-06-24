@@ -6,6 +6,7 @@ import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { Mode } from '../../../common/helpers/mode.enum';
 import { FieldCategory, LayerRasterRecorModelFieldsInfo, Layer3DRecorModelFieldsInfo, IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
@@ -14,7 +15,6 @@ import { UrlValuePresentorComponent } from './field-value-presentors/url.value-p
 import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentors';
 import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentors';
 import { RecordTypeValuePresentorComponent } from  './field-value-presentors/record-type.value-presentors';
-import { StringInputPresentorComponent } from './field-value-presentors/string.input-presentors';
 import { FieldLabelComponent } from './field-label';
 
 import './layer-details.css';
@@ -22,7 +22,7 @@ import './layer-details.css';
 interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
-  mode: string;
+  mode: Mode;
 }
 
 const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedUnion | LinkModelType): string => {
@@ -52,7 +52,7 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   }
 }
 
-export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: string): JSX.Element => {
+export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: Mode): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName, layerRecord);
   // console.log(`${fieldName} -->`, modelProps[fieldName].name, '-->', basicType);
@@ -62,15 +62,9 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
     case 'identifier':
     case 'number':
     case 'SensorType':
-      if (mode === 'View') {
-        return (
-          <StringValuePresentorComponent value={fieldValue as string}></StringValuePresentorComponent>
-        );
-      } else {
-        return (
-          <StringInputPresentorComponent value={fieldValue as string} fieldName={fieldName as string}></StringInputPresentorComponent>
-        );
-      }
+      return (
+        <StringValuePresentorComponent value={fieldValue as string} fieldName={fieldName as string} mode={mode}></StringValuePresentorComponent>
+      );
     case 'links':
       return (
         <LinksValuePresentorComponent value={fieldValue  as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
@@ -80,15 +74,9 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
         <UrlValuePresentorComponent value={fieldValue as string}></UrlValuePresentorComponent>
       );
     case 'momentDateType':
-      if (mode === 'View') {
-        return (
-          <DateValuePresentorComponent value={fieldValue as moment.Moment}></DateValuePresentorComponent>
-        );
-      } else {
-        return (
-          <StringInputPresentorComponent value={fieldValue as string} fieldName={fieldName as string}></StringInputPresentorComponent>
-        );
-      }
+      return (
+        <DateValuePresentorComponent value={fieldValue as moment.Moment} fieldName={fieldName as string} mode={mode}></DateValuePresentorComponent>
+      );
     case 'RecordType':
       return(
         <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
