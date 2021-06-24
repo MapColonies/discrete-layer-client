@@ -51,6 +51,7 @@
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",
   "field-names.raster.productType": "Type",
+  "field-names.raster.productName": "Name",
   "field-names.raster.productVersion": "Version",
   "field-names.raster.resolution": "Resolution",
   "field-names.raster.creation-date": "Created",
@@ -71,10 +72,12 @@
   "field-names.raster.link.description": "Description",
   "field-names.raster.link.protocol": "Protocol",
   "field-names.raster.link.url": "URL",
+  "field-names.raster.keywords": "Keywords",
 
   "field-names.3d.id": "ID",
   "field-names.3d.productId": "Ext. ID",
   "field-names.3d.productType": "Type",
+  "field-names.3d.productName": "Name",
   "field-names.3d.productVersion": "Version",
   "field-names.3d.resolution": "Resolution",
   "field-names.3d.creation-date": "Created",
@@ -95,5 +98,6 @@
   "field-names.3d.link.name": "Name",
   "field-names.3d.link.description": "Description",
   "field-names.3d.link.protocol": "Protocol",
-  "field-names.3d.link.url": "URL"
+  "field-names.3d.link.url": "URL",
+  "field-names.3d.keywords": "Keywords"
 }

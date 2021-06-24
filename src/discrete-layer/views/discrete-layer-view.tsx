@@ -34,6 +34,7 @@ import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
+import { EntityDescriptorModelType } from '../models';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -224,6 +225,25 @@ export enum TabViews {
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
   const { loading, error, data, query, setQuery } = useQuery();
+  const descriptorsQuery = useQuery((store) => store.queryEntityDescriptors({},
+    ` type
+    categories {
+      category
+      categoryTitle
+      fields { 
+        fieldName
+        label
+        fullWidth
+        isManuallyEditable
+        subFields {
+          fieldName
+          label
+          fullWidth
+          isManuallyEditable
+        }
+      }
+      __typename
+    }`));
   const store = useStore();
   const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
@@ -256,6 +276,14 @@ const DiscreteLayerView: React.FC = observer(() => {
 
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
+
+  useEffect(() => {
+    if(!descriptorsQuery.loading){
+      const descriptors = descriptorsQuery.data?.entityDescriptors as EntityDescriptorModelType[];
+  
+      store.discreteLayersStore.setEntityDescriptors([...descriptors]);
+    }
+  }, [descriptorsQuery.data, descriptorsQuery.loading, store.discreteLayersStore]);
 
   const buildFilters =  () => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
