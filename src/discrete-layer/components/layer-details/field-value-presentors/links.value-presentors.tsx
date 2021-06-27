@@ -23,12 +23,12 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
           return(
             <>
               {
-                fieldInfo?.subFields?.map((subFieldInfo: IRecordFieldInfo) => {
+                fieldInfo?.subFields.map((subFieldInfo: IRecordFieldInfo) => {
                   return (
-                    isString(get(link,subFieldInfo.fieldName)) && <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
+                    isString(get(link,subFieldInfo.fieldName as string)) && <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
                       <FieldLabelComponent value={subFieldInfo.label}></FieldLabelComponent>
                       {
-                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName), Mode.VIEW)
+                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName as string), Mode.VIEW)
                       }
                     </Box>
                   )

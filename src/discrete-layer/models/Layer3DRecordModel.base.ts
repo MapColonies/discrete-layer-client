@@ -37,7 +37,7 @@ export const Layer3DRecordModelBase = ModelBase
     sourceDateEnd: types.union(types.undefined, types.null, types.frozen()),
     resolution: types.union(types.undefined, types.null, types.number),
     accuracyCE90: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, SensorTypeEnumType),
+    sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     region: types.union(types.undefined, types.null, types.string),
     projectName: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),

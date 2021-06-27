@@ -2,12 +2,13 @@ import React from 'react';
 import moment from 'moment';
 import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType } from '../../models';
+import { FieldCategory, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType, SensorType, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Mode } from '../../../common/models/mode.enum';
-import { FieldCategory, LayerRasterRecorModelFieldsInfo, Layer3DRecorModelFieldsInfo, IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
+import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
 import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentors';
@@ -48,6 +49,9 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   else if (fieldNameStr.toLowerCase().includes('links')){
     return 'links';
   }
+  else if (fieldNameStr.toLowerCase().includes('sensortype')){
+    return 'SensorType';
+  }
   else {
     return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
   }
@@ -55,20 +59,23 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
 
 export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: Mode, formik?: unknown): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
-  const basicType = getBasicType(fieldName, layerRecord);
+  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord);
   // console.log(`${fieldName} -->`, modelProps[fieldName].name, '-->', basicType);
 
   switch(basicType){
     case 'string':
     case 'identifier':
     case 'number':
-    case 'SensorType':
       return (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
       );
+    case 'SensorType':
+      return (
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue as SensorType[]).join(',')} formik={formik}></StringValuePresentorComponent>
+      );
     case 'links':
       return (
-        <LinksValuePresentorComponent value={fieldValue  as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
+        <LinksValuePresentorComponent value={fieldValue as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
       );
     case 'url':
       return (
@@ -89,21 +96,23 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
   }
 };
 
-export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props :LayersDetailsComponentProps) => {
+export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
   const { isBrief, layerRecord, mode, formik } = props;
+  const store = useStore();
 
   const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
-    let fieldsInfo: IRecordCategoryFieldsInfo[];
+    let entityDesc;
     switch(layerRecord.__typename){
       case 'Layer3DRecord':
-        fieldsInfo = Layer3DRecorModelFieldsInfo;
+        entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
         break;
       default:
-        fieldsInfo = LayerRasterRecorModelFieldsInfo;
+        entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
         break;
     }
-      
-    if(isBrief === true){
+
+    const fieldsInfo = get(entityDesc, 'categories') as IRecordCategoryFieldsInfo[];
+    if(isBrief === true) {
       return fieldsInfo.filter((item) => item.category === FieldCategory.MAIN);
     }
     return fieldsInfo;
@@ -123,14 +132,14 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
               </Typography>
               <Box className="categoryFieldsContainer">
                 {
-                  category.fields.map(fieldInfo => {
+                  category.fields?.map((fieldInfo:IRecordFieldInfo) => {
                     return (
                       <Box key={fieldInfo.fieldName as string}
                         className={(fieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}
                       >
                         <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
                         {
-                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName), mode, formik)
+                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }
                       </Box>
                     )
@@ -150,4 +159,4 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       }
     </>
   )
-};
+});
