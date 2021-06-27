@@ -23,6 +23,7 @@ interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
   mode: Mode;
+  formik?: unknown;
 }
 
 const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedUnion | LinkModelType): string => {
@@ -52,7 +53,7 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   }
 }
 
-export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: Mode): JSX.Element => {
+export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: Mode, formik?: unknown): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName, layerRecord);
   // console.log(`${fieldName} -->`, modelProps[fieldName].name, '-->', basicType);
@@ -63,7 +64,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
     case 'number':
     case 'SensorType':
       return (
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string}></StringValuePresentorComponent>
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
       );
     case 'links':
       return (
@@ -89,7 +90,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
 };
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props :LayersDetailsComponentProps) => {
-  const { isBrief, layerRecord, mode } = props;
+  const { isBrief, layerRecord, mode, formik } = props;
 
   const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
     let fieldsInfo: IRecordCategoryFieldsInfo[];
@@ -129,7 +130,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                       >
                         <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
                         {
-                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName), mode)
+                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName), mode, formik)
                         }
                       </Box>
                     )

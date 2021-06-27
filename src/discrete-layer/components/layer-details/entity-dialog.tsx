@@ -23,8 +23,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
   const mode = (layerRecord === undefined) ? Mode.NEW : Mode.EDIT;
 
   const formik = useFormik({
-    initialValues: {},
-    onSubmit: values => {}
+    initialValues: {
+      ...layerRecord
+    },
+    onSubmit: values => {
+      console.log(values);
+    }
   });
 
   const handleClose = (isOpened: boolean): void => {
@@ -40,7 +44,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
             <PerfectScrollbar className="content">
-              <LayersDetailsComponent layerRecord={layerRecord} mode={mode}/>
+              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
             </PerfectScrollbar>
             <Box className="buttons">
               <Button type="button" onClick={(): void => { handleClose(false); }}>
