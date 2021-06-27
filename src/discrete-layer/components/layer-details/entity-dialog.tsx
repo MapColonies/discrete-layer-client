@@ -17,6 +17,7 @@ import './entity-dialog.css';
 interface EntityDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
+  recordType?: RecordType;
   layerRecord?: ILayerImage | null;
 }
 
@@ -45,15 +46,15 @@ const buildRecord = (recordType: RecordType) : ILayerImage => {
 }
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
-  const { isOpen, onSetOpen } = props;
+  const { isOpen, onSetOpen, recordType } = props;
   let { layerRecord } = props;
 
   let mode = Mode.EDIT;
-  if (layerRecord === undefined){
+  if (layerRecord === undefined && recordType !== undefined){
     mode = Mode.NEW;
-    layerRecord = buildRecord(RecordType.RECORD_3D);
+    layerRecord = buildRecord(recordType);
   }
-  
+
   const formik = useFormik({
     initialValues: cloneDeep(layerRecord) as FormikValues,
     onSubmit: values => {

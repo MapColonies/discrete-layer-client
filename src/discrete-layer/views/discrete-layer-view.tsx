@@ -25,6 +25,7 @@ import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { Mode } from '../../common/models/mode.enum';
 import { useQuery, useStore } from "../models/RootStore"
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
@@ -35,16 +36,14 @@ import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
-import { EntityDescriptorModelType } from '../models';
+import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { EntityDescriptorModelType, RecordType } from '../models';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
-import { FilterField } from '../models/RootStore.base';
-import { Mode } from '../../common/models/mode.enum';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -453,14 +452,27 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             <IconButton
-              className="operationIcon mc-icon-Bests glow"
-              label="NEW"
+              className="operationIcon mc-icon-Search-History glow"
+              label="NEW RASTER"
               onClick={ (): void => { handleNewEntityDialogClick() } }
             />
             {
               isNewEntityDialogOpen && <EntityDialogComponent
                 isOpen={isNewEntityDialogOpen}
-                onSetOpen={setNewEntityDialogOpen}>
+                onSetOpen={setNewEntityDialogOpen}
+                recordType={RecordType.RECORD_RASTER}>
+              </EntityDialogComponent>
+            }
+            <IconButton
+              className="operationIcon mc-icon-Bests glow"
+              label="NEW 3D"
+              onClick={ (): void => { handleNewEntityDialogClick() } }
+            />
+            {
+              isNewEntityDialogOpen && <EntityDialogComponent
+                isOpen={isNewEntityDialogOpen}
+                onSetOpen={setNewEntityDialogOpen}
+                recordType={RecordType.RECORD_3D}>
               </EntityDialogComponent>
             }
             <IconButton 
