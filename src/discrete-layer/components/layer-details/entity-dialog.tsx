@@ -1,15 +1,18 @@
 import React from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { FormattedMessage } from 'react-intl';
+import { FormikValues, useFormik } from 'formik';
+import { cloneDeep } from 'lodash';
+import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../common/models/mode.enum';
+import { RecordType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
-import { DialogContent } from '@material-ui/core';
-import { useFormik } from 'formik';
 import { LayersDetailsComponent } from './layer-details';
+import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 
 import './entity-dialog.css';
-import { Mode } from '../../../common/models/mode.enum';
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -17,15 +20,42 @@ interface EntityDialogComponentProps {
   layerRecord?: ILayerImage | null;
 }
 
+
+const buildRecord = (recordType: RecordType) : ILayerImage => {
+  const record = {} as Record<string, any>;
+  switch(recordType){
+    case RecordType.RECORD_3D:
+      Layer3DRecordModelKeys.forEach(key => {
+        // @ts-ignore
+        record[key] = undefined;
+      });
+      record['__typename'] = 'Layer3DRecord';
+      break;
+    case RecordType.RECORD_RASTER:
+      LayerRasterRecordModelKeys.forEach(key => {
+        // @ts-ignore
+        record[key] = undefined;
+      });
+      record['__typename'] = 'LayerRasterRecord';
+      break;
+    default:
+      break;
+  }
+  return record as ILayerImage;
+}
+  
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
-  const { isOpen, onSetOpen, layerRecord } = props;
+  const { isOpen, onSetOpen } = props;
+  let { layerRecord } = props;
 
-  const mode = (layerRecord === undefined) ? Mode.NEW : Mode.EDIT;
-
+  let mode = Mode.EDIT;
+  if (layerRecord === undefined){
+    mode = Mode.NEW;
+    layerRecord = buildRecord(RecordType.RECORD_3D);
+  }
+  
   const formik = useFormik({
-    initialValues: {
-      ...layerRecord
-    },
+    initialValues: cloneDeep(layerRecord) as FormikValues,
     onSubmit: values => {
       console.log(values);
     }

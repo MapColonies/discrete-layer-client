@@ -29,6 +29,8 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
           name={fieldInfo.fieldName as string}
           type="text"
           // eslint-disable-next-line
+          onChange={(formik as any).handleChange}
+          // eslint-disable-next-line
           value={value}
         />
       </Box>
