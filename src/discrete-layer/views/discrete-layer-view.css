@@ -183,3 +183,7 @@ body[dir='rtl'] .sideDetailsPanel{
     text-shadow: 0 0 12px #fff, 0 0 14px #ff4da6, 0 0 16px #ff4da6, 0 0 18px #ff4da6, 0 0 20px #ff4da6, 0 0 22px #ff4da6;
   }
 }
+
+.version{
+  margin: 0 16px;
+}

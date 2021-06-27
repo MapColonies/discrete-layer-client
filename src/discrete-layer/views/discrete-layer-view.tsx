@@ -23,6 +23,7 @@ import { find } from 'lodash';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
+import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { useQuery, useStore } from "../models/RootStore"
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
@@ -503,6 +504,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
             <Typography use="body2">Catalog App</Typography>
+            <Box className="version">{version}</Box>
           </Box>
           <Box className="headerViewsSwitcherContainer">
             {tabViews.map((tab) => {
