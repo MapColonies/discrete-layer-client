@@ -4,6 +4,7 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
+import { cloneDeep } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
@@ -14,6 +15,7 @@ import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
+import { EntityDescriptorModelType } from './EntityDescriptorModel';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -41,6 +43,7 @@ export const discreteLayersStore = ModelBase
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
     tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}])),
+    entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -103,6 +106,10 @@ export const discreteLayersStore = ModelBase
         }
       }
     );
+
+    function setEntityDescriptors(data: EntityDescriptorModelType[]): void {
+      self.entityDescriptors = cloneDeep(data);
+    }
 
     function setLayersImages(data: ILayerImage[], showFootprint = true): void {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
@@ -192,6 +199,7 @@ export const discreteLayersStore = ModelBase
       setTabviewData,
       restoreTabviewData,
       showFootprint,
+      setEntityDescriptors,
     };
   });
 

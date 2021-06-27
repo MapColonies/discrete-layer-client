@@ -37,11 +37,12 @@ export const LayerRasterRecordModelBase = ModelBase
     sourceDateEnd: types.union(types.undefined, types.null, types.frozen()),
     resolution: types.union(types.undefined, types.null, types.number),
     accuracyCE90: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, SensorTypeEnumType),
+    sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     region: types.union(types.undefined, types.null, types.string),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),
+    layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -77,6 +78,7 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get rms() { return this.__attr(`rms`) }
   get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
+  get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get keywords() { return this.__attr(`keywords`) }
@@ -86,4 +88,4 @@ export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productId.productName.productVersion.productType.description.srsId.srsName.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.resolution.accuracyCE90.sensorType.region.rms.scale.footprint.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productId.productName.productVersion.productType.description.srsId.srsName.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.resolution.accuracyCE90.sensorType.region.rms.scale.footprint.layerPolygonParts.insertDate.keywords.id.links(linkModelPrimitives)

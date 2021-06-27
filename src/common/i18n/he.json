@@ -51,6 +51,7 @@
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
   "field-names.raster.productType": "סוג מוצר",
+  "field-names.raster.productName": "שם מוצר",
   "field-names.raster.productVersion": "גירסה",
   "field-names.raster.resolution": "רזולוציה",
   "field-names.raster.creation-date": "יצירה",
@@ -71,10 +72,12 @@
   "field-names.raster.link.description": "תאור",
   "field-names.raster.link.protocol": "פרוטוקול",
   "field-names.raster.link.url": "קישור",
+  "field-names.raster.keywords": "מילות מפטח",
 
   "field-names.3d.id": "מזהה",
   "field-names.3d.productId": "מזהה חיצוני",
   "field-names.3d.productType": "סוג מוצר",
+  "field-names.3d.productName": "שם מוצר",
   "field-names.3d.productVersion": "גירסה",
   "field-names.3d.resolution": "רזולוציה",
   "field-names.3d.creation-date": "יצירה",
@@ -95,6 +98,7 @@
   "field-names.3d.link.name": "שם",
   "field-names.3d.link.description": "תאור",
   "field-names.3d.link.protocol": "פרוטוקול",
-  "field-names.3d.link.url": "קישור"
+  "field-names.3d.link.url": "קישור",
+  "field-names.3d.keywords": "מילות מפטח"
 
 }
