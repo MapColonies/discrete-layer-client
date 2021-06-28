@@ -251,7 +251,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [isNewEntityDialogOpen, setNewEntityDialogOpen] = useState<boolean>(false);
+  const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
+  const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
@@ -333,8 +334,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   };
 
-  const handleNewEntityDialogClick = (): void => {
-    setNewEntityDialogOpen(!isNewEntityDialogOpen);
+  const handleNewRasterEntityDialogClick = (): void => {
+    setNewRasterEntityDialogOpen(!isNewRasterEntityDialogOpen);
+  };
+
+  const handleNew3DEntityDialogClick = (): void => {
+    setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
   };
 
   const handleEditEntityDialogClick = (): void => {
@@ -454,24 +459,24 @@ const DiscreteLayerView: React.FC = observer(() => {
             <IconButton
               className="operationIcon mc-icon-Search-History glow"
               label="NEW RASTER"
-              onClick={ (): void => { handleNewEntityDialogClick() } }
+              onClick={ (): void => { handleNewRasterEntityDialogClick() } }
             />
             {
-              isNewEntityDialogOpen && <EntityDialogComponent
-                isOpen={isNewEntityDialogOpen}
-                onSetOpen={setNewEntityDialogOpen}
+              isNewRasterEntityDialogOpen && <EntityDialogComponent
+                isOpen={isNewRasterEntityDialogOpen}
+                onSetOpen={setNewRasterEntityDialogOpen}
                 recordType={RecordType.RECORD_RASTER}>
               </EntityDialogComponent>
             }
             <IconButton
               className="operationIcon mc-icon-Bests glow"
               label="NEW 3D"
-              onClick={ (): void => { handleNewEntityDialogClick() } }
+              onClick={ (): void => { handleNew3DEntityDialogClick() } }
             />
             {
-              isNewEntityDialogOpen && <EntityDialogComponent
-                isOpen={isNewEntityDialogOpen}
-                onSetOpen={setNewEntityDialogOpen}
+              isNew3DEntityDialogOpen && <EntityDialogComponent
+                isOpen={isNew3DEntityDialogOpen}
+                onSetOpen={setNew3DEntityDialogOpen}
                 recordType={RecordType.RECORD_3D}>
               </EntityDialogComponent>
             }
