@@ -1,9 +1,9 @@
 import React from 'react';
 import moment from 'moment';
 import { Box } from '@map-colonies/react-components';
-import { dateFormatter } from '../../layers-results/type-formatters/type-formatters';
-import { Mode } from '../../../../common/models/mode.enum';
 import { TextField } from '@map-colonies/react-core';
+import { Mode } from '../../../../common/models/mode.enum';
+import { dateFormatter } from '../../layers-results/type-formatters/type-formatters';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 
 interface DateValuePresentorProps {

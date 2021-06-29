@@ -1,8 +1,8 @@
 import React from 'react';
 import { get } from  'lodash';
 import { Box } from '@map-colonies/react-components';
-import { Mode } from '../../../../common/models/mode.enum';
 import { TextField } from '@map-colonies/react-core';
+import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 
 interface StringValuePresentorProps {
