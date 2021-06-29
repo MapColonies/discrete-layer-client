@@ -103,10 +103,12 @@
 /* INPUT CUSTOMIZATIONS */
 .dark-theme .mdc-text-field:not(.mdc-text-field--disabled) {
   background-color: transparent;
-  color: var(--mdc-theme-text-primary-on-dark, #fff);
   border: 1px solid var(--mdc-theme-text-icon-on-dark, #fff);
   border-radius: 0;
   height: 24px;
+}
+.dark-theme .mdc-text-field__input{
+  color: var(--mdc-theme-text-primary-on-dark, #fff) !important;
 }
 
 /* DIALOG CUSTOMIZATIONS */
