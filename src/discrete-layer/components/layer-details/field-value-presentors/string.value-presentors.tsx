@@ -20,8 +20,7 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
       </Box>
     );
   } else {
-    // eslint-disable-next-line
-    let value = get(formik,`values[${fieldInfo.fieldName as string}]`);
+    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
     return (
       <Box className="detailsFieldValue">
         <TextField
@@ -30,7 +29,6 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
           type="text"
           // eslint-disable-next-line
           onChange={(formik as any).handleChange}
-          // eslint-disable-next-line
           value={value}
         />
       </Box>
