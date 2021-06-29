@@ -27,15 +27,13 @@ const buildRecord = (recordType: RecordType) : ILayerImage => {
   switch(recordType){
     case RecordType.RECORD_3D:
       Layer3DRecordModelKeys.forEach(key => {
-        // @ts-ignore
-        record[key] = undefined;
+        record[key as string] = undefined;
       });
       record['__typename'] = 'Layer3DRecord';
       break;
     case RecordType.RECORD_RASTER:
       LayerRasterRecordModelKeys.forEach(key => {
-        // @ts-ignore
-        record[key] = undefined;
+        record[key as string] = undefined;
       });
       record['__typename'] = 'LayerRasterRecord';
       break;

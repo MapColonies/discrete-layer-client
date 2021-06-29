@@ -5,9 +5,9 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../common/models/mode.enum';
 import { FieldCategory, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType, SensorType, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
-import { Mode } from '../../../common/models/mode.enum';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';

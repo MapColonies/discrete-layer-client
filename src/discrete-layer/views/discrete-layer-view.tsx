@@ -457,7 +457,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             <IconButton
-              className="operationIcon mc-icon-Search-History glow"
+              className="operationIcon mc-icon-Search-History glow-missing-icon"
               label="NEW RASTER"
               onClick={ (): void => { handleNewRasterEntityDialogClick() } }
             />
@@ -469,7 +469,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               </EntityDialogComponent>
             }
             <IconButton
-              className="operationIcon mc-icon-Bests glow"
+              className="operationIcon mc-icon-Bests glow-missing-icon"
               label="NEW 3D"
               onClick={ (): void => { handleNew3DEntityDialogClick() } }
             />
@@ -591,7 +591,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Typography>
               {
                 layerToPresent && <IconButton
-                  className="operationIcon mc-icon-Status-Approves glow"
+                  className="operationIcon mc-icon-Status-Approves glow-missing-icon"
                   label="EDIT"
                   onClick={ (): void => { handleEditEntityDialogClick() } }
                 />

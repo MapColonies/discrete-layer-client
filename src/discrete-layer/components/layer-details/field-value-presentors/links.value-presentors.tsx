@@ -1,11 +1,11 @@
 import React from 'react';
-import { Box } from '@map-colonies/react-components';
 import { get, isString } from 'lodash';
+import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../../common/models/mode.enum';
 import { LinkModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { getValuePresentor } from '../layer-details';
 import { FieldLabelComponent } from '../field-label';
-import { Mode } from '../../../../common/models/mode.enum';
 
 import './links.value-presentors.css';
 
