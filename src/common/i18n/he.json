@@ -77,10 +77,7 @@
   "field-names.raster.keywords": "מילות מפתח",
 
   "field-names.3d.id": "מזהה",
-  "field-names.3d.productId": "מזהה חיצוני",
-  "field-names.3d.productType": "סוג מוצר",
   "field-names.3d.productName": "שם מוצר",
-  "field-names.3d.productVersion": "גירסה",
   "field-names.3d.resolution": "רזולוציה",
   "field-names.3d.creation-date": "יצירה",
   "field-names.3d.update-date": "עדכניות",
@@ -96,11 +93,20 @@
   "field-names.3d.classification": "סודיות",
   "field-names.3d.accuracyCE90": "טווח דיוק מישורי", 
   "field-names.3d.srs": "מערכת ייחוס",
-  "field-names.3d.srs-name": "שם מערכת",
   "field-names.3d.link.name": "שם",
   "field-names.3d.link.description": "תאור",
   "field-names.3d.link.protocol": "פרוטוקול",
   "field-names.3d.link.url": "קישור",
-  "field-names.3d.keywords": "מילות מפתח"
+  "field-names.3d.keywords": "מילות מפתח",
+  "field-names.3d.version": "גירסה",
+  "field-names.3d.producer-name": "מפיק",
+  "field-names.3d.project-name": "פרואקט",
+  "field-names.3d.validation-date": "נבדק",
+  "field-names.3d.centroid": "סנטרויד",
+  "field-names.3d.relativeAccuracyCE90": "דיוק רלטיבי",
+  "field-names.3d.estimated-precision": "דיוק צפוי",
+  "field-names.3d.measured-precision": "דיוק הנמדד",
+  "field-names.3d.nominal-resolution": "דיוק נומינלי",
+  "field-names.3d.wktGeometry": "גאומטריה"
 
 }

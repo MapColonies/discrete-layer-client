@@ -28,6 +28,7 @@ export const Layer3DRecordModel = Layer3DRecordModelBase
     ingestionDate: types.maybe(momentDateType),
     sourceDateStart: types.maybe(momentDateType),
     sourceDateEnd: types.maybe(momentDateType),
+    validationDate: types.maybe(momentDateType),
     /* tslint:enable */
     /* eslint-enable */
     footPrintShown: types.union(types.undefined, types.null, types.boolean),

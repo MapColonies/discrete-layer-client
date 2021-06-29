@@ -77,10 +77,7 @@
   "field-names.raster.keywords": "Keywords",
 
   "field-names.3d.id": "ID",
-  "field-names.3d.productId": "Ext. ID",
-  "field-names.3d.productType": "Type",
   "field-names.3d.productName": "Name",
-  "field-names.3d.productVersion": "Version",
   "field-names.3d.resolution": "Resolution",
   "field-names.3d.creation-date": "Created",
   "field-names.3d.update-date": "Updated",
@@ -96,10 +93,19 @@
   "field-names.3d.classification": "Permission",
   "field-names.3d.accuracyCE90": "Hor. accuracy", 
   "field-names.3d.srs": "System",
-  "field-names.3d.srs-name": "System Name",
   "field-names.3d.link.name": "Name",
   "field-names.3d.link.description": "Description",
   "field-names.3d.link.protocol": "Protocol",
   "field-names.3d.link.url": "URL",
-  "field-names.3d.keywords": "Keywords"
+  "field-names.3d.keywords": "Keywords",
+  "field-names.3d.version": "Version",
+  "field-names.3d.producer-name": "Producer",
+  "field-names.3d.project-name": "Project",
+  "field-names.3d.validation-date": "Validation",
+  "field-names.3d.centroid": "Centroid",
+  "field-names.3d.relativeAccuracyCE90": "Relative Acc.",
+  "field-names.3d.estimated-precision": "Estimated Prec.",
+  "field-names.3d.measured-precision": "Measured Prec.",
+  "field-names.3d.nominal-resolution": "Nominal Res.",
+  "field-names.3d.wktGeometry": "WKT Geometry"
 }
