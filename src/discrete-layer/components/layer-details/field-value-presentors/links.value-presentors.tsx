@@ -19,7 +19,7 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
     <Box className="detailsFieldValue detailsLinksFieldValue">
       <Box className="linksFieldsContainer">
       {
-        value?.map(link => {
+        value?.map((link, index) => {
           return(
             <>
               {
@@ -34,7 +34,9 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
                   )
                 })
               }
-              <Box className="linkFieldsSeparator"></Box>
+              {
+                index < (value.length-1) && <Box className="linkFieldsSeparator"></Box>
+              }
             </>
             )
           }
