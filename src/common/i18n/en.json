@@ -2,6 +2,8 @@
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
   "general.error.label": "Error",
+  "general.title.new": "New",
+  "general.title.edit": "Edit",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",

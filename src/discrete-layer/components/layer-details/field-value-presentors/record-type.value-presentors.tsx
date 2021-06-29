@@ -6,7 +6,7 @@ interface RecordTypeValuePresentorProps {
   value?: RecordType;
 }
 
-export const RecordTypeValuePresentorComponent: React.FC<RecordTypeValuePresentorProps> = ({value}) => {
+export const RecordTypeValuePresentorComponent: React.FC<RecordTypeValuePresentorProps> = ({ value }) => {
   return (
     <Box className="detailsFieldValue">
       {value}

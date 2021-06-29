@@ -25,6 +25,7 @@ import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { Mode } from '../../common/models/mode.enum';
 import { useQuery, useStore } from "../models/RootStore"
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
@@ -35,7 +36,8 @@ import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
-import { EntityDescriptorModelType } from '../models';
+import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { EntityDescriptorModelType, RecordType } from '../models';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -249,6 +251,9 @@ const DiscreteLayerView: React.FC = observer(() => {
   const theme = useTheme();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
+  const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
+  const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
@@ -327,11 +332,23 @@ const DiscreteLayerView: React.FC = observer(() => {
   
       setDrawEntities([]);
     }
-  }
+  };
+
+  const handleNewRasterEntityDialogClick = (): void => {
+    setNewRasterEntityDialogOpen(!isNewRasterEntityDialogOpen);
+  };
+
+  const handleNew3DEntityDialogClick = (): void => {
+    setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
+  };
+
+  const handleEditEntityDialogClick = (): void => {
+    setEditEntityDialogOpen(!isEditEntityDialogOpen);
+  };
 
   const handleFilter = (): void => {
     setIsFilter(!isFilter);
-  }
+  };
 
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
     return {
@@ -361,7 +378,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const setDrawType = (drawType: DrawType): void =>{
     setIsDrawing(true);
     setDrawPrimitive(createDrawPrimitive(drawType));
-  }
+  };
 
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
     const timeStamp = getTimeStamp();
@@ -412,9 +429,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   ];
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
+
     const tabView = find(tabViews, (tab)=>{
       return tab.idx === tabIdx;
     });
+
     return (
       <div className="tabHeaderContainer">
         <div className="tabTitleContainer" style={{backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string}}>
@@ -437,6 +456,30 @@ const DiscreteLayerView: React.FC = observer(() => {
             backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string,
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
+            <IconButton
+              className="operationIcon mc-icon-Search-History glow-missing-icon"
+              label="NEW RASTER"
+              onClick={ (): void => { handleNewRasterEntityDialogClick() } }
+            />
+            {
+              isNewRasterEntityDialogOpen && <EntityDialogComponent
+                isOpen={isNewRasterEntityDialogOpen}
+                onSetOpen={setNewRasterEntityDialogOpen}
+                recordType={RecordType.RECORD_RASTER}>
+              </EntityDialogComponent>
+            }
+            <IconButton
+              className="operationIcon mc-icon-Bests glow-missing-icon"
+              label="NEW 3D"
+              onClick={ (): void => { handleNew3DEntityDialogClick() } }
+            />
+            {
+              isNew3DEntityDialogOpen && <EntityDialogComponent
+                isOpen={isNew3DEntityDialogOpen}
+                onSetOpen={setNew3DEntityDialogOpen}
+                recordType={RecordType.RECORD_3D}>
+              </EntityDialogComponent>
+            }
             <IconButton 
               className="operationIcon mc-icon-Delete"
               label="DELETE"
@@ -444,7 +487,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <IconButton 
               className="operationIcon mc-icon-Filter"
               label="FILTER"
-              onClick={ (): void => {handleFilter()}}
+              onClick={ (): void => { handleFilter() } }
             />
             <IconButton 
               className="operationIcon mc-icon-Arrows-Left"
@@ -546,6 +589,20 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Typography use="headline6" tag="div" className="detailsTitle">
                 {layerToPresent?.productName}
               </Typography>
+              {
+                layerToPresent && <IconButton
+                  className="operationIcon mc-icon-Status-Approves glow-missing-icon"
+                  label="EDIT"
+                  onClick={ (): void => { handleEditEntityDialogClick() } }
+                />
+              }
+              {
+                isEditEntityDialogOpen && <EntityDialogComponent
+                  isOpen={isEditEntityDialogOpen}
+                  onSetOpen={setEditEntityDialogOpen}
+                  layerRecord={layerToPresent}>
+                </EntityDialogComponent>
+              }
               <IconButton 
                 className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel': 'mc-icon-Collapce-Panel'}`}
                 label="EXPANDER"
@@ -553,7 +610,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Box>
             <PerfectScrollbar className="detailsContent">
-              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded}/>
+              <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
             </PerfectScrollbar>
           </Box>
         </Box>

@@ -37,7 +37,7 @@ import CONFIG from './common/config';
 import { CustomTheme } from './theming/custom.theme';
 
 const App: React.FC = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  /*const prefersDarkMode = */useMediaQuery('(prefers-color-scheme: dark)');
   // eslint-disable-next-line
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;

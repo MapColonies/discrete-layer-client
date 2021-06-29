@@ -5,7 +5,7 @@ interface UnknownValuePresentorProps {
   value?: string;
 }
 
-export const UnknownValuePresentorComponent: React.FC<UnknownValuePresentorProps> = ({value}) => {
+export const UnknownValuePresentorComponent: React.FC<UnknownValuePresentorProps> = ({ value }) => {
   return (
     <Box className="detailsFieldValue">
       *UNKNOWN TYPE* {value}

@@ -78,8 +78,6 @@
   border-radius: 20px;
 }
 
-
-
 /* AG-GRID CUSTOMIZATIONS */
 .dark-theme .ag-theme-alpine-dark {
   color: var(--ag-foreground-color, #fff);
@@ -100,4 +98,20 @@
 
 .dark-theme .ag-theme-alpine-dark .ag-root-wrapper-body .ag-checkbox-input-wrapper {
   background: none;
+}
+
+/* INPUT CUSTOMIZATIONS */
+.dark-theme .mdc-text-field:not(.mdc-text-field--disabled) {
+  background-color: transparent;
+  border: 1px solid var(--mdc-theme-text-icon-on-dark, #fff);
+  border-radius: 0;
+  height: 24px;
+}
+.dark-theme .mdc-text-field__input{
+  color: var(--mdc-theme-text-primary-on-dark, #fff) !important;
+}
+
+/* DIALOG CUSTOMIZATIONS */
+.dark-theme .mdc-dialog .mdc-dialog__surface {
+  background-color: var(--mdc-theme-alternative-surface, #fff);
 }

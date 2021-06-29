@@ -84,7 +84,7 @@ describe('DialogBBox component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('Bbox fields filled succesfully', async () => {
+  it('Bbox fields filled successfully', async () => {
     const fields = {
       bottomLeftLat: 10,
       bottomLeftLon: 10,

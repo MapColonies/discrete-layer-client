@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../common/models/mode.enum';
 import { FieldCategory, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType, SensorType, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
@@ -22,6 +23,8 @@ import './layer-details.css';
 interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
+  mode: Mode;
+  formik?: unknown;
 }
 
 const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedUnion | LinkModelType): string => {
@@ -54,21 +57,25 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   }
 }
 
-export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown): JSX.Element => {
+export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: Mode, formik?: unknown): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord);
   // console.log(`${fieldName} -->`, modelProps[fieldName].name, '-->', basicType);
+  let sensorTypeValue = '';
+  if (basicType === 'SensorType' && fieldValue !== undefined) {
+    sensorTypeValue = (fieldValue as SensorType[]).join(',');
+  }
 
   switch(basicType){
     case 'string':
     case 'identifier':
     case 'number':
       return (
-        <StringValuePresentorComponent value={fieldValue as string}></StringValuePresentorComponent>
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
       );
     case 'SensorType':
       return (
-        <StringValuePresentorComponent value={(fieldValue as SensorType[]).join(',')}></StringValuePresentorComponent>
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={sensorTypeValue} formik={formik}></StringValuePresentorComponent>
       );
     case 'links':
       return (
@@ -80,7 +87,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       );
     case 'momentDateType':
       return (
-        <DateValuePresentorComponent value={fieldValue as moment.Moment}></DateValuePresentorComponent>
+        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as moment.Moment}></DateValuePresentorComponent>
       );
     case 'RecordType':
       return(
@@ -93,8 +100,8 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
   }
 };
 
-export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props :LayersDetailsComponentProps) => {
-  const { isBrief, layerRecord } = props;
+export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
+  const { isBrief, layerRecord, mode, formik } = props;
   const store = useStore();
 
   const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
@@ -136,7 +143,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                       >
                         <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
                         {
-                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName as string))
+                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }
                       </Box>
                     )

@@ -1,0 +1,23 @@
+#entityDialog .mdc-dialog__surface{
+  /*max-width: unset;*/
+}
+
+.dialogBody{
+  overflow-y: hidden !important;
+}
+
+.form{
+  max-height: 880px !important;
+}
+
+.content{
+  max-height: 800px;
+  padding-right: 20px;
+}
+
+.buttons{
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin: 20px;
+}

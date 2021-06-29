@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box } from '@map-colonies/react-components';
 import { get, isString } from 'lodash';
+import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../../common/models/mode.enum';
 import { LinkModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { getValuePresentor } from '../layer-details';
@@ -13,7 +14,7 @@ interface LinksValuePresentorProps {
   fieldInfo?: IRecordFieldInfo;
 }
 
-export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = ({value, fieldInfo}) => {
+export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = ({ value, fieldInfo }) => {
   return (
     <Box className="detailsFieldValue detailsLinksFieldValue">
       <Box className="linksFieldsContainer">
@@ -27,7 +28,7 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
                     isString(get(link,subFieldInfo.fieldName as string)) && <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
                       <FieldLabelComponent value={subFieldInfo.label}></FieldLabelComponent>
                       {
-                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName as string))
+                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName as string), Mode.VIEW)
                       }
                     </Box>
                   )

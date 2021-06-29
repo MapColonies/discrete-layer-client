@@ -1,7 +1,9 @@
 {
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
-  "general.error.label": "שגיא",
+  "general.error.label": "שגיאה",
+  "general.title.new": "הוספת יישות",
+  "general.title.edit": "עריכת יישות",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -72,7 +74,7 @@
   "field-names.raster.link.description": "תאור",
   "field-names.raster.link.protocol": "פרוטוקול",
   "field-names.raster.link.url": "קישור",
-  "field-names.raster.keywords": "מילות מפטח",
+  "field-names.raster.keywords": "מילות מפתח",
 
   "field-names.3d.id": "מזהה",
   "field-names.3d.productName": "שם מוצר",
@@ -95,7 +97,7 @@
   "field-names.3d.link.description": "תאור",
   "field-names.3d.link.protocol": "פרוטוקול",
   "field-names.3d.link.url": "קישור",
-  "field-names.3d.keywords": "מילות מפטח",
+  "field-names.3d.keywords": "מילות מפתח",
   "field-names.3d.version": "גירסה",
   "field-names.3d.producer-name": "מפיק",
   "field-names.3d.project-name": "פרואקט",

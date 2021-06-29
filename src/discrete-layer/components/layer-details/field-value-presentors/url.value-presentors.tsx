@@ -9,7 +9,7 @@ interface UrlValuePresentorProps {
   value?: string;
 }
 
-export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({value}) => {
+export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ value }) => {
   const [copied, setCopied] = useState<boolean>(false);
   return (
     <>
