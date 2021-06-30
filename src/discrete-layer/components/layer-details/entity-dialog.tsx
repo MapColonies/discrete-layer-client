@@ -21,8 +21,7 @@ interface EntityDialogComponentProps {
   layerRecord?: ILayerImage | null;
 }
 
-
-const buildRecord = (recordType: RecordType) : ILayerImage => {
+const buildRecord = (recordType: RecordType): ILayerImage => {
   const record = {} as Record<string, any>;
   switch(recordType){
     case RecordType.RECORD_3D:
@@ -40,6 +39,7 @@ const buildRecord = (recordType: RecordType) : ILayerImage => {
     default:
       break;
   }
+  record.type = recordType;
   return record as ILayerImage;
 }
   
