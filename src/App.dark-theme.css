@@ -117,5 +117,12 @@
   border-radius: 8px;
 }
 .dark-theme .mdc-dialog .mdc-dialog__title{
-  background: linear-gradient(90deg, #455570 16.15%, rgba(69, 85, 112, 0.3) 100%), #2D3748;
+  background: linear-gradient(90deg, #455570 16.15%, rgba(69, 85, 112, 0.3) 100%),var(--mdc-theme-alternative-surface, #fff);
+  padding-bottom: 0;
+  line-height: initial;
+  display: flex;
+  align-items: center;
+  color: var(--mdc-theme-text-icon-on-dark);
+  font-size: 16px;
+  font-weight: 600;
 }

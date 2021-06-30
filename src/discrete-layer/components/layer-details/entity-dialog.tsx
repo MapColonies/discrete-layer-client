@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogTitle } from '@map-colonies/react-core';
+import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { RecordType } from '../../models';
@@ -69,6 +69,11 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
           <FormattedMessage id={ mode === Mode.NEW ? 'general.title.new' : 'general.title.edit' }/>
+          <IconButton
+            className="closeIcon mc-icon-Close"
+            label="CLOSE"
+            onClick={ (): void => { handleClose(false); } }
+          />
         </DialogTitle>
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
