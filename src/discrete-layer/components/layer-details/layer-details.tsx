@@ -61,6 +61,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord);
   // console.log(`${fieldName} -->`, modelProps[fieldName].name, '-->', basicType);
+  
   let sensorTypeValue = '';
   if (basicType === 'SensorType' && fieldValue !== undefined) {
     sensorTypeValue = (fieldValue as SensorType[]).join(',');

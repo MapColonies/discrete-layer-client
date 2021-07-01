@@ -9,6 +9,7 @@ import {
   DialogContent,
   TextField,
   Button,
+  IconButton,
 } from '@map-colonies/react-core';
 import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
@@ -151,6 +152,11 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     <Dialog open={isOpen} preventOutsideDismiss={true}>
       <DialogTitle>
         <FormattedMessage id="custom-bbox.dialog.title" />
+        <IconButton
+          className="closeIcon mc-icon-Close"
+          label="CLOSE"
+          onClick={ (): void => { handleClose(false); } }
+        />
       </DialogTitle>
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>
