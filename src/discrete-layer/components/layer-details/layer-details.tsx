@@ -82,7 +82,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       );
     case 'momentDateType':
       return (
-        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as moment.Moment}></DateValuePresentorComponent>
+        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
     case 'RecordType':
       return(
