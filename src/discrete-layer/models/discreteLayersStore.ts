@@ -4,7 +4,7 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -125,8 +125,7 @@ export const discreteLayersStore = ModelBase
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
       for (const key in layerForUpdate){
-        // @ts-ignore
-        layerForUpdate[key] = data[key];
+        set(layerForUpdate,key, get(data,key));
       }
      
     }
