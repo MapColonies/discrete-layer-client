@@ -185,7 +185,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayer(event.data as ILayerImage);
+      discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
     },
     onGridReady(params: GridReadyEvent) {
       params.api.forEachNode( (node) => {
