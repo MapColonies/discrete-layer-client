@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
+import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
-import { RecordType } from '../../models';
+import { Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
@@ -29,13 +30,13 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       Layer3DRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
-      record['__typename'] = 'Layer3DRecord';
+      record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
       LayerRasterRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
-      record['__typename'] = 'LayerRasterRecord';
+      record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     default:
       break;
@@ -46,7 +47,9 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
-  let { layerRecord } = props;
+  let layerRecord = cloneDeep(props.layerRecord);
+  const updateMutation = useQuery();
+  const store = useStore();
 
   const directory = '';
   let fileNames = '';
@@ -61,15 +64,41 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
   }
 
   const formik = useFormik({
-    initialValues: cloneDeep(layerRecord) as FormikValues,
+    initialValues: layerRecord as FormikValues,
     onSubmit: values => {
       console.log(values);
+      if (mode === Mode.EDIT) {
+        updateMutation.setQuery(store.mutateUpdateMetadata({
+          data: {
+            id: values.id as string,
+            type: values.type as RecordType,
+            productName: values.productName as string,
+            description: values.description as string,
+            sensorType: values.sensorType as SensorType[],
+            classification: values.classification as string ,
+            keywords: values.keywords as string,
+          }
+        }));
+      }
     }
   });
-
-  const handleClose = (isOpened: boolean): void => {
-    onSetOpen(isOpened);
-  };
+  
+  const closeDialog = useCallback(
+    () => {
+      onSetOpen(false);
+    },
+    [onSetOpen]
+  );
+  
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if(!updateMutation.loading && updateMutation.data?.updateMetadata === 'ok'){
+      closeDialog();
+      store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
+      store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
+    }
+  }, [updateMutation.data, updateMutation.loading, closeDialog, store.discreteLayersStore, formik.values]);
 
   return (
     <Box id="entityDialog">
@@ -79,7 +108,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
           <IconButton
             className="closeIcon mc-icon-Close"
             label="CLOSE"
-            onClick={ (): void => { handleClose(false); } }
+            onClick={ (): void => { closeDialog(); } }
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
@@ -96,10 +125,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
               </PerfectScrollbar>
             </Box>
             <Box className="buttons">
-              <Button type="button" onClick={(): void => { handleClose(false); }}>
+              <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
-              <Button raised type="submit">
+              <Button raised type="submit" disabled={ updateMutation.loading }>
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
             </Box>

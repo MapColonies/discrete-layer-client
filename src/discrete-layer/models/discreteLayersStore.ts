@@ -4,7 +4,7 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -121,6 +121,15 @@ export const discreteLayersStore = ModelBase
       );
     }
 
+    function updateLayer(data: ILayerImage): void {
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
+      for (const key in layerForUpdate){
+        set(layerForUpdate,key, get(data,key));
+      }
+     
+    }
+
     // TODO: Remove when actual API is integrated
     function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
       return layers.filter((layer) => {
@@ -170,6 +179,11 @@ export const discreteLayersStore = ModelBase
       self.selectedLayer =  layer ? {...layer} : undefined;
     }
 
+    function selectLayerByID(layerID: string): void {
+      const layer = self.layersImages?.find(layer => layer.id === layerID);
+      self.selectedLayer =  layer ? {...layer} : undefined;
+    }
+
     function setTabviewData(tabView: TabViews): void {
       if(self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
@@ -195,10 +209,12 @@ export const discreteLayersStore = ModelBase
       showLayer,
       highlightLayer,
       selectLayer,
+      selectLayerByID,
       setTabviewData,
       restoreTabviewData,
       showFootprint,
       setEntityDescriptors,
+      updateLayer,
     };
   });
 
