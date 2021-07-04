@@ -84,15 +84,17 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
         </DialogTitle>
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
-            <PerfectScrollbar className="content">
-              {
-                mode === Mode.NEW && <IngestionFields directory={directory} fileNames={fileNames} formik={formik}/>
-              }
-              <Box className="sectionTitle categoryFieldsTitle"><FormattedMessage id="general.section.title"/></Box>
-              <Box className={(mode === Mode.NEW) ? 'section' : ''}>
+            {
+              mode === Mode.NEW && <IngestionFields directory={directory} fileNames={fileNames} formik={formik}/>
+            }
+            {
+              mode === Mode.NEW && <Box className="sectionTitle categoryFieldsTitle"><FormattedMessage id="general.section.title"/></Box>
+            }
+            <Box className={(mode === Mode.NEW) ? 'section' : ''}>
+              <PerfectScrollbar className="content">
                 <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
-              </Box>
-            </PerfectScrollbar>
+              </PerfectScrollbar>
+            </Box>
             <Box className="buttons">
               <Button type="button" onClick={(): void => { handleClose(false); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>

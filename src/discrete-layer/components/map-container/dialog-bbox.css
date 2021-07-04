@@ -7,6 +7,14 @@
   margin-bottom: 16px;
 }
 
+.bboxLabel{
+  font-size: 0.875rem;
+}
+
 .spacer{
   margin-right: 16px;
+}
+
+.noMargin {
+  margin: 0 !important;
 }

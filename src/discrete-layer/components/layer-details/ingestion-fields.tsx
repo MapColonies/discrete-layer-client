@@ -17,7 +17,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
   return (
     <Box>
       <Box className="categoryField">
-        <Box className="ingestionFieldsSpacer"><FieldLabelComponent value="Directory"></FieldLabelComponent></Box>
+        <Box className="directorySpacer"><FieldLabelComponent value="Directory"></FieldLabelComponent></Box>
         <TextField
           name="directory"
           type="text"
@@ -26,7 +26,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
           // eslint-disable-next-line
           value={directory}
         />
-        <Box className="ingestionFieldsSpacer"><FieldLabelComponent value="File names"></FieldLabelComponent></Box>
+        <Box className="fileNamesSpacer"><FieldLabelComponent value="File names"></FieldLabelComponent></Box>
         <TextField
           name="fileNames"
           type="text"

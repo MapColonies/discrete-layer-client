@@ -162,7 +162,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
         <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
           <Box className="dialogBboxRow">
             <Box>
-              <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lat.label'})}></FieldLabelComponent>
+              <Box className="detailsFieldLabel bboxLabel">
+                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lat.label'})}></FieldLabelComponent>
+              </Box>
               <TextField
                 id="topRightLat"
                 name="topRightLat"
@@ -173,21 +175,25 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               />
             </Box>
             <Box>
-            <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lon.label'})}></FieldLabelComponent>
-            <TextField
-              id="topRightLon"
-              name="topRightLon"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.topRightLon}
-              className="spacer"
-            />
+              <Box className="detailsFieldLabel bboxLabel">
+                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lon.label'})}></FieldLabelComponent>
+              </Box>
+              <TextField
+                id="topRightLon"
+                name="topRightLon"
+                type="number"
+                onChange={formik.handleChange}
+                value={formik.values.topRightLon}
+                className="spacer"
+              />
             </Box>
             <BBoxCorner corner={Corner.TOP_RIGHT} />
           </Box>
-          <Box style={{ display: 'flex' }}>
+          <Box className="dialogBboxRow">
             <Box>
-              <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lat.label'})}></FieldLabelComponent>
+              <Box className="detailsFieldLabel bboxLabel">
+                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lat.label'})}></FieldLabelComponent>
+              </Box>
               <TextField
                 id="bottomLeftLat"
                 name="bottomLeftLat"
@@ -198,7 +204,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               />
             </Box>
             <Box>
-              <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lon.label'})}></FieldLabelComponent>
+              <Box className="detailsFieldLabel bboxLabel">
+                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lon.label'})}></FieldLabelComponent>
+              </Box>
               <TextField
                 id="bottomLeftLon"
                 name="bottomLeftLon"
@@ -210,14 +218,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
             </Box>
             <BBoxCorner corner={Corner.BOTTOM_LEFT} />
           </Box>
-          <Box
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: '16px',
-              gap: '16px',
-            }}
-          >
+          <Box className="buttons noMargin">
             {!!formErrors.latDistance || !!formErrors.lonDistance ? (
               <div id="errorContainer" className={classes.errorContainer}>
                 {`${intl.formatMessage({ id: 'general.error.label' })}: ${
