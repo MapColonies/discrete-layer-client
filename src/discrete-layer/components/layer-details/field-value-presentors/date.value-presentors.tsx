@@ -13,7 +13,7 @@ interface DateValuePresentorProps {
 }
 
 export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value }) => {
-  if (mode === Mode.VIEW || fieldInfo.isManuallyEditable !== true) {
+  if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <Box className="detailsFieldValue">
         { dateFormatter(value) }
