@@ -15,12 +15,12 @@ import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-co
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
+import { FieldLabelComponent } from '../layer-details/field-label';
+
+import './dialog-bbox.css';
 
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({
-    spacer: {
-      marginRight: '16px',
-    },
     errorContainer: {
       display: 'flex',
       alignItems: 'center',
@@ -159,55 +159,55 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
         />
       </DialogTitle>
       <DialogContent>
-        <form onSubmit={formik.handleSubmit}>
-          <Box style={{ display: 'flex', marginBottom: '16px' }}>
+        <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
+          <Box className="dialogBboxRow">
+            <Box>
+              <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lat.label'})}></FieldLabelComponent>
+              <TextField
+                id="topRightLat"
+                name="topRightLat"
+                type="number"
+                onChange={formik.handleChange}
+                value={formik.values.topRightLat}
+                className="spacer"
+              />
+            </Box>
+            <Box>
+            <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lon.label'})}></FieldLabelComponent>
             <TextField
-              label={intl.formatMessage({
-                id: 'custom-bbox.dialog-field.top_right_lat.label',
-              })}
-              id="topRightLat"
-              name="topRightLat"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.topRightLat}
-              className={classes.spacer}
-            />
-            <TextField
-              label={intl.formatMessage({
-                id: 'custom-bbox.dialog-field.top_right_lon.label',
-              })}
               id="topRightLon"
               name="topRightLon"
               type="number"
               onChange={formik.handleChange}
               value={formik.values.topRightLon}
-              className={classes.spacer}
+              className="spacer"
             />
+            </Box>
             <BBoxCorner corner={Corner.TOP_RIGHT} />
           </Box>
           <Box style={{ display: 'flex' }}>
-            <TextField
-              label={intl.formatMessage({
-                id: 'custom-bbox.dialog-field.bottom_left_lat.label',
-              })}
-              id="bottomLeftLat"
-              name="bottomLeftLat"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.bottomLeftLat}
-              className={classes.spacer}
-            />
-            <TextField
-              label={intl.formatMessage({
-                id: 'custom-bbox.dialog-field.bottom_left_lon.label',
-              })}
-              id="bottomLeftLon"
-              name="bottomLeftLon"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.bottomLeftLon}
-              className={classes.spacer}
-            />
+            <Box>
+              <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lat.label'})}></FieldLabelComponent>
+              <TextField
+                id="bottomLeftLat"
+                name="bottomLeftLat"
+                type="number"
+                onChange={formik.handleChange}
+                value={formik.values.bottomLeftLat}
+                className="spacer"
+              />
+            </Box>
+            <Box>
+              <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lon.label'})}></FieldLabelComponent>
+              <TextField
+                id="bottomLeftLon"
+                name="bottomLeftLon"
+                type="number"
+                onChange={formik.handleChange}
+                value={formik.values.bottomLeftLon}
+                className="spacer"
+              />
+            </Box>
             <BBoxCorner corner={Corner.BOTTOM_LEFT} />
           </Box>
           <Box

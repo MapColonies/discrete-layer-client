@@ -19,6 +19,21 @@
   padding-right: 20px;
 }
 
+.section{
+  border: 1px solid var(--mdc-theme-text-icon-on-dark, #fff);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.sectionTitle{
+  background-color: var(--mdc-theme-alternative-surface, #fff);
+  display: block;
+  position: relative;
+  left: 24px;
+  top: 12px;
+  width: 72px;
+}
+
 .buttons{
   display: flex;
   justify-content: flex-end;

@@ -1,0 +1,12 @@
+.dialogBboxForm{
+  padding-top: 16px;
+}
+
+.dialogBboxRow{
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.spacer{
+  margin-right: 16px;
+}

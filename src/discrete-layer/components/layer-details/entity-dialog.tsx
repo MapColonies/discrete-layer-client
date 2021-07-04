@@ -11,6 +11,7 @@ import { RecordType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
+import { IngestionFields } from './ingestion-fields';
 
 import './entity-dialog.css';
 
@@ -47,9 +48,15 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
   const { isOpen, onSetOpen, recordType } = props;
   let { layerRecord } = props;
 
+  const directory = '';
+  let fileNames = '';
+
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined){
     mode = Mode.NEW;
+    if (recordType === RecordType.RECORD_3D) {
+      fileNames = 'tileset.json';
+    }
     layerRecord = buildRecord(recordType);
   }
 
@@ -68,7 +75,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
-          <FormattedMessage id={ mode === Mode.NEW ? 'general.title.new' : 'general.title.edit' }/>
+          <FormattedMessage id={ mode === Mode.NEW ? (recordType === RecordType.RECORD_3D ? 'general.title.new.3d' : 'general.title.new.raster') : 'general.title.edit' }/>
           <IconButton
             className="closeIcon mc-icon-Close"
             label="CLOSE"
@@ -78,7 +85,13 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
             <PerfectScrollbar className="content">
-              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
+              {
+                mode === Mode.NEW && <IngestionFields directory={directory} fileNames={fileNames} formik={formik}/>
+              }
+              <Box className="sectionTitle categoryFieldsTitle"><FormattedMessage id="general.section.title"/></Box>
+              <Box className={(mode === Mode.NEW) ? 'section' : ''}>
+                <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
+              </Box>
             </PerfectScrollbar>
             <Box className="buttons">
               <Button type="button" onClick={(): void => { handleClose(false); }}>

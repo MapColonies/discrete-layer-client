@@ -6,7 +6,7 @@
 
 .categoryFieldsTitle{
   flex: 100%;
-  color: var(--mdc-theme-text-icon-on-dark);
+  color: var(--mdc-theme-text-icon-on-dark, #fff);
   font-size: 16px;
   font-weight: 600;
 }

@@ -26,7 +26,6 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     return (
       <Box className="detailsFieldValue">
         <TextField
-          id={fieldInfo.fieldName as string}
           name={fieldInfo.fieldName as string}
           type="date"
           value={value}
