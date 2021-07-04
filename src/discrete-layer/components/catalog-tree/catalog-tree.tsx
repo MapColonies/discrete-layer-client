@@ -3,12 +3,11 @@
 
 import React, {useEffect, useState, useRef} from "react";
 import { observer } from "mobx-react";
-import { changeNodeAtPath, getNodeAtPath } from 'react-sortable-tree';
+import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 
 import { TreeComponent, TreeItem } from "../../../common/components/tree";
 
 import { useQuery, useStore } from "../../models/RootStore";
-import { LayerMetadataMixedUnion } from "../../models/LayerMetadataMixedModelSelector";
 
 import _ from 'lodash';
 
@@ -73,7 +72,6 @@ export const CatalogTreeComponent = observer(() => {
   );
 
   const { discreteLayersStore } = useStore();
-  const [selectionPaths, setSelectionPaths] = useState<Array<string | number>[]>([]);
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const selectedLayersRef = useRef(intialOrder);
 
@@ -135,23 +133,25 @@ export const CatalogTreeComponent = observer(() => {
               onClick: (evt: MouseEvent) => {
                 if(!rowInfo.node.isGroup){
                   let newTreeData = treeRawData;
-                  if(evt.ctrlKey){
-                    // Add to current selection
-                    setSelectionPaths([...selectionPaths, rowInfo.path]);
-                  }
-                  else{
+                  if(!evt.ctrlKey){
                     // Remove prev selection
-                    selectionPaths.forEach(path => {
+                    const selection = find({
+                      treeData: newTreeData,
+                      getNodeKey: keyFromTreeIndex,
+                      searchMethod: (data) => data.node.isSelected,
+                    });
+
+                    selection.matches.forEach(match => {
                       const selRowInfo = getNodeAtPath({
                         treeData: newTreeData,
-                        path,
+                        path: match.path,
                         getNodeKey: keyFromTreeIndex,
-                        ignoreCollapsed: false,
+                        // ignoreCollapsed: false,
                       });
 
                       newTreeData = changeNodeAtPath({
                         treeData: newTreeData,
-                        path: path,
+                        path: match.path,
                         newNode: {
                           ...selRowInfo?.node,
                           isSelected: false
@@ -159,9 +159,8 @@ export const CatalogTreeComponent = observer(() => {
                         getNodeKey: keyFromTreeIndex
                       });
                     });
-                    setSelectionPaths([rowInfo.path]);
-                  }
-                  
+                  }                 
+
                   newTreeData = changeNodeAtPath({
                     treeData: newTreeData,
                     path: rowInfo.path,
@@ -173,8 +172,7 @@ export const CatalogTreeComponent = observer(() => {
                   });
 
                   setTreeRawData(newTreeData);
-                  discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
-                  console.log('****** SELECTED NODE *******',rowInfo.node);
+                  discreteLayersStore.selectLayerByID((rowInfo.node as ILayerImage).id);
                 }
               },
               onMouseOver: (evt: MouseEvent) => {

@@ -121,6 +121,16 @@ export const discreteLayersStore = ModelBase
       );
     }
 
+    function updateLayer(data: ILayerImage): void {
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
+      for (const key in layerForUpdate){
+        // @ts-ignore
+        layerForUpdate[key] = data[key];
+      }
+     
+    }
+
     // TODO: Remove when actual API is integrated
     function filterBySearchParams(layers: ILayerImage[]): ILayerImage[] {
       return layers.filter((layer) => {
@@ -170,6 +180,11 @@ export const discreteLayersStore = ModelBase
       self.selectedLayer =  layer ? {...layer} : undefined;
     }
 
+    function selectLayerByID(layerID: string): void {
+      const layer = self.layersImages?.find(layer => layer.id === layerID);
+      self.selectedLayer =  layer ? {...layer} : undefined;
+    }
+
     function setTabviewData(tabView: TabViews): void {
       if(self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
@@ -195,10 +210,12 @@ export const discreteLayersStore = ModelBase
       showLayer,
       highlightLayer,
       selectLayer,
+      selectLayerByID,
       setTabviewData,
       restoreTabviewData,
       showFootprint,
       setEntityDescriptors,
+      updateLayer,
     };
   });
 

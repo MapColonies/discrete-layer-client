@@ -51,6 +51,15 @@ export type SortField = {
   field: string
   desc?: boolean
 }
+export type RecordUpdatePartial = {
+  id: string
+  type: RecordType
+  productName?: string
+  description?: string
+  sensorType?: SensorType[]
+  classification?: string
+  keywords?: string
+}
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   layerRasterRecords: ObservableMap<string, LayerRasterRecordModelType>,
@@ -66,7 +75,9 @@ export enum RootStoreBaseQueries {
 querySearch="querySearch",
 queryEntityDescriptors="queryEntityDescriptors"
 }
-
+export enum RootStoreBaseMutations {
+mutateUpdateMetadata="mutateUpdateMetadata"
+}
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -89,5 +100,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       return self.query<{ entityDescriptors: EntityDescriptorModelType[]}>(`query entityDescriptors { entityDescriptors {
         ${typeof resultSelector === "function" ? resultSelector(new EntityDescriptorModelSelector()).toString() : resultSelector}
       } }`, variables, options)
+    },
+    mutateUpdateMetadata(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
+      return self.mutate<{ updateMetadata: string }>(`mutation updateMetadata($data: RecordUpdatePartial!) { updateMetadata(data: $data) }`, variables, optimisticUpdate)
     },
   })))
