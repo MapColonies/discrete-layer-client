@@ -10,11 +10,11 @@ import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 
 import './entity-dialog.css';
-import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
