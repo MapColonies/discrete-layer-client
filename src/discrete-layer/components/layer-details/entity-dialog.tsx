@@ -46,7 +46,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
   return record as ILayerImage;
 }
   
-export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
+export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
   const mutationQuery = useQuery();
@@ -86,22 +86,22 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
               data:{
-                directory: 'KUKU_DIRECTORY',
-                fileNames: ['KUKU_FILE'],
+                directory: values.directory,
+                fileNames: [ values.fileNames ],
                 metadata: {...(values as Layer3DRecordInput)},
                 type: RecordType.RECORD_3D
               }
-            }))
+            }));
             break;
           case RecordType.RECORD_RASTER:
             mutationQuery.setQuery(store.mutateStartRasterIngestion({
               data:{
-                directory: 'MUKU_DIRECTORY',
-                fileNames: ['MUKU_FILE'],
+                directory: values.directory,
+                fileNames: values.fileNames.split(","),
                 metadata: {...(values as LayerRasterRecordInput)},
                 type: RecordType.RECORD_RASTER
               }
-            }))
+            }));
             break;
           default:
             break;
@@ -141,7 +141,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
             {
-              mode === Mode.NEW && <IngestionFields directory={directory} fileNames={fileNames} formik={formik}/>
+              mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
             }
             {
               mode === Mode.NEW && <Box className="sectionTitle categoryFieldsTitle"><FormattedMessage id="general.section.title"/></Box>
@@ -164,4 +164,4 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
       </Dialog>
     </Box>
   );
-};
+});

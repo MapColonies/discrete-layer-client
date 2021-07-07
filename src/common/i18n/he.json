@@ -52,6 +52,9 @@
   "fields-categories.general": "ראשי",
   "fields-categories.geo": "מידע גיאוגרפי",
 
+  "field-names.ingestion.directory": "נתיב מלא",
+
+  "field-names.raster.fileNames": "שמות הקבצים",
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
   "field-names.raster.productType": "סוג מוצר",
@@ -78,6 +81,7 @@
   "field-names.raster.link.url": "קישור",
   "field-names.raster.keywords": "מילות מפתח",
 
+  "field-names.3d.fileNames": "שם הקובץ",
   "field-names.3d.id": "מזהה",
   "field-names.3d.productName": "שם מוצר",
   "field-names.3d.resolution": "רזולוציה",
