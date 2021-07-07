@@ -86,8 +86,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
               data:{
-                directory: values.directory,
-                fileNames: [ values.fileNames ],
+                directory: values.directory as string,
+                fileNames: [ values.fileNames as string ],
                 metadata: {...(values as Layer3DRecordInput)},
                 type: RecordType.RECORD_3D
               }
@@ -96,8 +96,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           case RecordType.RECORD_RASTER:
             mutationQuery.setQuery(store.mutateStartRasterIngestion({
               data:{
-                directory: values.directory,
-                fileNames: values.fileNames.split(","),
+                directory: values.directory as string,
+                fileNames: (values.fileNames as string).split(","),
                 metadata: {...(values as LayerRasterRecordInput)},
                 type: RecordType.RECORD_RASTER
               }
