@@ -5,7 +5,6 @@
   "general.title.new.3d": "New 3D entity",
   "general.title.new.raster": "New raster entity",
   "general.title.edit": "Edit entity metadata",
-  "general.section.title": "Metadata",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",

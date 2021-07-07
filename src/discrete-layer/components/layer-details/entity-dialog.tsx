@@ -143,9 +143,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             {
               mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
             }
-            {
-              mode === Mode.NEW && <Box className="sectionTitle categoryFieldsTitle"><FormattedMessage id="general.section.title"/></Box>
-            }
             <Box className={(mode === Mode.NEW) ? 'section' : ''}>
               <PerfectScrollbar className="content">
                 <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
