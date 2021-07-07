@@ -52,13 +52,91 @@ export type SortField = {
   desc?: boolean
 }
 export type RecordUpdatePartial = {
-  id: string
-  type: RecordType
   productName?: string
   description?: string
   sensorType?: SensorType[]
   classification?: string
   keywords?: string
+  id: string
+  type: RecordType
+}
+export type IngestionRasterData = {
+  directory: string
+  fileNames: string[]
+  metadata: LayerRasterRecordInput
+  type: RecordType
+}
+export type LayerRasterRecordInput = {
+  type?: RecordType
+  classification?: string
+  productName: string
+  description?: string
+  srsId?: string
+  producerName?: string
+  creationDate?: any
+  ingestionDate?: any
+  updateDate?: any
+  sourceDateStart?: any
+  sourceDateEnd?: any
+  accuracyCE90?: number
+  sensorType?: SensorType[]
+  region?: string
+  productId: string
+  productVersion?: string
+  productType: string
+  srsName?: string
+  resolution?: number
+  rms?: number
+  scale?: string
+  footprint?: any
+  layerPolygonParts?: any
+  id: string
+  insertDate?: any
+  keywords?: string
+  links?: LinkInput[]
+}
+export type LinkInput = {
+  name?: string
+  description?: string
+  protocol: string
+  url: string
+}
+export type Ingestion3DData = {
+  directory: string
+  fileNames: string[]
+  metadata: Layer3DRecordInput
+  type: RecordType
+}
+export type Layer3DRecordInput = {
+  type?: RecordType
+  classification?: string
+  productName: string
+  description?: string
+  srsId?: string
+  producerName?: string
+  creationDate?: any
+  ingestionDate?: any
+  updateDate?: any
+  sourceDateStart?: any
+  sourceDateEnd?: any
+  accuracyCE90?: number
+  sensorType?: SensorType[]
+  region?: string
+  projectName?: string
+  validationDate?: any
+  version?: string
+  centroid?: string
+  footprint?: any
+  relativeAccuracyCE90?: number
+  estimatedPrecision?: number
+  measuredPrecision?: number
+  nominalResolution?: number
+  accuracyLE90?: number
+  id: string
+  insertDate?: any
+  wktGeometry?: string
+  keywords?: string
+  links?: LinkInput[]
 }
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -76,7 +154,9 @@ querySearch="querySearch",
 queryEntityDescriptors="queryEntityDescriptors"
 }
 export enum RootStoreBaseMutations {
-mutateUpdateMetadata="mutateUpdateMetadata"
+mutateUpdateMetadata="mutateUpdateMetadata",
+mutateStartRasterIngestion="mutateStartRasterIngestion",
+mutateStart3DIngestion="mutateStart3DIngestion"
 }
 
 /**
@@ -103,5 +183,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     mutateUpdateMetadata(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateMetadata: string }>(`mutation updateMetadata($data: RecordUpdatePartial!) { updateMetadata(data: $data) }`, variables, optimisticUpdate)
+    },
+    mutateStartRasterIngestion(variables: { data: IngestionRasterData }, optimisticUpdate?: () => void) {
+      return self.mutate<{ startRasterIngestion: string }>(`mutation startRasterIngestion($data: IngestionRasterData!) { startRasterIngestion(data: $data) }`, variables, optimisticUpdate)
+    },
+    mutateStart3DIngestion(variables: { data: Ingestion3DData }, optimisticUpdate?: () => void) {
+      return self.mutate<{ start3DIngestion: string }>(`mutation start3DIngestion($data: Ingestion3DData!) { start3DIngestion(data: $data) }`, variables, optimisticUpdate)
     },
   })))

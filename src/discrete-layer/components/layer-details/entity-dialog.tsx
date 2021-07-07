@@ -10,6 +10,7 @@ import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
@@ -48,7 +49,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
-  const updateMutation = useQuery();
+  const mutationQuery = useQuery();
   const store = useStore();
 
   const directory = '';
@@ -67,8 +68,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
     initialValues: layerRecord as FormikValues,
     onSubmit: values => {
       console.log(values);
-      if (mode === Mode.EDIT) {
-        updateMutation.setQuery(store.mutateUpdateMetadata({
+      if(mode === Mode.EDIT) {
+        mutationQuery.setQuery(store.mutateUpdateMetadata({
           data: {
             id: values.id as string,
             type: values.type as RecordType,
@@ -79,6 +80,32 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
             keywords: values.keywords as string,
           }
         }));
+      }
+      else{
+        switch(recordType){
+          case RecordType.RECORD_3D:
+            mutationQuery.setQuery(store.mutateStart3DIngestion({
+              data:{
+                directory: 'KUKU_DIRECTORY',
+                fileNames: ['KUKU_FILE'],
+                metadata: {...(values as Layer3DRecordInput)},
+                type: RecordType.RECORD_3D
+              }
+            }))
+            break;
+          case RecordType.RECORD_RASTER:
+            mutationQuery.setQuery(store.mutateStartRasterIngestion({
+              data:{
+                directory: 'MUKU_DIRECTORY',
+                fileNames: ['MUKU_FILE'],
+                metadata: {...(values as LayerRasterRecordInput)},
+                type: RecordType.RECORD_RASTER
+              }
+            }))
+            break;
+          default:
+            break;
+        }
       }
     }
   });
@@ -93,12 +120,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if(!updateMutation.loading && updateMutation.data?.updateMetadata === 'ok'){
+    if(!mutationQuery.loading && mutationQuery.data?.updateMetadata === 'ok'){
       closeDialog();
       store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
       store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
     }
-  }, [updateMutation.data, updateMutation.loading, closeDialog, store.discreteLayersStore, formik.values]);
+  }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, formik.values]);
 
   return (
     <Box id="entityDialog">
@@ -128,7 +155,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = (prop
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
-              <Button raised type="submit" disabled={ updateMutation.loading }>
+              <Button raised type="submit" disabled={ mutationQuery.loading}>
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
             </Box>
