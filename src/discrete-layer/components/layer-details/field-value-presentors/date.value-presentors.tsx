@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TextField } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -10,23 +11,24 @@ interface DateValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: moment.Moment;
+  formik?: unknown;
 }
 
-export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value }) => {
-  if (mode === Mode.VIEW || fieldInfo.isManuallyEditable !== true) {
+export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
+  if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <Box className="detailsFieldValue">
         { dateFormatter(value) }
       </Box>
     );
   } else {
+    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
     return (
       <Box className="detailsFieldValue">
         <TextField
-          id={fieldInfo.fieldName as string}
           name={fieldInfo.fieldName as string}
-          type="datetime-local"
-          value={value !== undefined ? dateFormatter(value) : ''}
+          type="date"
+          value={value}
         />
       </Box>
     );

@@ -24,7 +24,6 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
     return (
       <Box className="detailsFieldValue">
         <TextField
-          id={fieldInfo.fieldName as string}
           name={fieldInfo.fieldName as string}
           type="text"
           // eslint-disable-next-line

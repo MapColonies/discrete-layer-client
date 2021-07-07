@@ -1,21 +1,23 @@
 .categoryFieldsParentContainer{
   display: flex;
   flex-wrap: wrap;
-  border-top: 1px solid gray;
+  margin-top: 16px;
 }
+
 .categoryFieldsTitle{
   flex: 100%;
-  color: var(--mdc-theme-text-icon-on-dark);
+  color: var(--mdc-theme-text-icon-on-dark, #fff);
   font-size: 16px;
   font-weight: 600;
 }
+
 .categoryFieldsContainer{
   display: flex;
   flex-wrap: wrap;
   flex: 100%;
   gap: 10%;
   margin-left: 16px;
-  margin-bottom: '8px';
+  margin-bottom: 8px;
 }
 
 body[dir='rtl'] .categoryFieldsContainer {
@@ -27,12 +29,17 @@ body[dir='rtl'] .categoryFieldsContainer {
   flex: 40%;
   padding: 2px 0;
   display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+
 .categoryFullWidthField{
   flex: 100%;
   padding: 2px 0;
   display: flex;
 }
+
 .detailsFieldLabel{
   color: var(--mdc-theme-text-icon-on-dark);
   flex: 0 0 90px;
@@ -44,6 +51,9 @@ body[dir='rtl'] .categoryFieldsContainer {
 .detailsFieldValue{
   color: var(--mdc-theme-text-primary-on-dark);
   margin-left: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 body[dir='rtl'] .detailsFieldValue{

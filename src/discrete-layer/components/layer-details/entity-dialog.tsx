@@ -5,7 +5,7 @@ import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogTitle } from '@map-colonies/react-core';
+import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
@@ -13,6 +13,7 @@ import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
+import { IngestionFields } from './ingestion-fields';
 
 import './entity-dialog.css';
 
@@ -23,8 +24,7 @@ interface EntityDialogComponentProps {
   layerRecord?: ILayerImage | null;
 }
 
-
-const buildRecord = (recordType: RecordType) : ILayerImage => {
+const buildRecord = (recordType: RecordType): ILayerImage => {
   const record = {} as Record<string, any>;
   switch(recordType){
     case RecordType.RECORD_3D:
@@ -42,6 +42,7 @@ const buildRecord = (recordType: RecordType) : ILayerImage => {
     default:
       break;
   }
+  record.type = recordType;
   return record as ILayerImage;
 }
   
@@ -51,9 +52,15 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const mutationQuery = useQuery();
   const store = useStore();
 
+  const directory = '';
+  let fileNames = '';
+
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined){
     mode = Mode.NEW;
+    if (recordType === RecordType.RECORD_3D) {
+      fileNames = 'tileset.json';
+    }
     layerRecord = buildRecord(recordType);
   }
 
@@ -79,22 +86,22 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
               data:{
-                directory: 'KUKU_DIRECTORY',
-                fileNames: ['KUKU_FILE'],
+                directory: values.directory as string,
+                fileNames: [ values.fileNames as string ],
                 metadata: {...(values as Layer3DRecordInput)},
                 type: RecordType.RECORD_3D
               }
-            }))
+            }));
             break;
           case RecordType.RECORD_RASTER:
             mutationQuery.setQuery(store.mutateStartRasterIngestion({
               data:{
-                directory: 'MUKU_DIRECTORY',
-                fileNames: ['MUKU_FILE'],
+                directory: values.directory as string,
+                fileNames: (values.fileNames as string).split(","),
                 metadata: {...(values as LayerRasterRecordInput)},
                 type: RecordType.RECORD_RASTER
               }
-            }))
+            }));
             break;
           default:
             break;
@@ -102,14 +109,14 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       }
     }
   });
-
+  
   const closeDialog = useCallback(
     () => {
       onSetOpen(false);
     },
     [onSetOpen]
   );
-
+  
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -124,13 +131,26 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
-          <FormattedMessage id={ mode === Mode.NEW ? 'general.title.new' : 'general.title.edit' }/>
+          <FormattedMessage id={ mode === Mode.NEW ? (recordType === RecordType.RECORD_3D ? 'general.title.new.3d' : 'general.title.new.raster') : 'general.title.edit' }/>
+          <IconButton
+            className="closeIcon mc-icon-Close"
+            label="CLOSE"
+            onClick={ (): void => { closeDialog(); } }
+          />
         </DialogTitle>
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} className="form">
-            <PerfectScrollbar className="content">
-              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
-            </PerfectScrollbar>
+            {
+              mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
+            }
+            {
+              mode === Mode.NEW && <Box className="sectionTitle categoryFieldsTitle"><FormattedMessage id="general.section.title"/></Box>
+            }
+            <Box className={(mode === Mode.NEW) ? 'section' : ''}>
+              <PerfectScrollbar className="content">
+                <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
+              </PerfectScrollbar>
+            </Box>
             <Box className="buttons">
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>

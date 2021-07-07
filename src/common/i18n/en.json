@@ -2,8 +2,10 @@
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
   "general.error.label": "Error",
-  "general.title.new": "New",
-  "general.title.edit": "Edit",
+  "general.title.new.3d": "New 3D entity",
+  "general.title.new.raster": "New raster entity",
+  "general.title.edit": "Edit entity metadata",
+  "general.section.title": "Metadata",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -50,6 +52,9 @@
   "fields-categories.general": "General",
   "fields-categories.geo": "Geo Info",
 
+  "field-names.ingestion.directory": "Directory",
+
+  "field-names.raster.fileNames": "File names",
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",
   "field-names.raster.productType": "Type",
@@ -76,6 +81,7 @@
   "field-names.raster.link.url": "URL",
   "field-names.raster.keywords": "Keywords",
 
+  "field-names.3d.fileNames": "File name",
   "field-names.3d.id": "ID",
   "field-names.3d.productName": "Name",
   "field-names.3d.resolution": "Resolution",
