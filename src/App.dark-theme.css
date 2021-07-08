@@ -101,7 +101,7 @@
 }
 
 /* INPUT CUSTOMIZATIONS */
-.dark-theme .mdc-text-field:not(.mdc-text-field--disabled){
+.dark-theme .mdc-text-field{
   background-color: transparent;
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 0;

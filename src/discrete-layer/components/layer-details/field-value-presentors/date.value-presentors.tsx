@@ -28,6 +28,8 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
         <TextField
           name={fieldInfo.fieldName as string}
           type="date"
+          // eslint-disable-next-line
+          onChange={(formik as any).handleChange}
           value={value}
         />
       </Box>
