@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { IconButton } from '@map-colonies/react-core';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import './url.value-presentors.css';
@@ -13,9 +13,11 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
   const [copied, setCopied] = useState<boolean>(false);
   return (
     <>
-      <Box className="detailsFieldValue detailsUrlFieldValue">
-        {value}
-      </Box>
+      <Tooltip content={value}>
+        <Box className="detailsFieldValue detailsUrlFieldValue">
+          {value}
+        </Box>
+      </Tooltip>
       <Box className="detailsUrlFieldUrlCopy">
         <CopyToClipboard text={value as string} onCopy={(): void => setCopied(true)}>
           <IconButton icon="content_copy" />
