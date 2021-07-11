@@ -162,11 +162,8 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
         <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
           <Box className="dialogBboxRow">
             <Box>
-              <Box className="detailsFieldLabel bboxLabel">
-                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lat.label'})}></FieldLabelComponent>
-              </Box>
+              <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label'></FieldLabelComponent>
               <TextField
-                id="topRightLat"
                 name="topRightLat"
                 type="number"
                 onChange={formik.handleChange}
@@ -175,11 +172,8 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               />
             </Box>
             <Box>
-              <Box className="detailsFieldLabel bboxLabel">
-                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.top_right_lon.label'})}></FieldLabelComponent>
-              </Box>
+              <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label'></FieldLabelComponent>
               <TextField
-                id="topRightLon"
                 name="topRightLon"
                 type="number"
                 onChange={formik.handleChange}
@@ -191,11 +185,8 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           </Box>
           <Box className="dialogBboxRow">
             <Box>
-              <Box className="detailsFieldLabel bboxLabel">
-                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lat.label'})}></FieldLabelComponent>
-              </Box>
+              <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label'></FieldLabelComponent>
               <TextField
-                id="bottomLeftLat"
                 name="bottomLeftLat"
                 type="number"
                 onChange={formik.handleChange}
@@ -204,11 +195,8 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               />
             </Box>
             <Box>
-              <Box className="detailsFieldLabel bboxLabel">
-                <FieldLabelComponent value={intl.formatMessage({id: 'custom-bbox.dialog-field.bottom_left_lon.label'})}></FieldLabelComponent>
-              </Box>
+              <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label'></FieldLabelComponent>
               <TextField
-                id="bottomLeftLon"
                 name="bottomLeftLon"
                 type="number"
                 onChange={formik.handleChange}

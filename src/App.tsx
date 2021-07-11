@@ -46,6 +46,7 @@ const App: React.FC = () => {
     background: '#151A22',
     surface: '#151A22',
     alternativeSurface: '#2D3748',
+    gcSelectionBackground: CustomTheme.darkTheme.GC_SELECTION_BACKGROUND,
     custom: {
       ...CustomTheme.darkTheme
     }

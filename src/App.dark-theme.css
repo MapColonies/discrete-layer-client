@@ -101,9 +101,9 @@
 }
 
 /* INPUT CUSTOMIZATIONS */
-.dark-theme .mdc-text-field:not(.mdc-text-field--disabled){
+.dark-theme .mdc-text-field{
   background-color: transparent;
-  border: 1px solid var(--mdc-theme-text-icon-on-dark, #fff);
+  border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 0;
   height: 24px;
 }
@@ -117,7 +117,7 @@
   border-radius: 8px;
 }
 .dark-theme .mdc-dialog .mdc-dialog__title{
-  background: linear-gradient(90deg, #455570 16.15%, rgba(69, 85, 112, 0.3) 100%),var(--mdc-theme-alternative-surface, #fff);
+  background: linear-gradient(90deg, var(--mdc-theme-gc-selection-background, #fff) 16.15%, rgba(69, 85, 112, 0.3) 100%), var(--mdc-theme-alternative-surface, #fff);
   padding-bottom: 0;
   line-height: initial;
   display: flex;
@@ -125,4 +125,17 @@
   color: var(--mdc-theme-text-icon-on-dark);
   font-size: 16px;
   font-weight: 600;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--mdc-theme-text-primary-on-dark, #fff);
+  transition: background-color 5000s ease-in-out 0s;
 }

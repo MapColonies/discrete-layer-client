@@ -1,14 +1,11 @@
 .dialogBboxForm{
   padding-top: 16px;
+  font-size: 0.875rem;
 }
 
 .dialogBboxRow{
   display: flex;
   margin-bottom: 16px;
-}
-
-.bboxLabel{
-  font-size: 0.875rem;
 }
 
 .spacer{
