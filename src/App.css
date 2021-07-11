@@ -1,7 +1,3 @@
-.mdc-text-field--fullwidth:not(.mdc-text-field--textarea):not(.mdc-text-field--disabled) {
-  background-color: whitesmoke !important;
-}
-
 .mdc-checkbox .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background::before,
 .mdc-checkbox .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background::before {
   background-color: #2979ff;
@@ -34,4 +30,21 @@
 .app-container {
   background-color: var(--mdc-theme-background);
   color: var(--mdc-theme-on-surface);
+}
+
+.glow-missing-icon{
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+  from{
+    text-shadow: 0 0 10px #fff, 0 0 12px #fff, 0 0 14px #e60073, 0 0 18px #e60073, 0 0 20px #e60073;
+  }
+  to {
+    text-shadow: 0 0 12px #fff, 0 0 14px #ff4da6, 0 0 16px #ff4da6, 0 0 18px #ff4da6, 0 0 20px #ff4da6, 0 0 22px #ff4da6;
+  }
+}
+
+input[type='date'] {
+  width: 100px;
 }

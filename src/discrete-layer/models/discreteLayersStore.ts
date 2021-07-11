@@ -4,16 +4,17 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
+import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
-import { CswClient, IRequestExecutor } from '@map-colonies/csw-client';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
-import { createMockData, MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
+import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { TabViews } from '../views/discrete-layer-view';
 import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
+import { EntityDescriptorModelType } from './EntityDescriptorModel';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -41,6 +42,7 @@ export const discreteLayersStore = ModelBase
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
     tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}])),
+    entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -104,6 +106,10 @@ export const discreteLayersStore = ModelBase
       }
     );
 
+    function setEntityDescriptors(data: EntityDescriptorModelType[]): void {
+      self.entityDescriptors = cloneDeep(data);
+    }
+
     function setLayersImages(data: ILayerImage[], showFootprint = true): void {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
       self.layersImages = data.map(item => ({
@@ -113,6 +119,15 @@ export const discreteLayersStore = ModelBase
           order:null
         })
       );
+    }
+
+    function updateLayer(data: ILayerImage): void {
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
+      for (const key in layerForUpdate){
+        set(layerForUpdate,key, get(data,key));
+      }
+     
     }
 
     // TODO: Remove when actual API is integrated
@@ -164,6 +179,11 @@ export const discreteLayersStore = ModelBase
       self.selectedLayer =  layer ? {...layer} : undefined;
     }
 
+    function selectLayerByID(layerID: string): void {
+      const layer = self.layersImages?.find(layer => layer.id === layerID);
+      self.selectedLayer =  layer ? {...layer} : undefined;
+    }
+
     function setTabviewData(tabView: TabViews): void {
       if(self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
@@ -189,9 +209,12 @@ export const discreteLayersStore = ModelBase
       showLayer,
       highlightLayer,
       selectLayer,
+      selectLayerByID,
       setTabviewData,
       restoreTabviewData,
       showFootprint,
+      setEntityDescriptors,
+      updateLayer,
     };
   });
 

@@ -170,3 +170,7 @@ body[dir='rtl'] .sideDetailsPanel{
   height: calc(100% - 60px);
   overflow: auto;
 }
+
+.version{
+  margin: 0 16px;
+}

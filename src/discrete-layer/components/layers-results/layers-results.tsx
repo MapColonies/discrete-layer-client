@@ -17,7 +17,6 @@ import {
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
-import { LayerDetailsRenderer } from './cell-renderer/layer-details.cell-renderer';
 import { FootprintRenderer } from './cell-renderer/footprint.cell-renderer';
 import { HeaderFootprintRenderer } from './header-renderer/footprint.header-renderer';
 import { dateFormatter } from './type-formatters/type-formatters';
@@ -186,7 +185,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayer(event.data as ILayerImage);
+      discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
     },
     onGridReady(params: GridReadyEvent) {
       params.api.forEachNode( (node) => {
