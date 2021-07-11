@@ -24,16 +24,11 @@ exports[`DialogBBox component renders correctly 1`] = `
         className="dialogBboxRow"
       >
         <Component>
-          <Component
-            className="detailsFieldLabel bboxLabel"
-          >
-            <FieldLabelComponent
-              value="Top Right Lat"
-            />
-          </Component>
+          <FieldLabelComponent
+            value="custom-bbox.dialog-field.top_right_lat.label"
+          />
           <Function
             className="spacer"
-            id="topRightLat"
             name="topRightLat"
             onChange={[Function]}
             type="number"
@@ -41,16 +36,11 @@ exports[`DialogBBox component renders correctly 1`] = `
           />
         </Component>
         <Component>
-          <Component
-            className="detailsFieldLabel bboxLabel"
-          >
-            <FieldLabelComponent
-              value="Top Right Lon"
-            />
-          </Component>
+          <FieldLabelComponent
+            value="custom-bbox.dialog-field.top_right_lon.label"
+          />
           <Function
             className="spacer"
-            id="topRightLon"
             name="topRightLon"
             onChange={[Function]}
             type="number"
@@ -65,16 +55,11 @@ exports[`DialogBBox component renders correctly 1`] = `
         className="dialogBboxRow"
       >
         <Component>
-          <Component
-            className="detailsFieldLabel bboxLabel"
-          >
-            <FieldLabelComponent
-              value="Bottom Left Lat"
-            />
-          </Component>
+          <FieldLabelComponent
+            value="custom-bbox.dialog-field.bottom_left_lat.label"
+          />
           <Function
             className="spacer"
-            id="bottomLeftLat"
             name="bottomLeftLat"
             onChange={[Function]}
             type="number"
@@ -82,16 +67,11 @@ exports[`DialogBBox component renders correctly 1`] = `
           />
         </Component>
         <Component>
-          <Component
-            className="detailsFieldLabel bboxLabel"
-          >
-            <FieldLabelComponent
-              value="Bottom Left Lon"
-            />
-          </Component>
+          <FieldLabelComponent
+            value="custom-bbox.dialog-field.bottom_left_lon.label"
+          />
           <Function
             className="spacer"
-            id="bottomLeftLon"
             name="bottomLeftLon"
             onChange={[Function]}
             type="number"
