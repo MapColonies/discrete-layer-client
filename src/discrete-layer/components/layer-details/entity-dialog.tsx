@@ -82,13 +82,14 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         }));
       }
       else{
+        const { directory, fileNames, __typename, ...metadata } = values;
         switch(recordType){
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
               data:{
-                directory: values.directory as string,
-                fileNames: [ values.fileNames as string ],
-                metadata: {...(values as Layer3DRecordInput)},
+                directory: directory as string,
+                fileNames: [ fileNames as string ],
+                metadata: metadata as Layer3DRecordInput,
                 type: RecordType.RECORD_3D
               }
             }));
@@ -96,9 +97,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           case RecordType.RECORD_RASTER:
             mutationQuery.setQuery(store.mutateStartRasterIngestion({
               data:{
-                directory: values.directory as string,
-                fileNames: (values.fileNames as string).split(","),
-                metadata: {...(values as LayerRasterRecordInput)},
+                directory: directory as string,
+                fileNames: (fileNames as string).split(","),
+                metadata: metadata as LayerRasterRecordInput,
                 type: RecordType.RECORD_RASTER
               }
             }));
@@ -118,7 +119,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   );
   
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if(!mutationQuery.loading && mutationQuery.data?.updateMetadata === 'ok'){
       closeDialog();

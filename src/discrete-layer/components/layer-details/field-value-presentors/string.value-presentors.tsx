@@ -31,7 +31,6 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
           // eslint-disable-next-line
           onChange={(formik as any).handleChange}
           value={value}
-          required
         />
       </Box>
     );
