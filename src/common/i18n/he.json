@@ -2,9 +2,9 @@
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
   "general.error.label": "שגיאה",
-  "general.title.new.3d": "הוספת יישות תלת-מימד",
-  "general.title.new.raster": "הוספת יישות ראסטר",
-  "general.title.edit": "עריכת מידע של יישות",
+  "general.title.new.3d": "הוספת מוצר תלת-מימד",
+  "general.title.new.raster": "הוספת מוצר ראסטר",
+  "general.title.edit": "עריכת מידע של מוצר",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
