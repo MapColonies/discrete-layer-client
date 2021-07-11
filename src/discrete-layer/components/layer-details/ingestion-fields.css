@@ -1,11 +1,19 @@
 .ingestionFields{
-  margin: 24px 0 12px 0;
+  margin: 24px 0 24px 0;
 }
 
 .directorySpacer{
   margin: 0 4px 0 0;
 }
 
+body[dir='rtl'] .directorySpacer{
+  margin: 0 0 0 4px;
+}
+
 .fileNamesSpacer{
   margin: 0 4px 0 24px;
+}
+
+body[dir='rtl'] .fileNamesSpacer{
+  margin: 0 24px 0 4px;
 }

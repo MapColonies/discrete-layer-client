@@ -6,6 +6,11 @@
   margin-left: auto;
 }
 
+body[dir='rtl'] .closeIcon{
+  margin-left: unset;
+  margin-right: auto;
+}
+
 .dialogBody{
   overflow-y: hidden !important;
 }
@@ -17,6 +22,11 @@
 .content{
   max-height: 740px;
   padding-right: 20px;
+}
+
+body[dir='rtl'] .content{
+  padding-right: unset;
+  padding-left: 20px;
 }
 
 .section{
