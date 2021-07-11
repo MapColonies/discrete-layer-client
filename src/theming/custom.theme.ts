@@ -8,6 +8,12 @@ export const CustomTheme = {
 
     GC_SELECTION_BACKGROUND: '#455570',
     GC_HOVER_BACKGROUND: 'rgba(33, 150, 243, 0.1)',
+
+    GC_WARNING_HIGH: '#FFA032', /*Warning / Orange*/
+    GC_WARNING_MEDIUM: '#FFEB87', /*Warning / Yellow*/
+    GC_SUCCESS: 'green',
+    GC_ERROR_HIGH: '#CC1616', /*Warning / Red Dark*/
+    GC_ERROR_MEDIUM: '#FF3636', /*Warning / Red*/
   },
 };
   

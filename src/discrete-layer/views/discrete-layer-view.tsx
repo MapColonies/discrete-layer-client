@@ -37,6 +37,7 @@ import { LayersDetailsComponent } from '../components/layer-details/layer-detail
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { EntityDescriptorModelType, RecordType } from '../models';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -254,6 +255,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
+  const [isSytemsJobsDialogOpen, setSytemsJobsDialogOpen] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
@@ -345,6 +347,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handleEditEntityDialogClick = (): void => {
     setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
+
+  const handleSytemsJobsDialogClick = (): void => {
+    setSytemsJobsDialogOpen(!isSytemsJobsDialogOpen);
+  };
+
 
   const handleFilter = (): void => {
     setIsFilter(!isFilter);
@@ -547,6 +554,20 @@ const DiscreteLayerView: React.FC = observer(() => {
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
           />
+        </Box>
+
+        <Box className="headerSystemAreaContainer">
+          <IconButton
+            className="operationIcon mc-icon-Search-History glow-missing-icon"
+            label="SYTEM JOBS"
+            onClick={ (): void => { handleSytemsJobsDialogClick() } }
+          />
+          {
+            isSytemsJobsDialogOpen && <SystemJobsComponent
+              isOpen={isSytemsJobsDialogOpen}
+              onSetOpen={setSytemsJobsDialogOpen}>
+            </SystemJobsComponent>
+          }
         </Box>
       </Box>
       <Box className="mainViewContainer">

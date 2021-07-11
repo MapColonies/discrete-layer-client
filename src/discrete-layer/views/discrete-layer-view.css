@@ -66,6 +66,11 @@ body[dir='rtl'] .mapAppContainer {
   border-radius: 64px;
 }
 
+.headerSystemAreaContainer{
+  width: 10%;
+  height: 100%;
+}
+
 /* TabContent */
 .tabHeaderContainer{
   display: flex;

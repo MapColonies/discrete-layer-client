@@ -34,6 +34,7 @@ import { SnackContainer } from './discrete-layer/components/snack-container/snac
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import MESSAGES from './common/i18n';
 import CONFIG from './common/config';
+import { camelize } from './common/helpers/string';
 import { CustomTheme } from './theming/custom.theme';
 
 const App: React.FC = () => {
@@ -41,11 +42,16 @@ const App: React.FC = () => {
   // eslint-disable-next-line
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
+  const customThemeProps: Record<string,string> = {};
+  for(const prop in CustomTheme.darkTheme){
+    customThemeProps[camelize(prop)] = (CustomTheme.darkTheme as Record<string, string>)[prop];
+  }
   const theme = {
     ...Themes.darkTheme,
     background: '#151A22',
     surface: '#151A22',
     alternativeSurface: '#2D3748',
+    ...customThemeProps,
     custom: {
       ...CustomTheme.darkTheme
     }

@@ -107,5 +107,21 @@
   "field-names.3d.estimated-precision": "Estimated Prec.",
   "field-names.3d.measured-precision": "Measured Prec.",
   "field-names.3d.nominal-resolution": "Nominal Res.",
-  "field-names.3d.wktGeometry": "WKT Geometry"
+  "field-names.3d.wktGeometry": "WKT Geometry",
+
+  "system-status.title": "Sytem Jobs",
+  "system-status.ok-btn.text": "Ok",
+  "system-status.job.fields.resource-id.label": "Resource",
+  "system-status.job.fields.version.label": "Version",
+  "system-status.job.fields.type.label": "Job Type",
+  "system-status.job.fields.status.label": "Status",
+  "system-status.job.fields.priority.label": "Priority",
+  "system-status.job.fields.created.label": "Created",
+  "system-status.job.fields.updated.label": "Updated",
+  
+  "system-status.task.fields.type.label": "Task Type",
+  "system-status.task.fields.status.label": "Status",
+  "system-status.task.fields.attempts.label": "Attempts",
+  "system-status.task.fields.created.label": "Created",
+  "system-status.task.fields.updated.label": "Updated"
 }

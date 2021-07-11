@@ -96,6 +96,11 @@
   border-radius: 100px;
 }
 
+.dark-theme .ag-theme-alpine-dark .ag-row-hover.ag-full-width-row{
+  border-radius: unset;
+  background-color: unset;
+}
+
 .dark-theme .ag-theme-alpine-dark .ag-root-wrapper-body .ag-checkbox-input-wrapper {
   background: none;
 }

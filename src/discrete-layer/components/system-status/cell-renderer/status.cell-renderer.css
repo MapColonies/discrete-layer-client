@@ -1,0 +1,16 @@
+.pending{
+  color: var(--mdc-theme-gc-warning-high);
+}
+
+.inprogress{
+  color: var(--mdc-theme-gc-warning-medium);
+}
+
+.completed{
+  color: var(--mdc-theme-gc-success);
+}
+
+.failed{
+  color: var(--mdc-theme-gc-error-medium);
+  
+}

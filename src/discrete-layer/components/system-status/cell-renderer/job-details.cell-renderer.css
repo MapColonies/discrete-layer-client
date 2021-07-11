@@ -1,0 +1,25 @@
+.tasksTable{
+  margin-left: 60px;
+  padding-left: 8px;
+  width: 90%;
+  border: solid 1px #455570;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px
+}
+
+.tasksTableColumnHeader{
+  width: 20%;
+  text-align: left;
+  font-size: 13px;
+}
+
+body[dir=rtl] .tasksTableColumnHeader{
+  text-align: right;
+}
+
+body[dir=rtl] .tasksTable{
+  margin-left: unset;
+  margin-right: 60px;
+  padding-left: unset;
+  padding-right: 8px;
+}

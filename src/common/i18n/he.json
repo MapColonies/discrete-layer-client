@@ -107,6 +107,22 @@
   "field-names.3d.estimated-precision": "דיוק צפוי",
   "field-names.3d.measured-precision": "דיוק הנמדד",
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
-  "field-names.3d.wktGeometry": "גאומטריה"
+  "field-names.3d.wktGeometry": "גאומטריה",
+
+  "system-status.title": "משימות מערכת",
+  "system-status.ok-btn.text": "אישור",
+  "system-status.job.fields.resource-id.label": "מוצר",
+  "system-status.job.fields.version.label": "גירסה",
+  "system-status.job.fields.type.label": "סוג",
+  "system-status.job.fields.status.label": "סטטוס",
+  "system-status.job.fields.priority.label": "עדיפות",
+  "system-status.job.fields.created.label": "נוצר",
+  "system-status.job.fields.updated.label": "עודכן",
+  
+  "system-status.task.fields.type.label": "מטלה",
+  "system-status.task.fields.status.label": "סטטוס",
+  "system-status.task.fields.attempts.label": "ניסיונות",
+  "system-status.task.fields.created.label": "נוצר",
+  "system-status.task.fields.updated.label": "עודכן"
 
 }
