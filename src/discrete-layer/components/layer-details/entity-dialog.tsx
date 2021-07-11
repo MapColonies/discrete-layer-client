@@ -82,6 +82,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         }));
       }
       else{
+        // @ts-ignore
         const { directory, fileNames, __typename, ...metadata } = values;
         switch(recordType){
           case RecordType.RECORD_3D:
