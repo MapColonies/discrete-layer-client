@@ -466,7 +466,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <IconButton
               className="operationIcon mc-icon-Search-History glow-missing-icon"
               label="NEW RASTER"
-              onClick={ (): void => { handleNewRasterEntityDialogClick() } }
+              onClick={ (): void => { handleNewRasterEntityDialogClick(); } }
             />
             {
               isNewRasterEntityDialogOpen && <EntityDialogComponent
@@ -478,7 +478,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <IconButton
               className="operationIcon mc-icon-Bests glow-missing-icon"
               label="NEW 3D"
-              onClick={ (): void => { handleNew3DEntityDialogClick() } }
+              onClick={ (): void => { handleNew3DEntityDialogClick(); } }
             />
             {
               isNew3DEntityDialogOpen && <EntityDialogComponent
@@ -614,7 +614,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 layerToPresent && <IconButton
                   className="operationIcon mc-icon-Status-Approves glow-missing-icon"
                   label="EDIT"
-                  onClick={ (): void => { handleEditEntityDialogClick() } }
+                  onClick={ (): void => { handleEditEntityDialogClick(); } }
                 />
               }
               {

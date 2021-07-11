@@ -32,7 +32,7 @@ export const CatalogTreeComponent = observer(() => {
         filter: [
           {
             field: 'mc:type',
-            eq: RecordType.RECORD_RASTER
+            eq: RecordType.RECORD_ALL
           }
         ]
       }
