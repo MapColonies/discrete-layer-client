@@ -255,7 +255,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
-  const [isSytemsJobsDialogOpen, setSytemsJobsDialogOpen] = useState<boolean>(false);
+  const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
@@ -348,8 +348,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
 
-  const handleSytemsJobsDialogClick = (): void => {
-    setSytemsJobsDialogOpen(!isSytemsJobsDialogOpen);
+  const handleSystemsJobsDialogClick = (): void => {
+    setSystemsJobsDialogOpen(!isSystemsJobsDialogOpen);
   };
 
 
@@ -559,13 +559,13 @@ const DiscreteLayerView: React.FC = observer(() => {
         <Box className="headerSystemAreaContainer">
           <IconButton
             className="operationIcon mc-icon-Search-History glow-missing-icon"
-            label="SYTEM JOBS"
-            onClick={ (): void => { handleSytemsJobsDialogClick() } }
+            label="SYSTEM JOBS"
+            onClick={ (): void => { handleSystemsJobsDialogClick() } }
           />
           {
-            isSytemsJobsDialogOpen && <SystemJobsComponent
-              isOpen={isSytemsJobsDialogOpen}
-              onSetOpen={setSytemsJobsDialogOpen}>
+            isSystemsJobsDialogOpen && <SystemJobsComponent
+              isOpen={isSystemsJobsDialogOpen}
+              onSetOpen={setSystemsJobsDialogOpen}>
             </SystemJobsComponent>
           }
         </Box>

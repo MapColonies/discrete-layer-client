@@ -114,7 +114,7 @@
   "field-names.3d.nominal-resolution": "Nominal Res.",
   "field-names.3d.wktGeometry": "WKT Geometry",
 
-  "system-status.title": "Sytem Jobs",
+  "system-status.title": "System Jobs",
   "system-status.ok-btn.text": "Ok",
   "system-status.job.fields.resource-id.label": "Resource",
   "system-status.job.fields.version.label": "Version",
