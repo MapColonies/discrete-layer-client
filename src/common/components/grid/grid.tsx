@@ -54,8 +54,9 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
   
+  const {detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
   const gridOptionsFromProps: GridComponentOptions = {
-    ...props.gridOptions,
+    ...restGridOptions,
     columnDefs: [
       {
         field: 'isVisible',

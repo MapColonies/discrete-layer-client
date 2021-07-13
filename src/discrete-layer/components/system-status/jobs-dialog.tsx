@@ -89,6 +89,13 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       }),
       width: 100,
       field: 'priority',
+      editable: true,
+      cellStyle: () => {
+        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)'};
+      },
+      onCellValueChanged: (evt: unknown): void => {
+        console.log('EVTR--->', evt);
+      }
     },
     {
       headerName:  intl.formatMessage({
@@ -106,12 +113,12 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       field: 'updated',
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
     },
-    {
-      headerName: 'xcz',
-      width: 240,
-      pinned: 'right',
-      cellRenderer: 'actionsRenderer',
-    },
+    // {
+    //   headerName: 'actions',
+    //   width: 240,
+    //   pinned: 'right',
+    //   cellRenderer: 'actionsRenderer',
+    // },
   ];
   const gridOptions: GridComponentOptions = {
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
@@ -136,6 +143,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     tooltipMouseTrack: false,
     rowSelection: 'single',
     suppressCellSelection: true,
+    singleClickEdit: true,
     // suppressRowClickSelection: true,
   };
 
