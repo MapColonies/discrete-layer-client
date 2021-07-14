@@ -17,7 +17,7 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { useQuery, useStore } from "../../models/RootStore";
+import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { dateFormatter } from '../layers-results/type-formatters/type-formatters';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';

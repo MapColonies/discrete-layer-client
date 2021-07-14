@@ -28,7 +28,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
           // @ts-ignore
           fieldInfo={{
             fieldName: 'directory',
-            // isRequired: true
+            isRequired: true
           }} 
           value={directory} 
           formik={formik}>
@@ -41,7 +41,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
           // @ts-ignore
           fieldInfo={{
             fieldName: 'fileNames',
-            // isRequired: true
+            isRequired: true
           }} 
           value={fileNames} 
           formik={formik}>
