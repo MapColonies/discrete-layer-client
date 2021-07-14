@@ -47,10 +47,6 @@
 
   "details-panel.no-selection": "לא נבחר הפריט",
 
-  "fields-categories.main": " ",
-  "fields-categories.general": "ראשי",
-  "fields-categories.geo": "מידע גיאוגרפי",
-
   "field-names.ingestion.directory": "נתיב מלא",
 
   "field-names.raster.fileNames": "שמות הקבצים",
@@ -113,6 +109,15 @@
   "field-names.3d.measured-precision": "דיוק הנמדד",
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
   "field-names.3d.wktGeometry": "גאומטריה",
+
+  "lookups.sensorType.vis": "VIS",
+  "lookups.sensorType.rgb": "RGB",
+  "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
+  "lookups.sensorType.other": "אחר",
+
+  "lookups.fieldCategory.main": " ",
+  "lookups.fieldCategory.general": "ראשי",
+  "lookups.fieldCategory.geo_info": "מידע גיאוגרפי",
 
   "system-status.title": "משימות מערכת",
   "system-status.ok-btn.text": "אישור",

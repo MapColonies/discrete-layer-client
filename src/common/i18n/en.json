@@ -47,10 +47,6 @@
 
   "details-panel.no-selection": "No selection",
 
-  "fields-categories.main": " ",
-  "fields-categories.general": "General",
-  "fields-categories.geo": "Geo Info",
-
   "field-names.ingestion.directory": "Directory",
 
   "field-names.raster.fileNames": "File names",
@@ -113,6 +109,15 @@
   "field-names.3d.measured-precision": "Measured Prec.",
   "field-names.3d.nominal-resolution": "Nominal Res.",
   "field-names.3d.wktGeometry": "WKT Geometry",
+
+  "lookups.sensorType.vis": "VIS",
+  "lookups.sensorType.rgb": "RGB",
+  "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
+  "lookups.sensorType.other": "OTHER",
+
+  "lookups.fieldCategory.main": " ",
+  "lookups.fieldCategory.general": "General",
+  "lookups.fieldCategory.geo_info": "Geo Info",
 
   "system-status.title": "System Jobs",
   "system-status.ok-btn.text": "Ok",

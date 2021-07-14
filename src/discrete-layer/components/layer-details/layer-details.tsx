@@ -16,6 +16,7 @@ import { UrlValuePresentorComponent } from './field-value-presentors/url.value-p
 import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentors';
 import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentors';
 import { RecordTypeValuePresentorComponent } from  './field-value-presentors/record-type.value-presentors';
+import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
 import { FieldLabelComponent } from './field-label';
 
 import './layer-details.css';
@@ -64,9 +65,12 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
   switch(basicType){
     case 'string':
     case 'identifier':
-    case 'number':
       return (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
+      );
+    case 'number':
+      return (
+        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
       );
     case 'SensorType':
       return (
