@@ -21,17 +21,12 @@ import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
 import { enumAspectsModelPrimitives, EnumAspectsModelSelector } from "./EnumAspectsModel.base"
 import { EnumDictionaryModel, EnumDictionaryModelType } from "./EnumDictionaryModel"
 import { enumDictionaryModelPrimitives, EnumDictionaryModelSelector } from "./EnumDictionaryModel.base"
-import { JobModel, JobModelType } from "./JobModel"
-import { jobModelPrimitives, JobModelSelector } from "./JobModel.base"
-import { TaskModel, TaskModelType } from "./TaskModel"
-import { taskModelPrimitives, TaskModelSelector } from "./TaskModel.base"
 
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
 import { RecordType } from "./RecordTypeEnum"
 import { SensorType } from "./SensorTypeEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
-import { Status } from "./StatusEnum"
 
 export type SearchOptions = {
   filter?: FilterField[]
@@ -59,13 +54,6 @@ export type Bbox = {
 export type SortField = {
   field: string
   desc?: boolean
-}
-export type JobsSearchParams = {
-  resourceId?: string
-  version?: string
-  isCleaned?: boolean
-  status?: Status
-  type?: string
 }
 export type RecordUpdatePartial = {
   productName?: string
@@ -167,8 +155,7 @@ type Refs = {
 */
 export enum RootStoreBaseQueries {
 querySearch="querySearch",
-queryEntityDescriptors="queryEntityDescriptors",
-queryJobs="queryJobs"
+queryEntityDescriptors="queryEntityDescriptors"
 }
 export enum RootStoreBaseMutations {
 mutateUpdateMetadata="mutateUpdateMetadata",
@@ -181,7 +168,7 @@ mutateStart3DIngestion="mutateStart3DIngestion"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['EnumAspects', () => EnumAspectsModel], ['EnumDictionary', () => EnumDictionaryModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'EntityDescriptor'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['EnumAspects', () => EnumAspectsModel], ['EnumDictionary', () => EnumDictionaryModel]], ['LayerRasterRecord', 'Layer3DRecord', 'EntityDescriptor'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -196,11 +183,6 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryEntityDescriptors(variables?: {  }, resultSelector: string | ((qb: EntityDescriptorModelSelector) => EntityDescriptorModelSelector) = entityDescriptorModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ entityDescriptors: EntityDescriptorModelType[]}>(`query entityDescriptors { entityDescriptors {
         ${typeof resultSelector === "function" ? resultSelector(new EntityDescriptorModelSelector()).toString() : resultSelector}
-      } }`, variables, options)
-    },
-    queryJobs(variables: { params?: JobsSearchParams }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ jobs: JobModelType[]}>(`query jobs($params: JobsSearchParams) { jobs(params: $params) {
-        ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     mutateUpdateMetadata(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
