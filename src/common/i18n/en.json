@@ -122,9 +122,18 @@
   "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
   "lookups.sensorType.other": "OTHER",
 
+  "lookups.sensorType.vis.tooltip": "VIS",
+  "lookups.sensorType.rgb.tooltip": "RGB",
+  "lookups.sensorType.pan_sharpen.tooltip": "Pan_Sharpen",
+  "lookups.sensorType.other.tooltip": "OTHER",
+
   "lookups.fieldCategory.main": " ",
   "lookups.fieldCategory.general": "General",
   "lookups.fieldCategory.geo_info": "Geo Info",
+
+  "lookups.fieldCategory.main.tooltip": " ",
+  "lookups.fieldCategory.general.tooltip": "General",
+  "lookups.fieldCategory.geo_info.tooltip": "Geo Info",
 
   "system-status.title": "System Jobs",
   "system-status.ok-btn.text": "Ok",
