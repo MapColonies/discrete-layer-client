@@ -3,13 +3,12 @@ import moment from 'moment';
 import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Typography } from '@map-colonies/react-core';
+import { Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldCategory, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType, SensorType, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
-
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
 import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentors';
 import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentors';
@@ -141,7 +140,9 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                       <Box key={fieldInfo.fieldName as string}
                         className={(fieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}
                       >
-                        <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
+                        <Tooltip content={`tooltip.${fieldInfo.label}`}>
+                          <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
+                        </Tooltip>
                         {
                           getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }

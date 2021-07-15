@@ -110,6 +110,13 @@
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
   "field-names.3d.wktGeometry": "גאומטריה",
 
+  "tooltip.productId": "מזהה שהגיע ממערכת אגירה חיצונית",
+  "tooltip.resolution": "במעלות עשרוניות",
+  "tooltip.creation-date": "תאריך ההפקה במערכות ייצור",
+  "tooltip.update-date": "העדכון החדש ביותר",
+  "tooltip.sensor-type": "רשימת סנסורים ששימשו כמקור למוצר",
+  "tooltip.region": "כיסוי המדינות במוצר",
+
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",
   "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
