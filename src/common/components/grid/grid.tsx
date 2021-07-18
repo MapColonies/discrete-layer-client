@@ -41,6 +41,7 @@ export interface GridValueFormatterParams extends ValueFormatterParams{};
 export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;
+  detailsRowExapnderPosition?: 'start' | 'end';
 };
 export interface IGridRowDataDetailsExt {
   rowHeight: number;

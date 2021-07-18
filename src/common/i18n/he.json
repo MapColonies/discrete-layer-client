@@ -6,9 +6,9 @@
   "general.title.new.raster": "הוספת מוצר ראסטר",
   "general.title.edit": "עריכת מידע של מוצר",
 
-  "record-type.record_raster.label": "Raster",
-  "record-type.record_3d.label": "3D",
-  "record-type.record_all.label": "All",
+  "record-type.record_raster.label": "ראסטר",
+  "record-type.record_3d.label": "תלת-מימד",
+  "record-type.record_all.label": "הכל",
 
   "polygon-selection.draw-btn.tooltip": "צייר אזור ליצוא",
   "polygon-selection.cancel-btn.tooltip": "בטל ציור",
@@ -46,10 +46,6 @@
   "tab-views.catalog": "קטלוג",
 
   "details-panel.no-selection": "לא נבחר הפריט",
-
-  "fields-categories.main": " ",
-  "fields-categories.general": "ראשי",
-  "fields-categories.geo": "מידע גיאוגרפי",
 
   "field-names.ingestion.directory": "נתיב מלא",
 
@@ -105,13 +101,30 @@
   "field-names.3d.keywords": "מילות מפתח",
   "field-names.3d.version": "גירסה",
   "field-names.3d.producer-name": "מפיק",
-  "field-names.3d.project-name": "פרואקט",
+  "field-names.3d.project-name": "פרויקט",
   "field-names.3d.validation-date": "נבדק",
   "field-names.3d.centroid": "סנטרויד",
-  "field-names.3d.relativeAccuracyCE90": "דיוק רלטיבי",
+  "field-names.3d.relativeAccuracyCE90": "דיוק יחסי",
   "field-names.3d.estimated-precision": "דיוק צפוי",
   "field-names.3d.measured-precision": "דיוק הנמדד",
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
-  "field-names.3d.wktGeometry": "גאומטריה"
+  "field-names.3d.wktGeometry": "גאומטריה",
 
+  "lookups.sensorType.vis": "VIS",
+  "lookups.sensorType.rgb": "RGB",
+  "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
+  "lookups.sensorType.other": "אחר",
+
+  "lookups.sensorType.vis.tooltip": "VIS",
+  "lookups.sensorType.rgb.tooltip": "RGB",
+  "lookups.sensorType.pan_sharpen.tooltip": "Pan_Sharpen",
+  "lookups.sensorType.other.tooltip": "אחר",
+
+  "lookups.fieldCategory.main": " ",
+  "lookups.fieldCategory.general": "ראשי",
+  "lookups.fieldCategory.geo_info": "מידע גיאוגרפי",
+
+  "lookups.fieldCategory.main.tooltip": " ",
+  "lookups.fieldCategory.general.tooltip": "ראשי",
+  "lookups.fieldCategory.geo_info.tooltip": "מידע גיאוגרפי"
 }

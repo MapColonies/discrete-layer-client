@@ -9,13 +9,14 @@ import { Mode } from '../../../common/models/mode.enum';
 import { FieldCategory, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType, SensorType, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
-
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
 import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentors';
 import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentors';
 import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentors';
 import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentors';
 import { RecordTypeValuePresentorComponent } from  './field-value-presentors/record-type.value-presentors';
+import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
+import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { FieldLabelComponent } from './field-label';
 
 import './layer-details.css';
@@ -64,13 +65,16 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
   switch(basicType){
     case 'string':
     case 'identifier':
-    case 'number':
       return (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
       );
+    case 'number':
+      return (
+        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
+      );
     case 'SensorType':
       return (
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></StringValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
     case 'links':
       return (
@@ -138,7 +142,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                       >
                         <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
                         {
-                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName as string), mode, formik)
+                          getValuePresentor(layerRecord, fieldInfo, get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }
                       </Box>
                     )

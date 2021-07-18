@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import 'mobx-react-lite/batchingForReactDom';
-import { createHttpClient } from "mst-gql"
+import { createHttpClient } from 'mst-gql';
 import './index.css';
 import Axios, { Method } from 'axios';
 import App from './App';
