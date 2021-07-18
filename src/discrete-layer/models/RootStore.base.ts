@@ -17,8 +17,7 @@ import { CategoryConfigModel, CategoryConfigModelType } from "./CategoryConfigMo
 import { categoryConfigModelPrimitives, CategoryConfigModelSelector } from "./CategoryConfigModel.base"
 import { FieldConfigModel, FieldConfigModelType } from "./FieldConfigModel"
 import { fieldConfigModelPrimitives, FieldConfigModelSelector } from "./FieldConfigModel.base"
-import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
-import { enumAspectsModelPrimitives, EnumAspectsModelSelector } from "./EnumAspectsModel.base"
+import { EnumAspectsModel } from "./EnumAspectsModel"
 
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
