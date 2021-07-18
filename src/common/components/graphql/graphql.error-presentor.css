@@ -1,0 +1,17 @@
+.errorContainer{
+  flex-grow: 1;
+  display: flex;
+  color: var(--mdc-theme-gc-error-high);
+  align-items: center;
+}
+
+.errorIcon{
+  color: var(--mdc-theme-gc-error-high) !important;
+  font-weight: bolder;
+  font-size: 32px;
+}
+
+.errorsList{
+  list-style: circle;
+  margin: 0;
+}

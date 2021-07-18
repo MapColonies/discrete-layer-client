@@ -96,7 +96,12 @@
   border-radius: 100px;
 }
 
-.dark-theme .ag-theme-alpine-dark .ag-root-wrapper-body .ag-checkbox-input-wrapper {
+.dark-theme .ag-theme-alpine-dark .ag-row-hover.ag-full-width-row{
+  border-radius: unset;
+  background-color: unset;
+}
+
+.dark-theme .ag-theme-alpine-dark .ag-root-wrapper-body .ag-checkbox-input-wrapper{
   background: none;
 }
 
@@ -125,17 +130,4 @@
   color: var(--mdc-theme-text-icon-on-dark);
   font-size: 16px;
   font-weight: 600;
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  -webkit-text-fill-color: var(--mdc-theme-text-primary-on-dark, #fff);
-  transition: background-color 5000s ease-in-out 0s;
 }

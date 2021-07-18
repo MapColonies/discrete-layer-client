@@ -110,6 +110,22 @@
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
   "field-names.3d.wktGeometry": "גאומטריה",
 
+  "system-status.title": "משימות מערכת",
+  "system-status.close-btn.text": "סגור",
+  "system-status.job.fields.resource-id.label": "מוצר",
+  "system-status.job.fields.version.label": "גירסה",
+  "system-status.job.fields.type.label": "סוג",
+  "system-status.job.fields.status.label": "סטטוס",
+  "system-status.job.fields.priority.label": "עדיפות",
+  "system-status.job.fields.created.label": "נוצר",
+  "system-status.job.fields.updated.label": "עודכן",
+  
+  "system-status.task.fields.type.label": "מטלה",
+  "system-status.task.fields.status.label": "סטטוס",
+  "system-status.task.fields.attempts.label": "ניסיונות",
+  "system-status.task.fields.created.label": "נוצר",
+  "system-status.task.fields.updated.label": "עודכן",
+  
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",
   "lookups.sensorType.pan_sharpen": "Pan_Sharpen",

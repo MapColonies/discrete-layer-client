@@ -1,0 +1,70 @@
+#jobsDialog .mdc-dialog__surface{
+  max-width: unset;
+}
+
+.jobsBody{
+  overflow-y: hidden !important;
+  height: 600px;
+  width: 920px;
+}
+
+.closeIcon{
+  margin-left: auto;
+}
+
+body[dir=rtl] .closeIcon{
+  margin-left: unset;
+  margin-right: auto;
+}
+
+.buttons{
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin: 20px;
+  align-items: center;
+}
+
+/* Hide right header and spacer */
+.ag-pinned-right-header,
+.ag-horizontal-right-spacer {
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+/* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
+.ag-pinned-right-cols-container {
+  position: absolute !important;
+  right: 0;
+  pointer-events: none;
+}
+/* Reset pointer-events so that click can happen on action buttons */
+.ag-pinned-right-cols-container * {
+  pointer-events: initial;
+}
+
+/* Hide border of right-cols-container */
+.ag-pinned-right-cols-container .ag-cell {
+  border: none !important;
+}
+
+/* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
+.ag-pinned-right-cols-container .ag-row:not(.ag-row-hover),
+.ag-pinned-right-cols-container .ag-row:not(.ag-row-hover) .ag-cell {
+  width: 0 !important;
+  padding: 0 !important;
+}
+
+.ag-pinned-right-cols-container .ag-row.ag-row-hover{
+  background-color: rgb(44,65,89);
+  border-width: 0px !important;
+}
+
+.ag-pinned-right-cols-container .ag-row.ag-row-selected.ag-row-hover{
+  background-color: #455570;
+}
+
+body[dir=rtl] .ag-pinned-right-cols-container .ag-row.ag-row-hover {
+  margin-right: 250%;
+}
+
