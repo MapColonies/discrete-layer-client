@@ -16,7 +16,7 @@ import { LinksValuePresentorComponent } from './field-value-presentors/links.val
 import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentors';
 import { RecordTypeValuePresentorComponent } from  './field-value-presentors/record-type.value-presentors';
 import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
-import { ArrayValuePresentorComponent } from './field-value-presentors/array.value-presentors';
+import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { FieldLabelComponent } from './field-label';
 
 import './layer-details.css';
@@ -74,7 +74,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       );
     case 'SensorType':
       return (
-        <ArrayValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></ArrayValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
     case 'links':
       return (

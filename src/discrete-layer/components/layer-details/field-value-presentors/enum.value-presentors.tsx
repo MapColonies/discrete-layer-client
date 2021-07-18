@@ -5,14 +5,14 @@ import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 
-interface ArrayValuePresentorProps {
+interface EnumValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: unknown;
 }
 
-export const ArrayValuePresentorComponent: React.FC<ArrayValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
+export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <Tooltip content={value}>
