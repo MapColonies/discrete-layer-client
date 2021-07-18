@@ -7,6 +7,17 @@
   border-bottom-right-radius: 20px
 }
 
+.tableFixHead { 
+  overflow: auto; 
+  height: 100px; 
+}
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--mdc-theme-alternative-surface, #fff);
+}
+
 .tasksTableColumnHeader{
   width: 20%;
   text-align: left;

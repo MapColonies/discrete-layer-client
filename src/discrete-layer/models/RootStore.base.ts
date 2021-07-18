@@ -150,6 +150,14 @@ export type Layer3DRecordInput = {
   keywords?: string
   links?: LinkInput[]
 }
+export type JobUpdateData = {
+  parameters?: any
+  status?: string
+  percentage?: number
+  reason?: string
+  isCleaned?: boolean
+  priority?: number
+}
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   layerRasterRecords: ObservableMap<string, LayerRasterRecordModelType>,
@@ -169,7 +177,8 @@ queryJobs="queryJobs"
 export enum RootStoreBaseMutations {
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
-mutateStart3DIngestion="mutateStart3DIngestion"
+mutateStart3DIngestion="mutateStart3DIngestion",
+mutateUpdateJob="mutateUpdateJob"
 }
 
 /**
@@ -207,5 +216,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     mutateStart3DIngestion(variables: { data: Ingestion3DData }, optimisticUpdate?: () => void) {
       return self.mutate<{ start3DIngestion: string }>(`mutation start3DIngestion($data: Ingestion3DData!) { start3DIngestion(data: $data) }`, variables, optimisticUpdate)
+    },
+    mutateUpdateJob(variables: { data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
+      return self.mutate<{ updateJob: string }>(`mutation updateJob($data: JobUpdateData!, $id: String!) { updateJob(data: $data, id: $id) }`, variables, optimisticUpdate)
     },
   })))

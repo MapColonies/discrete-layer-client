@@ -8,11 +8,21 @@
   width: 920px;
 }
 
+.closeIcon{
+  margin-left: auto;
+}
+
+body[dir=rtl] .closeIcon{
+  margin-left: unset;
+  margin-right: auto;
+}
+
 .buttons{
   display: flex;
   justify-content: flex-end;
   gap: 20px;
   margin: 20px;
+  align-items: center;
 }
 
 /* Hide right header and spacer */

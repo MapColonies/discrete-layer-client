@@ -115,7 +115,7 @@
   "field-names.3d.wktGeometry": "WKT Geometry",
 
   "system-status.title": "Sytem Jobs",
-  "system-status.ok-btn.text": "Ok",
+  "system-status.close-btn.text": "Close",
   "system-status.job.fields.resource-id.label": "Resource",
   "system-status.job.fields.version.label": "Version",
   "system-status.job.fields.type.label": "Job Type",

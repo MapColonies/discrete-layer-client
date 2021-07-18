@@ -3,12 +3,11 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage } from 'react-intl';
 import { Moment } from 'moment';
 import { Box } from '@map-colonies/react-components';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { JobModelType } from '../../../models';
 import { dateFormatter } from '../../layers-results/type-formatters/type-formatters';
-// import { dateFormatter, FormatterFunc, stringFormatter } from '../type-formatters/type-formatters';
 
 import './job-details.cell-renderer.css';
-import { StatusRenderer } from './status.cell-renderer';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -85,91 +84,45 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
     }
   }
   return (
-    <Box >
-    {
-      <table className="tasksTable">
-        <thead>
-          <tr>
-            {
-              taskFileds.map(field => (
-                <th 
-                  key={`${keyPrefix}_${field.name}`} 
-                  className="tasksTableColumnHeader"
-                  style={getColumnStyle(field)}
-                >
-                  <FormattedMessage id={field.label} />
-                </th>    
-              ))
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {
-            tasksData.map(task => (
-              <tr key={`${keyPrefix}_${task.id as string}`}>
-                {
+    <Box className="tableFixHead">
+      {
+        // <PerfectScrollbar>
+        <table className="tasksTable">
+          <thead>
+            <tr>
+              {
                 taskFileds.map(field => (
-                  <td key={`${keyPrefix}_${task.id as string}_${field.name}`}>
-                    {/* {(task[field.name] as string)} */}
-                    {getValuePresentor(task, field)}
-                  </td>
+                  <th 
+                    key={`${keyPrefix}_${field.name}`} 
+                    className="tasksTableColumnHeader"
+                    style={getColumnStyle(field)}
+                  >
+                    <FormattedMessage id={field.label} />
+                  </th>    
                 ))
-                }
-              </tr>
-            ))
+              }
+            </tr>
+          </thead>
+          <tbody>
+            {
+              tasksData.map(task => (
+                <tr key={`${keyPrefix}_${task.id as string}`}>
+                  {
+                  taskFileds.map(field => (
+                    <td key={`${keyPrefix}_${task.id as string}_${field.name}`}>
+                      {/* {(task[field.name] as string)} */}
+                      {getValuePresentor(task, field)}
+                    </td>
+                  ))
+                  }
+                </tr>
+              ))
 
-          }
-        </tbody>
-        {/* <tr>
-          <td>DB</td>
-          <td>Completed</td>
-          <td>1</td>
-          <td>12/12/2020</td>
-          <td>13/12/2020</td>
-        </tr>
-        <tr>
-          <td>FS</td>
-          <td>Failed</td>
-          <td>1</td>
-          <td>12/12/2020</td>
-          <td>13/12/2020</td>
-        </tr>
-        <tr>
-          <td>Mailer</td>
-          <td>Completed</td>
-          <td>2</td>
-          <td>12/12/2020</td>
-          <td>13/12/2020</td>
-        </tr> */}
-      </table>
-    
-  //     props.data.tasks.map((task: Record<string,unknown>,i:number) => {
-  //       return (
-  //         <Box  key={i} className="detailsColumn">
-  //           {
-  //             ['status', 'jobId'].map((field:string, ii: number) => {
-  //               return(
-  //                 <Box key={`${i}_${ii}`}>
-  //                   <span style={{fontWeight:600}}>
-  //                     LABEL
-  //                     {/* <FormattedMessage id={task[field]} />:&nbsp; */}
-  //                   </span>
-  //                   <span>
-  //                     {
-  //                       task[field] as string
-  //                       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //                       // item.formater(props.data[item.propName])
-  //                     }
-  //                   </span>
-  //                 </Box>
-  //               )
-  //             })
-  //           }
-  //         </Box>
-  //       )
-  //     })
-    }
-  </Box>
+            }
+          </tbody>
+        </table>
+        // </PerfectScrollbar>
+      }
+    </Box>
   );
-
 };
