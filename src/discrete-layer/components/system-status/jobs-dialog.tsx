@@ -45,6 +45,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [updatingPriority, setUpdatingPriority] = useState<IUpdating>();
   const [gridApi, setGridApi] = useState<GridApi>();
   
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { loading, error, data, query } = useQuery((store) =>
     store.queryJobs({
       params: {}
@@ -72,6 +73,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   useEffect(() => {
     if(updateTaskPayload.id !== undefined){
       // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
     }
   }, [updateTaskPayload, store]);

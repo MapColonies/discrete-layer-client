@@ -1,5 +1,7 @@
-import { IconButton } from '@map-colonies/react-core';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react';
+import { IconButton } from '@map-colonies/react-core';
 
 import './graphql.error-presentor.css';
 
@@ -7,7 +9,7 @@ interface IGpaphQLError {
   error: any;
 }
 
-export const GpaphQLError: React.FC<IGpaphQLError> = (props: any)=> {
+export const GpaphQLError: React.FC<IGpaphQLError> = (props)=> {
   return (
     <>
     {

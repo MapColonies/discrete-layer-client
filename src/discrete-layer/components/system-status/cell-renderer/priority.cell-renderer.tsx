@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Box } from '@map-colonies/react-components';
-import { IUpdating } from '../jobs-dialog';
 import { CircularProgress } from '@map-colonies/react-core';
+import { IUpdating } from '../jobs-dialog';
 
 interface IPriorityCellRendererParams extends ICellRendererParams {
   isUpdating: () => IUpdating | undefined;
