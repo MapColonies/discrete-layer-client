@@ -19,8 +19,6 @@ import { FieldConfigModel, FieldConfigModelType } from "./FieldConfigModel"
 import { fieldConfigModelPrimitives, FieldConfigModelSelector } from "./FieldConfigModel.base"
 import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
 import { enumAspectsModelPrimitives, EnumAspectsModelSelector } from "./EnumAspectsModel.base"
-import { EnumDictionaryModel, EnumDictionaryModelType } from "./EnumDictionaryModel"
-import { enumDictionaryModelPrimitives, EnumDictionaryModelSelector } from "./EnumDictionaryModel.base"
 
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
@@ -168,7 +166,7 @@ mutateStart3DIngestion="mutateStart3DIngestion"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['EnumAspects', () => EnumAspectsModel], ['EnumDictionary', () => EnumDictionaryModel]], ['LayerRasterRecord', 'Layer3DRecord', 'EntityDescriptor'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['EnumAspects', () => EnumAspectsModel]], ['LayerRasterRecord', 'Layer3DRecord', 'EntityDescriptor'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),

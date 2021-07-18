@@ -5,8 +5,6 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { EnumDictionaryModel, EnumDictionaryModelType } from "./EnumDictionaryModel"
-import { EnumDictionaryModelSelector } from "./EnumDictionaryModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -18,7 +16,7 @@ export const EnumAspectsModelBase = ModelBase
   .named('EnumAspects')
   .props({
     __typename: types.optional(types.literal("EnumAspects"), "EnumAspects"),
-    dictionary: types.union(types.undefined, types.late((): any => EnumDictionaryModel)),
+    dictionary: types.union(types.undefined, types.frozen()),
   })
   .views(self => ({
     get store() {
@@ -27,10 +25,10 @@ export const EnumAspectsModelBase = ModelBase
   }))
 
 export class EnumAspectsModelSelector extends QueryBuilder {
-  dictionary(builder?: string | EnumDictionaryModelSelector | ((selector: EnumDictionaryModelSelector) => EnumDictionaryModelSelector)) { return this.__child(`dictionary`, EnumDictionaryModelSelector, builder) }
+  get dictionary() { return this.__attr(`dictionary`) }
 }
 export function selectFromEnumAspects() {
   return new EnumAspectsModelSelector()
 }
 
-export const enumAspectsModelPrimitives = selectFromEnumAspects()
+export const enumAspectsModelPrimitives = selectFromEnumAspects().dictionary
