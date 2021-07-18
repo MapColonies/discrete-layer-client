@@ -243,6 +243,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           />
           <Box className="buttons">
             {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
             }
             <Button raised type="button" onClick={(): void => { closeDialog(); }}>
