@@ -110,14 +110,6 @@
   "field-names.3d.nominal-resolution": "Nominal Res.",
   "field-names.3d.wktGeometry": "WKT Geometry",
 
-  "tooltip": "",
-  "tooltip.productId": "ID from an external storage",
-  "tooltip.resolution": "Decimal degrees",
-  "tooltip.creation-date": "Date of production",
-  "tooltip.update-date": "The latest update",
-  "tooltip.sensor-type": "List of sensors used as a source for the product",
-  "tooltip.region": "Coverage Contries",
-
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",
   "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
