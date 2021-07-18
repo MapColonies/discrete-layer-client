@@ -10,6 +10,7 @@ export { selectFromEnumAspects, enumAspectsModelPrimitives, EnumAspectsModelSele
 /**
  * EnumAspectsModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const EnumAspectsModel = EnumAspectsModelBase
   .actions(self => ({
     // This is an auto-generated example action.

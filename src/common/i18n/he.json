@@ -110,6 +110,7 @@
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
   "field-names.3d.wktGeometry": "גאומטריה",
 
+  "tooltip": "",
   "tooltip.productId": "מזהה שהגיע ממערכת אגירה חיצונית",
   "tooltip.resolution": "במעלות עשרוניות",
   "tooltip.creation-date": "תאריך ההפקה במערכות ייצור",

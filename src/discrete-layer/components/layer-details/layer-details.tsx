@@ -140,11 +140,11 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                       <Box key={fieldInfo.fieldName as string}
                         className={(fieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}
                       >
-                        <Tooltip content={`tooltip.${fieldInfo.label}`}>
+                        <Tooltip content={`tooltip.${fieldInfo.label ?? ''}`}>
                           <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
                         </Tooltip>
                         {
-                          getValuePresentor(layerRecord, fieldInfo,  get(layerRecord, fieldInfo.fieldName as string), mode, formik)
+                          getValuePresentor(layerRecord, fieldInfo, get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }
                       </Box>
                     )

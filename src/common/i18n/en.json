@@ -110,6 +110,7 @@
   "field-names.3d.nominal-resolution": "Nominal Res.",
   "field-names.3d.wktGeometry": "WKT Geometry",
 
+  "tooltip": "",
   "tooltip.productId": "ID from an external storage",
   "tooltip.resolution": "Decimal degrees",
   "tooltip.creation-date": "Date of production",
