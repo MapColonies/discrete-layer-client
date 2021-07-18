@@ -61,18 +61,8 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
         field: 'isVisible',
         hide: true,
       },
-      (props.gridOptions?.detailsRowExapnderPosition ===  'start' && props.gridOptions.detailsRowCellRenderer !== undefined) ? 
-        {
-          headerName: '',
-          width: EXPANDER_COLUMN_WIDTH,
-          cellRenderer: 'detailsExpanderRenderer',
-          suppressMovable: true,
-        } : 
-        {
-          hide: true,
-        },
       ...props.gridOptions?.columnDefs as [],
-      (props.gridOptions?.detailsRowExapnderPosition !==  'start' && props.gridOptions?.detailsRowCellRenderer !== undefined) ? 
+      props.gridOptions?.detailsRowCellRenderer !== undefined ? 
         {
           headerName: '',
           width: EXPANDER_COLUMN_WIDTH,

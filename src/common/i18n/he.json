@@ -134,21 +134,4 @@
   "lookups.fieldCategory.main.tooltip": " ",
   "lookups.fieldCategory.general.tooltip": "ראשי",
   "lookups.fieldCategory.geo_info.tooltip": "מידע גיאוגרפי",
-
-  "system-status.title": "משימות מערכת",
-  "system-status.ok-btn.text": "אישור",
-  "system-status.job.fields.resource-id.label": "מוצר",
-  "system-status.job.fields.version.label": "גירסה",
-  "system-status.job.fields.type.label": "סוג",
-  "system-status.job.fields.status.label": "סטטוס",
-  "system-status.job.fields.priority.label": "עדיפות",
-  "system-status.job.fields.created.label": "נוצר",
-  "system-status.job.fields.updated.label": "עודכן",
-  
-  "system-status.task.fields.type.label": "מטלה",
-  "system-status.task.fields.status.label": "סטטוס",
-  "system-status.task.fields.attempts.label": "ניסיונות",
-  "system-status.task.fields.created.label": "נוצר",
-  "system-status.task.fields.updated.label": "עודכן"
-
 }
