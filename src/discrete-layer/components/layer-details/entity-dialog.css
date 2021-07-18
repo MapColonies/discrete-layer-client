@@ -6,7 +6,7 @@
   margin-left: auto;
 }
 
-body[dir=rtl] .closeIcon{
+body[dir='rtl'] .closeIcon{
   margin-left: unset;
   margin-right: auto;
 }
@@ -24,7 +24,7 @@ body[dir=rtl] .closeIcon{
   padding-right: 20px;
 }
 
-body[dir=rtl] .content{
+body[dir='rtl'] .content{
   padding-right: unset;
   padding-left: 20px;
 }

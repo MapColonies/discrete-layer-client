@@ -47,10 +47,6 @@
 
   "details-panel.no-selection": "No selection",
 
-  "fields-categories.main": " ",
-  "fields-categories.general": "General",
-  "fields-categories.geo": "Geo Info",
-
   "field-names.ingestion.directory": "Directory",
 
   "field-names.raster.fileNames": "File names",
@@ -128,5 +124,23 @@
   "system-status.task.fields.status.label": "Status",
   "system-status.task.fields.attempts.label": "Attempts",
   "system-status.task.fields.created.label": "Created",
-  "system-status.task.fields.updated.label": "Updated"
+  "system-status.task.fields.updated.label": "Updated",
+  
+  "lookups.sensorType.vis": "VIS",
+  "lookups.sensorType.rgb": "RGB",
+  "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
+  "lookups.sensorType.other": "OTHER",
+
+  "lookups.sensorType.vis.tooltip": "VIS",
+  "lookups.sensorType.rgb.tooltip": "RGB",
+  "lookups.sensorType.pan_sharpen.tooltip": "Pan_Sharpen",
+  "lookups.sensorType.other.tooltip": "OTHER",
+
+  "lookups.fieldCategory.main": " ",
+  "lookups.fieldCategory.general": "General",
+  "lookups.fieldCategory.geo_info": "Geo Info",
+
+  "lookups.fieldCategory.main.tooltip": " ",
+  "lookups.fieldCategory.general.tooltip": "General",
+  "lookups.fieldCategory.geo_info.tooltip": "Geo Info"
 }

@@ -1,5 +1,5 @@
-import { IOptions } from "@map-colonies/react-core";
 import { get } from 'lodash';
+import { IOptions } from '@map-colonies/react-core';
 
 // eslint-disable-next-line
 export class GridThemes {

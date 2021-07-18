@@ -1,23 +1,20 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import React, {useEffect, useState, useRef} from "react";
-import { observer } from "mobx-react";
+import React, {useEffect, useState, useRef} from 'react';
+import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
-
-import { TreeComponent, TreeItem } from "../../../common/components/tree";
-
-import { useQuery, useStore } from "../../models/RootStore";
-
 import _ from 'lodash';
 
-import { groupBy } from "../../../common/helpers/group-by";
-import { ILayerImage } from "../../models/layerImage";
-import { RecordType } from "../../models/RecordTypeEnum";
-import { Error } from "./Error"
-import { Loading } from "./Loading"
-import { FootprintRenderer } from "./icon-renderers/footprint.icon-renderer";
-import { LayerImageRenderer } from "./icon-renderers/layer-image.icon-renderer";
+import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { groupBy } from '../../../common/helpers/group-by';
+import { useQuery, useStore } from '../../models/RootStore';
+import { ILayerImage } from '../../models/layerImage';
+import { RecordType } from '../../models/RecordTypeEnum';
+import { Error } from './Error'
+import { Loading } from './Loading'
+import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
+import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
