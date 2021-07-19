@@ -72,7 +72,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const store = useStore();
 
   useEffect(() => {
-    console.log('DATA--->', cloneDeep(data));
     setGridRowData(data ? cloneDeep(data.jobs) : []);
     setUpdatingPriority(undefined);
   }, [data]);
