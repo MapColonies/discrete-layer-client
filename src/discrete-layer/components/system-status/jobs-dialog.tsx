@@ -14,7 +14,7 @@ import {
   GridApi
 } from '../../../common/components/grid';
 import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
-import useCountDown from '../../../common/hooks/countdown.hook';
+import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import { useQuery, useStore } from "../../models/RootStore";
 import { JobModelType } from '../../models';
 import { dateFormatter } from '../layers-results/type-formatters/type-formatters';
@@ -52,11 +52,11 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
 
   // @ts-ignore
-  const [timeLeft, { start, pause, resume, reset }] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
+  const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
   
   // start the timer during the first render
   useEffect(() => {
-    start();
+    (actions as IActions).start();
   }, []);
 
   // eslint-disable-next-line
@@ -104,7 +104,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   useEffect(() => {
     const pollingInterval = setInterval(() => {
       setPollingCycle(pollingCycle + 1);
-      start(POLLING_CYCLE_INTERVAL);
+      (actions as IActions).start(POLLING_CYCLE_INTERVAL);
       void query?.refetch();
     }, POLLING_CYCLE_INTERVAL);
 
@@ -255,7 +255,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           <Box 
             className="refreshContainer"
             onClick={ (): void => {
-              start(POLLING_CYCLE_INTERVAL);
+              (actions as IActions).start(POLLING_CYCLE_INTERVAL);
               void query?.refetch();
             }}
           >

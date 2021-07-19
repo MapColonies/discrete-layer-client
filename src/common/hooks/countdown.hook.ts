@@ -86,4 +86,11 @@ const useCountDown = (timeToCount = 60 * 1000, interval = 1000) => {
   return [timeLeft, actions];
 }
 
+export interface IActions {
+  start: (ttc?: any) => void;
+  pause: () => void;
+  resume: () => void;
+  reset: () => void;
+}
+
 export default useCountDown;
