@@ -38,6 +38,9 @@ if (!window._env_) {
           path: '',
         },
       },
+      JOB_STATUS: {
+        POLLING_CYCLE_INTERVAL: 60000
+      },
     };
   })(void 0);
 }
