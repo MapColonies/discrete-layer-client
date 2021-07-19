@@ -141,7 +141,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.version.label',
       }),
-      width: 100,
+      width: 80,
       field: 'version',
     },
     {
@@ -157,7 +157,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.status.label',
       }),
-      width: 120,
+      width: 160,
       field: 'status',
       cellRenderer: 'statusRenderer',
     },
