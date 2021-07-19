@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
 import { Mode } from '../../../common/models/mode.enum';
 import { Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
@@ -150,6 +151,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               </PerfectScrollbar>
             </Box>
             <Box className="buttons">
+              {
+                mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
+              }
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
