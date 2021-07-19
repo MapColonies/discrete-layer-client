@@ -14,6 +14,7 @@ import {
   GridApi
 } from '../../../common/components/grid';
 import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
+import useCountDown from '../../../common/hooks/countdown.hook';
 import { useQuery, useStore } from "../../models/RootStore";
 import { JobModelType } from '../../models';
 import { dateFormatter } from '../layers-results/type-formatters/type-formatters';
@@ -26,6 +27,10 @@ import './jobs-dialog.css';
 
 const pagination = true;
 const pageSize = 10;
+const START_CYCLE_ITTERACTION = 0;
+const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
+const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
+const MILISECONDS_IN_SEC = 1000;
 
 interface SystemJobsComponentProps {
   isOpen: boolean;
@@ -44,7 +49,16 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [updatingPriority, setUpdatingPriority] = useState<IUpdating>();
   const [gridApi, setGridApi] = useState<GridApi>();
+  const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
+
+  // @ts-ignore
+  const [timeLeft, { start, pause, resume, reset }] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
   
+  // start the timer during the first render
+  useEffect(() => {
+    start();
+  }, []);
+
   // eslint-disable-next-line
   const { loading, error, data, query } = useQuery((store) =>
     store.queryJobs({
@@ -66,7 +80,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   useEffect(() => {
     if(mutationQuery.data){
       setUpdateTaskPayload({});
-      void query?.refetch(); //refetch data
+      void query?.refetch();
     }
   }, [mutationQuery.data, query]);
 
@@ -87,6 +101,18 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       });
     }
   },[mutationQuery.error]);
+
+  useEffect(() => {
+    const pollingInterval = setInterval(() => {
+      setPollingCycle(pollingCycle + 1);
+      start(POLLING_CYCLE_INTERVAL);
+      void query?.refetch();
+    }, POLLING_CYCLE_INTERVAL);
+
+    return (): void => {
+      clearInterval(pollingInterval);
+    };
+  }, [query, pollingCycle]);
 
   const closeDialog = useCallback(
     () => {
@@ -227,6 +253,21 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
           <FormattedMessage id="system-status.title"/>
+          <Box 
+            className="refreshContainer"
+            onClick={ (): void => {
+              start(POLLING_CYCLE_INTERVAL);
+              void query?.refetch();
+            }}
+          >
+            <IconButton 
+              icon="autorenew" 
+              className="refreshIcon"
+            />
+            <Box className="refreshSecs">
+              {`${(timeLeft as number)/MILISECONDS_IN_SEC}`}
+            </Box>
+          </Box>
           <IconButton
             className="closeIcon mc-icon-Close"
             onClick={ (): void => { closeDialog(); } }

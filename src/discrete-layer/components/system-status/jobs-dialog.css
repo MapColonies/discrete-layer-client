@@ -2,22 +2,39 @@
   max-width: unset;
 }
 
-.jobsBody{
+#jobsDialog .jobsBody{
   overflow-y: hidden !important;
   height: 600px;
   width: 920px;
 }
 
-.closeIcon{
+#jobsDialog .closeIcon {
   margin-left: auto;
 }
 
-body[dir=rtl] .closeIcon{
+body[dir=rtl] #jobsDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
 }
 
-.buttons{
+#jobsDialog .refreshContainer{
+  display: flex;
+  align-items: center;
+}
+
+.refreshContainer .refreshIcon{
+  font-size: 30px;
+}
+
+.refreshContainer .refreshSecs{
+  position: relative;
+  font-size: 8px;
+  left: 26px;
+  width: 10px;
+  text-align: center;
+}
+
+#jobsDialog .buttons{
   display: flex;
   justify-content: flex-end;
   gap: 20px;
