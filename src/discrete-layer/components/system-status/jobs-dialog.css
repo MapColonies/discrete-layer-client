@@ -5,7 +5,7 @@
 #jobsDialog .jobsBody{
   overflow-y: hidden !important;
   height: 600px;
-  width: 920px;
+  width: 950px;
 }
 
 #jobsDialog .closeIcon {
@@ -83,5 +83,16 @@ body[dir=rtl] #jobsDialog .closeIcon {
 
 body[dir=rtl] .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   margin-right: 250%;
+}
+
+#jobsDialog .ag-body-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+#jobsDialog .ag-body-viewport::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 6px;
+}
+#jobsDialog .ag-body-viewport::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
 }
 
