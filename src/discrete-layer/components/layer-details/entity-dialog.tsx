@@ -119,6 +119,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     },
     [onSetOpen]
   );
+
+  const isInvalidForm = (): boolean => {
+    return !formik.values.directory || !formik.values.fileNames;
+  };
   
   useEffect(() => {
     // @ts-ignore
@@ -158,7 +162,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
-              <Button raised type="submit" disabled={ mutationQuery.loading}>
+              <Button raised type="submit" disabled={mutationQuery.loading || isInvalidForm()}>
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
             </Box>
