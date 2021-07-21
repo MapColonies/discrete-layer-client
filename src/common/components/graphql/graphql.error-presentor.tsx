@@ -13,7 +13,7 @@ export const GpaphQLError: React.FC<IGpaphQLError> = (props)=> {
   return (
     <>
     {
-      props.error.response !== undefined && <div  className="errorContainer">
+      props.error.response !== undefined && <div className="errorContainer">
         {/* {JSON.stringify(props.error)} */}
         <IconButton
           className="errorIcon mc-icon-Status-Warnings"
