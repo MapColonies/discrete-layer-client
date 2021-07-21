@@ -2,40 +2,40 @@
   /*max-width: unset;*/
 }
 
-.closeIcon{
+#entityDialog .closeIcon{
   margin-left: auto;
 }
 
-body[dir='rtl'] .closeIcon{
+body[dir='rtl'] #entityDialog .closeIcon{
   margin-left: unset;
   margin-right: auto;
 }
 
-.dialogBody{
+#entityDialog .dialogBody{
   overflow-y: hidden !important;
 }
 
-.form{
+#entityDialog .form{
   max-height: 880px !important;
 }
 
-.content{
+#entityDialog .content{
   max-height: 740px;
   padding-right: 20px;
 }
 
-body[dir='rtl'] .content{
+body[dir='rtl'] #entityDialog .content{
   padding-right: unset;
   padding-left: 20px;
 }
 
-.section{
+#entityDialog .section{
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 10px;
   padding: 10px;
 }
 
-.buttons{
+#entityDialog .buttons{
   display: flex;
   justify-content: flex-end;
   gap: 20px;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Box } from '@map-colonies/react-components';
+import { Tooltip } from '@map-colonies/react-core';
 import { JobModelType, Status, TaskModelType } from '../../../models';
 
 import './status.cell-renderer.css';
@@ -16,10 +17,21 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
     return `(${completed.length}/${data.tasks.length})`;
   };
 
-  const status = (props.data as JobModelType).status;
+  const getProgressComponent = (): JSX.Element => {
+    return (
+      <Box className={`${status?.toLowerCase() as string}`}>
+        {status}&nbsp;&nbsp;{getProgress(jobData)}
+      </Box>
+    );
+  }
+  const jobData = props.data as JobModelType;
+  const status = jobData.status;
   return (
-    <Box className={`${status?.toLowerCase() as string}`}>
-      {status}&nbsp;&nbsp;{getProgress(props.data)}
-    </Box>
+    status === 'Failed' ? 
+      <Tooltip content={jobData.reason}>
+        {getProgressComponent()}
+      </Tooltip>
+    :
+      <>{getProgressComponent()}</>
  );
 };

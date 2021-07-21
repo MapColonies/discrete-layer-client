@@ -34,4 +34,7 @@ window._env_ = {
       path: '{{ getv "/configuration/logger/http/path" "" }}'
     }
   },
+  JOB_STATUS: {
+    pollingCycleInterval: '{{ getv "/configuration/job/status/polling/cycle/interval" "60000" }}',
+  }
 };
