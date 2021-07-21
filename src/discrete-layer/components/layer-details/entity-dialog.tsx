@@ -152,6 +152,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             </Box>
             <Box className="buttons">
               {
+                // eslint-disable-next-line
                 mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
               }
               <Button type="button" onClick={(): void => { closeDialog(); }}>
