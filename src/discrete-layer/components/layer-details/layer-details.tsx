@@ -74,7 +74,7 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       );
     case 'SensorType':
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
     case 'links':
       return (
