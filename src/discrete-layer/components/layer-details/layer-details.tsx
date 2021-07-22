@@ -72,10 +72,6 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       return (
         <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
       );
-    case 'SensorType':
-      return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
-      );
     case 'links':
       return (
         <LinksValuePresentorComponent value={fieldValue as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
@@ -87,6 +83,10 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
     case 'momentDateType':
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as moment.Moment} formik={formik}></DateValuePresentorComponent>
+      );
+    case 'SensorType':
+      return (
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
       return(
