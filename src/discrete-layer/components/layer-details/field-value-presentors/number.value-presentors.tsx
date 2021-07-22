@@ -5,14 +5,14 @@ import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 
-interface StringValuePresentorProps {
+interface NumberValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: unknown;
 }
 
-export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
+export const NumberValuePresentorComponent: React.FC<NumberValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <Tooltip content={value}>
@@ -28,7 +28,7 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
         <Box className="detailsFieldValue">
           <TextField
             name={fieldInfo.fieldName as string}
-            type="text"
+            type="number"
             // eslint-disable-next-line
             onChange={(formik as any).handleChange}
             value={value}
@@ -41,7 +41,7 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
       <Box className="detailsFieldValue">
         <TextField
           name={fieldInfo.fieldName as string}
-          type="text"
+          type="number"
           // eslint-disable-next-line
           onChange={(formik as any).handleChange}
           value={value}

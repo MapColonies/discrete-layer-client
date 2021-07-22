@@ -27,4 +27,5 @@ keys = [
   "/configuration/logger/http/path",
   "/configuration/logger/level",
   "/configuration/logger/log2console",
+  "/configuration/job/status/polling/cycle/interval"
 ]

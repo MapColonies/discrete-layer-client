@@ -41,6 +41,7 @@ export interface GridValueFormatterParams extends ValueFormatterParams{};
 export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;
+  detailsRowExapnderPosition?: 'start' | 'end';
 };
 export interface IGridRowDataDetailsExt {
   rowHeight: number;
@@ -53,15 +54,26 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
   
+  const {detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
   const gridOptionsFromProps: GridComponentOptions = {
-    ...props.gridOptions,
+    ...restGridOptions,
     columnDefs: [
       {
         field: 'isVisible',
         hide: true,
       },
+      (props.gridOptions?.detailsRowExapnderPosition ===  'start' && props.gridOptions.detailsRowCellRenderer !== undefined) ? 
+        {
+          headerName: '',
+          width: EXPANDER_COLUMN_WIDTH,
+          cellRenderer: 'detailsExpanderRenderer',
+          suppressMovable: true,
+        } : 
+        {
+          hide: true,
+        },
       ...props.gridOptions?.columnDefs as [],
-      props.gridOptions?.detailsRowCellRenderer !== undefined ? 
+      (props.gridOptions?.detailsRowExapnderPosition !==  'start' && props.gridOptions?.detailsRowCellRenderer !== undefined) ? 
         {
           headerName: '',
           width: EXPANDER_COLUMN_WIDTH,
