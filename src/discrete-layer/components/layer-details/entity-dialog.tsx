@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
+import { v4 as uuidv4 } from 'uuid';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -43,6 +44,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
     default:
       break;
   }
+  record.id = uuidv4();
   record.type = recordType;
   return record as ILayerImage;
 }
@@ -81,8 +83,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             keywords: values.keywords as string,
           }
         }));
-      }
-      else{
+      } else {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { directory, fileNames, __typename, ...metadata } = values;
         switch(recordType){

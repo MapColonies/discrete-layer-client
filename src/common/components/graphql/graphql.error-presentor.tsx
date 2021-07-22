@@ -22,7 +22,7 @@ export const GpaphQLError: React.FC<IGpaphQLError> = (props)=> {
           {
             props.error.response.errors.map((error: Record<string, any>) => {
               return (
-                <li>{error.message}</li>
+                <li>{error.message.substr(+error.message.indexOf('; ') + 1, error.message.length - 1)}</li>
               );
             })
           }
