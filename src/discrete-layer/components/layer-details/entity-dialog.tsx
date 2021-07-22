@@ -121,7 +121,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   );
 
   const isInvalidForm = (): boolean => {
-    return !formik.values.directory || !formik.values.fileNames;
+    // return !formik.values.directory || !formik.values.fileNames;
+    return false;
   };
   
   useEffect(() => {
