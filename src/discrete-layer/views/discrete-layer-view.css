@@ -131,6 +131,9 @@ body[dir='rtl'] .tabOperationsContainer{
   padding: 8px 8px;
 }
 
+.systemJobsIcon{
+  padding-top: 16px;
+}
 
 body[dir='rtl'] .tabOperations{
   border-top-right-radius: unset;
