@@ -136,7 +136,7 @@ class FileThemeNodeContentRenderer extends Component {
               }
               style={{
                 left: rowDirection === 'ltr' ? (lowerSiblingCounts.length - 0.4) * scaffoldBlockPxWidth : 'unset',
-                right: rowDirection === 'rtl' ? -1 * (lowerSiblingCounts.length) * scaffoldBlockPxWidth : 'unset',
+                right: rowDirection === 'rtl' ? (parentNode === null ? -1 * (lowerSiblingCounts.length) * scaffoldBlockPxWidth : 'unset') : 'unset',
               }}
               onClick={() =>
                 toggleChildrenVisibility({
@@ -234,7 +234,11 @@ class FileThemeNodeContentRenderer extends Component {
                   }
 
                   {node.children && (
-                    <div className="descendantCount">( {getDescendantCount({node, ignoreCollapsed: false })} )</div>
+                    <div 
+                      className="descendantCount"
+                    >
+                      ( {getDescendantCount({node, ignoreCollapsed: false }) - (parentNode !== null ? 0 : node.children.length)} )
+                    </div>
                   )}
 
                 </div>

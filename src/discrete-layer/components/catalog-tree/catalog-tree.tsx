@@ -4,10 +4,10 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
-import _ from 'lodash';
+import { useIntl } from 'react-intl';
 
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { groupBy } from '../../../common/helpers/group-by';
+import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
@@ -16,12 +16,14 @@ import { Loading } from './Loading'
 import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
 
+import './catalog-tree.css';
+
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const intialOrder = 0;
 
-export const CatalogTreeComponent = observer(() => {
+export const CatalogTreeComponent: React.FC = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
     // store.querySearch({})
     store.querySearch({
@@ -71,16 +73,14 @@ export const CatalogTreeComponent = observer(() => {
   const { discreteLayersStore } = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const selectedLayersRef = useRef(intialOrder);
+  const intl = useIntl();
 
-  useEffect(()=>{
-    if(data && data.search){
-      const arr: ILayerImage[] = [];
-      data.search.forEach((item) => arr.push({...item}));
-
-      discreteLayersStore.setLayersImages(arr, false);
-  
-      const treeData = groupBy(arr, {keys: ['region']});
-      setTreeRawData(treeData.map(item=> {
+  const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
+    const treeDataUnlinked = groupBy(arr, groupByParams);
+    return {
+      title: title,
+      isGroup: true,
+      children: treeDataUnlinked.map(item=> {
         return {
             title: item.key['region'],
             isGroup: true,
@@ -92,14 +92,60 @@ export const CatalogTreeComponent = observer(() => {
               };
             })]
         };
-      }) as TreeItem[]);
+      }) as TreeItem[]
+    };
+  };
+
+  useEffect(()=>{
+    if(data && data.search){
+      const arr: ILayerImage[] = [];
+      data.search.forEach((item) => arr.push({...item}));
+
+      discreteLayersStore.setLayersImages(arr, false);
+
+      // get unlinked/new discretes shortcuts
+      const arrUnlinked = arr.filter((item) => {
+        // @ts-ignore
+        const itemObjectBag =  item as Record<string,unknown>;
+        return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
+      });
+      const parentUnlinked = buildParentTreeNode(
+        arrUnlinked,
+        intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
+        {keys: ['region']}
+      );
+
+      // get BESTs shortcuts
+      const arrBests = arr.filter((item) => {
+        // @ts-ignore
+        const itemObjectBag =  item as Record<string,unknown>;
+        return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
+      });
+      const parentBests = buildParentTreeNode(
+        arrBests,
+        intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+        {keys: ['region']}
+      );
+
+      // whole catalog as is
+      const parentCatalog = buildParentTreeNode(
+        arr,
+        intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
+        {keys: ['region']}
+      );
+
+      setTreeRawData(
+        [
+          parentUnlinked,
+          parentCatalog,
+          parentBests,
+        ]
+      );
     }
   },[data]);
 
   if (error) return <Error>{error.message}</Error>
   if (data){
-    
-
     return (
       <>
         {loading ? (
@@ -108,7 +154,7 @@ export const CatalogTreeComponent = observer(() => {
           <button onClick={query!.refetch}>Refetch</button>
         )}
 
-        <div style={{ 
+        <div id="catalogContainer" style={{ 
           height: '100%',
           margin: '0 12px'
         }}>
@@ -182,20 +228,20 @@ export const CatalogTreeComponent = observer(() => {
               },
               icons: rowInfo.node.isGroup
                 ? [
-                    <div
-                      style={{
-                        borderLeft: 'solid 8px gray',
-                        borderBottom: 'solid 10px gray',
-                        marginRight: 10,
-                        boxSizing: 'border-box',
-                        width: 16,
-                        height: 12,
-                        filter: rowInfo.node.expanded
-                          ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
-                          : 'none',
-                        borderColor: rowInfo.node.expanded ? 'white' : 'gray',
-                      }}
-                    />,
+                    // <div
+                    //   style={{
+                    //     borderLeft: 'solid 8px gray',
+                    //     borderBottom: 'solid 10px gray',
+                    //     marginRight: 10,
+                    //     boxSizing: 'border-box',
+                    //     width: 16,
+                    //     height: 12,
+                    //     filter: rowInfo.node.expanded
+                    //       ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
+                    //       : 'none',
+                    //     borderColor: rowInfo.node.expanded ? 'white' : 'gray',
+                    //   }}
+                    // />,
                   ]
                 : [
                     <FootprintRenderer
