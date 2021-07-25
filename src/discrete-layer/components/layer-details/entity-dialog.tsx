@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
-import { v4 as uuidv4 } from 'uuid';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -19,6 +18,8 @@ import { IngestionFields } from './ingestion-fields';
 
 import './entity-dialog.css';
 
+const DEFAULT_ID = 'DEFAULT_ID';
+
 interface EntityDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
@@ -28,11 +29,12 @@ interface EntityDialogComponentProps {
 
 const buildRecord = (recordType: RecordType): ILayerImage => {
   const record = {} as Record<string, any>;
-  switch(recordType){
+  switch(recordType) {
     case RecordType.RECORD_3D:
       Layer3DRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
+      record.id = DEFAULT_ID;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
@@ -44,7 +46,6 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
     default:
       break;
   }
-  record.id = uuidv4();
   record.type = recordType;
   return record as ILayerImage;
 }
