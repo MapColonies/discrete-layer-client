@@ -107,7 +107,7 @@
   "field-names.3d.project-name": "פרויקט",
   "field-names.3d.validation-date": "נבדק",
   "field-names.3d.centroid": "סנטרויד",
-  "field-names.3d.relativeAccuracyCE90": "דיוק יחסי",
+  "field-names.3d.relativeAccuracyLE90": "דיוק יחסי",
   "field-names.3d.estimated-precision": "דיוק צפוי",
   "field-names.3d.measured-precision": "דיוק הנמדד",
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
