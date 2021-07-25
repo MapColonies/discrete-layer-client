@@ -128,8 +128,7 @@
     "react-scripts": "3.4.1",
     "react-sortable-tree": "^2.8.0",
     "typescript": "^3.7.5",
-    "uuid": "^8.3.2",
-    "yup": "^0.32.9"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@map-colonies/eslint-config": "^1.0.3",
