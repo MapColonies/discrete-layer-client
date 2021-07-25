@@ -14,13 +14,13 @@ import { RootStoreType } from "./index"
 
 
 /**
- * LayerRasterRecordBase
- * auto generated base class for the model LayerRasterRecordModel.
+ * BestRecordBase
+ * auto generated base class for the model BestRecordModel.
  */
-export const LayerRasterRecordModelBase = ModelBase
-  .named('LayerRasterRecord')
+export const BestRecordModelBase = ModelBase
+  .named('BestRecord')
   .props({
-    __typename: types.optional(types.literal("LayerRasterRecord"), "LayerRasterRecord"),
+    __typename: types.optional(types.literal("BestRecord"), "BestRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
     classification: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.string),
@@ -35,7 +35,6 @@ export const LayerRasterRecordModelBase = ModelBase
     accuracyCE90: types.union(types.undefined, types.null, types.number),
     sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     region: types.union(types.undefined, types.null, types.string),
-    productId: types.union(types.undefined, types.string),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     srsName: types.union(types.undefined, types.null, types.string),
@@ -44,7 +43,7 @@ export const LayerRasterRecordModelBase = ModelBase
     scale: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
-    includedInBests: types.union(types.undefined, types.null, types.string),
+    discretes: types.union(types.undefined, types.null, types.string),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -57,7 +56,7 @@ export const LayerRasterRecordModelBase = ModelBase
     }
   }))
 
-export class LayerRasterRecordModelSelector extends QueryBuilder {
+export class BestRecordModelSelector extends QueryBuilder {
   get type() { return this.__attr(`type`) }
   get classification() { return this.__attr(`classification`) }
   get productName() { return this.__attr(`productName`) }
@@ -72,7 +71,6 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get accuracyCE90() { return this.__attr(`accuracyCE90`) }
   get sensorType() { return this.__attr(`sensorType`) }
   get region() { return this.__attr(`region`) }
-  get productId() { return this.__attr(`productId`) }
   get productVersion() { return this.__attr(`productVersion`) }
   get productType() { return this.__attr(`productType`) }
   get srsName() { return this.__attr(`srsName`) }
@@ -81,14 +79,14 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
   get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
-  get includedInBests() { return this.__attr(`includedInBests`) }
+  get discretes() { return this.__attr(`discretes`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get keywords() { return this.__attr(`keywords`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
-export function selectFromLayerRasterRecord() {
-  return new LayerRasterRecordModelSelector()
+export function selectFromBestRecord() {
+  return new BestRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productId.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.includedInBests.insertDate.keywords.id.links(linkModelPrimitives)
+export const bestRecordModelPrimitives = selectFromBestRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.discretes.insertDate.keywords.id.links(linkModelPrimitives)

@@ -45,10 +45,13 @@
   "tab-views.search-results": "Search results",
   "tab-views.catalog": "Catalog",
 
+  "tab-views.catalog.top-categories.unlinked": "Unlinked",
+  "tab-views.catalog.top-categories.bests": "BESTs",
+  "tab-views.catalog.top-categories.catalog": "Catalog",
+
   "details-panel.no-selection": "No selection",
 
   "field-names.ingestion.directory": "Directory",
-
   "field-names.raster.fileNames": "File names",
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",

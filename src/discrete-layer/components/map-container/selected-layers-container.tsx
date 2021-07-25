@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Cesium3DTileset, CesiumXYZLayer } from '@map-colonies/react-components';
+import { Cesium3DTileset, CesiumGeographicTilingScheme, CesiumWMTSLayer, CesiumXYZLayer, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LinkModelType } from '../../models/LinkModel';
+import { LayerRasterRecordModelType } from '../../models';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined
@@ -28,12 +29,30 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   }, [discreteLayersStore.layersImages]);
 
   const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
-    const layerLink: LinkModelType = get(layer,'links[0]') as LinkModelType;
+    let optionsWMTS;
+    let layerLink = layer.links?.find((link: LinkModelType)=> ['WMTS_tile','WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+    if(layerLink === undefined){
+      layerLink = get(layer,'links[0]') as LinkModelType;
+    }
+    else{
+      optionsWMTS = {
+        url: layerLink.url,
+        layer: `${(layer as LayerRasterRecordModelType).productId as string}-${(layer as LayerRasterRecordModelType).productVersion as string}`,
+        style: 'default',
+        format: 'image/jpeg',
+        tileMatrixSetID: 'newGrids',
+        tilingScheme: new CesiumGeographicTilingScheme()
+     };
+
+    }
     switch(layerLink.protocol){
       case 'XYZ_LAYER':
         return <CesiumXYZLayer key={layer.id} options={{url: layerLink.url as string}}/>
       case '3D_LAYER':
         return <Cesium3DTileset key={layer.id} url={layerLink.url as string}/>
+      case 'WMTS_tile':
+      case 'WMTS_LAYER':
+        return <CesiumWMTSLayer options={optionsWMTS as RCesiumWMTSLayerOptions} />;
       default:
         return undefined;
     }

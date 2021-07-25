@@ -29,12 +29,12 @@ body[dir=rtl] #jobsDialog .closeIcon {
 .refreshContainer .refreshSecs{
   position: relative;
   font-size: 8px;
-  right: 26px;
   width: 10px;
   text-align: center;
+  right: 26px;
 }
 
-body[dir=rtl] .refreshContainer .refreshSecs{
+body[dir=rtl] .refreshContainer .refreshSecs {
   right: unset;
   left: 26px;
 }
