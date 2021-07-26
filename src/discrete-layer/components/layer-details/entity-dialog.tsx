@@ -129,7 +129,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   
   useEffect(() => {
     // @ts-ignore
-    if(!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.mutateStart3DIngestion === 'ok')){
+    if(!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')){
       closeDialog();
       store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
       store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
