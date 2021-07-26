@@ -6,7 +6,19 @@ import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
-import { FieldCategory, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, LinkModel, LinkModelType, RecordType, SensorType, useStore } from '../../models';
+import { 
+  BestRecordModel,
+  FieldCategory,
+  Layer3DRecordModel,
+  LayerMetadataMixedUnion,
+  LayerRasterRecordModel,
+  LinkModel,
+  LinkModelType,
+  ProductType,
+  RecordType,
+  SensorType,
+  useStore 
+} from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
@@ -20,6 +32,7 @@ import { EnumValuePresentorComponent } from './field-value-presentors/enum.value
 import { FieldLabelComponent } from './field-label';
 
 import './layer-details.css';
+import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
 
 interface LayersDetailsComponentProps {
   isBrief?: boolean;
@@ -33,6 +46,9 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   switch(layerRecord.__typename){
     case 'Layer3DRecord':
       recordModel = Layer3DRecordModel;
+      break;
+    case 'BestRecord':
+      recordModel = BestRecordModel;
       break;
     case 'Link':
       recordModel = LinkModel;
@@ -92,6 +108,10 @@ export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkMod
       return(
         <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
       );
+    case 'ProductType':
+      return(
+        <ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>
+      );
     default:
       return (
         <UnknownValuePresentorComponent value={basicType}></UnknownValuePresentorComponent>
@@ -109,6 +129,9 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
       case 'Layer3DRecord':
         entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
         break;
+      case 'BestRecord':
+          entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswBestCatalogRecord')
+          break;
       default:
         entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
         break;

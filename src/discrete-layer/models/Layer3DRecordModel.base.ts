@@ -39,7 +39,7 @@ export const Layer3DRecordModelBase = ModelBase
     version: types.union(types.undefined, types.null, types.string),
     centroid: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),
-    relativeAccuracyCE90: types.union(types.undefined, types.null, types.number),
+    relativeAccuracyLE90: types.union(types.undefined, types.null, types.number),
     estimatedPrecision: types.union(types.undefined, types.null, types.number),
     measuredPrecision: types.union(types.undefined, types.null, types.number),
     nominalResolution: types.union(types.undefined, types.null, types.number),
@@ -77,7 +77,7 @@ export class Layer3DRecordModelSelector extends QueryBuilder {
   get version() { return this.__attr(`version`) }
   get centroid() { return this.__attr(`centroid`) }
   get footprint() { return this.__attr(`footprint`) }
-  get relativeAccuracyCE90() { return this.__attr(`relativeAccuracyCE90`) }
+  get relativeAccuracyLE90() { return this.__attr(`relativeAccuracyLE90`) }
   get estimatedPrecision() { return this.__attr(`estimatedPrecision`) }
   get measuredPrecision() { return this.__attr(`measuredPrecision`) }
   get nominalResolution() { return this.__attr(`nominalResolution`) }
@@ -92,4 +92,4 @@ export function selectFromLayer3DRecord() {
   return new Layer3DRecordModelSelector()
 }
 
-export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.projectName.validationDate.version.centroid.footprint.relativeAccuracyCE90.estimatedPrecision.measuredPrecision.nominalResolution.accuracyLE90.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
+export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.projectName.validationDate.version.centroid.footprint.relativeAccuracyLE90.estimatedPrecision.measuredPrecision.nominalResolution.accuracyLE90.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)

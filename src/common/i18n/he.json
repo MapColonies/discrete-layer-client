@@ -45,10 +45,13 @@
   "tab-views.search-results": "תוצאות חיפוש",
   "tab-views.catalog": "קטלוג",
 
+  "tab-views.catalog.top-categories.unlinked": "חדשים",
+  "tab-views.catalog.top-categories.bests": "BESTs",
+  "tab-views.catalog.top-categories.catalog": "קטלוג",
+
   "details-panel.no-selection": "לא נבחר הפריט",
 
   "field-names.ingestion.directory": "נתיב מלא",
-
   "field-names.raster.fileNames": "שמות הקבצים",
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
@@ -104,7 +107,7 @@
   "field-names.3d.project-name": "פרויקט",
   "field-names.3d.validation-date": "נבדק",
   "field-names.3d.centroid": "סנטרויד",
-  "field-names.3d.relativeAccuracyCE90": "דיוק יחסי",
+  "field-names.3d.relativeAccuracyLE90": "דיוק יחסי",
   "field-names.3d.estimated-precision": "דיוק צפוי",
   "field-names.3d.measured-precision": "דיוק הנמדד",
   "field-names.3d.nominal-resolution": "דיוק נומינלי",

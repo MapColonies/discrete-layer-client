@@ -18,6 +18,8 @@ import { IngestionFields } from './ingestion-fields';
 
 import './entity-dialog.css';
 
+const DEFAULT_ID = 'DEFAULT_ID';
+
 interface EntityDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
@@ -27,11 +29,12 @@ interface EntityDialogComponentProps {
 
 const buildRecord = (recordType: RecordType): ILayerImage => {
   const record = {} as Record<string, any>;
-  switch(recordType){
+  switch(recordType) {
     case RecordType.RECORD_3D:
       Layer3DRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
+      record.id = DEFAULT_ID;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
@@ -81,8 +84,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             keywords: values.keywords as string,
           }
         }));
-      }
-      else{
+      } else {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { directory, fileNames, __typename, ...metadata } = values;
         switch(recordType){
@@ -127,7 +129,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   
   useEffect(() => {
     // @ts-ignore
-    if(!mutationQuery.loading && mutationQuery.data?.updateMetadata === 'ok'){
+    if(!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.ingest === 'ok')){
       closeDialog();
       store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
       store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
