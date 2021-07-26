@@ -145,7 +145,7 @@ export type Layer3DRecordInput = {
   version?: string
   centroid?: string
   footprint?: any
-  relativeAccuracyCE90?: number
+  relativeAccuracyLE90?: number
   estimatedPrecision?: number
   measuredPrecision?: number
   nominalResolution?: number

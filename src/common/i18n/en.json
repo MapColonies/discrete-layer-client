@@ -107,7 +107,7 @@
   "field-names.3d.project-name": "Project",
   "field-names.3d.validation-date": "Validation",
   "field-names.3d.centroid": "Centroid",
-  "field-names.3d.relativeAccuracyCE90": "Relative Acc.",
+  "field-names.3d.relativeAccuracyLE90": "Relative Acc.",
   "field-names.3d.estimated-precision": "Estimated Prec.",
   "field-names.3d.measured-precision": "Measured Prec.",
   "field-names.3d.nominal-resolution": "Nominal Res.",
