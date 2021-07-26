@@ -1,4 +1,6 @@
-
+body[dir='rtl'] #catalogContainer .rst__virtualScrollOverride {
+  direction: rtl !important;
+}
 #catalogContainer .rst__virtualScrollOverride::-webkit-scrollbar {
   width: 6px;
 }
