@@ -48,6 +48,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     switch(layerLink.protocol){
       case 'XYZ_LAYER':
         return <CesiumXYZLayer key={layer.id} options={{url: layerLink.url as string}}/>
+      case '3DTiles':
       case '3D_LAYER':
         return <Cesium3DTileset key={layer.id} url={layerLink.url as string}/>
       case 'WMTS_tile':
