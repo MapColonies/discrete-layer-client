@@ -6,7 +6,6 @@ import CONFIG from '../../../common/config';
 import { 
   GridComponent,
   GridComponentOptions,
-  GridValueFormatterParams,
   GridCellMouseOverEvent,
   GridCellMouseOutEvent,
   GridRowNode,
@@ -17,15 +16,12 @@ import {
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 
-import './layers-results.css';
-
-interface LayersResultsComponentProps {
+interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
 }
 
@@ -34,7 +30,7 @@ const pageSize = 10;
 const immediateExecution = 0;
 const intialOrder = 0;
 
-export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
+export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
   const intl = useIntl();
   const { discreteLayersStore } = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
@@ -79,6 +75,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
   
   const colDef = [
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.order.label',
+      }),
+      width: 100,
+      field: 'order',
+      rowDrag: true
+    },
     {
       width: 20,
       field: 'footPrintShown',
@@ -126,31 +130,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     {
       headerName: intl.formatMessage({
-        id: 'results.fields.order.label',
-      }),
-      width: 50,
-      field: 'order',
-      hide: true
-    },
-    {
-      headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 200,
+      width: 250,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
       tooltipComponentParams: { color: '#ececec' }
-    },
-    {
-      headerName:  intl.formatMessage({
-        id: 'results.fields.update-date.label',
-      }),
-      width: 120,
-      field: 'updateDate',
-      suppressMovable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -178,6 +165,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     rowSelection: 'single',
     suppressCellSelection: true,
     // suppressRowClickSelection: true,
+    // rowDragManaged: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer(event.data as ILayerImage);
     },

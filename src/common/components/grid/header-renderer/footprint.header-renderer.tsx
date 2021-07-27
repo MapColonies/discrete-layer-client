@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Checkbox } from '@map-colonies/react-core';
-import { GridApi } from '../../../../common/components/grid';
+import { GridApi } from '..';
+
 import './footprint.header-renderer.css';
 
 interface IFootprintCellRendererParams extends ICellRendererParams {

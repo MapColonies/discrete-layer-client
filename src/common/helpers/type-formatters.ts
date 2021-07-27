@@ -1,6 +1,6 @@
 
 import moment from 'moment';
-import CONFIG from '../../../../common/config';
+import CONFIG from '../config';
 
 export interface FormatterFunc {
   (source: string | Date | moment.Moment | undefined): string;
