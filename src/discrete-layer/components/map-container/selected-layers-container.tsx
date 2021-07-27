@@ -53,7 +53,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         return <Cesium3DTileset key={layer.id} url={layerLink.url as string}/>
       case 'WMTS_tile':
       case 'WMTS_LAYER':
-        return <CesiumWMTSLayer options={optionsWMTS as RCesiumWMTSLayerOptions} />;
+        return <CesiumWMTSLayer options={optionsWMTS as RCesiumWMTSLayerOptions}/>;
       default:
         return undefined;
     }
