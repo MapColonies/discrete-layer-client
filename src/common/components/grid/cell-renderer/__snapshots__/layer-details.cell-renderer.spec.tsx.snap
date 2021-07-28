@@ -1,0 +1,198 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AgGrid LayerDetailsRenderer component renders correctly 1`] = `
+<Component
+  className="layerDetailsContainer"
+>
+  <Component
+    className="detailsColumn"
+    key="0"
+  >
+    <Component
+      key="0_0"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.name.label"
+        />
+        : 
+      </span>
+      <span />
+    </Component>
+    <Component
+      key="0_1"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.name.label"
+        />
+        : 
+      </span>
+      <span />
+    </Component>
+    <Component
+      key="0_2"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.name.label"
+        />
+        : 
+      </span>
+      <span />
+    </Component>
+    <Component
+      key="0_3"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.name.label"
+        />
+        : 
+      </span>
+      <span />
+    </Component>
+    <Component
+      key="0_4"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.name.label"
+        />
+        : 
+      </span>
+      <span />
+    </Component>
+  </Component>
+  <Component
+    className="detailsColumn"
+    key="1"
+  >
+    <Component
+      key="1_0"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.creation-date.label"
+        />
+        : 
+      </span>
+      <span>
+        06/12/2020
+      </span>
+    </Component>
+    <Component
+      key="1_1"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.creation-date.label"
+        />
+        : 
+      </span>
+      <span>
+        06/12/2020
+      </span>
+    </Component>
+    <Component
+      key="1_2"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.creation-date.label"
+        />
+        : 
+      </span>
+      <span>
+        06/12/2020
+      </span>
+    </Component>
+    <Component
+      key="1_3"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.creation-date.label"
+        />
+        : 
+      </span>
+      <span>
+        06/12/2020
+      </span>
+    </Component>
+    <Component
+      key="1_4"
+    >
+      <span
+        style={
+          Object {
+            "fontWeight": 600,
+          }
+        }
+      >
+        <FormattedMessage
+          id="results.fields.creation-date.label"
+        />
+        : 
+      </span>
+      <span>
+        06/12/2020
+      </span>
+    </Component>
+  </Component>
+</Component>
+`;
