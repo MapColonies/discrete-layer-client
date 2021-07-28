@@ -36,6 +36,7 @@
   "results.fields.name.label": "שם",
   "results.fields.update-date.label": "עדכניות",
   "results.fields.order.label": "סדר",
+  "results.fields.resolution.label": "רזולוציה",
   "results.nodata": "אין תוצאות",
 
   "snack.message.success": "יצוא התחיל בהצלחה",

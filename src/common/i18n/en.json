@@ -36,6 +36,7 @@
   "results.fields.name.label": "Name",
   "results.fields.update-date.label": "Updated",
   "results.fields.order.label": "Order",
+  "results.fields.resolution.label": "Resolution",
   "results.nodata": "No results to show",
 
   "snack.message.success": "Export SUCCEEDED",

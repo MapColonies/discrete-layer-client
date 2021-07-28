@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isObject } from 'lodash';
+import { ValueGetterParams } from 'ag-grid-community';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -73,14 +74,17 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
   }
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+
+  const hashValueGetter = (params: ValueGetterParams): number => params.node.rowIndex;
   
   const colDef = [
     {
       headerName: intl.formatMessage({
         id: 'results.fields.order.label',
       }),
-      width: 100,
-      field: 'order',
+      width: 80,
+      valueGetter: hashValueGetter,
+      suppressMovable: true,
       rowDrag: true
     },
     {
@@ -107,7 +111,6 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          // setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
           if(value) {
             selectedLayersRef.current++;
           }
@@ -123,7 +126,6 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          // setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
           discreteLayersStore.showLayer(id, value, order);
         }
       }
@@ -132,12 +134,20 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 250,
+      width: 160,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
       tooltipComponentParams: { color: '#ececec' }
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.resolution.label',
+      }),
+      width: 120,
+      field: 'resolution',
+      suppressMovable: true
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -148,13 +158,10 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     getRowNodeId: (data: ILayerImage) => {
       return data.id;
     },
-    // detailsRowCellRenderer: 'detailsRenderer',
-    // detailsRowHeight: 150,
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      // detailsRenderer: LayerDetailsRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
       customTooltip: CustomTooltip,
@@ -164,7 +171,6 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     tooltipMouseTrack: false,
     rowSelection: 'single',
     suppressCellSelection: true,
-    // suppressRowClickSelection: true,
     // rowDragManaged: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer(event.data as ILayerImage);
