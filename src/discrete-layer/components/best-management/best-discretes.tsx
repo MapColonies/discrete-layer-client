@@ -1,8 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { isObject } from 'lodash';
 import { ValueGetterParams } from 'ag-grid-community';
+import { Button } from '@map-colonies/react-core';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -22,6 +23,8 @@ import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 
+import './best-discretes.css';
+
 const IS_PAGINATION = true;
 const PAGE_SIZE = 10;
 const IMMEDIATE_EXECUTION = 0;
@@ -29,6 +32,8 @@ const INITIAL_ORDER = 0;
 
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
+  // onSetOpen: (open: boolean) => void;
+  // layerRecords?: ILayerImage[] | undefined;
 }
 
 export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
@@ -70,7 +75,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       selectedLayersRef.current = INITIAL_ORDER;
       return cacheRef.current;
     }
-  }
+  };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
@@ -188,11 +193,20 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     },
   };
 
+  const handleSave = (): void => {
+    // TODO save in localStorage
+    // onSetOpen(false);
+  };
+
   return (
-    <GridComponent
-      gridOptions={gridOptions}
-      rowData={getRowData()}
-      style={props.style}
-    />
+    <>
+      <GridComponent
+        gridOptions={gridOptions}
+        rowData={getRowData()}
+        style={props.style}/>
+      <Button raised type="button" className="saveButton" onClick={(): void => { handleSave(); } }>
+        <FormattedMessage id="general.save-btn.text" />
+      </Button>
+    </>
   );
 });

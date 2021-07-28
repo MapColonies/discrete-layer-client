@@ -595,7 +595,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
               <Box className="detailsContent" style={{ overflow: 'hidden'}}>
                 <CatalogTreeComponent/>
-                <BestDiscretesComponent style={{ height: 'calc(50% - 50px)', width: 'calc(100% - 8px)' }}/>
+                <BestDiscretesComponent style={{ height: 'calc(45% - 50px)', width: 'calc(100% - 8px)' }}/>
               </Box>
             </Box>
 
