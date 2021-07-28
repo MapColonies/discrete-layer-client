@@ -22,27 +22,27 @@ import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 
+const IS_PAGINATION = true;
+const PAGE_SIZE = 10;
+const IMMEDIATE_EXECUTION = 0;
+const INITIAL_ORDER = 0;
+
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
 }
 
-const pagination = true;
-const pageSize = 10;
-const immediateExecution = 0;
-const intialOrder = 0;
-
 export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
   const intl = useIntl();
   const { discreteLayersStore } = useStore();
-  const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
+  const [layersImages, setLayersImages] = useState<ILayerImage[]>([]);
 
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
-  const selectedLayersRef = useRef(intialOrder);
+  const selectedLayersRef = useRef(INITIAL_ORDER);
 
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
-      setlayersImages(discreteLayersStore.layersImages);
+      setLayersImages(discreteLayersStore.layersImages);
     }
   },[discreteLayersStore.layersImages]);
 
@@ -68,7 +68,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       return cacheRef.current;
     } else {
       cacheRef.current = layersImages;
-      selectedLayersRef.current = intialOrder;
+      selectedLayersRef.current = INITIAL_ORDER;
       return cacheRef.current;
     }
   }
@@ -82,7 +82,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.order.label',
       }),
-      width: 80,
+      width: 90,
       valueGetter: hashValueGetter,
       suppressMovable: true,
       rowDrag: true
@@ -100,7 +100,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       headerComponentParams: { 
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footPrintShown', value), immediateExecution) ;
+            setTimeout(()=> item.setDataValue('footPrintShown', value), IMMEDIATE_EXECUTION) ;
           });
         }  
       }
@@ -134,7 +134,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 160,
+      width: 150,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -152,8 +152,8 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
   ];
   const gridOptions: GridComponentOptions = {
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
-    pagination: pagination,
-    paginationPageSize: pageSize,
+    pagination: IS_PAGINATION,
+    paginationPageSize: PAGE_SIZE,
     columnDefs: colDef,
     getRowNodeId: (data: ILayerImage) => {
       return data.id;
