@@ -59,7 +59,6 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
           });
           res = matchesRes;
     }
-    
     return res;
   };
 
@@ -111,15 +110,14 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          if(value) {
+          if (value) {
             selectedLayersRef.current++;
-          }
-          else {
+          } else {
             const orders: number[] = [];
             // eslint-disable-next-line
             (node as any).gridApi.forEachNode((item: GridRowNode)=> {
               const rowData = item.data as {[key: string]: string | boolean | number};
-              if(rowData.layerImageShown === true && rowData.id !== id) {
+              if (rowData.layerImageShown === true && rowData.id !== id) {
                 orders.push(rowData.order as number);
               }
             });
