@@ -2,8 +2,8 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { isObject } from 'lodash';
-import { ValueGetterParams } from 'ag-grid-community';
 import { Button } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -79,15 +79,12 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
-  const hashValueGetter = (params: ValueGetterParams): number => params.node.rowIndex;
+  // const hashValueGetter = (params: ValueGetterParams): number => params.node.rowIndex;
   
   const colDef = [
     {
-      headerName: intl.formatMessage({
-        id: 'results.fields.order.label',
-      }),
-      width: 90,
-      valueGetter: hashValueGetter,
+      width: 10,
+      // valueGetter: hashValueGetter,
       suppressMovable: true,
       rowDrag: true
     },
@@ -137,7 +134,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 150,
+      width: 210,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -195,7 +192,6 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
 
   const handleSave = (): void => {
     // TODO save in localStorage
-    // onSetOpen(false);
   };
 
   return (
@@ -204,9 +200,11 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
         gridOptions={gridOptions}
         rowData={getRowData()}
         style={props.style}/>
-      <Button raised type="button" className="saveButton" onClick={(): void => { handleSave(); } }>
-        <FormattedMessage id="general.save-btn.text" />
-      </Button>
+      <Box className="saveButton">
+        <Button raised type="button" onClick={(): void => { handleSave(); } }>
+          <FormattedMessage id="general.save-btn.text"/>
+        </Button>
+      </Box>
     </>
   );
 });
