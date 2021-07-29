@@ -155,7 +155,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         )}
 
         <div id="catalogContainer" style={{ 
-          height: '100%',
+          height: '50%',
           margin: '0 12px'
         }}>
           <TreeComponent

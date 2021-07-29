@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { GridRowNode } from '../../../../common/components/grid';
+import { GridRowNode } from '..';
 
 import './layer-image.cell-renderer.css';
 

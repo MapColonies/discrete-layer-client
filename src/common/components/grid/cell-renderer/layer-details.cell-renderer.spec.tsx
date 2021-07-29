@@ -5,6 +5,7 @@ import timezoneMock from 'timezone-mock';
 // eslint-disable-next-line
 import '../../../../__mocks__/confEnvShim';
 import { LayerDetailsRenderer } from './layer-details.cell-renderer';
+
 /* eslint-disable */
 const mockDataBase:ICellRendererParams = {
   value: '',

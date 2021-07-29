@@ -1,6 +1,7 @@
 {
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
+  "general.save-btn.text": "שמור",
   "general.error.label": "שגיאה",
   "general.title.new.3d": "הוספת מוצר תלת-מימד",
   "general.title.new.raster": "הוספת מוצר ראסטר",
@@ -36,6 +37,7 @@
   "results.fields.name.label": "שם",
   "results.fields.update-date.label": "עדכניות",
   "results.fields.order.label": "סדר",
+  "results.fields.resolution.label": "רזולוציה",
   "results.nodata": "אין תוצאות",
 
   "snack.message.success": "יצוא התחיל בהצלחה",

@@ -10,7 +10,7 @@ interface IGpaphQLError {
 }
 
 export const GpaphQLError: React.FC<IGpaphQLError> = (props)=> {
-  const getErrorMessage = (message: string): string => {
+  const formatMessage = (message: string): string => {
     return message.substr(+message.indexOf('; ') + 1, message.length);
   };
 
@@ -26,7 +26,7 @@ export const GpaphQLError: React.FC<IGpaphQLError> = (props)=> {
           {
             props.error.response.errors.map((error: Record<string, any>) => {
               return (
-                <li>{getErrorMessage(error.message)}</li>
+                <li>{formatMessage(error.message)}</li>
               );
             })
           }

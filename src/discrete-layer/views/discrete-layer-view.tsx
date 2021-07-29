@@ -31,11 +31,12 @@ import { SelectedLayersContainer } from '../components/map-container/selected-la
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
 import { PolygonSelectionUi } from '../components/map-container/polygon-selection-ui_2';
-import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
+import { LayersResultsComponent } from '../components/layers-results/layers-results';
+import { BestDiscretesComponent } from '../components/best-management/best-discretes';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { EntityDescriptorModelType, RecordType } from '../models';
@@ -594,6 +595,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
               <Box className="detailsContent" style={{ overflow: 'hidden'}}>
                 <CatalogTreeComponent/>
+                <BestDiscretesComponent style={{ height: 'calc(45% - 50px)', width: 'calc(100% - 8px)' }}/>
               </Box>
             </Box>
 
