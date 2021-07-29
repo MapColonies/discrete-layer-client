@@ -11,6 +11,7 @@ import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
+import { BestRecordModelType } from '../../models';
 import { Error } from './Error'
 import { Loading } from './Loading'
 import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
@@ -115,17 +116,58 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         {keys: ['region']}
       );
 
+      // // get BESTs shortcuts
+      // const arrBests = arr.filter((item) => {
+      //   // @ts-ignore
+      //   const itemObjectBag =  item as Record<string,unknown>;
+      //   return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
+      // });
+      // const parentBests = buildParentTreeNode(
+      //   arrBests,
+      //   intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+      //   {keys: ['region']}
+      // );
+
+      // // get DRAFTs of BEST
+      // const parentDrafts = buildParentTreeNode(
+      //   [{
+      //     ...arrBests[0],
+      //     isDraft: true,
+      //   }] as BestRecordModelType[],
+      //   intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+      //   {keys: ['region']}
+      // );
+
       // get BESTs shortcuts
       const arrBests = arr.filter((item) => {
         // @ts-ignore
         const itemObjectBag =  item as Record<string,unknown>;
         return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
       });
-      const parentBests = buildParentTreeNode(
-        arrBests,
-        intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-        {keys: ['region']}
-      );
+      const parentBests = {
+        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+        isGroup: true,
+        children: [
+          {
+            title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+            isGroup: true,
+            children: [{
+              ...arrBests[0],
+              title: 'DRAFT > ' + arrBests[0]['productName'],
+              isSelected: false,
+              isDraft: true,
+            }],
+          },
+          ...arrBests.map(item=> {
+            return {
+              ...item,
+              title: item['productName'],
+              isSelected: false
+            };
+        })
+      ]
+
+      }
 
       // whole catalog as is
       const parentCatalog = buildParentTreeNode(
@@ -139,6 +181,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
           parentUnlinked,
           parentCatalog,
           parentBests,
+          // parentDrafts,
         ]
       );
     }
@@ -215,7 +258,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                   });
 
                   setTreeRawData(newTreeData);
-                  discreteLayersStore.selectLayerByID((rowInfo.node as ILayerImage).id);
+                  discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
                 }
               },
               onMouseOver: (evt: MouseEvent) => {
@@ -271,25 +314,26 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                       }}
                     />
                   ],
-              buttons: [
-                // <button
-                //   style={{
-                //     padding: 0,
-                //     borderRadius: '100%',
-                //     backgroundColor: 'gray',
-                //     color: 'white',
-                //     width: 16,
-                //     height: 16,
-                //     border: 0,
-                //     fontWeight: 100,
-                //   }}
-                //   onClick={() => {
-                //     console.log('**** alertNodeInfo ****')
-                //   }}
-                // >
-                //   i
-                // </button>,
-              ],
+              buttons: rowInfo.node.isDraft ? [
+                 <button
+                  style={{
+                    padding: 0,
+                    borderRadius: '100%',
+                    backgroundColor: 'gray',
+                    color: 'white',
+                    width: 16,
+                    height: 16,
+                    border: 0,
+                    fontWeight: 100,
+                  }}
+                  onClick={() => {
+                    discreteLayersStore.editBest(rowInfo.node as BestRecordModelType)
+                  }}
+                >
+                  i
+                </button>,
+              ]
+              : [],
             })}
           />
         </div>

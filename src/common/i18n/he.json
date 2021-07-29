@@ -44,10 +44,16 @@
 
   "tab-views.search-results": "תוצאות חיפוש",
   "tab-views.catalog": "קטלוג",
+  "tab-views.create-best": "עריכת BEST",
 
   "tab-views.catalog.top-categories.unlinked": "חדשים",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",
+  "tab-views.catalog.top-categories.drafts": "טיוטות",
+  
+  "tab-views.catalog.actions.ingest_raster": "הוספ מוצר",
+  "tab-views.catalog.actions.ingest_3d": "הוספ מוצר תלת מיימד",
+  "tab-views.catalog.actions.new_best": "צור BEST",
 
   "details-panel.no-selection": "לא נבחר הפריט",
 

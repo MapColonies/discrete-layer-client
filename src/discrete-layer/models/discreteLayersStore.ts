@@ -15,6 +15,7 @@ import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
+import { BestRecordModelType } from './BestRecordModel';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -41,8 +42,9 @@ export const discreteLayersStore = ModelBase
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
-    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}])),
+    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
+    editingBest: types.maybe(types.frozen<BestRecordModelType>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -202,6 +204,10 @@ export const discreteLayersStore = ModelBase
       } 
     }
 
+    function editBest(best: BestRecordModelType | undefined): void {
+      self.editingBest =  best ? {...best} : undefined;
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -215,6 +221,7 @@ export const discreteLayersStore = ModelBase
       showFootprint,
       setEntityDescriptors,
       updateLayer,
+      editBest,
     };
   });
 

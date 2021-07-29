@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect } from 'react';
 import { get } from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { observer } from 'mobx-react-lite';
 import {
@@ -17,7 +17,7 @@ import {
   CesiumGeographicTilingScheme,
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
-import { IconButton, useTheme, Typography, Fab } from '@map-colonies/react-core';
+import { IconButton, useTheme, Typography, Fab, MenuSurfaceAnchor, MenuSurface, Tooltip } from '@map-colonies/react-core';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { find } from 'lodash';
 import { lineString } from '@turf/helpers';
@@ -38,13 +38,16 @@ import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
-import { EntityDescriptorModelType, RecordType } from '../models';
+import { BestRecordModel, EntityDescriptorModelType, RecordType } from '../models';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { BestEditComponent } from '../components/best-management/best-edit';
+import { BestRecordModelType } from '../models/BestRecordModel';
+import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -224,6 +227,7 @@ const tileOtions = { opacity: 0.5 };
 export enum TabViews {
   CATALOG,
   SEARCH_RESULTS,
+  CREATE_BEST,
 }
 
 const DiscreteLayerView: React.FC = observer(() => {
@@ -260,6 +264,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     }`));
   const store = useStore();
   const theme = useTheme();
+  const intl = useIntl();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
@@ -288,6 +293,8 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const [activeTabView, setActiveTabView] = React.useState(TabViews.CATALOG);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
+  const layerToPresent = store.discreteLayersStore.selectedLayer;
+  const editingBest = store.discreteLayersStore.editingBest;
 
   useEffect(() => {
     const layers = get(data,'search', []) as ILayerImage[];
@@ -302,6 +309,19 @@ const DiscreteLayerView: React.FC = observer(() => {
       store.discreteLayersStore.setEntityDescriptors([...descriptors]);
     }
   }, [descriptorsQuery.data, descriptorsQuery.loading, store.discreteLayersStore]);
+
+  const handleTabViewChange = (targetViewIdx: TabViews): void => {
+    store.discreteLayersStore.setTabviewData(activeTabView);
+    store.discreteLayersStore.restoreTabviewData(targetViewIdx);
+    setActiveTabView(targetViewIdx);
+  };
+
+  useEffect(() => {
+    if(store.discreteLayersStore.editingBest !== undefined){
+      handleTabViewChange(TabViews.CREATE_BEST);
+    }
+  }, [store.discreteLayersStore.editingBest]);
+
 
   const buildFilters =  () => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
@@ -354,8 +374,24 @@ const DiscreteLayerView: React.FC = observer(() => {
     setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
   };
 
+  const handleCreateBestDraft = (): void => {
+    const record = {} as Record<string, any>;
+    BestRecordModelKeys.forEach(key => {
+      record[key as string] = undefined;
+    });
+    record.id = 'DEFAULT_BEST_ID';
+    record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
+
+    store.discreteLayersStore.editBest(record as BestRecordModelType);
+  };
+
   const handleEditEntityDialogClick = (): void => {
-    setEditEntityDialogOpen(!isEditEntityDialogOpen);
+    if((layerToPresent as BestRecordModelType).isDraft === true){
+      store.discreteLayersStore.editBest(layerToPresent as BestRecordModelType);
+    }
+    else {
+      setEditEntityDialogOpen(!isEditEntityDialogOpen);
+    }
   };
 
   const handleSystemsJobsDialogClick = (): void => {
@@ -441,8 +477,15 @@ const DiscreteLayerView: React.FC = observer(() => {
       idx: TabViews.SEARCH_RESULTS,
       title: 'tab-views.search-results',
       iconClassName: 'mc-icon-Search-History',
+    },
+    {
+      idx: TabViews.CREATE_BEST,
+      title: 'tab-views.create-best',
+      iconClassName: 'mc-icon-Bests',
     }
   ];
+
+  const [openNew, setOpenNew] = React.useState(false);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -472,29 +515,33 @@ const DiscreteLayerView: React.FC = observer(() => {
             backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string,
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
-            <IconButton
-              className="operationIcon mc-icon-Search-History glow-missing-icon"
-              label="NEW RASTER"
-              onClick={ (): void => { handleNewRasterEntityDialogClick(); } }
-            />
             {
-              isNewRasterEntityDialogOpen && <EntityDialogComponent
-                isOpen={isNewRasterEntityDialogOpen}
-                onSetOpen={setNewRasterEntityDialogOpen}
-                recordType={RecordType.RECORD_RASTER}>
-              </EntityDialogComponent>
-            }
-            <IconButton
-              className="operationIcon mc-icon-Bests glow-missing-icon"
-              label="NEW 3D"
-              onClick={ (): void => { handleNew3DEntityDialogClick(); } }
-            />
-            {
-              isNew3DEntityDialogOpen && <EntityDialogComponent
-                isOpen={isNew3DEntityDialogOpen}
-                onSetOpen={setNew3DEntityDialogOpen}
-                recordType={RecordType.RECORD_3D}>
-              </EntityDialogComponent>
+              (tabIdx === TabViews.CATALOG) && <MenuSurfaceAnchor id="newContainer">
+              <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
+                <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Search-History glow-missing-icon"
+                    label="NEW RASTER"
+                    onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
+                  />
+                </Tooltip>
+                <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Bests glow-missing-icon"
+                    label="NEW 3D"
+                    onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
+                  />
+                </Tooltip>
+                <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Bests"
+                    label="NEW BEST"
+                    onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
+                  />
+                </Tooltip>
+              </MenuSurface>
+              <IconButton className="operationIcon mc-icon-Search-History glow-missing-icon" onClick={evt => setOpenNew(!openNew)} />
+            </MenuSurfaceAnchor>
             }
             <IconButton 
               className="operationIcon mc-icon-Delete"
@@ -514,23 +561,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       </div>
     );
   };
+ 
+  const availableTabs = editingBest ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
 
-  const handleTabViewChange = (targetViewIdx: TabViews): void => {
-    store.discreteLayersStore.setTabviewData(activeTabView);
-    store.discreteLayersStore.restoreTabviewData(targetViewIdx);
-    setActiveTabView(targetViewIdx);
-  };
-
-  // TODO: should be taken from selected item in store
-  // const [layerToPresent, setLayerToPresent] = useState<ILayerImage | null>(null);
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   setLayerToPresent(store.discreteLayersStore.highlightedLayer); 
-  // }, [store.discreteLayersStore.highlightedLayer]);
-  
-  // const layerToPresent = store.discreteLayersStore.highlightedLayer;
-  // const layerToPresent = (store.discreteLayersStore !== null && store.discreteLayersStore.layersImages !== undefined) ? store.discreteLayersStore.layersImages[0] : null;
-  const layerToPresent = store.discreteLayersStore.selectedLayer;
   return (
     <>
       <Box className="headerContainer">
@@ -540,7 +573,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <Box className="version">{version}</Box>
           </Box>
           <Box className="headerViewsSwitcherContainer">
-            {tabViews.map((tab) => {
+            {availableTabs.map((tab) => {
               return <Fab 
                 key={tab.idx}
                 className={`${tab.iconClassName} tabViewIcon`}
@@ -609,6 +642,21 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Box>
             }
+
+            {activeTabView === TabViews.CREATE_BEST && <Box className="tabContentContainer">
+              {
+                getActiveTabHeader(activeTabView)
+              }
+              <Box 
+                style={{
+                  height: 'calc(100% - 50px)',
+                  width: 'calc(100% - 8px)'
+                }}
+              >
+                <BestEditComponent />
+              </Box>
+            </Box>
+            }
           </Box>
           
           <Box className="sidePanelContainer sideDetailsPanel" style={{
@@ -673,6 +721,20 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
+        {
+          isNewRasterEntityDialogOpen && <EntityDialogComponent
+            isOpen={isNewRasterEntityDialogOpen}
+            onSetOpen={setNewRasterEntityDialogOpen}
+            recordType={RecordType.RECORD_RASTER}>
+          </EntityDialogComponent>
+        }
+        {
+          isNew3DEntityDialogOpen && <EntityDialogComponent
+            isOpen={isNew3DEntityDialogOpen}
+            onSetOpen={setNew3DEntityDialogOpen}
+            recordType={RecordType.RECORD_3D}>
+          </EntityDialogComponent>
+        }
       </Box>
     </>
   );

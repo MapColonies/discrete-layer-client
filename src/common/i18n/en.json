@@ -44,10 +44,16 @@
 
   "tab-views.search-results": "Search results",
   "tab-views.catalog": "Catalog",
+  "tab-views.create-best": "BEST edit",
 
   "tab-views.catalog.top-categories.unlinked": "Unlinked",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "Catalog",
+  "tab-views.catalog.top-categories.drafts": "Drafts",
+
+  "tab-views.catalog.actions.ingest_raster": "Ingest discrete",
+  "tab-views.catalog.actions.ingest_3d": "Ingest 3D model",
+  "tab-views.catalog.actions.new_best": "Create new BEST",
 
   "details-panel.no-selection": "No selection",
 
