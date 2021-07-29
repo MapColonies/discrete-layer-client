@@ -36,7 +36,6 @@ import { LayersDetailsComponent } from '../components/layer-details/layer-detail
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
-import { BestDiscretesComponent } from '../components/best-management/best-discretes';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestRecordModel, EntityDescriptorModelType, RecordType } from '../models';
@@ -628,7 +627,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
               <Box className="detailsContent" style={{ overflow: 'hidden'}}>
                 <CatalogTreeComponent/>
-                <BestDiscretesComponent style={{ height: 'calc(45% - 50px)', width: 'calc(100% - 8px)' }}/>
               </Box>
             </Box>
 
