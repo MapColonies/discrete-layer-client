@@ -14,12 +14,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const [layerImageShown, setLayerImageShown] = useState<boolean>(props.data.layerImageShown as boolean);
   return (
-    <Box  style={{    
-        display: 'flex',
-        justifyContent: 'center',
-        paddingTop: '8px'
-      }}
-    >
+    <Box style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
       <IconButton 
         className={layerImageShown ? 'mc-icon-Table---Fill-On layerShown' : 'mc-icon-Table-Fill-Off'}
         label="TABICON"
@@ -32,5 +27,5 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
         }
       />
     </Box>
- );
+  );
 };

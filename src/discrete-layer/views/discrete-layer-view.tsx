@@ -39,15 +39,15 @@ import { LayersResultsComponent } from '../components/layers-results/layers-resu
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestRecordModel, EntityDescriptorModelType, RecordType } from '../models';
+import { BestEditComponent } from '../components/best-management/best-edit';
+import { BestRecordModelType } from '../models/BestRecordModel';
+import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { BestEditComponent } from '../components/best-management/best-edit';
-import { BestRecordModelType } from '../models/BestRecordModel';
-import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -293,6 +293,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const [activeTabView, setActiveTabView] = React.useState(TabViews.CATALOG);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
+  const [tabsPanelExpanded, setTabsPanelExpanded] = React.useState(true);
   const layerToPresent = store.discreteLayersStore.selectedLayer;
   const editingBest = store.discreteLayersStore.editingBest;
 
@@ -517,45 +518,54 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             {
               (tabIdx === TabViews.CATALOG) && <MenuSurfaceAnchor id="newContainer">
-              <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
-                <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
-                  <IconButton
-                    className="operationIcon mc-icon-Search-History glow-missing-icon"
-                    label="NEW RASTER"
-                    onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
-                  />
+                <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
+                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
+                    <IconButton
+                      className="operationIcon mc-icon-Search-History glow-missing-icon"
+                      label="NEW RASTER"
+                      onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
+                    />
+                  </Tooltip>
+                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
+                    <IconButton
+                      className="operationIcon mc-icon-Bests glow-missing-icon"
+                      label="NEW 3D"
+                      onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
+                    />
+                  </Tooltip>
+                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                    <IconButton
+                      className="operationIcon mc-icon-Bests"
+                      label="NEW BEST"
+                      onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
+                    />
+                  </Tooltip>
+                </MenuSurface>
+                <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
+                  <IconButton className="operationIcon mc-icon-Search-History glow-missing-icon" onClick={evt => setOpenNew(!openNew)}/>
                 </Tooltip>
-                <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
-                  <IconButton
-                    className="operationIcon mc-icon-Bests glow-missing-icon"
-                    label="NEW 3D"
-                    onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
-                  />
-                </Tooltip>
-                <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
-                  <IconButton
-                    className="operationIcon mc-icon-Bests"
-                    label="NEW BEST"
-                    onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
-                  />
-                </Tooltip>
-              </MenuSurface>
-              <IconButton className="operationIcon mc-icon-Search-History glow-missing-icon" onClick={evt => setOpenNew(!openNew)} />
             </MenuSurfaceAnchor>
             }
-            <IconButton 
-              className="operationIcon mc-icon-Delete"
-              label="DELETE"
-            />
-            <IconButton 
-              className="operationIcon mc-icon-Filter"
-              label="FILTER"
-              onClick={ (): void => { handleFilter() } }
-            />
-            <IconButton 
-              className="operationIcon mc-icon-Arrows-Left"
-              label="EXPANDER"
-            />
+            <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
+              <IconButton 
+                className="operationIcon mc-icon-Delete"
+                label="DELETE"
+              />
+            </Tooltip>
+            <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
+              <IconButton 
+                className="operationIcon mc-icon-Filter"
+                label="FILTER"
+                onClick={ (): void => { handleFilter() } }
+              />
+            </Tooltip>
+            <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
+              <IconButton 
+                className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
+                label="EXPANDER"
+                onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
+              />
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -570,21 +580,25 @@ const DiscreteLayerView: React.FC = observer(() => {
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
             <Typography use="body2">Catalog App</Typography>
-            <Box className="version">{version}</Box>
+            <Tooltip content={`${intl.formatMessage({ id: 'general.version.text' })} ${version}`}>
+              <Box className="version">{version}</Box>
+            </Tooltip>
           </Box>
           <Box className="headerViewsSwitcherContainer">
-            {availableTabs.map((tab) => {
-              return <Fab 
-                key={tab.idx}
-                className={`${tab.iconClassName} tabViewIcon`}
-                mini 
-                onClick={(evt): void => handleTabViewChange(tab.idx)}
-                style={{ 
-                  backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
-                }}
-                theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
-              />;
-            })}
+            {
+              availableTabs.map((tab) => {
+                return <Tooltip content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}><Fab 
+                  key={tab.idx}
+                  className={`${tab.iconClassName} tabViewIcon`}
+                  mini 
+                  onClick={(evt): void => handleTabViewChange(tab.idx)}
+                  style={{ 
+                    backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
+                  }}
+                  theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
+                /></Tooltip>;
+              })
+            }
           </Box>
         </Box>
 
@@ -599,11 +613,13 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
 
         <Box className="headerSystemAreaContainer">
-          <IconButton
-            className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
-            label="SYSTEM JOBS"
-            onClick={ (): void => { handleSystemsJobsDialogClick() } }
-          />
+          <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
+            <IconButton
+              className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
+              label="SYSTEM JOBS"
+              onClick={ (): void => { handleSystemsJobsDialogClick(); } }
+            />
+          </Tooltip>
           {
             isSystemsJobsDialogOpen && <SystemJobsComponent
               isOpen={isSystemsJobsDialogOpen}
@@ -668,11 +684,13 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {layerToPresent?.productName}
               </Typography>
               {
-                layerToPresent && <IconButton
-                  className="operationIcon mc-icon-Status-Approves glow-missing-icon"
-                  label="EDIT"
-                  onClick={ (): void => { handleEditEntityDialogClick(); } }
-                />
+                layerToPresent && <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Status-Approves glow-missing-icon"
+                    label="EDIT"
+                    onClick={ (): void => { handleEditEntityDialogClick(); } }
+                  />
+                </Tooltip>
               }
               {
                 isEditEntityDialogOpen && <EntityDialogComponent
@@ -681,11 +699,13 @@ const DiscreteLayerView: React.FC = observer(() => {
                   layerRecord={layerToPresent}>
                 </EntityDialogComponent>
               }
-              <IconButton 
-                className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel': 'mc-icon-Collapce-Panel'}`}
-                label="EXPANDER"
-                onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
-              />
+              <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
+                <IconButton 
+                  className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
+                  label="EXPANDER"
+                  onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
+                />
+              </Tooltip>
             </Box>
             <PerfectScrollbar className="detailsContent">
               <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>

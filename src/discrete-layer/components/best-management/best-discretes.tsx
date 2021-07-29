@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { isObject } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
@@ -31,7 +30,6 @@ const INITIAL_ORDER = 0;
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
   discretes?: LayerRasterRecordModelType[] | undefined;
-  // onSetOpen: (open: boolean) => void;
 }
 
 export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {

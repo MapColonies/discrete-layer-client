@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import './url.value-presentors.css';
 
@@ -11,6 +12,7 @@ interface UrlValuePresentorProps {
 
 export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ value }) => {
   const [copied, setCopied] = useState<boolean>(false);
+  const intl = useIntl();
   return (
     <>
       <Tooltip content={value}>
@@ -19,9 +21,11 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
         </Box>
       </Tooltip>
       <Box className="detailsUrlFieldUrlCopy">
-        <CopyToClipboard text={value as string} onCopy={(): void => setCopied(true)}>
-          <IconButton icon="content_copy" />
-        </CopyToClipboard>
+        <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+          <CopyToClipboard text={value as string} onCopy={(): void => setCopied(true)}>
+            <IconButton icon="content_copy"/>
+          </CopyToClipboard>
+        </Tooltip>
       </Box>
     </>
   );
