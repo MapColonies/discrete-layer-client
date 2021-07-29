@@ -96,7 +96,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 210,
+      width: 190,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
