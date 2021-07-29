@@ -17,8 +17,6 @@ import { Loading } from './Loading'
 import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
 
-import './catalog-tree.css';
-
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);

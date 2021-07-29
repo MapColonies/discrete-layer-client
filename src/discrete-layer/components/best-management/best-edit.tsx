@@ -13,10 +13,8 @@ export const BestEditComponent: React.FC = observer(() => {
     <div style={{height: '100%'}}>
       <BestDiscretesComponent 
         discretes={ bestDiscretes } 
-        style={{ height: '100%', width: 'calc(100% - 8px)' }}
+        style={{ height: 'calc(100% - 80px)', width: 'calc(100% - 8px)' }}
       />
-
-      {JSON.stringify(store.discreteLayersStore.editingBest)}
     </div>
   )
 })
