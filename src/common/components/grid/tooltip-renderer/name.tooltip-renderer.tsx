@@ -1,8 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { get } from 'lodash';
 import { ITooltipParams } from 'ag-grid-community';
-import './name.tooltip-renderer.css'
-import { ILayerImage } from '../../../models/layerImage';
+import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
+
+import './name.tooltip-renderer.css';
 
 export default forwardRef((props: ITooltipParams, ref) => {
   // eslint-disable-next-line 

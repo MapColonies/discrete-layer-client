@@ -3,9 +3,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage } from 'react-intl';
 import { Moment } from 'moment';
 import { Box } from '@map-colonies/react-components';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import { dateFormatter } from '../../../../common/helpers/type-formatters';
 import { JobModelType } from '../../../models';
-import { dateFormatter } from '../../layers-results/type-formatters/type-formatters';
 
 import './job-details.cell-renderer.css';
 

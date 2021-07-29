@@ -1,6 +1,7 @@
 {
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
+  "general.save-btn.text": "Save",
   "general.error.label": "Error",
   "general.title.new.3d": "New 3D product",
   "general.title.new.raster": "New raster product",
@@ -36,6 +37,7 @@
   "results.fields.name.label": "Name",
   "results.fields.update-date.label": "Updated",
   "results.fields.order.label": "Order",
+  "results.fields.resolution.label": "Resolution",
   "results.nodata": "No results to show",
 
   "snack.message.success": "Export SUCCEEDED",

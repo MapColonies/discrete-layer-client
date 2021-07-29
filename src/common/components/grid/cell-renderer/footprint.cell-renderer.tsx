@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Checkbox } from '@map-colonies/react-core';
-import { GridRowNode } from '../../../../common/components/grid';
+import { GridRowNode } from '..';
+
 import './footprint.cell-renderer.css';
 
 interface IFootprintCellRendererParams extends ICellRendererParams {

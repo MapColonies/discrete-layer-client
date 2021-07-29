@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
@@ -15,9 +15,9 @@ import {
 } from '../../../common/components/grid';
 import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { useQuery, useStore } from "../../models/RootStore";
+import { dateFormatter } from '../../../common/helpers/type-formatters';
+import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
-import { dateFormatter } from '../layers-results/type-formatters/type-formatters';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
 import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';

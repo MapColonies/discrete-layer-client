@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { isObject } from 'lodash';
+import { Button } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
   GridComponentOptions,
-  GridValueFormatterParams,
   GridCellMouseOverEvent,
   GridCellMouseOutEvent,
   GridRowNode,
@@ -17,35 +18,36 @@ import {
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 
-import './layers-results.css';
+import './best-discretes.css';
 
-interface LayersResultsComponentProps {
+const IS_PAGINATION = true;
+const PAGE_SIZE = 10;
+const IMMEDIATE_EXECUTION = 0;
+const INITIAL_ORDER = 0;
+
+interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
+  // onSetOpen: (open: boolean) => void;
+  // layerRecords?: ILayerImage[] | undefined;
 }
 
-const pagination = true;
-const pageSize = 10;
-const immediateExecution = 0;
-const intialOrder = 0;
-
-export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
+export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
   const intl = useIntl();
   const { discreteLayersStore } = useStore();
-  const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
+  const [layersImages, setLayersImages] = useState<ILayerImage[]>([]);
 
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
-  const selectedLayersRef = useRef(intialOrder);
+  const selectedLayersRef = useRef(INITIAL_ORDER);
 
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
-      setlayersImages(discreteLayersStore.layersImages);
+      setLayersImages(discreteLayersStore.layersImages);
     }
   },[discreteLayersStore.layersImages]);
 
@@ -62,7 +64,6 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
           });
           res = matchesRes;
     }
-    
     return res;
   };
 
@@ -71,14 +72,22 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       return cacheRef.current;
     } else {
       cacheRef.current = layersImages;
-      selectedLayersRef.current = intialOrder;
+      selectedLayersRef.current = INITIAL_ORDER;
       return cacheRef.current;
     }
-  }
+  };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+
+  // const hashValueGetter = (params: ValueGetterParams): number => params.node.rowIndex;
   
   const colDef = [
+    {
+      width: 10,
+      // valueGetter: hashValueGetter,
+      suppressMovable: true,
+      rowDrag: true
+    },
     {
       width: 20,
       field: 'footPrintShown',
@@ -92,7 +101,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerComponentParams: { 
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footPrintShown', value), immediateExecution) ;
+            setTimeout(()=> item.setDataValue('footPrintShown', value), IMMEDIATE_EXECUTION) ;
           });
         }  
       }
@@ -103,40 +112,29 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          // setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
-          if(value) {
+          if (value) {
             selectedLayersRef.current++;
-          }
-          else {
+          } else {
             const orders: number[] = [];
             // eslint-disable-next-line
             (node as any).gridApi.forEachNode((item: GridRowNode)=> {
               const rowData = item.data as {[key: string]: string | boolean | number};
-              if(rowData.layerImageShown === true && rowData.id !== id) {
+              if (rowData.layerImageShown === true && rowData.id !== id) {
                 orders.push(rowData.order as number);
               }
             });
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          // setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
           discreteLayersStore.showLayer(id, value, order);
         }
       }
     },
     {
       headerName: intl.formatMessage({
-        id: 'results.fields.order.label',
-      }),
-      width: 50,
-      field: 'order',
-      hide: true
-    },
-    {
-      headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 200,
+      width: 210,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -144,30 +142,26 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       tooltipComponentParams: { color: '#ececec' }
     },
     {
-      headerName:  intl.formatMessage({
-        id: 'results.fields.update-date.label',
+      headerName: intl.formatMessage({
+        id: 'results.fields.resolution.label',
       }),
       width: 120,
-      field: 'updateDate',
-      suppressMovable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      field: 'resolution',
+      suppressMovable: true
     }
   ];
   const gridOptions: GridComponentOptions = {
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
-    pagination: pagination,
-    paginationPageSize: pageSize,
+    pagination: IS_PAGINATION,
+    paginationPageSize: PAGE_SIZE,
     columnDefs: colDef,
     getRowNodeId: (data: ILayerImage) => {
       return data.id;
     },
-    // detailsRowCellRenderer: 'detailsRenderer',
-    // detailsRowHeight: 150,
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      // detailsRenderer: LayerDetailsRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
       customTooltip: CustomTooltip,
@@ -177,7 +171,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     tooltipMouseTrack: false,
     rowSelection: 'single',
     suppressCellSelection: true,
-    // suppressRowClickSelection: true,
+    // rowDragManaged: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer(event.data as ILayerImage);
     },
@@ -196,11 +190,21 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
   };
 
+  const handleSave = (): void => {
+    // TODO save in localStorage
+  };
+
   return (
-    <GridComponent
-      gridOptions={gridOptions}
-      rowData={getRowData()}
-      style={props.style}
-    />
+    <>
+      <GridComponent
+        gridOptions={gridOptions}
+        rowData={getRowData()}
+        style={props.style}/>
+      <Box className="saveButton">
+        <Button raised type="button" onClick={(): void => { handleSave(); } }>
+          <FormattedMessage id="general.save-btn.text"/>
+        </Button>
+      </Box>
+    </>
   );
 });
