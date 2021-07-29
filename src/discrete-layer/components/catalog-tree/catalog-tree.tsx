@@ -116,48 +116,29 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         {keys: ['region']}
       );
 
-      // // get BESTs shortcuts
-      // const arrBests = arr.filter((item) => {
-      //   // @ts-ignore
-      //   const itemObjectBag =  item as Record<string,unknown>;
-      //   return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
-      // });
-      // const parentBests = buildParentTreeNode(
-      //   arrBests,
-      //   intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-      //   {keys: ['region']}
-      // );
-
-      // // get DRAFTs of BEST
-      // const parentDrafts = buildParentTreeNode(
-      //   [{
-      //     ...arrBests[0],
-      //     isDraft: true,
-      //   }] as BestRecordModelType[],
-      //   intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
-      //   {keys: ['region']}
-      // );
-
       // get BESTs shortcuts
       const arrBests = arr.filter((item) => {
         // @ts-ignore
         const itemObjectBag =  item as Record<string,unknown>;
         return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
       });
+      const drafts = discreteLayersStore.getDrafts();
+      const draftNode = (drafts.length > 0) ? [{
+        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+        isGroup: true,
+        children: [...discreteLayersStore.getDrafts().map(draft => {
+          return {
+            ...draft,
+            title: draft['productName'],
+            isSelected: false
+          };
+        })],
+      }] : [];
       const parentBests = {
         title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
         isGroup: true,
         children: [
-          {
-            title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
-            isGroup: true,
-            children: [{
-              ...arrBests[0],
-              title: 'DRAFT > ' + arrBests[0]['productName'],
-              isSelected: false,
-              isDraft: true,
-            }],
-          },
+          ...draftNode,
           ...arrBests.map(item=> {
             return {
               ...item,

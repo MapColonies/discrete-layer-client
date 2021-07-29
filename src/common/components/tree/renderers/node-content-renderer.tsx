@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getDescendantCount } from 'react-sortable-tree';
+import { getDescendantCount, getDepth } from 'react-sortable-tree';
 import { Tooltip } from '@map-colonies/react-core';
 import './node-content-renderer.css';
 
@@ -237,7 +237,7 @@ class FileThemeNodeContentRenderer extends Component {
                     <div 
                       className="descendantCount"
                     >
-                      ( {getDescendantCount({node, ignoreCollapsed: false }) - (parentNode !== null ? 0 : node.children.length)} )
+                      ( {getDescendantCount({node, ignoreCollapsed: false }) - (parentNode !== null ? 0 : (getDepth(node) > 1) ? node.children.length : 0)} )
                     </div>
                   )}
 
