@@ -16,6 +16,7 @@ import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { BestRecordModelType } from './BestRecordModel';
+import { localStore } from '../../common/helpers/storage';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -208,6 +209,36 @@ export const discreteLayersStore = ModelBase
       self.editingBest =  best ? {...best} : undefined;
     }
 
+    function saveDraft(best: BestRecordModelType | undefined): void {
+      const draftsKey = 'DRAFTS';
+      const drafts = localStore.getObject(draftsKey);
+      if(drafts === null){
+        localStore.setObject(draftsKey,{
+          data:[best]
+        });
+      }
+      else {
+        localStore.setObject(draftsKey,{
+          data:[
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            ...(drafts.data as unknown[]),
+            best
+          ]
+        });
+      }
+    }
+
+    function getDrafts(): BestRecordModelType[] {
+      const draftsKey = 'DRAFTS';
+      const drafts = localStore.getObject(draftsKey);
+      if(drafts === null){
+        return [];
+      }
+      else {
+        return drafts.data as BestRecordModelType[];
+      }
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -222,6 +253,8 @@ export const discreteLayersStore = ModelBase
       setEntityDescriptors,
       updateLayer,
       editBest,
+      saveDraft,
+      getDrafts,
     };
   });
 

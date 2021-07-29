@@ -381,7 +381,11 @@ const DiscreteLayerView: React.FC = observer(() => {
       record[key as string] = undefined;
     });
     record.id = 'DEFAULT_BEST_ID';
+    record.productName = 'DRAFT_OF_BEST_' + new Date().getTime().toString();
+    record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
+
+    store.discreteLayersStore.saveDraft(record as BestRecordModelType);
 
     store.discreteLayersStore.editBest(record as BestRecordModelType);
   };
