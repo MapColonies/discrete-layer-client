@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getDescendantCount } from 'react-sortable-tree';
+import { getDescendantCount, getDepth } from 'react-sortable-tree';
 import { Tooltip } from '@map-colonies/react-core';
 import './node-content-renderer.css';
 
@@ -81,17 +81,20 @@ class FileThemeNodeContentRenderer extends Component {
 
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
+    const isSecondLevelLeaf = node.isGroup === undefined && path.length ===2;
 
     // Construct the scaffold representing the structure of the tree
     const scaffold = [];
     lowerSiblingCounts.forEach((lowerSiblingCount, i) => {
-      scaffold.push(
-        <div
-          key={`pre_${1 + i}`}
-          style={{ width: scaffoldBlockPxWidth }}
-          className={styles.lineBlock}
-        />
-      );
+      if(!isSecondLevelLeaf){
+        scaffold.push(
+          <div
+            key={`pre_${1 + i}`}
+            style={{ width: scaffoldBlockPxWidth }}
+            className={styles.lineBlock}
+          />
+        );
+      }
 
       if (treeIndex !== listIndex && i === swapDepth) {
         // This row has been shifted, and is at the depth of
@@ -156,7 +159,7 @@ class FileThemeNodeContentRenderer extends Component {
           }
           style={{
             position: 'absolute',
-            left: rowDirection === 'ltr' ?  scaffoldBlockPxWidth : 'unset',
+            left: rowDirection === 'ltr' && !isSecondLevelLeaf ?  scaffoldBlockPxWidth : 'unset',
             right: rowDirection === 'rtl' ? scaffoldBlockPxWidth * 2 : 'unset',
             width: 'calc(100% - var(--rst-expander-size))'
           }}
@@ -237,7 +240,7 @@ class FileThemeNodeContentRenderer extends Component {
                     <div 
                       className="descendantCount"
                     >
-                      ( {getDescendantCount({node, ignoreCollapsed: false }) - (parentNode !== null ? 0 : node.children.length)} )
+                      ( {getDescendantCount({node, ignoreCollapsed: false }) - (parentNode !== null ? 0 : (getDepth(node) > 1) ? node.children.length : 0)} )
                     </div>
                   )}
 

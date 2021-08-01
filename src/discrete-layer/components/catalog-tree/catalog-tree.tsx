@@ -5,12 +5,14 @@ import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-
+import { CircularProgress, IconButton, Tooltip } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
+import { BestRecordModelType } from '../../models';
 import { Error } from './Error'
 import { Loading } from './Loading'
 import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
@@ -121,11 +123,33 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         const itemObjectBag =  item as Record<string,unknown>;
         return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
       });
-      const parentBests = buildParentTreeNode(
-        arrBests,
-        intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-        {keys: ['region']}
-      );
+      const drafts = discreteLayersStore.getDrafts();
+      const draftNode = (drafts.length > 0) ? [{
+        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+        isGroup: true,
+        children: [...discreteLayersStore.getDrafts().map(draft => {
+          return {
+            ...draft,
+            title: draft['productName'],
+            isSelected: false
+          };
+        })],
+      }] : [];
+      const parentBests = {
+        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+        isGroup: true,
+        children: [
+          ...draftNode,
+          ...arrBests.map(item=> {
+            return {
+              ...item,
+              title: item['productName'],
+              isSelected: false
+            };
+        })
+      ]
+
+      }
 
       // whole catalog as is
       const parentCatalog = buildParentTreeNode(
@@ -139,6 +163,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
           parentUnlinked,
           parentCatalog,
           parentBests,
+          // parentDrafts,
         ]
       );
     }
@@ -149,152 +174,157 @@ export const CatalogTreeComponent: React.FC = observer(() => {
     return (
       <>
         {loading ? (
-          <Loading />
+          <>
+            <CircularProgress className="refreshIconButton"/>
+            <Loading/>
+          </>
         ) : (
-          <button onClick={query!.refetch}>Refetch</button>
+          <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+            <IconButton icon="autorenew" className="refreshIconButton" onClick={(): void => { void query!.refetch(); }}/>
+          </Tooltip>
         )}
 
-        <div id="catalogContainer" style={{ 
-          height: '50%',
-          margin: '0 12px'
-        }}>
-          <TreeComponent
-            treeData={treeRawData}
-            onChange={treeData => {
-              console.log('****** UPDATE TREEE DATA *****')
-              setTreeRawData(treeData);
-            }}
-            canDrag={({ node }) => {
-              return false;
-              // return !node.dragDisabled
-            }}
-            canDrop={({ nextParent }) => {
-              return false;
-              // return !nextParent || nextParent.isDirectory
-            }}
-            generateNodeProps={rowInfo => ({
-              onClick: (evt: MouseEvent) => {
-                if(!rowInfo.node.isGroup){
-                  let newTreeData = treeRawData;
-                  if(!evt.ctrlKey){
-                    // Remove prev selection
-                    const selection = find({
-                      treeData: newTreeData,
-                      getNodeKey: keyFromTreeIndex,
-                      searchMethod: (data) => data.node.isSelected,
-                    });
-
-                    selection.matches.forEach(match => {
-                      const selRowInfo = getNodeAtPath({
+        <Box id="catalogContainer" className="catalogContainer">
+          {
+            !loading && <TreeComponent
+              treeData={treeRawData}
+              onChange={treeData => {
+                console.log('****** UPDATE TREEE DATA *****');
+                setTreeRawData(treeData);
+              }}
+              canDrag={({ node }) => {
+                return false;
+                // return !node.dragDisabled
+              }}
+              canDrop={({ nextParent }) => {
+                return false;
+                // return !nextParent || nextParent.isDirectory
+              }}
+              generateNodeProps={rowInfo => ({
+                onClick: (evt: MouseEvent) => {
+                  if(!rowInfo.node.isGroup){
+                    let newTreeData = treeRawData;
+                    if(!evt.ctrlKey){
+                      // Remove prev selection
+                      const selection = find({
                         treeData: newTreeData,
-                        path: match.path,
                         getNodeKey: keyFromTreeIndex,
-                        // ignoreCollapsed: false,
+                        searchMethod: (data) => data.node.isSelected,
                       });
 
-                      newTreeData = changeNodeAtPath({
-                        treeData: newTreeData,
-                        path: match.path,
-                        newNode: {
-                          ...selRowInfo?.node,
-                          isSelected: false
-                        },
-                        getNodeKey: keyFromTreeIndex
+                      selection.matches.forEach(match => {
+                        const selRowInfo = getNodeAtPath({
+                          treeData: newTreeData,
+                          path: match.path,
+                          getNodeKey: keyFromTreeIndex,
+                          // ignoreCollapsed: false,
+                        });
+
+                        newTreeData = changeNodeAtPath({
+                          treeData: newTreeData,
+                          path: match.path,
+                          newNode: {
+                            ...selRowInfo?.node,
+                            isSelected: false
+                          },
+                          getNodeKey: keyFromTreeIndex
+                        });
                       });
+                    }                 
+
+                    newTreeData = changeNodeAtPath({
+                      treeData: newTreeData,
+                      path: rowInfo.path,
+                      newNode: {
+                        ...rowInfo.node,
+                        isSelected: !rowInfo.node.isSelected
+                      },
+                      getNodeKey: keyFromTreeIndex
                     });
-                  }                 
 
-                  newTreeData = changeNodeAtPath({
-                    treeData: newTreeData,
-                    path: rowInfo.path,
-                    newNode: {
-                      ...rowInfo.node,
-                      isSelected: !rowInfo.node.isSelected
-                    },
-                    getNodeKey: keyFromTreeIndex
-                  });
-
-                  setTreeRawData(newTreeData);
-                  discreteLayersStore.selectLayerByID((rowInfo.node as ILayerImage).id);
-                }
-              },
-              onMouseOver: (evt: MouseEvent) => {
-                if(!rowInfo.node.isGroup){
-                  discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
-                }
-              },
-              onMouseOut: (evt: MouseEvent) => {
-                discreteLayersStore.highlightLayer(undefined);
-              },
-              icons: rowInfo.node.isGroup
-                ? [
-                    // <div
-                    //   style={{
-                    //     borderLeft: 'solid 8px gray',
-                    //     borderBottom: 'solid 10px gray',
-                    //     marginRight: 10,
-                    //     boxSizing: 'border-box',
-                    //     width: 16,
-                    //     height: 12,
-                    //     filter: rowInfo.node.expanded
-                    //       ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
-                    //       : 'none',
-                    //     borderColor: rowInfo.node.expanded ? 'white' : 'gray',
-                    //   }}
-                    // />,
-                  ]
-                : [
-                    <FootprintRenderer
-                      data={(rowInfo.node as any) as ILayerImage}
-                      onClick={(data, value) => {
-                        discreteLayersStore.showFootprint(data.id, value);
-                      }}
-                    />,
-                    <LayerImageRenderer
-                      data={(rowInfo.node as any) as ILayerImage}
-                      onClick={(data, value) => {
-                        if(value) {
-                          selectedLayersRef.current++;
-                        }
-                        else {
-                          const orders: number[] = [];
-                          // eslint-disable-next-line
-                          discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
-                            if(item.layerImageShown === true && data.id !== item.id) {
-                              orders.push(item.order as number);
-                            }
-                          });
-                          selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
-                        }
-                        const order = value ? selectedLayersRef.current : null;
-                        discreteLayersStore.showLayer(data.id, value, order);
-                      }}
-                    />
-                  ],
-              buttons: [
-                // <button
-                //   style={{
-                //     padding: 0,
-                //     borderRadius: '100%',
-                //     backgroundColor: 'gray',
-                //     color: 'white',
-                //     width: 16,
-                //     height: 16,
-                //     border: 0,
-                //     fontWeight: 100,
-                //   }}
-                //   onClick={() => {
-                //     console.log('**** alertNodeInfo ****')
-                //   }}
-                // >
-                //   i
-                // </button>,
-              ],
-            })}
-          />
-        </div>
+                    setTreeRawData(newTreeData);
+                    discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
+                  }
+                },
+                onMouseOver: (evt: MouseEvent) => {
+                  if(!rowInfo.node.isGroup){
+                    discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
+                  }
+                },
+                onMouseOut: (evt: MouseEvent) => {
+                  discreteLayersStore.highlightLayer(undefined);
+                },
+                icons: rowInfo.node.isGroup
+                  ? [
+                      // <div
+                      //   style={{
+                      //     borderLeft: 'solid 8px gray',
+                      //     borderBottom: 'solid 10px gray',
+                      //     marginRight: 10,
+                      //     boxSizing: 'border-box',
+                      //     width: 16,
+                      //     height: 12,
+                      //     filter: rowInfo.node.expanded
+                      //       ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
+                      //       : 'none',
+                      //     borderColor: rowInfo.node.expanded ? 'white' : 'gray',
+                      //   }}
+                      // />,
+                    ]
+                  : [
+                      <FootprintRenderer
+                        data={(rowInfo.node as any) as ILayerImage}
+                        onClick={(data, value) => {
+                          discreteLayersStore.showFootprint(data.id, value);
+                        }}
+                      />,
+                      <LayerImageRenderer
+                        data={(rowInfo.node as any) as ILayerImage}
+                        onClick={(data, value) => {
+                          if(value) {
+                            selectedLayersRef.current++;
+                          }
+                          else {
+                            const orders: number[] = [];
+                            // eslint-disable-next-line
+                            discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
+                              if(item.layerImageShown === true && data.id !== item.id) {
+                                orders.push(item.order as number);
+                              }
+                            });
+                            selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
+                          }
+                          const order = value ? selectedLayersRef.current : null;
+                          discreteLayersStore.showLayer(data.id, value, order);
+                        }}
+                      />
+                    ],
+                buttons: rowInfo.node.isDraft ? [
+                  <button
+                    style={{
+                      padding: 0,
+                      borderRadius: '100%',
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      width: 16,
+                      height: 16,
+                      border: 0,
+                      fontWeight: 100,
+                    }}
+                    onClick={() => {
+                      discreteLayersStore.editBest(rowInfo.node as BestRecordModelType)
+                    }}
+                  >
+                    i
+                  </button>,
+                ]
+                : [],
+              })}
+            />
+          }
+        </Box>
       </>
-    )
+    );
   }
-  return (<><Loading /></>)
+  return (<><Loading/></>);
 })

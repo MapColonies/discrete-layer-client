@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect } from 'react';
 import { get } from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { observer } from 'mobx-react-lite';
 import {
@@ -17,7 +17,7 @@ import {
   CesiumGeographicTilingScheme,
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
-import { IconButton, useTheme, Typography, Fab } from '@map-colonies/react-core';
+import { IconButton, useTheme, Typography, Fab, MenuSurfaceAnchor, MenuSurface, Tooltip } from '@map-colonies/react-core';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { find } from 'lodash';
 import { lineString } from '@turf/helpers';
@@ -36,10 +36,13 @@ import { LayersDetailsComponent } from '../components/layer-details/layer-detail
 import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
-import { BestDiscretesComponent } from '../components/best-management/best-discretes';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
-import { EntityDescriptorModelType, RecordType } from '../models';
+import { BestRecordModel, EntityDescriptorModelType, ProductType, RecordType } from '../models';
+import { BestEditComponent } from '../components/best-management/best-edit';
+import { BestRecordModelType } from '../models/BestRecordModel';
+import { FilterField } from '../models/RootStore.base';
+import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -225,6 +228,7 @@ const tileOtions = { opacity: 0.5 };
 export enum TabViews {
   CATALOG,
   SEARCH_RESULTS,
+  CREATE_BEST,
 }
 
 const DiscreteLayerView: React.FC = observer(() => {
@@ -261,6 +265,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     }`));
   const store = useStore();
   const theme = useTheme();
+  const intl = useIntl();
   const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
@@ -289,6 +294,9 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const [activeTabView, setActiveTabView] = React.useState(TabViews.CATALOG);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
+  const [tabsPanelExpanded, setTabsPanelExpanded] = React.useState(true);
+  const layerToPresent = store.discreteLayersStore.selectedLayer;
+  const editingBest = store.discreteLayersStore.editingBest;
 
   useEffect(() => {
     const layers = get(data,'search', []) as ILayerImage[];
@@ -304,7 +312,20 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   }, [descriptorsQuery.data, descriptorsQuery.loading, store.discreteLayersStore]);
 
-  const buildFilters =  () => {
+  const handleTabViewChange = (targetViewIdx: TabViews): void => {
+    store.discreteLayersStore.setTabviewData(activeTabView);
+    store.discreteLayersStore.restoreTabviewData(targetViewIdx);
+    setActiveTabView(targetViewIdx);
+  };
+
+  useEffect(() => {
+    if(store.discreteLayersStore.editingBest !== undefined){
+      handleTabViewChange(TabViews.CREATE_BEST);
+    }
+  }, [store.discreteLayersStore.editingBest]);
+
+
+  const buildFilters =  (): FilterField[]  => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
     return [
       {
@@ -355,8 +376,40 @@ const DiscreteLayerView: React.FC = observer(() => {
     setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
   };
 
+  const handleCreateBestDraft = (): void => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const record = {} as Record<string, any>;
+    BestRecordModelKeys.forEach(key => {
+      record[key as string] = undefined;
+    });
+    record.id = 'DEFAULT_BEST_ID';
+    record.productName = 'DRAFT_OF_BEST_' + new Date().getTime().toString();
+    record.productType = ProductType.BEST_ORTHOPHOTO;
+    record.isDraft = true;
+    record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
+    record.discretesArray = [
+      {
+        id: '6ac605c4-da38-11eb-8d19-0242ac130003',
+        zOrder: 0
+      },
+      {
+        id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
+        zOrder: 1
+      }
+    ]
+
+    store.discreteLayersStore.saveDraft(record as BestRecordModelType);
+
+    store.discreteLayersStore.editBest(record as BestRecordModelType);
+  };
+
   const handleEditEntityDialogClick = (): void => {
-    setEditEntityDialogOpen(!isEditEntityDialogOpen);
+    if((layerToPresent as BestRecordModelType).isDraft === true){
+      store.discreteLayersStore.editBest(layerToPresent as BestRecordModelType);
+    }
+    else {
+      setEditEntityDialogOpen(!isEditEntityDialogOpen);
+    }
   };
 
   const handleSystemsJobsDialogClick = (): void => {
@@ -442,8 +495,15 @@ const DiscreteLayerView: React.FC = observer(() => {
       idx: TabViews.SEARCH_RESULTS,
       title: 'tab-views.search-results',
       iconClassName: 'mc-icon-Search-History',
+    },
+    {
+      idx: TabViews.CREATE_BEST,
+      title: 'tab-views.create-best',
+      iconClassName: 'mc-icon-Bests',
     }
   ];
+
+  const [openNew, setOpenNew] = React.useState(false);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -473,86 +533,89 @@ const DiscreteLayerView: React.FC = observer(() => {
             backgroundColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string,
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
-            <IconButton
-              className="operationIcon mc-icon-Search-History glow-missing-icon"
-              label="NEW RASTER"
-              onClick={ (): void => { handleNewRasterEntityDialogClick(); } }
-            />
             {
-              isNewRasterEntityDialogOpen && <EntityDialogComponent
-                isOpen={isNewRasterEntityDialogOpen}
-                onSetOpen={setNewRasterEntityDialogOpen}
-                recordType={RecordType.RECORD_RASTER}>
-              </EntityDialogComponent>
+              (tabIdx === TabViews.CATALOG) && <MenuSurfaceAnchor id="newContainer">
+                <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
+                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
+                    <IconButton
+                      className="operationIcon mc-icon-Search-History glow-missing-icon"
+                      label="NEW RASTER"
+                      onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
+                    />
+                  </Tooltip>
+                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
+                    <IconButton
+                      className="operationIcon mc-icon-Bests glow-missing-icon"
+                      label="NEW 3D"
+                      onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
+                    />
+                  </Tooltip>
+                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                    <IconButton
+                      className="operationIcon mc-icon-Bests"
+                      label="NEW BEST"
+                      onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
+                    />
+                  </Tooltip>
+                </MenuSurface>
+                <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
+                  <IconButton className="operationIcon mc-icon-Search-History glow-missing-icon" onClick={evt => setOpenNew(!openNew)}/>
+                </Tooltip>
+            </MenuSurfaceAnchor>
             }
-            <IconButton
-              className="operationIcon mc-icon-Bests glow-missing-icon"
-              label="NEW 3D"
-              onClick={ (): void => { handleNew3DEntityDialogClick(); } }
-            />
-            {
-              isNew3DEntityDialogOpen && <EntityDialogComponent
-                isOpen={isNew3DEntityDialogOpen}
-                onSetOpen={setNew3DEntityDialogOpen}
-                recordType={RecordType.RECORD_3D}>
-              </EntityDialogComponent>
-            }
-            <IconButton 
-              className="operationIcon mc-icon-Delete"
-              label="DELETE"
-            />
-            <IconButton 
-              className="operationIcon mc-icon-Filter"
-              label="FILTER"
-              onClick={ (): void => { handleFilter() } }
-            />
-            <IconButton 
-              className="operationIcon mc-icon-Arrows-Left"
-              label="EXPANDER"
-            />
+            <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
+              <IconButton 
+                className="operationIcon mc-icon-Delete"
+                label="DELETE"
+              />
+            </Tooltip>
+            <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
+              <IconButton 
+                className="operationIcon mc-icon-Filter"
+                label="FILTER"
+                onClick={ (): void => { handleFilter() } }
+              />
+            </Tooltip>
+            <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
+              <IconButton 
+                className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
+                label="EXPANDER"
+                onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
+              />
+            </Tooltip>
           </div>
         </div>
       </div>
     );
   };
+ 
+  const availableTabs = editingBest ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
 
-  const handleTabViewChange = (targetViewIdx: TabViews): void => {
-    store.discreteLayersStore.setTabviewData(activeTabView);
-    store.discreteLayersStore.restoreTabviewData(targetViewIdx);
-    setActiveTabView(targetViewIdx);
-  };
-
-  // TODO: should be taken from selected item in store
-  // const [layerToPresent, setLayerToPresent] = useState<ILayerImage | null>(null);
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   setLayerToPresent(store.discreteLayersStore.highlightedLayer); 
-  // }, [store.discreteLayersStore.highlightedLayer]);
-  
-  // const layerToPresent = store.discreteLayersStore.highlightedLayer;
-  // const layerToPresent = (store.discreteLayersStore !== null && store.discreteLayersStore.layersImages !== undefined) ? store.discreteLayersStore.layersImages[0] : null;
-  const layerToPresent = store.discreteLayersStore.selectedLayer;
   return (
     <>
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
             <Typography use="body2">Catalog App</Typography>
-            <Box className="version">{version}</Box>
+            <Tooltip content={`${intl.formatMessage({ id: 'general.version.text' })} ${version}`}>
+              <Box className="version">{version}</Box>
+            </Tooltip>
           </Box>
           <Box className="headerViewsSwitcherContainer">
-            {tabViews.map((tab) => {
-              return <Fab 
-                key={tab.idx}
-                className={`${tab.iconClassName} tabViewIcon`}
-                mini 
-                onClick={(evt): void => handleTabViewChange(tab.idx)}
-                style={{ 
-                  backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
-                }}
-                theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
-              />;
-            })}
+            {
+              availableTabs.map((tab) => {
+                return <Tooltip content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}><Fab 
+                  key={tab.idx}
+                  className={`${tab.iconClassName} tabViewIcon`}
+                  mini 
+                  onClick={(evt): void => handleTabViewChange(tab.idx)}
+                  style={{ 
+                    backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
+                  }}
+                  theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
+                /></Tooltip>;
+              })
+            }
           </Box>
         </Box>
 
@@ -567,11 +630,13 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
 
         <Box className="headerSystemAreaContainer">
-          <IconButton
-            className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
-            label="SYSTEM JOBS"
-            onClick={ (): void => { handleSystemsJobsDialogClick() } }
-          />
+          <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
+            <IconButton
+              className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
+              label="SYSTEM JOBS"
+              onClick={ (): void => { handleSystemsJobsDialogClick(); } }
+            />
+          </Tooltip>
           {
             isSystemsJobsDialogOpen && <SystemJobsComponent
               isOpen={isSystemsJobsDialogOpen}
@@ -595,7 +660,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
               <Box className="detailsContent" style={{ overflow: 'hidden'}}>
                 <CatalogTreeComponent/>
-                <BestDiscretesComponent style={{ height: 'calc(45% - 50px)', width: 'calc(100% - 8px)' }}/>
               </Box>
             </Box>
 
@@ -611,6 +675,21 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Box>
             }
+
+            {activeTabView === TabViews.CREATE_BEST && <Box className="tabContentContainer">
+              {
+                getActiveTabHeader(activeTabView)
+              }
+              <Box 
+                style={{
+                  height: 'calc(100% - 50px)',
+                  width: 'calc(100% - 8px)'
+                }}
+              >
+                <BestEditComponent />
+              </Box>
+            </Box>
+            }
           </Box>
           
           <Box className="sidePanelContainer sideDetailsPanel" style={{
@@ -622,11 +701,13 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {layerToPresent?.productName}
               </Typography>
               {
-                layerToPresent && <IconButton
-                  className="operationIcon mc-icon-Status-Approves glow-missing-icon"
-                  label="EDIT"
-                  onClick={ (): void => { handleEditEntityDialogClick(); } }
-                />
+                layerToPresent && <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Status-Approves glow-missing-icon"
+                    label="EDIT"
+                    onClick={ (): void => { handleEditEntityDialogClick(); } }
+                  />
+                </Tooltip>
               }
               {
                 isEditEntityDialogOpen && <EntityDialogComponent
@@ -635,11 +716,13 @@ const DiscreteLayerView: React.FC = observer(() => {
                   layerRecord={layerToPresent}>
                 </EntityDialogComponent>
               }
-              <IconButton 
-                className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel': 'mc-icon-Collapce-Panel'}`}
-                label="EXPANDER"
-                onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded)}}
-              />
+              <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
+                <IconButton 
+                  className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
+                  label="EXPANDER"
+                  onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
+                />
+              </Tooltip>
             </Box>
             <PerfectScrollbar className="detailsContent">
               <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
@@ -675,6 +758,20 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
+        {
+          isNewRasterEntityDialogOpen && <EntityDialogComponent
+            isOpen={isNewRasterEntityDialogOpen}
+            onSetOpen={setNewRasterEntityDialogOpen}
+            recordType={RecordType.RECORD_RASTER}>
+          </EntityDialogComponent>
+        }
+        {
+          isNew3DEntityDialogOpen && <EntityDialogComponent
+            isOpen={isNew3DEntityDialogOpen}
+            onSetOpen={setNew3DEntityDialogOpen}
+            recordType={RecordType.RECORD_3D}>
+          </EntityDialogComponent>
+        }
       </Box>
     </>
   );

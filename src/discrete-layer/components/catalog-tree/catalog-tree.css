@@ -1,16 +1,21 @@
-body[dir='rtl'] #catalogContainer .rst__virtualScrollOverride {
-  direction: rtl !important;
-}
-#catalogContainer .rst__virtualScrollOverride::-webkit-scrollbar {
-  width: 6px;
+
+.catalogContainer {
+  height: calc(100% - 12px);
+  margin: 12px 12px 0 12px;
 }
 
-#catalogContainer .rst__virtualScrollOverride::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  border-radius: 6px;
+.refreshIconButton {
+  font-size: 30px;
+  position: absolute;
+  top: 10px;
+  left: 270px;
 }
 
-#catalogContainer .rst__virtualScrollOverride::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
+body[dir=rtl] .refreshIconButton {
+  left: unset;
+  right: 270px;
 }
-  
+
+body[dir=rtl] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer{
+  margin-right: -12px;
+}

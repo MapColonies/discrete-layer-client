@@ -182,3 +182,11 @@ body[dir='rtl'] .sideDetailsPanel{
 .version{
   margin: 0 16px;
 }
+
+#newContainer .mdc-menu-surface.mdc-menu-surface--open{
+  top: 40px !important;
+}
+
+#newContainer {
+  display: flex;
+}

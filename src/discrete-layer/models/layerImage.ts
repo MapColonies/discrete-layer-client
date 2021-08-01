@@ -8,6 +8,13 @@ import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 export type ILayerImage = LayerMetadataMixedUnion
 
 export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false) : Feature => {
+  if(layer.footprint === undefined)
+    return {
+      type: 'Feature',
+      // @ts-ignore
+      geometry: null
+    };
+
   if(isBbox){
     let geometry: Geometry = layer.footprint as Geometry;
     switch(geometry.type){

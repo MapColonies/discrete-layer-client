@@ -209,7 +209,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           <Box className="buttons noMargin">
             {!!formErrors.latDistance || !!formErrors.lonDistance ? (
               <div id="errorContainer" className={classes.errorContainer}>
-                {`${intl.formatMessage({ id: 'general.error.label' })}: ${
+                {`${intl.formatMessage({ id: 'general.error.text' })}: ${
                   formErrors.latDistance
                 } ${formErrors.lonDistance}`}
               </div>
