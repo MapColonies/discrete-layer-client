@@ -15,3 +15,7 @@ body[dir=rtl] .refreshIconButton {
   left: unset;
   right: 270px;
 }
+
+body[dir=rtl] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer{
+  margin-right: -12px;
+}
