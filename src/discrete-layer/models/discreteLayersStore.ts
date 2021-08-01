@@ -8,6 +8,7 @@ import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
+import { localStore } from '../../common/helpers/storage';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { TabViews } from '../views/discrete-layer-view';
 import { searchParams } from './search-params';
@@ -16,7 +17,6 @@ import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { BestRecordModelType } from './BestRecordModel';
-import { localStore } from '../../common/helpers/storage';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
