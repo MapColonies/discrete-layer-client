@@ -41,6 +41,7 @@ import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestRecordModel, EntityDescriptorModelType, ProductType, RecordType } from '../models';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestRecordModelType } from '../models/BestRecordModel';
+import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -48,7 +49,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { FilterField } from '../models/RootStore.base';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
