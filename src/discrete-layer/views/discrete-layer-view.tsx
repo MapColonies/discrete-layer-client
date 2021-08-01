@@ -38,7 +38,7 @@ import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
-import { BestRecordModel, EntityDescriptorModelType, RecordType } from '../models';
+import { BestRecordModel, EntityDescriptorModelType, ProductType, RecordType } from '../models';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
@@ -382,8 +382,19 @@ const DiscreteLayerView: React.FC = observer(() => {
     });
     record.id = 'DEFAULT_BEST_ID';
     record.productName = 'DRAFT_OF_BEST_' + new Date().getTime().toString();
+    record.productType = ProductType.BEST_ORTHOPHOTO;
     record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
+    record.discretesArray = [
+      {
+        id: '6ac605c4-da38-11eb-8d19-0242ac130003',
+        zOrder: 0
+      },
+      {
+        id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
+        zOrder: 1
+      }
+    ]
 
     store.discreteLayersStore.saveDraft(record as BestRecordModelType);
 
