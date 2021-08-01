@@ -48,6 +48,7 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { FilterField } from '../models/RootStore.base';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -324,7 +325,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, [store.discreteLayersStore.editingBest]);
 
 
-  const buildFilters =  () => {
+  const buildFilters =  (): FilterField[]  => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
     return [
       {
@@ -376,6 +377,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleCreateBestDraft = (): void => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const record = {} as Record<string, any>;
     BestRecordModelKeys.forEach(key => {
       record[key as string] = undefined;
