@@ -230,7 +230,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                           getNodeKey: keyFromTreeIndex
                         });
                       });
-                    }                 
+                    }
 
                     newTreeData = changeNodeAtPath({
                       treeData: newTreeData,

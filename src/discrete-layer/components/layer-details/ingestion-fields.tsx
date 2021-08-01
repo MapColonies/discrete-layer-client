@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
+import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { RecordType } from '../../models';
-import { FieldLabelComponent } from './field-label';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
 
 import './ingestion-fields.css';

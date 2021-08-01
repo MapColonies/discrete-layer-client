@@ -131,6 +131,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     rowSelection: 'single',
     suppressCellSelection: true,
     rowDragManaged: true,
+    animateRows: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer(event.data as LayerRasterRecordModelType);
     },

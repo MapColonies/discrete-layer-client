@@ -398,6 +398,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       }
     ]
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     store.discreteLayersStore.saveDraft(record as BestRecordModelType);
 
     store.discreteLayersStore.editBest(record as BestRecordModelType);
@@ -686,7 +687,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   width: 'calc(100% - 8px)'
                 }}
               >
-                <BestEditComponent />
+                <BestEditComponent best={editingBest}/>
               </Box>
             </Box>
             }
