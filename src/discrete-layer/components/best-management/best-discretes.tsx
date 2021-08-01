@@ -130,7 +130,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     tooltipMouseTrack: false,
     rowSelection: 'single',
     suppressCellSelection: true,
-    // rowDragManaged: true,
+    rowDragManaged: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
       discreteLayersStore.highlightLayer(event.data as LayerRasterRecordModelType);
     },
