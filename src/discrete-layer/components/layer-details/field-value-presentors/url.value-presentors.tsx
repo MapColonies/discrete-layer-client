@@ -11,6 +11,7 @@ interface UrlValuePresentorProps {
 }
 
 export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ value }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [copied, setCopied] = useState<boolean>(false);
   const intl = useIntl();
   return (
