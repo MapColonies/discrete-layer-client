@@ -22,7 +22,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
       <BestDiscretesComponent
         discretes={bestDiscretes}
-        style={{ height: 'calc(100% - 150px)', width: 'calc(100% - 8px)' }}/>
+        style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
     </>
   );
 })
