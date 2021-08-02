@@ -159,7 +159,6 @@ export const discreteLayersStore = ModelBase
         );
         return intersection ? true : false;
       });
-
     }
 
     function clearLayersImages(): void {

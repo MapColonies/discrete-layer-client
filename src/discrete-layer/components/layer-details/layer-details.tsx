@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
+import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { 
   BestRecordModel,
   FieldCategory,
@@ -29,10 +30,9 @@ import { UnknownValuePresentorComponent } from './field-value-presentors/unknown
 import { RecordTypeValuePresentorComponent } from  './field-value-presentors/record-type.value-presentors';
 import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
-import { FieldLabelComponent } from './field-label';
+import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
 
 import './layer-details.css';
-import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
 
 interface LayersDetailsComponentProps {
   isBrief?: boolean;

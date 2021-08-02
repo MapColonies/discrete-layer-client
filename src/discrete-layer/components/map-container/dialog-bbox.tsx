@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
+import { useFormik } from 'formik';
 import * as turf from '@turf/helpers';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
-import { useFormik } from 'formik';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Dialog,
@@ -12,10 +13,9 @@ import {
   IconButton,
 } from '@map-colonies/react-core';
 import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
-import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import CONFIG from '../../../common/config';
+import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
-import { FieldLabelComponent } from '../layer-details/field-label';
 
 import './dialog-bbox.css';
 
