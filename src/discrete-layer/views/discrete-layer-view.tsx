@@ -322,6 +322,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     if(store.discreteLayersStore.editingBest !== undefined){
       handleTabViewChange(TabViews.CREATE_BEST);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.discreteLayersStore.editingBest]);
 
 
