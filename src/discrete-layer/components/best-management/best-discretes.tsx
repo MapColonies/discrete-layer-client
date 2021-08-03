@@ -9,6 +9,7 @@ import {
   GridComponentOptions,
   GridCellMouseOverEvent,
   GridCellMouseOutEvent,
+  GridRowDragEvent,
   GridRowNode,
   GridRowSelectedEvent,
   GridReadyEvent,
@@ -30,9 +31,11 @@ const INITIAL_ORDER = 0;
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
   discretes?: LayerRasterRecordModelType[] | undefined;
+  onSave: (open: boolean) => void;
 }
 
 export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
+  const { style, discretes } = props;
   const intl = useIntl();
   const { discreteLayersStore } = useStore();
   const selectedLayersRef = useRef(INITIAL_ORDER);
@@ -141,6 +144,10 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     onRowClicked(event: GridRowSelectedEvent) {
       discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
     },
+    onRowDragEnd(event: GridRowDragEvent) {
+      discreteLayersStore.updateMovedLayer((event.node.data as LayerRasterRecordModelType).id, event.overIndex, event.overIndex);
+      console.log(event);
+    },
     onGridReady(params: GridReadyEvent) {
       params.api.forEachNode( (node) => {
         if ((node.data as LayerRasterRecordModelType).id === discreteLayersStore.selectedLayer?.id) {
@@ -158,8 +165,8 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     <>
       <GridComponent
         gridOptions={gridOptions}
-        rowData={props.discretes}
-        style={props.style}/>
+        rowData={discretes}
+        style={style}/>
       <Box className="saveButton">
         <Button raised type="button" onClick={(): void => { handleSave(); } }>
           <FormattedMessage id="general.save-btn.text"/>

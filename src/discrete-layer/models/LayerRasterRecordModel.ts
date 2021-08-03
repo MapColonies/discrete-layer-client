@@ -33,4 +33,5 @@ export const LayerRasterRecordModel = LayerRasterRecordModelBase
     footPrintShown: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
     layerImageShown: types.union(types.undefined, types.null, types.boolean),
+    zOrder: types.union(types.undefined, types.null, types.number),
   })

@@ -307,7 +307,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     if(!descriptorsQuery.loading){
       const descriptors = descriptorsQuery.data?.entityDescriptors as EntityDescriptorModelType[];
-  
       store.discreteLayersStore.setEntityDescriptors([...descriptors]);
     }
   }, [descriptorsQuery.data, descriptorsQuery.loading, store.discreteLayersStore]);
@@ -388,7 +387,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     record.productType = ProductType.BEST_ORTHOPHOTO;
     record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
-    record.discretesArray = [
+    record.discretes = [
       {
         id: '6ac605c4-da38-11eb-8d19-0242ac130003',
         zOrder: 0
@@ -397,7 +396,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
         zOrder: 1
       }
-    ]
+    ];
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     store.discreteLayersStore.saveDraft(record as BestRecordModelType);
