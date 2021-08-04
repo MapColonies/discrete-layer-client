@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FormattedMessage } from 'react-intl';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, cloneDeep } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { BestRecordModelType, LayerRasterRecordModelType, useStore } from '../../models';
+import { BestRecordModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestDetailsComponent } from './best-details';
@@ -23,10 +23,20 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const ids = discretesOrder.map((item: DiscreteOrder) => item.id);
   const discretesListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
-  
-  useEffect(() => {
-    void store.bestStore.getLayersById(ids);
-  }, []);
+
+  const { loading, error, data, query } = useQuery((store) =>
+    store.querySearchById({
+      idList: {
+        value: [...ids]
+      }
+    })
+  );
+  useEffect(()=>{
+    if(data && data.searchById){
+      const layers = cloneDeep(data.searchById as LayerRasterRecordModelType[]);
+      store.bestStore.setLayersList(layers);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (store.bestStore.layersList) {
