@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
+import { FormattedMessage } from 'react-intl';
 import { isEmpty, get } from 'lodash';
+import { Button } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import { BestRecordModelType, LayerRasterRecordModelType, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestDetailsComponent } from './best-details';
+
+import './best-edit.css';
 
 interface BestEditComponentProps {
   best?: BestRecordModelType | undefined;
@@ -28,68 +33,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       setDiscretes(store.bestStore.layersList);
     }
   }, [store.bestStore.layersList]);
-
-  //  const discretes = store.bestStore.layersList;
-//   const discretes = [
-//     {
-//       id: '6ac605c4-da38-11eb-8d19-0242ac130003',
-//       name: `Weizmann Institute of Science (Rehovot, Israel)`,
-//       creationDate: new Date('2018-02-13T13:39:55.400Z'),
-//       description: '',
-//       geojson: {
-//         type: 'Polygon',
-//         coordinates: [[
-//           [34.8076891807199, 31.9042863434239],
-//           [34.816135996859, 31.9042863434239],
-//           [34.816135996859,31.9118071956932],
-//           [34.8076891807199,31.9118071956932],
-//           [34.8076891807199,31.9042863434239],
-//         ]],
-//       },
-//       referenceSystem: '',
-//       imagingTimeStart: new Date(),
-//       imagingTimeEnd: new Date(),
-//       type: '',
-//       source: '',
-//       category: '',
-//       thumbnail: '',
-//       properties: {
-//         protocol: 'XYZ_LAYER',
-//         url: 'https://tiles.openaerialmap.org/5a852c072553e6000ce5ac8d/0/7950e2de-5d9e-49aa-adec-6e92384be0b9/{z}/{x}/{y}.png',
-//         meta: 'http://oin-hotosm.s3.amazonaws.com/5a852c072553e6000ce5ac8d/0/7950e2de-5d9e-49aa-adec-6e92384be0b9_meta.json'
-//       },
-//       order: 0,
-//     },
-//     {
-//       id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
-//       name: `Weizmann Institute of Science`,
-//       creationDate: new Date('2018-03-06T13:39:55.400Z'),
-//       description: '',
-//       geojson: {
-//         type: 'Polygon',
-//         coordinates: [[
-//           [34.8099445223518, 31.9061345394902],
-//           [34.8200994167574, 31.9061345394902],
-//           [34.8200994167574, 31.9106311613979],
-//           [34.8099445223518, 31.9106311613979],
-//           [34.8099445223518, 31.9061345394902],
-//         ]],
-//       },
-//       referenceSystem: '',
-//       imagingTimeStart: new Date(),
-//       imagingTimeEnd: new Date(),
-//       type: '',
-//       source: '',
-//       category: '',
-//       thumbnail: '',
-//       properties: {
-//         protocol: 'XYZ_LAYER',
-//         url: 'https://tiles.openaerialmap.org/5a9f90c42553e6000ce5ad6c/0/eee1a570-128e-4947-9ffa-1e69c1efab7c/{z}/{x}/{y}.png',
-//         meta: 'http://oin-hotosm.s3.amazonaws.com/5a9f90c42553e6000ce5ad6c/0/eee1a570-128e-4947-9ffa-1e69c1efab7c_meta.json'
-//       },
-//       order: 1,
-//     },
-// ];
   
   if (!isEmpty(discretesOrder) && !isEmpty(discretes)) {
     discretes?.forEach(discrete => {
@@ -100,23 +43,36 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     });
   }
 
+  const handleSave = (): void => {
+    const currentDiscretesListRef = get(discretesListRef, 'current');
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if ( currentDiscretesListRef !== undefined ) {
+      //@ts-ignore
+      const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
+      if (best !== undefined && !isEmpty(best)) {
+        //@ts-ignore
+        const newBest = { ...best, discretes: [...newOrderedDiscretesList] } as BestRecordModelType;
+        store.bestStore.saveDraft(newBest);
+        store.bestStore.editBest(newBest);
+      }
+    }
+  };
+
   return (
     <>
       <BestDetailsComponent best={best}/>
-      {/* <MyObserverComponent ref={discretesListRef}></MyObserverComponent> */}
+
       <BestDiscretesComponent
         //@ts-ignore
         ref={discretesListRef}
         discretes={discretes}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
-      <button onClick={() => {
-        const kuku = get(discretesListRef,'current');
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if( kuku !== undefined ) {
-          //@ts-ignore
-          console.log(kuku.getOrderedDiscretes())
-        }
-      }}>ALEX CLICK</button>
+
+      <Box className="saveButton">
+        <Button raised type="button" onClick={(): void => { handleSave(); } }>
+          <FormattedMessage id="general.save-btn.text"/>
+        </Button>
+      </Box>
     </>
   );
 })

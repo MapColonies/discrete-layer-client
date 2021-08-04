@@ -1,8 +1,6 @@
 import { observer } from 'mobx-react';
-import React, { useImperativeHandle, useRef } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Button } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import { useIntl } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -34,31 +32,12 @@ interface BestDiscretesComponentProps {
   discretes?: LayerRasterRecordModelType[] | undefined;
 }
 
-// export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer(React.forwardRef((props, ref) => {
-
-  // export const MyObserverComponent = observer(
-  //   React.forwardRef((props, ref) => {
-  //     React.useImperativeHandle(ref, () => ({
-  //       getOrderedDiscretes: () => {
-  //         return [
-  //           {
-  //             id: "kuku",
-  //             zOrder: 0
-  //           }
-  //         ];
-  //       }
-  //     }));
-  
-  //     return <div>My Observer Component</div>;
-  //   })
-  // );
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BestDiscretesComponent = observer(React.forwardRef((props: BestDiscretesComponentProps, ref) => {
+export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesComponentProps, ref) => {
   const { style, discretes } = props;
   const intl = useIntl();
   const store = useStore();
-  const selectedLayersRef = useRef(INITIAL_ORDER)
+  const selectedLayersRef = useRef(INITIAL_ORDER);
   
   useImperativeHandle(ref, () => ({
     getOrderedDiscretes: (): DiscreteOrder[] => {
@@ -68,7 +47,6 @@ export const BestDiscretesComponent = observer(React.forwardRef((props: BestDisc
       }]
     }
   }));
-
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
@@ -186,21 +164,12 @@ export const BestDiscretesComponent = observer(React.forwardRef((props: BestDisc
     },
   };
 
-  const handleSave = (): void => {
-    // TODO save in localStorage
-  };
-
   return (
     <>
       <GridComponent
         gridOptions={gridOptions}
         rowData={discretes}
         style={style}/>
-      <Box className="saveButton">
-        <Button raised type="button" onClick={(): void => { handleSave(); } }>
-          <FormattedMessage id="general.save-btn.text"/>
-        </Button>
-      </Box>
     </>
   );
 }));
