@@ -7,7 +7,8 @@ import {
   GridComponentOptions,
   GridCellMouseOverEvent,
   GridCellMouseOutEvent,
-  GridRowDragEvent,
+  GridRowDragEnterEvent,
+  GridRowDragEndEvent,
   GridRowNode,
   GridRowSelectedEvent,
   GridReadyEvent,
@@ -38,6 +39,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const intl = useIntl();
   const store = useStore();
   const selectedLayersRef = useRef(INITIAL_ORDER);
+
+  let start: number;
   
   useImperativeHandle(ref, () => ({
     getOrderedDiscretes: (): DiscreteOrder[] => {
@@ -152,8 +155,11 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     onRowClicked(event: GridRowSelectedEvent) {
       store.discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
     },
-    onRowDragEnd(event: GridRowDragEvent) {
-      store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: event.node.data.order, to: event.overIndex });
+    onRowDragEnter(event: GridRowDragEnterEvent) {
+      start = event.overIndex;
+    },
+    onRowDragEnd(event: GridRowDragEndEvent) {
+      store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: start, to: event.overIndex });
     },
     onGridReady(params: GridReadyEvent) {
       params.api.forEachNode( (node) => {

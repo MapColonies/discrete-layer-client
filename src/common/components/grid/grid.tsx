@@ -12,7 +12,8 @@ import {
   RowSelectedEvent,
   CellMouseOverEvent,
   CellMouseOutEvent,
-  RowDragEvent,
+  RowDragEnterEvent,
+  RowDragEndEvent
 } from 'ag-grid-community';
 import { GRID_MESSAGES } from '../../i18n';
 import CONFIG from '../../config';
@@ -37,7 +38,8 @@ export interface GridApi extends AgGridApi{};
 export interface GridReadyEvent extends AgGridReadyEvent{};
 export interface GridCellMouseOutEvent extends CellMouseOutEvent{};
 export interface GridCellMouseOverEvent extends CellMouseOverEvent{};
-export interface GridRowDragEvent extends RowDragEvent{};
+export interface GridRowDragEnterEvent extends RowDragEnterEvent{};
+export interface GridRowDragEndEvent extends RowDragEndEvent{};
 export interface GridRowSelectedEvent extends RowSelectedEvent{};
 export interface GridValueFormatterParams extends ValueFormatterParams{};
 export interface GridComponentOptions extends GridOptions {
