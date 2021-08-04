@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { 
@@ -39,17 +39,29 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const intl = useIntl();
   const store = useStore();
   const selectedLayersRef = useRef(INITIAL_ORDER);
-
+  const [gridApi, setGridApi] = useState<GridApi>();
+  
   let start: number;
+  let numberOfRows: number | undefined;
+  let currentOrder: DiscreteOrder[];
   
   useImperativeHandle(ref, () => ({
     getOrderedDiscretes: (): DiscreteOrder[] => {
-      return [{
-        id: 'kuku',
-        zOrder: 0
-      }]
+      currentOrder = [];
+      numberOfRows = gridApi?.getDisplayedRowCount();
+      gridApi?.forEachNode(updateOrder);
+      return currentOrder;
     }
   }));
+
+  const updateOrder = (node: GridRowNode, index: number): void => {
+    currentOrder.push(
+      {
+        id: node.id,
+        zOrder: numberOfRows !== undefined ? numberOfRows - 1 - node.rowIndex : index
+      }
+    );
+  };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
@@ -162,6 +174,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: start, to: event.overIndex });
     },
     onGridReady(params: GridReadyEvent) {
+      setGridApi(params.api);
       params.api.forEachNode( (node) => {
         if ((node.data as LayerRasterRecordModelType).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
