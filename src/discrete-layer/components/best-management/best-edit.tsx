@@ -42,7 +42,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       }
     });
   }
-
+  
   const handleSave = (): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
