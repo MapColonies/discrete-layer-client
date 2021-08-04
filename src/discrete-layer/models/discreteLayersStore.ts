@@ -8,7 +8,6 @@ import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
-import { localStore } from '../../common/helpers/storage';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { TabViews } from '../views/discrete-layer-view';
 import { searchParams } from './search-params';
@@ -16,11 +15,8 @@ import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
-import { BestRecordModelType } from './BestRecordModel';
-import { LayerRasterRecordModelType } from './LayerRasterRecordModel';
 
 export type LayersImagesResponse = ILayerImage[];
-export type LayersListResponse = LayerRasterRecordModelType[];
 
 export interface SearchResult {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,9 +42,8 @@ export const discreteLayersStore = ModelBase
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
-    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
+    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
-    editingBest: types.maybe(types.frozen<BestRecordModelType>())
   })
   .views((self) => ({
     get store(): IRootStore {

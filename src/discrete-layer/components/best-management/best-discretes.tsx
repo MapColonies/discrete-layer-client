@@ -1,5 +1,5 @@
-import { observer } from 'mobx-react-lite';
-import React, { useRef } from 'react';
+import { observer } from 'mobx-react';
+import React, { useImperativeHandle, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -21,6 +21,7 @@ import { LayerImageRenderer } from '../../../common/components/grid/cell-rendere
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
+import { DiscreteOrder } from '../../models/DiscreteOrder';
 
 import './best-discretes.css';
 
@@ -31,14 +32,43 @@ const INITIAL_ORDER = 0;
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
   discretes?: LayerRasterRecordModelType[] | undefined;
-  onSave: (open: boolean) => void;
 }
 
-export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
+// export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer(React.forwardRef((props, ref) => {
+
+  // export const MyObserverComponent = observer(
+  //   React.forwardRef((props, ref) => {
+  //     React.useImperativeHandle(ref, () => ({
+  //       getOrderedDiscretes: () => {
+  //         return [
+  //           {
+  //             id: "kuku",
+  //             zOrder: 0
+  //           }
+  //         ];
+  //       }
+  //     }));
+  
+  //     return <div>My Observer Component</div>;
+  //   })
+  // );
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const BestDiscretesComponent = observer(React.forwardRef((props: BestDiscretesComponentProps, ref) => {
   const { style, discretes } = props;
   const intl = useIntl();
-  const { discreteLayersStore } = useStore();
-  const selectedLayersRef = useRef(INITIAL_ORDER);
+  const store = useStore();
+  const selectedLayersRef = useRef(INITIAL_ORDER)
+  
+  useImperativeHandle(ref, () => ({
+    getOrderedDiscretes: (): DiscreteOrder[] => {
+      return [{
+        id: 'kuku',
+        zOrder: 0
+      }]
+    }
+  }));
+
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
@@ -57,8 +87,8 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          discreteLayersStore.showFootprint(id, value);
-         }
+          store.discreteLayersStore.showFootprint(id, value);
+        }
       },
       headerComponent: 'headerFootprintRenderer',
       headerComponentParams: { 
@@ -89,7 +119,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          discreteLayersStore.showLayer(id, value, order);
+          store.discreteLayersStore.showLayer(id, value, order);
         }
       }
     },
@@ -136,21 +166,20 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     rowDragManaged: true,
     animateRows: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
-      discreteLayersStore.highlightLayer(event.data as LayerRasterRecordModelType);
+      store.discreteLayersStore.highlightLayer(event.data as LayerRasterRecordModelType);
     },
     onCellMouseOut(event: GridCellMouseOutEvent) {
-      discreteLayersStore.highlightLayer(undefined);
+      store.discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
+      store.discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
     },
     onRowDragEnd(event: GridRowDragEvent) {
-      discreteLayersStore.updateMovedLayer((event.node.data as LayerRasterRecordModelType).id, event.overIndex, event.overIndex);
-      console.log(event);
+      store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: event.node.data.order, to: event.overIndex });
     },
     onGridReady(params: GridReadyEvent) {
       params.api.forEachNode( (node) => {
-        if ((node.data as LayerRasterRecordModelType).id === discreteLayersStore.selectedLayer?.id) {
+        if ((node.data as LayerRasterRecordModelType).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
         }
       });
@@ -174,4 +203,4 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       </Box>
     </>
   );
-});
+}));

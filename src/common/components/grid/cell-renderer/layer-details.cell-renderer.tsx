@@ -9,7 +9,7 @@ import './layer-details.cell-renderer.css';
 interface DetailsProp {
   propName: string,
   propLabelId: string,
-  formater: FormatterFunc
+  formatter: FormatterFunc
 }
 
 const detailsPropsLayout = new Array<DetailsProp[]>(
@@ -17,54 +17,54 @@ const detailsPropsLayout = new Array<DetailsProp[]>(
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringFormatter,
+      formatter: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringFormatter,
+      formatter: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringFormatter,
+      formatter: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringFormatter,
+      formatter: stringFormatter,
     },
     {
       propName: 'name',
       propLabelId: 'results.fields.name.label',
-      formater: stringFormatter,
+      formatter: stringFormatter,
     },
   ],
   [
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateFormatter,
+      formatter: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateFormatter,
+      formatter: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateFormatter,
+      formatter: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateFormatter,
+      formatter: dateFormatter,
     },
     {
       propName: 'creationDate',
       propLabelId: 'results.fields.creation-date.label',
-      formater: dateFormatter,
+      formatter: dateFormatter,
     },
   ]
 );
@@ -88,7 +88,7 @@ export const LayerDetailsRenderer: React.FC<ICellRendererParams> = (
                     <span>
                       {
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                        item.formater(props.data[item.propName])
+                        item.formatter(props.data[item.propName])
                       }
                     </span>
                   </Box>

@@ -72,7 +72,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
     // }`)
   );
 
-  const { discreteLayersStore } = useStore();
+  const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
@@ -103,7 +103,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
       const arr: ILayerImage[] = [];
       data.search.forEach((item) => arr.push({...item}));
 
-      discreteLayersStore.setLayersImages(arr, false);
+      store.discreteLayersStore.setLayersImages(arr, false);
 
       // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {
@@ -123,11 +123,11 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         const itemObjectBag =  item as Record<string,unknown>;
         return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
       });
-      const drafts = discreteLayersStore.getDrafts();
+      const drafts = store.bestStore.getDrafts();
       const draftNode = (drafts.length > 0) ? [{
         title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
         isGroup: true,
-        children: [...discreteLayersStore.getDrafts().map(draft => {
+        children: [...store.bestStore.getDrafts().map(draft => {
           return {
             ...draft,
             title: draft['productName'],
@@ -243,16 +243,16 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                     });
 
                     setTreeRawData(newTreeData);
-                    discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
+                    store.discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
                   if(!rowInfo.node.isGroup){
-                    discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
+                    store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
                   }
                 },
                 onMouseOut: (evt: MouseEvent) => {
-                  discreteLayersStore.highlightLayer(undefined);
+                  store.discreteLayersStore.highlightLayer(undefined);
                 },
                 icons: rowInfo.node.isGroup
                   ? [
@@ -275,7 +275,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                       <FootprintRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          discreteLayersStore.showFootprint(data.id, value);
+                          store.discreteLayersStore.showFootprint(data.id, value);
                         }}
                       />,
                       <LayerImageRenderer
@@ -287,7 +287,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                           else {
                             const orders: number[] = [];
                             // eslint-disable-next-line
-                            discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
+                            store.discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
                               if(item.layerImageShown === true && data.id !== item.id) {
                                 orders.push(item.order as number);
                               }
@@ -295,7 +295,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
                           }
                           const order = value ? selectedLayersRef.current : null;
-                          discreteLayersStore.showLayer(data.id, value, order);
+                          store.discreteLayersStore.showLayer(data.id, value, order);
                         }}
                       />
                     ],
@@ -312,7 +312,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                       fontWeight: 100,
                     }}
                     onClick={() => {
-                      discreteLayersStore.editBest(rowInfo.node as BestRecordModelType)
+                      store.bestStore.editBest(rowInfo.node as BestRecordModelType)
                     }}
                   >
                     i
