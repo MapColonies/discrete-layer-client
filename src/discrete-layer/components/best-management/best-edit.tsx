@@ -24,7 +24,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const discretesListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
 
-  const { loading, error, data, query } = useQuery((store) =>
+  const { data } = useQuery((store) =>
     store.querySearchById({
       idList: {
         value: [...ids]
@@ -32,7 +32,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     })
   );
   useEffect(()=>{
-    if(data && data.searchById){
+    if (data?.searchById) {
       const layers = cloneDeep(data.searchById as LayerRasterRecordModelType[]);
       store.bestStore.setLayersList(layers);
     }
@@ -45,7 +45,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   }, [store.bestStore.layersList]);
   
   if (!isEmpty(discretesOrder) && !isEmpty(discretes)) {
-    discretes?.forEach(discrete => {
+    discretes.forEach(discrete => {
       const layer = discretesOrder.find(item => discrete.id === item.id);
       if (layer){
         discrete.order = layer.zOrder;
@@ -58,6 +58,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if ( currentDiscretesListRef !== undefined ) {
       //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
       if (best !== undefined && !isEmpty(best)) {
         //@ts-ignore

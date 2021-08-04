@@ -1,10 +1,10 @@
-import { flow, types, getParent } from 'mobx-state-tree';
+import { types, getParent } from 'mobx-state-tree';
 import { localStore } from '../../common/helpers/storage';
 import { ResponseState } from '../../common/models/response-state.enum';
+import { MovedLayer } from '../components/best-management/interfaces/MovedLayer';
 import { BestRecordModelType } from './BestRecordModel';
 import { LayerRasterRecordModelType } from './LayerRasterRecordModel';
 import { ModelBase } from './ModelBase';
-import { MovedLayer } from '../components/best-management/interfaces/MovedLayer';
 import { IRootStore, RootStoreType } from './RootStore';
 
 export type LayersListResponse = LayerRasterRecordModelType[];
@@ -12,10 +12,6 @@ export type LayersListResponse = LayerRasterRecordModelType[];
 /* A graphql query fragment builders for BestRecordModel */
 export { selectFromBestRecord, bestRecordModelPrimitives, BestRecordModelSelector } from './BestRecordModel.base';
 
-/**
- * BestRecordModel
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const bestStore = ModelBase
   .props({
     state: types.enumeration<ResponseState>(
@@ -23,7 +19,7 @@ export const bestStore = ModelBase
       Object.values(ResponseState)
     ),
     layersList: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
-    editingBest: types.maybe(types.frozen()),
+    editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
   })
   .views((self) => ({
