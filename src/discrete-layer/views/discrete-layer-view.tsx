@@ -324,7 +324,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.bestStore.editingBest]);
 
-
   const buildFilters =  (): FilterField[]  => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
     return [
@@ -405,10 +404,9 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleEditEntityDialogClick = (): void => {
-    if((layerToPresent as BestRecordModelType).isDraft === true){
+    if ((layerToPresent as BestRecordModelType).isDraft === true) {
       store.bestStore.editBest(layerToPresent as BestRecordModelType);
-    }
-    else {
+    } else {
       setEditEntityDialogOpen(!isEditEntityDialogOpen);
     }
   };
