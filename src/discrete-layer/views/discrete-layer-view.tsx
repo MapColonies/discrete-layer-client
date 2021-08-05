@@ -1,9 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect } from 'react';
-import { get } from 'lodash';
+import { find, get } from 'lodash';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { observer } from 'mobx-react-lite';
+import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
+import { lineString } from '@turf/helpers';
+import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
+import { 
+  IconButton,
+  useTheme,
+  Typography,
+  Fab,
+  MenuSurfaceAnchor,
+  MenuSurface,
+  Tooltip,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerSubtitle,
+  DrawerTitle
+} from '@map-colonies/react-core';
 import {
   DrawType,
   IDrawingEvent,
@@ -17,12 +35,6 @@ import {
   CesiumGeographicTilingScheme,
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
-import { IconButton, useTheme, Typography, Fab, MenuSurfaceAnchor, MenuSurface, Tooltip } from '@map-colonies/react-core';
-import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
-import { find } from 'lodash';
-import { lineString } from '@turf/helpers';
-import bbox from '@turf/bbox';
-import bboxPolygon from '@turf/bbox-polygon';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { Mode } from '../../common/models/mode.enum';
@@ -44,6 +56,8 @@ import { BestRecordModelType } from '../models/BestRecordModel';
 import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
+import { BestCatalogComponent } from '../components/best-management/best-catalog';
+import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -273,7 +287,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
+  const [openNew, setOpenNew] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
+  const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
+  const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
+  const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
@@ -294,9 +312,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   );
   }, []);
 
-  const [activeTabView, setActiveTabView] = React.useState(TabViews.CATALOG);
-  const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
-  const [tabsPanelExpanded, setTabsPanelExpanded] = React.useState(true);
   const layerToPresent = store.discreteLayersStore.selectedLayer;
   const editingBest = store.bestStore.editingBest;
 
@@ -360,7 +375,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handlePolygonReset = (): void => {
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
       store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.selectLayer(undefined);
@@ -441,7 +456,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             type: drawing.type,
           },
         ]);
-
       },
     };
   };
@@ -503,8 +517,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       iconClassName: 'mc-icon-Bests',
     }
   ];
-
-  const [openNew, setOpenNew] = React.useState(false);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -622,7 +634,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
-            onCancelDraw={(): void=>{ console.log('****** onCancelDraw  **** called')}}
+            onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
             isSelectionEnabled={isDrawing}
@@ -652,7 +664,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             className="sidePanelContainer"
             style={{
               backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-              height: detailsPanelExpanded ? '50%': '75%'
+              height: detailsPanelExpanded ? '50%' : '75%'
             }}
           >
             <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block': 'none'}}>
@@ -695,7 +707,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           
           <Box className="sidePanelContainer sideDetailsPanel" style={{
             backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-            height: detailsPanelExpanded ? '50%': '25%',
+            height: detailsPanelExpanded ? '50%' : '25%',
           }}>
             <Box style={{display: 'flex', paddingTop: '8px'}}>
               <Typography use="headline6" tag="div" className="detailsTitle">
@@ -731,6 +743,77 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>
         </Box>
         
+        {
+          tabsPanelExpanded && (
+            <Box className="drawerPosition" style={{  height: '600px', width: '25%', zIndex: -1}}>
+              <Drawer dismissible open={tabsPanelExpanded}>
+                <DrawerContent>
+                  <Box className="sidePanelParentContainer secondaryPanel">
+                    <Box 
+                      className="sidePanelContainer"
+                      style={{
+                        backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
+                        height: detailsPanelExpanded ? '50%' : '75%'
+                      }}
+                    >
+                      <Box className="tabContentContainer" style={{display: 'block'}}>
+                        {
+                          getActiveTabHeader(TabViews.CATALOG)
+                        }
+                        <Box className="detailsContent" style={{ overflow: 'hidden'}}>
+                          <BestCatalogComponent/>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box className="sidePanelContainer sideDetailsPanel" style={{
+                      backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
+                      height: detailsPanelExpanded ? '50%' : '25%',
+                    }}>
+                      <Box style={{display: 'flex', paddingTop: '8px'}}>
+                        <Typography use="headline6" tag="div" className="detailsTitle">
+                          {layerToPresent?.productName}
+                        </Typography>
+                        {
+                          layerToPresent && <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
+                            <IconButton
+                              className="operationIcon mc-icon-Status-Approves glow-missing-icon"
+                              label="EDIT"
+                              onClick={ (): void => { handleEditEntityDialogClick(); } }
+                            />
+                          </Tooltip>
+                        }
+                        {
+                          isEditEntityDialogOpen && <EntityDialogComponent
+                            isOpen={isEditEntityDialogOpen}
+                            onSetOpen={setEditEntityDialogOpen}
+                            layerRecord={layerToPresent}>
+                          </EntityDialogComponent>
+                        }
+                        <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
+                          <IconButton 
+                            className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
+                            label="EXPANDER"
+                            onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
+                          />
+                        </Tooltip>
+                      </Box>
+                      <PerfectScrollbar className="detailsContent">
+                        <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
+                      </PerfectScrollbar>
+                    </Box>
+                  </Box>
+                </DrawerContent>
+              </Drawer>
+            </Box>
+          )
+        }
+        <DrawerOpener
+          isOpen={tabsPanelExpanded}
+          onClick={setTabsPanelExpanded}
+        />
+        
+
         <Box className="mapAppContainer">
           {
             <CesiumMap 

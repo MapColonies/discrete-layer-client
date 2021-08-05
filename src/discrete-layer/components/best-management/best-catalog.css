@@ -1,0 +1,20 @@
+.catalogContainer {
+  height: calc(100% - 12px);
+  margin: 12px 12px 0 12px;
+}
+
+.refreshIconButton {
+  font-size: 30px;
+  position: absolute;
+  top: 10px;
+  left: 270px;
+}
+
+body[dir=rtl] .refreshIconButton {
+  left: unset;
+  right: 270px;
+}
+
+body[dir=rtl] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer{
+  margin-right: -12px;
+}

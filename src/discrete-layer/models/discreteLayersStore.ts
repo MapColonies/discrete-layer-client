@@ -71,7 +71,7 @@ export const discreteLayersStore = ModelBase
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
-          self.layersImages = filterBySearchParams(result).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+          self.layersImages = filterBySearchParams(result).map(item => ({...item, footprintShown: true, layerImageShown:false, order:null}));
 
           // *** communicate with pycsw with cswClient - CORS
           // const cswClient = new CswClient(
@@ -112,10 +112,10 @@ export const discreteLayersStore = ModelBase
     }
 
     function setLayersImages(data: ILayerImage[], showFootprint = true): void {
-      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown: false, order: null}));
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
       self.layersImages = data.map(item => ({
           ...item,
-          footPrintShown: showFootprint,
+          footprintShown: showFootprint,
           layerImageShown: false,
           order: null
         })
@@ -123,7 +123,7 @@ export const discreteLayersStore = ModelBase
     }
 
     function updateLayer(data: ILayerImage): void {
-      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown: false, order: null}));
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
       for (const key in layerForUpdate){
         set(layerForUpdate,key, get(data,key));
@@ -146,7 +146,7 @@ export const discreteLayersStore = ModelBase
             layerBBoxPolygon = lineStringToPolygon(geometry).geometry;
             break;
           default:
-            throw(new Error('Unknow Geojson feature type'));
+            throw(new Error('Unknown Geojson feature type'));
         }
         const intersection = intersect(
           layerBBoxPolygon, 
@@ -167,7 +167,7 @@ export const discreteLayersStore = ModelBase
     }
 
     function showFootprint(id: string, isShow: boolean): void {
-      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, footPrintShown: isShow} : el);
+      self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, footprintShown: isShow} : el);
     }
 
     function highlightLayer(layer: ILayerImage | undefined): void {

@@ -12,6 +12,11 @@
   flex-direction: column;
 }
 
+.secondaryPanel{
+  z-index: 1;
+  margin: 0 8px;
+}
+
 .sidePanelContainer{
   border-radius: 12px;
 }

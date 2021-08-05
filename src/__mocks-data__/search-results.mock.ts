@@ -16,7 +16,7 @@ export const createMockData = (count: number, prefix: string): ILayerImage[] => 
       },
       // type: '',
       // source: '',
-      // footPrintShown: true,
+      // footprintShown: true,
       order: null,
     });
   }

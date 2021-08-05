@@ -73,7 +73,7 @@ export const LayersFootprints: React.FC = observer(() => {
         features: []
       }
       const footprintsFeaturesArray = discreteLayersStore.layersImages
-      .filter((layer) => layer.footPrintShown )
+      .filter((layer) => layer.footprintShown )
       .map((layer) => {
         return getLayerFootprint(layer, false);
       });

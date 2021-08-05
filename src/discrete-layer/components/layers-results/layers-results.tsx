@@ -81,7 +81,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const colDef = [
     {
       width: 20,
-      field: 'footPrintShown',
+      field: 'footprintShown',
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
@@ -92,7 +92,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerComponentParams: { 
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footPrintShown', value), immediateExecution) ;
+            setTimeout(()=> item.setDataValue('footprintShown', value), immediateExecution) ;
           });
         }  
       }

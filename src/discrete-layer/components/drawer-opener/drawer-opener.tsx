@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box } from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
+
 import './drawer-opener.css';
 
 interface DrawerOpenerProps {
