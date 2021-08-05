@@ -223,7 +223,7 @@ const noDrawing: IDrawingObject = {
 
 const getTimeStamp = (): string => new Date().getTime().toString();
 
-const tileOtions = { opacity: 0.5 };
+const tileOptions = { opacity: 0.5 };
 
 export enum TabViews {
   CATALOG,
@@ -296,7 +296,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [detailsPanelExpanded, setDetailsPanelExpanded] = React.useState(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = React.useState(true);
   const layerToPresent = store.discreteLayersStore.selectedLayer;
-  const editingBest = store.discreteLayersStore.editingBest;
+  const editingBest = store.bestStore.editingBest;
 
   useEffect(() => {
     const layers = get(data,'search', []) as ILayerImage[];
@@ -307,7 +307,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     if(!descriptorsQuery.loading){
       const descriptors = descriptorsQuery.data?.entityDescriptors as EntityDescriptorModelType[];
-  
       store.discreteLayersStore.setEntityDescriptors([...descriptors]);
     }
   }, [descriptorsQuery.data, descriptorsQuery.loading, store.discreteLayersStore]);
@@ -319,12 +318,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    if(store.discreteLayersStore.editingBest !== undefined){
+    if(store.bestStore.editingBest !== undefined){
       handleTabViewChange(TabViews.CREATE_BEST);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store.discreteLayersStore.editingBest]);
-
+  }, [store.bestStore.editingBest]);
 
   const buildFilters =  (): FilterField[]  => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
@@ -388,7 +386,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     record.productType = ProductType.BEST_ORTHOPHOTO;
     record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
-    record.discretesArray = [
+    record.discretes = [
       {
         id: '6ac605c4-da38-11eb-8d19-0242ac130003',
         zOrder: 0
@@ -397,19 +395,18 @@ const DiscreteLayerView: React.FC = observer(() => {
         id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
         zOrder: 1
       }
-    ]
+    ];
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    store.discreteLayersStore.saveDraft(record as BestRecordModelType);
+    store.bestStore.saveDraft(record as BestRecordModelType);
 
-    store.discreteLayersStore.editBest(record as BestRecordModelType);
+    store.bestStore.editBest(record as BestRecordModelType);
   };
 
   const handleEditEntityDialogClick = (): void => {
-    if((layerToPresent as BestRecordModelType).isDraft === true){
-      store.discreteLayersStore.editBest(layerToPresent as BestRecordModelType);
-    }
-    else {
+    if ((layerToPresent as BestRecordModelType).isDraft === true) {
+      store.bestStore.editBest(layerToPresent as BestRecordModelType);
+    } else {
       setEditEntityDialogOpen(!isEditEntityDialogOpen);
     }
   };

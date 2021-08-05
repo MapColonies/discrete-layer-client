@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { discreteLayersStore, SearchResponse } from './discreteLayersStore';
 import { RootStoreBase } from './RootStore.base';
+import { bestStore } from './bestStore';
 
 type FetchAction = (
   url: string,
@@ -18,6 +19,9 @@ export const baseRootStore = RootStoreBase
     discreteLayersStore: types.optional(discreteLayersStore, {
       state: ResponseState.IDLE,
       searchParams: {},
+    }),
+    bestStore: types.optional(bestStore, {
+      state: ResponseState.IDLE,
     })
   })
   .views((self) => ({

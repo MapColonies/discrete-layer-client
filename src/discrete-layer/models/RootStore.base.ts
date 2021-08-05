@@ -61,6 +61,9 @@ export type SortField = {
   field: string
   desc?: boolean
 }
+export type StringArray = {
+  value: string[]
+}
 export type JobsSearchParams = {
   resourceId?: string
   version?: string
@@ -178,6 +181,7 @@ type Refs = {
 */
 export enum RootStoreBaseQueries {
 querySearch="querySearch",
+querySearchById="querySearchById",
 queryEntityDescriptors="queryEntityDescriptors",
 queryJobs="queryJobs"
 }
@@ -203,6 +207,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .actions(self => ({
     querySearch(variables: { opts?: SearchOptions, end?: number, start?: number }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ search: LayerMetadataMixedUnion[]}>(`query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {
+        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    querySearchById(variables: { idList: StringArray }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ searchById: LayerMetadataMixedUnion[]}>(`query searchById($idList: StringArray!) { searchById(idList: $idList) {
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

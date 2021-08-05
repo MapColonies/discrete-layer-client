@@ -1,14 +1,14 @@
-import { observer } from 'mobx-react-lite';
-import React, { useRef } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Button } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { observer } from 'mobx-react';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
   GridComponentOptions,
   GridCellMouseOverEvent,
   GridCellMouseOutEvent,
+  GridRowDragEnterEvent,
+  GridRowDragEndEvent,
   GridRowNode,
   GridRowSelectedEvent,
   GridReadyEvent,
@@ -20,6 +20,7 @@ import { LayerImageRenderer } from '../../../common/components/grid/cell-rendere
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
+import { DiscreteOrder } from '../../models/DiscreteOrder';
 
 import './best-discretes.css';
 
@@ -32,10 +33,35 @@ interface BestDiscretesComponentProps {
   discretes?: LayerRasterRecordModelType[] | undefined;
 }
 
-export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = observer((props) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesComponentProps, ref) => {
+  const { style, discretes } = props;
   const intl = useIntl();
-  const { discreteLayersStore } = useStore();
+  const store = useStore();
   const selectedLayersRef = useRef(INITIAL_ORDER);
+  const [gridApi, setGridApi] = useState<GridApi>();
+  
+  let start: number;
+  let numberOfRows: number | undefined;
+  let currentOrder: DiscreteOrder[];
+  
+  useImperativeHandle(ref, () => ({
+    getOrderedDiscretes: (): DiscreteOrder[] => {
+      currentOrder = [];
+      numberOfRows = gridApi?.getDisplayedRowCount();
+      gridApi?.forEachNode(updateOrder);
+      return currentOrder;
+    }
+  }));
+
+  const updateOrder = (node: GridRowNode, index: number): void => {
+    currentOrder.push(
+      {
+        id: node.id,
+        zOrder: numberOfRows !== undefined ? numberOfRows - 1 - node.rowIndex : index
+      }
+    );
+  };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
@@ -54,8 +80,8 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          discreteLayersStore.showFootprint(id, value);
-         }
+          store.discreteLayersStore.showFootprint(id, value);
+        }
       },
       headerComponent: 'headerFootprintRenderer',
       headerComponentParams: { 
@@ -86,7 +112,7 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          discreteLayersStore.showLayer(id, value, order);
+          store.discreteLayersStore.showLayer(id, value, order);
         }
       }
     },
@@ -133,38 +159,36 @@ export const BestDiscretesComponent: React.FC<BestDiscretesComponentProps> = obs
     rowDragManaged: true,
     animateRows: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
-      discreteLayersStore.highlightLayer(event.data as LayerRasterRecordModelType);
+      store.discreteLayersStore.highlightLayer(event.data as LayerRasterRecordModelType);
     },
     onCellMouseOut(event: GridCellMouseOutEvent) {
-      discreteLayersStore.highlightLayer(undefined);
+      store.discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
+      store.discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
+    },
+    onRowDragEnter(event: GridRowDragEnterEvent) {
+      start = event.overIndex;
+    },
+    onRowDragEnd(event: GridRowDragEndEvent) {
+      store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: start, to: event.overIndex });
     },
     onGridReady(params: GridReadyEvent) {
+      setGridApi(params.api);
       params.api.forEachNode( (node) => {
-        if ((node.data as LayerRasterRecordModelType).id === discreteLayersStore.selectedLayer?.id) {
+        if ((node.data as LayerRasterRecordModelType).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
         }
       });
     },
   };
 
-  const handleSave = (): void => {
-    // TODO save in localStorage
-  };
-
   return (
     <>
       <GridComponent
         gridOptions={gridOptions}
-        rowData={props.discretes}
-        style={props.style}/>
-      <Box className="saveButton">
-        <Button raised type="button" onClick={(): void => { handleSave(); } }>
-          <FormattedMessage id="general.save-btn.text"/>
-        </Button>
-      </Box>
+        rowData={discretes}
+        style={style}/>
     </>
   );
-});
+}));

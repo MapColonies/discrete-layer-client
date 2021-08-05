@@ -38,7 +38,7 @@ export const BestDetailsComponent: React.FC<BestDetailsComponentProps> = observe
       {
         BestRecordModelKeys.map(key => {
           const value = get(best, key) as unknown;
-          if (value !== undefined && typeof value !== 'boolean') {
+          if (value !== undefined && typeof value !== 'boolean' && typeof value !== 'object') {
             return (
               <Box key={key.toString()} className="categoryFullWidthField">
                 <Box className="detailsFieldLabel">{key}:</Box>

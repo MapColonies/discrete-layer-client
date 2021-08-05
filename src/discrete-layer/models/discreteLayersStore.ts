@@ -8,7 +8,6 @@ import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
-import { localStore } from '../../common/helpers/storage';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import { TabViews } from '../views/discrete-layer-view';
 import { searchParams } from './search-params';
@@ -16,7 +15,7 @@ import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
-import { BestRecordModelType } from './BestRecordModel';
+
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -43,9 +42,8 @@ export const discreteLayersStore = ModelBase
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
-    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG},{idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
+    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
-    editingBest: types.maybe(types.frozen<BestRecordModelType>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -114,23 +112,22 @@ export const discreteLayersStore = ModelBase
     }
 
     function setLayersImages(data: ILayerImage[], showFootprint = true): void {
-      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown: false, order: null}));
       self.layersImages = data.map(item => ({
           ...item,
           footPrintShown: showFootprint,
-          layerImageShown:false,
-          order:null
+          layerImageShown: false,
+          order: null
         })
       );
     }
 
     function updateLayer(data: ILayerImage): void {
-      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown:false, order:null}));
+      // self.layersImages = filterBySearchParams(data).map(item => ({...item, footPrintShown: true, layerImageShown: false, order: null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
       for (const key in layerForUpdate){
         set(layerForUpdate,key, get(data,key));
       }
-     
     }
 
     // TODO: Remove when actual API is integrated
@@ -204,40 +201,6 @@ export const discreteLayersStore = ModelBase
       } 
     }
 
-    function editBest(best: BestRecordModelType | undefined): void {
-      self.editingBest =  best ? {...best} : undefined;
-    }
-
-    function saveDraft(best: BestRecordModelType | undefined): void {
-      const draftsKey = 'DRAFTS';
-      const drafts = localStore.getObject(draftsKey);
-      if(drafts === null){
-        localStore.setObject(draftsKey,{
-          data:[best]
-        });
-      }
-      else {
-        localStore.setObject(draftsKey,{
-          data:[
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            ...(drafts.data as unknown[]),
-            best
-          ]
-        });
-      }
-    }
-
-    function getDrafts(): BestRecordModelType[] {
-      const draftsKey = 'DRAFTS';
-      const drafts = localStore.getObject(draftsKey);
-      if(drafts === null){
-        return [];
-      }
-      else {
-        return drafts.data as BestRecordModelType[];
-      }
-    }
-
     return {
       getLayersImages,
       setLayersImages,
@@ -251,9 +214,6 @@ export const discreteLayersStore = ModelBase
       showFootprint,
       setEntityDescriptors,
       updateLayer,
-      editBest,
-      saveDraft,
-      getDrafts,
     };
   });
 

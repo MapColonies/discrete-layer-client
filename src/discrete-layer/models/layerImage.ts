@@ -5,7 +5,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import convex from '@turf/convex';
 import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 
-export type ILayerImage = LayerMetadataMixedUnion
+export type ILayerImage = LayerMetadataMixedUnion;
 
 export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false) : Feature => {
   if(layer.footprint === undefined)
