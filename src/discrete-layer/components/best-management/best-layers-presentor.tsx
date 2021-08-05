@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { get } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import { CesiumGeographicTilingScheme, useCesiumMap } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LayerRasterRecordModelType, LinkModelType, useStore } from '../../models';
@@ -43,7 +43,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
 
   useLayoutEffect(() => {
     // @ts-ignore
-    if(bestStore.layersList?.length > 0 ){
+    if(!isEmpty(bestStore.layersList?.length)){
       const sortedLayers = [...(bestStore.layersList ?? [])].sort(
         // @ts-ignore
         (layer1, layer2) => layer2.order - layer1.order
@@ -56,7 +56,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
 
   useLayoutEffect(() => {
     // @ts-ignore
-    if((prevLayersImages ?? []).length === 0){
+    if(isEmpty(prevLayersImages)){
       layersImages.forEach((layer, idx) => {
         const layerProperties = buildLayerProperties(layer);
   
@@ -72,7 +72,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
               url: layerProperties.url,
             },
           }, 
-          mapViewer.layersManager?.length(),
+          mapViewer.layersManager.length(),
           '');
       });
     } else {

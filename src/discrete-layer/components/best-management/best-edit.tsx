@@ -27,6 +27,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const prevDiscretes = usePrevious<LayerRasterRecordModelType[]>(discretes);
   const cacheRef = useRef([] as LayerRasterRecordModelType[]);
 
+  // eslint-disable-next-line
   const { loading, error, data, query } = useQuery((store) =>
     store.querySearchById({
       idList: {
