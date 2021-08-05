@@ -26,7 +26,6 @@ import './best-discretes.css';
 
 const IS_PAGINATION = false;
 const IMMEDIATE_EXECUTION = 0;
-const INITIAL_ORDER = 0;
 
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
@@ -35,16 +34,19 @@ interface BestDiscretesComponentProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesComponentProps, ref) => {
-  const { style, discretes } = props;
   const intl = useIntl();
   const store = useStore();
-  const selectedLayersRef = useRef(INITIAL_ORDER);
   const [gridApi, setGridApi] = useState<GridApi>();
+  
+  const sortedDiscretes = [...(props.discretes ?? [])].sort(
+    // @ts-ignore
+    (layer1, layer2) => layer1.order - layer2.order
+  );
   
   let start: number;
   let numberOfRows: number | undefined;
   let currentOrder: DiscreteOrder[];
-  
+
   useImperativeHandle(ref, () => ({
     getOrderedDiscretes: (): DiscreteOrder[] => {
       currentOrder = [];
@@ -63,7 +65,6 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     );
   };
 
-  const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
   // const hashValueGetter = (params: ValueGetterParams): number => params.node.rowIndex;
   
@@ -98,21 +99,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          if (value) {
-            selectedLayersRef.current++;
-          } else {
-            const orders: number[] = [];
-            // eslint-disable-next-line
-            (node as any).gridApi.forEachNode((item: GridRowNode)=> {
-              const rowData = item.data as {[key: string]: string | boolean | number};
-              if (rowData.layerImageShown === true && rowData.id !== id) {
-                orders.push(rowData.order as number);
-              }
-            });
-            selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
-          }
-          const order = value ? selectedLayersRef.current : null;
-          store.discreteLayersStore.showLayer(id, value, order);
+          store.bestStore.showLayer(id, value);
         }
       }
     },
@@ -187,8 +174,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     <>
       <GridComponent
         gridOptions={gridOptions}
-        rowData={discretes}
-        style={style}/>
+        rowData={sortedDiscretes}
+        style={props.style}/>
     </>
   );
 }));

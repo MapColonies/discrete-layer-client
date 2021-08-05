@@ -43,6 +43,7 @@ import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
+import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -288,6 +289,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       <SelectedLayersContainer/>
       <HighlightedLayer/>
       <LayersFootprints/>
+      <BestLayersPresentor/>
     </>
   );
   }, []);

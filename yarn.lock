@@ -1612,13 +1612,13 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.5.0.tgz#70637ee2546256d011533958fb21c1dbebc72515"
-  integrity sha512-QOG9BHM7Cb0faXB8Ke06FXE0PL1WSbe4vPY3LFya+bqxhWZuzWUOoHokhlF47l9gbxsCulGSpj1dNDJnhuIWhg==
+"@map-colonies/react-components@3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.6.3.tgz#57244b19526674653d0a53e0cc67a28eab78a892"
+  integrity sha512-QTxJMuJ4LaPOij8MEnon/eFAJiSy75w7GAc29H3J5YhfUn/wwXpCRNO0lbLQuxXidPC+T1lDbv/T64Fo+Bm3DA==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
-    "@map-colonies/react-core" "^3.3.0"
+    "@map-colonies/react-core" "^3.3.1"
     "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/pickers" "^3.2.10"
@@ -1649,10 +1649,10 @@
     rimraf "3.0.2"
     typescript "~3.7.2"
 
-"@map-colonies/react-core@3.3.0", "@map-colonies/react-core@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-3.3.0.tgz#e96f68b925e6948157dfb1448a956a9b998da618"
-  integrity sha512-3ahlU3Vewo1A+l4m1HU44M6Kc7lPEibsID6fG4hlh6MMYoRObDlBLdz3/jfedibBEyiQ6Of7fstmLVrE37LmWQ==
+"@map-colonies/react-core@3.3.1", "@map-colonies/react-core@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-3.3.1.tgz#9e9af808692aec31137fb7f3b6912b0b2fc4fc7a"
+  integrity sha512-barZDVuiDOl1B2aW+Txpf9zrPhfaB5AcCIINQL45zSZ2F7vSMLmhcD8GmRUZuW6VLNypQ88OYvWWeLDQ/RW11g==
   dependencies:
     "@testing-library/jest-dom" "^4.2.4"
     "@testing-library/react" "^9.3.2"

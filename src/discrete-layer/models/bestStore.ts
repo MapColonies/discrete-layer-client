@@ -72,11 +72,17 @@ export const bestStore = ModelBase
       self.movedLayer = { ...movedLayer };
     }
 
+    function showLayer(id: string, isShow: boolean): void {
+      self.layersList = self.layersList?.map(el => el.id === id ? {...el, layerImageShown: isShow} : el);
+    }
+
+
     return {
       setLayersList,
       editBest,
       saveDraft,
       getDrafts,
       updateMovedLayer,
+      showLayer,
     };
   });
