@@ -9,10 +9,13 @@ import { BestRecordModelType, LayerRasterRecordModelType, useQuery, useStore } f
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestDetailsComponent } from './best-details';
+import { BestCatalogComponent } from './best-catalog';
 
 import './best-edit.css';
 
 interface BestEditComponentProps {
+  openImport: boolean;
+  handleCloseImport: (isShow: boolean) => void;
   best?: BestRecordModelType | undefined;
 }
 
@@ -101,6 +104,21 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
           <FormattedMessage id="general.save-btn.text"/>
         </Button>
       </Box>
+
+      {
+        props.openImport && <Box className="bestCatalogImportContainer">
+          <BestCatalogComponent/>
+
+          <Box className="buttons">
+            <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
+              <FormattedMessage id="general.cancel-btn.text"/>
+            </Button>
+            <Button raised type="button" disabled={false}>
+              <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
+            </Button>
+          </Box>
+        </Box>
+      }
     </>
   );
 })

@@ -53,8 +53,6 @@ import { BestRecordModelType } from '../models/BestRecordModel';
 import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestCatalogComponent } from '../components/best-management/best-catalog';
-import { DrawerOpener } from '../components/drawer-opener/drawer-opener';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -290,6 +288,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
+  const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -573,6 +572,18 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
             </MenuSurfaceAnchor>
             }
+            { 
+            (tabIdx === TabViews.CREATE_BEST) && <>
+              <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                <IconButton
+                  className="operationIcon glow-missing-icon"
+                  icon="add"
+                  label="NEW BEST"
+                  onClick={ (): void => { setOpenImportFromCatalog(true)} }
+                />
+              </Tooltip>
+            </>
+            }
             <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Delete"
@@ -693,10 +704,13 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Box 
                 style={{
                   height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)'
+                  width: 'calc(100% - 8px)',
+                  position: 'relative'
                 }}
               >
-                <BestEditComponent best={editingBest}/>
+                <BestEditComponent 
+                  openImport={openImportFromCatalog} 
+                  handleCloseImport={setOpenImportFromCatalog} best={editingBest}/>
               </Box>
             </Box>
             }
@@ -739,79 +753,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             </PerfectScrollbar>
           </Box>
         </Box>
-        
-        {
-          tabsPanelExpanded && (
-            <Box className="drawerPosition" id="secondaryPanel">
-              <Drawer dismissible open={tabsPanelExpanded}>
-                <DrawerContent>
-                  <Box className="sidePanelParentContainer secondaryPanel">
-                    <Box 
-                      className="sidePanelContainer"
-                      style={{
-                        backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-                        height: detailsPanelExpanded ? '50%' : '75%'
-                      }}
-                    >
-                      <Box className="tabContentContainer" style={{display: 'block'}}>
-                        {
-                          getActiveTabHeader(TabViews.CATALOG)
-                        }
-                        <Box className="detailsContent" style={{ overflow: 'hidden'}}>
-                          <BestCatalogComponent/>
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    <Box className="sidePanelContainer sideDetailsPanel" style={{
-                      backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-                      height: detailsPanelExpanded ? '50%' : '25%',
-                    }}>
-                      <Box style={{display: 'flex', paddingTop: '8px'}}>
-                        <Typography use="headline6" tag="div" className="detailsTitle">
-                          {layerToPresent?.productName}
-                        </Typography>
-                        {
-                          layerToPresent && <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
-                            <IconButton
-                              className="operationIcon mc-icon-Status-Approves glow-missing-icon"
-                              label="EDIT"
-                              onClick={ (): void => { handleEditEntityDialogClick(); } }
-                            />
-                          </Tooltip>
-                        }
-                        {
-                          isEditEntityDialogOpen && <EntityDialogComponent
-                            isOpen={isEditEntityDialogOpen}
-                            onSetOpen={setEditEntityDialogOpen}
-                            layerRecord={layerToPresent}>
-                          </EntityDialogComponent>
-                        }
-                        <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
-                          <IconButton 
-                            className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
-                            label="EXPANDER"
-                            onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
-                          />
-                        </Tooltip>
-                      </Box>
-                      <PerfectScrollbar className="detailsContent">
-                        <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
-                      </PerfectScrollbar>
-                    </Box>
-                  </Box>
-                </DrawerContent>
-              </Drawer>
-            </Box>
-          )
-        }
-        {
-          activeTabView === TabViews.CREATE_BEST && <DrawerOpener
-            isOpen={tabsPanelExpanded}
-            onClick={setTabsPanelExpanded}
-          />
-        }
-        
         <Box className="mapAppContainer">
           {
             <CesiumMap 
