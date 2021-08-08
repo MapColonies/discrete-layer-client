@@ -22,8 +22,6 @@ import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 
-import './best-discretes.css';
-
 const IS_PAGINATION = false;
 const IMMEDIATE_EXECUTION = 0;
 
@@ -65,19 +63,16 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     );
   };
 
-
-  // const hashValueGetter = (params: ValueGetterParams): number => params.node.rowIndex;
-  
   const colDef = [
     {
       width: 10,
-      // valueGetter: hashValueGetter,
+      field: 'productName',
       suppressMovable: true,
       rowDrag: true
     },
     {
       width: 20,
-      field: 'footPrintShown',
+      field: 'footprintShown',
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
@@ -88,7 +83,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerComponentParams: { 
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footPrintShown', value), IMMEDIATE_EXECUTION) ;
+            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION) ;
           });
         }  
       }
@@ -121,6 +116,14 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       width: 120,
       field: 'resolution',
       suppressMovable: true
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.order.label',
+      }),
+      width: 80,
+      field: 'order',
+      hide: true
     }
   ];
   const gridOptions: GridComponentOptions = {

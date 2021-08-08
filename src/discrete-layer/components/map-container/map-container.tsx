@@ -192,7 +192,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
             }
 
             {resultsOpen && (
-              <Box className="drawerPosition" style={{  height: '600px', width: mapActionsWidth, zIndex:-1}}>
+              <Box className="drawerPosition" style={{  height: '600px', width: mapActionsWidth, zIndex: -1}}>
                 <Drawer dismissible open={resultsOpen}>
                   <DrawerHeader>
                     <DrawerTitle>RESULTS</DrawerTitle>

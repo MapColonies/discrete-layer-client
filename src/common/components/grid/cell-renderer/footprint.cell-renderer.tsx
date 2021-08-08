@@ -11,7 +11,7 @@ interface IFootprintCellRendererParams extends ICellRendererParams {
 
 export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const [checked, setChecked] = useState<boolean>(props.data.footPrintShown as boolean);
+  const [checked, setChecked] = useState<boolean>(props.data.footprintShown as boolean);
   return (
     <Checkbox 
       checked={checked}

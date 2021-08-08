@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box } from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
+
 import './drawer-opener.css';
 
 interface DrawerOpenerProps {
@@ -18,7 +19,7 @@ export const DrawerOpener: React.FC<DrawerOpenerProps> = (props) => {
         backgroundColor: theme.primary as string,
         color: theme.onPrimary as string,
       }} 
-      className={`drawerOpenerPosition ${isOpen ? 'spacer' : ''}`}
+      className={`drawerOpenerPosition ${isOpen ? 'opened' : ''}`}
     >
       {isOpen ? '<': '>'}
     </Box>

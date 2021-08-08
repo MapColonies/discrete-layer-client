@@ -5,7 +5,6 @@ import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { CircularProgress, IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
@@ -13,63 +12,30 @@ import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { BestRecordModelType } from '../../models';
-import { Error } from './Error';
-import { Loading } from './Loading';
-import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
-import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
+import { Error } from '../catalog-tree/Error';
+import { Loading } from '../catalog-tree/Loading';
+import { FootprintRenderer } from '../catalog-tree/icon-renderers/footprint.icon-renderer';
+import { LayerImageRenderer } from '../catalog-tree/icon-renderers/layer-image.icon-renderer';
 
-import './catalog-tree.css';
+import './best-catalog.css';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const intialOrder = 0;
 
-export const CatalogTreeComponent: React.FC = observer(() => {
+export const BestCatalogComponent: React.FC = observer(() => {
   const { loading, error, data, query } = useQuery((store) =>
-    // store.querySearch({})
     store.querySearch({
       opts: {
         filter: [
           {
             field: 'mc:type',
-            eq: RecordType.RECORD_ALL
+            eq: RecordType.RECORD_RASTER
           }
         ]
       }
     })
-
-    // store.queryCatalogItems({},`
-    // ... on LayerRasterRecord {
-    //   __typename
-    //   sourceName
-    //   creationDate
-    //   geometry 
-    //   type
-    //   links {
-    //     __typename
-    //     name
-    //     description
-    //     protocol
-    //     url
-    //   }
-    // }
-    // ... on Layer3DRecord {
-    //    __typename
-    //   sourceName
-    //   creationDate
-    //   geometry
-    //   type
-    //   links {
-    //     __typename
-    //     name
-    //     description
-    //     protocol
-    //     url
-    //   }
-    //   accuracyLE90
-    // }
-    // }`)
   );
 
   const store = useStore();
@@ -98,14 +64,13 @@ export const CatalogTreeComponent: React.FC = observer(() => {
     };
   };
 
-  useEffect(()=>{
-    if(data && data.search){
+  useEffect(() => {
+    if (data && data.search) {
       const arr: ILayerImage[] = [];
       data.search.forEach((item) => arr.push({...item}));
 
       store.discreteLayersStore.setLayersImages(arr, false);
-
-      // get unlinked/new discretes shortcuts
+      
       const arrUnlinked = arr.filter((item) => {
         // @ts-ignore
         const itemObjectBag =  item as Record<string,unknown>;
@@ -116,40 +81,6 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
         {keys: ['region']}
       );
-
-      // get BESTs shortcuts
-      const arrBests = arr.filter((item) => {
-        // @ts-ignore
-        const itemObjectBag =  item as Record<string,unknown>;
-        return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
-      });
-      const drafts = store.bestStore.getDrafts();
-      const draftNode = (drafts.length > 0) ? [{
-        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
-        isGroup: true,
-        children: [...store.bestStore.getDrafts().map(draft => {
-          return {
-            ...draft,
-            title: draft['productName'],
-            isSelected: false
-          };
-        })],
-      }] : [];
-      const parentBests = {
-        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-        isGroup: true,
-        children: [
-          ...draftNode,
-          ...arrBests.map(item=> {
-            return {
-              ...item,
-              title: item['productName'],
-              isSelected: false
-            };
-        })
-      ]
-
-      }
 
       // whole catalog as is
       const parentCatalog = buildParentTreeNode(
@@ -162,27 +93,16 @@ export const CatalogTreeComponent: React.FC = observer(() => {
         [
           parentUnlinked,
           parentCatalog,
-          parentBests,
-          // parentDrafts,
         ]
       );
     }
   },[data]);
 
   if (error) return <Error>{error.message}</Error>
-  if (data){
+  if (data) {
     return (
       <>
-        {loading ? (
-          <>
-            <CircularProgress className="refreshIconButton"/>
-            <Loading/>
-          </>
-        ) : (
-          <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-            <IconButton icon="autorenew" className="refreshIconButton" onClick={(): void => { void query!.refetch(); }}/>
-          </Tooltip>
-        )}
+        {loading && <Loading/>}
 
         <Box id="catalogContainer" className="catalogContainer">
           {

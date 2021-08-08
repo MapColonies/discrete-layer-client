@@ -2,22 +2,23 @@
   height: 64px; 
   padding: 20px 4px;
   font-weight: 900;
-  position: absolute;
-  top: 100px;
-  left: -20px;
   cursor: pointer;
+  position: absolute;
+  top: 35%;
+  left: calc(25% + 8px);
+  z-index: 1;
 }
 
 body[dir='rtl'] .drawerOpenerPosition {
-  right: -20px;
+  right: calc(25% + 8px);
   left: unset;
 }
 
-.spacer {
-  margin-left: calc(100% + 20px);
+.opened {
+  margin-left: calc(25% + 24px);
 }
 
-body[dir='rtl'] .spacer {
-  margin-right: calc(100% + 20px);
+body[dir='rtl'] .opened {
+  margin-right: calc(25% + 24px);
   margin-left: unset;
 }
