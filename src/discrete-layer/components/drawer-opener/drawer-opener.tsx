@@ -19,7 +19,7 @@ export const DrawerOpener: React.FC<DrawerOpenerProps> = (props) => {
         backgroundColor: theme.primary as string,
         color: theme.onPrimary as string,
       }} 
-      className={`drawerOpenerPosition ${isOpen ? 'spacer' : ''}`}
+      className={`drawerOpenerPosition ${isOpen ? 'opened' : ''}`}
     >
       {isOpen ? '<': '>'}
     </Box>

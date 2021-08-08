@@ -17,10 +17,7 @@ import {
   MenuSurface,
   Tooltip,
   Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerSubtitle,
-  DrawerTitle
+  DrawerContent
 } from '@map-colonies/react-core';
 import {
   DrawType,
@@ -745,7 +742,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         
         {
           tabsPanelExpanded && (
-            <Box className="drawerPosition" style={{  height: '600px', width: '25%', zIndex: -1}}>
+            <Box className="drawerPosition" id="secondaryPanel">
               <Drawer dismissible open={tabsPanelExpanded}>
                 <DrawerContent>
                   <Box className="sidePanelParentContainer secondaryPanel">
@@ -808,12 +805,13 @@ const DiscreteLayerView: React.FC = observer(() => {
             </Box>
           )
         }
-        <DrawerOpener
-          isOpen={tabsPanelExpanded}
-          onClick={setTabsPanelExpanded}
-        />
+        {
+          activeTabView === TabViews.CREATE_BEST && <DrawerOpener
+            isOpen={tabsPanelExpanded}
+            onClick={setTabsPanelExpanded}
+          />
+        }
         
-
         <Box className="mapAppContainer">
           {
             <CesiumMap 

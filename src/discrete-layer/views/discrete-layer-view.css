@@ -1,4 +1,4 @@
-.mainViewContainer{
+.mainViewContainer {
   display: flex;
   position: relative;
   height: calc(100vh - 52px);
@@ -6,18 +6,19 @@
   padding-bottom: 8px;
 }
 
-.sidePanelParentContainer{
+.sidePanelParentContainer {
   width: 25%;
   display: flex;
   flex-direction: column;
 }
 
-.secondaryPanel{
+.secondaryPanel {
   z-index: 1;
   margin: 0 8px;
+  width: unset;
 }
 
-.sidePanelContainer{
+.sidePanelContainer {
   border-radius: 12px;
 }
 
@@ -26,7 +27,7 @@ body[dir='rtl'] .sidePanelContainer {
   margin-left: 8px;
 }
 
-.mapAppContainer{
+.mapAppContainer {
   left: calc(25% + 8px);
   width: calc(75% - 8px);
   position: absolute;
@@ -45,25 +46,25 @@ body[dir='rtl'] .mapAppContainer {
   font-size: 24px;
 }
 
-.headerContainer{
+.headerContainer {
   height: 52px;
   display: flex;
   align-items: center;
 }
 
-.headerViewsSwitcher{
+.headerViewsSwitcher {
   width: 20%;
   display: flex;
   align-items: center;
 }
 
-.headerViewsSwitcherContainer{
+.headerViewsSwitcherContainer {
   display: flex;
   width: 180px;
   gap: 12px;
 }
 
-.headerSearchOptionsContainer{
+.headerSearchOptionsContainer {
   margin: 8px auto 0 auto;
   height: 64px;
   z-index: 1;
@@ -71,24 +72,24 @@ body[dir='rtl'] .mapAppContainer {
   border-radius: 64px;
 }
 
-.headerSystemAreaContainer{
+.headerSystemAreaContainer {
   width: 10%;
   height: 100%;
 }
 
 /* TabContent */
-.tabHeaderContainer{
+.tabHeaderContainer {
   display: flex;
   height: 50px;
 }
 
-.tabTitleContainer{
+.tabTitleContainer {
   flex-grow: 1;
   flex-basis: 0;
   background-color: red;
 }
 
-.tabTitle{
+.tabTitle {
   border-bottom-right-radius: 16px;
   border-bottom-width: 2px;
   border-bottom-color: red;
@@ -99,28 +100,27 @@ body[dir='rtl'] .mapAppContainer {
   align-items: center;
 }
 
-.tabTitleText{
+.tabTitleText {
   font-size: 18px;
 }
 
-body[dir='rtl'] .tabTitle{
+body[dir='rtl'] .tabTitle {
   border-bottom-right-radius: unset;
   border-bottom-left-radius: 16px;
 }
 
-
-.tabOperationsContainer{
+.tabOperationsContainer {
   flex-grow: 1;
   flex-basis: 0;
   border-top-right-radius: 8px;
 }
 
-body[dir='rtl'] .tabOperationsContainer{
+body[dir='rtl'] .tabOperationsContainer {
   border-top-right-radius: unset;
   border-top-left-radius: 8px;
 }
 
-.tabOperations{
+.tabOperations {
   border-top-right-radius: 8px;
   border-top-left-radius: 16px;
   border-top-color: red;
@@ -132,15 +132,15 @@ body[dir='rtl'] .tabOperationsContainer{
   justify-content: flex-end;
 }
 
-.operationIcon{
+.operationIcon {
   padding: 8px 8px;
 }
 
-.systemJobsIcon{
+.systemJobsIcon {
   padding-top: 16px;
 }
 
-body[dir='rtl'] .tabOperations{
+body[dir='rtl'] .tabOperations {
   border-top-right-radius: unset;
   border-top-left-radius: unset;
   border-top-left-radius: 8px;
@@ -156,7 +156,7 @@ body[dir='rtl'] .tabContentContainer {
   padding: 0 8px 8px 0;
 }
 
-.detailsTitle{
+.detailsTitle {
   color: var(--mdc-theme-text-primary-on-dark);
   white-Space: nowrap;
   overflow: hidden;
@@ -164,34 +164,54 @@ body[dir='rtl'] .tabContentContainer {
   margin-right: auto;
 }
 
-body[dir='rtl'] .detailsTitle{
+body[dir='rtl'] .detailsTitle {
   margin-right: unset;
   margin-left: auto;
 }
 
-.sideDetailsPanel{
+.sideDetailsPanel {
   margin-top: 8px;
   padding-left: 20px;
 }
 
-body[dir='rtl'] .sideDetailsPanel{
+body[dir='rtl'] .sideDetailsPanel {
   padding-left: unset;
   padding-right: 20px;
 }
 
-.detailsContent{
+.detailsContent {
   height: calc(100% - 60px);
   overflow: auto;
 }
 
-.version{
+.version {
   margin: 0 16px;
 }
 
-#newContainer .mdc-menu-surface.mdc-menu-surface--open{
+#newContainer .mdc-menu-surface.mdc-menu-surface--open {
   top: 40px !important;
 }
 
 #newContainer {
   display: flex;
+}
+
+/* Drawer */
+#secondaryPanel .drawerPosition {
+  left: 0px;
+}
+
+body[dir='rtl'] #secondaryPanel .drawerPosition {
+  right: 0px;
+  left: unset;
+}
+
+.drawerPosition .mdc-drawer {
+  background-color: var(--mdc-theme-background);
+  width: calc(25% + 32px);
+}
+
+#secondaryPanel .mdc-drawer--dismissible {
+  left: unset;
+  right: unset;
 }
