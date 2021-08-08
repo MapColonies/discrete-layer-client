@@ -83,6 +83,8 @@
 
   "details-panel.no-selection": "לא נבחר הפריט",
 
+  "best-edit.import.dialog.import-btn.text": "הוסף",
+
   "field-names.ingestion.directory": "נתיב מלא",
   "field-names.raster.fileNames": "שמות הקבצים",
   "field-names.raster.id": "מזהה",

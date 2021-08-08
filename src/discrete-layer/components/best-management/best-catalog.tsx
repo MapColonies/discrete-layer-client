@@ -102,9 +102,9 @@ export const BestCatalogComponent: React.FC = observer(() => {
   if (data) {
     return (
       <>
-        {loading && <Loading/>}
+        <Box id="bestCatalogContainer" className="bestCatalogContainer">
+          {loading && <Loading/>}
 
-        <Box id="catalogContainer" className="catalogContainer">
           {
             !loading && <TreeComponent
               treeData={treeRawData}

@@ -83,6 +83,8 @@
 
   "details-panel.no-selection": "No selection",
 
+  "best-edit.import.dialog.import-btn.text": "Import",
+
   "field-names.ingestion.directory": "Directory",
   "field-names.raster.fileNames": "File names",
   "field-names.raster.id": "ID",

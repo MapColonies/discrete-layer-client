@@ -43,7 +43,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
 
   useLayoutEffect(() => {
     // @ts-ignore
-    if(!isEmpty(bestStore.layersList?.length)){
+    if(!isEmpty(bestStore.layersList)){
       const sortedLayers = [...(bestStore.layersList ?? [])].sort(
         // @ts-ignore
         (layer1, layer2) => layer2.order - layer1.order
