@@ -300,23 +300,15 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                       />
                     ],
                 buttons: rowInfo.node.isDraft ? [
-                  <button
-                    style={{
-                      padding: 0,
-                      borderRadius: '100%',
-                      backgroundColor: 'gray',
-                      color: 'white',
-                      width: 16,
-                      height: 16,
-                      border: 0,
-                      fontWeight: 100,
-                    }}
-                    onClick={() => {
-                      store.bestStore.editBest(rowInfo.node as BestRecordModelType)
-                    }}
-                  >
-                    i
-                  </button>,
+                  <>
+                    <Tooltip content={intl.formatMessage({ id: 'field.actions.edit-draft' })}>
+                      <IconButton
+                        className="actionIcon glow-missing-icon"
+                        icon="edit"
+                        label="EDIT BEST"
+                        onClick={ (): void => { store.bestStore.editBest(rowInfo.node as BestRecordModelType); } }/>
+                    </Tooltip>
+                  </>,
                 ]
                 : [],
               })}

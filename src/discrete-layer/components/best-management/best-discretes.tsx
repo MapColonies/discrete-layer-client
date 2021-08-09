@@ -38,7 +38,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   
   const sortedDiscretes = [...(props.discretes ?? [])].sort(
     // @ts-ignore
-    (layer1, layer2) => layer1.order - layer2.order
+    (layer1, layer2) => layer2.order - layer1.order
   );
   
   let start: number;
@@ -69,6 +69,14 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       field: 'productName',
       suppressMovable: true,
       rowDrag: true
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'field-names.general.empty',
+      }),
+      width: 45,
+      field: 'order',
+      suppressMovable: true
     },
     {
       width: 20,
@@ -102,7 +110,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 190,
+      width: 170,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -116,14 +124,6 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       width: 120,
       field: 'resolution',
       suppressMovable: true
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'results.fields.order.label',
-      }),
-      width: 80,
-      field: 'order',
-      hide: true
     }
   ];
   const gridOptions: GridComponentOptions = {

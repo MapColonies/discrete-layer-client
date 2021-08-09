@@ -81,10 +81,15 @@
   "tab-views.catalog.actions.ingest_3d": "Ingest 3D model",
   "tab-views.catalog.actions.new_best": "Create new BEST",
 
-  "details-panel.no-selection": "No selection",
+  "tab-views.best-edit.actions.add": "Add layer\\s from list",
 
   "best-edit.import.dialog.import-btn.text": "Import",
 
+  "details-panel.no-selection": "No selection",
+
+  "field.actions.edit-draft": "Edit draft",
+
+  "field-names.general.empty": " ",
   "field-names.ingestion.directory": "Directory",
   "field-names.raster.fileNames": "File names",
   "field-names.raster.id": "ID",
