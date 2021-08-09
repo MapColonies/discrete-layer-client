@@ -32,8 +32,5 @@ export const BestRecordModel = BestRecordModelBase
     /* eslint-enable */
 
     // TODO: should be removed
-    footprintShown: types.union(types.undefined, types.null, types.boolean),
-    order: types.union(types.undefined, types.null, types.number),
-    layerImageShown: types.union(types.undefined, types.null, types.boolean),
     isDraft: types.union(types.undefined, types.null, types.boolean),
   })
