@@ -88,6 +88,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   };
 
   const close = (): void => {
+    // TODO: close draft tab
   };
  
   const handleApply = (): void => {

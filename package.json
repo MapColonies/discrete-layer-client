@@ -20,8 +20,7 @@
     }
   },
   "scripts": {
-    "postinstall": "yarn run patch:deps & patch-package",
-    "patch:deps": "(cd ./node_modules/@map-colonies/csw-client && patch-package --patch-dir ./dist/patches)",
+    "postinstall": "patch-package",
     "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,BestRecord,EntityDescriptor --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
     "start": "yarn run copyassets:all && react-scripts start",
     "build": "react-scripts --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
@@ -78,7 +77,6 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/csw-client": "^1.0.2",
     "@map-colonies/react-components": "3.6.3",
     "@map-colonies/react-core": "3.3.1",
     "@map-colonies/static-assets": "^0.1.1",

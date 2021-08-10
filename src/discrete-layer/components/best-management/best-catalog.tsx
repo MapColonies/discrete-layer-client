@@ -11,7 +11,6 @@ import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
-import { BestRecordModelType } from '../../models';
 import { Error } from '../catalog-tree/Error';
 import { Loading } from '../catalog-tree/Loading';
 import { FootprintRenderer } from '../catalog-tree/icon-renderers/footprint.icon-renderer';
@@ -175,22 +174,7 @@ export const BestCatalogComponent: React.FC = observer(() => {
                   store.discreteLayersStore.highlightLayer(undefined);
                 },
                 icons: rowInfo.node.isGroup
-                  ? [
-                      // <div
-                      //   style={{
-                      //     borderLeft: 'solid 8px gray',
-                      //     borderBottom: 'solid 10px gray',
-                      //     marginRight: 10,
-                      //     boxSizing: 'border-box',
-                      //     width: 16,
-                      //     height: 12,
-                      //     filter: rowInfo.node.expanded
-                      //       ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
-                      //       : 'none',
-                      //     borderColor: rowInfo.node.expanded ? 'white' : 'gray',
-                      //   }}
-                      // />,
-                    ]
+                  ? []
                   : [
                       <FootprintRenderer
                         data={(rowInfo.node as any) as ILayerImage}
@@ -219,26 +203,7 @@ export const BestCatalogComponent: React.FC = observer(() => {
                         }}
                       />
                     ],
-                buttons: rowInfo.node.isDraft ? [
-                  <button
-                    style={{
-                      padding: 0,
-                      borderRadius: '100%',
-                      backgroundColor: 'gray',
-                      color: 'white',
-                      width: 16,
-                      height: 16,
-                      border: 0,
-                      fontWeight: 100,
-                    }}
-                    onClick={() => {
-                      store.bestStore.editBest(rowInfo.node as BestRecordModelType)
-                    }}
-                  >
-                    i
-                  </button>,
-                ]
-                : [],
+                buttons: [],
               })}
             />
           }

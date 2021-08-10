@@ -5,7 +5,7 @@ import { Box } from '@map-colonies/react-components';
 
 export const Error: FC = (props) => (
   <>
-    <Box className="failed">
+    <Box className="failed" style={{ height: '100%' }}>
       <Typography use="headline6" tag="div"><FormattedMessage id="general.error.text"/></Typography>
       <Typography use="body2" tag="div"><FormattedMessage id="general.error.title"/></Typography>
       <Typography use="body2" tag="div"><FormattedMessage id="general.error.description"/> {props.children}</Typography>
