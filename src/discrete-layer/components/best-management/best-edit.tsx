@@ -26,7 +26,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
-  
   const prevDiscretes = usePrevious<LayerRasterRecordModelType[]>(discretes);
   const cacheRef = useRef([] as LayerRasterRecordModelType[]);
 
@@ -68,8 +67,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     cacheRef.current = discretes;
   }, [discretes]);
 
- 
-  const handleApply = (): void => {
+  const save = (): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if ( currentDiscretesListRef !== undefined ) {
@@ -87,46 +85,23 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         store.bestStore.editBest(newBest);
       }
     }
+  };
+
+  const close = (): void => {
+  };
+ 
+  const handleApply = (): void => {
+    save();
   };
 
   const handleSave = (): void => {
-    const currentDiscretesListRef = get(discretesListRef, 'current');
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if ( currentDiscretesListRef !== undefined ) {
-      //@ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
-      if (best !== undefined && !isEmpty(best)) {
-        //@ts-ignore
-        const newBest = { 
-          ...best,
-          discretes: [...newOrderedDiscretesList] 
-        } as BestRecordModelType;
-        
-        store.bestStore.saveDraft(newBest);
-        store.bestStore.editBest(newBest);
-      }
-    }
+    save();
+    close();
   };
 
   const handleSendToApproval = (): void => {
-    const currentDiscretesListRef = get(discretesListRef, 'current');
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if ( currentDiscretesListRef !== undefined ) {
-      //@ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
-      if (best !== undefined && !isEmpty(best)) {
-        //@ts-ignore
-        const newBest = { 
-          ...best,
-          discretes: [...newOrderedDiscretesList] 
-        } as BestRecordModelType;
-        
-        store.bestStore.saveDraft(newBest);
-        store.bestStore.editBest(newBest);
-      }
-    }
+    save();
+    close();
   };
 
   return (
@@ -139,20 +114,22 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         discretes={cacheRef.current}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
 
-      <Box className="ApplyButton">
-        <Button raised type="button" onClick={(): void => { handleApply(); } }>
-          <FormattedMessage id="general.apply-btn.text"/>
-        </Button>
-      </Box>
-      <Box className="saveButton">
-        <Button raised type="button" onClick={(): void => { handleSave(); } }>
-          <FormattedMessage id="general.save-btn.text"/>
-        </Button>
-      </Box>
-      <Box className="sendToApprovalButton">
-        <Button raised type="button" onClick={(): void => { handleSendToApproval(); } }>
-          <FormattedMessage id="general.send-to-approval-btn.text"/>
-        </Button>
+      <Box className="actionButton">
+        <Box>
+          <Button raised type="button" onClick={(): void => { handleApply(); } }>
+            <FormattedMessage id="general.apply-btn.text"/>
+          </Button>
+        </Box>
+        <Box>
+          <Button raised type="button" onClick={(): void => { handleSave(); } }>
+            <FormattedMessage id="general.save-btn.text"/>
+          </Button>
+        </Box>
+        <Box>
+          <Button raised type="button" onClick={(): void => { handleSendToApproval(); } }>
+            <FormattedMessage id="general.send-to-approval-btn.text"/>
+          </Button>
+        </Box>
       </Box>
 
       {
