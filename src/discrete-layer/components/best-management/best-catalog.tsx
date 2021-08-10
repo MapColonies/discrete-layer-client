@@ -4,15 +4,16 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { Error } from '../../../common/components/tree/statuses/Error';
+import { Loading } from '../../../common/components/tree/statuses/Loading';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
-import { Error } from '../catalog-tree/Error';
-import { Loading } from '../catalog-tree/Loading';
 import { FootprintRenderer } from '../catalog-tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../catalog-tree/icon-renderers/layer-image.icon-renderer';
 
@@ -21,9 +22,13 @@ import './best-catalog.css';
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
-const intialOrder = 0;
+const INITIAL_ORDER = 0;
 
-export const BestCatalogComponent: React.FC = observer(() => {
+interface BestCatalogComponentProps {
+  closeImport: (isShow: boolean) => void;
+}
+
+export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer((props) => {
   const { loading, error, data, query } = useQuery((store) =>
     store.querySearch({
       opts: {
@@ -39,7 +44,7 @@ export const BestCatalogComponent: React.FC = observer(() => {
 
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
-  const selectedLayersRef = useRef(intialOrder);
+  const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
@@ -108,7 +113,7 @@ export const BestCatalogComponent: React.FC = observer(() => {
             !loading && <TreeComponent
               treeData={treeRawData}
               onChange={treeData => {
-                console.log('****** UPDATE TREEE DATA *****');
+                console.log('****** UPDATE TREEE DATA ******');
                 setTreeRawData(treeData);
               }}
               canDrag={({ node }) => {
@@ -206,6 +211,17 @@ export const BestCatalogComponent: React.FC = observer(() => {
                 buttons: [],
               })}
             />
+          }
+
+          {
+            <Box className="buttons">
+              <Button type="button" onClick={(): void => { props.closeImport(false); }}>
+                <FormattedMessage id="general.cancel-btn.text"/>
+              </Button>
+              <Button raised type="button" disabled={false}>
+                <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
+              </Button>
+            </Box>
           }
         </Box>
       </>

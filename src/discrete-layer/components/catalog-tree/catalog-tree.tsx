@@ -8,13 +8,13 @@ import { useIntl } from 'react-intl';
 import { CircularProgress, IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { Error } from '../../../common/components/tree/statuses/Error';
+import { Loading } from '../../../common/components/tree/statuses/Loading';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { BestRecordModelType } from '../../models';
-import { Error } from './Error';
-import { Loading } from './Loading';
 import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
 
@@ -170,7 +170,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
   },[data]);
 
   if (error) return <Error>{error.message}</Error>
-  if (data){
+  if (data) {
     return (
       <>
         {loading ? (
