@@ -38,7 +38,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   
   const sortedDiscretes = [...(props.discretes ?? [])].sort(
     // @ts-ignore
-    (layer1, layer2) => layer1.order - layer2.order
+    (layer1, layer2) => layer2.order - layer1.order
   );
   
   let start: number;
