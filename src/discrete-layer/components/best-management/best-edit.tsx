@@ -5,7 +5,7 @@ import { isEmpty, get, cloneDeep } from 'lodash';
 import { Button, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { BestRecordModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
+import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestDetailsComponent } from './best-details';
@@ -39,21 +39,24 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   );
 
   useEffect(()=>{
-    if (data?.searchById) {
+    if (data?.searchById && !isEmpty(discretesOrder)) {
       const layers = cloneDeep(data.searchById as LayerRasterRecordModelType[]);
 
-      layers.forEach(discrete => {
-        const layer = discretesOrder.find(item => discrete.id === item.id);
-        if (layer){
-          discrete.order = layer.zOrder;
-        }
-      });
+      // if(store.bestStore.layersList?.length === 0){
+        layers.forEach(discrete => {
+          const layer = discretesOrder.find(item => discrete.id === item.id);
+          if (layer){
+            discrete.order = layer.zOrder;
+          }
+        });
+      // }
 
       store.bestStore.setLayersList(layers);
+      store.discreteLayersStore.setLayersImages(layers, false);
 
       cacheRef.current = layers;
     }
-  }, [data, store.bestStore, discretesOrder]);
+  }, [data, store.bestStore, store.discreteLayersStore, discretesOrder]);
 
   useEffect(() => {
     if (store.bestStore.layersList) {
@@ -67,7 +70,18 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     cacheRef.current = discretes;
   }, [discretes]);
 
-  const save = (): void => {
+  useEffect(() => {
+    if(!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)){
+      store.discreteLayersStore.previewedLayers?.forEach((layerId) => {
+        store.discreteLayersStore.showLayer(layerId, false, null);
+      });
+      store.discreteLayersStore.cleanPreviewedLayer();
+    }
+
+  }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
+
+ 
+  const handleSave = (isApply: boolean): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if ( currentDiscretesListRef !== undefined ) {
@@ -82,27 +96,19 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         } as BestRecordModelType;
         
         store.bestStore.saveDraft(newBest);
-        store.bestStore.editBest(newBest);
+
+        if (isApply) {
+          store.bestStore.editBest(newBest);
+        } else {
+          store.bestStore.editBest(undefined);
+          store.bestStore.setLayersList([]);
+        }
       }
     }
   };
 
-  const close = (): void => {
-    // TODO: close draft tab
-  };
- 
-  const handleApply = (): void => {
-    save();
-  };
-
-  const handleSave = (): void => {
-    save();
-    close();
-  };
-
   const handleSendToApproval = (): void => {
-    save();
-    close();
+    // TODO: send to approval
   };
 
   return (
@@ -114,15 +120,15 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         ref={discretesListRef}
         discretes={cacheRef.current}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
-
+      
       <Box className="actionButton">
         <Box>
-          <Button raised type="button" onClick={(): void => { handleApply(); } }>
+          <Button raised type="button" onClick={(): void => { handleSave(true); } }>
             <FormattedMessage id="general.apply-btn.text"/>
           </Button>
         </Box>
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSave(); } }>
+          <Button raised type="button" onClick={(): void => { handleSave(false); } }>
             <FormattedMessage id="general.save-btn.text"/>
           </Button>
         </Box>
@@ -135,7 +141,16 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
       {
         props.openImport && <Box className="bestCatalogImportContainer">
-          <BestCatalogComponent closeImport={props.handleCloseImport}/>
+          <BestCatalogComponent filterOut={discretesOrder}/>
+
+          <Box className="buttons">
+            <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
+              <FormattedMessage id="general.cancel-btn.text"/>
+            </Button>
+            <Button raised type="button" disabled={true}>
+              <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
+            </Button>
+          </Box>
         </Box>
       }
     </>

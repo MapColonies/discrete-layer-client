@@ -44,6 +44,7 @@ export const discreteLayersStore = ModelBase
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
     tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
+    previewedLayers: types.maybe(types.frozen<string[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -72,7 +73,7 @@ export const discreteLayersStore = ModelBase
           // @ts-ignore
           const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
           self.layersImages = filterBySearchParams(result).map(item => ({...item, footprintShown: true, layerImageShown:false, order:null}));
-
+          
         } catch (error) {
           console.error(error);
           self.state = ResponseState.ERROR;
@@ -174,6 +175,17 @@ export const discreteLayersStore = ModelBase
       } 
     }
 
+    function addPreviewedLayer(id: string): void {
+      self.previewedLayers = [
+        ...self.previewedLayers ?? [],
+        id
+      ];
+    }
+
+    function cleanPreviewedLayer(): void {
+      self.previewedLayers = [];
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -187,6 +199,8 @@ export const discreteLayersStore = ModelBase
       showFootprint,
       setEntityDescriptors,
       updateLayer,
+      addPreviewedLayer,
+      cleanPreviewedLayer,
     };
   });
 

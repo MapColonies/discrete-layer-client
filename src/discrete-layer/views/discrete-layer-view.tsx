@@ -325,17 +325,31 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, [descriptorsQuery.data, descriptorsQuery.loading, store.discreteLayersStore]);
 
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
-    store.discreteLayersStore.setTabviewData(activeTabView);
-    store.discreteLayersStore.restoreTabviewData(targetViewIdx);
-    setActiveTabView(targetViewIdx);
+    if(activeTabView !== targetViewIdx){
+      store.discreteLayersStore.setTabviewData(activeTabView);
+      store.discreteLayersStore.restoreTabviewData(targetViewIdx);
+  
+      if(activeTabView === TabViews.CREATE_BEST){
+        store.bestStore.preserveData();
+        store.bestStore.resetData();
+      }
+  
+      if(targetViewIdx === TabViews.CREATE_BEST){
+        store.bestStore.restoreData();
+      }
+  
+      setActiveTabView(targetViewIdx);
+    }
   };
 
   useEffect(() => {
-    if(store.bestStore.editingBest !== undefined){
+    if(editingBest !== undefined){
       handleTabViewChange(TabViews.CREATE_BEST);
+    } else {
+      handleTabViewChange(TabViews.CATALOG);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store.bestStore.editingBest]);
+  }, [editingBest]);
 
   const buildFilters =  (): FilterField[]  => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
@@ -394,8 +408,9 @@ const DiscreteLayerView: React.FC = observer(() => {
     BestRecordModelKeys.forEach(key => {
       record[key as string] = undefined;
     });
-    record.id = 'DEFAULT_BEST_ID';
-    record.productName = 'DRAFT_OF_BEST_' + new Date().getTime().toString();
+    const timestamp = new Date().getTime().toString();
+    record.id = 'DEFAULT_BEST_ID_' + timestamp;
+    record.productName = 'DRAFT_OF_BEST_' + timestamp;
     record.productType = ProductType.BEST_ORTHOPHOTO;
     record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
@@ -610,7 +625,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   };
  
-  const availableTabs = editingBest ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
+  const availableTabs = store.bestStore.isBestInEdit() ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
 
   return (
     <>
@@ -625,16 +640,18 @@ const DiscreteLayerView: React.FC = observer(() => {
           <Box className="headerViewsSwitcherContainer">
             {
               availableTabs.map((tab) => {
-                return <Tooltip content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}><Fab 
-                  key={tab.idx}
-                  className={`${tab.iconClassName} tabViewIcon`}
-                  mini 
-                  onClick={(evt): void => handleTabViewChange(tab.idx)}
-                  style={{ 
-                    backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
-                  }}
-                  theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
-                /></Tooltip>;
+                return <Tooltip content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>
+                  <Fab 
+                    key={tab.idx}
+                    className={`${tab.iconClassName} tabViewIcon`}
+                    mini 
+                    onClick={(evt): void => handleTabViewChange(tab.idx)}
+                    style={{ 
+                      backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
+                    }}
+                    theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
+                  />
+                </Tooltip>;
               })
             }
           </Box>
@@ -710,7 +727,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               >
                 <BestEditComponent 
                   openImport={openImportFromCatalog} 
-                  handleCloseImport={setOpenImportFromCatalog} best={editingBest}/>
+                  handleCloseImport={setOpenImportFromCatalog}
+                  best={editingBest}/>
               </Box>
             </Box>
             }

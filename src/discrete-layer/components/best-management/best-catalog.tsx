@@ -5,7 +5,6 @@ import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
@@ -14,6 +13,8 @@ import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
+import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { BestRecordModelType } from '../../models';
 import { FootprintRenderer } from '../catalog-tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../catalog-tree/icon-renderers/layer-image.icon-renderer';
 
@@ -25,7 +26,7 @@ const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current)
 const INITIAL_ORDER = 0;
 
 interface BestCatalogComponentProps {
-  closeImport: (isShow: boolean) => void;
+  filterOut: DiscreteOrder[] | undefined | null;
 }
 
 export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer((props) => {
@@ -46,6 +47,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
+  const discretesIds = props.filterOut?.map((item) => item.id);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
@@ -71,9 +73,17 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   useEffect(() => {
     if (data && data.search) {
       const arr: ILayerImage[] = [];
-      data.search.forEach((item) => arr.push({...item}));
+      data.search
+      .filter((item) => !discretesIds?.includes(item.id))
+      .forEach((item) => arr.push({...item}));
 
-      store.discreteLayersStore.setLayersImages(arr, false);
+      store.discreteLayersStore.setLayersImages(
+        [
+          ...store.discreteLayersStore.layersImages as ILayerImage[],
+          ...arr
+        ],
+        false
+      );
       
       const arrUnlinked = arr.filter((item) => {
         // @ts-ignore
@@ -204,24 +214,17 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
                           }
                           const order = value ? selectedLayersRef.current : null;
-                          store.discreteLayersStore.showLayer(data.id, value, order);
+                          setTimeout(()=>{
+                            store.discreteLayersStore.showLayer(data.id, value, order);
+                          }, 0); 
+                          
+                          store.discreteLayersStore.addPreviewedLayer(data.id);
                         }}
                       />
                     ],
                 buttons: [],
               })}
             />
-          }
-
-          {
-            <Box className="buttons">
-              <Button type="button" onClick={(): void => { props.closeImport(false); }}>
-                <FormattedMessage id="general.cancel-btn.text"/>
-              </Button>
-              <Button raised type="button" disabled={loading || true}>
-                <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
-              </Button>
-            </Box>
           }
         </Box>
       </>
