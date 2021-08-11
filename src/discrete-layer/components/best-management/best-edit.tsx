@@ -30,29 +30,14 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const prevDiscretes = usePrevious<LayerRasterRecordModelType[]>(discretes);
   const cacheRef = useRef([] as LayerRasterRecordModelType[]);
 
-  let  loading: boolean,
-       error: any,
-       data: { searchById: LayerMetadataMixedUnion[]; } | undefined,
-       query: any; 
-  // if(store.bestStore.layersList?.length === 0){
-    // eslint-disable-next-line
-    const queryObj = useQuery((store) =>
-      store.querySearchById({
-        idList: {
-          value: [...discretesOrder.map((item: DiscreteOrder) => item.id)]
-        }
-      })
-    );
-    loading = queryObj.loading;
-    // @ts-ignore
-    error = queryObj.error;
-    data = queryObj.data;
-    query  = queryObj.query;
-  // } else {
-  //   data = {
-  //     searchById: store.bestStore.layersList as LayerMetadataMixedUnion[]
-  //   }
-  // }
+  // eslint-disable-next-line
+  const { loading, error, data, query } = useQuery((store) =>
+    store.querySearchById({
+      idList: {
+        value: [...discretesOrder.map((item: DiscreteOrder) => item.id)]
+      }
+    })
+  );
 
   useEffect(()=>{
     if (data?.searchById && !isEmpty(discretesOrder)) {
