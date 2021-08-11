@@ -146,9 +146,8 @@ export const CatalogTreeComponent: React.FC = observer(() => {
               title: item['productName'],
               isSelected: false
             };
-        })
-      ]
-
+          })
+        ]
       }
 
       // whole catalog as is

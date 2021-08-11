@@ -33,4 +33,5 @@ export const LayerRasterRecordModel = LayerRasterRecordModelBase
     footprintShown: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
     layerImageShown: types.union(types.undefined, types.null, types.boolean),
+    isNewlyAddedToBest: types.union(types.undefined, types.null, types.boolean),
   })

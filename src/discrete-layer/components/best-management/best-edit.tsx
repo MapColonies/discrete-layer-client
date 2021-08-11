@@ -47,6 +47,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
           const layer = discretesOrder.find(item => discrete.id === item.id);
           if (layer){
             discrete.order = layer.zOrder;
+            if (layer.zOrder === 1) {discrete.isNewlyAddedToBest = true;} // ***** DELETE ME! *****
           }
         });
       // }

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { useIntl } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { 
@@ -14,9 +14,10 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
+import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
+import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
@@ -110,7 +111,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 160,
+      width: 130,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -121,8 +122,17 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: intl.formatMessage({
         id: 'results.fields.resolution.label',
       }),
-      width: 120,
+      width: 105,
       field: 'resolution',
+      suppressMovable: true
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'field-names.general.empty',
+      }),
+      width: 45,
+      field: 'isNewlyAddedToBest',
+      cellRenderer: 'iconRenderer',
       suppressMovable: true
     }
   ];
@@ -139,6 +149,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     frameworkComponents: {
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
+      iconRenderer: IconRenderer,
       customTooltip: CustomTooltip,
       headerFootprintRenderer: HeaderFootprintRenderer,
     },
