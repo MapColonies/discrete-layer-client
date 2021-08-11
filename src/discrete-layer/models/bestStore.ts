@@ -28,6 +28,7 @@ export const bestStore = ModelBase
     editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
     storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
+    importedList: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -82,6 +83,10 @@ export const bestStore = ModelBase
       self.layersList = self.layersList?.map(el => el.id === id ? {...el, layerImageShown: isShow} : el);
     }
 
+    function addToImportedList(layer: LayerRasterRecordModelType): void {
+      self.importedList?.push({...layer});
+    }
+
     function preserveData(): void {
       if(self.storedData){
         self.storedData = {
@@ -118,6 +123,7 @@ export const bestStore = ModelBase
       getDrafts,
       updateMovedLayer,
       showLayer,
+      addToImportedList,
       preserveData,
       restoreData,
       resetData,

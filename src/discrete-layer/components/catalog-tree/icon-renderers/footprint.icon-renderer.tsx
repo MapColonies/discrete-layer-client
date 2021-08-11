@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox } from '@map-colonies/react-core';
-
 import { ILayerImage } from '../../../models/layerImage';
+
 import './footprint.icon-renderer.css';
 
 interface IFootprintCellRendererParams {
