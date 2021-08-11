@@ -218,7 +218,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
               <Button type="button" onClick={(): void => { props.closeImport(false); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
-              <Button raised type="button" disabled={loading}>
+              <Button raised type="button" disabled={loading || true}>
                 <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
               </Button>
             </Box>

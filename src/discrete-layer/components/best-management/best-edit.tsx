@@ -135,11 +135,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
       {
         props.openImport && <Box className="bestCatalogImportContainer">
-          <IconButton
-            className="closeIcon mc-icon-Close"
-            label="CLOSE"
-            onClick={ (): void => { props.handleCloseImport(false); } }
-          />
           <BestCatalogComponent closeImport={props.handleCloseImport}/>
         </Box>
       }
