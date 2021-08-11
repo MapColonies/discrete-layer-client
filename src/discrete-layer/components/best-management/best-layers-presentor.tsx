@@ -46,11 +46,16 @@ export const BestLayersPresentor: React.FC = observer((props) => {
     if(!isEmpty(bestStore.layersList)){
       const sortedLayers = [...(bestStore.layersList ?? [])].sort(
         // @ts-ignore
-        (layer1, layer2) => layer2.order - layer1.order
+        (layer1, layer2) => layer1.order - layer2.order
       );
   
       setlayersImages(sortedLayers);
 
+    } else {
+      // @ts-ignore
+      mapViewer.layersManager?.removeNotBaseMapLayers();
+
+      setlayersImages([]);
     }
   }, [bestStore.layersList, mapViewer]);
 

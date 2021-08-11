@@ -79,7 +79,7 @@
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
     "@map-colonies/csw-client": "^1.0.2",
-    "@map-colonies/react-components": "3.6.3",
+    "@map-colonies/react-components": "3.6.5",
     "@map-colonies/react-core": "3.3.1",
     "@map-colonies/static-assets": "^0.1.1",
     "@material-ui/core": "^4.11.0",

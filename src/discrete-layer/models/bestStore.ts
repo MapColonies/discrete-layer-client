@@ -1,4 +1,5 @@
 import { types, getParent } from 'mobx-state-tree';
+import { isEmpty } from 'lodash';
 import { localStore } from '../../common/helpers/storage';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MovedLayer } from '../components/best-management/interfaces/MovedLayer';
@@ -8,6 +9,11 @@ import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
 export type LayersListResponse = LayerRasterRecordModelType[];
+
+interface IBestEditData {
+  layersList?: LayerRasterRecordModelType[];
+  editingBest?: BestRecordModelType;
+}
 
 /* A graphql query fragment builders for BestRecordModel */
 export { selectFromBestRecord, bestRecordModelPrimitives, BestRecordModelSelector } from './BestRecordModel.base';
@@ -21,6 +27,7 @@ export const bestStore = ModelBase
     layersList: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
     editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
+    storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -50,8 +57,7 @@ export const bestStore = ModelBase
       } else {
         localStore.setObject(draftsKey, {
           data: [
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            ...(drafts.data as unknown[]),
+            ...((drafts.data as BestRecordModelType[]).filter((item) => item.id !== best?.id)),
             best
           ]
         });
@@ -76,6 +82,34 @@ export const bestStore = ModelBase
       self.layersList = self.layersList?.map(el => el.id === id ? {...el, layerImageShown: isShow} : el);
     }
 
+    function preserveData(): void {
+      if(self.storedData){
+        self.storedData = {
+          layersList: self.layersList ? [ ...self.layersList ]: [],
+          editingBest: {...self.editingBest} as BestRecordModelType,
+        }
+        // self.storedData.layersList = self.layersList ? [ ...self.layersList ]: [];
+        // self.storedData.editingBest = {...self.editingBest} as BestRecordModelType;
+      }
+    }
+
+    function restoreData(): void {
+      if(self.storedData && !isEmpty(self.storedData.editingBest?.productName)) {
+        self.layersList = [...self.storedData.layersList??[]];
+        self.editingBest = {...self.storedData.editingBest} as BestRecordModelType;
+      }
+    }
+
+    function isBestInEdit(): boolean {
+      return !isEmpty(self.editingBest) || !isEmpty(self.storedData?.editingBest?.productName);
+    }
+
+    function resetData(): void {
+      self.layersList = [];
+      self.editingBest = undefined;
+    }
+
+
 
     return {
       setLayersList,
@@ -84,5 +118,9 @@ export const bestStore = ModelBase
       getDrafts,
       updateMovedLayer,
       showLayer,
+      preserveData,
+      restoreData,
+      resetData,
+      isBestInEdit,
     };
   });

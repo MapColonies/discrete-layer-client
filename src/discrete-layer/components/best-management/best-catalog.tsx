@@ -11,6 +11,7 @@ import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
+import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { BestRecordModelType } from '../../models';
 import { Error } from '../catalog-tree/Error';
 import { Loading } from '../catalog-tree/Loading';
@@ -24,7 +25,11 @@ const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const intialOrder = 0;
 
-export const BestCatalogComponent: React.FC = observer(() => {
+interface BestCatalogComponentProps {
+  filterOut: DiscreteOrder[] | undefined | null;
+}
+
+export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer((props) => {
   const { loading, error, data, query } = useQuery((store) =>
     store.querySearch({
       opts: {
@@ -42,6 +47,7 @@ export const BestCatalogComponent: React.FC = observer(() => {
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
+  const discretesIds = props.filterOut?.map((item) => item.id);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
@@ -67,9 +73,17 @@ export const BestCatalogComponent: React.FC = observer(() => {
   useEffect(() => {
     if (data && data.search) {
       const arr: ILayerImage[] = [];
-      data.search.forEach((item) => arr.push({...item}));
+      data.search
+      .filter((item) => !discretesIds?.includes(item.id))
+      .forEach((item) => arr.push({...item}));
 
-      store.discreteLayersStore.setLayersImages(arr, false);
+      store.discreteLayersStore.setLayersImages(
+        [
+          ...store.discreteLayersStore.layersImages as ILayerImage[],
+          ...arr
+        ],
+        false
+      );
       
       const arrUnlinked = arr.filter((item) => {
         // @ts-ignore
@@ -215,30 +229,15 @@ export const BestCatalogComponent: React.FC = observer(() => {
                             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
                           }
                           const order = value ? selectedLayersRef.current : null;
-                          store.discreteLayersStore.showLayer(data.id, value, order);
+                          setTimeout(()=>{
+                            store.discreteLayersStore.showLayer(data.id, value, order);
+                          },0); 
+                          
+                          store.discreteLayersStore.addPreviewedLayer(data.id);
                         }}
                       />
                     ],
-                buttons: rowInfo.node.isDraft ? [
-                  <button
-                    style={{
-                      padding: 0,
-                      borderRadius: '100%',
-                      backgroundColor: 'gray',
-                      color: 'white',
-                      width: 16,
-                      height: 16,
-                      border: 0,
-                      fontWeight: 100,
-                    }}
-                    onClick={() => {
-                      store.bestStore.editBest(rowInfo.node as BestRecordModelType)
-                    }}
-                  >
-                    i
-                  </button>,
-                ]
-                : [],
+                buttons: [],
               })}
             />
           }

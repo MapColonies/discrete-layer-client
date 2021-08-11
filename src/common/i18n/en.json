@@ -3,6 +3,7 @@
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
   "general.save-btn.text": "Save",
+  "general.apply-btn.text": "Apply",
   "general.error.text": "Error",
   "general.error.title": "Something went wrong",
   "general.error.description": "Message:",
