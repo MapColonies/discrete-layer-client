@@ -20,6 +20,10 @@ body[dir=rtl] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer{
   margin-right: -12px;
 }
 
+.catalogContainer .rst__virtualScrollOverride {
+  overflow-x: hidden !important;
+}
+
 .actionIcon {
   position: relative;
   right: 30px;

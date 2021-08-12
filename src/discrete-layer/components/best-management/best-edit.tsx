@@ -81,6 +81,10 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
   }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
 
+  const handleImport = (): void => {
+    // store.bestStore.addImportLayersToBest();
+    props.handleCloseImport(false);
+  };
  
   const handleSave = (isApply: boolean): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
@@ -148,7 +152,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
             <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
               <FormattedMessage id="general.cancel-btn.text"/>
             </Button>
-            <Button raised type="button" disabled={true}>
+            <Button raised type="button" disabled={true} onClick={(): void => { handleImport(); }}>
               <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
             </Button>
           </Box>

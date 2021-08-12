@@ -1,5 +1,5 @@
 import { types, getParent } from 'mobx-state-tree';
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import { localStore } from '../../common/helpers/storage';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MovedLayer } from '../components/best-management/interfaces/MovedLayer';
@@ -7,6 +7,7 @@ import { BestRecordModelType } from './BestRecordModel';
 import { LayerRasterRecordModelType } from './LayerRasterRecordModel';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
+import { DiscreteOrder } from './DiscreteOrder';
 
 export type LayersListResponse = LayerRasterRecordModelType[];
 
@@ -28,7 +29,6 @@ export const bestStore = ModelBase
     editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
     storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
-    importedList: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -83,8 +83,22 @@ export const bestStore = ModelBase
       self.layersList = self.layersList?.map(el => el.id === id ? {...el, layerImageShown: isShow} : el);
     }
 
-    function addToImportedList(layer: LayerRasterRecordModelType): void {
-      self.importedList?.push({...layer});
+    function addImportLayersToBest(importLayers: LayerRasterRecordModelType[]): void {
+      if (!isEmpty(importLayers)) {
+        self.layersList =  [
+          ...self.layersList ?? []
+        ];
+        importLayers.forEach(layer => {
+          // @ts-ignore
+          const discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
+          if (!isEmpty(discretes)) {
+            discretes.push({ id: layer.id, zOrder: discretes.length });
+          } else {
+            // @ts-ignore
+            (self.editingBest as Record<string,unknown>).discretes = [ { id: layer.id, zOrder: 0 } ];
+          }
+        });
+      }
     }
 
     function preserveData(): void {
@@ -114,8 +128,6 @@ export const bestStore = ModelBase
       self.editingBest = undefined;
     }
 
-
-
     return {
       setLayersList,
       editBest,
@@ -123,7 +135,7 @@ export const bestStore = ModelBase
       getDrafts,
       updateMovedLayer,
       showLayer,
-      addToImportedList,
+      addImportLayersToBest,
       preserveData,
       restoreData,
       resetData,

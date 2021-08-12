@@ -90,6 +90,7 @@
   "details-panel.no-selection": "No selection",
 
   "field.actions.edit-draft": "Edit draft",
+  "field.actions.more": "More options",
 
   "field-names.general.empty": " ",
   "field-names.ingestion.directory": "Directory",

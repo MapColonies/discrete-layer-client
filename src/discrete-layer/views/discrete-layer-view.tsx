@@ -594,7 +594,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   className="operationIcon glow-missing-icon"
                   icon="add"
                   label="NEW BEST"
-                  onClick={ (): void => { setOpenImportFromCatalog(true); } }
+                  onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
                 />
               </Tooltip>
             </>

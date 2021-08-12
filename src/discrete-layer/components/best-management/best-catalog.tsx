@@ -49,6 +49,19 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   const intl = useIntl();
   const discretesIds = props.filterOut?.map((item) => item.id);
 
+  let importList: LayerRasterRecordModelType[];
+
+  const addToImportList = (layer: LayerRasterRecordModelType): void  => {
+    const ids = importList?.map(item => item.id);
+    if (!importList || !ids.includes(layer.id)) {
+      importList = [...importList ?? [], { ...layer, isNewlyAddedToBest: true }];
+    }
+  };
+
+  const removeFromImportList = (layerId: string): void => {
+    importList = importList?.filter(item => item.id !== layerId);
+  };
+
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
     return {
@@ -193,8 +206,12 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                   : [
                       <ImportRenderer
                         data={(rowInfo.node as any) as LayerRasterRecordModelType}
-                        onClick={(data) => {
-                          store.bestStore.addToImportedList(data);
+                        onClick={(layer, isSelected) => {
+                          if (isSelected) {
+                            addToImportList(layer);
+                          } else {
+                            removeFromImportList(layer.id);
+                          }
                         }}
                       />,
                       <LayerImageRenderer
@@ -206,7 +223,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                             const orders: number[] = [];
                             // eslint-disable-next-line
                             store.discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
-                              if(item.layerImageShown === true && data.id !== item.id) {
+                              if (item.layerImageShown === true && data.id !== item.id) {
                                 orders.push(item.order as number);
                               }
                             });

@@ -308,8 +308,15 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                         onClick={ (): void => { store.bestStore.editBest(rowInfo.node as BestRecordModelType); } }/>
                     </Tooltip>
                   </>,
+                  <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
+                    <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>
+                  </Tooltip>
                 ]
-                : [],
+                : [
+                  <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
+                    <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>
+                  </Tooltip>
+                ],
               })}
             />
           }
