@@ -96,6 +96,10 @@ export const discreteLayersStore = ModelBase
       );
     }
 
+    function setLayersImagesData(data: ILayerImage[]): void {
+      self.layersImages = [...data];
+    }
+
     function updateLayer(data: ILayerImage): void {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
@@ -189,6 +193,7 @@ export const discreteLayersStore = ModelBase
     return {
       getLayersImages,
       setLayersImages,
+      setLayersImagesData,
       clearLayersImages,
       showLayer,
       highlightLayer,

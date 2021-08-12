@@ -625,7 +625,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   };
  
-  const availableTabs = store.bestStore.isBestInEdit() ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
+  const availableTabs = (editingBest !== undefined) ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
 
   return (
     <>
