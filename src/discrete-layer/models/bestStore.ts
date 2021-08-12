@@ -82,14 +82,21 @@ export const bestStore = ModelBase
       self.layersList = self.layersList?.map(el => el.id === id ? {...el, layerImageShown: isShow} : el);
     }
 
+    function showFootprint(id: string, isShow: boolean): void {
+      // just update is footprint shown for persistancy
+      self.layersList?.find((el) => {
+        if(el.id === id){
+          el.footprintShown = isShow;
+        } 
+      });
+    }
+
     function preserveData(): void {
       if(self.storedData){
         self.storedData = {
           layersList: self.layersList ? [ ...self.layersList ]: [],
           editingBest: {...self.editingBest} as BestRecordModelType,
         }
-        // self.storedData.layersList = self.layersList ? [ ...self.layersList ]: [];
-        // self.storedData.editingBest = {...self.editingBest} as BestRecordModelType;
       }
     }
 
@@ -100,13 +107,12 @@ export const bestStore = ModelBase
       }
     }
 
-    function isBestInEdit(): boolean {
-      return !isEmpty(self.editingBest) || !isEmpty(self.storedData?.editingBest?.productName);
+    function isDirty(): boolean {
+      return !isEmpty(self.editingBest) && !isEmpty(self.storedData?.editingBest?.productName);
     }
 
     function resetData(): void {
       self.layersList = [];
-      self.editingBest = undefined;
     }
 
 
@@ -118,9 +124,10 @@ export const bestStore = ModelBase
       getDrafts,
       updateMovedLayer,
       showLayer,
+      showFootprint,
       preserveData,
       restoreData,
       resetData,
-      isBestInEdit,
+      isDirty,
     };
   });

@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { isEmpty, get, cloneDeep } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { usePrevious } from '../../../common/hooks/previous.hook';
 import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { BestDiscretesComponent } from './best-discretes';
@@ -27,49 +26,39 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const discretesListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
   
-  const prevDiscretes = usePrevious<LayerRasterRecordModelType[]>(discretes);
-  const cacheRef = useRef([] as LayerRasterRecordModelType[]);
-
   // eslint-disable-next-line
-  const { loading, error, data, query } = useQuery((store) =>
-    store.querySearchById({
-      idList: {
-        value: [...discretesOrder.map((item: DiscreteOrder) => item.id)]
-      }
-    })
-  );
+  let { loading, error, data, query, setQuery } = useQuery();
+  useEffect(()=>{
+    if(!store.bestStore.isDirty()){
+      setQuery(store.querySearchById({
+          idList: {
+            value: [...discretesOrder.map((item: DiscreteOrder) => item.id)]
+          }
+        }));
+    } else {
+      const bestDiscretes = store.bestStore.layersList as LayerRasterRecordModelType[]
+      store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
+      setDiscretes(bestDiscretes);
+    }
+  },[]);
 
   useEffect(()=>{
-    if (data?.searchById && !isEmpty(discretesOrder)) {
-      const layers = cloneDeep(data.searchById as LayerRasterRecordModelType[]);
+    const layersList = get(data,'searchById') as LayerRasterRecordModelType[];
+    if (!isEmpty(layersList) && !isEmpty(discretesOrder)) {
+      const layers = cloneDeep(layersList);
 
-      // if(store.bestStore.layersList?.length === 0){
-        layers.forEach(discrete => {
-          const layer = discretesOrder.find(item => discrete.id === item.id);
-          if (layer){
-            discrete.order = layer.zOrder;
-          }
-        });
-      // }
+      layers.forEach(discrete => {
+        const layer = discretesOrder.find(item => discrete.id === item.id);
+        if (layer){
+          discrete.order = layer.zOrder;
+        }
+      });
 
       store.bestStore.setLayersList(layers);
-      store.discreteLayersStore.setLayersImages(layers, false);
-
-      cacheRef.current = layers;
+      store.discreteLayersStore.setLayersImagesData(layers);
+      setDiscretes(layers);
     }
   }, [data, store.bestStore, store.discreteLayersStore, discretesOrder]);
-
-  useEffect(() => {
-    if (store.bestStore.layersList) {
-      if(prevDiscretes?.length !== store.bestStore.layersList.length) {
-        setDiscretes(store.bestStore.layersList);
-      }
-    }
-  }, [store.bestStore.layersList]);
-
-  useEffect(() => {
-    cacheRef.current = discretes;
-  }, [discretes]);
 
   useEffect(() => {
     if(!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)){
@@ -116,7 +105,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       <BestDiscretesComponent
         //@ts-ignore
         ref={discretesListRef}
-        discretes={cacheRef.current}
+        discretes={discretes}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
 
       <Box className="saveButton">
@@ -126,7 +115,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         <Button raised type="button" onClick={(): void => { handleSave(true); } }>
           <FormattedMessage id="general.apply-btn.text"/>
         </Button>
-        
       </Box>
 
       {

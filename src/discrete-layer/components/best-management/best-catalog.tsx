@@ -77,12 +77,11 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
       .filter((item) => !discretesIds?.includes(item.id))
       .forEach((item) => arr.push({...item}));
 
-      store.discreteLayersStore.setLayersImages(
+      store.discreteLayersStore.setLayersImagesData(
         [
           ...store.discreteLayersStore.layersImages as ILayerImage[],
           ...arr
-        ],
-        false
+        ]
       );
       
       const arrUnlinked = arr.filter((item) => {
