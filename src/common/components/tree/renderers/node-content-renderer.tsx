@@ -194,7 +194,7 @@ class FileThemeNodeContentRenderer extends Component {
                   <div className={styles.rowToolbar}>
                     {icons.map((icon, index) => (
                       <div
-                        key={index} // eslint-disable-line react/no-array-index-key
+                        key={`${node.id}_${index}`}
                         className={styles.toolbarButton}
                       >
                         {icon}

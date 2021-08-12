@@ -86,6 +86,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
           store.discreteLayersStore.showFootprint(id, value);
+          store.bestStore.showFootprint(id, value);
         }
       },
       headerComponent: 'headerFootprintRenderer',

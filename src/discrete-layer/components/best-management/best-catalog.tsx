@@ -90,12 +90,11 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
       .filter((item) => !discretesIds?.includes(item.id))
       .forEach((item) => arr.push({...item}));
 
-      store.discreteLayersStore.setLayersImages(
+      store.discreteLayersStore.setLayersImagesData(
         [
           ...store.discreteLayersStore.layersImages as ILayerImage[],
           ...arr
-        ],
-        false
+        ]
       );
       
       const arrUnlinked = arr.filter((item) => {
@@ -207,6 +206,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                       <ImportRenderer
                         data={(rowInfo.node as any) as LayerRasterRecordModelType}
                         onClick={(layer, isSelected) => {
+                          layer.isNewlyAddedToBest = isSelected;
                           if (isSelected) {
                             addToImportList(layer);
                           } else {
@@ -235,6 +235,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                           }, 0); 
                           
                           store.discreteLayersStore.addPreviewedLayer(data.id);
+                          data.layerImageShown = value;
                         }}
                       />
                     ],

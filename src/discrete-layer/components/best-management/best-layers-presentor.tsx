@@ -71,7 +71,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
             type: layerProperties.protocol as "OSM_LAYER" | "WMTS_LAYER" | "WMS_LAYER" | "XYZ_LAYER",
             opacity: 1,
             zIndex: layer.order as number,
-            show: false,
+            show: layer.layerImageShown === true,
             options: {
               ...layerProperties.options,
               url: layerProperties.url,
