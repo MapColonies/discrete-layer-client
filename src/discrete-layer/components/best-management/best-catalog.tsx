@@ -209,6 +209,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
                           store.discreteLayersStore.showFootprint(data.id, value);
+                          data.footprintShown = value;
                         }}
                       />,
                       <LayerImageRenderer
@@ -233,6 +234,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                           },0); 
                           
                           store.discreteLayersStore.addPreviewedLayer(data.id);
+                          data.layerImageShown = value;
                         }}
                       />
                     ],
