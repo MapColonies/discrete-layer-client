@@ -5,6 +5,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
@@ -45,21 +46,20 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
 
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
+  const [importList, setImportList] = useState<LayerRasterRecordModelType[]>([]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
   const discretesIds = props.filterOut?.map((item) => item.id);
 
-  let importList: LayerRasterRecordModelType[];
-
   const addToImportList = (layer: LayerRasterRecordModelType): void  => {
     const ids = importList?.map(item => item.id);
-    if (!importList || !ids.includes(layer.id)) {
-      importList = [...importList ?? [], { ...layer, isNewlyAddedToBest: true }];
+    if (isEmpty(importList) || !ids.includes(layer.id)) {
+      setImportList([...importList ?? [], { ...layer }]);
     }
   };
 
   const removeFromImportList = (layerId: string): void => {
-    importList = importList?.filter(item => item.id !== layerId);
+    setImportList(importList?.filter(item => item.id !== layerId));
   };
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
