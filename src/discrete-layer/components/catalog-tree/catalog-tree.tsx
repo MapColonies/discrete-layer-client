@@ -276,6 +276,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
                           store.discreteLayersStore.showFootprint(data.id, value);
+                          data.footprintShown = value;
                         }}
                       />,
                       <LayerImageRenderer
@@ -296,6 +297,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                           }
                           const order = value ? selectedLayersRef.current : null;
                           store.discreteLayersStore.showLayer(data.id, value, order);
+                          data.layerImageShown = value;
                         }}
                       />
                     ],
