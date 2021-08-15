@@ -19,3 +19,17 @@ body[dir=rtl] .refreshIconButton {
 body[dir=rtl] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer{
   margin-right: -12px;
 }
+
+.catalogContainer .rst__virtualScrollOverride {
+  overflow-x: hidden !important;
+}
+
+.actionIcon {
+  position: relative;
+  right: 30px;
+}
+
+body[dir=rtl] .actionIcon {
+  right: unset;
+  left: 30px;
+}
