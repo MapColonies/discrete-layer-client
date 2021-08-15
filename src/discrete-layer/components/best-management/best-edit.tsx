@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FormattedMessage } from 'react-intl';
 import { isEmpty, get, cloneDeep } from 'lodash';
-import { Button, IconButton } from '@map-colonies/react-core';
+import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
@@ -25,6 +25,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
+  const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
@@ -135,13 +136,13 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
       {
         props.openImport && <Box className="bestCatalogImportContainer">
-          <BestCatalogComponent filterOut={discretesOrder}/>
+          <BestCatalogComponent filterOut={discretesOrder} handleImportLayerSelected={setShowImportAddButton}/>
 
           <Box className="buttons">
             <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
               <FormattedMessage id="general.cancel-btn.text"/>
             </Button>
-            <Button raised type="button" disabled={true} onClick={(): void => { handleImport(); }}>
+            <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
               <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
             </Button>
           </Box>

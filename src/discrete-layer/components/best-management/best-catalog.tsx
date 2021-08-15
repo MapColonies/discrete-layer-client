@@ -28,6 +28,7 @@ const INITIAL_ORDER = 0;
 
 interface BestCatalogComponentProps {
   filterOut: DiscreteOrder[] | undefined | null;
+  handleImportLayerSelected: (isSelected: boolean) => void;
 }
 
 export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer((props) => {
@@ -53,12 +54,18 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
 
   const addToImportList = (layer: LayerRasterRecordModelType): void  => {
     const ids = importList?.map(item => item.id);
+    if (isEmpty(importList)) {
+      props.handleImportLayerSelected(true);
+    }
     if (isEmpty(importList) || !ids.includes(layer.id)) {
       setImportList([...importList ?? [], { ...layer }]);
     }
   };
 
   const removeFromImportList = (layerId: string): void => {
+    if (importList.length === 1 && importList?.map(item => item.id).includes(layerId)) {
+      props.handleImportLayerSelected(false);
+    }
     setImportList(importList?.filter(item => item.id !== layerId));
   };
 
