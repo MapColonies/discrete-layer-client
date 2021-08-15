@@ -13,12 +13,7 @@ interface ILayerImageCellRendererParams {
 export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (props) => {
   const [layerImageShown, setLayerImageShown] = useState<boolean>(props.data.layerImageShown as boolean);
   return (
-    <Box  style={{    
-        display: 'flex',
-        justifyContent: 'center',
-        paddingTop: '8px'
-      }}
-    >
+    <Box>
       <IconButton 
         className={layerImageShown ? 'mc-icon-Table---Fill-On layerShown' : 'mc-icon-Table-Fill-Off'}
         label="TABICON"

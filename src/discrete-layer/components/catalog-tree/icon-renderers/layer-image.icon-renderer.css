@@ -1,3 +1,3 @@
-.layerShown{
-  color: red !important;
+.layerShown {
+  color: var(--mdc-theme-gc-error-medium) !important;
 }
