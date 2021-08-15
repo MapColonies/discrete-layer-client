@@ -5,6 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { DiscreteOrderModel, DiscreteOrderModelType } from "./DiscreteOrderModel"
+import { DiscreteOrderModelSelector, discreteOrderModelPrimitives } from "./DiscreteOrderModel.base"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
@@ -43,7 +45,7 @@ export const BestRecordModelBase = ModelBase
     scale: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
-    discretes: types.union(types.undefined, types.null, types.string),
+    discretes: types.union(types.undefined, types.null, types.array(types.late((): any => DiscreteOrderModel))),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -79,14 +81,14 @@ export class BestRecordModelSelector extends QueryBuilder {
   get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
   get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
-  get discretes() { return this.__attr(`discretes`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get keywords() { return this.__attr(`keywords`) }
+  discretes(builder?: string | DiscreteOrderModelSelector | ((selector: DiscreteOrderModelSelector) => DiscreteOrderModelSelector)) { return this.__child(`discretes`, DiscreteOrderModelSelector, builder) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
 export function selectFromBestRecord() {
   return new BestRecordModelSelector()
 }
 
-export const bestRecordModelPrimitives = selectFromBestRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.discretes.insertDate.keywords.id.links(linkModelPrimitives)
+export const bestRecordModelPrimitives = selectFromBestRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.insertDate.keywords.id.links(linkModelPrimitives).discretes(discreteOrderModelPrimitives)
