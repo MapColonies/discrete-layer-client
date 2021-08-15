@@ -8,15 +8,15 @@ import { useIntl } from 'react-intl';
 import { CircularProgress, IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { Error } from '../../../common/components/tree/statuses/Error';
+import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
+import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { BestRecordModelType } from '../../models';
-import { Error } from './Error';
-import { Loading } from './Loading';
-import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
-import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
 
 import './catalog-tree.css';
 
@@ -146,9 +146,8 @@ export const CatalogTreeComponent: React.FC = observer(() => {
               title: item['productName'],
               isSelected: false
             };
-        })
-      ]
-
+          })
+        ]
       }
 
       // whole catalog as is
@@ -170,7 +169,7 @@ export const CatalogTreeComponent: React.FC = observer(() => {
   },[data]);
 
   if (error) return <Error>{error.message}</Error>
-  if (data){
+  if (data) {
     return (
       <>
         {loading ? (
@@ -302,25 +301,24 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                       />
                     ],
                 buttons: rowInfo.node.isDraft ? [
-                  <button
-                    style={{
-                      padding: 0,
-                      borderRadius: '100%',
-                      backgroundColor: 'gray',
-                      color: 'white',
-                      width: 16,
-                      height: 16,
-                      border: 0,
-                      fontWeight: 100,
-                    }}
-                    onClick={() => {
-                      store.bestStore.editBest(rowInfo.node as BestRecordModelType)
-                    }}
-                  >
-                    i
-                  </button>,
+                  <>
+                    <Tooltip content={intl.formatMessage({ id: 'field.actions.edit-draft' })}>
+                      <IconButton
+                        className="actionIcon glow-missing-icon"
+                        icon="edit"
+                        label="EDIT BEST"
+                        onClick={ (): void => { store.bestStore.editBest(rowInfo.node as BestRecordModelType); } }/>
+                    </Tooltip>
+                  </>,
+                  <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
+                    <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>
+                  </Tooltip>
                 ]
-                : [],
+                : [
+                  <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
+                    <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>
+                  </Tooltip>
+                ],
               })}
             />
           }

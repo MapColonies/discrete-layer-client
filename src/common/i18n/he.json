@@ -2,8 +2,9 @@
   "general.version.text": "אפליקצית קטלוג גרסה",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
-  "general.save-btn.text": "שמור",
   "general.apply-btn.text": "החל",
+  "general.save-btn.text": "שמור",
+  "general.send-to-approval-btn.text": "שלח לאישור והפקה",
   "general.error.text": "שגיאה",
   "general.error.title": "משהו השתבש...",
   "general.error.description": "מידע נוסף:",
@@ -24,7 +25,7 @@
   "action.refresh.tooltip": "רענן",
   "action.operations.tooltip": "פעולות",
   "action.delete.tooltip": "מחק",
-  "action.filter.tooltip": "פלטר",
+  "action.filter.tooltip": "סנן",
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.edit.tooltip": "עריכה",
   "action.expand.tooltip": "הרחב תצוגה",
@@ -47,10 +48,10 @@
 
   "custom-bbox.dialog.title": "הגדר קואורדינטות אזור היצוא",
   "custom-bbox.dialog-field.top_right_lat.label": "רוחב נק' ימין עליונה",
-  "custom-bbox.dialog-field.top_right_lon.label": "ארך נק' ימין עליונה",
+  "custom-bbox.dialog-field.top_right_lon.label": "אורך נק' ימין עליונה",
   "custom-bbox.dialog-field.bottom_left_lat.label": "רוחב נק' שמאל תחתונה",
-  "custom-bbox.dialog-field.bottom_left_lon.label": "ארך נק' שמאל תחתונה",
-  "custom-bbox.form-error.x-distance.text": "ארך מעל המותר",
+  "custom-bbox.dialog-field.bottom_left_lon.label": "אורך נק' שמאל תחתונה",
+  "custom-bbox.form-error.x-distance.text": "אורך מעל המותר",
   "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
 
   "filters.title": "מסננים",
@@ -66,26 +67,32 @@
   "results.nodata": "אין תוצאות",
 
   "snack.message.success": "יצוא התחיל בהצלחה",
-  "snack.message.failed": "יצוא ניכשל",
+  "snack.message.failed": "יצוא נכשל",
   "snack.dismiss-btn.text": "אישור",
 
   "tab-views.search-results": "תוצאות חיפוש",
   "tab-views.catalog": "קטלוג",
-  "tab-views.create-best": "עריכת BEST",
+  "tab-views.create-best": "עריכת טיוטת BEST",
 
-  "tab-views.catalog.top-categories.unlinked": "חדשים",
+  "tab-views.catalog.top-categories.unlinked": "לא משוייכים",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",
   "tab-views.catalog.top-categories.drafts": "טיוטות",
   
-  "tab-views.catalog.actions.ingest_raster": "הוספ מוצר",
-  "tab-views.catalog.actions.ingest_3d": "הוספ מוצר תלת מיימד",
+  "tab-views.catalog.actions.ingest_raster": "הוסף מוצר",
+  "tab-views.catalog.actions.ingest_3d": "הוסף מוצר תלת-מימד",
   "tab-views.catalog.actions.new_best": "צור BEST",
 
-  "details-panel.no-selection": "לא נבחר הפריט",
+  "tab-views.best-edit.actions.add": "הוסף שכבה/ות מתוך רשימה",
 
   "best-edit.import.dialog.import-btn.text": "הוסף",
+  
+  "details-panel.no-selection": "לא נבחר פריט",
 
+  "field.actions.edit-draft": "ערוך טיוטה",
+  "field.actions.more": "פעולות נוספות",
+
+  "field-names.general.empty": " ",
   "field-names.ingestion.directory": "נתיב מלא",
   "field-names.raster.fileNames": "שמות הקבצים",
   "field-names.raster.id": "מזהה",

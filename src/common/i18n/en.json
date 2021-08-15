@@ -2,8 +2,9 @@
   "general.version.text": "Catalog App version",
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
-  "general.save-btn.text": "Save",
   "general.apply-btn.text": "Apply",
+  "general.save-btn.text": "Save",
+  "general.send-to-approval-btn.text": "Send to Approval",
   "general.error.text": "Error",
   "general.error.title": "Something went wrong",
   "general.error.description": "Message:",
@@ -82,10 +83,16 @@
   "tab-views.catalog.actions.ingest_3d": "Ingest 3D model",
   "tab-views.catalog.actions.new_best": "Create new BEST",
 
-  "details-panel.no-selection": "No selection",
+  "tab-views.best-edit.actions.add": "Add layer\\s from list",
 
   "best-edit.import.dialog.import-btn.text": "Import",
 
+  "details-panel.no-selection": "No selection",
+
+  "field.actions.edit-draft": "Edit draft",
+  "field.actions.more": "More options",
+
+  "field-names.general.empty": " ",
   "field-names.ingestion.directory": "Directory",
   "field-names.raster.fileNames": "File names",
   "field-names.raster.id": "ID",

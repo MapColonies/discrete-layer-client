@@ -1,0 +1,15 @@
+.footprintContainer {
+  width: 36px;
+}
+
+.toolbarButton .mdc-checkbox {
+  position: unset;
+}
+
+.toolbarButton .mdc-checkbox__ripple {
+  display: none;
+}
+
+body[dir='rtl'] .toolbarButton .mdc-checkbox .mdc-checkbox__background {
+  left: unset; 
+}

@@ -77,6 +77,27 @@ body[dir='rtl'] .mapAppContainer {
   height: 100%;
 }
 
+.alignCenter {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorTitle {
+  margin: 14px;
+}
+
+.errorMessage {
+  margin: 16px;
+}
+
+.errorDescription {
+  margin: 16px;
+}
+
 /* TabContent */
 .tabHeaderContainer {
   display: flex;
@@ -194,24 +215,4 @@ body[dir='rtl'] .sideDetailsPanel {
 
 #newContainer {
   display: flex;
-}
-
-/* Drawer */
-#secondaryPanel .drawerPosition {
-  left: 0px;
-}
-
-body[dir='rtl'] #secondaryPanel .drawerPosition {
-  right: 0px;
-  left: unset;
-}
-
-.drawerPosition .mdc-drawer {
-  background-color: var(--mdc-theme-background);
-  width: calc(25% + 32px);
-}
-
-#secondaryPanel .mdc-drawer--dismissible {
-  left: unset;
-  right: unset;
 }

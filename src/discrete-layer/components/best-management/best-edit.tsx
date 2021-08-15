@@ -25,6 +25,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
+  const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
@@ -70,6 +71,10 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
   }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
 
+  const handleImport = (): void => {
+    // store.bestStore.addImportLayersToBest();
+    props.handleCloseImport(false);
+  };
  
   const handleSave = (isApply: boolean): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
@@ -87,15 +92,18 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         
         store.bestStore.saveDraft(newBest);
 
-        if(isApply){
+        if (isApply) {
           store.bestStore.editBest(newBest);
-        }
-        else {
+        } else {
           store.bestStore.editBest(undefined);
           store.bestStore.setLayersList([]);
         }
       }
     }
+  };
+
+  const handleSendToApproval = (): void => {
+    // TODO: send to approval
   };
 
   return (
@@ -107,25 +115,34 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         ref={discretesListRef}
         discretes={discretes}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
-
-      <Box className="saveButton">
-        <Button raised type="button" onClick={(): void => { handleSave(false); } }>
-          <FormattedMessage id="general.save-btn.text"/>
-        </Button>
-        <Button raised type="button" onClick={(): void => { handleSave(true); } }>
-          <FormattedMessage id="general.apply-btn.text"/>
-        </Button>
+      
+      <Box className="actionButton">
+        <Box>
+          <Button raised type="button" onClick={(): void => { handleSave(true); } }>
+            <FormattedMessage id="general.apply-btn.text"/>
+          </Button>
+        </Box>
+        <Box>
+          <Button raised type="button" onClick={(): void => { handleSave(false); } }>
+            <FormattedMessage id="general.save-btn.text"/>
+          </Button>
+        </Box>
+        <Box>
+          <Button raised type="button" onClick={(): void => { handleSendToApproval(); } }>
+            <FormattedMessage id="general.send-to-approval-btn.text"/>
+          </Button>
+        </Box>
       </Box>
 
       {
         props.openImport && <Box className="bestCatalogImportContainer">
-          <BestCatalogComponent filterOut={discretesOrder}/>
+          <BestCatalogComponent filterOut={discretesOrder} handleImportLayerSelected={setShowImportAddButton}/>
 
           <Box className="buttons">
             <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
               <FormattedMessage id="general.cancel-btn.text"/>
             </Button>
-            <Button raised type="button" disabled={false}>
+            <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
               <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
             </Button>
           </Box>

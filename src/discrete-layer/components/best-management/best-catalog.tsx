@@ -5,28 +5,30 @@ import React, {useEffect, useState, useRef} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { Error } from '../../../common/components/tree/statuses/Error';
+import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
+import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
+import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
-import { BestRecordModelType } from '../../models';
-import { Error } from '../catalog-tree/Error';
-import { Loading } from '../catalog-tree/Loading';
-import { FootprintRenderer } from '../catalog-tree/icon-renderers/footprint.icon-renderer';
-import { LayerImageRenderer } from '../catalog-tree/icon-renderers/layer-image.icon-renderer';
 
 import './best-catalog.css';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
-const intialOrder = 0;
+const INITIAL_ORDER = 0;
 
 interface BestCatalogComponentProps {
   filterOut: DiscreteOrder[] | undefined | null;
+  handleImportLayerSelected: (isSelected: boolean) => void;
 }
 
 export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer((props) => {
@@ -45,9 +47,27 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
 
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
-  const selectedLayersRef = useRef(intialOrder);
+  const [importList, setImportList] = useState<LayerRasterRecordModelType[]>([]);
+  const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
   const discretesIds = props.filterOut?.map((item) => item.id);
+
+  const addToImportList = (layer: LayerRasterRecordModelType): void  => {
+    const ids = importList?.map(item => item.id);
+    if (isEmpty(importList)) {
+      props.handleImportLayerSelected(true);
+    }
+    if (isEmpty(importList) || !ids.includes(layer.id)) {
+      setImportList([...importList ?? [], { ...layer }]);
+    }
+  };
+
+  const removeFromImportList = (layerId: string): void => {
+    if (importList.length === 1 && importList?.map(item => item.id).includes(layerId)) {
+      props.handleImportLayerSelected(false);
+    }
+    setImportList(importList?.filter(item => item.id !== layerId));
+  };
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
@@ -122,7 +142,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
             !loading && <TreeComponent
               treeData={treeRawData}
               onChange={treeData => {
-                console.log('****** UPDATE TREEE DATA *****');
+                console.log('****** UPDATE TREE DATA ******');
                 setTreeRawData(treeData);
               }}
               canDrag={({ node }) => {
@@ -135,9 +155,9 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
               }}
               generateNodeProps={rowInfo => ({
                 onClick: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup){
+                  if (!rowInfo.node.isGroup) {
                     let newTreeData = treeRawData;
-                    if(!evt.ctrlKey){
+                    if (!evt.ctrlKey) {
                       // Remove prev selection
                       const selection = find({
                         treeData: newTreeData,
@@ -188,41 +208,29 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                   store.discreteLayersStore.highlightLayer(undefined);
                 },
                 icons: rowInfo.node.isGroup
-                  ? [
-                      // <div
-                      //   style={{
-                      //     borderLeft: 'solid 8px gray',
-                      //     borderBottom: 'solid 10px gray',
-                      //     marginRight: 10,
-                      //     boxSizing: 'border-box',
-                      //     width: 16,
-                      //     height: 12,
-                      //     filter: rowInfo.node.expanded
-                      //       ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
-                      //       : 'none',
-                      //     borderColor: rowInfo.node.expanded ? 'white' : 'gray',
-                      //   }}
-                      // />,
-                    ]
+                  ? []
                   : [
-                      <FootprintRenderer
-                        data={(rowInfo.node as any) as ILayerImage}
-                        onClick={(data, value) => {
-                          store.discreteLayersStore.showFootprint(data.id, value);
-                          data.footprintShown = value;
+                      <ImportRenderer
+                        data={(rowInfo.node as any) as LayerRasterRecordModelType}
+                        onClick={(layer, isSelected) => {
+                          layer.isNewlyAddedToBest = isSelected;
+                          if (isSelected) {
+                            addToImportList(layer);
+                          } else {
+                            removeFromImportList(layer.id);
+                          }
                         }}
                       />,
                       <LayerImageRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          if(value) {
+                          if (value) {
                             selectedLayersRef.current++;
-                          }
-                          else {
+                          } else {
                             const orders: number[] = [];
                             // eslint-disable-next-line
                             store.discreteLayersStore.layersImages?.forEach((item: ILayerImage)=> {
-                              if(item.layerImageShown === true && data.id !== item.id) {
+                              if (item.layerImageShown === true && data.id !== item.id) {
                                 orders.push(item.order as number);
                               }
                             });
@@ -231,7 +239,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                           const order = value ? selectedLayersRef.current : null;
                           setTimeout(()=>{
                             store.discreteLayersStore.showLayer(data.id, value, order);
-                          },0); 
+                          }, 0); 
                           
                           store.discreteLayersStore.addPreviewedLayer(data.id);
                           data.layerImageShown = value;

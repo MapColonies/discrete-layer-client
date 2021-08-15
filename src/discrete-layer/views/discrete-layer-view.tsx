@@ -589,12 +589,12 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             { 
             (tabIdx === TabViews.CREATE_BEST) && <>
-              <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+              <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.add' })}>
                 <IconButton
                   className="operationIcon glow-missing-icon"
                   icon="add"
                   label="NEW BEST"
-                  onClick={ (): void => { setOpenImportFromCatalog(true)} }
+                  onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
                 />
               </Tooltip>
             </>
