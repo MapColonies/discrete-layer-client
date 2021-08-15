@@ -10,13 +10,13 @@ import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
+import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { BestRecordModelType } from '../../models';
-import { FootprintRenderer } from './icon-renderers/footprint.icon-renderer';
-import { LayerImageRenderer } from './icon-renderers/layer-image.icon-renderer';
 
 import './catalog-tree.css';
 

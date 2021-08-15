@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { ILayerImage } from '../../../models/layerImage';
+import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 
 import './layer-image.icon-renderer.css';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Icon, useTheme } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { LayerRasterRecordModelType } from '../../../models';
+import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
 
 import './import.icon-renderer.css';
 
@@ -18,7 +18,7 @@ export const ImportRenderer: React.FC<IImportCellRendererParams> = (props) => {
     <Box>
       <Icon
         style={{ color: (theme.primary as string) }}
-        icon={{ icon: selected ? 'radio_button_checked' : 'radio_button_unchecked', size: 'small' }}
+        icon={{ icon: selected ? 'check_circle' : 'radio_button_unchecked', size: 'small' }}
         label="IMPORT"
         onClick={
           (evt): void => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { ILayerImage } from '../../../models/layerImage';
+import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 
 import './footprint.icon-renderer.css';
 

@@ -10,14 +10,14 @@ import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
+import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
-import { ImportRenderer } from '../catalog-tree/icon-renderers/import.icon-renderer';
-import { LayerImageRenderer } from '../catalog-tree/icon-renderers/layer-image.icon-renderer';
 
 import './best-catalog.css';
 
