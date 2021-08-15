@@ -98,13 +98,11 @@ export const bestStore = ModelBase
           ...self.layersList ?? []
         ];
         importLayers.forEach(layer => {
-          // @ts-ignore
           const discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
           if (!isEmpty(discretes)) {
-            discretes.push({ id: layer.id, zOrder: discretes.length });
+            discretes.push({ id: layer.id, zOrder: discretes.length } as DiscreteOrder);
           } else {
-            // @ts-ignore
-            (self.editingBest as Record<string,unknown>).discretes = [ { id: layer.id, zOrder: 0 } ];
+            (self.editingBest as BestRecordModelType).discretes = [ { id: layer.id, zOrder: 0 } as DiscreteOrder ];
           }
         });
       }

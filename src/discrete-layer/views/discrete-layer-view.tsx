@@ -50,6 +50,7 @@ import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestRecordModel, EntityDescriptorModelType, ProductType, RecordType } from '../models';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestRecordModelType } from '../models/BestRecordModel';
+import { DiscreteOrder } from '../models/DiscreteOrder';
 import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
@@ -423,7 +424,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
         zOrder: 1
       }
-    ];
+    ] as DiscreteOrder[];
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     store.bestStore.saveDraft(record as BestRecordModelType);
