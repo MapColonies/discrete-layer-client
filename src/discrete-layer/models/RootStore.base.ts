@@ -13,6 +13,8 @@ import { LayerRasterRecordModel, LayerRasterRecordModelType } from "./LayerRaste
 import { layerRasterRecordModelPrimitives, LayerRasterRecordModelSelector } from "./LayerRasterRecordModel.base"
 import { BestRecordModel, BestRecordModelType } from "./BestRecordModel"
 import { bestRecordModelPrimitives, BestRecordModelSelector } from "./BestRecordModel.base"
+import { DiscreteOrderModel, DiscreteOrderModelType } from "./DiscreteOrderModel"
+import { discreteOrderModelPrimitives, DiscreteOrderModelSelector } from "./DiscreteOrderModel.base"
 import { EntityDescriptorModel, EntityDescriptorModelType } from "./EntityDescriptorModel"
 import { entityDescriptorModelPrimitives, EntityDescriptorModelSelector } from "./EntityDescriptorModel.base"
 import { CategoryConfigModel, CategoryConfigModelType } from "./CategoryConfigModel"
@@ -110,7 +112,7 @@ export type LayerRasterRecordInput = {
   scale?: string
   footprint?: any
   layerPolygonParts?: any
-  includedInBests?: string
+  includedInBests?: string[]
   id: string
   insertDate?: any
   keywords?: string
@@ -197,7 +199,7 @@ mutateUpdateJob="mutateUpdateJob"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'EntityDescriptor'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'EntityDescriptor'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),

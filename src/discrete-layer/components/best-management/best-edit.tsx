@@ -33,7 +33,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     if(!store.bestStore.isDirty()){
       setQuery(store.querySearchById({
           idList: {
-            value: [...discretesOrder.map((item: DiscreteOrder) => item.id)]
+            value: [...discretesOrder.map((item: DiscreteOrder) => item.id)] as string[]
           }
         }));
     } else {

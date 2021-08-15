@@ -44,7 +44,7 @@ export const LayerRasterRecordModelBase = ModelBase
     scale: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
-    includedInBests: types.union(types.undefined, types.null, types.string),
+    includedInBests: types.union(types.undefined, types.null, types.array(types.string)),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),

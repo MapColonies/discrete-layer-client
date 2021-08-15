@@ -60,7 +60,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       {
         id: node.id,
         zOrder: numberOfRows !== undefined ? numberOfRows - 1 - node.rowIndex : index
-      }
+      } as DiscreteOrder
     );
   };
 
