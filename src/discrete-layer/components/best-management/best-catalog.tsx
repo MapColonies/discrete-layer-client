@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, forwardRef, useImperativeHandle} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
@@ -31,7 +31,7 @@ interface BestCatalogComponentProps {
   handleImportLayerSelected: (isSelected: boolean) => void;
 }
 
-export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer((props) => {
+export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer(forwardRef((props, ref) => {
   const { loading, error, data, query } = useQuery((store) =>
     store.querySearch({
       opts: {
@@ -51,6 +51,12 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
   const discretesIds = props.filterOut?.map((item) => item.id);
+
+  useImperativeHandle(ref, () => ({
+    getImportList: (): LayerRasterRecordModelType[] => {
+      return importList;
+    }
+  }));
 
   const addToImportList = (layer: LayerRasterRecordModelType): void  => {
     const ids = importList?.map(item => item.id);
@@ -255,4 +261,4 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     );
   }
   return (<><Loading/></>);
-});
+}));
