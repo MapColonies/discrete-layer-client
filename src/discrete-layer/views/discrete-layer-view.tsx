@@ -64,6 +64,7 @@ import './discrete-layer-view.css';
 import { UserAction } from '../models/userStore';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
+const START_IDX = 0;
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
@@ -292,6 +293,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
+  const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -572,6 +574,12 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             {
               (tabIdx === TabViews.CATALOG) && 
+                <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+                  <IconButton icon="autorenew" className="operationIcon" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                </Tooltip>
+            }
+            {
+              (tabIdx === TabViews.CATALOG) && 
               (permisions.isLayerRasterRecordIngestAllowed || permisions.isLayer3DRecordIngestAllowed || permisions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
@@ -723,7 +731,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 getActiveTabHeader(activeTabView)
               }
               <Box className="detailsContent" style={{ overflow: 'hidden'}}>
-                <CatalogTreeComponent/>
+                <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>
 
