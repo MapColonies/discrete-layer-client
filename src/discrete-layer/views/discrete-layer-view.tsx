@@ -17,7 +17,8 @@ import {
   MenuSurface,
   Tooltip,
   Drawer,
-  DrawerContent
+  DrawerContent,
+  Avatar
 } from '@map-colonies/react-core';
 import {
   DrawType,
@@ -60,6 +61,7 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { UserAction } from '../models/userStore';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -530,6 +532,16 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   ];
 
+  const permisions = useMemo(() => {
+    return {
+      isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
+      isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
+      isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
+      isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
+    }
+  }, 
+  [store.userStore]);
+
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
     const tabView = find(tabViews, (tab)=>{
@@ -559,34 +571,42 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             {
-              (tabIdx === TabViews.CATALOG) && <MenuSurfaceAnchor id="newContainer">
+              (tabIdx === TabViews.CATALOG) && 
+              (permisions.isLayerRasterRecordIngestAllowed || permisions.isLayer3DRecordIngestAllowed || permisions.isBestRecordCreateAllowed) && 
+              <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
-                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
-                    <IconButton
-                      className="operationIcon mc-icon-Search-History glow-missing-icon"
-                      label="NEW RASTER"
-                      onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
-                    />
-                  </Tooltip>
-                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
-                    <IconButton
-                      className="operationIcon mc-icon-Bests glow-missing-icon"
-                      label="NEW 3D"
-                      onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
-                    />
-                  </Tooltip>
-                  <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
-                    <IconButton
-                      className="operationIcon mc-icon-Bests"
-                      label="NEW BEST"
-                      onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
-                    />
-                  </Tooltip>
+                  {
+                    permisions.isLayerRasterRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
+                      <IconButton
+                        className="operationIcon mc-icon-Search-History glow-missing-icon"
+                        label="NEW RASTER"
+                        onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
+                      />
+                    </Tooltip>
+                  }
+                  {
+                    permisions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
+                      <IconButton
+                        className="operationIcon mc-icon-Bests glow-missing-icon"
+                        label="NEW 3D"
+                        onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
+                      />
+                    </Tooltip>
+                  }
+                  {
+                    permisions.isBestRecordCreateAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                      <IconButton
+                        className="operationIcon mc-icon-Bests"
+                        label="NEW BEST"
+                        onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
+                      />
+                    </Tooltip>
+                  }                  
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
                   <IconButton className="operationIcon mc-icon-Search-History glow-missing-icon" onClick={evt => setOpenNew(!openNew)}/>
                 </Tooltip>
-            </MenuSurfaceAnchor>
+              </MenuSurfaceAnchor>
             }
             { 
             (tabIdx === TabViews.CREATE_BEST) && <>
@@ -669,13 +689,18 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
 
         <Box className="headerSystemAreaContainer">
-          <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
-            <IconButton
-              className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
-              label="SYSTEM JOBS"
-              onClick={ (): void => { handleSystemsJobsDialogClick(); } }
-            />
+          <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' },{user: store.userStore.user?.role})}>
+            <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
+          {
+            permisions.isSystemsJobsAllowed && <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
+              <IconButton
+                className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
+                label="SYSTEM JOBS"
+                onClick={ (): void => { handleSystemsJobsDialogClick(); } }
+              />
+            </Tooltip>
+          }
           {
             isSystemsJobsDialogOpen && <SystemJobsComponent
               isOpen={isSystemsJobsDialogOpen}
@@ -744,7 +769,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {layerToPresent?.productName}
               </Typography>
               {
-                layerToPresent && <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
+                layerToPresent && 
+                store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`) &&
+                <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
                   <IconButton
                     className="operationIcon mc-icon-Status-Approves glow-missing-icon"
                     label="EDIT"
