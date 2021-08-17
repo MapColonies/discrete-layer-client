@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
@@ -17,6 +17,7 @@ import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { BestRecordModelType } from '../../models';
+import { UserAction } from '../../models/userStore';
 
 import './catalog-tree.css';
 
@@ -97,6 +98,8 @@ export const CatalogTreeComponent: React.FC = observer(() => {
       }) as TreeItem[]
     };
   };
+
+  const isBestRecordEditAllowed = useMemo(() => store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT), [store.userStore]);
 
   useEffect(()=>{
     if(data && data.search){
@@ -302,13 +305,16 @@ export const CatalogTreeComponent: React.FC = observer(() => {
                     ],
                 buttons: rowInfo.node.isDraft ? [
                   <>
-                    <Tooltip content={intl.formatMessage({ id: 'field.actions.edit-draft' })}>
-                      <IconButton
-                        className="actionIcon glow-missing-icon"
-                        icon="edit"
-                        label="EDIT BEST"
-                        onClick={ (): void => { store.bestStore.editBest(rowInfo.node as BestRecordModelType); } }/>
-                    </Tooltip>
+                    {
+                      isBestRecordEditAllowed && 
+                      <Tooltip content={intl.formatMessage({ id: 'field.actions.edit-draft' })}>
+                        <IconButton
+                          className="actionIcon glow-missing-icon"
+                          icon="edit"
+                          label="EDIT BEST"
+                          onClick={ (): void => { store.bestStore.editBest(rowInfo.node as BestRecordModelType); } }/>
+                      </Tooltip>
+                    }
                   </>,
                   <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
                     <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>

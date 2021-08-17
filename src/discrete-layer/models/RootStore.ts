@@ -7,6 +7,7 @@ import { ResponseState } from '../../common/models/response-state.enum';
 import { discreteLayersStore, SearchResponse } from './discreteLayersStore';
 import { RootStoreBase } from './RootStore.base';
 import { bestStore } from './bestStore';
+import { userStore } from './userStore';
 
 type FetchAction = (
   url: string,
@@ -22,7 +23,10 @@ export const baseRootStore = RootStoreBase
     }),
     bestStore: types.optional(bestStore, {
       state: ResponseState.IDLE,
-    })
+    }),
+    userStore: types.optional(userStore, {
+      state: ResponseState.IDLE,
+    }),
   })
   .views((self) => ({
     get fetch(): FetchAction {

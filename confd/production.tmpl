@@ -36,5 +36,8 @@ window._env_ = {
   },
   JOB_STATUS: {
     pollingCycleInterval: '{{ getv "/configuration/job/status/polling/cycle/interval" "60000" }}',
+  },
+  DEFAULT_USER: {
+    role: '{{ getv "/configuration/default/user/role" "ADMIN" }}',
   }
 };

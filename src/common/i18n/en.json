@@ -12,6 +12,7 @@
   "general.title.new.3d": "New 3D product",
   "general.title.new.raster": "New raster product",
   "general.title.edit": "Edit product metadata",
+  "general.login-user.tooltip": "Logged in user: {user}",
 
   "action.tab-views.catalog.tooltip": "Catalog tab",
   "action.tab-views.search-results.tooltip": "Search results tab",

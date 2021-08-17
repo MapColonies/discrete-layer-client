@@ -13,8 +13,9 @@ const ACTIVE_LAYER = (window as any)._env_.ACTIVE_LAYER;
 const ACTIVE_LAYER_PROPERTIES = (window as any)._env_.ACTIVE_LAYER_PROPERTIES;
 const MAP = (window as any)._env_.MAP;
 const JOB_STATUS = (window as any)._env_.JOB_STATUS;
+const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 
-const EXPORTER_CONFIG = {
+const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
   SERVICE_NAME: SERVICE_NAME,
   LOCALE: {
@@ -66,7 +67,10 @@ const EXPORTER_CONFIG = {
   },
   JOB_STATUS: {
     POLLING_CYCLE_INTERVAL: JOB_STATUS.pollingCycleInterval as number
+  },
+  DEFAULT_USER: {
+    ROLE: DEFAULT_USER.role
   }
 };
 
-export default EXPORTER_CONFIG;
+export default APP_CONFIG;

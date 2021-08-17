@@ -75,6 +75,20 @@ body[dir='rtl'] .mapAppContainer {
 .headerSystemAreaContainer {
   width: 10%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-direction: row-reverse;
+  padding-right: 16px;
+}
+
+body[dir='rtl'] .headerSystemAreaContainer{
+  padding-right: unset;
+  padding-left: 16px;
+}
+
+.headerSystemAreaContainer .avatar {
+  background: var(--mdc-theme-gc-selection-background);
 }
 
 .alignCenter {
