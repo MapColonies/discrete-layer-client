@@ -39,8 +39,11 @@ if (!window._env_) {
         },
       },
       JOB_STATUS: {
-        POLLING_CYCLE_INTERVAL: 60000
+        pollingCycleInterval: 60000
       },
+      DEFAULT_USER: {
+        role: 'ADMIN'
+      }
     };
   })(void 0);
 }
