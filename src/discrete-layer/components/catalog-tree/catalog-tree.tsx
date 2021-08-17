@@ -26,7 +26,11 @@ const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const intialOrder = 0;
 
-export const CatalogTreeComponent: React.FC = observer(() => {
+interface CatalogTreeComponentProps {
+  refresh?: number;
+}
+
+export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(({refresh}) => {
   const { loading, error, data, query } = useQuery((store) =>
     // store.querySearch({})
     store.querySearch({
@@ -102,6 +106,10 @@ export const CatalogTreeComponent: React.FC = observer(() => {
   const isBestRecordEditAllowed = useMemo(() => store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT), [store.userStore]);
 
   useEffect(()=>{
+    void query!.refetch();
+  },[refresh]);
+
+  useEffect(()=>{
     if(data && data.search){
       const arr: ILayerImage[] = [];
       data.search.forEach((item) => arr.push({...item}));
@@ -175,16 +183,9 @@ export const CatalogTreeComponent: React.FC = observer(() => {
   if (data) {
     return (
       <>
-        {loading ? (
-          <>
-            <CircularProgress className="refreshIconButton"/>
-            <Loading/>
-          </>
-        ) : (
-          <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-            <IconButton icon="autorenew" className="refreshIconButton" onClick={(): void => { void query!.refetch(); }}/>
-          </Tooltip>
-        )}
+        {
+          loading && <Loading/>
+        }
 
         <Box id="catalogContainer" className="catalogContainer">
           {

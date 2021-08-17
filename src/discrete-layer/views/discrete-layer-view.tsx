@@ -292,6 +292,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
+  const [catalogRefresh, setCatalogRefresh] = useState<number>(0);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -572,6 +573,12 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             {
               (tabIdx === TabViews.CATALOG) && 
+                <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+                  <IconButton icon="autorenew" className="operationIcon" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                </Tooltip>
+            }
+            {
+              (tabIdx === TabViews.CATALOG) && 
               (permisions.isLayerRasterRecordIngestAllowed || permisions.isLayer3DRecordIngestAllowed || permisions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
@@ -723,7 +730,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 getActiveTabHeader(activeTabView)
               }
               <Box className="detailsContent" style={{ overflow: 'hidden'}}>
-                <CatalogTreeComponent/>
+                <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>
 
