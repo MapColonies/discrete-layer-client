@@ -45,5 +45,8 @@ body[dir=rtl] .bestCatalogImportContainer {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
-  margin: 8px 28px;
+  margin: 32px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
