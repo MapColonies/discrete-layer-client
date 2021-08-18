@@ -5,7 +5,7 @@ import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { CircularProgress, IconButton, Tooltip } from '@map-colonies/react-core';
+import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';

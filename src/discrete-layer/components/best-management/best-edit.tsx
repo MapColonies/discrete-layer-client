@@ -46,7 +46,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setDiscretes(bestDiscretes);
     }
-  },[]);
+  }, []);
 
   useEffect(()=>{
     if (!isEmpty(newLayersToAdd)) {
@@ -54,7 +54,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setTimeout(()=> {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
     }
-  },[newLayersToAdd]);
+  }, [newLayersToAdd]);
 
   useEffect(()=>{
     const layersList = get(data,'searchById') as LayerRasterRecordModelType[];

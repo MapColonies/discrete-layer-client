@@ -11,6 +11,8 @@ import { DiscreteOrder } from './DiscreteOrder';
 
 export type LayersListResponse = LayerRasterRecordModelType[];
 
+const EMPTY = 0;
+
 interface IBestEditData {
   layersList?: LayerRasterRecordModelType[];
   editingBest?: BestRecordModelType;
@@ -94,18 +96,17 @@ export const bestStore = ModelBase
 
     function addImportLayersToBest(importLayers: LayerRasterRecordModelType[]): void {
       if (!isEmpty(importLayers)) {
-        self.layersList =  [
-          ...self.layersList ?? [],
-          ...importLayers
-        ];
-        const max = self.layersList.length - 1;
+        const currentLayers = self.layersList ?? [];
+        const last = currentLayers.length > EMPTY ? currentLayers.length - 1 : EMPTY;
+        importLayers = importLayers.map((item, index) => { return { ...item, order: last+index+1 }; });
         let discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
         discretes = [
-          ...discretes,
-          ...importLayers.map((item, index) => { return { id: item.id, zOrder: max - index }; })
+          ...importLayers.map((item, index) => { return { id: item.id, zOrder: item.order }; }),
+          ...discretes
         ] as DiscreteOrder[];
         const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
         editBest(newBest);
+        setLayersList([ ...importLayers, ...self.layersList ?? [] ]);
       }
     }
 
