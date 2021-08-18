@@ -158,11 +158,13 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       {
         <Box className={props.openImport ? 'bestCatalogImportContainer openedImport' : 'bestCatalogImportContainer'}>
           <Box className={props.openImport ? 'bestCatalogImportWrapper bestCatalogOpened' : 'bestCatalogImportWrapper bestCatalogClosed'}>
-            <BestCatalogComponent
+            {
+              props.openImport && <BestCatalogComponent
               // @ts-ignore
               ref={importListRef}
               filterOut={discretesOrder}
               handleImportLayerSelected={setShowImportAddButton}/>
+            }
 
             <Box className={props.openImport ? 'buttons bestCatalogOpened' : 'buttons bestCatalogClosed'}>
               <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
