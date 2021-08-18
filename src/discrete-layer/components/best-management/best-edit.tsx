@@ -139,17 +139,17 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       
       <Box className="actionButtons">
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSave(true); } }>
+          <Button raised type="button" onClick={ (): void => { handleSave(true); } }>
             <FormattedMessage id="general.apply-btn.text"/>
           </Button>
         </Box>
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSave(false); } }>
+          <Button raised type="button" onClick={ (): void => { handleSave(false); } }>
             <FormattedMessage id="general.save-btn.text"/>
           </Button>
         </Box>
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSendToApproval(); } }>
+          <Button raised type="button" onClick={ (): void => { handleSendToApproval(); } }>
             <FormattedMessage id="general.send-to-approval-btn.text"/>
           </Button>
         </Box>
