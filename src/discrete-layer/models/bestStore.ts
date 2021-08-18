@@ -41,11 +41,11 @@ export const bestStore = ModelBase
   .actions((self) => {
 
     function setLayersList(layers: LayerRasterRecordModelType[]): void {
-      self.layersList =  [...layers];
+      self.layersList = [...layers];
     }
 
     function editBest(best: BestRecordModelType | undefined): void {
-      self.editingBest =  best ? {...best} : undefined;
+      self.editingBest = best ? {...best} : undefined;
     }
 
     function saveDraft(best: BestRecordModelType | undefined): void {
@@ -95,21 +95,22 @@ export const bestStore = ModelBase
     function addImportLayersToBest(importLayers: LayerRasterRecordModelType[]): void {
       if (!isEmpty(importLayers)) {
         self.layersList =  [
-          ...self.layersList ?? []
+          ...self.layersList ?? [],
+          ...importLayers
         ];
-        importLayers.forEach(layer => {
-          const discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
-          if (!isEmpty(discretes)) {
-            discretes.push({ id: layer.id, zOrder: discretes.length } as DiscreteOrder);
-          } else {
-            (self.editingBest as BestRecordModelType).discretes = [ { id: layer.id, zOrder: 0 } as DiscreteOrder ];
-          }
-        });
+        const max = self.layersList.length - 1;
+        let discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
+        discretes = [
+          ...discretes,
+          ...importLayers.map((item, index) => { return { id: item.id, zOrder: max - index }; })
+        ] as DiscreteOrder[];
+        const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
+        editBest(newBest);
       }
     }
 
     function preserveData(): void {
-      if(self.storedData){
+      if (self.storedData) {
         self.storedData = {
           layersList: self.layersList ? [ ...self.layersList ]: [],
           editingBest: {...self.editingBest} as BestRecordModelType,
@@ -118,7 +119,7 @@ export const bestStore = ModelBase
     }
 
     function restoreData(): void {
-      if(self.storedData && !isEmpty(self.storedData.editingBest?.productName)) {
+      if (self.storedData && !isEmpty(self.storedData.editingBest?.productName)) {
         self.layersList = [...self.storedData.layersList??[]];
         self.editingBest = {...self.storedData.editingBest} as BestRecordModelType;
       }

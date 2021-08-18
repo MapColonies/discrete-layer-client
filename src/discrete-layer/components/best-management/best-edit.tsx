@@ -24,6 +24,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   //@ts-ignore
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
+  const importListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   
@@ -72,7 +73,14 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
 
   const handleImport = (): void => {
-    // store.bestStore.addImportLayersToBest();
+    const currentImportListRef = get(importListRef, 'current');
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if ( currentImportListRef !== undefined ) {
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const newLayersToAdd = currentImportListRef.getImportList() as LayerRasterRecordModelType[];
+      store.bestStore.addImportLayersToBest(newLayersToAdd);
+    }
     props.handleCloseImport(false);
   };
  
@@ -80,11 +88,11 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if ( currentDiscretesListRef !== undefined ) {
-      //@ts-ignore
+      // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
       if (best !== undefined && !isEmpty(best)) {
-        //@ts-ignore
+        // @ts-ignore
         const newBest = { 
           ...best,
           discretes: [...newOrderedDiscretesList] 
@@ -111,12 +119,12 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       <BestDetailsComponent best={best}/>
 
       <BestDiscretesComponent
-        //@ts-ignore
+        // @ts-ignore
         ref={discretesListRef}
         discretes={discretes}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
       
-      <Box className="actionButton">
+      <Box className="actionButtons">
         <Box>
           <Button raised type="button" onClick={(): void => { handleSave(true); } }>
             <FormattedMessage id="general.apply-btn.text"/>
@@ -135,16 +143,22 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       </Box>
 
       {
-        props.openImport && <Box className="bestCatalogImportContainer">
-          <BestCatalogComponent filterOut={discretesOrder} handleImportLayerSelected={setShowImportAddButton}/>
+        <Box className={props.openImport ? 'bestCatalogImportContainer openedImport' : 'bestCatalogImportContainer'}>
+          <Box className={props.openImport ? 'bestCatalogImportWrapper bestCatalogOpened' : 'bestCatalogImportWrapper bestCatalogClosed'}>
+            <BestCatalogComponent
+              // @ts-ignore
+              ref={importListRef}
+              filterOut={discretesOrder}
+              handleImportLayerSelected={setShowImportAddButton}/>
 
-          <Box className="buttons">
-            <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
-              <FormattedMessage id="general.cancel-btn.text"/>
-            </Button>
-            <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
-              <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
-            </Button>
+            <Box className={props.openImport ? 'buttons bestCatalogOpened' : 'buttons bestCatalogClosed'}>
+              <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
+                <FormattedMessage id="general.cancel-btn.text"/>
+              </Button>
+              <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
+                <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
+              </Button>
+            </Box>
           </Box>
         </Box>
       }
