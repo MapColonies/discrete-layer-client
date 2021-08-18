@@ -12,6 +12,8 @@ import { BestCatalogComponent } from './best-catalog';
 
 import './best-edit.css';
 
+const IMMEDIATE_EXECUTION = 0;
+
 interface BestEditComponentProps {
   openImport: boolean;
   handleCloseImport: (isShow: boolean) => void;
@@ -21,17 +23,19 @@ interface BestEditComponentProps {
 export const BestEditComponent: React.FC<BestEditComponentProps> = observer((props) => {
   const { best } = props;
   const store = useStore();
-  //@ts-ignore
+  // @ts-ignore
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const importListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
+  const [newLayersToAdd, setNewLayersToAdd] = useState<LayerRasterRecordModelType[]>([]);
+  
   
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
   useEffect(()=>{
-    if(!store.bestStore.isDirty()){
+    if (!store.bestStore.isDirty()) {
       setQuery(store.querySearchById({
           idList: {
             value: [...discretesOrder.map((item: DiscreteOrder) => item.id)] as string[]
@@ -43,6 +47,14 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       setDiscretes(bestDiscretes);
     }
   },[]);
+
+  useEffect(()=>{
+    if (!isEmpty(newLayersToAdd)) {
+      const bestDiscretes = store.bestStore.layersList as LayerRasterRecordModelType[];
+      store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
+      setTimeout(()=> {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
+    }
+  },[newLayersToAdd]);
 
   useEffect(()=>{
     const layersList = get(data,'searchById') as LayerRasterRecordModelType[];
@@ -60,7 +72,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(layers);
       setDiscretes(layers);
     }
-  }, [data, store.bestStore, store.discreteLayersStore, discretesOrder]);
+  }, [data, store.bestStore, store.discreteLayersStore]);
 
   useEffect(() => {
     if(!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)){
@@ -78,8 +90,9 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     if ( currentImportListRef !== undefined ) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const newLayersToAdd = currentImportListRef.getImportList() as LayerRasterRecordModelType[];
-      store.bestStore.addImportLayersToBest(newLayersToAdd);
+      const layersToAdd = cloneDeep(currentImportListRef.getImportList() as LayerRasterRecordModelType[]);
+      setNewLayersToAdd(layersToAdd);
+      store.bestStore.addImportLayersToBest(layersToAdd);
     }
     props.handleCloseImport(false);
   };

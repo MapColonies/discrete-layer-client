@@ -13,7 +13,7 @@
   top: calc(-100% + 12px);
   left: calc(100% + 16px);
   z-index: 1;
-  transition: 1s;
+  transition: 0.5s;
 }
 
 .bestCatalogImportContainer.openedImport {
@@ -38,7 +38,7 @@ body[dir=rtl] .bestCatalogImportContainer {
 
 .bestCatalogOpened {
   visibility: visible;
-  transition-delay: 0.9s;
+  transition-delay: 0.4s;
 }
 
 .bestCatalogImportWrapper .buttons {

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import CONFIG from '../../../common/config';
 import { 
@@ -37,10 +37,12 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const store = useStore();
   const [gridApi, setGridApi] = useState<GridApi>();
   
-  const sortedDiscretes = [...(props.discretes ?? [])].sort(
-    // @ts-ignore
-    (layer1, layer2) => layer2.order - layer1.order
-  );
+  const sortedDiscretes = useMemo(() => {
+    return [...(props.discretes ?? [])].sort(
+      // @ts-ignore
+      (layer1, layer2) => layer2.order - layer1.order
+    );
+  },[props.discretes]);
   
   let start: number;
   let numberOfRows: number | undefined;

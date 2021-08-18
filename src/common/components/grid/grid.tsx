@@ -3,6 +3,7 @@ import React, { CSSProperties, useEffect, useState } from 'react';
 import { Box } from '@map-colonies/react-components';
 import { useTheme } from '@map-colonies/react-core';
 import { AgGridReact } from 'ag-grid-react';
+import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import {
   GridReadyEvent as AgGridReadyEvent,
   GridApi as AgGridApi,
@@ -148,6 +149,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       <AgGridReact
         gridOptions={gridOptions}
         rowData={rowData}
+        rowDataChangeDetectionStrategy={ChangeDetectionStrategyType.IdentityCheck}
       />
     </Box>
   );
