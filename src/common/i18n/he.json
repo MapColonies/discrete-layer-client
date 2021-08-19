@@ -33,6 +33,7 @@
   "action.collapse.tooltip": "צמצם תצוגה",
   "action.close.tooltip": "סגור",
   "action.copy.tooltip": "העתק קישור",
+  "action.layer.move-up.tooltip": "הזז למלא",
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",

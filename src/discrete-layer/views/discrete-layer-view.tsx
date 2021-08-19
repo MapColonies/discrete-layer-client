@@ -48,20 +48,22 @@ import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
-import { BestRecordModel, EntityDescriptorModelType, ProductType, RecordType } from '../models';
+import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
 import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
+import { UserAction } from '../models/userStore';
+import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { UserAction } from '../models/userStore';
+import { IDispatchAction } from '../models/actionDispatcherStore';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -239,12 +241,6 @@ const getTimeStamp = (): string => new Date().getTime().toString();
 
 const tileOptions = { opacity: 0.5 };
 
-export enum TabViews {
-  CATALOG,
-  SEARCH_RESULTS,
-  CREATE_BEST,
-}
-
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
   const { loading, error, data, query, setQuery } = useQuery();
@@ -375,6 +371,28 @@ const DiscreteLayerView: React.FC = observer(() => {
     ];
   };
 
+  useEffect(()=>{
+    if(store.actionDispatcherStore.action !== undefined){
+      const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
+      console.log(`RESOVING ${action} EVENT`, data);
+
+      switch(action){
+        case 'BestRecord.edit':
+          // @ts-ignore
+          store.bestStore.editBest(data as BestRecordModelType);
+          break;
+        case 'LayerRasterRecord.edit':
+        case 'Layer3DRecord.edit':
+          // @ts-ignore        
+          store.discreteLayersStore.selectLayer(data as LayerMetadataMixedUnion);
+          setEditEntityDialogOpen(!isEditEntityDialogOpen);
+          break
+        default:
+          break;
+      }
+    }
+  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore]);
+
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
     void store.discreteLayersStore.clearLayersImages();
@@ -437,7 +455,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleEditEntityDialogClick = (): void => {
-    if ((layerToPresent as BestRecordModelType).isDraft === true) {
+    if ((layerToPresent as Object).hasOwnProperty('isDraft')) {
       store.bestStore.editBest(layerToPresent as BestRecordModelType);
     } else {
       setEditEntityDialogOpen(!isEditEntityDialogOpen);
@@ -628,12 +646,12 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Tooltip>
             </>
             }
-            <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
+            {/* <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Delete"
                 label="DELETE"
               />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Filter"
@@ -669,7 +687,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <Box className="headerViewsSwitcherContainer">
             {
               availableTabs.map((tab) => {
-                return <Tooltip content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>
+                return <Tooltip key={`tabView_${tab.idx}`} content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>
                   <Fab 
                     key={tab.idx}
                     className={`${tab.iconClassName} tabViewIcon`}
