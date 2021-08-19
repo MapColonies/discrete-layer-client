@@ -19,6 +19,10 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_EDIT = 'entity_action.LayerRasterRecord.edit',
   ENTITY_ACTION_LAYER3DRECORD_EDIT = 'entity_action.Layer3DRecord.edit',
   ENTITY_ACTION_BESTRECORD_EDIT = 'entity_action.BestRecord.edit',
+  ENTITY_ACTION_LAYERRASTERRECORD_DELETE = 'entity_action.LayerRasterRecord.delete',
+  ENTITY_ACTION_LAYER3DRECORD_DELETE = 'entity_action.Layer3DRecord.delete',
+  ENTITY_ACTION_BESTRECORD_DELETE = 'entity_action.BestRecord.delete',
+
 
   /***  FOR FUTURE USE, ENTITY FIELD PERMISSION PATTERN EXAMPLE ***/
   // ENTITY_FIELD_ACTION_BESTRECORD_PRODUCTNAME_VIEW = 'entity_action.BestRecord.productName.view',
@@ -50,6 +54,10 @@ const ROLES: IRole[] = [
       'entity_action.LayerRasterRecord.edit': true,
       'entity_action.Layer3DRecord.edit': true,
       'entity_action.BestRecord.edit': true,
+      'entity_action.LayerRasterRecord.delete': true,
+      'entity_action.Layer3DRecord.delete': true,
+      'entity_action.BestRecord.delete': true,
+
     },
   },
   {
@@ -62,6 +70,10 @@ const ROLES: IRole[] = [
       'entity_action.LayerRasterRecord.edit': false,
       'entity_action.Layer3DRecord.edit': false,
       'entity_action.BestRecord.edit': false,
+      'entity_action.LayerRasterRecord.delete': false,
+      'entity_action.Layer3DRecord.delete': false,
+      'entity_action.BestRecord.delete': false,
+
     },
   },
 ];
@@ -84,9 +96,9 @@ export const userStore = ModelBase
   }))
   .actions((self) => {
     
-    function isActionAllowed(action: UserAction | string): boolean {
+    function isActionAllowed(action: UserAction | string): boolean | undefined {
       const role = ROLES.find(item => item.role === self.user?.role);
-      return  role ? role.permitions[action as UserAction] as boolean : false;
+      return  role ? role.permitions[action as UserAction] as boolean : undefined;
     }
 
     return {
