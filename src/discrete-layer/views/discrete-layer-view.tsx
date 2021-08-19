@@ -64,6 +64,7 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
+import { hasOwnProperty } from '../../common/helpers/object';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -455,7 +456,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleEditEntityDialogClick = (): void => {
-    if ((layerToPresent as Object).hasOwnProperty('isDraft')) {
+    if (hasOwnProperty(layerToPresent as any,'isDraft')) {
       store.bestStore.editBest(layerToPresent as BestRecordModelType);
     } else {
       setEditEntityDialogOpen(!isEditEntityDialogOpen);
