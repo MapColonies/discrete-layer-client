@@ -8,7 +8,6 @@ import { discreteLayersStore, SearchResponse } from './discreteLayersStore';
 import { RootStoreBase } from './RootStore.base';
 import { bestStore } from './bestStore';
 import { userStore } from './userStore';
-import { actionDispatcherStore } from './actionDispatcherStore';
 
 type FetchAction = (
   url: string,
@@ -26,9 +25,6 @@ export const baseRootStore = RootStoreBase
       state: ResponseState.IDLE,
     }),
     userStore: types.optional(userStore, {
-      state: ResponseState.IDLE,
-    }),
-    actionDispatcherStore: types.optional(actionDispatcherStore, {
       state: ResponseState.IDLE,
     }),
   })

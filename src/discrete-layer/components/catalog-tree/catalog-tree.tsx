@@ -5,21 +5,19 @@ import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
+import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
-import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
-import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { BestRecordModelType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
-import { TabViews } from '../../views/tab-views';
+import { BestRecordModelType } from '../../models';
+import { UserAction } from '../../models/userStore';
 
 import './catalog-tree.css';
 
@@ -27,9 +25,6 @@ import './catalog-tree.css';
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const intialOrder = 0;
-const actionDismissibleRegex = new RegExp('actionDismissible');
-const nodeOutRegex = new RegExp('/toolbarButton|actionsContainer|rowContents/');
-
 
 interface CatalogTreeComponentProps {
   refresh?: number;
@@ -84,8 +79,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
-  const [hoveredNode, setHoveredNode] = useState<TreeItem>();
-  const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
 
@@ -110,39 +103,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     };
   };
 
-
-  const entityPermittedActions = useMemo(() => {
-    const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord'].forEach( entityName => {
-       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
-       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
-        return {
-          titleTranslationId: actionGroup.titleTranslationId,
-          group: 
-            actionGroup.group.filter(action => {
-              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                    action.views.includes(TabViews.CATALOG);
-            })
-            .map((action) => {
-              return {
-                ...action,
-                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
-              };
-            }),
-        }
-       });
-       entityActions[entityName] = permittedGroupsActions;
-
-      //  entityActions[entityName] = getEntityActionGroups(entityName);
-    })
-    return entityActions;
-  }, []);
-
-  useEffect(()=>{
-    if(store.actionDispatcherStore.action !== undefined){
-      setIsHoverAllowed(true);
-    }
-  });
+  const isBestRecordEditAllowed = useMemo(() => store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT), [store.userStore]);
 
   useEffect(()=>{
     void query!.refetch();
@@ -218,15 +179,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   },[data]);
 
-  const dispatchAction = (action: Record<string,unknown>): void => {
-    store.actionDispatcherStore.dispatchAction(
-      {
-        action: action.action,
-        data: action.data,
-      } as IDispatchAction
-    );
-  };
-
   if (error) return <Error>{error.message}</Error>
   if (data) {
     return (
@@ -293,32 +245,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       getNodeKey: keyFromTreeIndex
                     });
 
-                    // console.log('*** MOUSE ROW CLICK *****', (evt.target as any).className);
-                    if(evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)){
-                      setHoveredNode(undefined);
-                      setIsHoverAllowed(false);
-                    }
-  
                     setTreeRawData(newTreeData);
                     store.discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup && isHoverAllowed){
+                  if(!rowInfo.node.isGroup){
                     store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
-
-                    setHoveredNode(rowInfo.node);
-                  }
-                  else{
-                    setHoveredNode(undefined);
                   }
                 },
                 onMouseOut: (evt: MouseEvent) => {
                   store.discreteLayersStore.highlightLayer(undefined);
-                  // console.log('*** MOUSE OUT *****', (evt.target as any).className);
-                  if(evt.target !== null && nodeOutRegex.test((evt.target as any).className)){
-                    setHoveredNode(undefined);
-                  }
                 },
                 icons: rowInfo.node.isGroup
                   ? [
@@ -367,19 +304,28 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                         }}
                       />
                     ],
-                buttons: [
+                buttons: rowInfo.node.isDraft ? [
                   <>
                     {
-                      (hoveredNode !== undefined && hoveredNode.id === rowInfo.node.id) && 
-                      <ActionsRenderer 
-                        node={rowInfo.node} 
-                        actions = {entityPermittedActions[rowInfo.node.__typename] as IActionGroup[]}
-                        entity = {rowInfo.node.__typename}
-                        actionHandler = {dispatchAction}
-                      />
+                      isBestRecordEditAllowed && 
+                      <Tooltip content={intl.formatMessage({ id: 'field.actions.edit-draft' })}>
+                        <IconButton
+                          className="actionIcon glow-missing-icon"
+                          icon="edit"
+                          label="EDIT BEST"
+                          onClick={ (): void => { store.bestStore.editBest(rowInfo.node as BestRecordModelType); } }/>
+                      </Tooltip>
                     }
-                  </>
+                  </>,
+                  <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
+                    <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>
+                  </Tooltip>
                 ]
+                : [
+                  <Tooltip content={intl.formatMessage({ id: 'field.actions.more' })}>
+                    <IconButton icon="more_vert" className="actionIcon" onClick={(): void => { console.log('More button'); }}/>
+                  </Tooltip>
+                ],
               })}
             />
           }
