@@ -36,13 +36,14 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const intl = useIntl();
   const store = useStore();
   const [gridApi, setGridApi] = useState<GridApi>();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   
   const sortedDiscretes = useMemo(() => {
     return [...(props.discretes ?? [])].sort(
       // @ts-ignore
       (layer1, layer2) => layer2.order - layer1.order
     );
-  },[props.discretes]);
+  }, [props.discretes]);
   
   let start: number;
   let numberOfRows: number | undefined;
@@ -89,14 +90,19 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
           store.discreteLayersStore.showFootprint(id, value);
           store.bestStore.showFootprint(id, value);
+          const checkboxValues = (store.bestStore.layersList as LayerRasterRecordModelType[]).map(item => item.footprintShown);
+          const checkAllValue = checkboxValues.reduce((accumulated, current) => (accumulated as boolean) && current, value);
+          setIsChecked(checkAllValue as boolean);
         }
       },
       headerComponent: 'headerFootprintRenderer',
-      headerComponentParams: { 
+      headerComponentParams: {
+        isChecked: isChecked,
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
             setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION) ;
           });
+          setIsChecked(value);
         }  
       }
     },
@@ -140,6 +146,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     }
   ];
   const gridOptions: GridComponentOptions = {
+    enableChangeDetection: true,
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: IS_PAGINATION,
     columnDefs: colDef,

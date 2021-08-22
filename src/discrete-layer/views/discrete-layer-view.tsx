@@ -534,7 +534,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   ];
 
-  const permisions = useMemo(() => {
+  const permissions = useMemo(() => {
     return {
       isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
@@ -580,11 +580,11 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             {
               (tabIdx === TabViews.CATALOG) && 
-              (permisions.isLayerRasterRecordIngestAllowed || permisions.isLayer3DRecordIngestAllowed || permisions.isBestRecordCreateAllowed) && 
+              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
                   {
-                    permisions.isLayerRasterRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
+                    permissions.isLayerRasterRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
                       <IconButton
                         className="operationIcon mc-icon-Search-History glow-missing-icon"
                         label="NEW RASTER"
@@ -593,7 +593,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     </Tooltip>
                   }
                   {
-                    permisions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
+                    permissions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
                       <IconButton
                         className="operationIcon mc-icon-Bests glow-missing-icon"
                         label="NEW 3D"
@@ -602,7 +602,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     </Tooltip>
                   }
                   {
-                    permisions.isBestRecordCreateAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                    permissions.isBestRecordCreateAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
                       <IconButton
                         className="operationIcon mc-icon-Bests"
                         label="NEW BEST"
@@ -701,7 +701,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
           {
-            permisions.isSystemsJobsAllowed && <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
+            permissions.isSystemsJobsAllowed && <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
                 className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
                 label="SYSTEM JOBS"

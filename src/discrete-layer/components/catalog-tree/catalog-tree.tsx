@@ -24,7 +24,7 @@ import './catalog-tree.css';
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
-const intialOrder = 0;
+const INITIAL_ORDER = 0;
 
 interface CatalogTreeComponentProps {
   refresh?: number;
@@ -79,7 +79,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
-  const selectedLayersRef = useRef(intialOrder);
+  const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {

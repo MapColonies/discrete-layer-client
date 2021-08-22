@@ -6,12 +6,13 @@ import { GridApi } from '..';
 import './footprint.header-renderer.css';
 
 interface IFootprintCellRendererParams extends ICellRendererParams {
+  isChecked: boolean;
   onClick:  (value: boolean, gridApi: GridApi) => void;
 }
 
 export const HeaderFootprintRenderer: React.FC<IFootprintCellRendererParams> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const [checked, setChecked] = useState<boolean>(true);
+  const [checked, setChecked] = useState<boolean>(props.isChecked);
   return (
     <Checkbox 
       checked={checked}
