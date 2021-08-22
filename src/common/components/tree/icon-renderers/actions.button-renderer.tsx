@@ -1,0 +1,99 @@
+import React, { useState } from 'react';
+import { Box } from '@map-colonies/react-components';
+import { isEmpty } from 'lodash';
+import { IconButton,   MenuSurfaceAnchor,  MenuSurface, Typography } from '@map-colonies/react-core';
+import { IActionGroup, IAction } from '../../../actions/entity.actions';
+
+import './actions.button-renderer.css';
+
+interface IActionsRendererParams {
+  actions: IActionGroup[];
+  node: Record<string,unknown>;
+  entity: string;
+  actionHandler: (action: Record<string,unknown>) => void;
+}
+
+export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions, entity, actionHandler}) => {
+  let frequentActions: IAction[] = [];
+  let allFlatActions: IAction[] = [];
+  actions.forEach(actionGroup => {
+    frequentActions = [
+      ...frequentActions,
+      ...actionGroup.group.filter(action => action.frequent)
+    ];
+    allFlatActions = [
+      ...allFlatActions,
+      ...actionGroup.group
+    ];
+  });
+
+  const [openActionsMenu, setOpenActionsMenu] = useState<boolean>(false);
+
+  const sendAction = (entity:string, action:IAction, data: Record<string,unknown>): void => {
+    console.log(`SEND ${action.action} EVENT`);
+    actionHandler({
+      action: `${entity}.${action.action}`,
+      data: data,
+    });
+  }
+  return (
+    <Box className="actionsContainer">
+      {
+        frequentActions.map((action,idx) => {
+          return (
+            <IconButton
+              className="actionIcon glow-missing-icon1 actionDismissible"
+              icon={action.icon}
+              key={`freqAct_${node.id as string}_${idx}`}
+              onClick={ (evt): void => { 
+                sendAction(entity, action, node);
+              } }
+            />
+          );
+        })
+      }
+      <MenuSurfaceAnchor id="actionsMenuContainer">
+        <MenuSurface open={openActionsMenu} onClose={evt => setOpenActionsMenu(false)}
+          onMouseOver={(evt) => {
+            evt.stopPropagation();
+          }}
+        >
+          {
+            allFlatActions.map((action,idx) => {
+              return (
+                <Box 
+                  key={`menuAct_${node.id as string}_${idx}`}
+                  onClick={ (evt): void => {
+                    sendAction(entity, action, node);
+                    setOpenActionsMenu(false); 
+                  } }
+                  className="actionMenuItem"
+                >
+                  <IconButton
+                    icon={action.icon}
+                    className="actionIcon glow-missing-icon1 actionDismissible"
+  
+                  />
+                  <Typography 
+                    tag="div"
+                    className="actionMenuItemTitle actionDismissible"
+                  >
+                    {action.titleTranslationId}
+                  </Typography>
+                </Box>
+              );
+            })
+          }
+        </MenuSurface>
+        {
+          !isEmpty(allFlatActions) && <IconButton 
+            id="allActionsIcon"
+            icon="more_vert" 
+            className="actionIcon" 
+            onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
+          />
+        }
+      </MenuSurfaceAnchor>
+    </Box> 
+  );
+};

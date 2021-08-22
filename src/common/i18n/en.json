@@ -33,6 +33,7 @@
   "action.collapse.tooltip": "Collapse",
   "action.close.tooltip": "Close",
   "action.copy.tooltip": "Copy URL",
+  "action.layer.move-up.tooltip": "Move up",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
