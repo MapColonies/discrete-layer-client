@@ -2,8 +2,8 @@
   position: relative;
   display: flex;
   left: -132px;
-  justify-content: flex-end;
   width: 124px; /* 36+36+36+16*/
+  justify-content: flex-end;
   padding-left: 16px;
   background-color: rgb(44,65,89);
   /* 
@@ -18,18 +18,34 @@
   */
 }
 
+body[dir='rtl'] .actionsContainer{
+  left: unset;
+  right: -132px;
+}
+
 .actionsContainer .actionIcon{
   right: unset;
   left: unset;
 }
 
+body[dir='rtl'] .actionsContainer .actionIcon{
+  left: unset;
+  right: unset;
+}
+
 #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
   top: 30px !important;
   left: -88px !important;
+  width: 124px; /* 36+36+36+16*/
   padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+body[dir='rtl'] #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
+  right: -88px !important;
+  left: unset;
 }
 
 #actionsMenuContainer {
@@ -44,4 +60,9 @@
 .actionMenuItemTitle{
   font-size: 16px;
   padding-left: 8px;
+}
+
+body[dir='rtl'] .actionMenuItemTitle{
+ padding-left: unset;
+ padding-right: 8px;
 }

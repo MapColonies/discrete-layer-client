@@ -31,28 +31,28 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
-          {
-            action: 'delete',
-            frequent: false,
-            icon: 'delete',
-            titleTranslationId: 'action.delete.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
+          // {
+          //   action: 'delete',
+          //   frequent: false,
+          //   icon: 'delete',
+          //   titleTranslationId: 'action.delete.tooltip',
+          //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          // },
         ],
         titleTranslationId: 'CRUD'
       },
-      {
-        group: [
-          {
-            action: 'moveUP',
-            frequent: false,
-            icon: 'arrow_upward',
-            titleTranslationId: 'action.layer.move-up.tooltip',
-            views: [TabViews.CREATE_BEST, TabViews.CATALOG]
-          },
-        ],
-        titleTranslationId: 'OperationsOnMap'
-      }
+      // {
+      //   group: [
+      //     {
+      //       action: 'moveUP',
+      //       frequent: false,
+      //       icon: 'arrow_upward',
+      //       titleTranslationId: 'action.layer.move-up.tooltip',
+      //       views: [TabViews.CREATE_BEST, TabViews.CATALOG]
+      //     },
+      //   ],
+      //   titleTranslationId: 'OperationsOnMap'
+      // }
     ]
   },
   {
@@ -67,13 +67,13 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
-          {
-            action: 'delete',
-            frequent: false,
-            icon: 'delete',
-            titleTranslationId: 'action.delete.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
+          // {
+          //   action: 'delete',
+          //   frequent: false,
+          //   icon: 'delete',
+          //   titleTranslationId: 'action.delete.tooltip',
+          //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          // },
         ],
         titleTranslationId: 'CRUD'
       }
@@ -91,13 +91,13 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
-          {
-            action: 'delete',
-            frequent: false,
-            icon: 'delete',
-            titleTranslationId: 'action.delete.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
+          // {
+          //   action: 'delete',
+          //   frequent: false,
+          //   icon: 'delete',
+          //   titleTranslationId: 'action.delete.tooltip',
+          //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          // },
         ],
         titleTranslationId: 'CRUD'
       }
