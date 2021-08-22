@@ -602,7 +602,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
-                  {
+                  {/* {
                     permissions.isLayerRasterRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
                       <IconButton
                         className="operationIcon mc-icon-Search-History glow-missing-icon"
@@ -610,7 +610,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                         onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
                       />
                     </Tooltip>
-                  }
+                  } */}
                   {
                     permissions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
                       <IconButton
