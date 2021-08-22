@@ -47,8 +47,9 @@ export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;
   detailsRowExapnderPosition?: 'start' | 'end';
-  enableChangeDetection?: boolean;
+  rowDataChangeDetectionStrategy?: ChangeDetectionStrategyType;
 };
+
 export interface IGridRowDataDetailsExt {
   rowHeight: number;
   fullWidth: boolean;
@@ -60,7 +61,11 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
   
-  const {enableChangeDetection, detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
+  const {rowDataChangeDetectionStrategy, detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
+  const reactGridConfig = {
+    rowDataChangeDetectionStrategy: rowDataChangeDetectionStrategy ?? undefined,
+  };
+
   const gridOptionsFromProps: GridComponentOptions = {
     ...restGridOptions,
     columnDefs: [
@@ -146,18 +151,10 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
         ...agGridThemeOverrides
       }}
     >
-      {
-        enableChangeDetection === true ?
-          <AgGridReact
-            gridOptions={gridOptions}
-            rowData={rowData}
-            rowDataChangeDetectionStrategy={ChangeDetectionStrategyType.IdentityCheck}
-          /> :
-          <AgGridReact
-            gridOptions={gridOptions}
-            rowData={rowData}
-          />
-      }
+      <AgGridReact
+        gridOptions={gridOptions}
+        rowData={rowData}
+        {...reactGridConfig} />
     </Box>
   );
 };

@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { forwardRef, useImperativeHandle, useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -148,7 +149,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     }
   ];
   const gridOptions: GridComponentOptions = {
-    enableChangeDetection: true,
+    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: IS_PAGINATION,
     columnDefs: colDef,
