@@ -50,3 +50,8 @@ body[dir=rtl] .bestCatalogImportContainer {
   bottom: 0;
   right: 0;
 }
+
+body[dir=rtl] .bestCatalogImportWrapper .buttons {
+  right: unset;
+  left: 0;
+}
