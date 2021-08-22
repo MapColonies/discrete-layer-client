@@ -40,13 +40,13 @@ interface IUser {
 
 interface IRole {
   role: UserRole;
-  permitions: UserActionKeys;
+  permissions: UserActionKeys;
 }
 
 const ROLES: IRole[] = [
   {
     role: UserRole.ADMIN,
-    permitions: {
+    permissions: {
       'action_systemJobs': true,
       'entity_action.LayerRasterRecord.create': true,
       'entity_action.Layer3DRecord.create': true,
@@ -62,7 +62,7 @@ const ROLES: IRole[] = [
   },
   {
     role: UserRole.USER,
-    permitions: {
+    permissions: {
       'action_systemJobs': false,
       'entity_action.LayerRasterRecord.create': false,
       'entity_action.Layer3DRecord.create': false,
@@ -98,7 +98,7 @@ export const userStore = ModelBase
     
     function isActionAllowed(action: UserAction | string): boolean | undefined {
       const role = ROLES.find(item => item.role === self.user?.role);
-      return  role ? role.permitions[action as UserAction] as boolean : undefined;
+      return role ? role.permissions[action as UserAction] as boolean : false;
     }
 
     return {

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { CSSProperties, useEffect, useState } from 'react';
-import { Box } from '@map-colonies/react-components';
-import { useTheme } from '@map-colonies/react-core';
 import { AgGridReact } from 'ag-grid-react';
+import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import {
   GridReadyEvent as AgGridReadyEvent,
   GridApi as AgGridApi,
@@ -15,6 +14,8 @@ import {
   RowDragEnterEvent,
   RowDragEndEvent
 } from 'ag-grid-community';
+import { useTheme } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import { GRID_MESSAGES } from '../../i18n';
 import CONFIG from '../../config';
 import { DetailsExpanderRenderer } from './cell-renderer/details-expander.cell-renderer';
@@ -24,7 +25,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
-const DEFAULT_DTAILS_ROW_HEIGHT = 150;
+const DEFAULT_DETAILS_ROW_HEIGHT = 150;
 const EXPANDER_COLUMN_WIDTH = 60;
 export const DETAILS_ROW_ID_SUFFIX = '_details';
 
@@ -46,7 +47,9 @@ export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;
   detailsRowExapnderPosition?: 'start' | 'end';
+  rowDataChangeDetectionStrategy?: ChangeDetectionStrategyType;
 };
+
 export interface IGridRowDataDetailsExt {
   rowHeight: number;
   fullWidth: boolean;
@@ -58,7 +61,11 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
   
-  const {detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
+  const {rowDataChangeDetectionStrategy, detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
+  const reactGridConfig = {
+    rowDataChangeDetectionStrategy: rowDataChangeDetectionStrategy ?? undefined,
+  };
+
   const gridOptionsFromProps: GridComponentOptions = {
     ...restGridOptions,
     columnDefs: [
@@ -117,7 +124,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       props.rowData?.forEach((element,idx) => {
         result.push({
           ...element,
-          isVisible:true
+          isVisible: true
         });
         result.push({
           ...element, 
@@ -125,15 +132,14 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           id: `${element.id as string}${DETAILS_ROW_ID_SUFFIX}`,
           isVisible: false,
-          rowHeight: props.gridOptions?.detailsRowHeight ?? DEFAULT_DTAILS_ROW_HEIGHT,
+          rowHeight: props.gridOptions?.detailsRowHeight ?? DEFAULT_DETAILS_ROW_HEIGHT,
         });
       });
-    }
-    else {
+    } else {
       result.push(...(props.rowData as []));
     }
     setRowData(result);
-  },[props.rowData, props.gridOptions]);
+  }, [props.rowData, props.gridOptions]);
 
   const agGridThemeOverrides = GridThemes.getTheme(theme);
 
@@ -148,7 +154,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       <AgGridReact
         gridOptions={gridOptions}
         rowData={rowData}
-      />
+        {...reactGridConfig} />
     </Box>
   );
 };

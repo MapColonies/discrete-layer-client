@@ -11,6 +11,10 @@ import { DiscreteOrder } from './DiscreteOrder';
 
 export type LayersListResponse = LayerRasterRecordModelType[];
 
+const EMPTY = 0;
+const INC = 1;
+const DEC = -1;
+
 interface IBestEditData {
   layersList?: LayerRasterRecordModelType[];
   editingBest?: BestRecordModelType;
@@ -28,6 +32,7 @@ export const bestStore = ModelBase
     layersList: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
     editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
+    importedLayers: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
     storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
   })
   .views((self) => ({
@@ -41,11 +46,11 @@ export const bestStore = ModelBase
   .actions((self) => {
 
     function setLayersList(layers: LayerRasterRecordModelType[]): void {
-      self.layersList =  [...layers];
+      self.layersList = [...layers];
     }
 
     function editBest(best: BestRecordModelType | undefined): void {
-      self.editingBest =  best ? {...best} : undefined;
+      self.editingBest = best ? {...best} : undefined;
     }
 
     function saveDraft(best: BestRecordModelType | undefined): void {
@@ -77,6 +82,31 @@ export const bestStore = ModelBase
 
     function updateMovedLayer(movedLayer: MovedLayer): void {
       self.movedLayer = { ...movedLayer };
+      const move = movedLayer.from > movedLayer.to ? DEC : INC;
+      let discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
+      const last = discretes.length - 1;
+      const max = last - (movedLayer.from < movedLayer.to ? movedLayer.from : movedLayer.to);
+      const min = last - (movedLayer.from < movedLayer.to ? movedLayer.to : movedLayer.from);
+      const fromOrder = (discretes.find(item => item.id === movedLayer.id) as DiscreteOrder).zOrder;
+      const toOrder = last - movedLayer.to;
+      discretes = [
+        ...discretes.map((discrete) => {
+          return {
+            id: discrete.id,
+            zOrder: (discrete.zOrder as number) >= min && (discrete.zOrder as number) <= max && (discrete.zOrder as number) !== fromOrder ? (discrete.zOrder as number) + move : ((discrete.zOrder as number) === fromOrder ? toOrder : discrete.zOrder)
+          };
+        })
+      ] as DiscreteOrder[];
+      const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
+      editBest(newBest);
+      setLayersList([
+        ...(self.layersList as LayerRasterRecordModelType[]).map((layer) => {
+          return {
+            ...layer,
+            order: (layer.order as number) >= min && (layer.order as number) <= max && (layer.order as number) !== fromOrder ? (layer.order as number) + move : ((layer.order as number) === fromOrder ? toOrder : layer.order)
+          };
+        })
+      ]);
     }
 
     function showLayer(id: string, isShow: boolean): void {
@@ -94,22 +124,30 @@ export const bestStore = ModelBase
 
     function addImportLayersToBest(importLayers: LayerRasterRecordModelType[]): void {
       if (!isEmpty(importLayers)) {
-        self.layersList =  [
-          ...self.layersList ?? []
-        ];
-        importLayers.forEach(layer => {
-          const discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
-          if (!isEmpty(discretes)) {
-            discretes.push({ id: layer.id, zOrder: discretes.length } as DiscreteOrder);
-          } else {
-            (self.editingBest as BestRecordModelType).discretes = [ { id: layer.id, zOrder: 0 } as DiscreteOrder ];
-          }
+        const currentLayers = self.layersList ?? [];
+        const last = currentLayers.length > EMPTY ? currentLayers.length - 1 : EMPTY;
+        importLayers = importLayers.map((item, index) => { 
+          return { 
+            ...item, 
+            order: last+index+1,
+            layerImageShown: false,
+            footprintShown: false,
+          }; 
         });
+        let discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
+        discretes = [
+          ...importLayers.map((item, index) => { return { id: item.id, zOrder: item.order }; }),
+          ...discretes
+        ] as DiscreteOrder[];
+        const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
+        editBest(newBest);
+        setLayersList([ ...importLayers, ...self.layersList ?? [] ]);
+        self.importedLayers = [ ...importLayers];
       }
     }
 
     function preserveData(): void {
-      if(self.storedData){
+      if (self.storedData) {
         self.storedData = {
           layersList: self.layersList ? [ ...self.layersList ]: [],
           editingBest: {...self.editingBest} as BestRecordModelType,
@@ -118,7 +156,7 @@ export const bestStore = ModelBase
     }
 
     function restoreData(): void {
-      if(self.storedData && !isEmpty(self.storedData.editingBest?.productName)) {
+      if (self.storedData && !isEmpty(self.storedData.editingBest?.productName)) {
         self.layersList = [...self.storedData.layersList??[]];
         self.editingBest = {...self.storedData.editingBest} as BestRecordModelType;
       }

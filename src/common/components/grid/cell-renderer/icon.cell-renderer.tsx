@@ -1,10 +1,9 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Icon, useTheme } from '@map-colonies/react-core';
+import { Icon } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 
 export const IconRenderer: React.FC<ICellRendererParams> = (props) => {
-  const theme = useTheme();
 
   if (!props.value) {
     return <></>;
@@ -12,9 +11,9 @@ export const IconRenderer: React.FC<ICellRendererParams> = (props) => {
   return (
     <Box className="expanderContainer">
       <Icon 
-        style={{ color: (theme.primary as string) }} 
-        icon={{ icon: 'favorite', size: 'small' }}
-      />
+        style={{ color: 'var(--mdc-theme-primary)' }} 
+        icon={{ icon: 'star_rate', size: 'small' }}
+      /> 
     </Box>
   );
 

@@ -25,29 +25,29 @@ import { useStore } from '../../models/RootStore';
 
 import './layers-results.css';
 
+const PAGINATION = true;
+const PAGE_SIZE = 10;
+const IMMEDIATE_EXECUTION = 0;
+const INITIAL_ORDER = 0;
+
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
 }
-
-const pagination = true;
-const pageSize = 10;
-const immediateExecution = 0;
-const intialOrder = 0;
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
   const { discreteLayersStore } = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
-
+  const [isChecked, setIsChecked] = useState<boolean>(true);
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
-  const selectedLayersRef = useRef(intialOrder);
+  const selectedLayersRef = useRef(INITIAL_ORDER);
 
   useEffect(()=>{
     if(discreteLayersStore.layersImages){
       setlayersImages(discreteLayersStore.layersImages);
     }
-  },[discreteLayersStore.layersImages]);
+  }, [discreteLayersStore.layersImages]);
 
   const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
     let res = false;
@@ -71,7 +71,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       return cacheRef.current;
     } else {
       cacheRef.current = layersImages;
-      selectedLayersRef.current = intialOrder;
+      selectedLayersRef.current = INITIAL_ORDER;
       return cacheRef.current;
     }
   }
@@ -86,14 +86,19 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
           discreteLayersStore.showFootprint(id, value);
-         }
+          const checkboxValues = layersImages.map(item => item.footprintShown);
+          const checkAllValue = checkboxValues.reduce((accumulated, current) => (accumulated as boolean) && current, value);
+          setIsChecked(checkAllValue as boolean);
+        }
       },
       headerComponent: 'headerFootprintRenderer',
-      headerComponentParams: { 
+      headerComponentParams: {
+        isChecked: isChecked,
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footprintShown', value), immediateExecution) ;
+            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION) ;
           });
+          setIsChecked(value);
         }  
       }
     },
@@ -155,8 +160,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   ];
   const gridOptions: GridComponentOptions = {
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
-    pagination: pagination,
-    paginationPageSize: pageSize,
+    pagination: PAGINATION,
+    paginationPageSize: PAGE_SIZE,
     columnDefs: colDef,
     getRowNodeId: (data: ILayerImage) => {
       return data.id;

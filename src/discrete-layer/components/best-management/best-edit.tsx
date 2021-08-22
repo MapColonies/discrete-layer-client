@@ -12,6 +12,8 @@ import { BestCatalogComponent } from './best-catalog';
 
 import './best-edit.css';
 
+const IMMEDIATE_EXECUTION = 0;
+
 interface BestEditComponentProps {
   openImport: boolean;
   handleCloseImport: (isShow: boolean) => void;
@@ -21,16 +23,18 @@ interface BestEditComponentProps {
 export const BestEditComponent: React.FC<BestEditComponentProps> = observer((props) => {
   const { best } = props;
   const store = useStore();
-  //@ts-ignore
+  // @ts-ignore
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
+  const importListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
+  const [newLayersToAdd, setNewLayersToAdd] = useState<LayerRasterRecordModelType[]>([]);
   
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
   useEffect(()=>{
-    if(!store.bestStore.isDirty()){
+    if (!store.bestStore.isDirty()) {
       setQuery(store.querySearchById({
           idList: {
             value: [...discretesOrder.map((item: DiscreteOrder) => item.id)] as string[]
@@ -41,16 +45,24 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setDiscretes(bestDiscretes);
     }
-  },[]);
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (!isEmpty(newLayersToAdd)) {
+      const bestDiscretes = store.bestStore.layersList as LayerRasterRecordModelType[];
+      store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
+      setTimeout(()=> {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
+    }
+  }, [newLayersToAdd]);
+
+  useEffect(() => {
     const layersList = get(data,'searchById') as LayerRasterRecordModelType[];
     if (!isEmpty(layersList) && !isEmpty(discretesOrder)) {
       const layers = cloneDeep(layersList);
 
       layers.forEach(discrete => {
         const layer = discretesOrder.find(item => discrete.id === item.id);
-        if (layer){
+        if (layer) {
           discrete.order = layer.zOrder;
         }
       });
@@ -59,20 +71,33 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(layers);
       setDiscretes(layers);
     }
-  }, [data, store.bestStore, store.discreteLayersStore, discretesOrder]);
+  }, [data, store.bestStore, store.discreteLayersStore]);
 
   useEffect(() => {
-    if(!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)){
+    if (!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)) {
       store.discreteLayersStore.previewedLayers?.forEach((layerId) => {
         store.discreteLayersStore.showLayer(layerId, false, null);
       });
       store.discreteLayersStore.cleanPreviewedLayer();
     }
-
   }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
 
+  useEffect(() => {
+    if (store.bestStore.movedLayer !== undefined) {
+      setDiscretes(store.bestStore.layersList as LayerRasterRecordModelType[]);
+    }
+  }, [store.bestStore.movedLayer]);
+
   const handleImport = (): void => {
-    // store.bestStore.addImportLayersToBest();
+    const currentImportListRef = get(importListRef, 'current');
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if ( currentImportListRef !== undefined ) {
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const layersToAdd = cloneDeep(currentImportListRef.getImportList() as LayerRasterRecordModelType[]);
+      setNewLayersToAdd(layersToAdd);
+      store.bestStore.addImportLayersToBest(layersToAdd);
+    }
     props.handleCloseImport(false);
   };
  
@@ -80,11 +105,11 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if ( currentDiscretesListRef !== undefined ) {
-      //@ts-ignore
+      // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
       if (best !== undefined && !isEmpty(best)) {
-        //@ts-ignore
+        // @ts-ignore
         const newBest = { 
           ...best,
           discretes: [...newOrderedDiscretesList] 
@@ -111,40 +136,48 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       <BestDetailsComponent best={best}/>
 
       <BestDiscretesComponent
-        //@ts-ignore
+        // @ts-ignore
         ref={discretesListRef}
         discretes={discretes}
         style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
       
-      <Box className="actionButton">
+      <Box className="actionButtons">
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSave(true); } }>
+          <Button raised type="button" onClick={ (): void => { handleSave(true); } }>
             <FormattedMessage id="general.apply-btn.text"/>
           </Button>
         </Box>
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSave(false); } }>
+          <Button raised type="button" onClick={ (): void => { handleSave(false); } }>
             <FormattedMessage id="general.save-btn.text"/>
           </Button>
         </Box>
         <Box>
-          <Button raised type="button" onClick={(): void => { handleSendToApproval(); } }>
+          <Button raised type="button" onClick={ (): void => { handleSendToApproval(); } }>
             <FormattedMessage id="general.send-to-approval-btn.text"/>
           </Button>
         </Box>
       </Box>
 
       {
-        props.openImport && <Box className="bestCatalogImportContainer">
-          <BestCatalogComponent filterOut={discretesOrder} handleImportLayerSelected={setShowImportAddButton}/>
+        <Box className={props.openImport ? 'bestCatalogImportContainer openedImport' : 'bestCatalogImportContainer'}>
+          <Box className={props.openImport ? 'bestCatalogImportWrapper bestCatalogOpened' : 'bestCatalogImportWrapper bestCatalogClosed'}>
+            {
+              props.openImport && <BestCatalogComponent
+              // @ts-ignore
+              ref={importListRef}
+              filterOut={discretesOrder}
+              handleImportLayerSelected={setShowImportAddButton}/>
+            }
 
-          <Box className="buttons">
-            <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
-              <FormattedMessage id="general.cancel-btn.text"/>
-            </Button>
-            <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
-              <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
-            </Button>
+            <Box className={props.openImport ? 'buttons bestCatalogOpened' : 'buttons bestCatalogClosed'}>
+              <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
+                <FormattedMessage id="general.cancel-btn.text"/>
+              </Button>
+              <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
+                <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
+              </Button>
+            </Box>
           </Box>
         </Box>
       }
