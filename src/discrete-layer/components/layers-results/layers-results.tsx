@@ -94,9 +94,10 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerComponent: 'headerFootprintRenderer',
       headerComponentParams: {
         isChecked: isChecked,
-        onClick: (value: boolean, gridApi: GridApi): void => { 
-          gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION) ;
+        onClick: (value: boolean, gridApi: GridApi): void => {
+          gridApi.forEachNode((item: GridRowNode) => {
+            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION);
+            discreteLayersStore.showFootprint(item.id, value);
           });
           setIsChecked(value);
         }  
@@ -109,15 +110,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
           // setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
-          if(value) {
+          if (value) {
             selectedLayersRef.current++;
-          }
-          else {
+          } else {
             const orders: number[] = [];
             // eslint-disable-next-line
             (node as any).gridApi.forEachNode((item: GridRowNode)=> {
               const rowData = item.data as {[key: string]: string | boolean | number};
-              if(rowData.layerImageShown === true && rowData.id !== id) {
+              if (rowData.layerImageShown === true && rowData.id !== id) {
                 orders.push(rowData.order as number);
               }
             });
