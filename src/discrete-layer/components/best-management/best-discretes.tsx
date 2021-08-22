@@ -100,7 +100,9 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         isChecked: isChecked,
         onClick: (value: boolean, gridApi: GridApi): void => { 
           gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION) ;
+            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION);
+            store.discreteLayersStore.showFootprint(item.id, value);
+            store.bestStore.showFootprint(item.id, value);
           });
           setIsChecked(value);
         }  
