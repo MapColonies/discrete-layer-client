@@ -21,10 +21,9 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   const buildLayerProperties = (layer: LayerRasterRecordModelType): IRasterLayerProperties => {
     let options: Record<string, unknown> = {};
     let layerLink = layer.links?.find((link: LinkModelType)=> ['WMTS_tile','WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
-    if(layerLink === undefined){
+    if (layerLink === undefined) {
       layerLink = get(layer,'links[0]') as LinkModelType;
-    }
-    else{
+    } else {
       options = {
         url: layerLink.url,
         layer: `${layer.productId as string}-${layer.productVersion as string}`,
@@ -39,6 +38,27 @@ export const BestLayersPresentor: React.FC = observer((props) => {
       protocol: layerLink.protocol as string,
       options,
     }
+  };
+
+  const addLayersToMap = (layersImages: LayerRasterRecordModelType[]): void =>{
+    layersImages.forEach((layer, idx) => {
+      const layerProperties = buildLayerProperties(layer);
+
+      mapViewer.layersManager?.addRasterLayer(
+        {
+          id: layer.id,
+          type: layerProperties.protocol as "OSM_LAYER" | "WMTS_LAYER" | "WMS_LAYER" | "XYZ_LAYER",
+          opacity: 1,
+          zIndex: layer.order as number,
+          show: layer.layerImageShown === true,
+          options: {
+            ...layerProperties.options,
+            url: layerProperties.url,
+          },
+        }, 
+        mapViewer.layersManager.length(),
+        '');
+    });
   };
 
   useLayoutEffect(() => {
@@ -61,29 +81,12 @@ export const BestLayersPresentor: React.FC = observer((props) => {
 
   useLayoutEffect(() => {
     // @ts-ignore
-    if(isEmpty(prevLayersImages)){
-      layersImages.forEach((layer, idx) => {
-        const layerProperties = buildLayerProperties(layer);
-  
-        mapViewer.layersManager?.addRasterLayer(
-          {
-            id: layer.id,
-            type: layerProperties.protocol as "OSM_LAYER" | "WMTS_LAYER" | "WMS_LAYER" | "XYZ_LAYER",
-            opacity: 1,
-            zIndex: layer.order as number,
-            show: layer.layerImageShown === true,
-            options: {
-              ...layerProperties.options,
-              url: layerProperties.url,
-            },
-          }, 
-          mapViewer.layersManager.length(),
-          '');
-      });
+    if (isEmpty(prevLayersImages)) {
+      addLayersToMap(layersImages);
     } else {
       (prevLayersImages ?? []).forEach(prevLayer => {
         const layer = layersImages.find(layer => layer.id === prevLayer.id);
-        if(layer && layer.layerImageShown !== prevLayer.layerImageShown) {
+        if (layer && layer.layerImageShown !== prevLayer.layerImageShown) {
           mapViewer.layersManager?.show(layer.id, layer.layerImageShown ? true : false);
         }
       })
@@ -91,14 +94,24 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   }, [layersImages, mapViewer]);
 
   useLayoutEffect(() => {
-    if(bestStore.movedLayer){
-      if(bestStore.movedLayer.from > bestStore.movedLayer.to){
+    if (bestStore.movedLayer) {
+      if (bestStore.movedLayer.from > bestStore.movedLayer.to) {
         mapViewer.layersManager?.raise(bestStore.movedLayer.id, bestStore.movedLayer.from - bestStore.movedLayer.to);
       } else {
         mapViewer.layersManager?.lower(bestStore.movedLayer.id, bestStore.movedLayer.to - bestStore.movedLayer.from);
       }
     }
   }, [bestStore.movedLayer, mapViewer]);
+
+  useLayoutEffect(() => {
+    if (bestStore.importedLayers) {
+      addLayersToMap(bestStore.importedLayers);
+      setlayersImages([
+        ...layersImages,
+        ...bestStore.importedLayers
+      ]);
+    }
+  }, [bestStore.importedLayers, mapViewer]);
   
   return (
     <></>

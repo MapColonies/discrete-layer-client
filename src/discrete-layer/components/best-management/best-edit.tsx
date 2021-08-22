@@ -31,7 +31,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   const [newLayersToAdd, setNewLayersToAdd] = useState<LayerRasterRecordModelType[]>([]);
   
-  
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
   useEffect(()=>{
@@ -48,7 +47,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     }
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!isEmpty(newLayersToAdd)) {
       const bestDiscretes = store.bestStore.layersList as LayerRasterRecordModelType[];
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
@@ -56,14 +55,14 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     }
   }, [newLayersToAdd]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const layersList = get(data,'searchById') as LayerRasterRecordModelType[];
     if (!isEmpty(layersList) && !isEmpty(discretesOrder)) {
       const layers = cloneDeep(layersList);
 
       layers.forEach(discrete => {
         const layer = discretesOrder.find(item => discrete.id === item.id);
-        if (layer){
+        if (layer) {
           discrete.order = layer.zOrder;
         }
       });
@@ -75,14 +74,19 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   }, [data, store.bestStore, store.discreteLayersStore]);
 
   useEffect(() => {
-    if(!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)){
+    if (!props.openImport && !isEmpty(store.discreteLayersStore.previewedLayers)) {
       store.discreteLayersStore.previewedLayers?.forEach((layerId) => {
         store.discreteLayersStore.showLayer(layerId, false, null);
       });
       store.discreteLayersStore.cleanPreviewedLayer();
     }
-
   }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
+
+  useEffect(() => {
+    if (store.bestStore.movedLayer !== undefined) {
+      setDiscretes(store.bestStore.layersList as LayerRasterRecordModelType[]);
+    }
+  }, [store.bestStore.movedLayer]);
 
   const handleImport = (): void => {
     const currentImportListRef = get(importListRef, 'current');

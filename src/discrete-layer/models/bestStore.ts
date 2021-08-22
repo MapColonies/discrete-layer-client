@@ -32,6 +32,7 @@ export const bestStore = ModelBase
     layersList: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
     editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
+    importedLayers: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
     storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
   })
   .views((self) => ({
@@ -125,7 +126,14 @@ export const bestStore = ModelBase
       if (!isEmpty(importLayers)) {
         const currentLayers = self.layersList ?? [];
         const last = currentLayers.length > EMPTY ? currentLayers.length - 1 : EMPTY;
-        importLayers = importLayers.map((item, index) => { return { ...item, order: last+index+1 }; });
+        importLayers = importLayers.map((item, index) => { 
+          return { 
+            ...item, 
+            order: last+index+1,
+            layerImageShown: false,
+            footprintShown: false,
+          }; 
+        });
         let discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
         discretes = [
           ...importLayers.map((item, index) => { return { id: item.id, zOrder: item.order }; }),
@@ -134,6 +142,7 @@ export const bestStore = ModelBase
         const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
         editBest(newBest);
         setLayersList([ ...importLayers, ...self.layersList ?? [] ]);
+        self.importedLayers = [ ...importLayers];
       }
     }
 
