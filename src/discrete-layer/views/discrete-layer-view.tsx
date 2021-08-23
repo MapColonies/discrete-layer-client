@@ -35,6 +35,7 @@ import {
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { hasOwnProperty } from '../../common/helpers/object';
 import { Mode } from '../../common/models/mode.enum';
 import { useQuery, useStore } from '../models/RootStore';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
@@ -56,6 +57,7 @@ import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import { UserAction } from '../models/userStore';
+import { IDispatchAction } from '../models/actionDispatcherStore';
 import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -63,8 +65,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { IDispatchAction } from '../models/actionDispatcherStore';
-import { hasOwnProperty } from '../../common/helpers/object';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -345,7 +345,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    if(editingBest !== undefined){
+    if (editingBest !== undefined) {
       handleTabViewChange(TabViews.CREATE_BEST);
     } else {
       handleTabViewChange(TabViews.CATALOG);
@@ -353,7 +353,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingBest]);
 
-  const buildFilters =  (): FilterField[]  => {
+  const buildFilters = (): FilterField[] => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
     return [
       {
@@ -372,19 +372,19 @@ const DiscreteLayerView: React.FC = observer(() => {
     ];
   };
 
-  useEffect(()=>{
-    if(store.actionDispatcherStore.action !== undefined){
+  useEffect(() => {
+    if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
-      console.log(`RESOVING ${action} EVENT`, data);
+      console.log(`RESOLVING ${action} EVENT`, data);
 
-      switch(action){
+      switch(action) {
         case 'BestRecord.edit':
           // @ts-ignore
           store.bestStore.editBest(data as BestRecordModelType);
           break;
         case 'LayerRasterRecord.edit':
         case 'Layer3DRecord.edit':
-          // @ts-ignore        
+          // @ts-ignore
           store.discreteLayersStore.selectLayer(data as LayerMetadataMixedUnion);
           setEditEntityDialogOpen(!isEditEntityDialogOpen);
           break

@@ -15,10 +15,10 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.button-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
@@ -126,6 +126,12 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       field: 'isNewlyAddedToBest',
       cellRenderer: 'iconRenderer',
       suppressMovable: true
+    },
+    {
+      headerName: '',
+      width: 60,
+      cellRenderer: 'actionsRenderer',
+      pinned: 'right'
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -144,7 +150,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       rowLayerImageRenderer: LayerImageRenderer,
       iconRenderer: IconRenderer,
       customTooltip: CustomTooltip,
-      headerFootprintRenderer: HeaderFootprintRenderer,
+      actionsRenderer: ActionsRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
