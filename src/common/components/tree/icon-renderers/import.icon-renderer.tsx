@@ -3,8 +3,6 @@ import { Icon, useTheme } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
 
-import './import.icon-renderer.css';
-
 interface IImportCellRendererParams {
   onClick: (data: LayerRasterRecordModelType, isSelected: boolean) => void;
   data: LayerRasterRecordModelType;

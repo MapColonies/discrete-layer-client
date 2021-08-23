@@ -1,14 +1,13 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Icon, useTheme } from '@map-colonies/react-core';
+import { Icon } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { DETAILS_ROW_ID_SUFFIX, IGridRowDataDetailsExt } from '../grid';
 
 import './details-expander.cell-renderer.css';
 
 export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (props) => {
-  const value: boolean = (props.data as IGridRowDataDetailsExt).isVisible; 
-  const theme = useTheme();
+  const value: boolean = (props.data as IGridRowDataDetailsExt).isVisible;
   
   const handleCollapseExpand = (): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -18,13 +17,13 @@ export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (props) =>
   };
 
   if (!value) {
-    return <></>;//''; // not null!
+    return <></>; // not null!
   }
   return (
     <Box className="expanderContainer" onClick={handleCollapseExpand}>
       <Icon 
-        style={{color: (theme.primary as string)}} 
-        icon={{ icon: 'expand_more', size: 'xsmall' }}
+        style={{ color: 'var(--mdc-theme-primary)' }}
+        icon={{ icon: value ? 'expand_more' : 'expand_less', size: 'xsmall' }}
       />
     </Box>
   );
