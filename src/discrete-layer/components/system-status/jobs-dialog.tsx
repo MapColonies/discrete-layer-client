@@ -203,7 +203,10 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       }),
       width: 120,
       field: 'updated',
+      sortable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      // @ts-ignore
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
     },
     // {
     //   headerName: 'actions',
@@ -215,6 +218,10 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   const onGridReady = (params: GridReadyEvent) => {
     setGridApi(params.api);
+    const sortModel = [
+      {colId: 'updated', sort: 'desc'}
+    ];
+    params.api.setSortModel(sortModel);
   };
 
   const gridOptions: GridComponentOptions = {
@@ -277,7 +284,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             gridOptions={gridOptions}
             rowData={gridRowData}
             style={{
-              height: 'calc(100% - 70px)',
+              height: 'calc(100% - 64px)',
               width: 'calc(100% - 8px)'
             }}
           />
