@@ -94,8 +94,7 @@
 
   "field.actions.edit-draft": "ערוך טיוטה",
   "field.actions.more": "פעולות נוספות",
-
-  "field-names.general.empty": " ",
+  
   "field-names.ingestion.directory": "נתיב מלא",
   "field-names.raster.fileNames": "שמות הקבצים",
   "field-names.raster.id": "מזהה",

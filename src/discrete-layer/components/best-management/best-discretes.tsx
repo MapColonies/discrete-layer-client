@@ -25,7 +25,6 @@ import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 
 const IS_PAGINATION = false;
-const IMMEDIATE_EXECUTION = 0;
 
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
@@ -37,7 +36,6 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const intl = useIntl();
   const store = useStore();
   const [gridApi, setGridApi] = useState<GridApi>();
-  const [isChecked, setIsChecked] = useState<boolean>(false);
   
   const sortedDiscretes = useMemo(() => {
     return [...(props.discretes ?? [])].sort(
@@ -76,14 +74,13 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       rowDrag: true
     },
     {
-      headerName: intl.formatMessage({
-        id: 'field-names.general.empty',
-      }),
+      headerName: '',
       width: 45,
       field: 'order',
       suppressMovable: true
     },
     {
+      headerName: '',
       width: 20,
       field: 'footprintShown',
       cellRenderer: 'rowFootprintRenderer',
@@ -91,22 +88,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
           store.discreteLayersStore.showFootprint(id, value);
           store.bestStore.showFootprint(id, value);
-          const checkboxValues = (store.bestStore.layersList as LayerRasterRecordModelType[]).map(item => item.footprintShown);
-          const checkAllValue = checkboxValues.reduce((accumulated, current) => (accumulated as boolean) && current, value);
-          setIsChecked(checkAllValue as boolean);
         }
-      },
-      headerComponent: 'headerFootprintRenderer',
-      headerComponentParams: {
-        isChecked: isChecked,
-        onClick: (value: boolean, gridApi: GridApi): void => { 
-          gridApi.forEachNode((item: GridRowNode)=> {
-            setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION);
-            store.discreteLayersStore.showFootprint(item.id, value);
-            store.bestStore.showFootprint(item.id, value);
-          });
-          setIsChecked(value);
-        }  
       }
     },
     {
@@ -139,9 +121,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       suppressMovable: true
     },
     {
-      headerName: intl.formatMessage({
-        id: 'field-names.general.empty',
-      }),
+      headerName: '',
       width: 45,
       field: 'isNewlyAddedToBest',
       cellRenderer: 'iconRenderer',
