@@ -11,12 +11,12 @@ import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
+import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { BestRecordModelType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { TabViews } from '../../views/tab-views';
@@ -132,8 +132,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         }
        });
        entityActions[entityName] = permittedGroupsActions;
-
-      //  entityActions[entityName] = getEntityActionGroups(entityName);
+       // entityActions[entityName] = getEntityActionGroups(entityName);
     })
     return entityActions;
   }, []);
@@ -321,22 +320,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                   }
                 },
                 icons: rowInfo.node.isGroup
-                  ? [
-                      // <div
-                      //   style={{
-                      //     borderLeft: 'solid 8px gray',
-                      //     borderBottom: 'solid 10px gray',
-                      //     marginRight: 10,
-                      //     boxSizing: 'border-box',
-                      //     width: 16,
-                      //     height: 12,
-                      //     filter: rowInfo.node.expanded
-                      //       ? 'drop-shadow(1px 0 0 gray) drop-shadow(0 1px 0 gray) drop-shadow(0 -1px 0 gray) drop-shadow(-1px 0 0 gray)'
-                      //       : 'none',
-                      //     borderColor: rowInfo.node.expanded ? 'white' : 'gray',
-                      //   }}
-                      // />,
-                    ]
+                  ? []
                   : [
                       <FootprintRenderer
                         data={(rowInfo.node as any) as ILayerImage}
@@ -365,7 +349,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           store.discreteLayersStore.showLayer(data.id, value, order);
                           data.layerImageShown = value;
                         }}
-                      />
+                      />,
+                      <EntityTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
                     ],
                 buttons: [
                   <>

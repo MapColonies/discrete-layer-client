@@ -14,7 +14,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
     <Box>
       <IconButton 
         className={layerImageShown ? 'mc-icon-Shown' : 'mc-icon-Hidden'}
-        label="TABICON"
+        label="LAYER IMAGE SHOWN ICON"
         onClick={
           (evt): void => {
             const val = !layerImageShown;

@@ -578,7 +578,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             <IconButton 
               className={`operationIcon ${tabView?.iconClassName as string}`}
-              label="TABICON"
+              label="TAB ICON"
             />
             <Typography use="headline6" tag="span">
               <FormattedMessage id={tabView?.title}></FormattedMessage>
@@ -662,7 +662,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
               <IconButton 
                 className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
-                label="EXPANDER"
+                label="PANEL EXPANDER"
                 onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
               />
             </Tooltip>
@@ -815,7 +815,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
                 <IconButton 
                   className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
-                  label="EXPANDER"
+                  label="DETAILS EXPANDER"
                   onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
                 />
               </Tooltip>

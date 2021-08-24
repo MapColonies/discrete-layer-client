@@ -87,7 +87,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
         <IconButton 
           className="mc-icon-Set-Coordinates" 
-          label="BBOX_CORNERS" 
+          label="BBOX CORNERS" 
           onClick={(): void => {setOpen(true);}}/>
       </Tooltip>
       <Devider/>

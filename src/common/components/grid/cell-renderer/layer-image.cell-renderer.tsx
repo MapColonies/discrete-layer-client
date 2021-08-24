@@ -17,7 +17,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
     <Box style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
       <IconButton 
         className={layerImageShown ? 'mc-icon-Shown' : 'mc-icon-Hidden'}
-        label="TABICON"
+        label="LAYER IMAGE SHOWN ICON"
         onClick={
           (evt): void => {
             setLayerImageShown(!layerImageShown);
