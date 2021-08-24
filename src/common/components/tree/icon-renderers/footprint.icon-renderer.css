@@ -1,5 +1,12 @@
-.footprintContainer {
-  width: 36px;
+.footprintIcon {
+  position: relative !important;
+  top: -8px;
+  margin-right: 16px;
+}
+
+body[dir='rtl'] .footprintIcon {
+  margin-right: unset;
+  margin-left: 16px;
 }
 
 .toolbarButton .mdc-checkbox {

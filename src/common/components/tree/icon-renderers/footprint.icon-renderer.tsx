@@ -12,7 +12,8 @@ interface IFootprintCellRendererParams {
 export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = (props) => {
   const [checked, setChecked] = useState<boolean>(props.data.footprintShown as boolean);
   return (
-    <Checkbox 
+    <Checkbox
+      className="footprintIcon"
       checked={checked}
       onClick={
         (evt): void => {
