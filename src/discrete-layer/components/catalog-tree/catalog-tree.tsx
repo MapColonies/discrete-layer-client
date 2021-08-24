@@ -28,7 +28,7 @@ const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const intialOrder = 0;
 const actionDismissibleRegex = new RegExp('actionDismissible');
-const nodeOutRegex = new RegExp('/toolbarButton|actionsContainer|rowContents/');
+const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 
 
 interface CatalogTreeComponentProps {
@@ -314,7 +314,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                 },
                 onMouseOut: (evt: MouseEvent) => {
                   store.discreteLayersStore.highlightLayer(undefined);
-                  // console.log('*** MOUSE OUT *****', (evt.target as any).className);
+                  // console.log('*** MOUSE OUT *****', (evt.target as any).className, nodeOutRegex.test((evt.target as any).className));
                   if(evt.target !== null && nodeOutRegex.test((evt.target as any).className)){
                     setHoveredNode(undefined);
                   }
