@@ -16,16 +16,17 @@ export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (props) =>
     props.api.onFilterChanged();
   };
 
-  if (!value) {
-    return <></>; // not null!
-  }
   return (
-    <Box className="expanderContainer" onClick={handleCollapseExpand}>
-      <Icon 
-        style={{ color: 'var(--mdc-theme-primary)' }}
-        icon={{ icon: value ? 'expand_more' : 'expand_less', size: 'xsmall' }}
-      />
-    </Box>
+    <>
+      {
+      value && <Box className="expanderContainer" onClick={handleCollapseExpand}>
+        <Icon 
+          style={{ color: 'var(--mdc-theme-primary)' }}
+          icon={{ icon: 'expand_more', size: 'xsmall' }}
+        />
+      </Box>
+      }
+    </>
   );
 
 };
