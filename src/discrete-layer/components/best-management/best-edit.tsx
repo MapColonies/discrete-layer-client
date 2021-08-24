@@ -101,10 +101,10 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     props.handleCloseImport(false);
   };
  
-  const handleSave = (isApply: boolean): void => {
+  const handleSave = (): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if ( currentDiscretesListRef !== undefined ) {
+    if (currentDiscretesListRef !== undefined) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const newOrderedDiscretesList = currentDiscretesListRef.getOrderedDiscretes() as DiscreteOrder[];
@@ -116,19 +116,14 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         } as BestRecordModelType;
         
         store.bestStore.saveDraft(newBest);
-
-        if (isApply) {
-          store.bestStore.editBest(newBest);
-        } else {
-          store.bestStore.editBest(undefined);
-          store.bestStore.setLayersList([]);
-        }
+        store.bestStore.editBest(newBest);
       }
     }
   };
 
-  const handleSendToApproval = (): void => {
-    // TODO: send to approval
+  const handleClose = (): void => {
+    store.bestStore.editBest(undefined);
+    store.bestStore.setLayersList([]);
   };
 
   return (
@@ -143,18 +138,13 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       
       <Box className="actionButtons">
         <Box>
-          <Button raised type="button" onClick={ (): void => { handleSave(true); } }>
-            <FormattedMessage id="general.apply-btn.text"/>
-          </Button>
-        </Box>
-        <Box>
-          <Button raised type="button" onClick={ (): void => { handleSave(false); } }>
+          <Button raised type="button" onClick={ (): void => { handleSave(); } }>
             <FormattedMessage id="general.save-btn.text"/>
           </Button>
         </Box>
         <Box>
-          <Button raised type="button" onClick={ (): void => { handleSendToApproval(); } }>
-            <FormattedMessage id="general.send-to-approval-btn.text"/>
+          <Button raised type="button" onClick={ (): void => { handleClose(); } }>
+            <FormattedMessage id="general.close-btn.text"/>
           </Button>
         </Box>
       </Box>
