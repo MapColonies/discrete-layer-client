@@ -1,22 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AgGrid DetailsExpanderRenderer component renders correctly 1`] = `
-<Component
-  className="expanderContainer"
-  onClick={[Function]}
->
-  <Icon
-    icon={
-      Object {
-        "icon": "expand_more",
-        "size": "xsmall",
+<Fragment>
+  <Component
+    className="expanderContainer"
+    onClick={[Function]}
+  >
+    <Icon
+      icon={
+        Object {
+          "icon": "expand_more",
+          "size": "xsmall",
+        }
       }
-    }
-    style={
-      Object {
-        "color": "#2979ff",
+      style={
+        Object {
+          "color": "var(--mdc-theme-primary)",
+        }
       }
-    }
-  />
-</Component>
+    />
+  </Component>
+</Fragment>
 `;
