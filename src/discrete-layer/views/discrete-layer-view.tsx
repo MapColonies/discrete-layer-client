@@ -375,7 +375,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(()=>{
     if(store.actionDispatcherStore.action !== undefined){
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
-      console.log(`RESOVING ${action} EVENT`, data);
+      console.log(`RESOLVING ${action} EVENT`, data);
 
       switch(action){
         case 'BestRecord.edit':
@@ -384,7 +384,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           break;
         case 'LayerRasterRecord.edit':
         case 'Layer3DRecord.edit':
-          // @ts-ignore        
+          // @ts-ignore
           store.discreteLayersStore.selectLayer(data as LayerMetadataMixedUnion);
           setEditEntityDialogOpen(!isEditEntityDialogOpen);
           break
@@ -448,10 +448,8 @@ const DiscreteLayerView: React.FC = observer(() => {
         zOrder: 1
       }
     ] as DiscreteOrder[];
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     store.bestStore.saveDraft(record as BestRecordModelType);
-
     store.bestStore.editBest(record as BestRecordModelType);
   };
 
