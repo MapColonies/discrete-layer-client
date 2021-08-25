@@ -35,27 +35,29 @@ import {
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { hasOwnProperty } from '../../common/helpers/object';
 import { Mode } from '../../common/models/mode.enum';
-import { useQuery, useStore } from '../models/RootStore';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
 import { PolygonSelectionUi } from '../components/map-container/polygon-selection-ui_2';
 import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
-import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
-import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
 import { BestEditComponent } from '../components/best-management/best-edit';
+import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
+import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
+import { ILayerImage } from '../models/layerImage';
+import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
-import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
-import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import { UserAction } from '../models/userStore';
+import { IDispatchAction } from '../models/actionDispatcherStore';
 import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -63,8 +65,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { IDispatchAction } from '../models/actionDispatcherStore';
-import { hasOwnProperty } from '../../common/helpers/object';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -637,7 +637,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             { 
             (tabIdx === TabViews.CREATE_BEST) && <>
-              <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.add' })}>
+              <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
                 <IconButton
                   className="operationIcon glow-missing-icon"
                   icon="add"

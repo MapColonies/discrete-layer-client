@@ -85,7 +85,8 @@
   "tab-views.catalog.actions.ingest_3d": "Ingest 3D model",
   "tab-views.catalog.actions.new_best": "Create new BEST",
 
-  "tab-views.best-edit.actions.add": "Add layer\\s from list",
+  "tab-views.best-edit.actions.import": "Add layer\\s from list",
+  "tab-views.best-edit.actions.edit": "Edit BEST details",
 
   "best-edit.import.dialog.import-btn.text": "Import",
 

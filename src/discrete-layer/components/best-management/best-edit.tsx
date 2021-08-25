@@ -1,13 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { isEmpty, get, cloneDeep } from 'lodash';
-import { Button } from '@map-colonies/react-core';
+import { Button, IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { UserAction } from '../../models/userStore';
 import { LayersDetailsComponent } from '../layer-details/layer-details';
+import { EntityDialogComponent } from '../layer-details/entity-dialog';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestCatalogComponent } from './best-catalog';
 
@@ -24,13 +26,15 @@ interface BestEditComponentProps {
 export const BestEditComponent: React.FC<BestEditComponentProps> = observer((props) => {
   const { best } = props;
   const store = useStore();
-  // @ts-ignore
+  const intl = useIntl();
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const importListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   const [newLayersToAdd, setNewLayersToAdd] = useState<LayerRasterRecordModelType[]>([]);
+  const [isEditBestEntityDialogOpen, setEditBestEntityDialogOpen] = useState<boolean>(false);
+  const [showEditButton, setShowEditButton] = useState<boolean>(false);
   
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
@@ -89,6 +93,12 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     }
   }, [store.bestStore.movedLayer]);
 
+  const permissions = useMemo(() => {
+    return {
+      isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
+    }
+  }, [store.userStore]);
+
   const handleImport = (): void => {
     const currentImportListRef = get(importListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -100,6 +110,10 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.bestStore.addImportLayersToBest(layersToAdd);
     }
     props.handleCloseImport(false);
+  };
+
+  const handleEditBestEntityDialogClick = (): void => {
+    setEditBestEntityDialogOpen(!isEditBestEntityDialogOpen);
   };
  
   const handleSave = (): void => {
@@ -129,9 +143,26 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
   return (
     <>
-      <Box className="bestDetails">
+      <Box className="bestDetails" onMouseOver={(evt): void => { setShowEditButton(true); }} onMouseOut={(evt): void => { setShowEditButton(false); }}>
         <LayersDetailsComponent layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
       </Box>
+      {
+        permissions.isBestRecordEditAllowed && showEditButton &&
+        <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
+          <IconButton
+            className="editBestIcon mc-icon-Edit"
+            label="EDIT BEST"
+            onClick={ (): void => { handleEditBestEntityDialogClick(); } }
+          />
+        </Tooltip>
+      }
+      {
+        isEditBestEntityDialogOpen && <EntityDialogComponent
+          isOpen={isEditBestEntityDialogOpen}
+          onSetOpen={setEditBestEntityDialogOpen}
+          layerRecord={best}>
+        </EntityDialogComponent>
+      }
 
       <BestDiscretesComponent
         // @ts-ignore
