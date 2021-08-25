@@ -4,10 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { isEmpty, get, cloneDeep } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { LayersDetailsComponent } from '../layer-details/layer-details';
 import { BestDiscretesComponent } from './best-discretes';
-import { BestDetailsComponent } from './best-details';
 import { BestCatalogComponent } from './best-catalog';
 
 import './best-edit.css';
@@ -128,13 +129,15 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
   return (
     <>
-      <BestDetailsComponent best={best}/>
+      <Box className="bestDetails">
+        <LayersDetailsComponent layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
+      </Box>
 
       <BestDiscretesComponent
         // @ts-ignore
         ref={discretesListRef}
         discretes={discretes}
-        style={{ height: 'calc(100% - 200px)', width: 'calc(100% - 8px)' }}/>
+        style={{ height: 'calc(100% - 220px)', width: 'calc(100% - 8px)' }}/>
       
       <Box className="actionButtons">
         <Box>
