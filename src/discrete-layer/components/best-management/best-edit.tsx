@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { isEmpty, get, cloneDeep } from 'lodash';
+import { isEmpty, get, cloneDeep, isEqual } from 'lodash';
 import { Button, IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
@@ -10,6 +10,7 @@ import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { UserAction } from '../../models/userStore';
 import { LayersDetailsComponent } from '../layer-details/layer-details';
 import { EntityDialogComponent } from '../layer-details/entity-dialog';
+import { CloseWithoutSaveDialogComponent } from '../dialogs/close-without-save-dialog';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestCatalogComponent } from './best-catalog';
 
@@ -34,12 +35,13 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   const [newLayersToAdd, setNewLayersToAdd] = useState<LayerRasterRecordModelType[]>([]);
   const [isEditBestEntityDialogOpen, setEditBestEntityDialogOpen] = useState<boolean>(false);
-  const [showEditButton, setShowEditButton] = useState<boolean>(false);
+  const [isCloseWithoutSaveDialogOpen, setCloseWithoutSaveDialogOpen] = useState<boolean>(false);
+  // const [showEditButton, setShowEditButton] = useState<boolean>(false);
   
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
-  useEffect(()=>{
-    if (!store.bestStore.isDirty()) {
+  useEffect(() => {
+    if (!store.bestStore.onBestLoad()) {
       setQuery(store.querySearchById({
           idList: {
             value: [...discretesOrder.map((item: DiscreteOrder) => item.id)] as string[]
@@ -50,6 +52,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setDiscretes(bestDiscretes);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -58,6 +61,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setTimeout(()=> {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newLayersToAdd]);
 
   useEffect(() => {
@@ -76,6 +80,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(layers);
       setDiscretes(layers);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, store.bestStore, store.discreteLayersStore]);
 
   useEffect(() => {
@@ -88,9 +93,10 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   }, [props.openImport, store.discreteLayersStore, store.discreteLayersStore.previewedLayers]);
 
   useEffect(() => {
-    if (store.bestStore.movedLayer !== undefined) {
+    if (!isEmpty(store.bestStore.movedLayer)) {
       setDiscretes(store.bestStore.layersList as LayerRasterRecordModelType[]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.bestStore.movedLayer]);
 
   const permissions = useMemo(() => {
@@ -98,6 +104,16 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
   }, [store.userStore]);
+
+  const isDirty = useMemo(() => {
+    const current = store.bestStore.editingBest;
+    if (!current) {
+      return false;
+    }
+    const saved = store.bestStore.getDraftById(current.id);
+    return !isEqual(current, saved);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.bestStore.editingBest]);
 
   const handleImport = (): void => {
     const currentImportListRef = get(importListRef, 'current');
@@ -137,17 +153,26 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   };
 
   const handleClose = (): void => {
-    store.bestStore.editBest(undefined);
-    store.bestStore.setLayersList([]);
+    if (isDirty) {
+      setCloseWithoutSaveDialogOpen(true);
+    } else {
+      store.bestStore.editBest(undefined);
+      store.bestStore.setLayersList([]);
+    }
   };
 
   return (
     <>
-      <Box className="bestDetails" onMouseOver={(evt): void => { setShowEditButton(true); }} onMouseOut={(evt): void => { setShowEditButton(false); }}>
+      <Box
+        className="bestDetails"
+        // onMouseOver={(evt): void => { setShowEditButton(true); }}
+        // onMouseOut={(evt): void => { setShowEditButton(false); }}
+      >
         <LayersDetailsComponent layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
       </Box>
       {
-        permissions.isBestRecordEditAllowed && showEditButton &&
+        permissions.isBestRecordEditAllowed &&
+        // showEditButton &&
         <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
           <IconButton
             className="editBestIcon mc-icon-Edit"
@@ -157,7 +182,9 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
         </Tooltip>
       }
       {
-        isEditBestEntityDialogOpen && <EntityDialogComponent
+        // showEditButton &&
+        isEditBestEntityDialogOpen &&
+        <EntityDialogComponent
           isOpen={isEditBestEntityDialogOpen}
           onSetOpen={setEditBestEntityDialogOpen}
           layerRecord={best}>
@@ -172,7 +199,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       
       <Box className="actionButtons">
         <Box>
-          <Button raised type="button" onClick={ (): void => { handleSave(); } }>
+          <Button raised type="button" onClick={ (): void => { handleSave(); } } disabled={!isDirty}>
             <FormattedMessage id="general.save-btn.text"/>
           </Button>
         </Box>
@@ -182,6 +209,12 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
           </Button>
         </Box>
       </Box>
+      {
+        isCloseWithoutSaveDialogOpen &&
+        <CloseWithoutSaveDialogComponent
+          isOpen={isCloseWithoutSaveDialogOpen}
+          onSetOpen={setCloseWithoutSaveDialogOpen}/>
+      }
 
       {
         <Box className={props.openImport ? 'bestCatalogImportContainer openedImport' : 'bestCatalogImportContainer'}>
@@ -207,4 +240,4 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       }
     </>
   );
-})
+});

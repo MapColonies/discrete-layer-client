@@ -2,6 +2,7 @@
   "general.version.text": "אפליקצית קטלוג גרסה",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
+  "general.continue-btn.text": "המשך",
   "general.save-btn.text": "שמור",
   "general.close-btn.text": "סגור",
   "general.error.text": "שגיאה",
@@ -11,6 +12,8 @@
   "general.title.new.3d": "הוספת מוצר תלת-מימד",
   "general.title.new.raster": "הוספת מוצר ראסטר",
   "general.title.edit": "עריכת מידע של מוצר",
+  "general.dialog.exit.title": "בטוח שברצונך להמשיך?",
+  "general.dialog.exit.message": "שינויים שלא נשמרו ייאבדו.",
   "general.best-draft.new.tooltip": "חדש",
   "general.login-user.tooltip": "{user} מחובר כמשתמש",
 

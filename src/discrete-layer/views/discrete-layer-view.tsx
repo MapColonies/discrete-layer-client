@@ -560,8 +560,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
     }
-  }, 
-  [store.userStore]);
+  }, [store.userStore]);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -594,7 +593,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             {
               (tabIdx === TabViews.CATALOG) && 
                 <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                  <IconButton icon="autorenew" className="operationIcon" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                  <IconButton icon="autorenew" className="operationIcon" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1); }}/>
                 </Tooltip>
             }
             {
