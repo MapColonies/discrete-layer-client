@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
+import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
 import { IconButton,   MenuSurfaceAnchor,  MenuSurface, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.button-renderer.css';
 
-interface IActionsRendererParams {
+interface IActionsRendererParams extends ICellRendererParams {
   actions: IActionGroup[];
-  node: Record<string,unknown>;
   entity: string;
   actionHandler: (action: Record<string,unknown>) => void;
 }
 
-export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions, entity, actionHandler}) => {
+export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
-  actions.forEach(actionGroup => {
+  props.actions.forEach(actionGroup => {
     frequentActions = [
       ...frequentActions,
       ...actionGroup.group.filter(action => action.frequent)
@@ -31,7 +32,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
 
   const sendAction = (entity: string, action: IAction, data: Record<string,unknown>): void => {
     console.log(`SEND ${action.action} EVENT`);
-    actionHandler({
+    props.actionHandler({
       action: `${entity}.${action.action}`,
       data: data,
     });
@@ -44,9 +45,9 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
             <IconButton
               className="actionIcon actionDismissible"
               icon={action.icon}
-              key={`freqAct_${node.id as string}_${idx}`}
+              key={`freqAct_${(props.data as ILayerImage).id}_${idx}`}
               onClick={ (evt): void => { 
-                sendAction(entity, action, node);
+                sendAction(props.entity, action, props.data);
               } }
             />
           );
@@ -62,9 +63,9 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
             allFlatActions.map((action,idx) => {
               return (
                 <Box 
-                  key={`menuAct_${node.id as string}_${idx}`}
+                  key={`menuAct_${(props.data as ILayerImage).id}_${idx}`}
                   onClick={ (evt): void => {
-                    sendAction(entity, action, node);
+                    sendAction(props.entity, action, props.data);
                     setOpenActionsMenu(false); 
                   } }
                   className="actionMenuItem"
