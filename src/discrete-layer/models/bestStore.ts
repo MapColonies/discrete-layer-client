@@ -11,6 +11,7 @@ import { DiscreteOrder } from './DiscreteOrder';
 
 export type LayersListResponse = LayerRasterRecordModelType[];
 
+const DRAFTS_KEY = 'DRAFTS';
 const EMPTY = 0;
 const INC = 1;
 const DEC = -1;
@@ -54,11 +55,11 @@ export const bestStore = ModelBase
     }
 
     function saveDraft(best: BestRecordModelType | undefined): void {
-      const draftsKey = 'DRAFTS';
+      const draftsKey = DRAFTS_KEY;
       const drafts = localStore.getObject(draftsKey);
       if (drafts === null) {
         localStore.setObject(draftsKey, {
-          data: [best]
+          data: [ best ]
         });
       } else {
         localStore.setObject(draftsKey, {
@@ -71,13 +72,17 @@ export const bestStore = ModelBase
     }
 
     function getDrafts(): BestRecordModelType[] {
-      const draftsKey = 'DRAFTS';
+      const draftsKey = DRAFTS_KEY;
       const drafts = localStore.getObject(draftsKey);
       if (drafts === null) {
         return [];
       } else {
         return drafts.data as BestRecordModelType[];
       }
+    }
+
+    function getDraftById(id: string): BestRecordModelType {
+      return getDrafts().find(draft => draft.id === id) as BestRecordModelType;
     }
 
     function updateMovedLayer(movedLayer: MovedLayer): void {
@@ -163,7 +168,7 @@ export const bestStore = ModelBase
       }
     }
 
-    function isDirty(): boolean {
+    function onBestLoad(): boolean {
       return !isEmpty(self.editingBest) && !isEmpty(self.storedData?.editingBest?.productName);
     }
 
@@ -176,6 +181,7 @@ export const bestStore = ModelBase
       editBest,
       saveDraft,
       getDrafts,
+      getDraftById,
       updateMovedLayer,
       showLayer,
       showFootprint,
@@ -183,6 +189,6 @@ export const bestStore = ModelBase
       preserveData,
       restoreData,
       resetData,
-      isDirty,
+      onBestLoad,
     };
   });

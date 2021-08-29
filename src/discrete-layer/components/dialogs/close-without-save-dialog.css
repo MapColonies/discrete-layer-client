@@ -1,0 +1,8 @@
+#closeWithoutSaveDialog .closeIcon{
+  margin-left: auto;
+}
+
+body[dir='rtl'] #closeWithoutSaveDialog .closeIcon{
+  margin-left: unset;
+  margin-right: auto;
+}

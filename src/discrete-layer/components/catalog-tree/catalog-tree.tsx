@@ -30,7 +30,6 @@ const intialOrder = 0;
 const actionDismissibleRegex = new RegExp('actionDismissible');
 const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 
-
 interface CatalogTreeComponentProps {
   refresh?: number;
 }
@@ -110,7 +109,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     };
   };
 
-
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
     ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord'].forEach( entityName => {
@@ -137,18 +135,18 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     return entityActions;
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if(store.actionDispatcherStore.action !== undefined){
       setIsHoverAllowed(true);
     }
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     void query!.refetch();
-  },[refresh]);
+  }, [refresh]);
 
-  useEffect(()=>{
-    if(data && data.search){
+  useEffect(() => {
+    if (data && data.search) {
       const arr: ILayerImage[] = [];
       data.search.forEach((item) => arr.push({...item}));
 
@@ -215,7 +213,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         ]
       );
     }
-  },[data]);
+  }, [data]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     store.actionDispatcherStore.dispatchAction(

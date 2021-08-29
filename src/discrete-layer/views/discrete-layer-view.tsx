@@ -37,25 +37,25 @@ import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { hasOwnProperty } from '../../common/helpers/object';
 import { Mode } from '../../common/models/mode.enum';
-import { useQuery, useStore } from '../models/RootStore';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
 import { PolygonSelectionUi } from '../components/map-container/polygon-selection-ui_2';
 import { Filters } from '../components/filters/filters';
 import { LayersDetailsComponent } from '../components/layer-details/layer-details';
-import { ILayerImage } from '../models/layerImage';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
-import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
 import { BestEditComponent } from '../components/best-management/best-edit';
+import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
+import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
+import { ILayerImage } from '../models/layerImage';
+import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
-import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
-import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import { UserAction } from '../models/userStore';
 import { IDispatchAction } from '../models/actionDispatcherStore';
 import { TabViews } from './tab-views';
@@ -434,6 +434,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     });
     const timestamp = new Date().getTime().toString();
     record.id = 'DEFAULT_BEST_ID_' + timestamp;
+    record.type = RecordType.RECORD_RASTER;
     record.productName = 'DRAFT_OF_BEST_' + timestamp;
     record.productType = ProductType.BEST_ORTHOPHOTO;
     record.isDraft = true;
@@ -558,8 +559,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
     }
-  }, 
-  [store.userStore]);
+  }, [store.userStore]);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -635,7 +635,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             { 
             (tabIdx === TabViews.CREATE_BEST) && <>
-              <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.add' })}>
+              <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
                 <IconButton
                   className="operationIcon mc-icon-Property-1Add"
                   label="ADD TO BEST"

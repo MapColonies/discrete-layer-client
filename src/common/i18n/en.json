@@ -2,9 +2,9 @@
   "general.version.text": "Catalog App version",
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
-  "general.apply-btn.text": "Apply",
+  "general.continue-btn.text": "Continue",
   "general.save-btn.text": "Save",
-  "general.send-to-approval-btn.text": "Send to Approval",
+  "general.close-btn.text": "Close",
   "general.error.text": "Error",
   "general.error.title": "Something went wrong...",
   "general.error.description": "Message:",
@@ -12,6 +12,8 @@
   "general.title.new.3d": "New 3D product",
   "general.title.new.raster": "New raster product",
   "general.title.edit": "Edit product metadata",
+  "general.dialog.exit.title": "Are you sure?",
+  "general.dialog.exit.message": "You'll lose any unsaved changes.",
   "general.best-draft.new.tooltip": "New",
   "general.login-user.tooltip": "Logged in user: {user}",
 
@@ -85,7 +87,8 @@
   "tab-views.catalog.actions.ingest_3d": "Ingest 3D model",
   "tab-views.catalog.actions.new_best": "Create new BEST",
 
-  "tab-views.best-edit.actions.add": "Add layer\\s from list",
+  "tab-views.best-edit.actions.import": "Add layer\\s from list",
+  "tab-views.best-edit.actions.edit": "Edit BEST details",
 
   "best-edit.import.dialog.import-btn.text": "Import",
 
