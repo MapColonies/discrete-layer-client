@@ -6,7 +6,7 @@ import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
-import './actions.button-renderer.css';
+import './actions.cell-renderer.css';
 
 interface IActionsRendererParams extends ICellRendererParams {
   actions: IActionGroup[];
@@ -17,16 +17,19 @@ interface IActionsRendererParams extends ICellRendererParams {
 export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
-  props.actions.forEach(actionGroup => {
-    frequentActions = [
-      ...frequentActions,
-      ...actionGroup.group.filter(action => action.frequent)
-    ];
-    allFlatActions = [
-      ...allFlatActions,
-      ...actionGroup.group
-    ];
-  });
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (props.actions !== undefined) {
+    props.actions.forEach(actionGroup => {
+      frequentActions = [
+        ...frequentActions,
+        ...actionGroup.group.filter(action => action.frequent)
+      ];
+      allFlatActions = [
+        ...allFlatActions,
+        ...actionGroup.group
+      ];
+    });
+  }
 
   const [openActionsMenu, setOpenActionsMenu] = useState<boolean>(false);
 

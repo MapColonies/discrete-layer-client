@@ -18,11 +18,14 @@ import {
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
-import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.button-renderer';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
+import { TabViews } from '../../views/tab-views';
 
 const IS_PAGINATION = false;
 
@@ -63,6 +66,40 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         id: node.id,
         zOrder: numberOfRows !== undefined ? numberOfRows - 1 - node.rowIndex : index
       } as DiscreteOrder
+    );
+  };
+
+  const entityPermittedActions = useMemo(() => {
+    const entityActions: Record<string, unknown> = {};
+    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord'].forEach( entityName => {
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
+        return {
+          titleTranslationId: actionGroup.titleTranslationId,
+          group: 
+            actionGroup.group.filter(action => {
+              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                    action.views.includes(TabViews.CATALOG);
+            })
+            .map((action) => {
+              return {
+                ...action,
+                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+              };
+            }),
+        }
+       });
+       entityActions[entityName] = permittedGroupsActions;
+    })
+    return entityActions;
+  }, []);
+
+  const dispatchAction = (action: Record<string,unknown>): void => {
+    store.actionDispatcherStore.dispatchAction(
+      {
+        action: action.action,
+        data: action.data,
+      } as IDispatchAction
     );
   };
 
@@ -131,7 +168,11 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: '',
       width: 60,
       cellRenderer: 'actionsRenderer',
-      pinned: 'right'
+      cellRendererParams: {
+        // entity: (params.data as BestRecordModelType).__typename,
+        // actions: {entityPermittedActions[params.data.__typename] as IActionGroup[]}
+        actionHandler: dispatchAction
+      }
     }
   ];
   const gridOptions: GridComponentOptions = {

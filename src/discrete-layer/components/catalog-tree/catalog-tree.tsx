@@ -11,7 +11,7 @@ import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
-import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
+import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';

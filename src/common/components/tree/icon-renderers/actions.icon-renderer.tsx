@@ -4,7 +4,7 @@ import { IconButton,   MenuSurfaceAnchor,  MenuSurface, Typography } from '@map-
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
-import './actions.button-renderer.css';
+import './actions.icon-renderer.css';
 
 interface IActionsRendererParams {
   actions: IActionGroup[];
