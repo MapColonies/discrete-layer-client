@@ -434,6 +434,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     });
     const timestamp = new Date().getTime().toString();
     record.id = 'DEFAULT_BEST_ID_' + timestamp;
+    record.type = RecordType.RECORD_RASTER;
     record.productName = 'DRAFT_OF_BEST_' + timestamp;
     record.productType = ProductType.BEST_ORTHOPHOTO;
     record.isDraft = true;
