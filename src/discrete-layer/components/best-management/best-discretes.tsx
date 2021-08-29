@@ -78,8 +78,9 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
           titleTranslationId: actionGroup.titleTranslationId,
           group: 
             actionGroup.group.filter(action => {
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                    action.views.includes(TabViews.CATALOG);
+                    action.views.includes(TabViews.CREATE_BEST);
             })
             .map((action) => {
               return {
