@@ -17,9 +17,9 @@ import {
 } from '../../../common/components/grid';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
+import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
 import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
