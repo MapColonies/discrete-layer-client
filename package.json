@@ -79,7 +79,7 @@
     "@commitlint/config-conventional": "^9.1.1",
     "@map-colonies/react-components": "3.6.5",
     "@map-colonies/react-core": "3.3.1",
-    "@map-colonies/static-assets": "^0.1.1",
+    "@map-colonies/static-assets": "^0.2.0",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^10.4.9",
