@@ -24,7 +24,6 @@
   "action.box.tooltip": "מלבן",
   "action.polygon.tooltip": "מצולע",
   "action.bbox-corners.tooltip": "תיבת גבולות",
-  "action.type-select.tooltip": "סינון לפי סוג",
   "action.search.tooltip": "חיפוש טקסטואלי",
   "action.refresh.tooltip": "רענן",
   "action.operations.tooltip": "פעולות",

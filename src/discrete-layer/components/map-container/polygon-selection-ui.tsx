@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { FormattedMessage } from 'react-intl';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
+import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { DialogBBox } from './dialog-bbox';
+
 import './polygon-selection-ui.css';
 
 const WIDTH_SPACING_FACTOR = 18;

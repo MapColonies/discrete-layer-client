@@ -24,7 +24,6 @@
   "action.box.tooltip": "Box",
   "action.polygon.tooltip": "Polygon",
   "action.bbox-corners.tooltip": "BBox Corners",
-  "action.type-select.tooltip": "Filter by type",
   "action.search.tooltip": "Search text",
   "action.refresh.tooltip": "Refresh",
   "action.operations.tooltip": "Operations",

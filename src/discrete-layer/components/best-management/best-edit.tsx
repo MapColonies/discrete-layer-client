@@ -59,7 +59,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     if (!isEmpty(newLayersToAdd)) {
       const bestDiscretes = store.bestStore.layersList as LayerRasterRecordModelType[];
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
-      setTimeout(()=> {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
+      setTimeout(() => {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newLayersToAdd]);
@@ -69,10 +69,11 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     if (!isEmpty(layersList) && !isEmpty(discretesOrder)) {
       const layers = cloneDeep(layersList);
 
-      layers.forEach(discrete => {
-        const layer = discretesOrder.find(item => discrete.id === item.id);
-        if (layer) {
-          discrete.order = layer.zOrder;
+      layers.forEach(layer => {
+        const discrete = discretesOrder.find(item => layer.id === item.id);
+        if (discrete) {
+          layer.order = discrete.zOrder;
+          layer.includedInBests = [ ...(layer.includedInBests ?? []), store.bestStore.editingBest?.productName as string ];
         }
       });
 

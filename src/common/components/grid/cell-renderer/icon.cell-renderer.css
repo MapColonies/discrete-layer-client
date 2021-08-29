@@ -1,0 +1,11 @@
+.cellRendererIcon {
+  color: var(--mdc-theme-primary) !important;
+  position: relative;
+  top: 4px;
+  right: 16px;
+}
+
+body[dir='rtl'] .cellRendererIcon {
+  right: unset;
+  left: 16px;
+}

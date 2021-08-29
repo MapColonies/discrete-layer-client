@@ -261,15 +261,12 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           <FormattedMessage id="system-status.title"/>
           <Box 
             className="refreshContainer"
-            onClick={ (): void => {
+            onClick={(): void => {
               (actions as IActions).start(POLLING_CYCLE_INTERVAL);
               void query?.refetch();
             }}
           >
-            <IconButton 
-              icon="autorenew" 
-              className="refreshIcon"
-            />
+            <IconButton className="refreshIcon mc-icon-Refresh"/>
             <Box className="refreshSecs">
               {`${(timeLeft as number)/MILISECONDS_IN_SEC}`}
             </Box>

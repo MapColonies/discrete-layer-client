@@ -23,20 +23,21 @@ body[dir=rtl] #jobsDialog .closeIcon {
 }
 
 .refreshContainer .refreshIcon{
-  font-size: 30px;
+  font-size: 24px;
 }
 
 .refreshContainer .refreshSecs{
   position: relative;
+  text-align: center;
   font-size: 8px;
   width: 10px;
-  text-align: center;
-  right: 26px;
+  top: 1px;
+  right: 23px;
 }
 
 body[dir=rtl] .refreshContainer .refreshSecs {
   right: unset;
-  left: 26px;
+  left: 23px;
 }
 
 #jobsDialog .buttons{

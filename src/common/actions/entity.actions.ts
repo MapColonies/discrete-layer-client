@@ -4,6 +4,7 @@ export interface IAction {
   action: string;
   frequent: boolean;
   icon: string;
+  class: string;
   titleTranslationId: string;
   views: TabViews[];
 };
@@ -27,14 +28,16 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           {
             action: 'edit',
             frequent: true,
-            icon: 'edit',
+            icon: '',
+            class: 'mc-icon-Edit',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           // {
           //   action: 'delete',
           //   frequent: false,
-          //   icon: 'delete',
+          //   icon: '',
+          //   class: 'mc-icon-Delete',
           //   titleTranslationId: 'action.delete.tooltip',
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },
@@ -46,7 +49,8 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       //     {
       //       action: 'moveUP',
       //       frequent: false,
-      //       icon: 'arrow_upward',
+      //       icon: '',
+      //       class: 'mc-icon-Move-Row',
       //       titleTranslationId: 'action.layer.move-up.tooltip',
       //       views: [TabViews.CREATE_BEST, TabViews.CATALOG]
       //     },
@@ -63,14 +67,16 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           {
             action: 'edit',
             frequent: true,
-            icon: 'edit',
+            icon: '',
+            class: 'mc-icon-Edit',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           // {
           //   action: 'delete',
           //   frequent: false,
-          //   icon: 'delete',
+          //   icon: '',
+          //   class: 'mc-icon-Delete',
           //   titleTranslationId: 'action.delete.tooltip',
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },
@@ -87,14 +93,16 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           {
             action: 'edit',
             frequent: true,
-            icon: 'edit',
+            icon: '',
+            class: 'mc-icon-Edit',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           // {
           //   action: 'delete',
           //   frequent: false,
-          //   icon: 'delete',
+          //   icon: '',
+          //   class: 'mc-icon-Delete',
           //   titleTranslationId: 'action.delete.tooltip',
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },

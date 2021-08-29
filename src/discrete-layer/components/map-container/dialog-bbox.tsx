@@ -149,85 +149,82 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     onSetOpen(isOpened);
   };
   return (
-    <Dialog open={isOpen} preventOutsideDismiss={true}>
-      <DialogTitle>
-        <FormattedMessage id="custom-bbox.dialog.title" />
-        <IconButton
-          className="closeIcon mc-icon-Close"
-          label="CLOSE"
-          onClick={ (): void => { handleClose(false); } }
-        />
-      </DialogTitle>
-      <DialogContent>
-        <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
-          <Box className="dialogBboxRow">
-            <Box>
-              <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label'></FieldLabelComponent>
-              <TextField
-                name="topRightLat"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.topRightLat}
-                className="spacer"
-              />
+    <Box id="bboxDialog">
+      <Dialog open={isOpen} preventOutsideDismiss={true}>
+        <DialogTitle>
+          <FormattedMessage id="custom-bbox.dialog.title" />
+          <IconButton
+            className="closeIcon mc-icon-Close"
+            label="CLOSE"
+            onClick={ (): void => { handleClose(false); } }
+          />
+        </DialogTitle>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
+            <Box className="dialogBboxRow">
+              <Box>
+                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label'></FieldLabelComponent>
+                <TextField
+                  name="topRightLat"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.topRightLat}
+                  className="spacer"
+                />
+              </Box>
+              <Box>
+                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label'></FieldLabelComponent>
+                <TextField
+                  name="topRightLon"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.topRightLon}
+                  className="spacer"
+                />
+              </Box>
+              <BBoxCorner corner={Corner.TOP_RIGHT} />
             </Box>
-            <Box>
-              <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label'></FieldLabelComponent>
-              <TextField
-                name="topRightLon"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.topRightLon}
-                className="spacer"
-              />
+            <Box className="dialogBboxRow">
+              <Box>
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label'></FieldLabelComponent>
+                <TextField
+                  name="bottomLeftLat"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.bottomLeftLat}
+                  className="spacer"
+                />
+              </Box>
+              <Box>
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label'></FieldLabelComponent>
+                <TextField
+                  name="bottomLeftLon"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.bottomLeftLon}
+                  className="spacer"
+                />
+              </Box>
+              <BBoxCorner corner={Corner.BOTTOM_LEFT} />
             </Box>
-            <BBoxCorner corner={Corner.TOP_RIGHT} />
-          </Box>
-          <Box className="dialogBboxRow">
-            <Box>
-              <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label'></FieldLabelComponent>
-              <TextField
-                name="bottomLeftLat"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.bottomLeftLat}
-                className="spacer"
-              />
+            <Box className="buttons noMargin">
+              {!!formErrors.latDistance || !!formErrors.lonDistance ? (
+                <div id="errorContainer" className={classes.errorContainer}>
+                  {`${intl.formatMessage({ id: 'general.error.text' })}: ${
+                    formErrors.latDistance
+                  } ${formErrors.lonDistance}`}
+                </div>
+              ) : null}
+              <Button type="button" onClick={(): void => {handleClose(false);}}>
+                <FormattedMessage id="general.cancel-btn.text" />
+              </Button>
+              <Button raised type="submit">
+                <FormattedMessage id="general.ok-btn.text" />
+              </Button>
             </Box>
-            <Box>
-              <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label'></FieldLabelComponent>
-              <TextField
-                name="bottomLeftLon"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.bottomLeftLon}
-                className="spacer"
-              />
-            </Box>
-            <BBoxCorner corner={Corner.BOTTOM_LEFT} />
-          </Box>
-          <Box className="buttons noMargin">
-            {!!formErrors.latDistance || !!formErrors.lonDistance ? (
-              <div id="errorContainer" className={classes.errorContainer}>
-                {`${intl.formatMessage({ id: 'general.error.text' })}: ${
-                  formErrors.latDistance
-                } ${formErrors.lonDistance}`}
-              </div>
-            ) : null}
-            <Button
-              type="button"
-              onClick={(): void => {
-                handleClose(false);
-              }}
-            >
-              <FormattedMessage id="general.cancel-btn.text" />
-            </Button>
-            <Button raised type="submit">
-              <FormattedMessage id="general.ok-btn.text" />
-            </Button>
-          </Box>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </Box>
   );
 };
