@@ -132,9 +132,17 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     {
       headerName: '',
-      width: 50,
+      width: 20,
       field: '__typename',
-      cellRenderer: 'entityTypeRenderer'
+      cellRenderer: 'entityTypeRenderer',
+      cellRendererParams: {
+        style: {
+          display: 'flex',
+          justifyContent: 'center',
+          paddingTop: '8px'
+        }
+      },
+
     },
     {
       headerName: intl.formatMessage({

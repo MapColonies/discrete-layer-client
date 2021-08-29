@@ -5,7 +5,11 @@ import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
 
-export const EntityTypeRenderer: React.FC<ICellRendererParams> = (props) => {
+interface IEntityTypeCellRendererParams extends ICellRendererParams {
+  style?: Record<string, unknown>;
+}
+
+export const EntityTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (props) => {
   const type = (props.data as ILayerImage).__typename;
   let icon: string;
   let includedInBests;
@@ -29,7 +33,7 @@ export const EntityTypeRenderer: React.FC<ICellRendererParams> = (props) => {
   }
 
   return (
-    <Box>
+    <Box style={props.style}>
       <Tooltip content={value}>
         <IconButton className={icon} label="ENTITY TYPE ICON"/>
       </Tooltip>

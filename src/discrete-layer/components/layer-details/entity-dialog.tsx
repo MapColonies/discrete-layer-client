@@ -88,8 +88,11 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           }));
         } else {
           setTimeout(() => {
-            // @ts-ignore
-            store.bestStore.editBest({...(values as BestRecordModelType), sensorType: JSON.parse('[' + (values.sensorType as string) + ']') as string[]});
+            store.bestStore.editBest({
+              ...(values as BestRecordModelType), 
+              // @ts-ignore
+              sensorType: (values.sensorType !== undefined) ? JSON.parse('[' + (values.sensorType as string) + ']') as string[] : []
+            });
           }, IMMEDIATE_EXECUTION);
           closeDialog();
         }

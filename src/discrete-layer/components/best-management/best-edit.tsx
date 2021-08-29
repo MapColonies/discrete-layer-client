@@ -1,15 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { isEmpty, get, cloneDeep, isEqual } from 'lodash';
-import { Button, IconButton, Tooltip } from '@map-colonies/react-core';
+import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
-import { UserAction } from '../../models/userStore';
 import { LayersDetailsComponent } from '../layer-details/layer-details';
-import { EntityDialogComponent } from '../layer-details/entity-dialog';
 import { CloseWithoutSaveDialogComponent } from '../dialogs/close-without-save-dialog';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestCatalogComponent } from './best-catalog';
@@ -27,17 +25,14 @@ interface BestEditComponentProps {
 export const BestEditComponent: React.FC<BestEditComponentProps> = observer((props) => {
   const { best } = props;
   const store = useStore();
-  const intl = useIntl();
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const importListRef = useRef();
   const [discretes, setDiscretes] = useState<LayerRasterRecordModelType[]>([]);
   const [showImportAddButton, setShowImportAddButton] = useState<boolean>(false);
   const [newLayersToAdd, setNewLayersToAdd] = useState<LayerRasterRecordModelType[]>([]);
-  const [isEditBestEntityDialogOpen, setEditBestEntityDialogOpen] = useState<boolean>(false);
   const [isCloseWithoutSaveDialogOpen, setCloseWithoutSaveDialogOpen] = useState<boolean>(false);
-  // const [showEditButton, setShowEditButton] = useState<boolean>(false);
-  
+    
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
   useEffect(() => {
@@ -100,12 +95,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.bestStore.movedLayer]);
 
-  const permissions = useMemo(() => {
-    return {
-      isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
-    }
-  }, [store.userStore]);
-
   const isDirty = useMemo(() => {
     const current = store.bestStore.editingBest;
     if (!current) {
@@ -129,10 +118,6 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     props.handleCloseImport(false);
   };
 
-  const handleEditBestEntityDialogClick = (): void => {
-    setEditBestEntityDialogOpen(!isEditBestEntityDialogOpen);
-  };
- 
   const handleSave = (): void => {
     const currentDiscretesListRef = get(discretesListRef, 'current');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -166,31 +151,9 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     <>
       <Box
         className="bestDetails"
-        // onMouseOver={(evt): void => { setShowEditButton(true); }}
-        // onMouseOut={(evt): void => { setShowEditButton(false); }}
       >
         <LayersDetailsComponent layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
       </Box>
-      {
-        permissions.isBestRecordEditAllowed &&
-        // showEditButton &&
-        <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
-          <IconButton
-            className="editBestIcon mc-icon-Edit"
-            label="EDIT BEST"
-            onClick={ (): void => { handleEditBestEntityDialogClick(); } }
-          />
-        </Tooltip>
-      }
-      {
-        // showEditButton &&
-        isEditBestEntityDialogOpen &&
-        <EntityDialogComponent
-          isOpen={isEditBestEntityDialogOpen}
-          onSetOpen={setEditBestEntityDialogOpen}
-          layerRecord={best}>
-        </EntityDialogComponent>
-      }
 
       <BestDiscretesComponent
         // @ts-ignore
