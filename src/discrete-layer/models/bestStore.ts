@@ -152,6 +152,7 @@ export const bestStore = ModelBase
         ...layerToDelete,
         layerImageShown: false,
         footprintShown: false,
+        includedInBests: null,
       };
       const deletedId = layerToDelete.id;
       const deletedOrder = layerToDelete.order as number;
