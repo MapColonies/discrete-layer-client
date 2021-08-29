@@ -35,6 +35,7 @@ import {
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { hasOwnProperty } from '../../common/helpers/object';
 import { Mode } from '../../common/models/mode.enum';
 import { useQuery, useStore } from '../models/RootStore';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
@@ -56,6 +57,7 @@ import { FilterField } from '../models/RootStore.base';
 import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import { UserAction } from '../models/userStore';
+import { IDispatchAction } from '../models/actionDispatcherStore';
 import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -63,8 +65,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { IDispatchAction } from '../models/actionDispatcherStore';
-import { hasOwnProperty } from '../../common/helpers/object';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -375,7 +375,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(()=>{
     if(store.actionDispatcherStore.action !== undefined){
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
-      console.log(`RESOVING ${action} EVENT`, data);
+      console.log(`RESOLVING ${action} EVENT`, data);
 
       switch(action){
         case 'BestRecord.edit':
@@ -384,7 +384,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           break;
         case 'LayerRasterRecord.edit':
         case 'Layer3DRecord.edit':
-          // @ts-ignore        
+          // @ts-ignore
           store.discreteLayersStore.selectLayer(data as LayerMetadataMixedUnion);
           setEditEntityDialogOpen(!isEditEntityDialogOpen);
           break
@@ -448,10 +448,8 @@ const DiscreteLayerView: React.FC = observer(() => {
         zOrder: 1
       }
     ] as DiscreteOrder[];
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     store.bestStore.saveDraft(record as BestRecordModelType);
-
     store.bestStore.editBest(record as BestRecordModelType);
   };
 
@@ -495,7 +493,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     };
   };
   
-  const setDrawType = (drawType: DrawType): void =>{
+  const setDrawType = (drawType: DrawType): void => {
     setIsDrawing(true);
     setDrawPrimitive(createDrawPrimitive(drawType));
   };
@@ -578,7 +576,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             <IconButton 
               className={`operationIcon ${tabView?.iconClassName as string}`}
-              label="TABICON"
+              label="TAB ICON"
             />
             <Typography use="headline6" tag="span">
               <FormattedMessage id={tabView?.title}></FormattedMessage>
@@ -594,7 +592,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             {
               (tabIdx === TabViews.CATALOG) && 
                 <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                  <IconButton icon="autorenew" className="operationIcon" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                  <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
                 </Tooltip>
             }
             {
@@ -605,7 +603,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   {/* {
                     permissions.isLayerRasterRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
                       <IconButton
-                        className="operationIcon mc-icon-Search-History glow-missing-icon"
+                        className="operationIcon mc-icon-Map-Orthophoto"
                         label="NEW RASTER"
                         onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
                       />
@@ -614,7 +612,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   {
                     permissions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
                       <IconButton
-                        className="operationIcon mc-icon-Bests glow-missing-icon"
+                        className="operationIcon mc-icon-Map-3D"
                         label="NEW 3D"
                         onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
                       />
@@ -631,7 +629,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   }                  
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Search-History glow-missing-icon" onClick={evt => setOpenNew(!openNew)}/>
+                  <IconButton className="operationIcon mc-icon-Property-1Add" onClick={evt => setOpenNew(!openNew)}/>
                 </Tooltip>
               </MenuSurfaceAnchor>
             }
@@ -639,9 +637,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             (tabIdx === TabViews.CREATE_BEST) && <>
               <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.add' })}>
                 <IconButton
-                  className="operationIcon glow-missing-icon"
-                  icon="add"
-                  label="NEW BEST"
+                  className="operationIcon mc-icon-Property-1Add"
+                  label="ADD TO BEST"
                   onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
                 />
               </Tooltip>
@@ -657,13 +654,13 @@ const DiscreteLayerView: React.FC = observer(() => {
               <IconButton 
                 className="operationIcon mc-icon-Filter"
                 label="FILTER"
-                onClick={ (): void => { handleFilter() } }
+                onClick={ (): void => { handleFilter(); } }
               />
             </Tooltip>
             <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
               <IconButton 
                 className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
-                label="EXPANDER"
+                label="PANEL EXPANDER"
                 onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
               />
             </Tooltip>
@@ -722,7 +719,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           {
             permissions.isSystemsJobsAllowed && <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
-                className="operationIcon systemJobsIcon mc-icon-Search-History glow-missing-icon"
+                className="operationIcon mc-icon-System-Missions"
                 label="SYSTEM JOBS"
                 onClick={ (): void => { handleSystemsJobsDialogClick(); } }
               />
@@ -745,11 +742,11 @@ const DiscreteLayerView: React.FC = observer(() => {
               height: detailsPanelExpanded ? '50%' : '75%'
             }}
           >
-            <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block': 'none'}}>
+            <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block' : 'none'}}>
               {
                 getActiveTabHeader(activeTabView)
               }
-              <Box className="detailsContent" style={{ overflow: 'hidden'}}>
+              <Box className="detailsContent" style={{ overflow: 'hidden' }}>
                 <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>
@@ -800,7 +797,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`) &&
                 <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
                   <IconButton
-                    className="operationIcon mc-icon-Status-Approves glow-missing-icon"
+                    className="operationIcon mc-icon-Edit"
                     label="EDIT"
                     onClick={ (): void => { handleEditEntityDialogClick(); } }
                   />
@@ -816,7 +813,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
                 <IconButton 
                   className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
-                  label="EXPANDER"
+                  label="DETAILS EXPANDER"
                   onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
                 />
               </Tooltip>

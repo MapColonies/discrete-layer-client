@@ -130,6 +130,7 @@ export const bestStore = ModelBase
           return { 
             ...item, 
             order: last+index+1,
+            includedInBests: [ ...(item.includedInBests ?? []), self.editingBest?.productName as string ],
             layerImageShown: false,
             footprintShown: false,
           }; 

@@ -32,12 +32,12 @@
   color: var(--mdc-theme-on-surface);
 }
 
-.glow-missing-icon{
+.glow-missing-icon {
   animation: glow 1s ease-in-out infinite alternate;
 }
 
-@keyframes glow{
-  from{
+@keyframes glow {
+  from {
     text-shadow: 0 0 10px #fff, 0 0 12px #fff, 0 0 14px #e60073, 0 0 18px #e60073, 0 0 20px #e60073;
   }
   to {

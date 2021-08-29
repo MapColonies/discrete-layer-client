@@ -1,8 +1,8 @@
 .actionsContainer {
   position: relative;
   display: flex;
-  left: -132px;
-  width: 124px; /* 36+36+36+16*/
+  right: 172px;
+  width: 124px; /*36+36+36+16*/
   justify-content: flex-end;
   padding-left: 16px;
   background-color: rgb(44,65,89);
@@ -11,19 +11,18 @@
     Color = rgba(33, 150, 243, 0.1)
     Background = rgb(45, 55, 72)
 
-    ColorRes.Red   =   33 * 0.1 + 45 *  0.9
+    ColorRes.Red   =   33 * 0.1 + 45 * 0.9
     ColorRes.Green =  150 * 0.1 + 55 * 0.9
     ColorRes.Blue  =  243 * 0.1 + 72 * 0.9
-  
   */
 }
 
-body[dir='rtl'] .actionsContainer{
-  left: unset;
-  right: -132px;
+body[dir='rtl'] .actionsContainer {
+  right: unset;
+  left: 172px;
 }
 
-.actionsContainer .actionIcon{
+.actionsContainer .actionIcon {
   right: unset;
   left: unset;
 }
@@ -51,18 +50,18 @@ body[dir='rtl'] #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
 #actionsMenuContainer {
 }
 
-.actionMenuItem{
+.actionMenuItem {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-.actionMenuItemTitle{
+.actionMenuItemTitle {
   font-size: 16px;
   padding-left: 8px;
 }
 
-body[dir='rtl'] .actionMenuItemTitle{
+body[dir='rtl'] .actionMenuItemTitle {
  padding-left: unset;
  padding-right: 8px;
 }

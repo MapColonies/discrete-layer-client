@@ -1,17 +1,38 @@
-.dialogBboxForm{
+#bboxDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #bboxDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#bboxDialog .dialogBboxForm {
   padding-top: 16px;
   font-size: 0.875rem;
 }
 
-.dialogBboxRow{
+#bboxDialog .dialogBboxRow {
   display: flex;
   margin-bottom: 16px;
 }
 
-.spacer{
+#bboxDialog .spacer {
   margin-right: 16px;
 }
 
-.noMargin {
+body[dir='rtl'] #bboxDialog .spacer{
+  margin-right: unset;
+  margin-left: 16px;
+}
+
+#bboxDialog .noMargin {
   margin: 0 !important;
+}
+
+#bboxDialog .buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin: 20px;
 }

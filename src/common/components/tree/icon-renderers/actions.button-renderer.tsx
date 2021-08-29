@@ -42,21 +42,21 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
         frequentActions.map((action,idx) => {
           return (
             <IconButton
-              className="actionIcon glow-missing-icon1 actionDismissible"
+              className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
               icon={action.icon}
               key={`freqAct_${node.id as string}_${idx}`}
-              onClick={ (evt): void => { 
+              onClick={(evt): void => { 
                 sendAction(entity, action, node);
-              } }
+              }}
             />
           );
         })
       }
       <MenuSurfaceAnchor id="actionsMenuContainer">
-        <MenuSurface open={openActionsMenu} onClose={evt => setOpenActionsMenu(false)}
-          onMouseOver={(evt) => {
-            evt.stopPropagation();
-          }}
+        <MenuSurface
+          open={openActionsMenu}
+          onClose={evt => setOpenActionsMenu(false)}
+          onMouseOver={evt => { evt.stopPropagation(); }}
         >
           {
             allFlatActions.map((action,idx) => {
@@ -70,9 +70,8 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
                   className="actionMenuItem"
                 >
                   <IconButton
+                    className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
                     icon={action.icon}
-                    className="actionIcon glow-missing-icon1 actionDismissible"
-  
                   />
                   <Typography 
                     tag="div"

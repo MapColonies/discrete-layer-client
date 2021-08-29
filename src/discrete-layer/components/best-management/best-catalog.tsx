@@ -12,6 +12,7 @@ import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
 import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
+import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -25,6 +26,7 @@ import './best-catalog.css';
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
 const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 const INITIAL_ORDER = 0;
+const IMMEDIATE_EXECUTION = 0;
 
 interface BestCatalogComponentProps {
   filterOut: DiscreteOrder[] | undefined | null;
@@ -243,14 +245,12 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
                           }
                           const order = value ? selectedLayersRef.current : null;
-                          setTimeout(()=>{
-                            store.discreteLayersStore.showLayer(data.id, value, order);
-                          }, 0); 
-                          
+                          setTimeout(()=>{ store.discreteLayersStore.showLayer(data.id, value, order); }, IMMEDIATE_EXECUTION);
                           store.discreteLayersStore.addPreviewedLayer(data.id);
                           data.layerImageShown = value;
                         }}
-                      />
+                      />,
+                      <EntityTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
                     ],
                 buttons: [],
               })}

@@ -18,8 +18,9 @@ import {
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
-import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
+import { EntityTypeRenderer } from '../../../common/components/grid/cell-renderer/entity-type.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
@@ -102,10 +103,16 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       }
     },
     {
+      headerName: '',
+      width: 50,
+      field: '__typename',
+      cellRenderer: 'entityTypeRenderer'
+    },
+    {
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 130,
+      width: 90,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -122,7 +129,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 45,
+      width: 20,
       field: 'isNewlyAddedToBest',
       cellRenderer: 'iconRenderer',
       suppressMovable: true
@@ -140,11 +147,12 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       id: 'results.nodata',
     }),
     frameworkComponents: {
+      headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
-      iconRenderer: IconRenderer,
+      entityTypeRenderer: EntityTypeRenderer,
       customTooltip: CustomTooltip,
-      headerFootprintRenderer: HeaderFootprintRenderer,
+      iconRenderer: IconRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
