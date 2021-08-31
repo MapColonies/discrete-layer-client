@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { IconButton, Select, TextField, Tooltip, useTheme } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
-import { enumKeys } from '../../../common/helpers/enums';
+import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DialogBBox } from './dialog-bbox';
@@ -44,14 +44,13 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
   const { discreteLayersStore } = useStore();
   const [open, setOpen] = useState(false);
   const recordTypeOptions = useMemo(() => {
-    const options = [];
-    for (const value of enumKeys(RecordType)) {
-      options.push({
-          label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
-          value: RecordType[value]
-      });
-    }
-    return options;
+    return CONFIG.SERVED_ENTITY_TYPES.map((entity) => {
+      const value = entity as keyof typeof RecordType;
+      return {
+        label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
+        value: RecordType[value]
+      };
+    });
   }, []);
 
   return (
