@@ -28,5 +28,6 @@ keys = [
   "/configuration/logger/level",
   "/configuration/logger/log2console",
   "/configuration/job/status/polling/cycle/interval",
-  "/configuration/default/user/role"
+  "/configuration/default/user/role",
+  "/configuration/servedEntityTypes"
 ]
