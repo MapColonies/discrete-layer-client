@@ -129,7 +129,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     }
   ];
   const gridOptions: GridComponentOptions = {
-    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    // rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    immutableData: true,
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: IS_PAGINATION,
     columnDefs: colDef,

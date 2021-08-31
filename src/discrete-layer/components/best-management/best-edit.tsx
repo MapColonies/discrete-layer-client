@@ -95,6 +95,12 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.bestStore.movedLayer]);
 
+  useEffect(() => {
+    if (!props.openImport) {
+      setDiscretes(store.bestStore.layersList as LayerRasterRecordModelType[]);
+    }
+  }, [props.openImport, store.bestStore.layersList]);
+
   const isDirty = useMemo(() => {
     const current = store.bestStore.editingBest;
     if (!current) {

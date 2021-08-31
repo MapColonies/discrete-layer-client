@@ -97,7 +97,12 @@ export const discreteLayersStore = ModelBase
     }
 
     function setLayersImagesData(data: ILayerImage[]): void {
-      self.layersImages = [...data];
+      self.layersImages = data.map(item => ({
+          ...item,
+          layerImageShown: false,
+          order: null
+        })
+      );
     }
 
     function updateLayer(data: ILayerImage): void {
@@ -186,6 +191,14 @@ export const discreteLayersStore = ModelBase
       ];
     }
 
+    function removePreviewedLayer(id: string): void {
+      self.previewedLayers = self.previewedLayers?.filter(layerId => layerId !== id);
+    }
+
+    function isPreviewedLayer(id: string): boolean {
+      return self.previewedLayers?.find(layerId => layerId === id) !== undefined ? true : false;
+    }
+
     function cleanPreviewedLayer(): void {
       self.previewedLayers = [];
     }
@@ -206,6 +219,8 @@ export const discreteLayersStore = ModelBase
       updateLayer,
       addPreviewedLayer,
       cleanPreviewedLayer,
+      removePreviewedLayer,
+      isPreviewedLayer,
     };
   });
 
