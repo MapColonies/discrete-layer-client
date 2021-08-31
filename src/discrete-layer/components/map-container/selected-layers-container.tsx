@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Cesium3DTileset, CesiumGeographicTilingScheme, CesiumWMTSLayer, CesiumXYZLayer, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
+import { Cesium3DTileset, CesiumGeographicTilingScheme, CesiumWMTSLayer, CesiumXYZLayer, RCesiumWMTSLayerOptions, useCesiumMap } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -17,6 +17,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as CacheMap);
+  const mapViewer = useCesiumMap();
   
   useEffect(() => {
     if (discreteLayersStore.layersImages) {
@@ -27,6 +28,12 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       }
     }
   }, [discreteLayersStore.layersImages]);
+
+  useEffect(() => {
+    if (isEmpty(discreteLayersStore.previewedLayers)) {
+      cacheRef.current = {};
+    }
+  }, [discreteLayersStore.previewedLayers]);
 
   const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
     let optionsWMTS;
@@ -65,8 +72,13 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       if(cache[layer.id] !== undefined){
         return cache[layer.id];
       } else{
-        cache[layer.id] = generateLayerComponent(layer);
-        return cache[layer.id];
+        if(mapViewer.layersManager?.get(layer.id) === undefined){
+          cache[layer.id] = generateLayerComponent(layer);
+          return cache[layer.id];
+        }
+        else{
+          return <></>;
+        }
       }
     }
     else{

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { forwardRef, useImperativeHandle, useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
+// import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -18,7 +18,6 @@ import {
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
-import { EntityTypeRenderer } from '../../../common/components/grid/cell-renderer/entity-type.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
 import { LayerRasterRecordModelType } from '../../models';
@@ -76,7 +75,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 45,
+      width: 20,
       field: 'order',
       suppressMovable: true
     },
@@ -103,16 +102,10 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       }
     },
     {
-      headerName: '',
-      width: 50,
-      field: '__typename',
-      cellRenderer: 'entityTypeRenderer'
-    },
-    {
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 90,
+      width: 140,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -136,7 +129,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     }
   ];
   const gridOptions: GridComponentOptions = {
-    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    // rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    immutableData: true,
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: IS_PAGINATION,
     columnDefs: colDef,
@@ -150,7 +144,6 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
-      entityTypeRenderer: EntityTypeRenderer,
       customTooltip: CustomTooltip,
       iconRenderer: IconRenderer,
     },

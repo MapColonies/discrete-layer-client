@@ -1,7 +1,3 @@
-.ag-cell .mdc-checkbox {
-  position: unset;
-}
-
 .imageChecked {
   color: var(--mdc-theme-primary) !important;
 }

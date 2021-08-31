@@ -3,6 +3,8 @@ import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 
+import './layer-image.icon-renderer.css';
+
 interface ILayerImageCellRendererParams {
   onClick: (data: ILayerImage, isShown: boolean) => void;
   data: ILayerImage;
@@ -13,7 +15,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
   return (
     <Box>
       <IconButton 
-        className={layerImageShown ? 'mc-icon-Shown' : 'mc-icon-Hidden'}
+        className={layerImageShown ? 'mc-icon-Shown imageChecked' : 'mc-icon-Hidden'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (evt): void => {

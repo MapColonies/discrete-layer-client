@@ -558,6 +558,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
+      isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
   }, [store.userStore]);
 
@@ -634,15 +635,25 @@ const DiscreteLayerView: React.FC = observer(() => {
               </MenuSurfaceAnchor>
             }
             { 
-            (tabIdx === TabViews.CREATE_BEST) && <>
-              <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
-                <IconButton
-                  className="operationIcon mc-icon-Property-1Add"
-                  label="ADD TO BEST"
-                  onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
-                />
-              </Tooltip>
-            </>
+            (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
+              <>
+                <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Edit"
+                    label="EDIT"
+                    onClick={ (): void => { 
+                      setEditEntityDialogOpen(!isEditEntityDialogOpen);
+                    } }
+                  />
+                </Tooltip>
+                <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
+                  <IconButton
+                    className="operationIcon mc-icon-Property-1Add"
+                    label="ADD TO BEST"
+                    onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
+                  />
+                </Tooltip>
+              </>
             }
             {/* <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
               <IconButton 
@@ -807,7 +818,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 isEditEntityDialogOpen && <EntityDialogComponent
                   isOpen={isEditEntityDialogOpen}
                   onSetOpen={setEditEntityDialogOpen}
-                  layerRecord={layerToPresent}>
+                  layerRecord={layerToPresent ?? editingBest}>
                 </EntityDialogComponent>
               }
               <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
