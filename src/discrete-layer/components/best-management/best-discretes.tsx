@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { forwardRef, useImperativeHandle, useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
+// import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
