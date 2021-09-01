@@ -60,7 +60,7 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   
   const fieldNameStr = fieldName as string;
   const typeString = get(recordModel,`properties.${fieldNameStr}.name`) as string;
-  if(fieldNameStr.toLowerCase().includes('url')){
+  if (fieldNameStr.toLowerCase().includes('url')) {
     return 'url';
   }
   else if (fieldNameStr.toLowerCase().includes('links')){
@@ -138,7 +138,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
     }
 
     const fieldsInfo = get(entityDesc, 'categories') as IRecordCategoryFieldsInfo[];
-    if(isBrief === true) {
+    if (isBrief === true) {
       return fieldsInfo.filter((item) => item.category === FieldCategory.MAIN);
     }
     return fieldsInfo;

@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { IconButton, Select, TextField, Tooltip, useTheme } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
-import { enumKeys } from '../../../common/helpers/enums';
+import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DialogBBox } from './dialog-bbox';
@@ -31,10 +31,7 @@ export interface PolygonSelectionUiProps {
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
 }
 
-
-export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
-  props
-) => {
+export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
   const {
     isSelectionEnabled,
     onCancelDraw,
@@ -47,14 +44,13 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   const { discreteLayersStore } = useStore();
   const [open, setOpen] = useState(false);
   const recordTypeOptions = useMemo(() => {
-    const options = [];
-    for (const value of enumKeys(RecordType)) {
-      options.push({
-          label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
-          value: RecordType[value]
-      });
-    }
-    return options;
+    return CONFIG.SERVED_ENTITY_TYPES.map((entity) => {
+      const value = entity as keyof typeof RecordType;
+      return {
+        label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
+        value: RecordType[value]
+      };
+    });
   }, []);
 
   return (
@@ -89,29 +85,27 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
       </Tooltip>
       <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
         <IconButton 
-          icon="settings_overscan" 
-          label="BBOX_CORNERS" 
-          onClick={ (): void => {setOpen(true);}}/>
+          className="mc-icon-Set-Coordinates" 
+          label="BBOX CORNERS" 
+          onClick={(): void => {setOpen(true);}}/>
       </Tooltip>
       <Devider/>
       <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
-        <IconButton icon="delete" label="CLEAR" onClick={onReset}/>
+        <IconButton className="mc-icon-Delete" label="CLEAR" onClick={onReset}/>
       </Tooltip>
       <Devider/>
-      <Tooltip content={intl.formatMessage({ id: 'action.type-select.tooltip' })}>
-        <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
-          <Select
-            enhanced
-            defaultValue={RecordType.RECORD_ALL.toString()}
-            options={recordTypeOptions}
-            onChange={
-              (evt): void => {
-                discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
-              }
+      <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
+        <Select
+          enhanced
+          defaultValue={RecordType.RECORD_ALL.toString()}
+          options={recordTypeOptions}
+          onChange={
+            (evt): void => {
+              discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
             }
-          />
-        </Box>
-      </Tooltip>
+          }
+        />
+      </Box>
       <Box id="searchTerm">
         <TextField fullwidth style={{padding: '0 6px 0 6px'}}/>
       </Box>

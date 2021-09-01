@@ -9,7 +9,7 @@ import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-cor
 import { Box } from '@map-colonies/react-components';
 import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
 import { Mode } from '../../../common/models/mode.enum';
-import { Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
+import { BestRecordModelType, Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
@@ -19,6 +19,7 @@ import { IngestionFields } from './ingestion-fields';
 import './entity-dialog.css';
 
 const DEFAULT_ID = 'DEFAULT_ID';
+const IMMEDIATE_EXECUTION = 0;
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -72,25 +73,36 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     initialValues: layerRecord as FormikValues,
     onSubmit: values => {
       console.log(values);
-      if(mode === Mode.EDIT) {
-        mutationQuery.setQuery(store.mutateUpdateMetadata({
-          data: {
-            id: values.id as string,
-            type: values.type as RecordType,
-            productName: values.productName as string,
-            description: values.description as string,
-            sensorType: values.sensorType as SensorType[],
-            classification: values.classification as string ,
-            keywords: values.keywords as string,
-          }
-        }));
+      if (mode === Mode.EDIT) {
+        if (values.__typename !== 'BestRecord') {
+          mutationQuery.setQuery(store.mutateUpdateMetadata({
+            data: {
+              id: values.id as string,
+              type: values.type as RecordType,
+              productName: values.productName as string,
+              description: values.description as string,
+              sensorType: values.sensorType as SensorType[],
+              classification: values.classification as string ,
+              keywords: values.keywords as string,
+            }
+          }));
+        } else {
+          setTimeout(() => {
+            store.bestStore.editBest({
+              ...(values as BestRecordModelType), 
+              // @ts-ignore
+              sensorType: (values.sensorType !== undefined) ? JSON.parse('[' + (values.sensorType as string) + ']') as string[] : []
+            });
+          }, IMMEDIATE_EXECUTION);
+          closeDialog();
+        }
       } else {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { directory, fileNames, __typename, ...metadata } = values;
         switch(recordType){
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
-              data:{
+              data: {
                 directory: directory as string,
                 fileNames: [ fileNames as string ],
                 metadata: metadata as Layer3DRecordInput,
@@ -100,7 +112,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             break;
           case RecordType.RECORD_RASTER:
             mutationQuery.setQuery(store.mutateStartRasterIngestion({
-              data:{
+              data: {
                 directory: directory as string,
                 fileNames: (fileNames as string).split(","),
                 metadata: metadata as LayerRasterRecordInput,

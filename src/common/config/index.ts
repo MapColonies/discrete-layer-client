@@ -14,6 +14,7 @@ const ACTIVE_LAYER_PROPERTIES = (window as any)._env_.ACTIVE_LAYER_PROPERTIES;
 const MAP = (window as any)._env_.MAP;
 const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
+const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
@@ -70,7 +71,8 @@ const APP_CONFIG = {
   },
   DEFAULT_USER: {
     ROLE: DEFAULT_USER.role
-  }
+  },
+  SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(',')
 };
 
 export default APP_CONFIG;

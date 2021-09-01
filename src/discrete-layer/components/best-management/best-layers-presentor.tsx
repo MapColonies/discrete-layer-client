@@ -62,7 +62,6 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   };
 
   useLayoutEffect(() => {
-    // @ts-ignore
     if(!isEmpty(bestStore.layersList)){
       const sortedLayers = [...(bestStore.layersList ?? [])].sort(
         // @ts-ignore
@@ -72,26 +71,25 @@ export const BestLayersPresentor: React.FC = observer((props) => {
       setlayersImages(sortedLayers);
 
     } else {
-      // @ts-ignore
       mapViewer.layersManager?.removeNotBaseMapLayers();
-
       setlayersImages([]);
     }
   }, [bestStore.layersList, mapViewer]);
 
   useLayoutEffect(() => {
-    // @ts-ignore
     if (isEmpty(prevLayersImages)) {
       addLayersToMap(layersImages);
     } else {
       (prevLayersImages ?? []).forEach(prevLayer => {
         const layer = layersImages.find(layer => layer.id === prevLayer.id);
         if (layer && layer.layerImageShown !== prevLayer.layerImageShown) {
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           mapViewer.layersManager?.show(layer.id, layer.layerImageShown ? true : false);
         }
       })
     }
-  }, [layersImages, mapViewer]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layersImages, mapViewer, prevLayersImages]);
 
   useLayoutEffect(() => {
     if (bestStore.movedLayer) {
@@ -106,12 +104,9 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   useLayoutEffect(() => {
     if (bestStore.importedLayers) {
       addLayersToMap(bestStore.importedLayers);
-      setlayersImages([
-        ...layersImages,
-        ...bestStore.importedLayers
-      ]);
     }
-  }, [bestStore.importedLayers, mapViewer]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bestStore.importedLayers]);
   
   return (
     <></>

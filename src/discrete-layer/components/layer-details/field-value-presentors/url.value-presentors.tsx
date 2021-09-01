@@ -24,7 +24,7 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
       <Box className="detailsUrlFieldUrlCopy">
         <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
           <CopyToClipboard text={value as string} onCopy={(): void => setCopied(true)}>
-            <IconButton icon="content_copy"/>
+            <IconButton className="mc-icon-Copy"/>
           </CopyToClipboard>
         </Tooltip>
       </Box>

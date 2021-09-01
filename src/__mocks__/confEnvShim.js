@@ -43,7 +43,8 @@ if (!window._env_) {
       },
       DEFAULT_USER: {
         role: 'ADMIN'
-      }
+      },
+      SERVED_ENTITY_TYPES: 'RECORD_ALL,RECORD_RASTER,RECORD_3D'
     };
   })(void 0);
 }

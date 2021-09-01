@@ -1,22 +1,21 @@
-.categoryFieldsParentContainer{
+.categoryFieldsParentContainer {
   display: flex;
   flex-wrap: wrap;
   margin-top: 16px;
 }
 
-.categoryFieldsTitle{
+.categoryFieldsTitle {
   flex: 100%;
   color: var(--mdc-theme-text-icon-on-dark, #fff);
   font-size: 16px;
   font-weight: 600;
 }
 
-.categoryFieldsContainer{
+.categoryFieldsContainer {
   display: flex;
   flex-wrap: wrap;
   flex: 100%;
   gap: 10%;
-  margin-left: 16px;
   margin-bottom: 8px;
 }
 
@@ -25,7 +24,7 @@ body[dir='rtl'] .categoryFieldsContainer {
   margin-right: 16px;
 }
 
-.categoryField{
+.categoryField {
   flex: 40%;
   padding: 2px 0;
   display: flex;
@@ -34,13 +33,13 @@ body[dir='rtl'] .categoryFieldsContainer {
   text-overflow: ellipsis;
 }
 
-.categoryFullWidthField{
+.categoryFullWidthField {
   flex: 100%;
   padding: 2px 0;
   display: flex;
 }
 
-.detailsFieldLabel{
+.detailsFieldLabel {
   color: var(--mdc-theme-text-icon-on-dark);
   flex: 0 0 90px;
   overflow: hidden;
@@ -48,7 +47,7 @@ body[dir='rtl'] .categoryFieldsContainer {
   text-overflow: ellipsis;
 }
 
-.detailsFieldValue{
+.detailsFieldValue {
   color: var(--mdc-theme-text-primary-on-dark);
   margin-left: 12px;
   overflow: hidden;
@@ -56,12 +55,12 @@ body[dir='rtl'] .categoryFieldsContainer {
   text-overflow: ellipsis;
 }
 
-body[dir='rtl'] .detailsFieldValue{
+body[dir='rtl'] .detailsFieldValue {
   margin-left: unset;
   margin-right: 12px;
 }
 
-.noSelection{
+.noSelection {
   padding-top: 20px;
   text-align: center;
 }

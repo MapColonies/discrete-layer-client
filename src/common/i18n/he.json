@@ -2,9 +2,9 @@
   "general.version.text": "אפליקצית קטלוג גרסה",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
-  "general.apply-btn.text": "החל",
+  "general.continue-btn.text": "המשך",
   "general.save-btn.text": "שמור",
-  "general.send-to-approval-btn.text": "שלח לאישור והפקה",
+  "general.close-btn.text": "סגור",
   "general.error.text": "שגיאה",
   "general.error.title": "משהו השתבש...",
   "general.error.description": "מידע נוסף:",
@@ -12,6 +12,8 @@
   "general.title.new.3d": "הוספת מוצר תלת-מימד",
   "general.title.new.raster": "הוספת מוצר ראסטר",
   "general.title.edit": "עריכת מידע של מוצר",
+  "general.dialog.exit.title": "בטוח שברצונך להמשיך?",
+  "general.dialog.exit.message": "שינויים שלא נשמרו ייאבדו.",
   "general.best-draft.new.tooltip": "חדש",
   "general.login-user.tooltip": "{user} מחובר כמשתמש",
 
@@ -22,7 +24,6 @@
   "action.box.tooltip": "מלבן",
   "action.polygon.tooltip": "מצולע",
   "action.bbox-corners.tooltip": "תיבת גבולות",
-  "action.type-select.tooltip": "סינון לפי סוג",
   "action.search.tooltip": "חיפוש טקסטואלי",
   "action.refresh.tooltip": "רענן",
   "action.operations.tooltip": "פעולות",
@@ -86,7 +87,8 @@
   "tab-views.catalog.actions.ingest_3d": "הוסף מוצר תלת-מימד",
   "tab-views.catalog.actions.new_best": "צור BEST",
 
-  "tab-views.best-edit.actions.add": "הוסף שכבה/ות מתוך רשימה",
+  "tab-views.best-edit.actions.import": "הוסף שכבה/ות מתוך רשימה",
+  "tab-views.best-edit.actions.edit": "עריכת נתוני BEST",
 
   "best-edit.import.dialog.import-btn.text": "הוסף",
   

@@ -1,6 +1,6 @@
-import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { observer } from 'mobx-react-lite';
 import { isObject } from 'lodash';
 import CONFIG from '../../../common/config';
 import { 
@@ -15,11 +15,12 @@ import {
   GridApi
 } from '../../../common/components/grid';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
+import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
+import { EntityTypeRenderer } from '../../../common/components/grid/cell-renderer/entity-type.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 
@@ -130,12 +131,18 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       }
     },
     {
-      headerName: intl.formatMessage({
-        id: 'results.fields.order.label',
-      }),
-      width: 50,
-      field: 'order',
-      hide: true
+      headerName: '',
+      width: 20,
+      field: '__typename',
+      cellRenderer: 'entityTypeRenderer',
+      cellRendererParams: {
+        style: {
+          display: 'flex',
+          justifyContent: 'center',
+          paddingTop: '8px'
+        }
+      },
+
     },
     {
       headerName: intl.formatMessage({
@@ -156,6 +163,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'updateDate',
       suppressMovable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'results.fields.order.label',
+      }),
+      width: 50,
+      field: 'order',
+      hide: true
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -173,10 +188,11 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     }),
     frameworkComponents: {
       // detailsRenderer: LayerDetailsRenderer,
+      headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
+      entityTypeRenderer: EntityTypeRenderer,
       customTooltip: CustomTooltip,
-      headerFootprintRenderer: HeaderFootprintRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,

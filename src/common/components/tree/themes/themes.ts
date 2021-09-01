@@ -11,7 +11,7 @@ export class TreeThemes {
       "--rst-selected-background-color": selectionBackground,
       "--rst-hover-background-color": hoverBackground,
       "--rst-highlight-line-size": '6px',
-      "--rst-node-label-width": '300px',
+      "--rst-node-label-width": '280px',
       "--rst-expander-size": '30px',
     };
     // return Object.entries(rstTheme).map(

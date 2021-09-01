@@ -2,6 +2,6 @@
   position: unset;
 }
 
-.layerShown {
-  color: red !important;
+.imageChecked {
+  color: var(--mdc-theme-primary) !important;
 }

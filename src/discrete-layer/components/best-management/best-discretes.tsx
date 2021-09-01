@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { forwardRef, useImperativeHandle, useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
+// import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import CONFIG from '../../../common/config';
 import { 
   GridComponent,
@@ -113,7 +113,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 45,
+      width: 20,
       field: 'order',
       suppressMovable: true
     },
@@ -143,7 +143,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 130,
+      width: 140,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -160,7 +160,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 45,
+      width: 20,
       field: 'isNewlyAddedToBest',
       cellRenderer: 'iconRenderer',
       suppressMovable: true
@@ -177,7 +177,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     }
   ];
   const gridOptions: GridComponentOptions = {
-    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    // rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    immutableData: true,
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: IS_PAGINATION,
     columnDefs: colDef,
@@ -188,8 +189,10 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       id: 'results.nodata',
     }),
     frameworkComponents: {
+      headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
+      customTooltip: CustomTooltip,
       iconRenderer: IconRenderer,
       customTooltip: CustomTooltip,
       actionsRenderer: ActionsRenderer,
