@@ -189,10 +189,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
-      customTooltip: CustomTooltip,
       iconRenderer: IconRenderer,
       customTooltip: CustomTooltip,
       actionsRenderer: ActionsRenderer,
