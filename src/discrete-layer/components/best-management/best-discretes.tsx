@@ -27,6 +27,8 @@ import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { TabViews } from '../../views/tab-views';
 
+import './best-discretes.css';
+
 const IS_PAGINATION = false;
 
 interface BestDiscretesComponentProps {
@@ -167,8 +169,9 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 20,
+      width: 240,
       cellRenderer: 'actionsRenderer',
+      pinned: 'right',
       cellRendererParams: {
         // entity: (params.data as BestRecordModelType).__typename,
         // actions: {entityPermittedActions[params.data.__typename] as IActionGroup[]}

@@ -6,8 +6,6 @@ import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
-import './actions.cell-renderer.css';
-
 interface IActionsRendererParams extends ICellRendererParams {
   actions: IActionGroup[];
   entity: string;
@@ -41,62 +39,67 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
     });
   }
   return (
-    <Box className="actionsContainer">
-      {
-        frequentActions.map((action,idx) => {
-          return (
-            <IconButton
-              className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
-              icon={action.icon}
-              key={`freqAct_${(props.data as ILayerImage).id}_${idx}`}
-              onClick={(evt): void => { 
-                sendAction(props.entity, action, props.data);
-              }}
-            />
-          );
-        })
-      }
-      <MenuSurfaceAnchor id="actionsMenuContainer">
-        <MenuSurface
-          open={openActionsMenu}
-          onClose={evt => setOpenActionsMenu(false)}
-          onMouseOver={evt => evt.stopPropagation()}
-        >
-          {
-            allFlatActions.map((action,idx) => {
-              return (
-                <Box 
-                  key={`menuAct_${(props.data as ILayerImage).id}_${idx}`}
-                  onClick={(evt): void => {
-                    sendAction(props.entity, action, props.data);
-                    setOpenActionsMenu(false); 
-                  }}
-                  className="actionMenuItem"
-                >
-                  <IconButton
-                    className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
-                    icon={action.icon}
-                  />
-                  <Typography 
-                    tag="div"
-                    className="actionMenuItemTitle actionDismissible"
-                  >
-                    {action.titleTranslationId}
-                  </Typography>
-                </Box>
-              );
-            })
-          }
-        </MenuSurface>
-        {
-          !isEmpty(allFlatActions) && <IconButton 
-            id="allActionsIcon"
-            icon="more_vert" 
-            className="actionIcon" 
-            onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
-          />
-        }
-      </MenuSurfaceAnchor>
-    </Box> 
+    <Box>
+      KUKU
+    </Box>
   );
+  // return (
+  //   <Box className="actionsContainer">
+  //     {
+  //       frequentActions.map((action,idx) => {
+  //         return (
+  //           <IconButton
+  //             className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
+  //             icon={action.icon}
+  //             key={`freqAct_${(props.data as ILayerImage).id}_${idx}`}
+  //             onClick={(evt): void => { 
+  //               sendAction(props.entity, action, props.data);
+  //             }}
+  //           />
+  //         );
+  //       })
+  //     }
+  //     <MenuSurfaceAnchor id="actionsMenuContainer">
+  //       <MenuSurface
+  //         open={openActionsMenu}
+  //         onClose={evt => setOpenActionsMenu(false)}
+  //         onMouseOver={evt => evt.stopPropagation()}
+  //       >
+  //         {
+  //           allFlatActions.map((action,idx) => {
+  //             return (
+  //               <Box 
+  //                 key={`menuAct_${(props.data as ILayerImage).id}_${idx}`}
+  //                 onClick={(evt): void => {
+  //                   sendAction(props.entity, action, props.data);
+  //                   setOpenActionsMenu(false); 
+  //                 }}
+  //                 className="actionMenuItem"
+  //               >
+  //                 <IconButton
+  //                   className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
+  //                   icon={action.icon}
+  //                 />
+  //                 <Typography 
+  //                   tag="div"
+  //                   className="actionMenuItemTitle actionDismissible"
+  //                 >
+  //                   {action.titleTranslationId}
+  //                 </Typography>
+  //               </Box>
+  //             );
+  //           })
+  //         }
+  //       </MenuSurface>
+  //       {
+  //         !isEmpty(allFlatActions) && <IconButton 
+  //           id="allActionsIcon"
+  //           icon="more_vert" 
+  //           className="actionIcon" 
+  //           onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
+  //         />
+  //       }
+  //     </MenuSurfaceAnchor>
+  //   </Box> 
+  // );
 };
