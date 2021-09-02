@@ -641,7 +641,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                   <IconButton
                     className="operationIcon mc-icon-Edit"
                     label="EDIT"
-                    onClick={ (): void => { 
+                    onClick={ (): void => {
+                      store.discreteLayersStore.selectLayer(undefined);
                       setEditEntityDialogOpen(!isEditEntityDialogOpen);
                     } }
                   />
