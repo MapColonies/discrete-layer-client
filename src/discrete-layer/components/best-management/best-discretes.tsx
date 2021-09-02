@@ -143,7 +143,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 140,
+      width: 120,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -167,7 +167,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 60,
+      width: 20,
       cellRenderer: 'actionsRenderer',
       cellRendererParams: {
         // entity: (params.data as BestRecordModelType).__typename,
