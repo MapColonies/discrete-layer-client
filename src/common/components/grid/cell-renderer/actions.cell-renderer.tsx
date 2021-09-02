@@ -46,18 +46,18 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
         frequentActions.map((action,idx) => {
           return (
             <IconButton
-              className="actionIcon actionDismissible"
+              className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
               icon={action.icon}
               key={`freqAct_${(props.data as ILayerImage).id}_${idx}`}
-              onClick={ (evt): void => { 
+              onClick={(evt): void => { 
                 sendAction(props.entity, action, props.data);
-              } }
+              }}
             />
           );
         })
       }
       <MenuSurfaceAnchor id="actionsMenuContainer">
-        <MenuSurface 
+        <MenuSurface
           open={openActionsMenu}
           onClose={evt => setOpenActionsMenu(false)}
           onMouseOver={evt => evt.stopPropagation()}
@@ -67,15 +67,15 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
               return (
                 <Box 
                   key={`menuAct_${(props.data as ILayerImage).id}_${idx}`}
-                  onClick={ (evt): void => {
+                  onClick={(evt): void => {
                     sendAction(props.entity, action, props.data);
                     setOpenActionsMenu(false); 
-                  } }
+                  }}
                   className="actionMenuItem"
                 >
                   <IconButton
+                    className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
                     icon={action.icon}
-                    className="actionIcon actionDismissible"
                   />
                   <Typography 
                     tag="div"
