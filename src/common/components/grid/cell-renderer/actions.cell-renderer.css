@@ -1,8 +1,9 @@
 .actionsContainer {
-  position: relative;
+  position: fixed;
   display: flex;
-  left: -132px;
-  width: 124px; /* 36+36+36+16*/
+  right: 16px;
+  width: 124px; /*36+36+36+16*/
+  height: 42px;
   justify-content: flex-end;
   padding-left: 16px;
   background-color: rgb(44,65,89);
@@ -11,16 +12,15 @@
     Color = rgba(33, 150, 243, 0.1)
     Background = rgb(45, 55, 72)
 
-    ColorRes.Red   =   33 * 0.1 + 45 *  0.9
+    ColorRes.Red   =   33 * 0.1 + 45 * 0.9
     ColorRes.Green =  150 * 0.1 + 55 * 0.9
     ColorRes.Blue  =  243 * 0.1 + 72 * 0.9
-  
   */
 }
 
 body[dir='rtl'] .actionsContainer {
-  left: unset;
-  right: -132px;
+  right: unset;
+  left: 16px;
 }
 
 .actionsContainer .actionIcon {
