@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box } from '@map-colonies/react-components';
 import { isEmpty } from 'lodash';
 import { IconButton,   MenuSurfaceAnchor,  MenuSurface, Typography } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.button-renderer.css';
@@ -29,7 +29,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
 
   const [openActionsMenu, setOpenActionsMenu] = useState<boolean>(false);
 
-  const sendAction = (entity:string, action:IAction, data: Record<string,unknown>): void => {
+  const sendAction = (entity: string, action: IAction, data: Record<string,unknown>): void => {
     console.log(`SEND ${action.action} EVENT`);
     actionHandler({
       action: `${entity}.${action.action}`,
