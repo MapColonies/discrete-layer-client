@@ -147,7 +147,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 155,
+      width: 140,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',

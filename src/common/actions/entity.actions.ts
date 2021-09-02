@@ -35,7 +35,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           },
           {
             action: 'delete',
-            frequent: false,
+            frequent: true,
             icon: '',
             class: 'mc-icon-Delete',
             titleTranslationId: 'action.delete.tooltip',

@@ -176,8 +176,7 @@ export const bestStore = ModelBase
             };
           })
       ];
-      const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
-      editBest(newBest);
+      editBest({ ...self.editingBest as BestRecordModelType, discretes: [...discretes] });
       setLayersList([
         ...(self.layersList as LayerRasterRecordModelType[])
           .filter((item) =>
