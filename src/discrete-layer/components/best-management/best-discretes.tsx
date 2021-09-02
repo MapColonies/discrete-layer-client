@@ -30,6 +30,7 @@ import { TabViews } from '../../views/tab-views';
 import './best-discretes.css';
 
 const IS_PAGINATION = false;
+const OUT_OF_RANGE = -1;
 
 interface BestDiscretesComponentProps {
   style?: {[key: string]: string};
@@ -49,7 +50,8 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     );
   }, [props.discretes]);
   
-  let start: number;
+  let fromIndex: number;
+  let toIndex: number;
   let numberOfRows: number | undefined;
   let currentOrder: DiscreteOrder[];
 
@@ -213,10 +215,16 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       store.discreteLayersStore.selectLayerByID((event.data as LayerRasterRecordModelType).id);
     },
     onRowDragEnter(event: GridRowDragEnterEvent) {
-      start = event.overIndex;
+      fromIndex = event.overIndex;
     },
     onRowDragEnd(event: GridRowDragEndEvent) {
-      store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: start, to: event.overIndex });
+      const lastIndex = (store.bestStore.layersList?.length ?? 1) - 1;
+      if (fromIndex === OUT_OF_RANGE && event.node.data !== undefined && event.node.data !== null) {
+        const rowOrder = (event.node.data as LayerRasterRecordModelType).order;
+        fromIndex = lastIndex - (rowOrder ?? lastIndex);
+      }
+      toIndex = event.overIndex !== OUT_OF_RANGE ? event.overIndex : lastIndex;
+      store.bestStore.updateMovedLayer({ id: (event.node.data as LayerRasterRecordModelType).id, from: fromIndex, to: toIndex });
     },
     onGridReady(params: GridReadyEvent) {
       setGridApi(params.api);
