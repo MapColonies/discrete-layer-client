@@ -169,12 +169,11 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     },
     {
       headerName: '',
-      width: 240,
+      width: 124,
       cellRenderer: 'actionsRenderer',
       pinned: 'right',
       cellRendererParams: {
-        // entity: (params.data as BestRecordModelType).__typename,
-        // actions: {entityPermittedActions[params.data.__typename] as IActionGroup[]}
+        actions: entityPermittedActions,
         actionHandler: dispatchAction
       }
     }
