@@ -456,6 +456,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     store.bestStore.saveDraft(record as BestRecordModelType);
     store.bestStore.editBest(record as BestRecordModelType);
+    setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
 
   const handleEditEntityDialogClick = (): void => {
@@ -628,7 +629,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                       <IconButton
                         className="operationIcon mc-icon-Bests"
                         label="NEW BEST"
-                        onClick={ (): void => { setOpenNew(false); handleCreateBestDraft(); } }
+                        onClick={ (): void => {
+                          setOpenNew(false);
+                          handleCreateBestDraft();
+                        } }
                       />
                     </Tooltip>
                   }                  
