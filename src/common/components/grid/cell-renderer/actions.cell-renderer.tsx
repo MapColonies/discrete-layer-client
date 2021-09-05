@@ -59,7 +59,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           );
         })
       }
-      <MenuSurfaceAnchor id="actionsMenuContainer">
+      {/* <MenuSurfaceAnchor id="actionsMenuContainer">
         <MenuSurface
           open={openActionsMenu}
           onClose={evt => setOpenActionsMenu(false)}
@@ -100,7 +100,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
             onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
           />
         }
-      </MenuSurfaceAnchor>
+      </MenuSurfaceAnchor> */}
     </Box>
   );
 };
