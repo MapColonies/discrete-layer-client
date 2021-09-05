@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import { 
   CategoryConfigModelType, 
   FieldConfigModelType, 
@@ -28,3 +29,14 @@ export const LayerRasterRecordModelKeys: LayerRasterRecordModelArray = Object.ke
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BestRecordModelKeys: BestRecordModelArray = Object.keys(BestRecordModel.properties) as BestRecordModelArray;
+
+export const cleanUpEntity = (
+  data: Record<string,unknown>,
+  entityKeys: BestRecordModelArray | LayerRasterRecordModelArray | Layer3DRecordModelArray): Record<string,unknown> => 
+{
+  const keysNotInModel = Object.keys(data).filter(key => {
+    // @ts-ignore
+    return !entityKeys.includes(key);
+  });
+  return omit(data, keysNotInModel);
+};

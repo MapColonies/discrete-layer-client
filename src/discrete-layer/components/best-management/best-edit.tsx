@@ -36,7 +36,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   // eslint-disable-next-line
   let { loading, error, data, query, setQuery } = useQuery();
   useEffect(() => {
-    if (!store.bestStore.onBestLoad()) {
+    if (!store.bestStore.isBestLoad()) {
       setQuery(store.querySearchById({
           idList: {
             value: [...discretesOrder.map((item: DiscreteOrder) => item.id)] as string[]
@@ -104,10 +104,13 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   const isDirty = useMemo(() => {
     const current = store.bestStore.editingBest;
     if (!current) {
+      store.bestStore.setIsDirty(false);
       return false;
     }
     const saved = store.bestStore.getDraftById(current.id);
-    return !isEqual(current, saved);
+    const dirty = !isEqual(current, saved);
+    store.bestStore.setIsDirty(dirty);
+    return dirty;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.bestStore.editingBest]);
 
