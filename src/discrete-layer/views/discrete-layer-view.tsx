@@ -50,7 +50,7 @@ import { BestRecordModelKeys } from '../components/layer-details/layer-details.f
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
+import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';
@@ -345,7 +345,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    if(editingBest !== undefined){
+    if (editingBest !== undefined) {
       handleTabViewChange(TabViews.CREATE_BEST);
     } else {
       handleTabViewChange(TabViews.CATALOG);
@@ -353,7 +353,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingBest]);
 
-  const buildFilters =  (): FilterField[]  => {
+  const buildFilters = (): FilterField[] => {
     const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
     return [
       {
@@ -372,12 +372,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     ];
   };
 
-  useEffect(()=>{
-    if(store.actionDispatcherStore.action !== undefined){
+  useEffect(() => {
+    if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
       console.log(`RESOLVING ${action} EVENT`, data);
 
-      switch(action){
+      switch (action) {
         case 'BestRecord.edit':
           // @ts-ignore
           store.bestStore.editBest(data as BestRecordModelType);
@@ -387,7 +387,11 @@ const DiscreteLayerView: React.FC = observer(() => {
           // @ts-ignore
           store.discreteLayersStore.selectLayer(data as LayerMetadataMixedUnion);
           setEditEntityDialogOpen(!isEditEntityDialogOpen);
-          break
+          break;
+        case 'LayerRasterRecord.delete':
+          // @ts-ignore
+          store.bestStore.deleteLayerFromBest(data as LayerRasterRecordModelType);
+          break;
         default:
           break;
       }

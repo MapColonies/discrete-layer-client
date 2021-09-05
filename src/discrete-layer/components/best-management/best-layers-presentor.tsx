@@ -102,6 +102,12 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   }, [bestStore.movedLayer, mapViewer]);
 
   useLayoutEffect(() => {
+    if (bestStore.deletedLayer) {
+      mapViewer.layersManager?.removeLayer(bestStore.deletedLayer.id);
+    }
+  }, [bestStore.deletedLayer, mapViewer]);
+
+  useLayoutEffect(() => {
     if (bestStore.importedLayers) {
       addLayersToMap(bestStore.importedLayers);
     }

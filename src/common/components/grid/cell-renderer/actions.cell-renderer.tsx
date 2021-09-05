@@ -1,72 +1,79 @@
 import React, { useState } from 'react';
+import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
 import { IconButton,   MenuSurfaceAnchor,  MenuSurface, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
-import './actions.button-renderer.css';
+import './actions.cell-renderer.css';
 
-interface IActionsRendererParams {
+interface IActionsRendererParams extends ICellRendererParams {
   actions: IActionGroup[];
-  node: Record<string,unknown>;
-  entity: string;
   actionHandler: (action: Record<string,unknown>) => void;
 }
 
-export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions, entity, actionHandler}) => {
+export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
+  const entity = (props.data as ILayerImage).__typename as string;
+  // @ts-ignore
+  const actions = props.actions[entity] as IActionGroup[];
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
-  actions.forEach(actionGroup => {
-    frequentActions = [
-      ...frequentActions,
-      ...actionGroup.group.filter(action => action.frequent)
-    ];
-    allFlatActions = [
-      ...allFlatActions,
-      ...actionGroup.group
-    ];
-  });
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (actions !== undefined) {
+    actions.forEach(actionGroup => {
+      frequentActions = [
+        ...frequentActions,
+        ...actionGroup.group.filter(action => action.frequent)
+      ];
+      allFlatActions = [
+        ...allFlatActions,
+        ...actionGroup.group
+      ];
+    });
+  }
 
   const [openActionsMenu, setOpenActionsMenu] = useState<boolean>(false);
 
   const sendAction = (entity: string, action: IAction, data: Record<string,unknown>): void => {
     console.log(`SEND ${action.action} EVENT`);
-    actionHandler({
+    props.actionHandler({
       action: `${entity}.${action.action}`,
       data: data,
     });
   }
+
   return (
-    <Box className="actionsContainer">
+    <Box id="actionsCellRenderer" className="actionsContainer">
       {
         frequentActions.map((action,idx) => {
           return (
             <IconButton
               className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
               icon={action.icon}
-              key={`freqAct_${node.id as string}_${idx}`}
+              key={`freqAct_${(props.data as ILayerImage).id}_${idx}`}
               onClick={(evt): void => { 
-                sendAction(entity, action, node);
+                sendAction(entity, action, props.data);
               }}
             />
           );
         })
       }
-      <MenuSurfaceAnchor id="actionsMenuContainer">
+      {/* <MenuSurfaceAnchor id="actionsMenuContainer">
         <MenuSurface
           open={openActionsMenu}
           onClose={evt => setOpenActionsMenu(false)}
-          onMouseOver={evt => { evt.stopPropagation(); }}
+          onMouseOver={evt => evt.stopPropagation()}
         >
           {
             allFlatActions.map((action,idx) => {
               return (
                 <Box 
-                  key={`menuAct_${node.id as string}_${idx}`}
-                  onClick={ (evt): void => {
-                    sendAction(entity, action, node);
+                  key={`menuAct_${(props.data as ILayerImage).id}_${idx}`}
+                  onClick={(evt): void => {
+                    sendAction(entity, action, props.data);
                     setOpenActionsMenu(false); 
-                  } }
+                  }}
                   className="actionMenuItem"
                 >
                   <IconButton
@@ -85,14 +92,15 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
           }
         </MenuSurface>
         {
-          !isEmpty(allFlatActions) && <IconButton 
+          !isEmpty(allFlatActions) &&
+          <IconButton 
             id="allActionsIcon"
             icon="more_vert" 
             className="actionIcon" 
             onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
           />
         }
-      </MenuSurfaceAnchor>
-    </Box> 
+      </MenuSurfaceAnchor> */}
+    </Box>
   );
 };
