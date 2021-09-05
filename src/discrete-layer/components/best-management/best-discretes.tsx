@@ -15,14 +15,19 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
+import { TabViews } from '../../views/tab-views';
+
+import './best-discretes.css';
 
 const IS_PAGINATION = false;
 const OUT_OF_RANGE = -1;
@@ -65,6 +70,41 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         id: node.id,
         zOrder: numberOfRows !== undefined ? numberOfRows - 1 - node.rowIndex : index
       } as DiscreteOrder
+    );
+  };
+
+  const entityPermittedActions = useMemo(() => {
+    const entityActions: Record<string, unknown> = {};
+    ['LayerRasterRecord'].forEach( entityName => {
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
+        return {
+          titleTranslationId: actionGroup.titleTranslationId,
+          group: 
+            actionGroup.group.filter(action => {
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                    action.views.includes(TabViews.CREATE_BEST);
+            })
+            .map((action) => {
+              return {
+                ...action,
+                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+              };
+            }),
+        }
+       });
+       entityActions[entityName] = permittedGroupsActions;
+    })
+    return entityActions;
+  }, []);
+
+  const dispatchAction = (action: Record<string,unknown>): void => {
+    store.actionDispatcherStore.dispatchAction(
+      {
+        action: action.action,
+        data: action.data,
+      } as IDispatchAction
     );
   };
 
@@ -128,6 +168,16 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       field: 'isNewlyAddedToBest',
       cellRenderer: 'iconRenderer',
       suppressMovable: true
+    },
+    {
+      headerName: '',
+      width: 124,
+      cellRenderer: 'actionsRenderer',
+      pinned: 'right',
+      cellRendererParams: {
+        actions: entityPermittedActions,
+        actionHandler: dispatchAction
+      }
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -143,11 +193,11 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       id: 'results.nodata',
     }),
     frameworkComponents: {
-      headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
-      customTooltip: CustomTooltip,
       iconRenderer: IconRenderer,
+      customTooltip: CustomTooltip,
+      actionsRenderer: ActionsRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,

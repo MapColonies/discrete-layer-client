@@ -34,8 +34,9 @@ export const bestStore = ModelBase
     editingBest: types.maybe(types.frozen<BestRecordModelType>()),
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
     importedLayers: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
-    storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
     isDirty: types.maybe(types.frozen<boolean>()),
+    deletedLayer: types.maybe(types.frozen<LayerRasterRecordModelType>()),
+    storedData: types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -134,8 +135,8 @@ export const bestStore = ModelBase
         const currentLayers = self.layersList ?? [];
         const last = currentLayers.length > EMPTY ? currentLayers.length - 1 : EMPTY;
         importLayers = importLayers.map((item, index) => { 
-          return { 
-            ...item, 
+          return {
+            ...item,
             order: last+index+1,
             includedInBests: [ ...(item.includedInBests ?? []), self.editingBest?.productName as string ],
             layerImageShown: false,
@@ -150,8 +151,48 @@ export const bestStore = ModelBase
         const newBest = { ...self.editingBest as BestRecordModelType, discretes: [...discretes] };
         editBest(newBest);
         setLayersList([ ...importLayers, ...self.layersList ?? [] ]);
-        self.importedLayers = [ ...importLayers];
+        self.importedLayers = [ ...importLayers ];
       }
+    }
+
+    function deleteLayerFromBest(layerToDelete: LayerRasterRecordModelType): void {
+      layerToDelete = { 
+        ...layerToDelete,
+        layerImageShown: false,
+        footprintShown: false,
+        includedInBests: null,
+      };
+      const deletedId = layerToDelete.id;
+      const deletedOrder = layerToDelete.order as number;
+      let discretes = get(self.editingBest, 'discretes') as DiscreteOrder[];
+      discretes = [
+        ...(discretes)
+          .filter(item => 
+            item.id !== deletedId
+          )
+          .map(discreteOrder => {
+            const order = discreteOrder.zOrder as number;
+            return {
+              ...discreteOrder,
+              zOrder: order > deletedOrder ? order - 1 : order
+            };
+          })
+      ];
+      editBest({ ...self.editingBest as BestRecordModelType, discretes: [...discretes] });
+      setLayersList([
+        ...(self.layersList as LayerRasterRecordModelType[])
+          .filter((item) =>
+            item.id !== layerToDelete.id
+          )
+          .map(layer => {
+            const currentOrder = layer.order as number;
+            return {
+              ...layer,
+              order: currentOrder > deletedOrder ? currentOrder -1 : currentOrder
+            };
+          })
+      ]);
+      self.deletedLayer = { ...layerToDelete };
     }
 
     function preserveData(): void {
@@ -192,6 +233,7 @@ export const bestStore = ModelBase
       showLayer,
       showFootprint,
       addImportLayersToBest,
+      deleteLayerFromBest,
       preserveData,
       restoreData,
       resetData,
