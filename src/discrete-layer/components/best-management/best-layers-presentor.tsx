@@ -103,7 +103,6 @@ export const BestLayersPresentor: React.FC = observer((props) => {
 
   useLayoutEffect(() => {
     if (bestStore.deletedLayer) {
-      mapViewer.layersManager?.show(bestStore.deletedLayer.id, bestStore.deletedLayer.layerImageShown as boolean);
       mapViewer.layersManager?.removeLayer(bestStore.deletedLayer.id);
     }
   }, [bestStore.deletedLayer, mapViewer]);

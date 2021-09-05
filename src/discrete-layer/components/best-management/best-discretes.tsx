@@ -75,7 +75,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord'].forEach( entityName => {
+    ['LayerRasterRecord'].forEach( entityName => {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
