@@ -236,3 +236,8 @@ body[dir='rtl'] .sideDetailsPanel {
   left: -36px;
   top: -12px;
 }
+
+body[dir='rtl'] .dirty-best-indicator {
+  left: unset;
+  right: -36px;
+}
