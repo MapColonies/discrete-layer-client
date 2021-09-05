@@ -35,6 +35,7 @@ export const bestStore = ModelBase
     movedLayer: types.maybe(types.frozen<MovedLayer>()),
     importedLayers: types.maybe(types.frozen<LayerRasterRecordModelType[]>([])),
     storedData:  types.maybe(types.frozen<IBestEditData>({layersList: [] as LayerRasterRecordModelType[], editingBest: {} as BestRecordModelType})),
+    isDirty: types.maybe(types.frozen<boolean>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -52,6 +53,7 @@ export const bestStore = ModelBase
 
     function editBest(best: BestRecordModelType | undefined): void {
       self.editingBest = best ? {...best} : undefined;
+      self.isDirty = false;
     }
 
     function saveDraft(best: BestRecordModelType | undefined): void {
@@ -168,8 +170,12 @@ export const bestStore = ModelBase
       }
     }
 
-    function onBestLoad(): boolean {
+    function isBestLoad(): boolean {
       return !isEmpty(self.editingBest) && !isEmpty(self.storedData?.editingBest?.productName);
+    }
+
+    function setIsDirty(dirty: boolean): void {
+      self.isDirty = dirty;
     }
 
     function resetData(): void {
@@ -189,6 +195,7 @@ export const bestStore = ModelBase
       preserveData,
       restoreData,
       resetData,
-      onBestLoad,
+      isBestLoad,
+      setIsDirty,
     };
   });

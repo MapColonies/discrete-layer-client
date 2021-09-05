@@ -20,6 +20,7 @@ import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { TabViews } from '../../views/tab-views';
+import { BestinEditDialogComponent } from '../dialogs/best-in-edit.dialog';
 
 import './catalog-tree.css';
 
@@ -85,6 +86,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [hoveredNode, setHoveredNode] = useState<TreeItem>();
   const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
+  const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
 
@@ -216,12 +218,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   }, [data]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
-    store.actionDispatcherStore.dispatchAction(
-      {
-        action: action.action,
-        data: action.data,
-      } as IDispatchAction
-    );
+    if(!store.bestStore.isBestLoad()) {
+      store.actionDispatcherStore.dispatchAction(
+        {
+          action: action.action,
+          data: action.data,
+        } as IDispatchAction
+      );
+    }
+    else {
+      setBestInEditDialogOpen(true);
+    }
   };
 
   if (error) return <Error>{error.message}</Error>
@@ -367,6 +374,12 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
             />
           }
         </Box>
+        {
+          isBestInEditDialogOpen &&
+          <BestinEditDialogComponent
+            isOpen={isBestInEditDialogOpen}
+            onSetOpen={setBestInEditDialogOpen}/>
+        }
       </>
     );
   }

@@ -46,7 +46,7 @@ import { LayersDetailsComponent } from '../components/layer-details/layer-detail
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
-import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
+import { BestRecordModelKeys, LayerRasterRecordModelKeys, Layer3DRecordModelKeys, cleanUpEntity } from '../components/layer-details/layer-details.field-info';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
@@ -380,12 +380,16 @@ const DiscreteLayerView: React.FC = observer(() => {
       switch(action){
         case 'BestRecord.edit':
           // @ts-ignore
-          store.bestStore.editBest(data as BestRecordModelType);
+          store.bestStore.editBest(cleanUpEntity(data, BestRecordModelKeys) as BestRecordModelType);
           break;
         case 'LayerRasterRecord.edit':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion);
+          setEditEntityDialogOpen(!isEditEntityDialogOpen);
+          break;
         case 'Layer3DRecord.edit':
           // @ts-ignore
-          store.discreteLayersStore.selectLayer(data as LayerMetadataMixedUnion);
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
           setEditEntityDialogOpen(!isEditEntityDialogOpen);
           break
         default:
@@ -698,20 +702,25 @@ const DiscreteLayerView: React.FC = observer(() => {
             {
               availableTabs.map((tab) => {
                 return <Tooltip key={`tabView_${tab.idx}`} content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>
-                  <Fab 
-                    key={tab.idx}
-                    className={`${tab.iconClassName} tabViewIcon`}
-                    mini 
-                    onClick={(evt): void => handleTabViewChange(tab.idx)}
-                    style={{ 
-                      backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
-                    }}
-                    theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
-                  />
+                  <Box>
+                    <Fab 
+                      key={tab.idx}
+                      className={`${tab.iconClassName} tabViewIcon`}
+                      mini 
+                      onClick={(evt): void => handleTabViewChange(tab.idx)}
+                      style={{ 
+                        backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
+                      }}
+                      theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
+                    />
+                  </Box>
                 </Tooltip>;
               })
             }
           </Box>
+          {
+            store.bestStore.isDirty === true && <Box className="dirty-best-indicator"/>
+          }
         </Box>
 
         <Box className="headerSearchOptionsContainer">

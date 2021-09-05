@@ -226,3 +226,13 @@ body[dir='rtl'] .sideDetailsPanel {
 #newContainer {
   display: flex;
 }
+
+.dirty-best-indicator{
+  background-color: var(--mdc-theme-gc-warning-high);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: relative;
+  left: -36px;
+  top: -12px;
+}
