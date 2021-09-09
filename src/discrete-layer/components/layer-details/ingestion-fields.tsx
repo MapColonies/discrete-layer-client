@@ -21,7 +21,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
     <Box className="ingestionFields">
       <Box className="categoryField">
         <Box className="directorySpacer">
-          <FieldLabelComponent value='field-names.ingestion.directory'></FieldLabelComponent>
+          <FieldLabelComponent value='field-names.ingestion.directory' isRequired={true}></FieldLabelComponent>
         </Box>
         <StringValuePresentorComponent 
           mode={Mode.NEW} 
@@ -34,7 +34,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
           formik={formik}>
         </StringValuePresentorComponent>
         <Box className="fileNamesSpacer">
-          <FieldLabelComponent value={recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames' : 'field-names.raster.fileNames'}></FieldLabelComponent>
+          <FieldLabelComponent value={recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames' : 'field-names.raster.fileNames'} isRequired={true}></FieldLabelComponent>
         </Box>
         <StringValuePresentorComponent 
           mode={Mode.NEW} 
