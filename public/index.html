@@ -28,7 +28,7 @@
     <script type="text/javascript">
       (function(){
         const getTime = () => new Date().getTime().toString();
-        const getVersoin = () => '1.9.2';
+        const getVersion = () => '1.9.3';
         
         // Render SCRIPTS
         const scripts = [
@@ -43,7 +43,7 @@
         ];
         scripts.forEach((script) => {
             document.write(
-              `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersoin())}'><\/script>`);
+              `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}'><\/script>`);
         });
         
         // Render STYLES/LINKS
@@ -63,7 +63,7 @@
 
         ];
         styles.forEach((style) => {
-            document.write(`<link href='${style.href}?${((style.cacheType === 'timestamp') ? getTime() : getVersoin())}' rel='stylesheet'>`);
+            document.write(`<link href='${style.href}?${((style.cacheType === 'timestamp') ? getTime() : getVersion())}' rel='stylesheet'>`);
         });
       })();
     </script>
