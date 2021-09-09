@@ -12,7 +12,7 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({value, isRequire
     <Box className="detailsFieldLabel">
       <FormattedMessage id={value}/>
       {
-        isRequired === true && <Box style={{ display: 'inline' }}> * </Box>
+        isRequired === true && <Box style={{ display: 'inline', color: 'var(--mdc-theme-gc-error-medium)' }}> * </Box>
       }
     </Box>
   );
