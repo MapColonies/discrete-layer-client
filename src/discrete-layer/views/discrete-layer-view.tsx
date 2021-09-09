@@ -457,9 +457,9 @@ const DiscreteLayerView: React.FC = observer(() => {
         zOrder: 1
       }
     ] as DiscreteOrder[];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    store.bestStore.saveDraft(record as BestRecordModelType);
     store.bestStore.editBest(record as BestRecordModelType);
+    // @ts-ignore
+    store.discreteLayersStore.selectLayer(cleanUpEntity(record, BestRecordModelKeys) as LayerMetadataMixedUnion);
     setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
 
