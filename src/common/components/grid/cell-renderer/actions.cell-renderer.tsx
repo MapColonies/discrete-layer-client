@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
-import { IconButton,   MenuSurfaceAnchor,  MenuSurface, Typography } from '@map-colonies/react-core';
+import { IconButton,   MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
@@ -59,8 +59,8 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           );
         })
       }
-      {/* <MenuSurfaceAnchor id="actionsMenuContainer">
-        <MenuSurface
+      <MenuSurfaceAnchor id="actionsMenuContainer">
+        <Menu
           open={openActionsMenu}
           onClose={evt => setOpenActionsMenu(false)}
           onMouseOver={evt => evt.stopPropagation()}
@@ -68,29 +68,30 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           {
             allFlatActions.map((action,idx) => {
               return (
-                <Box 
-                  key={`menuAct_${(props.data as ILayerImage).id}_${idx}`}
-                  onClick={(evt): void => {
-                    sendAction(entity, action, props.data);
-                    setOpenActionsMenu(false); 
-                  }}
-                  className="actionMenuItem"
-                >
-                  <IconButton
-                    className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
-                    icon={action.icon}
-                  />
-                  <Typography 
-                    tag="div"
-                    className="actionMenuItemTitle actionDismissible"
+                <MenuItem key={`menuItemAct_${(props.data as ILayerImage).id}_${idx}`}>
+                  <Box 
+                    onClick={(evt): void => {
+                      sendAction(entity, action, props.data);
+                      setOpenActionsMenu(false); 
+                    }}
+                    className="actionMenuItem"
                   >
-                    {action.titleTranslationId}
-                  </Typography>
-                </Box>
+                    <IconButton
+                      className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
+                      icon={action.icon}
+                    />
+                    <Typography 
+                      tag="div"
+                      className="actionMenuItemTitle actionDismissible"
+                    >
+                      {action.titleTranslationId}
+                    </Typography>
+                  </Box>
+                </MenuItem>
               );
             })
           }
-        </MenuSurface>
+        </Menu>
         {
           !isEmpty(allFlatActions) &&
           <IconButton 
@@ -100,7 +101,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
             onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
           />
         }
-      </MenuSurfaceAnchor> */}
+      </MenuSurfaceAnchor>
     </Box>
   );
 };

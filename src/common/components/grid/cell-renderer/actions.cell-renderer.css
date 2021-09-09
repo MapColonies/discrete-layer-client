@@ -34,9 +34,9 @@ body[dir='rtl'] #actionsCellRenderer.actionsContainer .actionIcon {
 }
 
 #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
-  top: 30px !important;
+  top: 42px !important;
   left: -88px !important;
-  width: 124px; /*36+36+36+16*/
+  width: 169px; /*36+36+36+16+34*/ /*34-offset*/
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -51,10 +51,23 @@ body[dir='rtl'] #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
 #actionsMenuContainer {
 }
 
+body[dir='rtl']  #actionsMenuContainer {
+  right: 20px;
+}
+
 #actionsCellRenderer .actionMenuItem {
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+#actionsCellRenderer .mdc-list-item{
+  padding: 0 4px;
+}
+
+#actionsCellRenderer #allActionsIcon{
+  position: relative;
+  top: 6px;
 }
 
 #actionsCellRenderer .actionMenuItemTitle {
