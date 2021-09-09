@@ -165,7 +165,10 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                       <Box key={fieldInfo.fieldName as string}
                         className={(fieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}
                       >
-                        <FieldLabelComponent value={fieldInfo.label} isRequired={fieldInfo.isRequired ?? false}></FieldLabelComponent>
+                        <FieldLabelComponent 
+                          value={fieldInfo.label} 
+                          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                          isRequired={(fieldInfo.isRequired ?? false) && !(isBrief ?? false)}/>
                         {
                           getValuePresentor(layerRecord, fieldInfo, get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }

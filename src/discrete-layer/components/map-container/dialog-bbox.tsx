@@ -163,7 +163,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
             <Box className="dialogBboxRow">
               <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label'></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label' isRequired={true}></FieldLabelComponent>
                 <TextField
                   name="topRightLat"
                   type="number"
@@ -173,7 +173,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                 />
               </Box>
               <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label'></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label' isRequired={true}></FieldLabelComponent>
                 <TextField
                   name="topRightLon"
                   type="number"
@@ -186,7 +186,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
             </Box>
             <Box className="dialogBboxRow">
               <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label'></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label' isRequired={true}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLat"
                   type="number"
@@ -196,7 +196,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                 />
               </Box>
               <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label'></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label' isRequired={true}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLon"
                   type="number"
