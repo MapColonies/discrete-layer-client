@@ -459,7 +459,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     ] as DiscreteOrder[];
     store.bestStore.editBest(record as BestRecordModelType);
     // @ts-ignore
-    store.discreteLayersStore.selectLayer(cleanUpEntity(record, BestRecordModelKeys) as LayerMetadataMixedUnion);
+    store.discreteLayersStore.selectLayer(record as LayerMetadataMixedUnion);
     setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
 
