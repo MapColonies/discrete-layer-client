@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { forwardRef, useImperativeHandle, useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { Box } from '@map-colonies/react-components';
 // import { ChangeDetectionStrategyType } from 'ag-grid-react/lib/changeDetectionService';
 import CONFIG from '../../../common/config';
 import { 
@@ -237,11 +238,14 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   };
 
   return (
-    <>
+    <Box id="bestDiscretes" style={props.style}>
       <GridComponent
         gridOptions={gridOptions}
         rowData={sortedDiscretes}
-        style={props.style}/>
-    </>
+        style={{
+          height: '100%'
+        }}
+        />
+    </Box>
   );
 }));
