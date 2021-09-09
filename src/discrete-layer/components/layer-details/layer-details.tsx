@@ -165,7 +165,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                       <Box key={fieldInfo.fieldName as string}
                         className={(fieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}
                       >
-                        <FieldLabelComponent value={fieldInfo.label}></FieldLabelComponent>
+                        <FieldLabelComponent value={fieldInfo.label} isRequired={fieldInfo.isRequired ?? false}></FieldLabelComponent>
                         {
                           getValuePresentor(layerRecord, fieldInfo, get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }
