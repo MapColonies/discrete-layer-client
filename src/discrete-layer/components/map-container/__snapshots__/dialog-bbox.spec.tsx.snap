@@ -28,6 +28,7 @@ exports[`DialogBBox component renders correctly 1`] = `
         >
           <Component>
             <FieldLabelComponent
+              isRequired={true}
               value="custom-bbox.dialog-field.top_right_lat.label"
             />
             <Function
@@ -40,6 +41,7 @@ exports[`DialogBBox component renders correctly 1`] = `
           </Component>
           <Component>
             <FieldLabelComponent
+              isRequired={true}
               value="custom-bbox.dialog-field.top_right_lon.label"
             />
             <Function
@@ -59,6 +61,7 @@ exports[`DialogBBox component renders correctly 1`] = `
         >
           <Component>
             <FieldLabelComponent
+              isRequired={true}
               value="custom-bbox.dialog-field.bottom_left_lat.label"
             />
             <Function
@@ -71,6 +74,7 @@ exports[`DialogBBox component renders correctly 1`] = `
           </Component>
           <Component>
             <FieldLabelComponent
+              isRequired={true}
               value="custom-bbox.dialog-field.bottom_left_lon.label"
             />
             <Function
