@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
-import { IconButton,   MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
+import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';

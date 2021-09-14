@@ -43,16 +43,16 @@ body[dir=rtl] #bestDiscretes .ag-pinned-right-cols-container {
   padding: 0 !important;
 }
 
-#bestDiscretes .ag-pinned-right-cols-container .ag-row.ag-row-hover{
+#bestDiscretes .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   background-color: rgb(44,65,89);
   border-width: 0px !important;
 }
 
-#bestDiscretes .ag-pinned-right-cols-container .ag-row.ag-row-selected.ag-row-hover{
-  background-color: #455570;
+#bestDiscretes .ag-pinned-right-cols-container .ag-row.ag-row-selected.ag-row-hover {
+  background-color: var(--ag-selected-row-background-color, rgba(33, 150, 243, 0.3));
 }
 
-#bestDiscretes .ag-pinned-right-cols-container div[role=row]{
+#bestDiscretes .ag-pinned-right-cols-container div[role=row] {
   height: 112px !important;
 }
 

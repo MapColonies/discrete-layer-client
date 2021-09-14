@@ -4,8 +4,8 @@
   display: flex;
   top: 0;
   right: 0;
-  width: 100px; /*36+36+36+16*/
-  background-color: rgb(44,65,89);
+  width: 100px;
+  /*background-color: rgb(44,65,89);*/
   border-radius: 50px;
   /* 
   ColorRes = Color * alpha + Background * (1 - alpha); 
