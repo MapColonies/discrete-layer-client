@@ -46,7 +46,7 @@ import { LayersDetailsComponent } from '../components/layer-details/layer-detail
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
-import { BestRecordModelKeys, LayerRasterRecordModelKeys, Layer3DRecordModelKeys, cleanUpEntity } from '../components/layer-details/layer-details.field-info';
+import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
@@ -57,7 +57,7 @@ import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
-import { IDispatchAction } from '../models/actionDispatcherStore';
+import { ActionResolver } from './components/action-resolver.component';
 import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -372,36 +372,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     ];
   };
 
-  useEffect(() => {
-    if (store.actionDispatcherStore.action !== undefined) {
-      const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
-      console.log(`RESOLVING ${action} EVENT`, data);
-
-      switch (action) {
-        case 'BestRecord.edit':
-          // @ts-ignore
-          store.bestStore.editBest(cleanUpEntity(data, BestRecordModelKeys) as BestRecordModelType);
-          break;
-        case 'LayerRasterRecord.edit':
-          // @ts-ignore
-          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion);
-          setEditEntityDialogOpen(!isEditEntityDialogOpen);
-          break;
-        case 'Layer3DRecord.edit':
-          // @ts-ignore
-          store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
-          setEditEntityDialogOpen(!isEditEntityDialogOpen);
-          break;
-        case 'LayerRasterRecord.delete':
-          // @ts-ignore
-          store.bestStore.deleteLayerFromBest(data as LayerRasterRecordModelType);
-          break;
-        default:
-          break;
-      }
-    }
-  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore]);
-
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
     void store.discreteLayersStore.clearLayersImages();
@@ -698,6 +668,9 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   return (
     <>
+      <ActionResolver
+        handleOpenEntityDialog = {setEditEntityDialogOpen}
+      />
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
