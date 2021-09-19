@@ -13,6 +13,11 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
     data[0]?.meta !== undefined
       ? ((data[0]?.meta as Record<string, unknown>).id as string)
       : '';
+  
+  const layerName =
+  data[0]?.meta !== undefined
+    ? (((data[0]?.meta as Record<string, unknown>).details as Record<string, unknown>).name)
+    : '';
 
   const handleAction = (
     action: string,
@@ -25,29 +30,28 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   return (
     <>
       {data.length > EMPTY && (
-        <Box className="container" style={style}>
+        <Box style={style}>
+          <h4>Actions on {layerName}:</h4>
           {data.length > 1 && (
             <h3>
-              Overlapping <span style={{ color: 'red' }}>{data.length}</span>{' '}
-              layers
+              <span style={{ color: 'red' }}>{data.length}</span> layers overlapping
             </h3>
           )}
-          <MenuSurfaceAnchor id="actionsMenuContainer">
+          <MenuSurfaceAnchor id="imageryMenuContainer">
             <Menu
               open={true}
-              onClose={(evt) => handleClose()}
-              onMouseOver={(evt) => evt.stopPropagation()}
+              onClose={(evt): void => handleClose()}
+              onMouseOver={(evt): void => evt.stopPropagation()}
             >
-              {['TOP', 'UP', 'DOWN', 'BOTTOM'].map((action) => {
+              {['Top', 'Up', 'Down', 'Bottom'].map((action) => {
                 return (
                   <MenuItem key={`imageryMenuItemAction_${action}`}>
                     <Box
-                      className="imageryMenuItem"
                       onClick={(evt): void => {
                         handleAction(action, data);
                       }}
                     >
-                      {`${layerId} ${action}`}
+                      {`${action}`}
                     </Box>
                   </MenuItem>
                 );
