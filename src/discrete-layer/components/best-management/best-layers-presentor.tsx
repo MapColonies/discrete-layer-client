@@ -55,7 +55,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
             ...layerProperties.options,
             url: layerProperties.url,
           },
-          // footprint: layer.footprint,
+          footprint: layer.footprint,
         }, 
         mapViewer.layersManager.length(),
         '');

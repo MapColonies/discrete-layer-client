@@ -58,6 +58,7 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { IDispatchAction } from '../models/actionDispatcherStore';
+import { ContextMenu } from '../components/map-container/context-menu';
 import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
@@ -861,6 +862,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               sceneMode={CesiumSceneMode.SCENE2D}
               imageryProvider={false}
               baseMaps={BASE_MAPS}
+              // @ts-ignore
+              imageryContextMenu={<ContextMenu />}
               >
                 {memoizedLayers}
                 <CesiumDrawingsDataSource
