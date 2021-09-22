@@ -61,7 +61,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           </MenuSurfaceAnchor>
         </Box>
       )}
-      {data.length === EMPTY && <Box style={style}></Box>}
+      {data.length === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', borderRadius: '4px', padding: '12px'}}></Box>}
     </>
   );
 };
