@@ -30,7 +30,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   return (
     <>
       {data.length > EMPTY && (
-        <Box style={style}>
+        <Box style={{...style, background: 'var(--mdc-theme-surface)', borderRadius: '4px', padding: '12px', paddingBottom: '220px'}}>
           <h4>Actions on {layerName}:</h4>
           {data.length > 1 && (
             <h3>
@@ -42,6 +42,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               open={true}
               onClose={(evt): void => handleClose()}
               onMouseOver={(evt): void => evt.stopPropagation()}
+              style={{width: '100%'}}
             >
               {['Top', 'Up', 'Down', 'Bottom'].map((action) => {
                 return (
@@ -51,7 +52,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                         handleAction(action, data);
                       }}
                     >
-                      {`${action}`}
+                      {action}
                     </Box>
                   </MenuItem>
                 );
