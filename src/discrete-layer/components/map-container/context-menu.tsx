@@ -9,15 +9,10 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   data,
   handleClose,
 }) => {
-  const layerId =
-    data[0]?.meta !== undefined
-      ? ((data[0]?.meta as Record<string, unknown>).id as string)
-      : '';
-  
-  const layerName =
-  data[0]?.meta !== undefined
-    ? (((data[0]?.meta as Record<string, unknown>).details as Record<string, unknown>).name)
-    : '';
+  const layer = data[0]?.meta as Record<string, unknown>;
+  // const layerId = layer !== undefined ? layer.id ?? '' : '';
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const layerName = layer !== undefined ? (layer.details as Record<string, unknown>).name ?? '' : '';
 
   const handleAction = (
     action: string,
@@ -30,7 +25,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   return (
     <>
       {data.length > EMPTY && (
-        <Box style={{...style, background: 'var(--mdc-theme-surface)', borderRadius: '4px', padding: '12px', paddingBottom: '220px'}}>
+        <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px', paddingBottom: '154px'}}>
           <h4>Actions on {layerName}:</h4>
           {data.length > 1 && (
             <h3>
@@ -61,7 +56,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           </MenuSurfaceAnchor>
         </Box>
       )}
-      {data.length === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', borderRadius: '4px', padding: '12px'}}></Box>}
+      {data.length === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px'}}></Box>}
     </>
   );
 };
