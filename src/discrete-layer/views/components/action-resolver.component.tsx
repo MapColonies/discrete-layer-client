@@ -17,6 +17,8 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
     if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
       console.log(`  ${action} EVENT`, data);
+      let numOfLayers: number;
+      let order: number;
 
       switch (action) {
         case 'BestRecord.edit':
@@ -40,16 +42,24 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.bestStore.deleteLayerFromBest(data as LayerRasterRecordModelType);
           break;
         case 'LayerRasterRecord.moveToTop':
-          store.bestStore.updateMovedLayer({ id: data.id, from: data.zIndex, to: (store.bestStore.layersList as LayerRasterRecordModelType[]).length-1 } as MovedLayer);
+          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
+          order = data.zIndex as number;
+          store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: 0 } as MovedLayer);
           break;
         case 'LayerRasterRecord.moveUp':
-          store.bestStore.updateMovedLayer({ id: data.id, from: data.zIndex, to: (data.zIndex as number) + 1 } as MovedLayer);
-          break;
+          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
+          order = data.zIndex as number;
+          store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order - 1 } as MovedLayer);
+          break
         case 'LayerRasterRecord.moveDown':
-          store.bestStore.updateMovedLayer({ id: data.id, from: data.zIndex, to: (data.zIndex as number) - 1 } as MovedLayer);
+          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
+          order = data.zIndex as number;
+          store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order + 1 } as MovedLayer);
           break;
         case 'LayerRasterRecord.moveToBottom':
-          store.bestStore.updateMovedLayer({ id: data.id, from: data.zIndex, to: 0 } as MovedLayer);
+          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
+          order = data.zIndex as number;
+          store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
           break;
         default:
           break;
