@@ -46,6 +46,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
+  // @ts-ignore
   const layer = data[0]?.meta as Record<string, unknown>;
   // const layerId = layer !== undefined ? layer.id ?? '' : '';
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
