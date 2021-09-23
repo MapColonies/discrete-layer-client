@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { Menu, MenuItem, MenuSurfaceAnchor } from '@map-colonies/react-core';
+import { Icon, Menu, MenuItem, MenuSurfaceAnchor } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 import { IAction, IActionGroup } from '../../../common/actions/entity.actions';
 import { TabViews } from '../../views/tab-views';
@@ -84,6 +84,11 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                         dispatchAction(`LayerRasterRecord.${action.action}`, data[0].meta as Record<string, unknown>);
                       }}
                     >
+                      <Icon
+                        style={{ verticalAlign: 'sub'}}
+                        icon={{ icon: action.icon, size: 'small' }}
+                      />
+                      {' '}
                       {action.titleTranslationId}
                     </Box>
                   </MenuItem>

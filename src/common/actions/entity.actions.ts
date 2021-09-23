@@ -49,7 +49,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           {
             action: 'moveToTop',
             frequent: false,
-            icon: 'keyboard_double_arrow_up',
+            icon: 'vertical_align_top',
             class: '',
             titleTranslationId: 'action.layer.move-to-top.tooltip',
             views: [TabViews.CREATE_BEST]
@@ -73,7 +73,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           {
             action: 'moveToBottom',
             frequent: false,
-            icon: 'keyboard_double_arrow_down',
+            icon: 'vertical_align_bottom',
             class: '',
             titleTranslationId: 'action.layer.move-to-bottom.tooltip',
             views: [TabViews.CREATE_BEST]
