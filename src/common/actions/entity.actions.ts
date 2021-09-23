@@ -44,19 +44,43 @@ const ACTIONS_CONFIG: IEntityActions[] = [
         ],
         titleTranslationId: 'CRUD'
       },
-      // {
-      //   group: [
-      //     {
-      //       action: 'moveUP',
-      //       frequent: false,
-      //       icon: '',
-      //       class: 'mc-icon-Move-Row',
-      //       titleTranslationId: 'action.layer.move-up.tooltip',
-      //       views: [TabViews.CREATE_BEST, TabViews.CATALOG]
-      //     },
-      //   ],
-      //   titleTranslationId: 'OperationsOnMap'
-      // }
+      {
+        group: [
+          {
+            action: 'moveToTop',
+            frequent: false,
+            icon: 'keyboard_double_arrow_up',
+            class: '',
+            titleTranslationId: 'action.layer.move-to-top.tooltip',
+            views: [TabViews.CREATE_BEST]
+          },
+          {
+            action: 'moveUp',
+            frequent: false,
+            icon: 'keyboard_arrow_up',
+            class: '',
+            titleTranslationId: 'action.layer.move-up.tooltip',
+            views: [TabViews.CREATE_BEST]
+          },
+          {
+            action: 'moveDown',
+            frequent: false,
+            icon: 'keyboard_arrow_down',
+            class: '',
+            titleTranslationId: 'action.layer.move-down.tooltip',
+            views: [TabViews.CREATE_BEST]
+          },
+          {
+            action: 'moveToBottom',
+            frequent: false,
+            icon: 'keyboard_double_arrow_down',
+            class: '',
+            titleTranslationId: 'action.layer.move-to-bottom.tooltip',
+            views: [TabViews.CREATE_BEST]
+          },
+        ],
+        titleTranslationId: 'OperationsOnMap'
+      }
     ]
   },
   {

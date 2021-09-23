@@ -580,7 +580,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               (tabIdx === TabViews.CATALOG) && 
               (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
-                <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
+                <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {/* {
                     permissions.isLayerRasterRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
                       <IconButton
@@ -613,7 +613,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   }                  
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Property-1Add" onClick={evt => setOpenNew(!openNew)}/>
+                  <IconButton className="operationIcon mc-icon-Property-1Add" onClick={(evt): void => setOpenNew(!openNew)}/>
                 </Tooltip>
               </MenuSurfaceAnchor>
             }

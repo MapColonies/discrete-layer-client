@@ -62,8 +62,8 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
       <MenuSurfaceAnchor id="actionsMenuContainer">
         <Menu
           open={openActionsMenu}
-          onClose={evt => setOpenActionsMenu(false)}
-          onMouseOver={evt => evt.stopPropagation()}
+          onClose={(evt): void => setOpenActionsMenu(false)}
+          onMouseOver={(evt): void => evt.stopPropagation()}
         >
           {
             allFlatActions.map((action,idx) => {

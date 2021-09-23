@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useIntl } from 'react-intl';
 import { Menu, MenuItem, MenuSurfaceAnchor } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
+import { IAction, IActionGroup } from '../../../common/actions/entity.actions';
+import { TabViews } from '../../views/tab-views';
+import { useStore } from '../../models/RootStore';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 
 const EMPTY = 0;
 
@@ -9,17 +14,48 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   data,
   handleClose,
 }) => {
+
+  const store = useStore();
+  const intl = useIntl();
+  
+  const entityPermittedActions = useMemo(() => {
+    const entityActions: Record<string, unknown> = {};
+    ['LayerRasterRecord'].forEach( entityName => {
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName).filter(actionGroup => actionGroup.titleTranslationId === 'OperationsOnMap');
+       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
+        return {
+          titleTranslationId: actionGroup.titleTranslationId,
+          group: 
+            actionGroup.group.filter(action => {
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                    action.views.includes(TabViews.CREATE_BEST);
+            })
+            .map((action) => {
+              return {
+                ...action,
+                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+              };
+            }),
+        }
+       });
+       entityActions[entityName] = permittedGroupsActions;
+    });
+    return entityActions['LayerRasterRecord'];
+  }, []);
+
+  const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
+  
   const layer = data[0]?.meta as Record<string, unknown>;
   // const layerId = layer !== undefined ? layer.id ?? '' : '';
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const layerName = layer !== undefined ? (layer.details as Record<string, unknown>).name ?? '' : '';
 
-  const handleAction = (
+  const dispatchAction = (
     action: string,
-    data: Record<string, unknown>[]
+    data: Record<string, unknown>
   ): void => {
-    console.log(`ACTION: ${action}`);
-    console.log('DATA:', data);
+    store.actionDispatcherStore.dispatchAction(({ action, data } as unknown) as IDispatchAction);
   };
 
   return (
@@ -39,15 +75,15 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               onMouseOver={(evt): void => evt.stopPropagation()}
               style={{width: '100%'}}
             >
-              {['Top', 'Up', 'Down', 'Bottom'].map((action) => {
+              {flatPermittedActions.map((action: IAction) => {
                 return (
-                  <MenuItem key={`imageryMenuItemAction_${action}`}>
+                  <MenuItem key={`imageryMenuItemAction_${action.action}`}>
                     <Box
                       onClick={(evt): void => {
-                        handleAction(action, data);
+                        dispatchAction(`LayerRasterRecord.${action.action}`, data[0].meta as Record<string, unknown>);
                       }}
                     >
-                      {action}
+                      {action.titleTranslationId}
                     </Box>
                   </MenuItem>
                 );

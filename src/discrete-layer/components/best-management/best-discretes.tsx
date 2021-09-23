@@ -21,7 +21,6 @@ import { LayerImageRenderer } from '../../../common/components/grid/cell-rendere
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
 import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import { IActionGroup } from '../../../common/actions/entity.actions';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
@@ -77,7 +76,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
     ['LayerRasterRecord'].forEach( entityName => {
-       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName).filter(actionGroup => actionGroup.titleTranslationId === 'CRUD');
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
           titleTranslationId: actionGroup.titleTranslationId,
