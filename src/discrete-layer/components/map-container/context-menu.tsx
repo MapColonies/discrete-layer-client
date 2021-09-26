@@ -46,11 +46,11 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
-  // @ts-ignore
   const layer = data[0]?.meta as Record<string, unknown>;
   // const layerId = layer !== undefined ? layer.id ?? '' : '';
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const layerName = layer !== undefined ? (layer.details as Record<string, unknown>).name ?? '' : '';
+  const numOfSelectedLayers = data.length;
 
   const dispatchAction = (
     action: string,
@@ -61,12 +61,12 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   return (
     <>
-      {data.length > EMPTY && (
+      {numOfSelectedLayers > EMPTY && (
         <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px', paddingBottom: '154px'}}>
           <h4>Actions on {layerName}:</h4>
-          {data.length > 1 && (
+          {numOfSelectedLayers > 1 && (
             <h3>
-              <span style={{ color: 'red' }}>{data.length}</span> layers overlapping
+              <span style={{ color: 'red' }}>{numOfSelectedLayers}</span> layers overlapping
             </h3>
           )}
           <MenuSurfaceAnchor id="imageryMenuContainer">
@@ -81,7 +81,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                   <MenuItem key={`imageryMenuItemAction_${action.action}`}>
                     <Box
                       onClick={(evt): void => {
-                        dispatchAction(`LayerRasterRecord.${action.action}`, data[0].meta as Record<string, unknown>);
+                        dispatchAction(`LayerRasterRecord.${action.action}`, layer);
                       }}
                     >
                       <Icon
@@ -98,7 +98,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           </MenuSurfaceAnchor>
         </Box>
       )}
-      {data.length === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px'}}></Box>}
+      {numOfSelectedLayers === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px'}}></Box>}
     </>
   );
 };
