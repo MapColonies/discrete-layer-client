@@ -43,22 +43,22 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
         case 'LayerRasterRecord.moveToTop':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = data.zIndex as number;
+          order = store.bestStore.getLayerOrder(data.id as string);
           store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: 0 } as MovedLayer);
           break;
         case 'LayerRasterRecord.moveUp':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = data.zIndex as number;
+          order = store.bestStore.getLayerOrder(data.id as string);
           store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order - 1 } as MovedLayer);
           break
         case 'LayerRasterRecord.moveDown':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = data.zIndex as number;
+          order = store.bestStore.getLayerOrder(data.id as string);
           store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order + 1 } as MovedLayer);
           break;
         case 'LayerRasterRecord.moveToBottom':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = data.zIndex as number;
+          order = store.bestStore.getLayerOrder(data.id as string);
           store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
           break;
         default:
