@@ -55,7 +55,6 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
         dlgPortalRef &&
         !dlgPortalRef.contains(target)
       ) {
-        console.log('KUKU');
         document.removeEventListener('click', handleClickOutside, false);
         handleClose();
       }
@@ -63,10 +62,6 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
     };
 
     document.addEventListener('click', handleClickOutside, false);
-
-    // return (): void => {
-    //   document.removeEventListener('click', handleClickOutside, false);
-    // };
   });
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
@@ -98,7 +93,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
             {' '}
             <Tooltip content={info + layerName}>
               <Icon
-                style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)' }}
+                style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)', cursor: 'help'}}
                 icon={{ icon: 'info', size: 'small' }}
               />
             </Tooltip>
@@ -106,8 +101,6 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           <MenuSurfaceAnchor id="imageryMenuContainer" style={{ height: '154px' }}>
             <Menu
               open={true}
-              // onClose={(evt): void => handleClose()}
-              onMouseOver={(evt): void => evt.stopPropagation()}
               style={{width: '100%'}}
             >
               {flatPermittedActions.map((action: IAction) => {
@@ -137,7 +130,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                 {`${numOfSelectedLayers} ${subTitle}`}
                 {' '}
                 <Icon
-                  style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)' }}
+                  style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)', cursor: 'pointer' }}
                   icon={{ icon: !expanded ? 'arrow_drop_down' : 'arrow_drop_up' }}
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                   onClick={(evt): void => {
