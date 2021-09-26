@@ -49,6 +49,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   
   const layer = get(data,'[0].meta') as Record<string, unknown>;
   const layerName = get(layer,'details.name') ?? '';
+  // eslint-disable-next-line
   const numOfSelectedLayers = get(data,'length');
 
   const dispatchAction = (
