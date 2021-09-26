@@ -48,7 +48,7 @@ import { BestRecordModelKeys } from '../components/layer-details/layer-details.f
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, ProductType, RecordType } from '../models';
+import { BestRecordModel, EntityDescriptorModelType, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';

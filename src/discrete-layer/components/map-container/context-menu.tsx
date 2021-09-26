@@ -67,7 +67,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           <h4>
             <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
             {' '}
-            <Tooltip content={info + ' ' + layerName}>
+            <Tooltip content={info + layerName}>
               <Icon
                 style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)' }}
                 icon={{ icon: 'info', size: 'small' }}
