@@ -20,7 +20,8 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const store = useStore();
   const intl = useIntl();
-  const dialogPortalRef = useRef(null);
+  const imageryContextMenuRef = useRef(null);
+  const [expanded, setExpanded] = useState<boolean>(false);
   
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
@@ -52,10 +53,10 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
     const handleClickOutside = (event: MouseEvent): void => {
       /* eslint-disable */
       const target: any = event.target;
-      const dlgPortalRef: any = get(dialogPortalRef, 'current');
+      const imgContextMenuRef: any = get(imageryContextMenuRef, 'current');
       if (
-        dlgPortalRef &&
-        !dlgPortalRef.contains(target)
+        imgContextMenuRef &&
+        !imgContextMenuRef.contains(target)
       ) {
         document.removeEventListener('click', handleClickOutside, false);
         handleClose();
@@ -74,7 +75,6 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   const subTitle = intl.formatMessage({ id: 'context-menu.sub-title.tooltip' });
   // eslint-disable-next-line
   const numOfSelectedLayers = get(data,'length') as number;
-  const [expanded, setExpanded] = useState<boolean>(false);
 
   const dispatchAction = (
     action: string,
@@ -87,7 +87,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
     <>
       {numOfSelectedLayers > EMPTY && (
         <div 
-          ref={dialogPortalRef}
+          ref={imageryContextMenuRef}
           style={style}
           className="imageryContextMenu"
         >
