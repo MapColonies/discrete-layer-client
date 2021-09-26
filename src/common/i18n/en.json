@@ -98,6 +98,7 @@
   "best-edit.import.dialog.import-btn.text": "Import",
 
   "context-menu.title.tooltip": "Actions on topmost layer: ",
+  "context-menu.sub-title.tooltip": "overlapping layers at current position",
 
   "details-panel.no-selection": "No selection",
 
