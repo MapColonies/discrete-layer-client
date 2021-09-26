@@ -94,7 +94,8 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           )}
           <h4>
             <span>Actions on </span>
-            <span>topmost layer </span>
+            {numOfSelectedLayers > 1 ? 'topmost ' : ' '}
+            <span>layer </span>
             <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
             {':'}
           </h4>
