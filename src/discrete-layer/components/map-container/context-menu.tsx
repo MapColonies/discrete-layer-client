@@ -46,10 +46,12 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
+  // @ts-ignore
   const layer = data[0]?.meta as Record<string, unknown>;
   // const layerId = layer !== undefined ? layer.id ?? '' : '';
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const layerName = layer !== undefined ? (layer.details as Record<string, unknown>).name ?? '' : '';
+  const layerName = layer !== undefined ? ((layer.details as Record<string, unknown>).name as string) ?? '' : '';
+  // @ts-ignore
   const numOfSelectedLayers = data.length;
 
   const dispatchAction = (
@@ -63,12 +65,39 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
     <>
       {numOfSelectedLayers > EMPTY && (
         <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px', paddingBottom: '154px'}}>
-          <h4>Actions on {layerName}:</h4>
           {numOfSelectedLayers > 1 && (
-            <h3>
-              <span style={{ color: 'red' }}>{numOfSelectedLayers}</span> layers overlapping
-            </h3>
+            <Box>
+              <h4>{numOfSelectedLayers} overlapping layers:</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Resolution</th>
+                    <th>Order</th>
+                    <th>Update Date</th>
+                  </tr>
+                </thead>
+                {data.map((item: Record<string, unknown>) => {
+                  const meta = item.meta as Record<string, unknown>;
+                  const details = meta.details as Record<string, unknown>;
+                  return (
+                    <tr>
+                      <td>{details.name as string}</td>
+                      <td>{details.resolution as number}</td>
+                      <td>{meta.zIndex as number}</td>
+                      <td>{details.updateDate as string}</td>
+                    </tr>
+                  );
+                })}
+              </table>
+            </Box>
           )}
+          <h4>
+            <span>Actions on </span>
+            <span>topmost layer </span>
+            <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
+            {':'}
+          </h4>
           <MenuSurfaceAnchor id="imageryMenuContainer">
             <Menu
               open={true}
