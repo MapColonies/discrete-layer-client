@@ -16,8 +16,6 @@ import {
   MenuSurfaceAnchor,
   MenuSurface,
   Tooltip,
-  Drawer,
-  DrawerContent,
   Avatar
 } from '@map-colonies/react-core';
 import {
@@ -57,8 +55,8 @@ import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
-import { ActionResolver } from './components/action-resolver.component';
 import { ContextMenu } from '../components/map-container/context-menu';
+import { ActionResolver } from './components/action-resolver.component';
 import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';

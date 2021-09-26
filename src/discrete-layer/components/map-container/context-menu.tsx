@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
-import { Icon, Menu, MenuItem, MenuSurfaceAnchor } from '@map-colonies/react-core';
+import { Icon, Menu, MenuItem, MenuSurfaceAnchor, Tooltip } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 import { IAction, IActionGroup } from '../../../common/actions/entity.actions';
 import { TabViews } from '../../views/tab-views';
@@ -49,8 +49,9 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   
   const layer = get(data,'[0].meta') as Record<string, unknown>;
   const layerName = get(layer,'details.name') as string;
+  const info = intl.formatMessage({ id: 'context-menu.title.tooltip' });
   // eslint-disable-next-line
-  const numOfSelectedLayers = get(data,'length');
+  const numOfSelectedLayers = get(data,'length') as number;
 
   const dispatchAction = (
     action: string,
@@ -65,6 +66,13 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
         <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px'}}>
           <h4>
             <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
+            {' '}
+            <Tooltip content={info + ' ' + layerName}>
+              <Icon
+                style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)' }}
+                icon={{ icon: 'info', size: 'small' }}
+              />
+            </Tooltip>
           </h4>
           <MenuSurfaceAnchor id="imageryMenuContainer" style={{ height: '154px' }}>
             <Menu
@@ -82,7 +90,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                       }}
                     >
                       <Icon
-                        style={{ verticalAlign: 'sub'}}
+                        style={{ verticalAlign: 'sub' }}
                         icon={{ icon: action.icon, size: 'small' }}
                       />
                       {' '}
