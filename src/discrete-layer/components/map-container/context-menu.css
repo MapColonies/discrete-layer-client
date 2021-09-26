@@ -1,0 +1,45 @@
+.imageryContextMenu {
+  background: var(--mdc-theme-surface);
+  position: absolute;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.imageryContextMenuTitle {
+  color: var(--mdc-theme-primary);
+}
+
+.imageryContextMenuTitleInfo {
+  vertical-align: sub;
+  color: var(--mdc-theme-primary);
+  cursor: help;
+}
+
+.imageryMenuContainer {
+  height: 154px;
+}
+
+.imageryMenu {
+  width: 100%;
+}
+
+.imageryMenuIcon {
+  vertical-align: sub;
+}
+
+.imageryContextMenuSubTitleIcon {
+  vertical-align: sub;
+  color: var(--mdc-theme-primary);
+  cursor: pointer;
+}
+
+.imageryContextMenuTableOrder {
+  width: 30px;
+  text-align: center;
+}
+
+.imageryContextMenuEmpty {
+  background: var(--mdc-theme-surface);
+  position: absolute;
+  border-radius: 4px;
+}

@@ -8,6 +8,8 @@ import { TabViews } from '../../views/tab-views';
 import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 
+import './context-menu.css';
+
 const EMPTY = 0;
 
 export const ContextMenu: React.FC<IContextMenuData> = ({
@@ -86,22 +88,23 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
       {numOfSelectedLayers > EMPTY && (
         <div 
           ref={dialogPortalRef}
-          style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px'}}
+          style={style}
+          className="imageryContextMenu"
         >
           <h4>
-            <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
+            <span className="imageryContextMenuTitle">{layerName}</span>
             {' '}
             <Tooltip content={info + layerName}>
               <Icon
-                style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)', cursor: 'help'}}
+                className="imageryContextMenuTitleInfo"
                 icon={{ icon: 'info', size: 'small' }}
               />
             </Tooltip>
           </h4>
-          <MenuSurfaceAnchor id="imageryMenuContainer" style={{ height: '154px' }}>
+          <MenuSurfaceAnchor className="imageryMenuContainer">
             <Menu
               open={true}
-              style={{width: '100%'}}
+              className="imageryMenu"
             >
               {flatPermittedActions.map((action: IAction) => {
                 return (
@@ -113,7 +116,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                       }}
                     >
                       <Icon
-                        style={{ verticalAlign: 'sub' }}
+                        className="imageryMenuIcon glow-missing-icon"
                         icon={{ icon: action.icon, size: 'small' }}
                       />
                       {' '}
@@ -130,7 +133,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                 {`${numOfSelectedLayers} ${subTitle}`}
                 {' '}
                 <Icon
-                  style={{ verticalAlign: 'sub', color: 'var(--mdc-theme-primary)', cursor: 'pointer' }}
+                  className="imageryContextMenuSubTitleIcon"
                   icon={{ icon: !expanded ? 'arrow_drop_down' : 'arrow_drop_up' }}
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                   onClick={(evt): void => {
@@ -145,7 +148,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                   const details = meta.details as Record<string, unknown>;
                   return (
                     <tr>
-                      <td style={{ width: '30px', textAlign: 'center' }}>{meta.zIndex as number}</td>
+                      <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
                       <td>{details.name as string}</td>
                     </tr>
                   );
@@ -155,7 +158,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           )}
         </div>
       )}
-      {numOfSelectedLayers === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px'}}></Box>}
+      {numOfSelectedLayers === EMPTY && <Box style={style} className="imageryContextMenuEmpty"></Box>}
     </>
   );
 };
