@@ -48,7 +48,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
   const layer = get(data,'[0].meta') as Record<string, unknown>;
-  const layerName = get(layer,'details.name') ?? '';
+  const layerName = get(layer,'details.name') as string;
   // eslint-disable-next-line
   const numOfSelectedLayers = get(data,'length');
 
@@ -64,7 +64,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
       {numOfSelectedLayers > EMPTY && (
         <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px'}}>
           <h4>
-            <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName} i</span>
+            <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
           </h4>
           <MenuSurfaceAnchor id="imageryMenuContainer" style={{ height: '154px' }}>
             <Menu
