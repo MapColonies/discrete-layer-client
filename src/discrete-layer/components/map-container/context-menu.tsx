@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { Icon, Menu, MenuItem, MenuSurfaceAnchor } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 import { IAction, IActionGroup } from '../../../common/actions/entity.actions';
@@ -46,13 +47,9 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
-  // @ts-ignore
-  const layer = data[0]?.meta as Record<string, unknown>;
-  // const layerId = layer !== undefined ? layer.id ?? '' : '';
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const layerName = layer !== undefined ? ((layer.details as Record<string, unknown>).name as string) ?? '' : '';
-  // @ts-ignore
-  const numOfSelectedLayers = data.length;
+  const layer = get(data,'[0].meta') as Record<string, unknown>;
+  const layerName = get(layer,'details.name') ?? '';
+  const numOfSelectedLayers = get(data,'length');
 
   const dispatchAction = (
     action: string,
@@ -64,42 +61,11 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   return (
     <>
       {numOfSelectedLayers > EMPTY && (
-        <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px', paddingBottom: '154px'}}>
-          {numOfSelectedLayers > 1 && (
-            <Box>
-              <h4>{numOfSelectedLayers} overlapping layers:</h4>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Resolution</th>
-                    <th>Order</th>
-                    <th>Update Date</th>
-                  </tr>
-                </thead>
-                {data.map((item: Record<string, unknown>) => {
-                  const meta = item.meta as Record<string, unknown>;
-                  const details = meta.details as Record<string, unknown>;
-                  return (
-                    <tr>
-                      <td>{details.name as string}</td>
-                      <td>{details.resolution as number}</td>
-                      <td>{meta.zIndex as number}</td>
-                      <td>{details.updateDate as string}</td>
-                    </tr>
-                  );
-                })}
-              </table>
-            </Box>
-          )}
+        <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px', padding: '12px'}}>
           <h4>
-            <span>Actions on </span>
-            {numOfSelectedLayers > 1 ? 'topmost ' : ' '}
-            <span>layer </span>
-            <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName}</span>
-            {':'}
+            <span style={{ color: 'var(--mdc-theme-primary)' }}>{layerName} i</span>
           </h4>
-          <MenuSurfaceAnchor id="imageryMenuContainer">
+          <MenuSurfaceAnchor id="imageryMenuContainer" style={{ height: '154px' }}>
             <Menu
               open={true}
               onClose={(evt): void => handleClose()}
@@ -126,6 +92,23 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               })}
             </Menu>
           </MenuSurfaceAnchor>
+          {numOfSelectedLayers > 1 && (
+            <Box>
+              <h4>{numOfSelectedLayers} overlapping layers V</h4>
+              <table>
+                {data.map((item: Record<string, unknown>) => {
+                  const meta = item.meta as Record<string, unknown>;
+                  const details = meta.details as Record<string, unknown>;
+                  return (
+                    <tr>
+                      <td>{meta.zIndex as number}</td>
+                      <td>{details.name as string}</td>
+                    </tr>
+                  );
+                })}
+              </table>
+            </Box>
+          )}
         </Box>
       )}
       {numOfSelectedLayers === EMPTY && <Box style={{...style, background: 'var(--mdc-theme-surface)', position: 'absolute', borderRadius: '4px'}}></Box>}
