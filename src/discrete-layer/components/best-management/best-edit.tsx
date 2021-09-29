@@ -19,12 +19,11 @@ const IMMEDIATE_EXECUTION = 0;
 interface BestEditComponentProps {
   openImport: boolean;
   handleCloseImport: (isShow: boolean) => void;
-  best?: BestRecordModelType | undefined;
 }
 
 export const BestEditComponent: React.FC<BestEditComponentProps> = observer((props) => {
-  const { best } = props;
   const store = useStore();
+  const best = store.bestStore.editingBest;
   const discretesOrder = best?.discretes as DiscreteOrder[];
   const discretesListRef = useRef();
   const importListRef = useRef();

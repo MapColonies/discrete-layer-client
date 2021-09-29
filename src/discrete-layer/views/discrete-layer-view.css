@@ -40,12 +40,6 @@ body[dir='rtl'] .mapAppContainer {
   left: unset;
 }
 
-.tabViewIcon {
-  width: 44px;
-  height: 44px;
-  font-size: 24px;
-}
-
 .headerContainer {
   height: 52px;
   display: flex;
@@ -56,12 +50,6 @@ body[dir='rtl'] .mapAppContainer {
   width: 20%;
   display: flex;
   align-items: center;
-}
-
-.headerViewsSwitcherContainer {
-  display: flex;
-  width: 180px;
-  gap: 12px;
 }
 
 .headerSearchOptionsContainer {
@@ -187,19 +175,6 @@ body[dir='rtl'] .tabContentContainer {
   padding: 0 8px 8px 0;
 }
 
-.detailsTitle {
-  color: var(--mdc-theme-text-primary-on-dark);
-  white-Space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: auto;
-}
-
-body[dir='rtl'] .detailsTitle {
-  margin-right: unset;
-  margin-left: auto;
-}
-
 .sideDetailsPanel {
   margin-top: 8px;
   padding-left: 20px;
@@ -208,11 +183,6 @@ body[dir='rtl'] .detailsTitle {
 body[dir='rtl'] .sideDetailsPanel {
   padding-left: unset;
   padding-right: 20px;
-}
-
-.detailsContent {
-  height: calc(100% - 60px);
-  overflow: auto;
 }
 
 .version {
@@ -225,19 +195,4 @@ body[dir='rtl'] .sideDetailsPanel {
 
 #newContainer {
   display: flex;
-}
-
-.dirty-best-indicator{
-  background-color: var(--mdc-theme-gc-warning-high);
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  position: relative;
-  left: -36px;
-  top: -12px;
-}
-
-body[dir='rtl'] .dirty-best-indicator {
-  left: unset;
-  right: -36px;
 }

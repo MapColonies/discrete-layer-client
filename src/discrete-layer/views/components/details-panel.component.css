@@ -1,0 +1,17 @@
+.detailsTitle {
+  color: var(--mdc-theme-text-primary-on-dark);
+  white-Space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: auto;
+}
+
+body[dir='rtl'] .detailsTitle {
+  margin-right: unset;
+  margin-left: auto;
+}
+
+.detailsContent {
+  height: calc(100% - 60px);
+  overflow: auto;
+}
