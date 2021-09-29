@@ -33,6 +33,7 @@ import './App.light-theme.css';
 
 import { SnackContainer } from './discrete-layer/components/snack-container/snack-container';
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
+import { StaticDataFetcher } from './discrete-layer/views/components/data-fetchers/static-data-fetcher.component';
 import MESSAGES from './common/i18n';
 import CONFIG from './common/config';
 import { camelize } from './common/helpers/string';
@@ -76,6 +77,7 @@ const App: React.FC = () => {
       >
         <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme}>
           <CssBaseline />
+          <StaticDataFetcher />
           <DiscreteLayerView />
           <SnackContainer />
         </RMWCThemeProvider>
