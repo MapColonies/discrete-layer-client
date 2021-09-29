@@ -7,6 +7,7 @@
 
 .imageryContextMenuTitle {
   color: var(--mdc-theme-primary);
+  font-weight: bold;
 }
 
 .imageryContextMenuTitleInfo {
@@ -16,7 +17,7 @@
 }
 
 .imageryMenuContainer {
-  height: 154px;
+  height: 144px;
 }
 
 .imageryMenu {
@@ -25,6 +26,16 @@
 
 .imageryMenuIcon {
   vertical-align: sub;
+  margin-right: 8px;
+}
+
+body[dir='rtl'] .imageryMenuIcon {
+  margin-right: unset;
+  margin-left: 8px;
+}
+
+.imageryContextMenuSubTitle {
+  font-weight: bold;
 }
 
 .imageryContextMenuSubTitleIcon {
@@ -36,6 +47,13 @@
 .imageryContextMenuTableOrder {
   width: 30px;
   text-align: center;
+}
+
+.imageryContextMenuTableField {
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .imageryContextMenuEmpty {

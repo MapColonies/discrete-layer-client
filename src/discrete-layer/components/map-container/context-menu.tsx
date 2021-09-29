@@ -91,7 +91,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           style={style}
           className="imageryContextMenu"
         >
-          <h4>
+          <Box>
             <span className="imageryContextMenuTitle">{layerName}</span>
             {' '}
             <Tooltip content={info + layerName}>
@@ -100,7 +100,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                 icon={{ icon: 'info', size: 'small' }}
               />
             </Tooltip>
-          </h4>
+          </Box>
           <MenuSurfaceAnchor className="imageryMenuContainer">
             <Menu
               open={true}
@@ -119,7 +119,6 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                         className="imageryMenuIcon glow-missing-icon"
                         icon={{ icon: action.icon, size: 'small' }}
                       />
-                      {' '}
                       {action.titleTranslationId}
                     </Box>
                   </MenuItem>
@@ -129,7 +128,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           </MenuSurfaceAnchor>
           {numOfSelectedLayers > 1 && (
             <Box>
-              <h4>
+              <Box className="imageryContextMenuSubTitle">
                 {`${numOfSelectedLayers} ${subTitle}`}
                 {' '}
                 <Icon
@@ -141,7 +140,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                     setExpanded(!expanded);
                   }}
                 />
-              </h4>
+              </Box>
               {expanded  && <table>
                 {data.map((item: Record<string, unknown>) => {
                   const meta = item.meta as Record<string, unknown>;
@@ -149,7 +148,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                   return (
                     <tr>
                       <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
-                      <td>{details.name as string}</td>
+                      <td className="imageryContextMenuTableField">{details.name as string}</td>
                     </tr>
                   );
                 })}
