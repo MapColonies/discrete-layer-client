@@ -90,7 +90,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
         <div 
           ref={imageryContextMenuRef}
           style={style}
-          className="imageryContextMenu"
+          className="imageryContextMenuTheme imageryContextMenu"
         >
           <Box>
             <span className="imageryContextMenuTitle">{layerName}</span>

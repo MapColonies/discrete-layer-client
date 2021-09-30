@@ -1,8 +1,15 @@
+.imageryContextMenuTheme {
+  --context-menu-width: 260px;
+  --order-width: 60px;
+  --scrollbar-width: 16px;
+}
+
 .imageryContextMenu {
   background: var(--mdc-theme-surface);
   position: absolute;
   border-radius: 4px;
   padding: 12px;
+  width: var(--context-menu-width);
 }
 
 .imageryContextMenuTitle {
@@ -54,12 +61,12 @@ body[dir='rtl'] .imageryMenuIcon {
 }
 
 .imageryContextMenuTableOrder {
-  width: 30px;
+  width: var(--order-width);
   text-align: center;
 }
 
 .imageryContextMenuTableField {
-  max-width: 190px;
+  max-width: calc(var(--context-menu-width) - var(--order-width) - var(--scrollbar-width) - 24px);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
