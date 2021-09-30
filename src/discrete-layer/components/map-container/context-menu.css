@@ -15,10 +15,15 @@
 .imageryContextMenuTitle {
   color: var(--mdc-theme-primary);
   font-weight: bold;
+  display: inline-block;
+  max-width: calc(var(--context-menu-width) - 52px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: ltr;
 }
 
 .imageryContextMenuTitleInfo {
-  vertical-align: sub;
   color: var(--mdc-theme-primary);
   cursor: help;
 }

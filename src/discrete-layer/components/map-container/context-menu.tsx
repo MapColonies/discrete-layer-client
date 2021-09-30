@@ -94,7 +94,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           className="imageryContextMenuTheme imageryContextMenu"
         >
           <Box>
-            <span className="imageryContextMenuTitle">{layerName}</span>
+            <Box className="imageryContextMenuTitle">{layerName}</Box>
             {' '}
             <Tooltip content={info + layerName}>
               <Icon
@@ -103,7 +103,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               />
             </Tooltip>
           </Box>
-          <MenuSurfaceAnchor style={{height: `calc(${(size as Record<string, number>).height}px - 40px - 20px)`}}>
+          <MenuSurfaceAnchor style={{height: `calc(${(size as Record<string, number>).height}px - 32px - 28px)`}}>
             <Menu
               open={true}
               className="imageryMenu"
