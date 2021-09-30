@@ -44,16 +44,26 @@ body[dir='rtl'] .imageryMenuIcon {
   cursor: pointer;
 }
 
+.imageryContextMenuTableContainer {
+  max-height: 100px;
+  overflow: auto;
+}
+
+.imageryContextMenuTable {
+  height: 100%;
+}
+
 .imageryContextMenuTableOrder {
   width: 30px;
   text-align: center;
 }
 
 .imageryContextMenuTableField {
-  max-width: 180px;
+  max-width: 190px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  direction: ltr;
 }
 
 .imageryContextMenuTableSelectedRow {

@@ -142,18 +142,20 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                   }}
                 />
               </Box>
-              {expanded  && <table>
-                {data.map((item: Record<string, unknown>, index: number) => {
-                  const meta = item.meta as Record<string, unknown>;
-                  const details = meta.details as Record<string, unknown>;
-                  return (
-                    <tr className={index === FIRST ? 'imageryContextMenuTableSelectedRow' : ''}>
-                      <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
-                      <td className="imageryContextMenuTableField">{details.name as string}</td>
-                    </tr>
-                  );
-                })}
-              </table>}
+              {expanded  && <Box className="imageryContextMenuTableContainer">
+                <table className="imageryContextMenuTable">
+                  {data.map((item: Record<string, unknown>, index: number) => {
+                    const meta = item.meta as Record<string, unknown>;
+                    const details = meta.details as Record<string, unknown>;
+                    return (
+                      <tr className={index === FIRST ? 'imageryContextMenuTableSelectedRow' : ''}>
+                        <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
+                        <td className="imageryContextMenuTableField">{details.name as string}</td>
+                      </tr>
+                    );
+                  })}
+                </table>
+              </Box>}
             </Box>
           )}
         </div>
