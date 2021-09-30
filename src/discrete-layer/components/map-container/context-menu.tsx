@@ -10,7 +10,8 @@ import { IDispatchAction } from '../../models/actionDispatcherStore';
 
 import './context-menu.css';
 
-const EMPTY = 0;
+const NONE = 0;
+const FIRST = 0;
 
 export const ContextMenu: React.FC<IContextMenuData> = ({
   style,
@@ -85,7 +86,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   return (
     <>
-      {numOfSelectedLayers > EMPTY && (
+      {numOfSelectedLayers > NONE && (
         <div 
           ref={imageryContextMenuRef}
           style={style}
@@ -142,11 +143,11 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
                 />
               </Box>
               {expanded  && <table>
-                {data.map((item: Record<string, unknown>) => {
+                {data.map((item: Record<string, unknown>, index: number) => {
                   const meta = item.meta as Record<string, unknown>;
                   const details = meta.details as Record<string, unknown>;
                   return (
-                    <tr>
+                    <tr className={index === FIRST ? 'imageryContextMenuTableSelectedRow' : ''}>
                       <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
                       <td className="imageryContextMenuTableField">{details.name as string}</td>
                     </tr>
@@ -157,7 +158,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           )}
         </div>
       )}
-      {numOfSelectedLayers === EMPTY && <Box style={style} className="imageryContextMenuEmpty"></Box>}
+      {numOfSelectedLayers === NONE && <Box style={style} className="imageryContextMenuEmpty"></Box>}
     </>
   );
 };

@@ -39,7 +39,7 @@ body[dir='rtl'] .imageryMenuIcon {
 }
 
 .imageryContextMenuSubTitleIcon {
-  vertical-align: sub;
+  vertical-align: middle;
   color: var(--mdc-theme-primary);
   cursor: pointer;
 }
@@ -54,6 +54,11 @@ body[dir='rtl'] .imageryMenuIcon {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.imageryContextMenuTableSelectedRow {
+  color: var(--mdc-theme-primary);
+  font-weight: bold;
 }
 
 .imageryContextMenuEmpty {
