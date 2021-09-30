@@ -14,9 +14,10 @@ const NONE = 0;
 const FIRST = 0;
 
 export const ContextMenu: React.FC<IContextMenuData> = ({
-  style,
   data,
+  style,
   handleClose,
+  size
 }) => {
 
   const store = useStore();
@@ -102,7 +103,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               />
             </Tooltip>
           </Box>
-          <MenuSurfaceAnchor className="imageryMenuContainer">
+          <MenuSurfaceAnchor style={{height: `calc(${(size as Record<string, number>).height}px - 40px - 20px)`}}>
             <Menu
               open={true}
               className="imageryMenu"
