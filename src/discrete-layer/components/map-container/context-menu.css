@@ -44,6 +44,7 @@ body[dir='rtl'] .imageryMenuIcon {
 
 .imageryContextMenuSubTitle {
   font-weight: bold;
+  margin-top: 12px;
 }
 
 .imageryContextMenuSubTitleIcon {
