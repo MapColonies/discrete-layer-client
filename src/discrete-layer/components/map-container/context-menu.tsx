@@ -16,8 +16,9 @@ const FIRST = 0;
 export const ContextMenu: React.FC<IContextMenuData> = ({
   data,
   style,
-  handleClose,
-  size
+  position,
+  size,
+  handleClose
 }) => {
 
   const store = useStore();
@@ -71,6 +72,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
+  const emptyStyle = { left: `${position.x as number}px`, top: `${position.y as number}px` };
   const layer = get(data,'[0].meta') as Record<string, unknown>;
   const layerName = get(layer,'details.name') as string;
   const info = intl.formatMessage({ id: 'context-menu.title.tooltip' });
@@ -161,7 +163,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
           )}
         </div>
       )}
-      {numOfSelectedLayers === NONE && <Box style={style} className="imageryContextMenuEmpty"></Box>}
+      {numOfSelectedLayers === NONE && <Box style={emptyStyle} className="imageryContextMenuEmpty"></Box>}
     </>
   );
 };
