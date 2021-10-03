@@ -12,11 +12,14 @@ import './context-menu.css';
 
 const NONE = 0;
 const FIRST = 0;
+const TITLE_HEIGHT = 24;
+const SUB_TITLE_HEIGHT = 24;
+const MARGIN_HEIGHT = 20;
 
 export const ContextMenu: React.FC<IContextMenuData> = ({
   data,
-  style,
   position,
+  style,
   size,
   handleClose
 }) => {
@@ -95,7 +98,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
       {numOfSelectedLayers > NONE && (
         <div 
           ref={imageryContextMenuRef}
-          style={style}
+          style={{...emptyStyle, ...style}}
           className="imageryContextMenuTheme imageryContextMenu"
         >
           <Box>
@@ -108,7 +111,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               />
             </Tooltip>
           </Box>
-          <MenuSurfaceAnchor style={{height: `calc(${(size as Record<string, number>).height}px - 32px - 28px)`}}>
+          <MenuSurfaceAnchor style={{height: `calc(${(size as Record<string, number>).height}px - ${TITLE_HEIGHT}px - ${SUB_TITLE_HEIGHT}px - ${MARGIN_HEIGHT}px)`}}>
             <Menu
               open={true}
               className="imageryMenu"
