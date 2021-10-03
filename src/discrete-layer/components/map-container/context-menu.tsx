@@ -72,7 +72,10 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
-  const emptyStyle = { left: `${position.x as number}px`, top: `${position.y as number}px` };
+  const emptyStyle = {
+    left: `${(position as Record<string, number>).x}px`,
+    top: `${(position as Record<string, number>).y}px`
+  };
   const layer = get(data,'[0].meta') as Record<string, unknown>;
   const layerName = get(layer,'details.name') as string;
   const info = intl.formatMessage({ id: 'context-menu.title.tooltip' });

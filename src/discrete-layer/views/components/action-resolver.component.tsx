@@ -6,6 +6,8 @@ import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 
+const FIRST = 0;
+
 interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
 }
@@ -58,14 +60,14 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerRasterRecord.moveDown':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
           order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== 0) {
+          if (order !== FIRST) {
             store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order + 1 } as MovedLayer);
           }
           break;
         case 'LayerRasterRecord.moveToBottom':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
           order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== 0) {
+          if (order !== FIRST) {
             store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
           }
           break;
