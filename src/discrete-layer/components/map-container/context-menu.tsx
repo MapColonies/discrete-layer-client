@@ -6,7 +6,6 @@ import { Box, IContextMenuData } from '@map-colonies/react-components';
 import { IAction, IActionGroup } from '../../../common/actions/entity.actions';
 import { TabViews } from '../../views/tab-views';
 import { useStore } from '../../models/RootStore';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
 
 import './context-menu.css';
 
