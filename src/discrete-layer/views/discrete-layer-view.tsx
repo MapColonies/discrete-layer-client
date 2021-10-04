@@ -728,7 +728,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               baseMaps={BASE_MAPS}
               // @ts-ignore
               imageryContextMenu={<ContextMenu />}
-              imageryContextMenuSize={{height: 212, width: 260}}
+              imageryContextMenuSize={{ height: 212, width: 260, dynamicHeightIncrement: 120 }}
               >
                 {memoizedLayers}
                 <CesiumDrawingsDataSource
