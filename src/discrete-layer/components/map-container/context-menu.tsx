@@ -76,8 +76,8 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
   const emptyStyle = {
-    left: `${(position as Record<string, number>).x}px`,
-    top: `${(position as Record<string, number>).y}px`
+    left: `${position.x}px`,
+    top: `${position.y}px`
   };
   const layer = get(data,'[0].meta') as Record<string, unknown>;
   const layerName = get(layer,'details.name') as string;
@@ -90,7 +90,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
     action: string,
     data: Record<string, unknown>
   ): void => {
-    store.actionDispatcherStore.dispatchAction(({ action, data } as unknown) as IDispatchAction);
+    store.actionDispatcherStore.dispatchAction({ action, data });
   };
 
   return (
