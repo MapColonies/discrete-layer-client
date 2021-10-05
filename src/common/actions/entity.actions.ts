@@ -10,41 +10,26 @@ export interface IAction {
 };
 
 export interface IActionGroup {
-  group: IAction[];
+  id: number;
   titleTranslationId: string;
+  type?: 'mapActions';
+  group: IAction[];
 }
 
 export interface IEntityActions {
   entity: string;
+  childEntity?: string;
   actions: IActionGroup[];
 }
 
 const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'LayerRasterRecord',
-    actions:[
+    actions: [
       {
-        group: [
-          {
-            action: 'edit',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Edit',
-            titleTranslationId: 'action.edit.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-          {
-            action: 'delete',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Delete',
-            titleTranslationId: 'action.delete.tooltip',
-            views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
-          },
-        ],
-        titleTranslationId: 'CRUD'
-      },
-      {
+        id: 1,
+        titleTranslationId: 'OperationsOnMap',
+        type: 'mapActions',
         group: [
           {
             action: 'moveToTop',
@@ -79,14 +64,37 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [TabViews.CREATE_BEST]
           },
         ],
-        titleTranslationId: 'OperationsOnMap'
-      }
+      },
+      {
+        id: 2,
+        titleTranslationId: 'CRUD',
+        group: [
+          {
+            action: 'edit',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Edit',
+            titleTranslationId: 'action.edit.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          {
+            action: 'delete',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Delete',
+            titleTranslationId: 'action.delete.tooltip',
+            views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
+          },
+        ],
+      },
     ]
   },
   {
     entity: 'Layer3DRecord',
-    actions:[
+    actions: [
       {
+        id: 1,
+        titleTranslationId: 'CRUD',
         group: [
           {
             action: 'edit',
@@ -105,14 +113,16 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },
         ],
-        titleTranslationId: 'CRUD'
       }
     ]
   },
   {
     entity: 'BestRecord',
-    actions:[
+    childEntity: 'LayerRasterRecord',
+    actions: [
       {
+        id: 1,
+        titleTranslationId: 'CRUD',
         group: [
           {
             action: 'edit',
@@ -131,7 +141,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },
         ],
-        titleTranslationId: 'CRUD'
       }
     ]
   }

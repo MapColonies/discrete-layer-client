@@ -50,7 +50,7 @@ import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
-import { ContextMenu } from '../components/map-container/context-menu';
+import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -727,8 +727,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               imageryProvider={false}
               baseMaps={BASE_MAPS}
               // @ts-ignore
-              imageryContextMenu={<ContextMenu />}
-              imageryContextMenuSize={{ height: 212, width: 260, dynamicHeightIncrement: 120 }}
+              imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+              imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
               >
                 {memoizedLayers}
                 <CesiumDrawingsDataSource

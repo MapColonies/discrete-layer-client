@@ -1,10 +1,9 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { Icon, Menu, MenuItem, MenuSurfaceAnchor, Tooltip } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
-import { IAction, IActionGroup } from '../../../common/actions/entity.actions';
-import { TabViews } from '../../views/tab-views';
+import { IAction } from '../../../common/actions/entity.actions';
 import { useStore } from '../../models/RootStore';
 
 import './context-menu.css';
@@ -15,44 +14,23 @@ const TITLE_HEIGHT = 24;
 const SUB_TITLE_HEIGHT = 24;
 const MARGIN_HEIGHT = 20;
 
-export const ContextMenu: React.FC<IContextMenuData> = ({
+interface IMapContextMenuData extends IContextMenuData {
+  actions: IAction[];
+}
+
+export const ContextMenu: React.FC<IMapContextMenuData> = ({
   data,
   position,
   style,
   size,
-  handleClose
+  handleClose,
+  actions
 }) => {
 
   const store = useStore();
   const intl = useIntl();
   const imageryContextMenuRef = useRef(null);
   const [expanded, setExpanded] = useState<boolean>(false);
-  
-  const entityPermittedActions = useMemo(() => {
-    const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord'].forEach( entityName => {
-       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName).filter(actionGroup => actionGroup.titleTranslationId === 'OperationsOnMap');
-       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
-        return {
-          titleTranslationId: actionGroup.titleTranslationId,
-          group: 
-            actionGroup.group.filter(action => {
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                    action.views.includes(TabViews.CREATE_BEST);
-            })
-            .map((action) => {
-              return {
-                ...action,
-                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
-              };
-            }),
-        }
-       });
-       entityActions[entityName] = permittedGroupsActions;
-    });
-    return entityActions['LayerRasterRecord'];
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -71,8 +49,6 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
 
     document.addEventListener('click', handleClickOutside, false);
   });
-
-  const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;
   
   const emptyStyle = {
     left: `${position.x}px`,
@@ -115,7 +91,7 @@ export const ContextMenu: React.FC<IContextMenuData> = ({
               open={true}
               className="imageryMenu"
             >
-              {flatPermittedActions.map((action: IAction) => {
+              {actions.map((action: IAction) => {
                 return (
                   <MenuItem key={`imageryMenuItemAction_${action.action}`}>
                     <Box

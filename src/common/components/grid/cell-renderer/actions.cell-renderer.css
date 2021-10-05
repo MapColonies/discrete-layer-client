@@ -35,16 +35,17 @@ body[dir='rtl'] #actionsCellRenderer.actionsContainer .actionIcon {
 
 #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
   top: 42px !important;
-  left: -88px !important;
-  width: 169px; /*36+36+36+16+34*/ /*34-offset*/
+  left: -128px !important;
+  width: 240px;
   padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: fixed;
 }
 
 body[dir='rtl'] #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
-  right: -88px !important;
+  right: -128px !important;
   left: unset;
 }
 

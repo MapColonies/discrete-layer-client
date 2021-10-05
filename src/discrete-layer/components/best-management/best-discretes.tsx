@@ -72,11 +72,13 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       } as DiscreteOrder
     );
   };
+  
+  const entityName = store.actionDispatcherStore.getEntityActionConfiguration('BestRecord')?.childEntity;
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord'].forEach( entityName => {
-       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName).filter(actionGroup => actionGroup.titleTranslationId === 'CRUD');
+    if (entityName !== undefined) {
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
           titleTranslationId: actionGroup.titleTranslationId,
@@ -95,7 +97,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         }
        });
        entityActions[entityName] = permittedGroupsActions;
-    })
+    }
     return entityActions;
   }, []);
 
