@@ -532,7 +532,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     </Tooltip>
                   } */}
                   {
-                    permissions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
+                    CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_3D') && permissions.isLayer3DRecordIngestAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_3d' })}>
                       <IconButton
                         className="operationIcon mc-icon-Map-3D"
                         label="NEW 3D"
@@ -541,7 +541,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     </Tooltip>
                   }
                   {
-                    permissions.isBestRecordCreateAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
+                    CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') && permissions.isBestRecordCreateAllowed && <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
                       <IconButton
                         className="operationIcon mc-icon-Bests"
                         label="NEW BEST"
@@ -551,7 +551,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                         } }
                       />
                     </Tooltip>
-                  }                  
+                  }
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
                   <IconButton className="operationIcon mc-icon-Property-1Add" onClick={evt => setOpenNew(!openNew)}/>
