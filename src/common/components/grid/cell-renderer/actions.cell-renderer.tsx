@@ -59,7 +59,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           );
         })
       }
-      <MenuSurfaceAnchor id="actionsMenuContainer">
+      <MenuSurfaceAnchor id="gridActionsMenuContainer">
         <Menu
           open={openActionsMenu}
           onClose={(evt): void => setOpenActionsMenu(false)}
