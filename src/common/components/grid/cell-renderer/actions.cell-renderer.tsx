@@ -46,7 +46,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   }
 
   return (
-    <Box id="actionsCellRenderer" className="actionsContainer">
+    <Box id="gridActionsCellRenderer" className="actionsContainer">
       {
         frequentActions.map((action, idx) => {
           return (

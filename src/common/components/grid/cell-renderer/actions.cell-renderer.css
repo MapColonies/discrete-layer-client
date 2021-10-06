@@ -1,4 +1,4 @@
-#actionsCellRenderer.actionsContainer {
+#gridActionsCellRenderer.actionsContainer {
   justify-content: flex-end;
   position: relative;
   display: flex;
@@ -19,17 +19,17 @@
   */
 }
 
-body[dir='rtl'] #actionsCellRenderer.actionsContainer {
+body[dir='rtl'] #gridActionsCellRenderer.actionsContainer {
   right: unset;
   left: 0;
 }
 
-#actionsCellRenderer.actionsContainer .actionIcon {
+#gridActionsCellRenderer.actionsContainer .actionIcon {
   right: unset;
   left: unset;
 }
 
-body[dir='rtl'] #actionsCellRenderer.actionsContainer .actionIcon {
+body[dir='rtl'] #gridActionsCellRenderer.actionsContainer .actionIcon {
   left: unset;
   right: unset;
 }
@@ -57,32 +57,32 @@ body[dir='rtl'] #gridActionsMenuContainer {
   right: 20px;
 }
 
-#actionsCellRenderer .actionMenuItem {
+#gridActionsCellRenderer .actionMenuItem {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-#actionsCellRenderer .mdc-list-item {
+#gridActionsCellRenderer .mdc-list-item {
   padding: 0 4px;
 }
 
-#actionsCellRenderer #allActionsIcon {
+#gridActionsCellRenderer #allActionsIcon {
   position: relative;
   top: 6px;
 }
 
-#actionsCellRenderer .actionMenuItemTitle {
+#gridActionsCellRenderer .actionMenuItemTitle {
   font-size: 16px;
   padding-left: 8px;
 }
 
-body[dir='rtl'] #actionsCellRenderer .actionMenuItemTitle {
+body[dir='rtl'] #gridActionsCellRenderer .actionMenuItemTitle {
   padding-left: unset;
   padding-right: 8px;
 }
 
-#actionsCellRenderer .menuSeparator {
+#gridActionsCellRenderer .menuSeparator {
   border-bottom: 1px solid;
   width: 100%;
 }
