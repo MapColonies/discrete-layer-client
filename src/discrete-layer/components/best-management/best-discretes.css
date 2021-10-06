@@ -53,7 +53,7 @@ body[dir=rtl] #bestDiscretes .ag-pinned-right-cols-container {
 }
 
 #bestDiscretes .ag-pinned-right-cols-container div[role=row] {
-  height: 112px !important;
+  height: 268px !important;
 }
 
 #bestDiscretes .ag-pinned-right-cols-container .ag-row.ag-row-selected.ag-row-hover {

@@ -8,6 +8,8 @@ import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
 
+const FIRST = 0;
+
 interface IActionsRendererParams extends ICellRendererParams {
   actions: IActionGroup[];
   actionHandler: (action: Record<string,unknown>) => void;
@@ -66,12 +68,12 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           onMouseOver={(evt): void => evt.stopPropagation()}
         >
           {
-            actions.map((actionGroup: IActionGroup, categoryIdx: number) => {
+            actions.map((actionGroup: IActionGroup, groupIdx: number) => {
               return (
                 <>
-                  {categoryIdx > 0 && 
-                    <MenuItem key={`menuItemSeparator_groupId_${categoryIdx}`}>
-                      <Box className="separator"></Box>
+                  {groupIdx > FIRST && 
+                    <MenuItem key={`menuItemSeparator_groupId_${groupIdx}`}>
+                      <Box className="menuSeparator"></Box>
                     </MenuItem>
                   }
                   {actionGroup.group.map((action: IAction, idx: number) => {

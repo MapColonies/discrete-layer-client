@@ -7,6 +7,7 @@
   width: 100px;
   /*background-color: rgb(44,65,89);*/
   border-radius: 50px;
+  margin-top: 1px;
   /* 
   ColorRes = Color * alpha + Background * (1 - alpha); 
     Color = rgba(33, 150, 243, 0.1)
@@ -41,7 +42,7 @@ body[dir='rtl'] #actionsCellRenderer.actionsContainer .actionIcon {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  position: fixed;
+  /* position: fixed; */
 }
 
 body[dir='rtl'] #gridActionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
@@ -81,7 +82,7 @@ body[dir='rtl'] #actionsCellRenderer .actionMenuItemTitle {
   padding-right: 8px;
 }
 
-.separator {
-  border-bottom: 1px solid white;
+#actionsCellRenderer .menuSeparator {
+  border-bottom: 1px solid;
   width: 100%;
 }

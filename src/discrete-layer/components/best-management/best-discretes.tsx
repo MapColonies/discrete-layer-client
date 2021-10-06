@@ -246,7 +246,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         style={{
           height: '100%'
         }}
-        />
+      />
     </Box>
   );
 }));
