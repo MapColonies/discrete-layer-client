@@ -46,7 +46,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   return (
     <Box id="actionsCellRenderer" className="actionsContainer">
       {
-        frequentActions.map((action,idx) => {
+        frequentActions.map((action, idx) => {
           return (
             <IconButton
               className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
@@ -66,28 +66,31 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           onMouseOver={(evt): void => evt.stopPropagation()}
         >
           {
-            allFlatActions.map((action,idx) => {
+            allFlatActions.map((action, idx) => {
               return (
-                <MenuItem key={`menuItemAct_${(props.data as ILayerImage).id}_${idx}`}>
-                  <Box 
-                    onClick={(evt): void => {
-                      sendAction(entity, action, props.data);
-                      setOpenActionsMenu(false); 
-                    }}
-                    className="actionMenuItem"
-                  >
-                    <IconButton
-                      className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
-                      icon={action.icon}
-                    />
-                    <Typography 
-                      tag="div"
-                      className="actionMenuItemTitle actionDismissible"
+                <>
+                  <MenuItem key={`menuItemAct_${(props.data as ILayerImage).id}_${idx}`}>
+                    <Box 
+                      onClick={(evt): void => {
+                        sendAction(entity, action, props.data);
+                        setOpenActionsMenu(false); 
+                      }}
+                      className="actionMenuItem"
                     >
-                      {action.titleTranslationId}
-                    </Typography>
-                  </Box>
-                </MenuItem>
+                      <IconButton
+                        className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
+                        icon={action.icon}
+                      />
+                      <Typography 
+                        tag="div"
+                        className="actionMenuItemTitle actionDismissible"
+                      >
+                        {action.titleTranslationId}
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                  {idx === 3 && <hr/>}
+                </>
               );
             })
           }
