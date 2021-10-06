@@ -80,3 +80,8 @@ body[dir='rtl'] #actionsCellRenderer .actionMenuItemTitle {
   padding-left: unset;
   padding-right: 8px;
 }
+
+.separator {
+  border-bottom: 1px solid white;
+  width: 100%;
+}
