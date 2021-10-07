@@ -19,7 +19,6 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import { RecordType } from '../../models/RecordTypeEnum';
 import { TabViews } from '../../views/tab-views';
 import { BestinEditDialogComponent } from '../dialogs/best-in-edit.dialog';
 
