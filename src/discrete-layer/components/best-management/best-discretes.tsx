@@ -79,24 +79,26 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
     const entityActions: Record<string, unknown> = {};
     if (entityName !== undefined) {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
-       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
-        return {
-          titleTranslationId: actionGroup.titleTranslationId,
-          group: 
-            actionGroup.group.filter(action => {
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                    action.views.includes(TabViews.CREATE_BEST);
-            })
-            .map((action) => {
-              return {
-                ...action,
-                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
-              };
-            }),
-        }
-       });
-       entityActions[entityName] = permittedGroupsActions;
+       const permittedGroupsActions = allGroupsActions
+        .sort((actionGroup1, actionGroup2) => actionGroup1.id - actionGroup2.id)
+        .map((actionGroup) => {
+          return {
+            titleTranslationId: actionGroup.titleTranslationId,
+            group: 
+              actionGroup.group.filter(action => {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                      action.views.includes(TabViews.CREATE_BEST);
+              })
+              .map((action) => {
+                return {
+                  ...action,
+                  titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+                };
+              }),
+          }
+        });
+      entityActions[entityName] = permittedGroupsActions;
     }
     return entityActions;
   }, []);
