@@ -59,8 +59,8 @@ export const BestLayersPresentor: React.FC = observer((props) => {
           details: {
             footprint: layer.footprint as Record<string, unknown>,
             name: layer.productName,
-            resolution: layer.resolution,
-            updateDate: dateFormatter(layer.updateDate),
+            // resolution: layer.resolution,
+            // updateDate: dateFormatter(layer.updateDate),
           },
         }, 
         mapViewer.layersManager.length(),
