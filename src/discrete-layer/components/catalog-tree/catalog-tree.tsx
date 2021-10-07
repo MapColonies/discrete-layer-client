@@ -43,7 +43,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         filter: [
           {
             field: 'mc:type',
-            eq: RecordType.RECORD_ALL
+            eq: store.discreteLayersStore.searchParams.recordType
           }
         ]
       }
