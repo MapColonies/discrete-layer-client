@@ -12,7 +12,7 @@ export interface IAction {
 export interface IActionGroup {
   id: number;
   titleTranslationId: string;
-  type?: 'mapActions';
+  type: string;
   group: IAction[];
 }
 
@@ -68,6 +68,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 2,
         titleTranslationId: 'CRUD',
+        type: 'CRUD',
         group: [
           {
             action: 'edit',
@@ -95,6 +96,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
+        type: 'CRUD',
         group: [
           {
             action: 'edit',
@@ -123,6 +125,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
+        type: 'CRUD',
         group: [
           {
             action: 'edit',
