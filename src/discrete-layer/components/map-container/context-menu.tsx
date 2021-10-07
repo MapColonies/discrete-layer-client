@@ -134,9 +134,12 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
                     return (
                       <tr className={index === FIRST ? 'imageryContextMenuTableSelectedRow' : ''}>
                         <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
-                        <Tooltip content={details.name as string}>
-                          <td className="imageryContextMenuTableField">{details.name as string}</td>
-                        </Tooltip>
+                        <td>
+                          <Tooltip content={details.name as string}>
+                            <Box className="imageryContextMenuTableField">{details.name as string}</Box>
+                          </Tooltip>
+                        </td>
+                        
                       </tr>
                     );
                   })}
