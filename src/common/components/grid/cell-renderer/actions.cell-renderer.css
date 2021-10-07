@@ -3,7 +3,7 @@
   position: relative;
   display: flex;
   top: 0;
-  right: 0;
+  right: -82px;
   width: 100px;
   /*background-color: rgb(44,65,89);*/
   border-radius: 50px;
@@ -21,7 +21,7 @@
 
 body[dir='rtl'] #gridActionsCellRenderer.actionsContainer {
   right: unset;
-  left: 0;
+  left: -82px;
 }
 
 #gridActionsCellRenderer.actionsContainer .actionIcon {
@@ -36,8 +36,8 @@ body[dir='rtl'] #gridActionsCellRenderer.actionsContainer .actionIcon {
 
 #gridActionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
   top: 42px !important;
-  left: -128px !important;
-  width: 240px;
+  left: -160px !important;
+  width: 200px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -46,7 +46,7 @@ body[dir='rtl'] #gridActionsCellRenderer.actionsContainer .actionIcon {
 }
 
 body[dir='rtl'] #gridActionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
-  right: -128px !important;
+  right: -160px !important;
   left: unset;
 }
 

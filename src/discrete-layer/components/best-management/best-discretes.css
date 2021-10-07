@@ -34,6 +34,13 @@ body[dir=rtl] #bestDiscretes .ag-pinned-right-cols-container {
 /* Hide border of right-cols-container */
 #bestDiscretes .ag-pinned-right-cols-container .ag-cell {
   border: none !important;
+  width: 260px !important;
+  left: -82px !important;
+}
+
+body[dir=rtl] #bestDiscretes .ag-pinned-right-cols-container .ag-cell {
+  left: unset;
+  right: -82px !important;
 }
 
 /* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/

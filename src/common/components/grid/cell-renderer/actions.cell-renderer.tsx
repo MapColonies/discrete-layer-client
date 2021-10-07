@@ -87,7 +87,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
                           className="actionMenuItem"
                         >
                           <IconButton
-                            className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
+                            className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible glow-missing-icon`}
                             icon={action.icon}
                           />
                           <Typography 

@@ -38,8 +38,8 @@
   "action.close.tooltip": "סגור",
   "action.copy.tooltip": "העתק קישור",
   "action.layer.move-to-top.tooltip": "העלה מעל כולם",
-  "action.layer.move-up.tooltip": "הזז לשכבה אחת מעל",
-  "action.layer.move-down.tooltip": "הזז לשכבה אחת מתחת",
+  "action.layer.move-up.tooltip": "הזז למעלה",
+  "action.layer.move-down.tooltip": "הזז למטה",
   "action.layer.move-to-bottom.tooltip": "הורד לתחתית",
 
   "record-type.record_raster.label": "ראסטר",
