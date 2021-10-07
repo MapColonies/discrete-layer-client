@@ -37,7 +37,10 @@
   "action.collapse.tooltip": "Collapse",
   "action.close.tooltip": "Close",
   "action.copy.tooltip": "Copy URL",
+  "action.layer.move-to-top.tooltip": "Bring to top",
   "action.layer.move-up.tooltip": "Move up",
+  "action.layer.move-down.tooltip": "Move down",
+  "action.layer.move-to-bottom.tooltip": "Send to bottom",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -93,6 +96,9 @@
   "tab-views.best-edit.actions.edit": "Edit BEST details",
 
   "best-edit.import.dialog.import-btn.text": "Import",
+
+  "context-menu.title.tooltip": "Actions on topmost layer: ",
+  "context-menu.sub-title.tooltip": "overlapping layers",
 
   "details-panel.no-selection": "No selection",
 

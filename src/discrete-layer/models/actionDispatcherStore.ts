@@ -35,12 +35,18 @@ export const actionDispatcherStore = ModelBase
       return actions?.actions ?? [];
     };
 
+    function getEntityActionConfiguration(entity: string): IEntityActions | undefined {
+      const actions = self.actionsConfig?.find(entityActions => entityActions.entity === entity);
+      return actions ?? undefined;
+    };
+    
     function dispatchAction(action:IDispatchAction): void {
       self.action = cloneDeep(action);
     };
 
     return {
       getEntityActionGroups,
+      getEntityActionConfiguration,
       dispatchAction,
     };
   });

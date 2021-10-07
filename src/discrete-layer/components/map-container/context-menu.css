@@ -1,0 +1,87 @@
+.imageryContextMenuTheme {
+  --context-menu-width: 260px;
+  --order-width: 60px;
+  --scrollbar-width: 16px;
+}
+
+.imageryContextMenu {
+  background: var(--mdc-theme-surface);
+  position: absolute;
+  border-radius: 4px;
+  padding: 12px;
+  width: var(--context-menu-width);
+}
+
+.imageryContextMenuTitle {
+  color: var(--mdc-theme-primary);
+  font-weight: bold;
+  display: inline-block;
+  max-width: calc(var(--context-menu-width) - 52px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: ltr;
+}
+
+.imageryContextMenuTitleInfo {
+  color: var(--mdc-theme-primary);
+  cursor: help;
+}
+
+.imageryMenu {
+  width: 100%;
+}
+
+.imageryMenuIcon {
+  vertical-align: sub;
+  margin-right: 8px;
+}
+
+body[dir='rtl'] .imageryMenuIcon {
+  margin-right: unset;
+  margin-left: 8px;
+}
+
+.imageryContextMenuSubTitle {
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.imageryContextMenuSubTitleIcon {
+  vertical-align: middle;
+  color: var(--mdc-theme-primary);
+  cursor: pointer;
+}
+
+.imageryContextMenuTableContainer {
+  max-height: 100px;
+  overflow: auto;
+}
+
+.imageryContextMenuTable {
+  height: 100%;
+}
+
+.imageryContextMenuTableOrder {
+  width: var(--order-width);
+  text-align: center;
+}
+
+.imageryContextMenuTableField {
+  max-width: calc(var(--context-menu-width) - var(--order-width) - var(--scrollbar-width) - 24px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: ltr;
+}
+
+.imageryContextMenuTableSelectedRow {
+  color: var(--mdc-theme-primary);
+  font-weight: bold;
+}
+
+.imageryContextMenuEmpty {
+  background: var(--mdc-theme-surface);
+  position: absolute;
+  border-radius: 4px;
+}

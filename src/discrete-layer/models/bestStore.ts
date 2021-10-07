@@ -15,6 +15,7 @@ const DRAFTS_KEY = 'DRAFTS';
 const EMPTY = 0;
 const INC = 1;
 const DEC = -1;
+const NOT_FOUND = -1;
 
 interface IBestEditData {
   layersList?: LayerRasterRecordModelType[];
@@ -219,6 +220,11 @@ export const bestStore = ModelBase
       self.isDirty = dirty;
     }
 
+    function getLayerOrder(id: string): number {
+      const layer = self.layersList?.find(layer => layer.id === id);
+      return layer?.order ?? NOT_FOUND;
+    }
+
     function resetData(): void {
       self.layersList = [];
     }
@@ -236,8 +242,9 @@ export const bestStore = ModelBase
       deleteLayerFromBest,
       preserveData,
       restoreData,
-      resetData,
       isBestLoad,
       setIsDirty,
+      getLayerOrder,
+      resetData,
     };
   });

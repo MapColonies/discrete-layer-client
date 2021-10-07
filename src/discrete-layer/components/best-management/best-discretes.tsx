@@ -21,7 +21,6 @@ import { LayerImageRenderer } from '../../../common/components/grid/cell-rendere
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { IconRenderer } from '../../../common/components/grid/cell-renderer/icon.cell-renderer';
 import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import { IActionGroup } from '../../../common/actions/entity.actions';
 import { LayerRasterRecordModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
@@ -73,30 +72,34 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       } as DiscreteOrder
     );
   };
+  
+  const entityName = store.actionDispatcherStore.getEntityActionConfiguration('BestRecord')?.childEntity;
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord'].forEach( entityName => {
+    if (entityName !== undefined) {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
-       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
-        return {
-          titleTranslationId: actionGroup.titleTranslationId,
-          group: 
-            actionGroup.group.filter(action => {
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                    action.views.includes(TabViews.CREATE_BEST);
-            })
-            .map((action) => {
-              return {
-                ...action,
-                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
-              };
-            }),
-        }
-       });
-       entityActions[entityName] = permittedGroupsActions;
-    })
+       const permittedGroupsActions = allGroupsActions
+        .sort((actionGroup1, actionGroup2) => actionGroup1.id - actionGroup2.id)
+        .map((actionGroup) => {
+          return {
+            titleTranslationId: actionGroup.titleTranslationId,
+            group: 
+              actionGroup.group.filter(action => {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                      action.views.includes(TabViews.CREATE_BEST);
+              })
+              .map((action) => {
+                return {
+                  ...action,
+                  titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+                };
+              }),
+          }
+        });
+      entityActions[entityName] = permittedGroupsActions;
+    }
     return entityActions;
   }, []);
 
@@ -245,7 +248,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
         style={{
           height: '100%'
         }}
-        />
+      />
     </Box>
   );
 }));

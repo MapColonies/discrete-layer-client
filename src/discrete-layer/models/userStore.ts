@@ -22,6 +22,10 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_DELETE = 'entity_action.LayerRasterRecord.delete',
   ENTITY_ACTION_LAYER3DRECORD_DELETE = 'entity_action.Layer3DRecord.delete',
   ENTITY_ACTION_BESTRECORD_DELETE = 'entity_action.BestRecord.delete',
+  ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP = 'entity_action.LayerRasterRecord.moveToTop',
+  ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP = 'entity_action.LayerRasterRecord.moveUp',
+  ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN = 'entity_action.LayerRasterRecord.moveDown',
+  ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM = 'entity_action.LayerRasterRecord.moveToBottom',
 
 
   /***  FOR FUTURE USE, ENTITY FIELD PERMISSION PATTERN EXAMPLE ***/
@@ -57,7 +61,10 @@ const ROLES: IRole[] = [
       'entity_action.LayerRasterRecord.delete': true,
       'entity_action.Layer3DRecord.delete': true,
       'entity_action.BestRecord.delete': true,
-
+      'entity_action.LayerRasterRecord.moveToTop': true,
+      'entity_action.LayerRasterRecord.moveUp': true,
+      'entity_action.LayerRasterRecord.moveDown': true,
+      'entity_action.LayerRasterRecord.moveToBottom': true,
     },
   },
   {
@@ -73,7 +80,10 @@ const ROLES: IRole[] = [
       'entity_action.LayerRasterRecord.delete': false,
       'entity_action.Layer3DRecord.delete': false,
       'entity_action.BestRecord.delete': false,
-
+      'entity_action.LayerRasterRecord.moveToTop': false,
+      'entity_action.LayerRasterRecord.moveUp': false,
+      'entity_action.LayerRasterRecord.moveDown': false,
+      'entity_action.LayerRasterRecord.moveToBottom': false,
     },
   },
 ];
@@ -95,7 +105,6 @@ export const userStore = ModelBase
     },
   }))
   .actions((self) => {
-    
     function isActionAllowed(action: UserAction | string): boolean | undefined {
       const role = ROLES.find(item => item.role === self.user?.role);
       return role ? role.permissions[action as UserAction] as boolean : false;

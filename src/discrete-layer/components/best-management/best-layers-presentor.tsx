@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
 import { CesiumGeographicTilingScheme, useCesiumMap } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { LayerRasterRecordModelType, LinkModelType, useStore } from '../../models';
 
 interface IRasterLayerProperties {
@@ -54,6 +55,12 @@ export const BestLayersPresentor: React.FC = observer((props) => {
           options: {
             ...layerProperties.options,
             url: layerProperties.url,
+          },
+          details: {
+            footprint: layer.footprint as Record<string, unknown>,
+            name: layer.productName,
+            // resolution: layer.resolution,
+            // updateDate: dateFormatter(layer.updateDate),
           },
         }, 
         mapViewer.layersManager.length(),

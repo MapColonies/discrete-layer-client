@@ -14,8 +14,6 @@ import {
   MenuSurfaceAnchor,
   MenuSurface,
   Tooltip,
-  Drawer,
-  DrawerContent,
   Avatar
 } from '@map-colonies/react-core';
 import {
@@ -52,6 +50,7 @@ import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
+import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -521,7 +520,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               (tabIdx === TabViews.CATALOG) && 
               (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
-                <MenuSurface open={openNew} onClose={evt => setOpenNew(false)}>
+                <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {/* {
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
                     permissions.isLayerRasterRecordIngestAllowed &&
@@ -560,7 +559,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   }
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Property-1Add" onClick={evt => setOpenNew(!openNew)}/>
+                  <IconButton className="operationIcon mc-icon-Property-1Add" onClick={(evt): void => setOpenNew(!openNew)}/>
                 </Tooltip>
               </MenuSurfaceAnchor>
             }
@@ -733,6 +732,9 @@ const DiscreteLayerView: React.FC = observer(() => {
               sceneMode={CesiumSceneMode.SCENE2D}
               imageryProvider={false}
               baseMaps={BASE_MAPS}
+              // @ts-ignore
+              imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+              imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
               >
                 {memoizedLayers}
                 <CesiumDrawingsDataSource

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
-import { IconButton,   MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
+import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
+
+const FIRST = 0;
 
 interface IActionsRendererParams extends ICellRendererParams {
   actions: IActionGroup[];
@@ -44,9 +46,9 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   }
 
   return (
-    <Box id="actionsCellRenderer" className="actionsContainer">
+    <Box id="gridActionsCellRenderer" className="actionsContainer">
       {
-        frequentActions.map((action,idx) => {
+        frequentActions.map((action, idx) => {
           return (
             <IconButton
               className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
@@ -59,36 +61,47 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           );
         })
       }
-      <MenuSurfaceAnchor id="actionsMenuContainer">
+      <MenuSurfaceAnchor id="gridActionsMenuContainer">
         <Menu
           open={openActionsMenu}
-          onClose={evt => setOpenActionsMenu(false)}
-          onMouseOver={evt => evt.stopPropagation()}
+          onClose={(evt): void => setOpenActionsMenu(false)}
+          onMouseOver={(evt): void => evt.stopPropagation()}
         >
           {
-            allFlatActions.map((action,idx) => {
+            actions.map((actionGroup: IActionGroup, groupIdx: number) => {
               return (
-                <MenuItem key={`menuItemAct_${(props.data as ILayerImage).id}_${idx}`}>
-                  <Box 
-                    onClick={(evt): void => {
-                      sendAction(entity, action, props.data);
-                      setOpenActionsMenu(false); 
-                    }}
-                    className="actionMenuItem"
-                  >
-                    <IconButton
-                      className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
-                      icon={action.icon}
-                    />
-                    <Typography 
-                      tag="div"
-                      className="actionMenuItemTitle actionDismissible"
-                    >
-                      {action.titleTranslationId}
-                    </Typography>
-                  </Box>
-                </MenuItem>
-              );
+                <>
+                  {groupIdx > FIRST && 
+                    <MenuItem key={`menuItemSeparator_groupId_${groupIdx}`}>
+                      <Box className="menuSeparator"></Box>
+                    </MenuItem>
+                  }
+                  {actionGroup.group.map((action: IAction, idx: number) => {
+                    return (
+                      <MenuItem key={`menuItemAct_${(props.data as ILayerImage).id}_${idx}`}>
+                        <Box 
+                          onClick={(evt): void => {
+                            sendAction(entity, action, props.data);
+                            setOpenActionsMenu(false); 
+                          }}
+                          className="actionMenuItem"
+                        >
+                          <IconButton
+                            className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible glow-missing-icon`}
+                            icon={action.icon}
+                          />
+                          <Typography 
+                            tag="div"
+                            className="actionMenuItemTitle actionDismissible"
+                          >
+                            {action.titleTranslationId}
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    );
+                  })}
+                </>
+              )
             })
           }
         </Menu>
