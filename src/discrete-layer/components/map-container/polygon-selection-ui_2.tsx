@@ -97,7 +97,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
         <Select
           enhanced
-          defaultValue={RecordType.RECORD_ALL.toString()}
+          defaultValue={recordTypeOptions[0].value}
           options={recordTypeOptions}
           onChange={
             (evt): void => {
