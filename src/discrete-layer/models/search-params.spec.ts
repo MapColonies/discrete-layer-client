@@ -1,4 +1,6 @@
 import { Geometry } from 'geojson';
+// eslint-disable-next-line
+import '../../__mocks__/confEnvShim';
 import { searchParams } from './search-params';
 
 const geom: Geometry = {
