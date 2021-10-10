@@ -5,6 +5,7 @@ import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
+import { get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
@@ -18,7 +19,6 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import { RecordType } from '../../models/RecordTypeEnum';
 import { TabViews } from '../../views/tab-views';
 import { BestinEditDialogComponent } from '../dialogs/best-in-edit.dialog';
 
@@ -36,18 +36,28 @@ interface CatalogTreeComponentProps {
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(({refresh}) => {
-  const { loading, error, data, query } = useQuery((store) =>
-    // store.querySearch({})
-    store.querySearch({
-      opts: {
-        filter: [
-          {
-            field: 'mc:type',
-            eq: store.discreteLayersStore.searchParams.recordType
-          }
-        ]
-      }
-    })
+  const { loading, error, data, query, setQuery } = useQuery();
+
+  const store = useStore();
+  const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
+  const [hoveredNode, setHoveredNode] = useState<TreeItem>();
+  const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
+  const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
+  const selectedLayersRef = useRef(intialOrder);
+  const intl = useIntl();
+
+  useEffect(() => {
+    setQuery(
+      store.querySearch({
+        opts: {
+          filter: [
+            {
+              field: 'mc:type',
+              eq: store.discreteLayersStore.searchParams.recordType
+            }
+          ]
+        }
+      })
 
     // store.queryCatalogItems({},`
     // ... on LayerRasterRecord {
@@ -80,15 +90,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     //   accuracyLE90
     // }
     // }`)
-  );
-
-  const store = useStore();
-  const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
-  const [hoveredNode, setHoveredNode] = useState<TreeItem>();
-  const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
-  const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
-  const selectedLayersRef = useRef(intialOrder);
-  const intl = useIntl();
+    )
+  }, [refresh]);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
@@ -144,13 +147,11 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   });
 
   useEffect(() => {
-    void query!.refetch();
-  }, [refresh]);
 
-  useEffect(() => {
-    if (data && data.search) {
+    const layersList = get(data,'search') as ILayerImage[];
+    if (!isEmpty(layersList)) {
       const arr: ILayerImage[] = [];
-      data.search.forEach((item) => arr.push({...item}));
+      layersList.forEach((item) => arr.push({...item}));
 
       store.discreteLayersStore.setLayersImages(arr, false);
 

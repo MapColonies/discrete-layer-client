@@ -1,12 +1,13 @@
 import { types, Instance } from 'mobx-state-tree';
 import { Geometry } from 'geojson';
+import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { RecordType } from './RecordTypeEnum';
 
 export const searchParams = ModelBase
   .props({
     geojson: types.maybe(types.frozen<Geometry>()),
-    recordType: types.maybe(types.frozen<RecordType>(RecordType.RECORD_ALL)),
+    recordType: types.maybe(types.frozen<RecordType>(CONFIG.SERVED_ENTITY_TYPES[0] as RecordType)),
   })
   .actions((self) => ({
     setLocation: function setLocation(geometry: Geometry): void {
