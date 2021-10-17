@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import vest, { test, enforce } from 'vest';
 // import { IVestResult } from 'vest/vestResult';
 
-const suite = vest.create((data = {}): any => {
+const suite = vest.create((data: any = {}): any => {
 
   test('directory', 'Directory is required', () => {
     enforce(data.directory as string).isNotEmpty();
