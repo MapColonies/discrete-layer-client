@@ -15,6 +15,7 @@ const MAP = (window as any)._env_.MAP;
 const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
+const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
@@ -72,7 +73,8 @@ const APP_CONFIG = {
   DEFAULT_USER: {
     ROLE: DEFAULT_USER.role
   },
-  SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(',')
+  SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
+  BASE_MAPS: BASE_MAPS
 };
 
 export default APP_CONFIG;
