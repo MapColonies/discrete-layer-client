@@ -26,10 +26,8 @@ import {
   CesiumSceneMode,
   BboxCorner,
   Box,
-  CesiumGeographicTilingScheme,
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
-import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
@@ -72,7 +70,7 @@ const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
   dashLength: 5
 });
-const BASE_MAPS = CONFIG.BASE_MAPS as IBaseMaps;
+const BASE_MAPS = CONFIG.BASE_MAPS;
 
 interface IDrawingObject {
   type: DrawType;
