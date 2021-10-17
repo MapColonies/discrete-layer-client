@@ -167,6 +167,10 @@
   "field-names.3d.nominal-resolution": "Nominal Res.",
   "field-names.3d.wktGeometry": "WKT Geometry",
 
+  "info-general-tooltip.required": "Required field",
+
+  "validation-general.required": "{fieldName} is required",
+
   "system-status.title": "System Jobs",
   "system-status.close-btn.text": "Close",
   "system-status.job.fields.resource-id.label": "Resource",

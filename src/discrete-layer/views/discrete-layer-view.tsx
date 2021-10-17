@@ -641,7 +641,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
 
         <Box className="headerSystemAreaContainer">
-          <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' },{user: store.userStore.user?.role})}>
+          <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
           {

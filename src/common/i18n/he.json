@@ -17,7 +17,7 @@
   "general.dialog.best-in-edit.title": "אתה עורך BEST",
   "general.dialog.best-in-edit.message": "נא לסיים עבודתך לפני עריכת BEST אחר.",
   "general.best-draft.new.tooltip": "חדש",
-  "general.login-user.tooltip": "{user} מחובר כמשתמש",
+  "general.login-user.tooltip": "מחובר כמשתמש {user}",
 
   "action.tab-views.catalog.tooltip": "טאב קטלוג",
   "action.tab-views.search-results.tooltip": "טאב תוצאות חיפוש",
@@ -166,6 +166,10 @@
   "field-names.3d.measured-precision": "דיוק הנמדד",
   "field-names.3d.nominal-resolution": "דיוק נומינלי",
   "field-names.3d.wktGeometry": "גאומטריה",
+
+  "info-general-tooltip.required": "שדה חובה",
+
+  "validation-general.required": "{fieldName} הוא שדה חובה",
 
   "system-status.title": "משימות מערכת",
   "system-status.close-btn.text": "סגור",

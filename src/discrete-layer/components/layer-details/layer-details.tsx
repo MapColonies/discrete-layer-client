@@ -9,6 +9,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { 
   BestRecordModel,
+  EntityDescriptorModelType,
   FieldCategory,
   Layer3DRecordModel,
   LayerMetadataMixedUnion,
@@ -31,6 +32,7 @@ import { RecordTypeValuePresentorComponent } from  './field-value-presentors/rec
 import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
+import { getEntityDescriptors } from './descriptors';
 
 import './layer-details.css';
 
@@ -124,20 +126,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
   const store = useStore();
 
   const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
-    let entityDesc;
-    switch(layerRecord.__typename){
-      case 'Layer3DRecord':
-        entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
-        break;
-      case 'BestRecord':
-          entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswBestCatalogRecord')
-          break;
-      default:
-        entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
-        break;
-    }
-
-    const fieldsInfo = get(entityDesc, 'categories') as IRecordCategoryFieldsInfo[];
+    const fieldsInfo = getEntityDescriptors(layerRecord, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]);
     if (isBrief === true) {
       return fieldsInfo.filter((item) => item.category === FieldCategory.MAIN);
     }

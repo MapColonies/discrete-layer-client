@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { cloneDeep } from 'lodash';
@@ -11,12 +10,13 @@ import { Box } from '@map-colonies/react-components';
 import { GpaphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { Mode } from '../../../common/models/mode.enum';
-import { BestRecordModelType, Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
+import { BestRecordModelType, EntityDescriptorModelType, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
+import { getFlatEntityDescriptors } from './descriptors';
 import suite from './validate';
 
 import './entity-dialog.css';
@@ -60,11 +60,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   let layerRecord = cloneDeep(props.layerRecord);
   const mutationQuery = useQuery();
   const store = useStore();
-
+  const intl = useIntl();
+  
   const directory = '';
   let fileNames = '';
   const result = suite.get();
-
+  
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined){
     mode = Mode.NEW;
@@ -73,12 +74,19 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     }
     layerRecord = buildRecord(recordType);
   }
-
+  const descriptors = getFlatEntityDescriptors(layerRecord as LayerMetadataMixedUnion, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]);
+  const schema: Record<string, Yup.AnySchema<any, any, any>> = {};
+  descriptors.forEach(field => {
+    if (field.isRequired as boolean) {
+      const fieldName: string = field.fieldName as string;
+      schema[fieldName] = Yup.string().required(intl.formatMessage({ id: 'validation-general.required' }, { fieldName: intl.formatMessage({ id: field.label }) }));
+    }
+  });
+  
   const formik = useFormik({
     initialValues: layerRecord as FormikValues,
     validationSchema: Yup.object({
-      directory: Yup.string().required('XXXXXDIREORY is required'),
-      fileNames: Yup.string().required('XXXXXfileNames is required'),
+      ...schema
     }),
     onSubmit: values => {
       console.log(values);
@@ -177,17 +185,15 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'section' : ''}>
-              <PerfectScrollbar className="content">
-                <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
-              </PerfectScrollbar>
+              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
             </Box>
             <Box className="buttons">
               {
-                // eslint-disable-next-line
-                // mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
+                result.errorCount > NONE && <ValidationsError errors={result.getErrors()}/>
               }
               {
-                result.errorCount > NONE && <ValidationsError errors={result.getErrors()} />
+                // eslint-disable-next-line
+                // mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
               }
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>

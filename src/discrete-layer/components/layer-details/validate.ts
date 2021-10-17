@@ -4,15 +4,15 @@ import vest, { test, enforce } from 'vest';
 const suite = vest.create((data = {}): any => {
 
   test('directory', 'Directory is required', () => {
-    enforce(data.directory).isNotEmpty();
+    enforce(data.directory as string).isNotEmpty();
   });
 
   test('fileNames', 'File name is required', () => {
-    enforce(data.fileNames).isNotEmpty();
+    enforce(data.fileNames as string).isNotEmpty();
   });
 
   test('version', 'Minimum of 2 required.', () => {
-    enforce(data.version).greaterThan(1);
+    enforce(data.version as number).greaterThan(1);
   });
 
 });
