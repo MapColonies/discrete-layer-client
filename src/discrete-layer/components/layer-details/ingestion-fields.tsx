@@ -1,7 +1,7 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
-import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { RecordType } from '../../models';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
 
@@ -21,8 +21,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
     <Box className="ingestionFields">
       <Box className="categoryField">
         <Box className="directorySpacer">
-          <FieldLabelComponent value='field-names.ingestion.directory' isRequired={true}></FieldLabelComponent>
+          <FormattedMessage id='field-names.ingestion.directory'/>
         </Box>
+        <Box style={{ flex: '0 0 8px', color: 'var(--mdc-theme-gc-error-medium)' }}>*</Box>
         <StringValuePresentorComponent 
           mode={Mode.NEW} 
           // @ts-ignore
@@ -34,8 +35,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
           formik={formik}>
         </StringValuePresentorComponent>
         <Box className="fileNamesSpacer">
-          <FieldLabelComponent value={recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames' : 'field-names.raster.fileNames'} isRequired={true}></FieldLabelComponent>
+          <FormattedMessage id={recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames' : 'field-names.raster.fileNames'}/>
         </Box>
+        <Box style={{ flex: '0 0 8px', color: 'var(--mdc-theme-gc-error-medium)' }}>*</Box>
         <StringValuePresentorComponent 
           mode={Mode.NEW} 
           // @ts-ignore

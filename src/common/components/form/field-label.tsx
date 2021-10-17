@@ -9,11 +9,11 @@ interface FieldLabelProps {
 
 export const FieldLabelComponent: React.FC<FieldLabelProps> = ({value, isRequired}) => {
   return (
-    <Box className="detailsFieldLabel">
-      <FormattedMessage id={value}/>
-      {
-        isRequired === true && <Box style={{ display: 'inline', color: 'var(--mdc-theme-gc-error-medium)' }}> * </Box>
-      }
-    </Box>
+    <>
+      <Box className="detailsFieldLabel">
+        <FormattedMessage id={value}/>
+      </Box>
+      <Box style={{ flex: '0 0 8px', color: 'var(--mdc-theme-gc-error-medium)' }}>{isRequired === true ? '*' : ''}</Box>
+    </>
   );
 }
