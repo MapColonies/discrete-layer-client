@@ -29,5 +29,6 @@ keys = [
   "/configuration/logger/log2console",
   "/configuration/job/status/polling/cycle/interval",
   "/configuration/default/user/role",
-  "/configuration/served/entity/types"
+  "/configuration/served/entity/types",
+  "/configuration/basemaps"
 ]
