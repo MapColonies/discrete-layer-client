@@ -32,7 +32,9 @@ body[dir='rtl'] #entityDialog .content{
 #entityDialog .section{
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px;
+  max-height: 724px;
+  overflow-y: auto;
 }
 
 #entityDialog .buttons{
