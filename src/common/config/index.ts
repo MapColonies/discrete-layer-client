@@ -1,4 +1,6 @@
-import { Proj } from '@map-colonies/react-components';
+import { CesiumGeographicTilingScheme, Proj } from '@map-colonies/react-components';
+import { IRasterLayer } from '@map-colonies/react-components/dist/cesium-map/layers-manager';
+import { IBaseMaps, IBaseMap } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 
 /*eslint-disable */
 const LANGUAGE = (window as any)._env_.LANGUAGE as string;
@@ -16,6 +18,25 @@ const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
+
+const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
+  return {
+    maps: baseMaps.maps.map((baseMap: IBaseMap) => {
+      return {
+        ...baseMap,
+        baseRasteLayers: (baseMap.baseRasteLayers as IRasterLayer[]).map((rasterLayer)=>{
+          return {
+            ...rasterLayer,
+            options: {
+              ...rasterLayer.options,
+              tilingScheme: (rasterLayer.type === 'WMTS_LAYER') ? new CesiumGeographicTilingScheme() : undefined
+            }
+          };
+        })
+      }
+    })
+  }
+}
 
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
@@ -74,7 +95,7 @@ const APP_CONFIG = {
     ROLE: DEFAULT_USER.role
   },
   SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
-  BASE_MAPS: BASE_MAPS
+  BASE_MAPS: enreachBaseMaps(BASE_MAPS)
 };
 
 export default APP_CONFIG;
