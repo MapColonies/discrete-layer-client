@@ -23,20 +23,6 @@ export const NumberValuePresentorComponent: React.FC<NumberValuePresentorProps> 
     );
   } else {
     const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
-    if (fieldInfo.isRequired === true) {
-      return (
-        <Box className="detailsFieldValue">
-          <TextField
-            name={fieldInfo.fieldName as string}
-            type="number"
-            // eslint-disable-next-line
-            onChange={(formik as any).handleChange}
-            value={value}
-            required
-          />
-        </Box>
-      );
-    }
     return (
       <Box className="detailsFieldValue">
         <TextField

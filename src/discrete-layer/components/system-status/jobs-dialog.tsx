@@ -13,7 +13,7 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
+import { GpaphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
@@ -47,6 +47,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [updatingPriority, setUpdatingPriority] = useState<IUpdating>();
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
@@ -57,6 +58,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // eslint-disable-next-line
@@ -89,6 +91,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTaskPayload, store]);
 
   useEffect(() => {
@@ -99,6 +102,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
         force: true
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[mutationQuery.error]);
 
   useEffect(() => {
@@ -111,6 +115,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     return (): void => {
       clearInterval(pollingInterval);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, pollingCycle]);
 
   const closeDialog = useCallback(

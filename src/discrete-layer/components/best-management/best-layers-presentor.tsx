@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
 import { CesiumGeographicTilingScheme, useCesiumMap } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
+// import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { LayerRasterRecordModelType, LinkModelType, useStore } from '../../models';
 
 interface IRasterLayerProperties {

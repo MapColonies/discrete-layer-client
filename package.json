@@ -125,7 +125,9 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-scripts": "3.4.1",
     "react-sortable-tree": "^2.8.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "vest": "^3.2.6",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@map-colonies/eslint-config": "^1.0.3",

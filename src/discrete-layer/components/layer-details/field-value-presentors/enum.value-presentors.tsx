@@ -23,20 +23,6 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
     );
   } else {
     const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
-    if (fieldInfo.isRequired === true) {
-      return (
-        <Box className="detailsFieldValue">
-          <TextField
-            name={fieldInfo.fieldName as string}
-            type="text"
-            // eslint-disable-next-line
-            onChange={(formik as any).handleChange}
-            value={value}
-            required
-          />
-        </Box>
-      );
-    }
     return (
       <Box className="detailsFieldValue">
         <TextField

@@ -2,12 +2,14 @@ import React, { useEffect, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues, useFormik } from 'formik';
+import * as Yup from 'yup';
 import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
+import { GpaphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
@@ -15,11 +17,13 @@ import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootSto
 import { LayersDetailsComponent } from './layer-details';
 import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
+import suite from './validate';
 
 import './entity-dialog.css';
 
 const DEFAULT_ID = 'DEFAULT_ID';
 const IMMEDIATE_EXECUTION = 0;
+const NONE = 0;
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -59,6 +63,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
 
   const directory = '';
   let fileNames = '';
+  const result = suite.get();
 
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined){
@@ -71,8 +76,15 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
 
   const formik = useFormik({
     initialValues: layerRecord as FormikValues,
+    validationSchema: Yup.object({
+      directory: Yup.string().required('XXXXXDIREORY is required'),
+      fileNames: Yup.string().required('XXXXXfileNames is required'),
+    }),
     onSubmit: values => {
       console.log(values);
+
+      suite(values);
+      
       if (mode === Mode.EDIT) {
         if (values.__typename !== 'BestRecord') {
           mutationQuery.setQuery(store.mutateUpdateMetadata({
@@ -135,8 +147,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   );
 
   const isInvalidForm = (): boolean => {
-    // return !formik.values.directory || !formik.values.fileNames;
-    return false;
+    return false; // !formik.values.directory || !formik.values.fileNames;
   };
   
   useEffect(() => {
@@ -160,6 +171,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
+          <span style={{color:'green'}}>{JSON.stringify(formik.errors)}</span>
           <form onSubmit={formik.handleSubmit} className="form">
             {
               mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
@@ -172,7 +184,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             <Box className="buttons">
               {
                 // eslint-disable-next-line
-                mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
+                // mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
+              }
+              {
+                result.errorCount > NONE && <ValidationsError errors={result.getErrors()} />
               }
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>

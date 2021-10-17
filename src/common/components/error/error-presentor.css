@@ -5,13 +5,13 @@
   align-items: center;
 }
 
-.errorIcon{
+.errorIcon {
   color: var(--mdc-theme-gc-error-high) !important;
   font-weight: bolder;
   font-size: 32px;
 }
 
-.errorsList{
+.errorsList {
   list-style: circle;
   margin: 0;
 }

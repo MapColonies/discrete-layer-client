@@ -42,7 +42,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = (props: Ingestion
           fieldInfo={{
             fieldName: 'fileNames',
             isRequired: true
-          }} 
+          }}
           value={fileNames} 
           formik={formik}>
         </StringValuePresentorComponent>

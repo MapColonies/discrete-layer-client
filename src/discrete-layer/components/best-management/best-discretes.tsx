@@ -101,6 +101,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       entityActions[entityName] = permittedGroupsActions;
     }
     return entityActions;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
