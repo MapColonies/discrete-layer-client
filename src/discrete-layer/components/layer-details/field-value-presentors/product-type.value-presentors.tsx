@@ -10,7 +10,7 @@ interface ProductTypeValuePresentorProps {
 export const ProductTypeValuePresentorComponent: React.FC<ProductTypeValuePresentorProps> = ({ value }) => {
   return (
     <Tooltip content={value}>
-      <Box className="detailsFieldValue">
+      <Box className="detailsFieldValue leftToRight">
         {value}
       </Box>
     </Tooltip>

@@ -157,7 +157,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                         <FieldLabelComponent 
                           value={fieldInfo.label} 
                           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                          isRequired={(fieldInfo.isRequired ?? false) && !(isBrief ?? false)}/>
+                          isRequired={(fieldInfo.isRequired ?? false) && !(isBrief ?? false) && mode !== Mode.VIEW}/>
                         {
                           getValuePresentor(layerRecord, fieldInfo, get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }

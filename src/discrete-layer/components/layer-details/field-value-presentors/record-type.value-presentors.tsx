@@ -10,7 +10,7 @@ interface RecordTypeValuePresentorProps {
 export const RecordTypeValuePresentorComponent: React.FC<RecordTypeValuePresentorProps> = ({ value }) => {
   return (
     <Tooltip content={value}>
-      <Box className="detailsFieldValue">
+      <Box className="detailsFieldValue leftToRight">
         {value}
       </Box>
     </Tooltip>
