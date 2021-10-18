@@ -26,10 +26,13 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
     return (
       <Box className="detailsFieldValue">
         <TextField
+          id={fieldInfo.fieldName as string}
           name={fieldInfo.fieldName as string}
           type="text"
           // eslint-disable-next-line
           onChange={(formik as any).handleChange}
+          // eslint-disable-next-line
+          onBlur={(formik as any).handleBlur}
           value={value}
         />
       </Box>

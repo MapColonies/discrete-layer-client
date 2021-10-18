@@ -6,6 +6,8 @@ import { Box } from '@map-colonies/react-components';
 
 import './error-presentor.css';
 
+const NONE = 0;
+
 interface IValidationsError {
   errors: Record<string, string[]>;
 }
@@ -14,6 +16,7 @@ export const ValidationsError: React.FC<IValidationsError> = ({ errors })=> {
   return (
     <>
       {
+        Object.keys(errors).length > NONE &&
         <Box className="errorContainer">
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">

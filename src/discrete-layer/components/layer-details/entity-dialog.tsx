@@ -1,13 +1,13 @@
 import React, { useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { FormikValues, useFormik } from 'formik';
+import { FormikErrors, FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { GpaphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, EntityDescriptorModelType, Layer3DRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
@@ -64,7 +64,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   
   const directory = '';
   let fileNames = '';
-  const result = suite.get();
+  const validationResults = suite.get();
   
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined){
@@ -75,11 +75,20 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     layerRecord = buildRecord(recordType);
   }
   const descriptors = getFlatEntityDescriptors(layerRecord as LayerMetadataMixedUnion, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]);
-  const schema: Record<string, Yup.AnySchema<any, any, any>> = {};
-  descriptors.forEach(field => {
+  const schema: Record<string, Yup.AnySchema> = {};
+  [
+    { fieldName: 'directory', label: 'field-names.ingestion.directory', isRequired: true }, 
+    { fieldName: 'fileNames', label: 'field-names.3d.fileNames', isRequired: true },
+    ...descriptors
+  ].forEach(field => {
     if (field.isRequired as boolean) {
       const fieldName: string = field.fieldName as string;
-      schema[fieldName] = Yup.string().required(intl.formatMessage({ id: 'validation-general.required' }, { fieldName: intl.formatMessage({ id: field.label }) }));
+      schema[fieldName] = Yup.string().required(
+        intl.formatMessage(
+          { id: 'validation-general.required' },
+          { fieldName: intl.formatMessage({ id: field.label }) }
+        )
+      );
     }
   });
   
@@ -155,12 +164,22 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   );
 
   const isInvalidForm = (): boolean => {
-    return false; // !formik.values.directory || !formik.values.fileNames;
+    return Object.keys(formik.errors).length > NONE;
+  };
+
+  const getErrors = (formikObject: FormikErrors<FormikValues>): Record<string, string[]> => {
+    const validationsObject: Record<string, string[]> = {};
+    Object.entries(formikObject).forEach(([key, value]) => {
+      if (formik.getFieldMeta(key).touched) {
+        validationsObject[key] = [ value as string ];
+      }
+    });
+    return validationsObject;
   };
   
   useEffect(() => {
     // @ts-ignore
-    if(!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')){
+    if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
       closeDialog();
       store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
       store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
@@ -179,21 +198,23 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <span style={{color:'green'}}>{JSON.stringify(formik.errors)}</span>
           <form onSubmit={formik.handleSubmit} className="form">
             {
               mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'section' : ''}>
-              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
+              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik} /*errors={validationResults.getErrors()}*//>
             </Box>
             <Box className="buttons">
               {
-                result.errorCount > NONE && <ValidationsError errors={result.getErrors()}/>
+                Object.keys(formik.errors).length > NONE && <ValidationsError errors={getErrors(formik.errors)}/>
+              }
+              {
+                validationResults.errorCount > NONE && <ValidationsError errors={validationResults.getErrors()}/>
               }
               {
                 // eslint-disable-next-line
-                // mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
+                // mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
               }
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>

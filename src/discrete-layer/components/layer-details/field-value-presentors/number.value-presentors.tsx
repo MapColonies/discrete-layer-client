@@ -26,10 +26,13 @@ export const NumberValuePresentorComponent: React.FC<NumberValuePresentorProps> 
     return (
       <Box className="detailsFieldValue">
         <TextField
+          id={fieldInfo.fieldName as string}
           name={fieldInfo.fieldName as string}
           type="number"
           // eslint-disable-next-line
           onChange={(formik as any).handleChange}
+          // eslint-disable-next-line
+          onBlur={(formik as any).handleBlur}
           value={value}
         />
       </Box>

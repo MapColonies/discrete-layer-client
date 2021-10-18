@@ -11,7 +11,7 @@ interface IGpaphQLError {
   error: any;
 }
 
-export const GpaphQLError: React.FC<IGpaphQLError> = (props)=> {
+export const GraphQLError: React.FC<IGpaphQLError> = (props)=> {
   const formatMessage = (message: string): string => {
     return message.substr(+message.indexOf('; ') + 1, message.length);
   };

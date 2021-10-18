@@ -13,7 +13,7 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { GpaphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
@@ -293,7 +293,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           <Box className="buttons">
             {
               // eslint-disable-next-line
-              mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
+              mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
             }
             <Button raised type="button" onClick={(): void => { closeDialog(); }}>
               <FormattedMessage id="system-status.close-btn.text"/>

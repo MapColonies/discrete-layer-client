@@ -1,4 +1,4 @@
-.detailsUrlFieldValue{
+.detailsUrlFieldValue {
   flex: 0 0 50%;
   overflow: hidden;
   white-space: nowrap;
@@ -6,6 +6,6 @@
   direction: ltr;
 }
 
-.detailsUrlFieldUrlCopy{
+.detailsUrlFieldUrlCopy {
   margin: 0 16px;
 }
