@@ -34,6 +34,7 @@ export const NumberValuePresentorComponent: React.FC<NumberValuePresentorProps> 
           // eslint-disable-next-line
           onBlur={(formik as any).handleBlur}
           value={value}
+          required={fieldInfo.isRequired === true}
         />
       </Box>
     );

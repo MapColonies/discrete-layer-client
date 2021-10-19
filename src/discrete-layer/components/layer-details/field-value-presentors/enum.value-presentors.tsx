@@ -34,6 +34,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
           // eslint-disable-next-line
           onBlur={(formik as any).handleBlur}
           value={value}
+          required={fieldInfo.isRequired === true}
         />
       </Box>
     );

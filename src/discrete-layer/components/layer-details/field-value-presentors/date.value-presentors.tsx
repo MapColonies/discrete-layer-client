@@ -36,6 +36,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
           // eslint-disable-next-line
           onBlur={(formik as any).handleBlur}
           value={value}
+          required={fieldInfo.isRequired === true}
         />
       </Box>
     );
