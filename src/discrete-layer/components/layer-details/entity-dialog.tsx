@@ -219,7 +219,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               <Button type="button" onClick={(): void => { closeDialog(); }}>
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
-              <Button raised type="submit" disabled={mutationQuery.loading || isInvalidForm()}>
+              <Button raised type="submit" disabled={mutationQuery.loading || !formik.dirty || isInvalidForm()}>
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
             </Box>
