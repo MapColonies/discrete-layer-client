@@ -132,6 +132,8 @@
   "field-names.raster.link.protocol": "פרוטוקול",
   "field-names.raster.link.url": "קישור",
   "field-names.raster.keywords": "מילות מפתח",
+  "field-names.raster.productSubType": "תת סוג",
+  "field-names.raster.maxResolutionMeter": "רזולוציה במ'",
 
   "field-names.3d.fileNames": "שם הקובץ",
   "field-names.3d.id": "מזהה",

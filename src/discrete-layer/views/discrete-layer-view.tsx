@@ -212,7 +212,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     record.id = 'DEFAULT_BEST_ID_' + timestamp;
     record.type = RecordType.RECORD_RASTER;
     record.productName = 'DRAFT_OF_BEST_' + timestamp;
-    record.productType = ProductType.BEST_ORTHOPHOTO;
+    record.productType = ProductType.ORTHOPHOTO_BEST;
     record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
     record.discretes = [
