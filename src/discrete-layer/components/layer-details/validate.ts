@@ -12,7 +12,7 @@ const suite = vest.create((data: any = {}): any => {
     enforce(data.fileNames as string).isNotEmpty();
   });
 
-  test('version', 'Minimum of 2 required.', () => {
+  test('version', 'Minimum of 2 required', () => {
     enforce(data.version as number).greaterThan(1);
   });
 
