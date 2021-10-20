@@ -10,6 +10,7 @@ export { selectFromAutocompletion, autocompletionModelPrimitives, Autocompletion
 /**
  * AutocompletionModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const AutocompletionModel = AutocompletionModelBase
   .actions(self => ({
     // This is an auto-generated example action.

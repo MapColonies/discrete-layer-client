@@ -10,6 +10,7 @@ export { selectFromStringArrayObjectType, stringArrayObjectTypeModelPrimitives, 
 /**
  * StringArrayObjectTypeModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const StringArrayObjectTypeModel = StringArrayObjectTypeModelBase
   .actions(self => ({
     // This is an auto-generated example action.

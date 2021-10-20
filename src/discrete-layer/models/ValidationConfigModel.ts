@@ -10,6 +10,7 @@ export { selectFromValidationConfig, validationConfigModelPrimitives, Validation
 /**
  * ValidationConfigModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ValidationConfigModel = ValidationConfigModelBase
   .actions(self => ({
     // This is an auto-generated example action.
