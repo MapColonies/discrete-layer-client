@@ -38,13 +38,16 @@ export const LayerRasterRecordModelBase = ModelBase
     productId: types.union(types.undefined, types.string),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
+    productSubType: types.union(types.undefined, types.null, types.string),
     srsName: types.union(types.undefined, types.null, types.string),
     resolution: types.union(types.undefined, types.null, types.number),
+    maxResolutionMeter: types.union(types.undefined, types.null, types.number),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.null, types.frozen()),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     includedInBests: types.union(types.undefined, types.null, types.array(types.string)),
+    productBoundingBox: types.union(types.undefined, types.null, types.string),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -75,13 +78,16 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get productId() { return this.__attr(`productId`) }
   get productVersion() { return this.__attr(`productVersion`) }
   get productType() { return this.__attr(`productType`) }
+  get productSubType() { return this.__attr(`productSubType`) }
   get srsName() { return this.__attr(`srsName`) }
   get resolution() { return this.__attr(`resolution`) }
+  get maxResolutionMeter() { return this.__attr(`maxResolutionMeter`) }
   get rms() { return this.__attr(`rms`) }
   get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
   get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
   get includedInBests() { return this.__attr(`includedInBests`) }
+  get productBoundingBox() { return this.__attr(`productBoundingBox`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get keywords() { return this.__attr(`keywords`) }
@@ -91,4 +97,4 @@ export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productId.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.includedInBests.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productId.productVersion.productType.productSubType.srsName.resolution.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.insertDate.keywords.id.links(linkModelPrimitives)
