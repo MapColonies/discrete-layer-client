@@ -22,9 +22,9 @@ export const ValidationsError: React.FC<IValidationsError> = ({ errors })=> {
           <ul className="errorsList">
             {
               Object.keys(errors).map((key: string) => {
-                return errors[key].map((errorMessage: string) => {
+                return errors[key].map((errorMessage: string, index: number) => {
                   return (
-                    <li>{errorMessage}</li>
+                    <li key={`${key}${index}`}>{errorMessage}</li>
                   );
                 })
               })
