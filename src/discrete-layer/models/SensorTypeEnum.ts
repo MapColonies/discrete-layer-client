@@ -11,7 +11,8 @@ export enum SensorType {
   VIS="VIS",
 RGB="RGB",
 Pan_Sharpen="Pan_Sharpen",
-OTHER="OTHER"
+OTHER="OTHER",
+UNDEFINED="UNDEFINED"
 }
 
 /**
@@ -22,4 +23,5 @@ export const SensorTypeEnumType = types.enumeration("SensorType", [
   "RGB",
   "Pan_Sharpen",
   "OTHER",
+  "UNDEFINED",
       ])

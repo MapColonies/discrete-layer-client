@@ -212,7 +212,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     record.id = 'DEFAULT_BEST_ID_' + timestamp;
     record.type = RecordType.RECORD_RASTER;
     record.productName = 'DRAFT_OF_BEST_' + timestamp;
-    record.productType = ProductType.BEST_ORTHOPHOTO;
+    record.productType = ProductType.ORTHOPHOTO_BEST;
     record.isDraft = true;
     record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
     record.discretes = [
@@ -370,7 +370,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
-                  {/* {
+                  {
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
                     permissions.isLayerRasterRecordIngestAllowed &&
                     <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
@@ -380,7 +380,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                         onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
                       />
                     </Tooltip>
-                  } */}
+                  }
                   {
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_3D') &&
                     permissions.isLayer3DRecordIngestAllowed &&
