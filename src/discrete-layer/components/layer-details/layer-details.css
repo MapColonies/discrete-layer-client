@@ -68,3 +68,20 @@ body[dir='rtl'] .detailsFieldValue {
 .leftToRight {
   direction: ltr;
 }
+
+.textFieldInfoList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+body[dir='rtl'] .textFieldInfoList {
+  text-align: right;
+}
+
+.textFieldInfoIcon {
+  color: var(--mdc-theme-primary);
+  cursor: help;
+  vertical-align: middle;
+}

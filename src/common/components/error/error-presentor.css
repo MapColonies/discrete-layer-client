@@ -1,4 +1,4 @@
-.errorContainer{
+.errorContainer {
   flex-grow: 1;
   display: flex;
   color: var(--mdc-theme-gc-error-high);

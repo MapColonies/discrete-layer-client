@@ -43,9 +43,3 @@ body[dir='rtl'] #entityDialog .content {
   gap: 20px;
   margin: 20px;
 }
-
-#entityDialog .textFieldInfoIcon {
-  color: var(--mdc-theme-primary);
-  cursor: help;
-  vertical-align: middle;
-}

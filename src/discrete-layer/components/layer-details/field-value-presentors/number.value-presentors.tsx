@@ -44,7 +44,7 @@ export const NumberValuePresentorComponent: React.FC<NumberValuePresentorProps> 
           <>
             {' '}
             <Tooltip content={
-              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+              <ul className="textFieldInfoList">
                 {
                   (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
                     return (
