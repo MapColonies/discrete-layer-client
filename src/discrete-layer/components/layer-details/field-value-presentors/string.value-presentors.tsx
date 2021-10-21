@@ -1,9 +1,12 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { get } from  'lodash';
+import { Icon, TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+
+const EMPTY = 0;
 
 interface StringValuePresentorProps {
   mode: Mode;
@@ -36,6 +39,25 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
           value={value}
           required={fieldInfo.isRequired === true}
         />
+        {
+          fieldInfo.infoMsgCode && (fieldInfo.infoMsgCode as string[]).length > EMPTY &&
+          <>
+            {' '}
+            <Tooltip content={
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                {
+                  (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
+                    return (
+                      <li key={index}><FormattedMessage id={msg}/></li>
+                    );
+                  })
+                }
+              </ul>
+            }>
+              <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'small' }}/>
+            </Tooltip>
+          </>
+        }
       </Box>
     );
   }

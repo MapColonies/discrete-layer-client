@@ -3,37 +3,30 @@ import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
+import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';
 
-interface IFieldInfo {
-  fieldName: string;
-  label: string;
-  value: string;
-}
-
 interface IngestionFieldsProps {
-  fields: IFieldInfo[];
+  fields: IRecordFieldInfo[];
+  values: string[];
   formik?: unknown;
 }
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, formik }) => {
+export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, formik }) => {
   return (
     <Box className="ingestionFields">
       <Box className="categoryField">
         {
-          fields.map(field => {
+          fields.map((field: IRecordFieldInfo, index: number) => {
             return (
               <>
-                <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName}Spacer` }/>
+                <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName as string}Spacer` }/>
                 <StringValuePresentorComponent 
                   mode={Mode.NEW} 
                   // @ts-ignore
-                  fieldInfo={{
-                    fieldName: field.fieldName,
-                    isRequired: true
-                  }} 
-                  value={field.value} 
+                  fieldInfo={{ ...field }} 
+                  value={values[index]} 
                   formik={formik}>
                 </StringValuePresentorComponent>
               </>

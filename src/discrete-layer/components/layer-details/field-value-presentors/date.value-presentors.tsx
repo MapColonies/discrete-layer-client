@@ -1,11 +1,14 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { get } from 'lodash';
-import { TextField, Tooltip } from '@map-colonies/react-core';
+import { Icon, TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { dateFormatter } from '../../../../common/helpers/type-formatters';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+
+const EMPTY = 0;
 
 interface DateValuePresentorProps {
   mode: Mode;
@@ -38,6 +41,25 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
           value={value}
           required={fieldInfo.isRequired === true}
         />
+        {
+          fieldInfo.infoMsgCode && (fieldInfo.infoMsgCode as string[]).length > EMPTY &&
+          <>
+            {' '}
+            <Tooltip content={
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                {
+                  (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
+                    return (
+                      <li key={index}><FormattedMessage id={msg}/></li>
+                    );
+                  })
+                }
+              </ul>
+            }>
+              <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'small' }}/>
+            </Tooltip>
+          </>
+        }
       </Box>
     );
   }
