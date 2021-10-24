@@ -134,6 +134,8 @@
   "field-names.raster.keywords": "Keywords",
   "field-names.raster.productSubType": "Sub Type",
   "field-names.raster.maxResolutionMeter": "Resolution in (m)",
+  "field-names.raster.scale": "Scale",
+  "field-names.raster.footprint": "Footprint",
 
   "field-names.3d.fileNames": "File name",
   "field-names.3d.id": "ID",

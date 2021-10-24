@@ -134,6 +134,8 @@
   "field-names.raster.keywords": "מילות מפתח",
   "field-names.raster.productSubType": "תת סוג",
   "field-names.raster.maxResolutionMeter": "רזולוציה במ'",
+  "field-names.raster.scale": "קנה-מידה",
+  "field-names.raster.footprint": "גבולות שכבה",
 
   "field-names.3d.fileNames": "שם הקובץ",
   "field-names.3d.id": "מזהה",
