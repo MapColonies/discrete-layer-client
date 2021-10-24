@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import vest, { test, enforce } from 'vest';
-import { FieldConfigModelType, ValidationConfigModelType } from '../../models';
+import { FieldConfigModelType, LayerMetadataMixedUnion, ValidationConfigModelType } from '../../models';
 
-const suite = (fieldDescriptor: any[], data: any = {}): any => {
+const suite = (fieldDescriptor: FieldConfigModelType[], data: LayerMetadataMixedUnion = {} as LayerMetadataMixedUnion): any => {
 
-  const validate = vest.create((data: any): any => {
+  const validate = vest.create((data: LayerMetadataMixedUnion): any => {
 
-    fieldDescriptor.forEach((field: FieldConfigModelType) => {
-      field.validation?.forEach((val: ValidationConfigModelType) => {
+    fieldDescriptor.forEach((field: FieldConfigModelType): void => {
+      field.validation?.forEach((val: ValidationConfigModelType): void => {
         test(field.fieldName, val.errorMsgTranslation, () => {
           if (val.type === 'required') {
             enforce(data[field.fieldName] as string).isNotEmpty();
@@ -28,7 +28,7 @@ const suite = (fieldDescriptor: any[], data: any = {}): any => {
       });
       
     });
-  }) as any;
+  });
 
   validate(data);
 

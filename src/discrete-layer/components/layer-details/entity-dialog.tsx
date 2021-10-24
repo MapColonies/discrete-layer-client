@@ -150,7 +150,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     ].map((field: FieldConfigModelType) => {
       return {
         ...field,
-        // @ts-ignore
         validation: field.validation?.map((val: ValidationConfigModelType) => {
           return {
             ...val,
@@ -171,8 +170,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     }),
     onSubmit: values => {
       console.log(values);
-
-      const vestSuite = suite(descriptors, values);
+      
+      // eslint-disable-next-line
+      const vestSuite = suite(descriptors as FieldConfigModelType[], values);
+      // eslint-disable-next-line
       setValidationResults(vestSuite.get());
       
       if (mode === Mode.EDIT) {
@@ -191,8 +192,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         } else {
           setTimeout(() => {
             store.bestStore.editBest({
-              ...(values as BestRecordModelType), 
-              // @ts-ignore
+              ...(values as BestRecordModelType),
               sensorType: (values.sensorType !== undefined) ? JSON.parse('[' + (values.sensorType as string) + ']') as string[] : []
             });
           }, IMMEDIATE_EXECUTION);
