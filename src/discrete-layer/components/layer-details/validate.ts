@@ -3,6 +3,11 @@ import vest, { test, enforce } from 'vest';
 import { useIntl } from 'react-intl';
 // import { IVestResult } from 'vest/vestResult';
 
+const MIN_RESOLUTION = 0.00000009;
+const MAX_RESOLUTION = 0.072;
+const MIN_RESOLUTION_METER = 0.01;
+const MAX_RESOLUTION_METER = 8000;
+
 const suite = vest.create((data: any = {}): any => {
   const intl = useIntl();
 
@@ -51,11 +56,11 @@ const suite = vest.create((data: any = {}): any => {
   });
 
   test('resolution', intl.formatMessage({ id: 'validation-field.resolution.min' }), () => {
-    enforce(data['resolution'] as number).greaterThanOrEquals(0.00000009);
+    enforce(data['resolution'] as number).greaterThanOrEquals(MIN_RESOLUTION);
   });
 
   test('resolution', intl.formatMessage({ id: 'validation-field.resolution.max' }), () => {
-    enforce(data['resolution'] as number).lessThan(0.072);
+    enforce(data['resolution'] as number).lessThan(MAX_RESOLUTION);
   });
 
   test('maxResolutionMeter', intl.formatMessage({ id: 'validation-general.required' }), () => {
@@ -63,11 +68,11 @@ const suite = vest.create((data: any = {}): any => {
   });
 
   test('maxResolutionMeter', intl.formatMessage({ id: 'validation-field.maxResolutionMeter.min' }), () => {
-    enforce(data['maxResolutionMeter'] as number).greaterThanOrEquals(0.01);
+    enforce(data['maxResolutionMeter'] as number).greaterThanOrEquals(MIN_RESOLUTION_METER);
   });
 
   test('maxResolutionMeter', intl.formatMessage({ id: 'validation-field.maxResolutionMeter.max' }), () => {
-    enforce(data['maxResolutionMeter'] as number).lessThan(8000);
+    enforce(data['maxResolutionMeter'] as number).lessThan(MAX_RESOLUTION_METER);
   });
 
   test('scale', intl.formatMessage({ id: 'validation-field.scale.pattern' }), () => {
