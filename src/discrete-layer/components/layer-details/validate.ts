@@ -1,27 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import vest, { test, enforce } from 'vest';
-import { FieldConfigModelType, LayerMetadataMixedUnion, ValidationConfigModelType } from '../../models';
+import { FieldConfigModelType, ValidationConfigModelType } from '../../models';
 
-const suite = (fieldDescriptor: FieldConfigModelType[], data: LayerMetadataMixedUnion = {} as LayerMetadataMixedUnion): any => {
+const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): any => {
 
-  const validate = vest.create((data: LayerMetadataMixedUnion): any => {
+  const validate = vest.create((data: Record<string, unknown>): any => {
 
     fieldDescriptor.forEach((field: FieldConfigModelType): void => {
       field.validation?.forEach((val: ValidationConfigModelType): void => {
-        test(field.fieldName, val.errorMsgTranslation, () => {
-          if (val.type === 'required') {
-            enforce(data[field.fieldName] as string).isNotEmpty();
+        const fieldName = field.fieldName as string;
+        test(fieldName, val.errorMsgTranslation as string, () => {
+          if (val.type === 'REQUIRED') {
+            enforce(data[fieldName] as string).isNotEmpty();
           } else {
             if (val.pattern !== undefined) {
-              enforce(data[field.fieldName] as string).matches(val.pattern);
+              enforce(data[fieldName] as string).matches(val.pattern as string);
             } else if (val.min !== undefined) {
-              enforce(data[field.fieldName] as string).greaterThanOrEquals(val.type === 'field' ? data[val.min] : val.min);
+              enforce(data[fieldName] as string).greaterThanOrEquals(val.type === 'FIELD' ? data[val.min as string] as number : +(val.min as string));
             } else if (val.max !== undefined) {
-              enforce(data[field.fieldName] as string).lessThan(val.type === 'field' ? data[val.max] : val.max);
+              enforce(data[fieldName] as string).lessThan(val.type === 'FIELD' ? data[val.max as string] as number : +(val.max as string));
             } else if (val.minLength !== undefined) {
-              enforce(data[field.fieldName] as string).longerThanOrEquals(val.type === 'field' ? data[val.minLength] : val.minLength);
+              enforce(data[fieldName] as string).longerThanOrEquals(val.minLength as number);
             } else if (val.maxLength !== undefined) {
-              enforce(data[field.fieldName] as string).shorterThan(val.type === 'field' ? data[val.maxLength] : val.maxLength);
+              enforce(data[fieldName] as string).shorterThan(val.maxLength as number);
             }
           }
         });

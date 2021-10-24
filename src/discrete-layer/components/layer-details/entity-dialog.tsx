@@ -153,7 +153,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         validation: field.validation?.map((val: ValidationConfigModelType) => {
           return {
             ...val,
-            errorMsgTranslation: intl.formatMessage({ id: val.errorMsgCode })
+            errorMsgTranslation: intl.formatMessage(
+              { id: val.errorMsgCode },
+              { fieldName: intl.formatMessage({ id: field.label }) }
+            )
           }
         })
       };
@@ -193,6 +196,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           setTimeout(() => {
             store.bestStore.editBest({
               ...(values as BestRecordModelType),
+              // @ts-ignore
               sensorType: (values.sensorType !== undefined) ? JSON.parse('[' + (values.sensorType as string) + ']') as string[] : []
             });
           }, IMMEDIATE_EXECUTION);
@@ -298,7 +302,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               <Button
                 raised 
                 type="submit" 
-                disabled={mutationQuery.loading || !formik.dirty || isInvalidForm()}
+                // disabled={mutationQuery.loading || !formik.dirty || isInvalidForm()}
               >
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>

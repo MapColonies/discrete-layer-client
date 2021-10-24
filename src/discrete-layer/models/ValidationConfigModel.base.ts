@@ -24,6 +24,7 @@ export const ValidationConfigModelBase = ModelBase
     minLength: types.union(types.undefined, types.null, types.number),
     maxLength: types.union(types.undefined, types.null, types.number),
     pattern: types.union(types.undefined, types.null, types.string),
+    errorMsgTranslation: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
