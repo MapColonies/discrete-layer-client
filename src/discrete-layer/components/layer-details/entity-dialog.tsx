@@ -151,7 +151,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       return {
         ...field,
         // @ts-ignore
-        validation: (field as FieldConfigModelType).validation?.map((val: ValidationConfigModelType) => {
+        validation: field.validation?.map((val: ValidationConfigModelType) => {
           return {
             ...val,
             errorMsgTranslation: intl.formatMessage({ id: val.errorMsgCode })
@@ -160,6 +160,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       };
     });
     setDescriptors(desc as any[]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   
@@ -171,7 +172,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     onSubmit: values => {
       console.log(values);
 
-      const vestSuite = suite(values, descriptors as any[]);
+      const vestSuite = suite(descriptors, values);
       setValidationResults(vestSuite.get());
       
       if (mode === Mode.EDIT) {

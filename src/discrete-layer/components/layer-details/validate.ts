@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import vest, { test, enforce } from 'vest';
+import { FieldConfigModelType, ValidationConfigModelType } from '../../models';
 
-const suite = (data: any = {}, fieldDescriptor: any[]): any => {
+const suite = (fieldDescriptor: any[], data: any = {}): any => {
 
-  const validate = vest.create((data: any = {}): any => {
+  const validate = vest.create((data: any): any => {
 
-    fieldDescriptor.forEach(field => {
-      field.validation?.forEach((val: any) => {
+    fieldDescriptor.forEach((field: FieldConfigModelType) => {
+      field.validation?.forEach((val: ValidationConfigModelType) => {
         test(field.fieldName, val.errorMsgTranslation, () => {
           if (val.type === 'required') {
             enforce(data[field.fieldName] as string).isNotEmpty();
