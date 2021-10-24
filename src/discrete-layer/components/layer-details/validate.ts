@@ -1,21 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import vest, { test, enforce } from 'vest';
-import { IVestResult, DraftResult } from 'vest/vestResult';
-
-const MIN_RESOLUTION = 0.00000009;
-const MAX_RESOLUTION = 0.072;
-const MIN_RESOLUTION_METER = 0.01;
-const MAX_RESOLUTION_METER = 8000;
-
-// eslint-disable-next-line
-export interface ICreateResult {
-  (...args: any[]): IVestResult;
-  get: () => DraftResult;
-  reset: () => void;
-  remove: (fieldName: string) => void;
-
-  // subscribe: (payload: ISubscribePayload) => void;
-}
 
 const suite = (data: any = {}, fieldDescriptor: any[]): any => {
 
