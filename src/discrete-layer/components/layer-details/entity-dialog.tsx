@@ -224,6 +224,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         }
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validationResults]);
 
   
@@ -243,13 +244,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       setInputValues(values);
     }
   });
-  
-  const closeDialog = useCallback(
-    () => {
-      onSetOpen(false);
-    },
-    [onSetOpen]
-  );
 
   const isInvalidForm = (): boolean => {
     return Object.keys(formik.errors).length > NONE;
@@ -264,6 +258,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     });
     return validationsObject;
   };
+  
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
   
   useEffect(() => {
     // @ts-ignore

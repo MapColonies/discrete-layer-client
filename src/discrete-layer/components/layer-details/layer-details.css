@@ -83,5 +83,10 @@ body[dir='rtl'] .textFieldInfoList {
 .textFieldInfoIcon {
   color: var(--mdc-theme-primary);
   cursor: help;
-  vertical-align: middle;
+  margin-left: 8px;
+}
+
+body[dir='rtl'] .textFieldInfoIcon {
+  margin-left: unset;
+  margin-right: 8px;
 }

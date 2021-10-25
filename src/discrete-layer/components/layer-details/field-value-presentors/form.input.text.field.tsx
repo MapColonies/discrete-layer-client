@@ -28,22 +28,23 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   } else {
     const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
     return (
-      <Box className="detailsFieldValue">
-        <TextField
-          id={fieldInfo.fieldName as string}
-          name={fieldInfo.fieldName as string}
-          type={type}
-          // eslint-disable-next-line
-          onChange={(formik as any).handleChange}
-          // eslint-disable-next-line
-          onBlur={(formik as any).handleBlur}
-          value={value}
-          required={fieldInfo.isRequired === true}
-        />
+      <>
+        <Box className="detailsFieldValue">
+          <TextField
+            id={fieldInfo.fieldName as string}
+            name={fieldInfo.fieldName as string}
+            type={type}
+            // eslint-disable-next-line
+            onChange={(formik as any).handleChange}
+            // eslint-disable-next-line
+            onBlur={(formik as any).handleBlur}
+            value={value}
+            required={fieldInfo.isRequired === true}
+          />
+        </Box>
         {
           fieldInfo.infoMsgCode && (fieldInfo.infoMsgCode as string[]).length > EMPTY &&
           <>
-            {' '}
             <Tooltip content={
               <ul className="textFieldInfoList">
                 {
@@ -59,7 +60,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             </Tooltip>
           </>
         }
-      </Box>
+      </>
     );
   }
 }
