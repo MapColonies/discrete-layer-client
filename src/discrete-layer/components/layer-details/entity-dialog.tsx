@@ -88,6 +88,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const [validationResults, setValidationResults] = useState<DraftResult>({} as DraftResult);
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
+  const [inputValues, setInputValues] = useState<FormikValues>({});
   
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined){
@@ -169,46 +170,34 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-  const formik = useFormik({
-    initialValues: layerRecord as FormikValues,
-    /*validationSchema: Yup.object({
-      ...schema
-    }),*/
-    onSubmit: values => {
-      console.log(values);
-      
-      // eslint-disable-next-line
-      const vestSuite = suite(descriptors as FieldConfigModelType[], values);
-      // eslint-disable-next-line
-      setValidationResults(vestSuite.get());
-      
+  useEffect(() => {
+    if (validationResults.errorCount === NONE) {
       if (mode === Mode.EDIT) {
-        if (values.__typename !== 'BestRecord') {
+        if (inputValues.__typename !== 'BestRecord') {
           mutationQuery.setQuery(store.mutateUpdateMetadata({
             data: {
-              id: values.id as string,
-              type: values.type as RecordType,
-              productName: values.productName as string,
-              description: values.description as string,
-              sensorType: values.sensorType as SensorType[],
-              classification: values.classification as string ,
-              keywords: values.keywords as string,
+              id: inputValues.id as string,
+              type: inputValues.type as RecordType,
+              productName: inputValues.productName as string,
+              description: inputValues.description as string,
+              sensorType: inputValues.sensorType as SensorType[],
+              classification: inputValues.classification as string ,
+              keywords: inputValues.keywords as string,
             }
           }));
         } else {
           setTimeout(() => {
             store.bestStore.editBest({
-              ...(values as BestRecordModelType),
+              ...(inputValues as BestRecordModelType),
               // @ts-ignore
-              sensorType: (values.sensorType !== undefined) ? JSON.parse('[' + (values.sensorType as string) + ']') as string[] : []
+              sensorType: (inputValues.sensorType !== undefined) ? JSON.parse('[' + (inputValues.sensorType as string) + ']') as string[] : []
             });
           }, IMMEDIATE_EXECUTION);
           closeDialog();
         }
       } else {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { directory, fileNames, __typename, ...metadata } = values;
+        const { directory, fileNames, __typename, ...metadata } = inputValues;
         switch(recordType){
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
@@ -234,6 +223,24 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             break;
         }
       }
+    }
+  }, [validationResults]);
+
+  
+  const formik = useFormik({
+    initialValues: layerRecord as FormikValues,
+    validationSchema: Yup.object({
+      ...schema
+    }),
+    onSubmit: values => {
+      console.log(values);
+      
+      // eslint-disable-next-line
+      const vestSuite = suite(descriptors as FieldConfigModelType[], values);
+      // eslint-disable-next-line
+      setValidationResults(vestSuite.get());
+
+      setInputValues(values);
     }
   });
   
@@ -295,7 +302,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               }
               {
                 // eslint-disable-next-line
-                // mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
+                mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
               }
               <Button
                 type="button"
@@ -306,7 +313,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               <Button
                 raised 
                 type="submit" 
-                // disabled={mutationQuery.loading || !formik.dirty || isInvalidForm()}
+                disabled={mutationQuery.loading || !formik.dirty || isInvalidForm()}
               >
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
