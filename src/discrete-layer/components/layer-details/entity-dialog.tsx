@@ -151,13 +151,17 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       return {
         ...field,
         validation: field.validation?.map((val: ValidationConfigModelType) => {
+          const firstParam = intl.formatMessage({ id: field.label });
+          const secondParamType = val.type === 'FIELD' ? val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1) : '';
+          // @ts-ignore
+          const secondParam = (val.type === 'FIELD' && secondParamType !== '' && val[secondParamType] !== undefined) ? intl.formatMessage({ id: `field-names.raster.${val[secondParamType]}` }) : '';
           return {
             ...val,
             errorMsgTranslation: intl.formatMessage(
               { id: val.errorMsgCode },
-              { fieldName: intl.formatMessage({ id: field.label }) }
+              { fieldName: firstParam, fieldToCompare: secondParam }
             )
-          }
+          };
         })
       };
     });
@@ -168,9 +172,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   
   const formik = useFormik({
     initialValues: layerRecord as FormikValues,
-    validationSchema: Yup.object({
+    /*validationSchema: Yup.object({
       ...schema
-    }),
+    }),*/
     onSubmit: values => {
       console.log(values);
       

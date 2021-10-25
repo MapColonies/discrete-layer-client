@@ -13,16 +13,16 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
           if (val.type === 'REQUIRED') {
             enforce(data[fieldName] as string).isNotEmpty();
           } else {
-            if (val.pattern !== undefined) {
+            if (val.pattern) {
               enforce(data[fieldName] as string).matches(val.pattern as string);
-            } else if (val.min !== undefined) {
-              enforce(data[fieldName] as string).greaterThanOrEquals(val.type === 'FIELD' ? data[val.min as string] as number : +(val.min as string));
-            } else if (val.max !== undefined) {
-              enforce(data[fieldName] as string).lessThan(val.type === 'FIELD' ? data[val.max as string] as number : +(val.max as string));
-            } else if (val.minLength !== undefined) {
-              enforce(data[fieldName] as string).longerThanOrEquals(val.minLength as number);
-            } else if (val.maxLength !== undefined) {
-              enforce(data[fieldName] as string).shorterThan(val.maxLength as number);
+            } else if (val.min) {
+              enforce(data[fieldName] as number).greaterThanOrEquals(val.type === 'FIELD' ? data[val.min as string] as number : val.min as number);
+            } else if (val.max) {
+              enforce(data[fieldName] as number).lessThan(val.type === 'FIELD' ? data[val.max as string] as number : val.max as number);
+            } else if (val.minLength) {
+              enforce(data[fieldName] as number).longerThanOrEquals(val.minLength as number);
+            } else if (val.maxLength) {
+              enforce(data[fieldName] as number).shorterThan(val.maxLength as number);
             }
           }
         });
