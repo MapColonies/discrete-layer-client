@@ -155,7 +155,11 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           const firstParam = intl.formatMessage({ id: field.label });
           const secondParamType = val.type === 'FIELD' ? val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1) : '';
           // @ts-ignore
-          const secondParam = (val.type === 'FIELD' && secondParamType !== '' && val[secondParamType] !== undefined) ? intl.formatMessage({ id: `field-names.raster.${val[secondParamType]}` }) : '';
+          const secondParam = (val.type === 'FIELD' && secondParamType !== '' && val[secondParamType] !== undefined) ?
+            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            intl.formatMessage({ id: `field-names.raster.${val[secondParamType]}` }) :
+            '';
           return {
             ...val,
             errorMsgTranslation: intl.formatMessage(
