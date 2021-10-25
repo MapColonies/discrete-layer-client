@@ -9,23 +9,39 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
     fieldDescriptor.forEach((field: FieldConfigModelType): void => {
       field.validation?.forEach((val: ValidationConfigModelType): void => {
         const fieldName = field.fieldName as string;
+        /* eslint-disable */
         test(fieldName, val.errorMsgTranslation as string, () => {
           if (val.type === 'REQUIRED') {
             enforce(data[fieldName] as string).isNotEmpty();
           } else {
-            if (val.pattern) {
-              enforce(data[fieldName] as string).matches(val.pattern as string);
-            } else if (val.min) {
-              enforce(data[fieldName] as number).greaterThanOrEquals(val.type === 'FIELD' ? data[val.min as string] as number : val.min as number);
-            } else if (val.max) {
-              enforce(data[fieldName] as number).lessThan(val.type === 'FIELD' ? data[val.max as string] as number : val.max as number);
-            } else if (val.minLength) {
-              enforce(data[fieldName] as number).longerThanOrEquals(val.minLength as number);
-            } else if (val.maxLength) {
-              enforce(data[fieldName] as number).shorterThan(val.maxLength as number);
+            if (data[fieldName]) {
+              if (val.pattern) {
+                enforce(data[fieldName] as string).matches(val.pattern as string);
+              } else if (val.min) {
+                if (val.type === 'FIELD') {
+                  if (data[val.min]) {
+                    enforce(data[fieldName] as number).greaterThanOrEquals(Number(data[val.min]));
+                  }
+                } else {
+                  enforce(data[fieldName] as number).greaterThanOrEquals(Number(val.min));
+                }
+              } else if (val.max) {
+                if (val.type === 'FIELD') {
+                  if (data[val.max]) {
+                    enforce(data[fieldName] as number).lessThanOrEquals(Number(data[val.max]));
+                  }
+                } else {
+                  enforce(data[fieldName] as number).lessThanOrEquals(Number(val.max));
+                }
+              } else if (val.minLength) {
+                enforce(data[fieldName] as number).longerThanOrEquals(Number(val.minLength));
+              } else if (val.maxLength) {
+                enforce(data[fieldName] as number).shorterThanOrEquals(Number(val.maxLength));
+              }
             }
           }
         });
+        /* eslint-enable */
       });
       
     });
