@@ -1,6 +1,6 @@
 {
   "name": "discrete-layer-client",
-  "version": "1.9.10",
+  "version": "1.9.11",
   "bugs": {
     "url": "https://github.com/MapColonies/discrete-layer-client/issues"
   },
@@ -49,7 +49,7 @@
     "moduleNameMapper": {
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
       "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
-      "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control).css": "<rootDir>/src/__mocks__/styleMock.js",
+      "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control|autocomplete).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(drawHelper|coordinates-tracker.tool|scale-tracker.tool|scene-modes|base-maps|settings).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(ag-grid|ag-theme-alpine|ag-theme-alpine-dark).css": "<rootDir>/src/__mocks__/styleMock.js"
     },
@@ -77,7 +77,7 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/react-components": "3.7.3",
+    "@map-colonies/react-components": "3.7.4",
     "@map-colonies/react-core": "3.3.1",
     "@map-colonies/static-assets": "^0.2.0",
     "@material-ui/core": "^4.11.0",
