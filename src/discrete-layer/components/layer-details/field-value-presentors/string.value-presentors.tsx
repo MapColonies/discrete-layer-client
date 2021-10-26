@@ -1,5 +1,5 @@
 import React from 'react';
-import { get } from  'lodash';
+import { get, isEmpty } from  'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -23,7 +23,9 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
     );
   } else {
     const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
-    const controlValue = {value: value ?? undefined};
+    const controlValue = {
+      value: isEmpty(value) ? undefined : value
+    };
     if (fieldInfo.isRequired === true) {
       return (
         <Box className="detailsFieldValue">

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, {useState, useEffect} from 'react';
 import { observer } from 'mobx-react';
 import { Box, Autocomplete } from '@map-colonies/react-components';
@@ -59,10 +60,9 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
                 ...required
               },
               ...controlValue,
-              onChange: (eStr)=> {
+              onChange: (eStr): void => {
                 // @ts-ignore
                 changeHandler(fieldInfo.fieldName, eStr);
-                console.log('****** IN ONCHANGE*** ', eStr);
               },
               mode: 'autocomplete',
               options: autocompleteValues,
