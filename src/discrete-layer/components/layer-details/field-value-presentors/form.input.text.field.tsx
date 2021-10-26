@@ -60,21 +60,19 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
         </Box>
         {
           fieldInfo.infoMsgCode && (fieldInfo.infoMsgCode as string[]).length > EMPTY &&
-          <>
-            <Tooltip content={
-              <ul className="textFieldInfoList">
-                {
-                  (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
-                    return (
-                      <li key={index}><FormattedMessage id={msg}/></li>
-                    );
-                  })
-                }
-              </ul>
-            }>
-              <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'small' }}/>
-            </Tooltip>
-          </>
+          <Tooltip content={
+            <ul className="textFieldInfoList">
+              {
+                (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
+                  return (
+                    <li key={index}><FormattedMessage id={msg}/></li>
+                  );
+                })
+              }
+            </ul>
+          }>
+            <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'small' }}/>
+          </Tooltip>
         }
       </>
     );
