@@ -23,15 +23,16 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
     );
   } else {
     const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
+    const controlValue = {value: value ?? undefined};
     if (fieldInfo.isRequired === true) {
       return (
         <Box className="detailsFieldValue">
           <TextField
+            {...controlValue}
             name={fieldInfo.fieldName as string}
             type="text"
             // eslint-disable-next-line
             onChange={(formik as any).handleChange}
-            value={value}
             required
           />
         </Box>
@@ -40,11 +41,11 @@ export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> 
     return (
       <Box className="detailsFieldValue">
         <TextField
+          {...controlValue}
           name={fieldInfo.fieldName as string}
           type="text"
           // eslint-disable-next-line
           onChange={(formik as any).handleChange}
-          value={value}
         />
       </Box>
     );
