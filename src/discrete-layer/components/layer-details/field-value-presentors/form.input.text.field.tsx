@@ -1,13 +1,11 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { get } from  'lodash';
-import { Icon, TextField, Tooltip } from '@map-colonies/react-core';
+import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationConfigModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-
-const EMPTY = 0;
+import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface FormInputTextFieldProps {
   mode: Mode;
@@ -58,22 +56,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             required={fieldInfo.isRequired === true}
           />
         </Box>
-        {
-          fieldInfo.infoMsgCode && (fieldInfo.infoMsgCode as string[]).length > EMPTY &&
-          <Tooltip content={
-            <ul className="textFieldInfoList">
-              {
-                (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
-                  return (
-                    <li key={index}><FormattedMessage id={msg}/></li>
-                  );
-                })
-              }
-            </ul>
-          }>
-            <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'small' }}/>
-          </Tooltip>
-        }
+        <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
       </>
     );
   }

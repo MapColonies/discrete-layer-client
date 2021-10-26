@@ -182,8 +182,8 @@
   "info-field-tooltip.scale.pattern": "מספר בין 0 ל-100000000",
 
   "validation-general.required": "{fieldName} הוא שדה חובה",
-  "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {sourceDateEnd}",
-  "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {sourceDateStart}",
+  "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {fieldToCompare}",
+  "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {fieldToCompare}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",
   "validation-field.resolution.min": "{fieldName} קטנה מהערך המינימלי: 0.00000009",
   "validation-field.resolution.max": "{fieldName} גדולה מהערך המקסימלי: 0.072",
