@@ -84,7 +84,9 @@ export type JobsSearchParams = {
 export type RecordUpdatePartial = {
   productName?: string
   description?: string
-  sensorType?: SensorType[]
+  // sensorType?: SensorType[]
+  productSubType?: string
+  producerName?: string
   classification?: string
   keywords?: string
   id: string

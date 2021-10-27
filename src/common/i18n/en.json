@@ -136,6 +136,7 @@
   "field-names.raster.maxResolutionMeter": "Resolution in (m)",
   "field-names.raster.scale": "Scale",
   "field-names.raster.footprint": "Footprint",
+  "field-names.raster.producerName": "Producer Name",
 
   "field-names.3d.fileNames": "File name",
   "field-names.3d.id": "ID",

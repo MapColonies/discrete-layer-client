@@ -184,7 +184,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               type: inputValues.type as RecordType,
               productName: inputValues.productName as string,
               description: inputValues.description as string,
-              sensorType: inputValues.sensorType as SensorType[],
+              // sensorType: inputValues.sensorType as SensorType[],
+              productSubType: inputValues.productSubType as string,
+              producerName: inputValues.producerName as string,
               classification: inputValues.classification as string ,
               keywords: inputValues.keywords as string,
             }

@@ -1,0 +1,16 @@
+.detailsFieldValue .react-autocomplete-input {
+  position: fixed;
+  margin-left: 36px;
+  width: unset !important;
+  background-color: var(--mdc-theme-surface);
+}
+
+body[dir='rtl'] .detailsFieldValue .react-autocomplete-input {
+  margin-right: -16px;
+  margin-left: unset;
+}
+
+.detailsFieldValue .react-autocomplete-input > li.active {
+  background-color: var(--mdc-theme-gc-selection-background);
+  color: var(--mdc-theme-text-primary-on-background);
+}

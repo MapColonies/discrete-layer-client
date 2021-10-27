@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
@@ -8,6 +8,7 @@ import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { 
+  AutocompletionModelType,
   BestRecordModel,
   EntityDescriptorModelType,
   FieldCategory,
@@ -32,6 +33,7 @@ import { RecordTypeValuePresentorComponent } from  './field-value-presentors/rec
 import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
+import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentors';
 import { getEntityDescriptors } from './descriptors';
 
 import './layer-details.css';
@@ -76,16 +78,23 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
   }
 }
 
-export const getValuePresentor = (layerRecord: LayerMetadataMixedUnion | LinkModelType, fieldInfo: IRecordFieldInfo, fieldValue: unknown, mode: Mode, formik?: unknown): JSX.Element => {
+export const getValuePresentor = (
+  layerRecord: LayerMetadataMixedUnion | LinkModelType,
+  fieldInfo: IRecordFieldInfo,
+  fieldValue: unknown,
+  mode: Mode,
+  formik?: unknown,
+): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord);
 
   switch(basicType){
     case 'string':
     case 'identifier':
-      return (
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
-      );
+      return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
+        // eslint-disable-next-line
+        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent> 
     case 'number':
       return (
         <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
