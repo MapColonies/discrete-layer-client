@@ -94,7 +94,7 @@ export const getValuePresentor = (
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent> 
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
     case 'number':
       return (
         <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
@@ -121,7 +121,8 @@ export const getValuePresentor = (
       );
     case 'ProductType':
       return(
-        <ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
+        /*<ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>*/
       );
     default:
       return (
