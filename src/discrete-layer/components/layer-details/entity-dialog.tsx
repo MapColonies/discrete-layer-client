@@ -79,18 +79,18 @@ const buildFieldInfo = (): IRecordFieldInfo => {
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
+  const directory = '';
+  let fileNames = '';
   const mutationQuery = useQuery();
   const store = useStore();
   const intl = useIntl();
-  const directory = '';
-  let fileNames = '';
   const [validationResults, setValidationResults] = useState<DraftResult>({} as DraftResult);
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
   
   let mode = Mode.EDIT;
-  if (layerRecord === undefined && recordType !== undefined){
+  if (layerRecord === undefined && recordType !== undefined) {
     mode = Mode.NEW;
     if (recordType === RecordType.RECORD_3D) {
       fileNames = 'tileset.json';
@@ -248,6 +248,19 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       setValidationResults(vestSuite.get());
     }
   });
+ 
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
+  
+  useEffect(() => {
+    // @ts-ignore
+    if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
+      closeDialog();
+      store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
+      store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
+    }
+  }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, formik.values]);
 
   const isInvalidForm = (): boolean => {
     return Object.keys(formik.errors).length > NONE;
@@ -262,19 +275,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     });
     return validationsObject;
   };
-  
-  const closeDialog = useCallback(() => {
-    onSetOpen(false);
-  }, [onSetOpen]);
-  
-  useEffect(() => {
-    // @ts-ignore
-    if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
-      closeDialog();
-      store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
-      store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
-    }
-  }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, formik.values]);
 
   return (
     <Box id="entityDialog">
