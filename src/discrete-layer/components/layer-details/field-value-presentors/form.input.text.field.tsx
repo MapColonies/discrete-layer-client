@@ -1,5 +1,5 @@
 import React from 'react';
-import { get } from  'lodash';
+import { get, isEmpty } from  'lodash';
 import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -25,7 +25,10 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
       </Tooltip>
     );
   } else {
-    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
+    const value = get(formik, `values[${fieldInfo.fieldName as string}]`) as string;
+    const controlValue = {
+      value: isEmpty(value) ? undefined : value
+    };
     let min: string;
     let max: string;
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
@@ -44,6 +47,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
       <>
         <Box className="detailsFieldValue">
           <TextField
+            {...controlValue}
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             type={type}
@@ -52,7 +56,6 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             // eslint-disable-next-line
             onBlur={(formik as any).handleBlur}
             placeholder={placeholder}
-            value={value}
             required={fieldInfo.isRequired === true}
           />
         </Box>
