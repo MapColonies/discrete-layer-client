@@ -41,7 +41,10 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
             required={fieldInfo.isRequired === true}
           />
         </Box>
-        <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
+        {
+          !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
+          <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
+        }
       </>
     );
   }
