@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
-import { FormikErrors, FormikValues, useFormik } from 'formik';
+import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
 import * as Yup from 'yup';
 import { DraftResult } from 'vest/vestResult';
@@ -92,7 +92,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const mutationQuery = useQuery();
   const store = useStore();
   const intl = useIntl();
-  const [validationResults, setValidationResults] = useState<DraftResult>({} as DraftResult);
+  const [vestValidationResults, setVestValidationResults] = useState<DraftResult>({} as DraftResult);
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
@@ -183,7 +183,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   }, []);
 
   useEffect(() => {
-    if (validationResults.errorCount === NONE) {
+    if (vestValidationResults.errorCount === NONE) {
       if (mode === Mode.EDIT) {
         if (inputValues.__typename !== 'BestRecord') {
           mutationQuery.setQuery(store.mutateUpdateMetadata({
@@ -239,7 +239,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [validationResults]);
+  }, [vestValidationResults]);
 
   
   const formik = useFormik({
@@ -254,7 +254,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       // eslint-disable-next-line
       const vestSuite = suite(descriptors as FieldConfigModelType[], values);
       // eslint-disable-next-line
-      setValidationResults(vestSuite.get());
+      setVestValidationResults(vestSuite.get());
     }
   });
  
@@ -271,18 +271,14 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     }
   }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, formik.values]);
 
-  const isInvalidForm = (): boolean => {
-    return Object.keys(formik.errors).length > NONE;
-  };
-
-  const getErrors = (formikObject: FormikErrors<FormikValues>): Record<string, string[]> => {
-    const validationsObject: Record<string, string[]> = {};
-    Object.entries(formikObject).forEach(([key, value]) => {
+  const getYupErrors = (): Record<string, string[]> => {
+    const validationResults: Record<string, string[]> = {};
+    Object.entries(formik.errors).forEach(([key, value]) => {
       if (formik.getFieldMeta(key).touched) {
-        validationsObject[key] = [ value as string ];
+        validationResults[key] = [ value as string ];
       }
     });
-    return validationsObject;
+    return validationResults;
   };
 
   return (
@@ -302,14 +298,14 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'section' : ''}>
-              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik} /*errors={validationResults.getErrors()}*//>
+              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
             </Box>
             <Box className="buttons">
               {
-                Object.keys(formik.errors).length > NONE && <ValidationsError errors={getErrors(formik.errors)}/>
+                Object.keys(formik.errors).length > NONE && <ValidationsError errors={getYupErrors()}/>
               }
               {
-                validationResults.errorCount > NONE && <ValidationsError errors={validationResults.getErrors()}/>
+                vestValidationResults.errorCount > NONE && <ValidationsError errors={vestValidationResults.getErrors()}/>
               }
               {
                 // eslint-disable-next-line
@@ -324,7 +320,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               <Button
                 raised 
                 type="submit" 
-                disabled={mutationQuery.loading || !formik.dirty || isInvalidForm()}
+                disabled={mutationQuery.loading || !formik.dirty || Object.keys(formik.errors).length > NONE}
               >
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
