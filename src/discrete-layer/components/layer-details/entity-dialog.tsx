@@ -18,7 +18,6 @@ import {
   LayerMetadataMixedUnion,
   LayerRasterRecordModel,
   RecordType,
-  SensorType,
   useQuery,
   useStore,
   ValidationConfigModelType,
