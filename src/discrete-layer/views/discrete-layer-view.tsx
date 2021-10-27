@@ -371,15 +371,15 @@ const DiscreteLayerView: React.FC = observer(() => {
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {
-                    // CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
-                    // permissions.isLayerRasterRecordIngestAllowed &&
-                    // <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
-                    //   <IconButton
-                    //     className="operationIcon mc-icon-Map-Orthophoto"
-                    //     label="NEW RASTER"
-                    //     onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
-                    //   />
-                    // </Tooltip>
+                    CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
+                    permissions.isLayerRasterRecordIngestAllowed &&
+                    <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_raster' })}>
+                      <IconButton
+                        className="operationIcon mc-icon-Map-Orthophoto"
+                        label="NEW RASTER"
+                        onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
+                      />
+                    </Tooltip>
                   }
                   {
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_3D') &&
