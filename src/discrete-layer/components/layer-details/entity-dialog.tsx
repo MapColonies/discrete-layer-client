@@ -21,7 +21,8 @@ import {
   useQuery,
   useStore,
   ValidationConfigModelType,
-  FieldConfigModelType
+  FieldConfigModelType,
+  ProductType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
@@ -58,6 +59,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       LayerRasterRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
+      record.productType = ProductType.ORTHOPHOTO;
       record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     default:

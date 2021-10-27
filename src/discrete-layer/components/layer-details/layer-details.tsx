@@ -121,8 +121,7 @@ export const getValuePresentor = (
       );
     case 'ProductType':
       return(
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
-        /*<ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>*/
+        <ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>
       );
     default:
       return (
