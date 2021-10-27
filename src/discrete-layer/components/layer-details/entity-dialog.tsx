@@ -241,12 +241,11 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     onSubmit: values => {
       console.log(values);
       
+      setInputValues(values);
       // eslint-disable-next-line
       const vestSuite = suite(descriptors as FieldConfigModelType[], values);
       // eslint-disable-next-line
       setValidationResults(vestSuite.get());
-
-      setInputValues(values);
     }
   });
 
