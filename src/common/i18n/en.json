@@ -106,7 +106,9 @@
   "field.actions.more": "More options",
   
   "field-names.ingestion.directory": "Directory",
+
   "field-names.raster.fileNames": "File names",
+  "field-names.raster.fileNames.tooltip": "Comma seperated file names list",
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",
   "field-names.raster.productType": "Type",
@@ -139,6 +141,7 @@
   "field-names.raster.producerName": "Producer Name",
 
   "field-names.3d.fileNames": "File name",
+  "field-names.3d.fileNames.tooltip": "3DTiles tileset json file name",
   "field-names.3d.id": "ID",
   "field-names.3d.productName": "Name",
   "field-names.3d.resolution": "Resolution",

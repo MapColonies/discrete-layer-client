@@ -106,7 +106,9 @@
   "field.actions.more": "פעולות נוספות",
   
   "field-names.ingestion.directory": "נתיב מלא",
+
   "field-names.raster.fileNames": "שמות הקבצים",
+  "field-names.raster.fileNames.tooltip": "רשימת קבצים מופרדת עם פסיקים",
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
   "field-names.raster.productType": "סוג מוצר",
@@ -139,6 +141,7 @@
   "field-names.raster.producerName": "יצרן",
 
   "field-names.3d.fileNames": "שם הקובץ",
+  "field-names.3d.fileNames.tooltip": "שם קובץ ה-JSON הראשי",
   "field-names.3d.id": "מזהה",
   "field-names.3d.productName": "שם מוצר",
   "field-names.3d.resolution": "רזולוציה",
