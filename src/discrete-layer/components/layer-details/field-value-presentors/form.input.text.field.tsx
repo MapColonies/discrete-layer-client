@@ -3,6 +3,7 @@ import { get, isEmpty } from  'lodash';
 import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
+import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import { ValidationConfigModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
@@ -35,10 +36,10 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
       if (validationItem.type === 'VALUE') {
         if (validationItem.min !== null) {
-          min = validationItem.min as string;
+          min = convertExponentialToDecimal(validationItem.min as string);
         }
         if (validationItem.max !== null) {
-          max = validationItem.max as string;
+          max = convertExponentialToDecimal(validationItem.max as string);
         }
       }
     });
