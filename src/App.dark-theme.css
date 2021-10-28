@@ -117,6 +117,7 @@
 }
 .dark-theme .mdc-text-field__input::placeholder {
   color: var(--mdc-theme-text-hint-on-dark, #fff) !important;
+  opacity: 0.5;
 }
 
 /* DIALOG CUSTOMIZATIONS */
