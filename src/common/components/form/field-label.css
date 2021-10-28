@@ -1,0 +1,4 @@
+.requiredAsterisk {
+  flex: 0 0 8px;
+  color: var(--mdc-theme-gc-error-medium);
+}
