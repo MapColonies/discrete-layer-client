@@ -13,9 +13,10 @@ interface FormInputTextFieldProps {
   value?: string;
   formik?: unknown;
   type?: string;
+  pattern?: string;
 }
 
-export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({ mode, fieldInfo, value, formik, type }) => {
+export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({ mode, fieldInfo, value, formik, type, pattern }) => {
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <Tooltip content={value}>
@@ -41,6 +42,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
         }
       }
     });
+    const numberProps = pattern !== undefined ? { pattern } : {};
     // @ts-ignore
     const placeholder = (min && max) ? `${min} - ${max}` : '';
     return (
@@ -57,6 +59,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             onBlur={(formik as any).handleBlur}
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
+            {...numberProps}
           />
         </Box>
         {

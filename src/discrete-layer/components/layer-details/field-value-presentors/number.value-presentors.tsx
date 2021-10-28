@@ -8,6 +8,7 @@ interface NumberValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: unknown;
+  pattern?: string;
 }
 
 export const NumberValuePresentorComponent: React.FC<NumberValuePresentorProps> = (props) => {

@@ -97,7 +97,7 @@ export const getValuePresentor = (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
     case 'number':
       return (
-        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
+        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik} pattern={'([0-9]*[.])?[0-9]+'}></NumberValuePresentorComponent>
       );
     case 'links':
       return (
