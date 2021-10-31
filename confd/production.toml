@@ -30,5 +30,7 @@ keys = [
   "/configuration/job/status/polling/cycle/interval",
   "/configuration/default/user/role",
   "/configuration/served/entity/types",
-  "/configuration/basemaps"
+  "/configuration/basemaps",
+  "/configuration/running/mode/type",
+  "/configuration/running/mode/autocomplete"
 ]

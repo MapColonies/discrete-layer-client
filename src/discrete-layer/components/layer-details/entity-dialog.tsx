@@ -10,6 +10,7 @@ import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-cor
 import { Box } from '@map-colonies/react-components';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
+// import CONFIG from '../../../common/config';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   BestRecordModelType,
@@ -38,6 +39,7 @@ const DEFAULT_ID = 'DEFAULT_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
+// const isEnabled = true; // CONFIG.RUNNING_MODE.AUTOCOMPLETE;
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -303,7 +305,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <form onSubmit={formik.handleSubmit} className="form">
+          <form onSubmit={formik.handleSubmit} autoComplete="off" className="form">
             {
               mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
