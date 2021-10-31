@@ -37,6 +37,7 @@ import './entity-dialog.css';
 const DEFAULT_ID = 'DEFAULT_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
+const START = 0;
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -170,7 +171,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           let secondParam = '';
           if (paramType !== '' && paramValue !== '') {
             if (val.type === 'FIELD') {
-              secondParam = intl.formatMessage({ id: `field-names.raster.${paramValue}` });
+              const fieldLabel = field.label as string;
+              const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
+              secondParam = intl.formatMessage({ id: `${fieldLabelPrefix}.${paramValue}` });
             } else {
               secondParam = paramValue;
             }
