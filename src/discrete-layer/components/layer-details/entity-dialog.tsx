@@ -163,18 +163,24 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         ...field,
         validation: field.validation?.map((val: ValidationConfigModelType) => {
           const firstParam = intl.formatMessage({ id: field.label });
-          const secondParamType = val.type === 'FIELD' ? val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1) : '';
+          const paramType = val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1);
+          let secondParam = '';
           // @ts-ignore
-          const secondParam = (val.type === 'FIELD' && secondParamType !== '' && val[secondParamType] !== undefined) ?
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            intl.formatMessage({ id: `field-names.raster.${val[secondParamType]}` }) :
-            '';
+          if (paramType && val[paramType] !== undefined) {
+            if (val.type === 'FIELD') {
+              // @ts-ignore
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              secondParam = intl.formatMessage({ id: `field-names.raster.${val[paramType]}` });
+            } else {
+              // @ts-ignore
+              secondParam = val[paramType] as string;
+            }
+          }
           return {
             ...val,
             errorMsgTranslation: intl.formatMessage(
               { id: val.errorMsgCode },
-              { fieldName: firstParam, fieldToCompare: secondParam }
+              { fieldName: firstParam, value: secondParam }
             )
           };
         })
