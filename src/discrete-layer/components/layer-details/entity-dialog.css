@@ -43,3 +43,8 @@ body[dir='rtl'] #entityDialog .content {
   gap: 20px;
   margin: 20px;
 }
+
+#entityDialog .messages {
+  display: flex;
+  flex-direction: column;
+}

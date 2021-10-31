@@ -311,16 +311,18 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
             </Box>
             <Box className="buttons">
-              {
-                Object.keys(formik.errors).length > NONE && <ValidationsError errors={getYupErrors()}/>
-              }
-              {
-                vestValidationResults.errorCount > NONE && <ValidationsError errors={vestValidationResults.getErrors()}/>
-              }
-              {
-                // eslint-disable-next-line
-                mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
-              }
+              <Box className="messages">
+                {
+                  Object.keys(formik.errors).length > NONE && <ValidationsError errors={getYupErrors()}/>
+                }
+                {
+                  vestValidationResults.errorCount > NONE && <ValidationsError errors={vestValidationResults.getErrors()}/>
+                }
+                {
+                  // eslint-disable-next-line
+                  mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
+                }
+              </Box>
               <Button
                 type="button"
                 onClick={(): void => { closeDialog(); }}
