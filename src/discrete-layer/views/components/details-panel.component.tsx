@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useIntl } from 'react-intl';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Box } from '@map-colonies/react-components';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 
@@ -75,9 +74,9 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           />
         </Tooltip>
       </Box>
-      <PerfectScrollbar className="detailsContent">
+      <Box className="detailsContent">
         <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
-      </PerfectScrollbar>
+      </Box>
     </>
   );
 })

@@ -18,6 +18,7 @@ const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
+const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 
 const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -95,7 +96,11 @@ const APP_CONFIG = {
     ROLE: DEFAULT_USER.role
   },
   SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
-  BASE_MAPS: enreachBaseMaps(BASE_MAPS)
+  BASE_MAPS: enreachBaseMaps(BASE_MAPS),
+  RUNNING_MODE: {
+    TYPE: RUNNING_MODE.type,
+    AUTOCOMPLETE: RUNNING_MODE.autocomplete
+  }
 };
 
 export default APP_CONFIG;

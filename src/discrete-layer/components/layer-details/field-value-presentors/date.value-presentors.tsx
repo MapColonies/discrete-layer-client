@@ -1,12 +1,13 @@
 import React from 'react';
 import moment from 'moment';
 import { get } from 'lodash';
-import { TextField, Tooltip } from '@map-colonies/react-core';
+import { Tooltip } from '@map-colonies/react-core';
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
 import { dateFormatter } from '../../../../common/helpers/type-formatters';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface DateValuePresentorProps {
   mode: Mode;
@@ -30,48 +31,31 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
       </Tooltip>
     );
   } else {
-    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
-    if (fieldInfo.isRequired === true) {
-      return (
+    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as  moment.Moment;
+    return (
+      <>
         <Box className="detailsFieldValue datePresentor">
           <DateTimePicker
-            value={value} 
+            value={value}
+            onChange={
+              (dateVal): void => {
+                const momentVal = moment(dateVal);
+                // eslint-disable-next-line
+                (formik as any).setFieldValue(fieldInfo.fieldName, momentVal);
+              }
+            }
             // eslint-disable-next-line
-            onChange={(dateVal) => {(formik as any).setFieldValue(fieldInfo.fieldName, dateVal)}}
-            local= {local}
-            required
+            onBlur={(formik as any).handleBlur}
+            required={fieldInfo.isRequired === true}
+            local={local}
             autoOk
           />
-
-          {/* <TextField
-            name={fieldInfo.fieldName as string}
-            type="date"
-            // eslint-disable-next-line
-            onChange={(formik as any).handleChange}
-            value={value}
-            required
-          /> */}
         </Box>
-      );
-    }
-    return (
-      <Box className="detailsFieldValue datePresentor">
-        <DateTimePicker
-          value={value} 
-          // eslint-disable-next-line
-          onChange={(dateVal) => {(formik as any).setFieldValue(fieldInfo.fieldName, dateVal)}}
-          local= {local}
-          autoOk
-        />
-
-        {/* <TextField
-          name={fieldInfo.fieldName as string}
-          type="date"
-          // eslint-disable-next-line
-          onChange={(formik as any).handleChange}
-          value={value}
-        /> */}
-      </Box>
+        {
+          !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
+          <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
+        }
+      </>
     );
   }
 }

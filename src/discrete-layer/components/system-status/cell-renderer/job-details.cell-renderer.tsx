@@ -85,7 +85,6 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
   return (
     <Box className="tableFixHead">
       {
-        // <PerfectScrollbar>
         <table className="tasksTable">
           <thead>
             <tr>
@@ -120,7 +119,6 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
             }
           </tbody>
         </table>
-        // </PerfectScrollbar>
       }
     </Box>
   );

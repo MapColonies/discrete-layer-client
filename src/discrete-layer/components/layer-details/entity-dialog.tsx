@@ -1,25 +1,45 @@
-import React, { useEffect, useCallback } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { FormattedMessage } from 'react-intl';
+import React, { useEffect, useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { observer } from 'mobx-react';
 import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
-import { observer } from 'mobx-react';
+import * as Yup from 'yup';
+import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { GpaphQLError } from '../../../common/components/graphql/graphql.error-presentor';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
+import CONFIG from '../../../common/config';
 import { Mode } from '../../../common/models/mode.enum';
-import { BestRecordModelType, Layer3DRecordModel, LayerRasterRecordModel, RecordType, SensorType, useQuery, useStore } from '../../models';
+import {
+  BestRecordModelType,
+  EntityDescriptorModelType,
+  Layer3DRecordModel,
+  LayerMetadataMixedUnion,
+  LayerRasterRecordModel,
+  RecordType,
+  useQuery,
+  useStore,
+  ValidationConfigModelType,
+  FieldConfigModelType,
+  ProductType
+} from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
-import { Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
+import { FieldConfigModelKeys, IRecordFieldInfo, Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
+import { getFlatEntityDescriptors } from './descriptors';
+import suite from './validate';
 
 import './entity-dialog.css';
 
 const DEFAULT_ID = 'DEFAULT_ID';
 const IMMEDIATE_EXECUTION = 0;
+const NONE = 0;
+const START = 0;
+const isAutocompleteEnabled = CONFIG.RUNNING_MODE.AUTOCOMPLETE as boolean;
 
 interface EntityDialogComponentProps {
   isOpen: boolean;
@@ -42,6 +62,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       LayerRasterRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
+      record.productType = ProductType.ORTHOPHOTO;
       record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     default:
@@ -49,19 +70,40 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
   }
   record.type = recordType;
   return record as ILayerImage;
-}
+};
+
+const buildFieldInfo = (): IRecordFieldInfo => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recordFieldInfo = {} as Record<string, any>;
+  FieldConfigModelKeys.forEach(key => {
+    recordFieldInfo[key as string] = undefined;
+  });
+  return recordFieldInfo as IRecordFieldInfo;
+};
+
+const getLabel = (recordType: RecordType): string => {
+  return recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames' : 'field-names.raster.fileNames';
+};
+
+const getTooltip = (recordType: RecordType): string => {
+  return recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames.tooltip' : 'field-names.raster.fileNames.tooltip';
+};
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
-  const mutationQuery = useQuery();
-  const store = useStore();
-
   const directory = '';
   let fileNames = '';
-
+  const mutationQuery = useQuery();
+  const store = useStore();
+  const intl = useIntl();
+  const [vestValidationResults, setVestValidationResults] = useState<DraftResult>({} as DraftResult);
+  const [descriptors, setDescriptors] = useState<any[]>([]);
+  const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
+  const [inputValues, setInputValues] = useState<FormikValues>({});
+  
   let mode = Mode.EDIT;
-  if (layerRecord === undefined && recordType !== undefined){
+  if (layerRecord === undefined && recordType !== undefined) {
     mode = Mode.NEW;
     if (recordType === RecordType.RECORD_3D) {
       fileNames = 'tileset.json';
@@ -69,38 +111,119 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     layerRecord = buildRecord(recordType);
   }
 
-  const formik = useFormik({
-    initialValues: layerRecord as FormikValues,
-    onSubmit: values => {
-      console.log(values);
+  const ingestionFields = [
+    {
+      ...buildFieldInfo(),
+      fieldName: 'directory',
+      label: 'field-names.ingestion.directory',
+      isRequired: true,
+      isAutoGenerated: false,
+      infoMsgCode: [
+        'info-general-tooltip.required'
+      ]
+    },
+    {
+      ...buildFieldInfo(),
+      fieldName: 'fileNames',
+      label: getLabel(recordType as RecordType),
+      isRequired: true,
+      isAutoGenerated: false,
+      infoMsgCode: [
+        'info-general-tooltip.required',
+        getTooltip(recordType as RecordType)
+      ]
+    }
+  ];
+
+  useEffect(() => {
+    const descriptors = getFlatEntityDescriptors(
+      layerRecord as LayerMetadataMixedUnion,
+      store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
+    );
+  
+    const yupSchema: Record<string, any> = {};
+    [
+      ...ingestionFields,
+      ...descriptors
+    ].forEach(field => {
+      if (field.isRequired as boolean && field.isAutoGenerated !== true) {
+        const fieldName: string = field.fieldName as string;
+        yupSchema[fieldName] = Yup.string().required(
+          intl.formatMessage(
+            { id: 'validation-general.required' },
+            { fieldName: intl.formatMessage({ id: field.label }) }
+          )
+        );
+      }
+    })
+    setSchema(yupSchema);
+  
+    const desc =  [
+      ...ingestionFields,
+      ...descriptors
+    ].map((field: FieldConfigModelType) => {
+      return {
+        ...field,
+        validation: field.validation?.map((val: ValidationConfigModelType) => {
+          const firstParam = intl.formatMessage({ id: field.label });
+          const paramType = val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1) ?? '';
+          // @ts-ignore
+          // eslint-disable-next-line
+          const paramValue: string = val[paramType] ?? '';
+          let secondParam = '';
+          if (paramType !== '' && paramValue !== '') {
+            if (val.type === 'FIELD') {
+              const fieldLabel = field.label as string;
+              const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
+              secondParam = intl.formatMessage({ id: `${fieldLabelPrefix}.${paramValue}` });
+            } else {
+              secondParam = paramValue;
+            }
+          }
+          return {
+            ...val,
+            errorMsgTranslation: intl.formatMessage(
+              { id: val.errorMsgCode },
+              { fieldName: firstParam, value: secondParam }
+            )
+          };
+        })
+      };
+    });
+    setDescriptors(desc as any[]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (vestValidationResults.errorCount === NONE) {
       if (mode === Mode.EDIT) {
-        if (values.__typename !== 'BestRecord') {
+        if (inputValues.__typename !== 'BestRecord') {
           mutationQuery.setQuery(store.mutateUpdateMetadata({
             data: {
-              id: values.id as string,
-              type: values.type as RecordType,
-              productName: values.productName as string,
-              description: values.description as string,
-              // sensorType: values.sensorType as SensorType[],
-              productSubType: values.productSubType as string,
-              producerName: values.producerName as string,
-              classification: values.classification as string ,
-              keywords: values.keywords as string,
+              id: inputValues.id as string,
+              type: inputValues.type as RecordType,
+              productName: inputValues.productName as string,
+              description: inputValues.description as string,
+              // sensorType: inputValues.sensorType as SensorType[],
+              productSubType: inputValues.productSubType as string,
+              producerName: inputValues.producerName as string,
+              classification: inputValues.classification as string ,
+              keywords: inputValues.keywords as string,
             }
           }));
         } else {
           setTimeout(() => {
             store.bestStore.editBest({
-              ...(values as BestRecordModelType), 
+              ...(inputValues as BestRecordModelType),
               // @ts-ignore
-              sensorType: (values.sensorType !== undefined) ? JSON.parse('[' + (values.sensorType as string) + ']') as string[] : []
+              sensorType: (inputValues.sensorType !== undefined) ? JSON.parse('[' + (inputValues.sensorType as string) + ']') as string[] : []
             });
           }, IMMEDIATE_EXECUTION);
           closeDialog();
         }
       } else {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { directory, fileNames, __typename, ...metadata } = values;
+        const { directory, fileNames, __typename, ...metadata } = inputValues;
         switch(recordType){
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
@@ -127,28 +250,48 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         }
       }
     }
-  });
-  
-  const closeDialog = useCallback(
-    () => {
-      onSetOpen(false);
-    },
-    [onSetOpen]
-  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vestValidationResults]);
 
-  const isInvalidForm = (): boolean => {
-    // return !formik.values.directory || !formik.values.fileNames;
-    return false;
-  };
+  
+  const formik = useFormik({
+    initialValues: layerRecord as FormikValues,
+    validationSchema: Yup.object({
+      ...schema
+    }),
+    onSubmit: values => {
+      console.log(values);
+      
+      setInputValues(values);
+      // eslint-disable-next-line
+      const vestSuite = suite(descriptors as FieldConfigModelType[], values);
+      // eslint-disable-next-line
+      setVestValidationResults(vestSuite.get());
+    }
+  });
+ 
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
   
   useEffect(() => {
     // @ts-ignore
-    if(!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')){
+    if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
       closeDialog();
       store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
       store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
     }
   }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, formik.values]);
+
+  const getYupErrors = (): Record<string, string[]> => {
+    const validationResults: Record<string, string[]> = {};
+    Object.entries(formik.errors).forEach(([key, value]) => {
+      if (formik.getFieldMeta(key).touched) {
+        validationResults[key] = [ value as string ];
+      }
+    });
+    return validationResults;
+  };
 
   return (
     <Box id="entityDialog">
@@ -162,24 +305,37 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <form onSubmit={formik.handleSubmit} className="form">
+          <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form">
             {
-              mode === Mode.NEW && <IngestionFields recordType={recordType} directory={directory} fileNames={fileNames} formik={formik}/>
+              mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'section' : ''}>
-              <PerfectScrollbar className="content">
-                <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
-              </PerfectScrollbar>
+              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
             </Box>
             <Box className="buttons">
-              {
-                // eslint-disable-next-line
-                mutationQuery.error !== undefined && <GpaphQLError error={mutationQuery.error}/>
-              }
-              <Button type="button" onClick={(): void => { closeDialog(); }}>
+              <Box className="messages">
+                {
+                  Object.keys(formik.errors).length > NONE && <ValidationsError errors={getYupErrors()}/>
+                }
+                {
+                  vestValidationResults.errorCount > NONE && <ValidationsError errors={vestValidationResults.getErrors()}/>
+                }
+                {
+                  // eslint-disable-next-line
+                  mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
+                }
+              </Box>
+              <Button
+                type="button"
+                onClick={(): void => { closeDialog(); }}
+              >
                 <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
-              <Button raised type="submit" disabled={mutationQuery.loading || isInvalidForm()}>
+              <Button
+                raised 
+                type="submit" 
+                disabled={mutationQuery.loading || !formik.dirty || Object.keys(formik.errors).length > NONE}
+              >
                 <FormattedMessage id="general.ok-btn.text"/>
               </Button>
             </Box>

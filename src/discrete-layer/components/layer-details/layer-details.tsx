@@ -10,6 +10,7 @@ import { FieldLabelComponent } from '../../../common/components/form/field-label
 import { 
   AutocompletionModelType,
   BestRecordModel,
+  EntityDescriptorModelType,
   FieldCategory,
   Layer3DRecordModel,
   LayerMetadataMixedUnion,
@@ -33,6 +34,7 @@ import { NumberValuePresentorComponent } from './field-value-presentors/number.v
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
 import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentors';
+import { getEntityDescriptors } from './descriptors';
 
 import './layer-details.css';
 
@@ -92,10 +94,10 @@ export const getValuePresentor = (
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent> 
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
     case 'number':
       return (
-        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
+        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik} pattern={'([0-9]*[.])?[0-9]+'}></NumberValuePresentorComponent>
       );
     case 'links':
       return (
@@ -133,20 +135,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
   const store = useStore();
 
   const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
-    let entityDesc;
-    switch(layerRecord.__typename){
-      case 'Layer3DRecord':
-        entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
-        break;
-      case 'BestRecord':
-          entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswBestCatalogRecord')
-          break;
-      default:
-        entityDesc = store.discreteLayersStore.entityDescriptors?.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
-        break;
-    }
-
-    const fieldsInfo = get(entityDesc, 'categories') as IRecordCategoryFieldsInfo[];
+    const fieldsInfo = getEntityDescriptors(layerRecord, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]);
     if (isBrief === true) {
       return fieldsInfo.filter((item) => item.category === FieldCategory.MAIN);
     }
@@ -177,7 +166,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                         <FieldLabelComponent 
                           value={fieldInfo.label} 
                           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                          isRequired={(fieldInfo.isRequired ?? false) && !(isBrief ?? false)}/>
+                          isRequired={(fieldInfo.isRequired ?? false) && !(isBrief ?? false) && mode !== Mode.VIEW}/>
                         {
                           getValuePresentor(layerRecord, fieldInfo, get(layerRecord, fieldInfo.fieldName as string), mode, formik)
                         }

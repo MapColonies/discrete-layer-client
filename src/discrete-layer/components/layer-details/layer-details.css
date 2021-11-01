@@ -64,3 +64,29 @@ body[dir='rtl'] .detailsFieldValue {
   padding-top: 20px;
   text-align: center;
 }
+
+.leftToRight {
+  direction: ltr;
+}
+
+.textFieldInfoList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+body[dir='rtl'] .textFieldInfoList {
+  text-align: right;
+}
+
+.textFieldInfoIcon {
+  color: var(--mdc-theme-primary);
+  cursor: help;
+  margin-left: 8px;
+}
+
+body[dir='rtl'] .textFieldInfoIcon {
+  margin-left: unset;
+  margin-right: 8px;
+}

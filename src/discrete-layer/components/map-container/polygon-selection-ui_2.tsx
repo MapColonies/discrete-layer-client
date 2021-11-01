@@ -33,7 +33,9 @@ export interface PolygonSelectionUiProps {
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isSelectionEnabled,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onCancelDraw,
     onStartDraw,
     onReset,
@@ -51,6 +53,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         value: RecordType[value]
       };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
