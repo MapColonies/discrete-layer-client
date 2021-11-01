@@ -31,14 +31,19 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
       </Tooltip>
     );
   } else {
-    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as string;
+    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as  moment.Moment;
     return (
       <>
         <Box className="detailsFieldValue datePresentor">
           <DateTimePicker
             value={value}
-            // eslint-disable-next-line
-            onChange={(dateVal) => {(formik as any).setFieldValue(fieldInfo.fieldName, dateVal)}}
+            onChange={
+              (dateVal): void => {
+                const momentVal = moment(dateVal);
+                // eslint-disable-next-line
+                (formik as any).setFieldValue(fieldInfo.fieldName, momentVal);
+              }
+            }
             // eslint-disable-next-line
             onBlur={(formik as any).handleBlur}
             required={fieldInfo.isRequired === true}
