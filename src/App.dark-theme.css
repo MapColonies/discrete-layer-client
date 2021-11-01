@@ -111,9 +111,31 @@
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 0;
   height: 24px;
+  margin-right: 1px;
 }
 .dark-theme .mdc-text-field__input{
   color: var(--mdc-theme-text-primary-on-dark, #fff) !important;
+}
+
+/* DATE_TIME_PICKER CUSTOMIZATION */
+.dark-theme .datePresentor .MuiInputBase-input {
+  padding: 2px 0px 2px 16px;
+}
+
+.dark-theme .datePresentor .MuiIconButton-root:hover {
+  background-color: unset;
+}
+
+.dark-theme .datePresentor .MuiInput-underline:hover:not(.Mui-disabled):before {
+  border-bottom: 0px;
+}
+
+.dark-theme .datePresentor .MuiInputBase-formControl.MuiInput-formControl{
+  border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
+}
+
+.dark-theme .datePresentor .MuiInput-underline:before {
+  border-bottom: 0px;
 }
 
 /* DIALOG CUSTOMIZATIONS */

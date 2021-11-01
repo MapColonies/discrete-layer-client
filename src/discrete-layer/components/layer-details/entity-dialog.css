@@ -1,6 +1,8 @@
-#entityDialog .mdc-dialog__surface{
-  /*max-width: unset;*/
-}
+@media (min-width: 592px){
+  #entityDialog .mdc-dialog .mdc-dialog__surface {
+    max-width: 660px;
+  }
+} 
 
 #entityDialog .closeIcon{
   margin-left: auto;
