@@ -14,10 +14,9 @@ interface FormInputTextFieldProps {
   value?: string;
   formik?: unknown;
   type?: string;
-  pattern?: string;
 }
 
-export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({ mode, fieldInfo, value, formik, type, pattern }) => {
+export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({ mode, fieldInfo, value, formik, type }) => {
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <Tooltip content={value}>
@@ -33,6 +32,8 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     };
     let min: string;
     let max: string;
+    let validationProps = {};
+    let placeholder = '';
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
       if (validationItem.type === 'VALUE') {
         if (validationItem.min !== null) {
@@ -43,9 +44,11 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
         }
       }
     });
-    const numberProps = pattern !== undefined ? { pattern } : {};
     // @ts-ignore
-    const placeholder = (min && max) ? `${min} - ${max}` : '';
+    if (min && max) {
+      validationProps = { min, max, step: "0.000000001" };
+      placeholder = `${min} - ${max}`;
+    }
     return (
       <>
         <Box className="detailsFieldValue">
@@ -60,7 +63,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             onBlur={(formik as any).handleBlur}
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
-            {...numberProps}
+            {...validationProps}
           />
         </Box>
         {
