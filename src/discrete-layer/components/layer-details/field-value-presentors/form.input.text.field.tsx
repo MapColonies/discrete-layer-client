@@ -62,11 +62,11 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             required={fieldInfo.isRequired === true}
             {...numberProps}
           />
+            {
+              !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
+              <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
+            }
         </Box>
-        {
-          !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
-          <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
-        }
       </>
     );
   }

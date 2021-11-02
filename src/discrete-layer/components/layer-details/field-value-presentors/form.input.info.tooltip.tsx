@@ -56,7 +56,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
             }
           </ul>
         }>
-          <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'small' }}/>
+          <Icon className="textFieldInfoIcon" icon={{ icon: 'info', size: 'xsmall' }}/>
         </Tooltip>
       }
     </>

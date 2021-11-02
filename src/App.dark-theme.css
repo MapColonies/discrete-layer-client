@@ -123,7 +123,7 @@
 
 /* DATE_TIME_PICKER CUSTOMIZATION */
 .dark-theme .datePresentor .MuiInputBase-input {
-  padding: 2px 0px 2px 16px;
+  padding: 2px 16px;
 }
 
 .dark-theme .datePresentor .MuiIconButton-root:hover {
@@ -140,6 +140,10 @@
 
 .dark-theme .datePresentor .MuiInput-underline:before {
   border-bottom: 0px;
+}
+
+.dark-theme .datePresentor .MuiInputAdornment-root{
+  margin: 0 8px;
 }
 
 /* DIALOG CUSTOMIZATIONS */
