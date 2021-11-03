@@ -15,7 +15,7 @@
   "general.dialog.exit.title": "Are you sure?",
   "general.dialog.exit.message": "You'll lose any unsaved changes.",
   "general.dialog.best-in-edit.title": "You are editing the BEST",
-  "general.dialog.best-in-edit.message": "Please finish your work, before edit other BEST.",
+  "general.dialog.best-in-edit.message": "Please finish your work, before edit other product.",
   "general.best-draft.new.tooltip": "New",
   "general.login-user.tooltip": "Logged in user: {user}",
 

@@ -200,11 +200,11 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
             }
 
             <Box className={props.openImport ? 'buttons bestCatalogOpened' : 'buttons bestCatalogClosed'}>
-              <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
-                <FormattedMessage id="general.cancel-btn.text"/>
-              </Button>
               <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
                 <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>
+              </Button>
+              <Button type="button" onClick={(): void => { props.handleCloseImport(false); }}>
+                <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
             </Box>
           </Box>
