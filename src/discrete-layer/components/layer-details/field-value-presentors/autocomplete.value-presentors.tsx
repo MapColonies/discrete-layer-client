@@ -56,7 +56,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
               Component: <TextField/>,
               ComponentProps: {
                 name: fieldInfo.fieldName,
-                autocomplete: 'off',
+                autoComplete: 'off',
                 ...required
               },
               ...controlValue,
