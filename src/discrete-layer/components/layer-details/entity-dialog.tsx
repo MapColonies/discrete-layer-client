@@ -151,7 +151,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         yupSchema[fieldName] = Yup.string().required(
           intl.formatMessage(
             { id: 'validation-general.required' },
-            { fieldName: intl.formatMessage({ id: field.label }) }
+            { fieldName: `<strong>${intl.formatMessage({ id: field.label })}</strong>` }
           )
         );
       }
@@ -180,12 +180,16 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               secondParam = paramValue;
             }
           }
+          const finalMsg = intl.formatMessage(
+            { id: val.errorMsgCode },
+            { 
+              fieldName: `<strong>${firstParam}</strong>`,
+              value: `<strong>${secondParam}</strong>`,
+            }
+          );
           return {
             ...val,
-            errorMsgTranslation: intl.formatMessage(
-              { id: val.errorMsgCode },
-              { fieldName: firstParam, value: secondParam }
-            )
+            errorMsgTranslation: finalMsg
           };
         })
       };
@@ -305,39 +309,44 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form">
+          <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form" noValidate>
             {
               mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'section' : ''}>
               <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
             </Box>
-            <Box className="buttons">
+            <Box className="footer">
               <Box className="messages">
                 {
-                  Object.keys(formik.errors).length > NONE && <ValidationsError errors={getYupErrors()}/>
+                  (Object.keys(formik.errors).length > NONE) && 
+                  <ValidationsError errors={getYupErrors()}/>
                 }
                 {
-                  vestValidationResults.errorCount > NONE && <ValidationsError errors={vestValidationResults.getErrors()}/>
+                  (Object.keys(formik.errors).length === NONE && vestValidationResults.errorCount > NONE) && 
+                  <ValidationsError errors={vestValidationResults.getErrors()}/>
                 }
                 {
+                  mutationQuery.error !== undefined && 
                   // eslint-disable-next-line
-                  mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
+                  <GraphQLError error={mutationQuery.error}/>
                 }
               </Box>
-              <Button
-                type="button"
-                onClick={(): void => { closeDialog(); }}
-              >
-                <FormattedMessage id="general.cancel-btn.text"/>
-              </Button>
-              <Button
-                raised 
-                type="submit" 
-                disabled={mutationQuery.loading || !formik.dirty || Object.keys(formik.errors).length > NONE}
-              >
-                <FormattedMessage id="general.ok-btn.text"/>
-              </Button>
+              <Box className="buttons">
+                <Button
+                  raised 
+                  type="submit" 
+                  disabled={mutationQuery.loading || !formik.dirty || Object.keys(formik.errors).length > NONE}
+                >
+                  <FormattedMessage id="general.ok-btn.text"/>
+                </Button>
+                <Button
+                  type="button"
+                  onClick={(): void => { closeDialog(); }}
+                >
+                  <FormattedMessage id="general.cancel-btn.text"/>
+                </Button>
+              </Box>
             </Box>
           </form>
         </DialogContent>
