@@ -44,9 +44,11 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
         }
       }
     });
+
+    const precisionAllowed = "any";
     // @ts-ignore
     if (min && max) {
-      validationProps = { min, max, step: "0.000000001" };
+      validationProps = { min, max, step: precisionAllowed };
       placeholder = `${min} - ${max}`;
     }
     return (

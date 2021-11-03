@@ -24,7 +24,8 @@ export const ValidationsError: React.FC<IValidationsError> = ({ errors })=> {
               Object.keys(errors).map((key: string) => {
                 return errors[key].map((errorMessage: string, index: number) => {
                   return (
-                    <li key={`${key}${index}`}>{errorMessage}</li>
+                    // eslint-disable-next-line
+                    <li key={`${key}${index}`} dangerouslySetInnerHTML={{__html: errorMessage}}></li>
                   );
                 })
               })
