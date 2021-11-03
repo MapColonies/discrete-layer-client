@@ -32,6 +32,8 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     };
     let min: string;
     let max: string;
+    let validationProps = {};
+    let placeholder = '';
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
       if (validationItem.type === 'VALUE') {
         if (validationItem.min !== null) {
@@ -42,8 +44,13 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
         }
       }
     });
+
+    const precisionAllowed = "any";
     // @ts-ignore
-    const placeholder = (min && max) ? `${min} - ${max}` : '';
+    if (min && max) {
+      validationProps = { min, max, step: precisionAllowed };
+      placeholder = `${min} - ${max}`;
+    }
     return (
       <>
         <Box className="detailsFieldValue">
@@ -58,6 +65,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             onBlur={(formik as any).handleBlur}
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
+            {...validationProps}
           />
         </Box>
         {
