@@ -41,7 +41,7 @@ body[dir='rtl'] .categoryFieldsContainer {
 
 .detailsFieldLabel {
   color: var(--mdc-theme-text-icon-on-dark);
-  flex: 0 0 90px;
+  flex: 0 0 112px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

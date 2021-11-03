@@ -1,6 +1,6 @@
-@media (min-width: 592px) {
+@media (min-width: 700px) {
   #entityDialog .mdc-dialog .mdc-dialog__surface {
-    max-width: 660px;
+    max-width: 728px;
   }
 } 
 
