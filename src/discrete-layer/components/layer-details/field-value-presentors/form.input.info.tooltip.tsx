@@ -15,7 +15,7 @@ interface FormInputInfoTooltipProps {
 export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> = ({ fieldInfo }) => {
   const intl = useIntl();
 
-  const getInfoMsgParamValue = (fieldInfo: IRecordFieldInfo, msgCode: string): string => {
+  const getInfoMsg = (fieldInfo: IRecordFieldInfo, msgCode: string): string => {
     let infoMsgParamValue = '';
     const infoMsgType = msgCode.substring(msgCode.lastIndexOf('.') + 1);
     const validation = fieldInfo.validation !== undefined ? fieldInfo.validation as ValidationConfigModelType[] : undefined;
@@ -37,7 +37,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
         }
       }
     });
-    return infoMsgParamValue;
+    return intl.formatMessage({ id: msgCode }, { value: `<strong>${infoMsgParamValue}</strong>` });
   };
 
   return (
@@ -50,7 +50,8 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
             {
               (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
                 return (
-                  <li key={index}><FormattedMessage id={msg} values={{ value: `${getInfoMsgParamValue(fieldInfo, msg)}` }}/></li>
+                  // eslint-disable-next-line @typescript-eslint/naming-convention
+                  <li key={index}><div dangerouslySetInnerHTML={{__html: getInfoMsg(fieldInfo, msg)}}/></li>
                 );
               })
             }

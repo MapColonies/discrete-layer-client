@@ -2,7 +2,7 @@
   flex-grow: 1;
   display: flex;
   color: var(--mdc-theme-gc-error-high);
-  align-items: center;
+  align-items: flex-start;
 }
 
 .errorIcon {
@@ -14,4 +14,13 @@
 .errorsList {
   list-style: circle;
   margin: 0;
+  padding-right: 6px;
+  height: 60px;
+  min-width: 264px;
+  overflow-y: auto;
+}
+
+body[dir='rtl'] .errorsList {
+  padding-right: 16px;
+  padding-left: 6px;
 }

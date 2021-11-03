@@ -31,12 +31,12 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
       </Tooltip>
     );
   } else {
-    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as  moment.Moment;
+    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as  (moment.Moment | undefined);
     return (
       <>
         <Box className="detailsFieldValue datePresentor">
           <DateTimePicker
-            value={value}
+            value={value === undefined ? null : value}
             onChange={
               (dateVal): void => {
                 const momentVal = moment(dateVal);
