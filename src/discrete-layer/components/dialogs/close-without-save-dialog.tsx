@@ -48,11 +48,11 @@ export const CloseWithoutSaveDialogComponent: React.FC<CloseWithoutSaveDialogCom
           <FormattedMessage id={ 'general.dialog.exit.message' }/>
         </DialogContent>
         <DialogActions>
-          <Button raised type="button" onClick={(): void => { closeWithoutSaving(); }}>
-            <FormattedMessage id="general.continue-btn.text"/>
-          </Button>
           <Button type="button" onClick={(): void => { closeDialog(); }}>
             <FormattedMessage id="general.cancel-btn.text"/>
+          </Button>
+          <Button raised type="button" onClick={(): void => { closeWithoutSaving(); }}>
+            <FormattedMessage id="general.continue-btn.text"/>
           </Button>
         </DialogActions>
       </Dialog>

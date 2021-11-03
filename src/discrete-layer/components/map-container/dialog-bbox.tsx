@@ -215,11 +215,11 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   } ${formErrors.lonDistance}`}
                 </div>
               ) : null}
-              <Button raised type="submit">
-                <FormattedMessage id="general.ok-btn.text" />
-              </Button>
               <Button type="button" onClick={(): void => {handleClose(false);}}>
                 <FormattedMessage id="general.cancel-btn.text" />
+              </Button>
+              <Button raised type="submit">
+                <FormattedMessage id="general.ok-btn.text" />
               </Button>
             </Box>
           </form>

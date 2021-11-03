@@ -20,7 +20,7 @@ import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { TabViews } from '../../views/tab-views';
-import { BestInEditDialogComponent } from '../dialogs/best-in-edit.dialog';
+import { BestinEditDialogComponent } from '../dialogs/best-in-edit.dialog';
 
 import './catalog-tree.css';
 
@@ -377,7 +377,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         </Box>
         {
           isBestInEditDialogOpen &&
-          <BestInEditDialogComponent
+          <BestinEditDialogComponent
             isOpen={isBestInEditDialogOpen}
             onSetOpen={setBestInEditDialogOpen}/>
         }

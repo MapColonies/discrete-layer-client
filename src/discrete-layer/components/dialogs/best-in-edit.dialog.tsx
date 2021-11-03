@@ -6,12 +6,12 @@ import { Box } from '@map-colonies/react-components';
 
 import './best-in-edit.dialog.css';
 
-interface BestInEditDialogComponentProps {
+interface BestinEditDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
 
-export const BestInEditDialogComponent: React.FC<BestInEditDialogComponentProps> = ({ isOpen, onSetOpen }) => {
+export const BestinEditDialogComponent: React.FC<BestinEditDialogComponentProps> = ({ isOpen, onSetOpen }) => {
   const closeDialog = useCallback(
     () => {
       onSetOpen(false);
@@ -20,7 +20,7 @@ export const BestInEditDialogComponent: React.FC<BestInEditDialogComponentProps>
   );
 
   return (
-    <Box id="bestInEditDialog">
+    <Box id="bestinEditDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
           <FormattedMessage id={ 'general.dialog.best-in-edit.title' }/>

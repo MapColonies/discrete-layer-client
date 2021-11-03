@@ -15,7 +15,7 @@
   "general.dialog.exit.title": "בטוח שברצונך להמשיך?",
   "general.dialog.exit.message": "שינויים שלא נשמרו ייאבדו.",
   "general.dialog.best-in-edit.title": "אתה עורך BEST",
-  "general.dialog.best-in-edit.message": "נא סיים עבודתך לפני עריכת מוצר אחר.",
+  "general.dialog.best-in-edit.message": "נא לסיים עבודתך לפני עריכת BEST אחר.",
   "general.best-draft.new.tooltip": "חדש",
   "general.login-user.tooltip": "מחובר כמשתמש {user}",
 
