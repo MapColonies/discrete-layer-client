@@ -74,7 +74,7 @@ const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedU
     return 'SensorType';
   }
   else {
-    return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
+    return typeString.replace(/\(/g,'').replace(/\)/g,'').replace(/\s\|\s/g,'').replace(/null/g,'').replace(/undefined/g,'');
   }
 }
 

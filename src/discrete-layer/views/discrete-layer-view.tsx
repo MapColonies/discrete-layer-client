@@ -214,7 +214,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     record.productName = 'DRAFT_OF_BEST_' + timestamp;
     record.productType = ProductType.ORTHOPHOTO_BEST;
     record.isDraft = true;
-    record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
+    record['__typename'] = BestRecordModel.properties['__typename'].name.replace(/"/g,'');
     record.discretes = [
       {
         id: '6ac605c4-da38-11eb-8d19-0242ac130003',

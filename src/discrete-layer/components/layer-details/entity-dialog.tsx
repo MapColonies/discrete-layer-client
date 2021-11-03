@@ -56,14 +56,14 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.id = DEFAULT_ID;
-      record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
+      record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replace(/"/g,'');
       break;
     case RecordType.RECORD_RASTER:
       LayerRasterRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
       record.productType = ProductType.ORTHOPHOTO;
-      record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
+      record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replace(/"/g,'');
       break;
     default:
       break;
