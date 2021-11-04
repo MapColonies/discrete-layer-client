@@ -259,7 +259,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vestValidationResults]);
-
   
   const formik = useFormik({
     initialValues: layerRecord as FormikValues,

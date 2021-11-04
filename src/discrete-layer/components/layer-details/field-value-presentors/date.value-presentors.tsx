@@ -50,11 +50,11 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
             local={local}
             autoOk
           />
-        </Box>
         {
           !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
           <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
         }
+        </Box>
       </>
     );
   }

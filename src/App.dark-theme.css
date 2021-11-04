@@ -126,6 +126,12 @@
   padding: 2px 0px 2px 16px;
 }
 
+body[dir='rtl'] .dark-theme .datePresentor .MuiInputBase-input {
+  padding-left: unset;
+  padding-right: 16px;
+}
+
+
 .dark-theme .datePresentor .MuiIconButton-root:hover {
   background-color: unset;
 }
@@ -140,6 +146,26 @@
 
 .dark-theme .datePresentor .MuiInput-underline:before {
   border-bottom: 0px;
+}
+
+.dark-theme .datePresentor .MuiInputAdornment-root{
+  margin: 0 8px;
+}
+
+.dark-theme .datePresentor button.MuiButtonBase-root.MuiIconButton-root{
+  padding-left: 0px;
+}
+body[dir='rtl'] .dark-theme .datePresentor button.MuiButtonBase-root.MuiIconButton-root{
+  padding-left: 16px;
+  padding-right: 0px;
+}
+
+.dark-theme .datePresentor svg.MuiSvgIcon-root{
+  font-size: 20px;
+}
+
+.dark-theme .datePresentor p.MuiFormHelperText-root.Mui-error.MuiFormHelperText-filled{
+  display: none;
 }
 
 /* DIALOG CUSTOMIZATIONS */

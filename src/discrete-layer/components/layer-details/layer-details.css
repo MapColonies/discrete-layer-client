@@ -1,7 +1,7 @@
 .categoryFieldsParentContainer {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 16px
 }
 
 .categoryFieldsTitle {
@@ -22,6 +22,7 @@
 body[dir='rtl'] .categoryFieldsContainer {
   margin-left: unset;
   margin-right: 16px;
+  padding:20px;
 }
 
 .categoryField {
@@ -53,11 +54,15 @@ body[dir='rtl'] .categoryFieldsContainer {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  position: relative;
+  
 }
 
 body[dir='rtl'] .detailsFieldValue {
   margin-left: unset;
   margin-right: 12px;
+  
+
 }
 
 .noSelection {
@@ -83,10 +88,15 @@ body[dir='rtl'] .textFieldInfoList {
 .textFieldInfoIcon {
   color: var(--mdc-theme-primary);
   cursor: help;
-  margin-left: 8px;
+  position: absolute;
+  right:2px;
+  top:50%;
+  transform: translateY(-50%);
 }
 
 body[dir='rtl'] .textFieldInfoIcon {
   margin-left: unset;
-  margin-right: 8px;
+  right: unset;
+  left:2px;
+ 
 }
