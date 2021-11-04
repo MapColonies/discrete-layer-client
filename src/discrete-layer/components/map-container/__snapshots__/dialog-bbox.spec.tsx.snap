@@ -93,19 +93,19 @@ exports[`DialogBBox component renders correctly 1`] = `
           className="buttons noMargin"
         >
           <withRipple(Function)
-            onClick={[Function]}
-            type="button"
-          >
-            <FormattedMessage
-              id="general.cancel-btn.text"
-            />
-          </withRipple(Function)>
-          <withRipple(Function)
             raised={true}
             type="submit"
           >
             <FormattedMessage
               id="general.ok-btn.text"
+            />
+          </withRipple(Function)>
+          <withRipple(Function)
+            onClick={[Function]}
+            type="button"
+          >
+            <FormattedMessage
+              id="general.cancel-btn.text"
             />
           </withRipple(Function)>
         </Component>

@@ -1,15 +1,15 @@
-#bestinEditDialog .closeIcon{
+#bestInEditDialog .closeIcon {
   margin-left: auto;
 }
 
-#bestinEditDialog .dialogBody {
+#bestInEditDialog .dialogBody {
   height: 100px;
   width: 360px;
   display: flex;
   align-items: center;
 }
 
-body[dir='rtl'] #bestinEditDialog .closeIcon{
+body[dir='rtl'] #bestInEditDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
 }
