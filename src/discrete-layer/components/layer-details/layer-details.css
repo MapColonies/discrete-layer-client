@@ -41,11 +41,17 @@ body[dir='rtl'] .categoryFieldsContainer {
 }
 
 .detailsFieldLabel {
+  display:flex;
   color: var(--mdc-theme-text-icon-on-dark);
-  flex: 0 0 112px;
+  flex: 0 0 95px;
   overflow: hidden;
-  white-space: nowrap;
+}
+
+.detailsFieldLabel > span {
+  min-width: 0;      
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .detailsFieldValue {
