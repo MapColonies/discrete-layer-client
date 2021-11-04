@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -18,9 +18,9 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
 }) => {
   const intl = useIntl();
 
-  const renderLabel = () => {
+  const renderLabel = useMemo(() => {
     // Indicates when the label will overflow the container
-    const MAX_LABEL_LENGTH = 11;
+    const MAX_LABEL_LENGTH = 12;
     const formattedLabel = intl.formatMessage({ id: value });
 
     if (formattedLabel.length > MAX_LABEL_LENGTH) {
@@ -37,7 +37,7 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
         <FormattedMessage id={value} />
       </span>
     );
-  };
+  },[]);
 
   return (
     <>
@@ -46,7 +46,7 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
           customClassName !== undefined ? customClassName : 'detailsFieldLabel'
         }
       >
-        {renderLabel()}
+        {renderLabel}
         <Box className="requiredAsterisk">{isRequired === true ? '*' : ''}</Box>
       </Box>
     </>
