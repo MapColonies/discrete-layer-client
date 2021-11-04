@@ -62,6 +62,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       LayerRasterRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
+      record.id = DEFAULT_ID;
       record.productType = ProductType.ORTHOPHOTO;
       record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
