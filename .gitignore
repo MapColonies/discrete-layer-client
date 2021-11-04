@@ -8,7 +8,10 @@ confd/**
 public/env-config.js
 public/[cC]esium
 public/fonts
-public/assets
+!public/assets/
+public/assets/*
+!public/assets/scripts/
+
 public/mock
 
 # dependencies
