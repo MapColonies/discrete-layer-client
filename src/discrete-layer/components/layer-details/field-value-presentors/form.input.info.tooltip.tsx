@@ -50,8 +50,8 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
             {
               (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
                 return (
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  <li key={index}><div dangerouslySetInnerHTML={{__html: getInfoMsg(fieldInfo, msg)}}/></li>
+                  // eslint-disable-next-line
+                  <li key={index} dangerouslySetInnerHTML={{__html: getInfoMsg(fieldInfo, msg)}}></li>
                 );
               })
             }

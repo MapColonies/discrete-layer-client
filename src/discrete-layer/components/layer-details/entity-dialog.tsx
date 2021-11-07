@@ -35,7 +35,7 @@ import suite from './validate';
 
 import './entity-dialog.css';
 
-const DEFAULT_ID = 'DEFAULT_ID';
+const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
