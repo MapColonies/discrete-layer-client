@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Icon, Tooltip } from '@map-colonies/react-core';
@@ -50,7 +51,6 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
             {
               (fieldInfo.infoMsgCode as string[]).map((msg: string, index: number) => {
                 return (
-                  // eslint-disable-next-line
                   <li key={index} dangerouslySetInnerHTML={{__html: getInfoMsg(fieldInfo, msg)}}></li>
                 );
               })

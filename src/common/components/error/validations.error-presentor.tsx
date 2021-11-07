@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -24,7 +25,6 @@ export const ValidationsError: React.FC<IValidationsError> = ({ errors })=> {
               Object.keys(errors).map((key: string) => {
                 return errors[key].map((errorMessage: string, index: number) => {
                   return (
-                    // eslint-disable-next-line
                     <li key={`${key}${index}`} dangerouslySetInnerHTML={{__html: errorMessage}}></li>
                   );
                 })
