@@ -41,6 +41,12 @@
             cacheType: 'version'
           }
         ];
+        if(typeof String.prototype.replaceAll === 'undefined'){
+          scripts.push({
+            src: '%PUBLIC_URL%/assets/scripts/polyfill.chrome_68.replaceall.js',
+            cacheType: 'version'
+          }) 
+        }
         scripts.forEach((script) => {
             document.write(
               `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}'><\/script>`);
