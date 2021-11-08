@@ -30,7 +30,7 @@ import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootSto
 import { LayersDetailsComponent } from './layer-details';
 import { FieldConfigModelKeys, IRecordFieldInfo, Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
-import { getFlatEntityDescriptors } from './descriptors';
+import { getFlatEntityDescriptors } from './utils';
 import suite from './validate';
 
 import './entity-dialog.css';
