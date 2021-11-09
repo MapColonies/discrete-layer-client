@@ -22,21 +22,14 @@ body[dir='rtl'] #entityDialog .closeIcon {
 }
 
 #entityDialog .content {
-  max-height: 740px;
-  padding-right: 20px;
-}
-
-body[dir='rtl'] #entityDialog .content {
-  padding-right: unset;
-  padding-left: 20px;
+  max-height: 724px;
+  overflow-y: auto;
+  padding: 20px;
 }
 
 #entityDialog .section {
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 10px;
-  padding: 12px;
-  max-height: 724px;
-  overflow-y: auto;
 }
 
 #entityDialog .footer {
