@@ -51,7 +51,7 @@ export const getValuePresentor = (
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
 
-  switch(basicType){
+  switch (basicType) {
     case 'string':
     case 'identifier':
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
@@ -79,11 +79,11 @@ export const getValuePresentor = (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
-      return(
+      return (
         <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
       );
     case 'ProductType':
-      return(
+      return (
         <ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>
       );
     default:
