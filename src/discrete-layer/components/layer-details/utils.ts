@@ -1,5 +1,6 @@
 import { get } from 'lodash';
-import { Type } from '../../../common/models/validation.enum';
+import { $enum } from 'ts-enum-util';
+import { ValidationTypeName } from '../../../common/models/validation.enum';
 import { BestRecordModel,
   CategoryConfigModelType,
   EntityDescriptorModelType,
@@ -74,21 +75,9 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string): string
   return 'string';
 };
 
-export const getValidationType = (validation: ValidationConfigModelType): Type | undefined => {
-  switch (true) {
-    // case validation.required !== null && validation.required !== undefined:
-    //   return Type.required;
-    case validation.pattern !== null && validation.pattern !== undefined:
-      return Type.pattern;
-    case validation.min !== null && validation.min !== undefined:
-      return Type.min;
-    case validation.max !== null && validation.max !== undefined:
-      return Type.max;
-    case validation.minLength !== null && validation.minLength !== undefined:
-      return Type.minLength;
-    case validation.maxLength !== null && validation.maxLength !== undefined:
-      return Type.maxLength;
-    default:
-      return undefined;
-  }
+export const getValidationType = (validation: ValidationConfigModelType): ValidationTypeName | undefined => {
+  const values = $enum(ValidationTypeName).getValues();
+  //@ts-ignore
+  const filteredArray = values.filter(value => validation[value] !== null && validation[value] !== undefined);
+  return ValidationTypeName[filteredArray[0]];
 };

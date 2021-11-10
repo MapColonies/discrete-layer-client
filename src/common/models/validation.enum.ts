@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export enum Type {
+export enum ValidationTypeName {
   required = 'required',
   pattern = 'pattern',
   min = 'min',

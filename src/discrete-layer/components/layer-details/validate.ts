@@ -2,7 +2,7 @@
 import moment from 'moment';
 import vest, { test, enforce } from 'vest';
 import { IEnforceRules } from 'vest/enforce';
-import { Type } from '../../../common/models/validation.enum';
+import { ValidationTypeName } from '../../../common/models/validation.enum';
 import { FieldConfigModelType, ValidationConfigModelType, ValidationType } from '../../models';
 import { FieldInfoName } from './layer-details.field-info';
 import { getBasicType, getValidationType } from './utils';
@@ -65,28 +65,28 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
               const validationType = getValidationType(validation);
               if (validationType !== undefined) {
                 switch (validationType) {
-                  case Type.required:
+                  case ValidationTypeName.required:
                     enforce(data[fieldName]).isNotEmpty();
                     break;
-                  case Type.pattern:
+                  case ValidationTypeName.pattern:
                     enforce(data[fieldName]).matches(validation.pattern as string);
                     break;
-                  case Type.min:
+                  case ValidationTypeName.min:
                     value2Compare = getValueToCompare(validation, data);
                     if (value2Compare !== undefined) {
                       greaterThanOrEquals(basicType, data[fieldName], value2Compare);
                     }
                     break;
-                  case Type.max:
+                  case ValidationTypeName.max:
                     value2Compare = getValueToCompare(validation, data);
                     if (value2Compare !== undefined) {
                       lessThanOrEquals(basicType, data[fieldName], value2Compare);
                     }
                     break;
-                  case Type.minLength:
+                  case ValidationTypeName.minLength:
                     enforce(data[fieldName]).longerThanOrEquals(validation.minLength as number);
                     break;
-                  case Type.maxLength:
+                  case ValidationTypeName.maxLength:
                     enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
                     break;
                 }
