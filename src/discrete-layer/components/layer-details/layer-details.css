@@ -19,12 +19,6 @@
   margin-bottom: 8px;
 }
 
-body[dir='rtl'] .categoryFieldsContainer {
-  margin-left: unset;
-  margin-right: 16px;
-  padding:20px;
-}
-
 .categoryField {
   flex: 40%;
   padding: 2px 0;
