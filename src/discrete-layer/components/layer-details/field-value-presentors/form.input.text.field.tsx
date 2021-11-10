@@ -4,7 +4,7 @@ import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
-import { ValidationConfigModelType } from '../../../models';
+import { ValidationConfigModelType, ValidationType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
@@ -35,7 +35,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     let validationProps = {};
     let placeholder = '';
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
-      if (validationItem.type === 'VALUE') {
+      if (validationItem.type === ValidationType.VALUE) {
         if (validationItem.min !== null) {
           min = convertExponentialToDecimal(validationItem.min as string);
         }

@@ -1,42 +1,95 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import moment from 'moment';
 import vest, { test, enforce } from 'vest';
-import { FieldConfigModelType, ValidationConfigModelType } from '../../models';
+import { IEnforceRules } from 'vest/enforce';
+import { ValidationTypeName } from '../../../common/models/validation.enum';
+import { FieldConfigModelType, ValidationConfigModelType, ValidationType } from '../../models';
+import { FieldInfoName } from './layer-details.field-info';
+import { getBasicType, getValidationType } from './utils';
+
+enforce.extend({
+  afterOrSame: (val1, val2) => (val1 as moment.Moment).isAfter(val2) || (val1 as moment.Moment).isSame(val2),
+  beforeOrSame: (val1, val2) => (val1 as moment.Moment).isBefore(val2) || (val1 as moment.Moment).isSame(val2),
+});
 
 const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): any => {
+
+  const greaterThanOrEquals = (basicType: string, value1: unknown, value2: unknown): IEnforceRules => {
+    switch (basicType) {
+      case 'momentDateType':
+        return enforce(value1).afterOrSame(value2);
+      case 'number':
+        return enforce(value1).greaterThanOrEquals(value2 as number);
+      default:
+        return enforce(false).isTruthy();
+    }
+  };
+
+  const lessThanOrEquals = (basicType: string, value1: unknown, value2: unknown): IEnforceRules => {
+    switch (basicType) {
+      case 'momentDateType':
+        return enforce(value1).beforeOrSame(value2);
+      case 'number':
+        return enforce(value1).lessThanOrEquals(value2 as number);
+      default:
+        return enforce(false).isTruthy();
+    }
+  };
+
+  const getValueToCompare = (validation: ValidationConfigModelType, data: Record<string, unknown>): number | undefined => {
+    const value = getValidationType(validation) ?? '';
+    // @ts-ignore
+    const param = validation[value] as string | number;
+    if (validation.type === ValidationType.FIELD) {
+      if (data[param] !== undefined) {
+        return data[param as string] as number;
+      }
+    } else {
+      return param as number;
+    }
+  };
 
   const validate = vest.create((data: Record<string, unknown>): any => {
 
     fieldDescriptor.forEach((field: FieldConfigModelType): void => {
-      field.validation?.forEach((val: ValidationConfigModelType): void => {
-        const fieldName = field.fieldName as string;
+      let value2Compare;
+      const fieldName = field.fieldName as string;
+      const basicType = getBasicType(fieldName as FieldInfoName, data.__typename as string);
+      field.validation?.forEach((validation: ValidationConfigModelType): void => {
         /* eslint-disable */
-        test(fieldName, val.errorMsgTranslation as string, () => {
-          if (val.type === 'REQUIRED') {
-            enforce(data[fieldName] as string).isNotEmpty();
+        test(fieldName, validation.errorMsgTranslation as string, () => {
+          if (validation.type === ValidationType.REQUIRED) {
+            enforce(data[fieldName]).isNotEmpty();
           } else {
             if (data[fieldName]) {
-              if (val.pattern) {
-                enforce(data[fieldName] as string).matches(val.pattern as string);
-              } else if (val.min) {
-                if (val.type === 'FIELD') {
-                  if (data[val.min]) {
-                    enforce(data[fieldName] as number).greaterThanOrEquals(Number(data[val.min]));
-                  }
-                } else {
-                  enforce(data[fieldName] as number).greaterThanOrEquals(Number(val.min));
+              const validationType = getValidationType(validation);
+              if (validationType !== undefined) {
+                switch (validationType) {
+                  case ValidationTypeName.required:
+                    enforce(data[fieldName]).isNotEmpty();
+                    break;
+                  case ValidationTypeName.pattern:
+                    enforce(data[fieldName]).matches(validation.pattern as string);
+                    break;
+                  case ValidationTypeName.min:
+                    value2Compare = getValueToCompare(validation, data);
+                    if (value2Compare !== undefined) {
+                      greaterThanOrEquals(basicType, data[fieldName], value2Compare);
+                    }
+                    break;
+                  case ValidationTypeName.max:
+                    value2Compare = getValueToCompare(validation, data);
+                    if (value2Compare !== undefined) {
+                      lessThanOrEquals(basicType, data[fieldName], value2Compare);
+                    }
+                    break;
+                  case ValidationTypeName.minLength:
+                    enforce(data[fieldName]).longerThanOrEquals(validation.minLength as number);
+                    break;
+                  case ValidationTypeName.maxLength:
+                    enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
+                    break;
                 }
-              } else if (val.max) {
-                if (val.type === 'FIELD') {
-                  if (data[val.max]) {
-                    enforce(data[fieldName] as number).lessThanOrEquals(Number(data[val.max]));
-                  }
-                } else {
-                  enforce(data[fieldName] as number).lessThanOrEquals(Number(val.max));
-                }
-              } else if (val.minLength) {
-                enforce(data[fieldName] as number).longerThanOrEquals(Number(val.minLength));
-              } else if (val.maxLength) {
-                enforce(data[fieldName] as number).shorterThanOrEquals(Number(val.maxLength));
               }
             }
           }
