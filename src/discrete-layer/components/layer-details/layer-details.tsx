@@ -9,13 +9,9 @@ import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { 
   AutocompletionModelType,
-  BestRecordModel,
   EntityDescriptorModelType,
   FieldCategory,
-  Layer3DRecordModel,
   LayerMetadataMixedUnion,
-  LayerRasterRecordModel,
-  LinkModel,
   LinkModelType,
   ProductType,
   RecordType,
@@ -34,7 +30,7 @@ import { NumberValuePresentorComponent } from './field-value-presentors/number.v
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
 import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentors';
-import { getEntityDescriptors } from './descriptors';
+import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
 
@@ -45,39 +41,6 @@ interface LayersDetailsComponentProps {
   formik?: unknown;
 }
 
-const getBasicType = (fieldName: FieldInfoName, layerRecord: LayerMetadataMixedUnion | LinkModelType): string => {
-  let recordModel;
-  switch(layerRecord.__typename){
-    case 'Layer3DRecord':
-      recordModel = Layer3DRecordModel;
-      break;
-    case 'BestRecord':
-      recordModel = BestRecordModel;
-      break;
-    case 'Link':
-      recordModel = LinkModel;
-      break;
-    default:
-      recordModel = LayerRasterRecordModel;
-      break;
-  }
-  
-  const fieldNameStr = fieldName as string;
-  const typeString = get(recordModel,`properties.${fieldNameStr}.name`) as string;
-  if (fieldNameStr.toLowerCase().includes('url')) {
-    return 'url';
-  }
-  else if (fieldNameStr.toLowerCase().includes('links')){
-    return 'links';
-  }
-  else if (fieldNameStr.toLowerCase().includes('sensortype')){
-    return 'SensorType';
-  }
-  else {
-    return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
-  }
-}
-
 export const getValuePresentor = (
   layerRecord: LayerMetadataMixedUnion | LinkModelType,
   fieldInfo: IRecordFieldInfo,
@@ -86,9 +49,9 @@ export const getValuePresentor = (
   formik?: unknown,
 ): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
-  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord);
+  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
 
-  switch(basicType){
+  switch (basicType) {
     case 'string':
     case 'identifier':
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
@@ -116,11 +79,11 @@ export const getValuePresentor = (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
-      return(
+      return (
         <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
       );
     case 'ProductType':
-      return(
+      return (
         <ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>
       );
     default:
