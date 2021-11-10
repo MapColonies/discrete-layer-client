@@ -124,6 +124,7 @@
     "react-intl": "^5.7.1",
     "react-scripts": "3.4.1",
     "react-sortable-tree": "^2.8.0",
+    "ts-enum-util": "^4.0.2",
     "typescript": "^3.7.5",
     "vest": "^3.2.6",
     "yup": "^0.32.11"

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { Icon, Tooltip } from '@map-colonies/react-core';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
-import { ValidationConfigModelType } from '../../../models';
+import { ValidationConfigModelType, ValidationType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+import { getValidationType } from '../utils';
 
 const START = 0;
 const EMPTY = 0;
@@ -21,13 +22,13 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
     const infoMsgType = msgCode.substring(msgCode.lastIndexOf('.') + 1);
     const validation = fieldInfo.validation !== undefined ? fieldInfo.validation as ValidationConfigModelType[] : undefined;
     validation?.forEach((val: ValidationConfigModelType) => {
-      const validationType = val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1) ?? '';
+      const validationType = getValidationType(val) ?? '';
       if (validationType === infoMsgType) {
         // @ts-ignore
         // eslint-disable-next-line
         const validationParamValue: string = val[validationType] ?? '';
         if (validationType !== '' && validationParamValue !== '') {
-          if (val.type === 'FIELD') {
+          if (val.type === ValidationType.FIELD) {
             const fieldLabel = fieldInfo.label as string;
             const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
             infoMsgParamValue = intl.formatMessage({ id: `${fieldLabelPrefix}.${validationParamValue}` });
