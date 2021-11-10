@@ -23,14 +23,15 @@ import {
   useStore,
   ValidationConfigModelType,
   FieldConfigModelType,
-  ProductType
+  ProductType,
+  ValidationType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
 import { FieldConfigModelKeys, IRecordFieldInfo, Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
-import { getFlatEntityDescriptors } from './utils';
+import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 
 import './entity-dialog.css';
@@ -158,7 +159,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           )
         );
       }
-    })
+    });
     setSchema(yupSchema);
   
     const desc =  [
@@ -169,13 +170,13 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         ...field,
         validation: field.validation?.map((val: ValidationConfigModelType) => {
           const firstParam = intl.formatMessage({ id: field.label });
-          const paramType = val.errorMsgCode?.substring(val.errorMsgCode.lastIndexOf('.') + 1) ?? '';
+          const paramType = getValidationType(val) ?? '';
           // @ts-ignore
           // eslint-disable-next-line
           const paramValue: string = val[paramType] ?? '';
           let secondParam = '';
           if (paramType !== '' && paramValue !== '') {
-            if (val.type === 'FIELD') {
+            if (val.type === ValidationType.FIELD) {
               const fieldLabel = field.label as string;
               const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
               secondParam = intl.formatMessage({ id: `${fieldLabelPrefix}.${paramValue}` });

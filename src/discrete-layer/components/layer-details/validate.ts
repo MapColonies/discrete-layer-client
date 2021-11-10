@@ -2,9 +2,10 @@
 import moment from 'moment';
 import vest, { test, enforce } from 'vest';
 import { IEnforceRules } from 'vest/enforce';
-import { FieldConfigModelType, ValidationConfigModelType } from '../../models';
+import { Type } from '../../../common/models/validation.enum';
+import { FieldConfigModelType, ValidationConfigModelType, ValidationType } from '../../models';
 import { FieldInfoName } from './layer-details.field-info';
-import { getBasicType } from './utils';
+import { getBasicType, getValidationType } from './utils';
 
 enforce.extend({
   afterOrSame: (val1, val2) => (val1 as moment.Moment).isAfter(val2) || (val1 as moment.Moment).isSame(val2),
@@ -19,8 +20,9 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
         return enforce(value1).afterOrSame(value2);
       case 'number':
         return enforce(value1).greaterThanOrEquals(value2 as number);
+      default:
+        return enforce(false).isTruthy();
     }
-    return enforce(value1).greaterThanOrEquals(value2 as number);
   };
 
   const lessThanOrEquals = (basicType: string, value1: unknown, value2: unknown): IEnforceRules => {
@@ -29,15 +31,16 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
         return enforce(value1).beforeOrSame(value2);
       case 'number':
         return enforce(value1).lessThanOrEquals(value2 as number);
+      default:
+        return enforce(false).isTruthy();
     }
-    return enforce(value1).lessThanOrEquals(value2 as number);
   };
 
   const getValueToCompare = (validation: ValidationConfigModelType, data: Record<string, unknown>): number | undefined => {
-    const value = validation.errorMsgCode?.substring(validation.errorMsgCode.lastIndexOf('.') + 1) ?? '';
+    const value = getValidationType(validation) ?? '';
     // @ts-ignore
     const param = validation[value] as string | number;
-    if (validation.type === 'FIELD') {
+    if (validation.type === ValidationType.FIELD) {
       if (data[param] !== undefined) {
         return data[param as string] as number;
       }
@@ -55,32 +58,38 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
       field.validation?.forEach((validation: ValidationConfigModelType): void => {
         /* eslint-disable */
         test(fieldName, validation.errorMsgTranslation as string, () => {
-          if (validation.type === 'REQUIRED') {
+          if (validation.type === ValidationType.REQUIRED) {
             enforce(data[fieldName]).isNotEmpty();
           } else {
             if (data[fieldName]) {
-              switch (true) {
-                case validation.pattern !== null:
-                  enforce(data[fieldName]).matches(validation.pattern as string);
-                  break;
-                case validation.min !== null:
-                  value2Compare = getValueToCompare(validation, data);
-                  if (value2Compare !== undefined) {
-                    greaterThanOrEquals(basicType, data[fieldName], value2Compare);
-                  }
-                  break;
-                case validation.max !== null:
-                  value2Compare = getValueToCompare(validation, data);
-                  if (value2Compare !== undefined) {
-                    lessThanOrEquals(basicType, data[fieldName], value2Compare);
-                  }
-                  break;
-                case validation.minLength !== null:
-                  enforce(data[fieldName]).longerThanOrEquals(validation.minLength as number);
-                  break;
-                case validation.maxLength !== null:
-                  enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
-                  break;
+              const validationType = getValidationType(validation);
+              if (validationType !== undefined) {
+                switch (validationType) {
+                  case Type.required:
+                    enforce(data[fieldName]).isNotEmpty();
+                    break;
+                  case Type.pattern:
+                    enforce(data[fieldName]).matches(validation.pattern as string);
+                    break;
+                  case Type.min:
+                    value2Compare = getValueToCompare(validation, data);
+                    if (value2Compare !== undefined) {
+                      greaterThanOrEquals(basicType, data[fieldName], value2Compare);
+                    }
+                    break;
+                  case Type.max:
+                    value2Compare = getValueToCompare(validation, data);
+                    if (value2Compare !== undefined) {
+                      lessThanOrEquals(basicType, data[fieldName], value2Compare);
+                    }
+                    break;
+                  case Type.minLength:
+                    enforce(data[fieldName]).longerThanOrEquals(validation.minLength as number);
+                    break;
+                  case Type.maxLength:
+                    enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
+                    break;
+                }
               }
             }
           }

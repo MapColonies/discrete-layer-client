@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import { Type } from '../../../common/models/validation.enum';
 import { BestRecordModel,
   CategoryConfigModelType,
   EntityDescriptorModelType,
@@ -6,7 +7,8 @@ import { BestRecordModel,
   Layer3DRecordModel,
   LayerMetadataMixedUnion,
   LayerRasterRecordModel,
-  LinkModel
+  LinkModel,
+  ValidationConfigModelType
 } from '../../models';
 import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-info';
 
@@ -70,4 +72,23 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string): string
     }
   }
   return 'string';
+};
+
+export const getValidationType = (validation: ValidationConfigModelType): Type | undefined => {
+  switch (true) {
+    // case validation.required !== null && validation.required !== undefined:
+    //   return Type.required;
+    case validation.pattern !== null && validation.pattern !== undefined:
+      return Type.pattern;
+    case validation.min !== null && validation.min !== undefined:
+      return Type.min;
+    case validation.max !== null && validation.max !== undefined:
+      return Type.max;
+    case validation.minLength !== null && validation.minLength !== undefined:
+      return Type.minLength;
+    case validation.maxLength !== null && validation.maxLength !== undefined:
+      return Type.maxLength;
+    default:
+      return undefined;
+  }
 };
