@@ -5,7 +5,7 @@ import { Icon, Tooltip } from '@map-colonies/react-core';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import { ValidationConfigModelType, ValidationType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-import { getValidationType } from '../utils';
+import { getInfoMsgValidationType, getValidationType } from '../utils';
 
 const START = 0;
 const EMPTY = 0;
@@ -19,7 +19,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
 
   const getInfoMsg = (fieldInfo: IRecordFieldInfo, msgCode: string): string => {
     let infoMsgParamValue = '';
-    const infoMsgType = msgCode.substring(msgCode.lastIndexOf('.') + 1);
+    const infoMsgType = getInfoMsgValidationType(msgCode);
     const validation = fieldInfo.validation !== undefined ? fieldInfo.validation as ValidationConfigModelType[] : undefined;
     validation?.forEach((val: ValidationConfigModelType) => {
       const validationType = getValidationType(val) ?? '';
@@ -27,7 +27,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
         // @ts-ignore
         // eslint-disable-next-line
         const validationParamValue: string = val[validationType] ?? '';
-        if (validationType !== '' && validationParamValue !== '') {
+        if (validationParamValue !== '') {
           if (val.type === ValidationType.FIELD) {
             const fieldLabel = fieldInfo.label as string;
             const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));

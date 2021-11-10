@@ -77,7 +77,13 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string): string
 
 export const getValidationType = (validation: ValidationConfigModelType): ValidationTypeName | undefined => {
   const values = $enum(ValidationTypeName).getValues();
-  //@ts-ignore
+  // @ts-ignore
   const filteredArray = values.filter(value => validation[value] !== null && validation[value] !== undefined);
   return ValidationTypeName[filteredArray[0]];
+};
+
+export const getInfoMsgValidationType = (msgCode: string): ValidationTypeName => {
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return ValidationTypeName[msgCode.substring(msgCode.lastIndexOf('.') + 1)];
 };
