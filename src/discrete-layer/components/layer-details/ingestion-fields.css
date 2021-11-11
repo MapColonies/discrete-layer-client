@@ -1,6 +1,12 @@
 .ingestionFields {
-  display: table;
-  margin: 24px auto;
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.ingestionField {
+  display: flex;
+  padding: 2px 0;
 }
 
 .directorySpacer {
