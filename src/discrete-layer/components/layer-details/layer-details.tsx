@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { observer } from 'mobx-react-lite';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
@@ -15,8 +14,7 @@ import {
   LinkModelType,
   ProductType,
   RecordType,
-  SensorType,
-  useStore 
+  SensorType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
@@ -35,9 +33,10 @@ import { getBasicType, getEntityDescriptors } from './utils';
 import './layer-details.css';
 
 interface LayersDetailsComponentProps {
+  entityDescriptors: EntityDescriptorModelType[];
+  mode: Mode;
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
-  mode: Mode;
   formik?: unknown;
 }
 
@@ -50,7 +49,7 @@ export const getValuePresentor = (
 ): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
-
+  // console.log('fieldName=', fieldName, 'basicType=', basicType);
   switch (basicType) {
     case 'string':
     case 'identifier':
@@ -93,14 +92,13 @@ export const getValuePresentor = (
   }
 };
 
-export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
-  const { isBrief, layerRecord, mode, formik } = props;
-  const store = useStore();
+export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
+  const { entityDescriptors, mode, isBrief, layerRecord, formik } = props;
 
   const getCategoryFields = (layerRecord: LayerMetadataMixedUnion): IRecordCategoryFieldsInfo[] => {
-    const fieldsInfo = getEntityDescriptors(layerRecord, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]);
+    const fieldsInfo = getEntityDescriptors(layerRecord, entityDescriptors);
     if (isBrief === true) {
-      return fieldsInfo.filter((item) => item.category === FieldCategory.MAIN);
+      return fieldsInfo.filter((item: unknown) => (item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
     }
     return fieldsInfo;
   };
@@ -153,4 +151,4 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
       }
     </>
   )
-});
+};

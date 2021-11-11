@@ -317,7 +317,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
-              <LayersDetailsComponent layerRecord={layerRecord} mode={mode} formik={formik}/>
+              <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerRecord} mode={mode} formik={formik}/>
             </Box>
             <Box className="footer">
               <Box className="messages">
