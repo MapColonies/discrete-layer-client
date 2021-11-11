@@ -30,6 +30,7 @@ import { NumberValuePresentorComponent } from './field-value-presentors/number.v
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
 import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
 import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentors';
+import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
 import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
@@ -50,7 +51,7 @@ export const getValuePresentor = (
 ): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
-
+  
   switch (basicType) {
     case 'string':
     case 'identifier':
@@ -58,6 +59,10 @@ export const getValuePresentor = (
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
+    case 'json':
+      return (
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></JsonValuePresentorComponent>
+      );
     case 'number':
       return (
         <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
