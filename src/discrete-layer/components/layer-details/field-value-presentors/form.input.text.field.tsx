@@ -35,7 +35,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     let validationProps = {};
     let placeholder = '';
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
-      if (validationItem.type === ValidationType.VALUE) {
+      if (validationItem.valueType === ValidationType.VALUE) {
         if (validationItem.min !== null) {
           min = convertExponentialToDecimal(validationItem.min as string);
         }

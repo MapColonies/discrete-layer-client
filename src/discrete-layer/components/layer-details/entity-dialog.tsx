@@ -176,7 +176,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           const paramValue: string = val[paramType] ?? '';
           let secondParam = '';
           if (paramType !== '' && paramValue !== '') {
-            if (val.type === ValidationType.FIELD) {
+            if (val.valueType === ValidationType.FIELD) {
               const fieldLabel = field.label as string;
               const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
               secondParam = intl.formatMessage({ id: `${fieldLabelPrefix}.${paramValue}` });

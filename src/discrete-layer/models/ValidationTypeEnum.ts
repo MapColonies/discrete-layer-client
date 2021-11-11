@@ -10,7 +10,6 @@ import { types } from "mobx-state-tree"
 export enum ValidationType {
   VALUE="VALUE",
 FIELD="FIELD",
-REQUIRED="REQUIRED"
 }
 
 /**
@@ -19,5 +18,4 @@ REQUIRED="REQUIRED"
 export const ValidationTypeEnumType = types.enumeration("ValidationType", [
         "VALUE",
   "FIELD",
-  "REQUIRED",
       ])

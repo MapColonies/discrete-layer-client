@@ -18,7 +18,7 @@ export const ValidationConfigModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("ValidationConfig"), "ValidationConfig"),
     errorMsgCode: types.union(types.undefined, types.string),
-    type: types.union(types.undefined, ValidationTypeEnumType),
+    valueType: types.union(types.undefined, ValidationTypeEnumType),
     min: types.union(types.undefined, types.null, types.string),
     max: types.union(types.undefined, types.null, types.string),
     minLength: types.union(types.undefined, types.null, types.number),
