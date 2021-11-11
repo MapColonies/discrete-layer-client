@@ -10,6 +10,7 @@ import { getBasicType, getValidationType } from './utils';
 enforce.extend({
   afterOrSame: (val1, val2) => (val1 as moment.Moment).isAfter(val2) || (val1 as moment.Moment).isSame(val2),
   beforeOrSame: (val1, val2) => (val1 as moment.Moment).isBefore(val2) || (val1 as moment.Moment).isSame(val2),
+  isJson: (val) => val !== null,
 });
 
 const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): any => {
@@ -85,6 +86,9 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
                   break;
                 case ValidationTypeName.maxLength:
                   enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
+                  break;
+                case ValidationTypeName.json:
+                  enforce(data[fieldName]).isJson();
                   break;
               }
             }

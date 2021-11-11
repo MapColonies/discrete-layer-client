@@ -40,7 +40,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         // eslint-disable-next-line
         (formik as any).setFieldValue(fieldInfo.fieldName, formikValue);
       // eslint-disable-next-line no-empty
-      } catch(e) {}
+      } catch(e) {
+        (formik as any).setFieldValue(fieldInfo.fieldName, null);
+      }
       
       // eslint-disable-next-line
       (formik as any).handleBlur(e);
