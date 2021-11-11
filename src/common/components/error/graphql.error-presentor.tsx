@@ -24,9 +24,9 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props)=> {
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
             {
-              props.error.response.errors.map((error: Record<string, any>) => {
+              props.error.response.errors.map((error: Record<string, any>, index: number) => {
                 return (
-                  <li>{formatMessage(error.message)}</li>
+                  <li key={index}>{formatMessage(error.message)}</li>
                 );
               })
             }
