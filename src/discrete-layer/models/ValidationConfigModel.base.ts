@@ -40,9 +40,10 @@ export class ValidationConfigModelSelector extends QueryBuilder {
   get minLength() { return this.__attr(`minLength`) }
   get maxLength() { return this.__attr(`maxLength`) }
   get pattern() { return this.__attr(`pattern`) }
+  get errorMsgTranslation() { return this.__attr(`errorMsgTranslation`) }
 }
 export function selectFromValidationConfig() {
   return new ValidationConfigModelSelector()
 }
 
-export const validationConfigModelPrimitives = selectFromValidationConfig().errorMsgCode.type.min.max.minLength.maxLength.pattern
+export const validationConfigModelPrimitives = selectFromValidationConfig().errorMsgCode.type.min.max.minLength.maxLength.pattern.errorMsgTranslation
