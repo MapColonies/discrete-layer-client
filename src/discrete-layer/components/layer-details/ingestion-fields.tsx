@@ -16,24 +16,22 @@ interface IngestionFieldsProps {
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, formik }) => {
   return (
     <Box className="ingestionFields">
-      <Box className="categoryField">
-        {
-          fields.map((field: IRecordFieldInfo, index: number) => {
-            return (
-              <>
-                <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName as string}Spacer` }/>
-                <StringValuePresentorComponent 
-                  mode={Mode.NEW} 
-                  // @ts-ignore
-                  fieldInfo={{ ...field }} 
-                  value={values[index]} 
-                  formik={formik}>
-                </StringValuePresentorComponent>
-              </>
-            );
-          })
-        }
-      </Box>
+      {
+        fields.map((field: IRecordFieldInfo, index: number) => {
+          return (
+            <Box className="ingestionField" key={field.fieldName}>
+              <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName as string}Spacer` }/>
+              <StringValuePresentorComponent 
+                mode={Mode.NEW} 
+                // @ts-ignore
+                fieldInfo={{ ...field }} 
+                value={values[index]} 
+                formik={formik}>
+              </StringValuePresentorComponent>
+            </Box>
+          );
+        })
+      }
     </Box>
   );
 };

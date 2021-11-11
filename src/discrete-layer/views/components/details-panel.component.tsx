@@ -3,13 +3,12 @@ import { observer } from 'mobx-react-lite';
 import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
-
 import { Mode } from '../../../common/models/mode.enum';
 import { hasOwnProperty } from '../../../common/helpers/object';
 import { EntityDialogComponent } from '../../components/layer-details/entity-dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
 import { useStore } from '../../models/RootStore';
-import { BestRecordModelType } from '../../models';
+import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
 
 import './details-panel.component.css';
 
@@ -75,7 +74,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
         </Tooltip>
       </Box>
       <Box className="detailsContent">
-        <LayersDetailsComponent layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
+        <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
       </Box>
     </>
   );
