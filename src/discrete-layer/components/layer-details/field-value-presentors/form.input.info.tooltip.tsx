@@ -30,7 +30,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
           // eslint-disable-next-line
           const validationParamValue: string = val[validationType] ?? '';
           if (validationParamValue !== '') {
-            if (val.type === ValidationType.FIELD) {
+            if (val.valueType === ValidationType.FIELD) {
               const fieldLabel = fieldInfo.label as string;
               const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
               infoMsgParamValue = intl.formatMessage({ id: `${fieldLabelPrefix}.${validationParamValue}` });
