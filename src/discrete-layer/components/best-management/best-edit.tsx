@@ -5,7 +5,7 @@ import { isEmpty, get, cloneDeep, isEqual } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
-import { BestRecordModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
+import { BestRecordModelType, EntityDescriptorModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { LayersDetailsComponent } from '../layer-details/layer-details';
 import { CloseWithoutSaveDialogComponent } from '../dialogs/close-without-save-dialog';
@@ -160,7 +160,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       <Box
         className="bestDetails"
       >
-        <LayersDetailsComponent layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
+        <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
       </Box>
 
       <BestDiscretesComponent
