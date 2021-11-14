@@ -39,7 +39,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           }
         }
         validation {
-          type
+          valueType
           errorMsgCode
           min
           max
@@ -47,6 +47,8 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           maxLength
           pattern
           errorMsgTranslation
+          required
+          json
         }
       }
       __typename

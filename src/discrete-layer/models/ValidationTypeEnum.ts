@@ -9,7 +9,7 @@ import { types } from "mobx-state-tree"
 
 export enum ValidationType {
   VALUE="VALUE",
-FIELD="FIELD",
+FIELD="FIELD"
 }
 
 /**

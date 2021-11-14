@@ -194,6 +194,7 @@
   "validation-field.maxResolutionMeter.min": "{fieldName} is less than minimum: {value}",
   "validation-field.maxResolutionMeter.max": "{fieldName} is greater than maximum: {value}",
   "validation-field.scale.pattern": "{fieldName} is not a valid number between 0 to 100000000",
+  "validation-field.footprint.json": "{fieldName} is geoJSON",
 
   "system-status.title": "System Jobs",
   "system-status.close-btn.text": "Close",

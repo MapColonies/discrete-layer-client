@@ -194,6 +194,7 @@
   "validation-field.maxResolutionMeter.min": "{fieldName} קטנה מהמינימום: {value}",
   "validation-field.maxResolutionMeter.max": "{fieldName} גדולה מהמקסימום: {value}",
   "validation-field.scale.pattern": "{fieldName} לא מספר חוקי בין 0 ל-100000000",
+  "validation-field.footprint.json": "{fieldName} לא GEOJSON",
 
   "system-status.title": "משימות מערכת",
   "system-status.close-btn.text": "סגור",
