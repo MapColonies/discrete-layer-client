@@ -6,4 +6,5 @@ export enum ValidationTypeName {
   max = 'max',
   minLength = 'minLength',
   maxLength = 'maxLength',
+  json = 'json',
 }
