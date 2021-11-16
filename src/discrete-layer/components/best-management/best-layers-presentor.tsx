@@ -4,6 +4,7 @@ import { isEmpty, get } from 'lodash';
 import { CesiumGeographicTilingScheme, useCesiumMap } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LayerRasterRecordModelType, LinkModelType, useStore } from '../../models';
+import { generateLayerRectangle } from '../helpers/layersUtils';
 
 interface IRasterLayerProperties {
   url: string;
@@ -30,7 +31,9 @@ export const BestLayersPresentor: React.FC = observer((props) => {
         style: 'default',
         format: 'image/jpeg',
         tileMatrixSetID: 'newGrids',
-        tilingScheme: new CesiumGeographicTilingScheme()
+        tilingScheme: new CesiumGeographicTilingScheme(),
+        rectangle: generateLayerRectangle(layer),
+
      };
     }
     return {
