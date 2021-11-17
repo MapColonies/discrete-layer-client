@@ -37,8 +37,8 @@ import { taskModelPrimitives, TaskModelSelector } from "./TaskModel.base"
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
 import { RecordType } from "./RecordTypeEnum"
-import { SensorType } from "./SensorTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
+import { SensorType } from "./SensorTypeEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocomplitionType } from "./AutocomplitionTypeEnum"
 import { ValidationType } from "./ValidationTypeEnum"
@@ -84,7 +84,6 @@ export type JobsSearchParams = {
 export type RecordUpdatePartial = {
   productName?: string
   description?: string
-  // sensorType?: SensorType[]
   productSubType?: string
   producerName?: string
   classification?: string
@@ -145,29 +144,39 @@ export type Ingestion3DData = {
 }
 export type Layer3DRecordInput = {
   type?: RecordType
-  classification?: string
+  productId: string
   productName: string
+  productVersion?: number
+  productType: ProductType
   description?: string
-  srsId?: string
-  producerName?: string
   creationDate?: any
-  ingestionDate?: any
-  updateDate?: any
   sourceDateStart?: any
   sourceDateEnd?: any
-  accuracyCE90?: number
-  sensorType?: SensorType[]
-  region?: string
-  projectName?: string
-  validationDate?: any
-  version?: string
-  centroid?: string
-  footprint?: any
-  relativeAccuracyLE90?: number
-  estimatedPrecision?: number
-  measuredPrecision?: number
+  minResolutionMeter?: number
+  maxResolutionMeter?: number
   nominalResolution?: number
-  accuracyLE90?: number
+  maxAccuracyCE90?: number
+  absoluteAccuracyLEP90?: number
+  accuracySE90?: number
+  relativeAccuracyLEP90?: number
+  visualAccuracy?: number
+  sensors?: SensorType[]
+  footprint?: any
+  heightRangeFrom?: number
+  heightRangeTo?: number
+  srsId?: number
+  srsName?: string
+  srsOrigin?: string
+  region?: string
+  classification?: string
+  productionSystem?: string
+  productionSystemVer?: string
+  producerName?: string
+  productionMethod?: string
+  minFlightAlt?: number
+  maxFlightAlt?: number
+  geographicArea?: string
+  productBoundingBox?: string
   id: string
   insertDate?: any
   wktGeometry?: string
