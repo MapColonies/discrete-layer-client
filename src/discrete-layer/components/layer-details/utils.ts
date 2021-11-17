@@ -68,7 +68,7 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string): string
     else if (fieldNameStr.toLowerCase().includes('sensortype')) {
       return 'SensorType';
     }
-    else if (fieldNameStr.toLowerCase().includes('footprint')) {
+    else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
     }
     else {

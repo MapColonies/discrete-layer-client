@@ -55,7 +55,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   position: relative;
-  
+  width: 100%;
 }
 
 body[dir='rtl'] .detailsFieldValue {

@@ -139,6 +139,7 @@
   "field-names.raster.scale": "Scale",
   "field-names.raster.footprint": "Footprint",
   "field-names.raster.producerName": "Producer Name",
+  "field-names.raster.layerPolygonParts": "Polygon parts",
 
   "field-names.3d.fileNames": "File name",
   "field-names.3d.fileNames.tooltip": "3DTiles tileset json file name",
@@ -194,6 +195,8 @@
   "validation-field.maxResolutionMeter.min": "{fieldName} is less than minimum: {value}",
   "validation-field.maxResolutionMeter.max": "{fieldName} is greater than maximum: {value}",
   "validation-field.scale.pattern": "{fieldName} is not a valid number between 0 to 100000000",
+  "validation-field.footprint.json": "{fieldName} is not geoJSON",
+  "validation-field.layerPolygonParts.json": "{fieldName} is not geoJSON",
 
   "system-status.title": "System Jobs",
   "system-status.close-btn.text": "Close",

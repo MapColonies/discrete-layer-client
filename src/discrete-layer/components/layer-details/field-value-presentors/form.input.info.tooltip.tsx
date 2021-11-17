@@ -25,7 +25,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
       const validation = fieldInfo.validation !== undefined ? fieldInfo.validation as ValidationConfigModelType[] : undefined;
       validation?.forEach((val: ValidationConfigModelType) => {
         const validationType = getValidationType(val) ?? '';
-        if (validationType === infoMsgType) {
+        if (validationType === infoMsgType && validationType !== 'required') {
           // @ts-ignore
           // eslint-disable-next-line
           const validationParamValue: string = val[validationType] ?? '';
