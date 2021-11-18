@@ -21,35 +21,30 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
   const renderLabel = useMemo(() => {
     // Indicates when the label will overflow the container
     const MAX_LABEL_LENGTH = 12;
-    const formattedLabel = intl.formatMessage({ id: value });
+    const label = intl.formatMessage({ id: value });
+    const tooltip = intl.formatMessage({ id: `${value as string}.tooltip` });
 
-    if (formattedLabel.length > MAX_LABEL_LENGTH) {
+    if (tooltip !== `${value as string}.tooltip` || label.length > MAX_LABEL_LENGTH) {
       return (
-        <Tooltip content={formattedLabel}>
+        <Tooltip content={tooltip !== `${value as string}.tooltip` ? tooltip : label}>
           <span>
-            <FormattedMessage id={value} />
+            <FormattedMessage id={value}/>
           </span>
         </Tooltip>
       );
     }
     return (
       <span>
-        <FormattedMessage id={value} />
+        <FormattedMessage id={value}/>
       </span>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <>
-      <Box
-        className={
-          customClassName !== undefined ? customClassName : 'detailsFieldLabel'
-        }
-      >
-        {renderLabel}
-        <Box className="requiredAsterisk">{isRequired === true ? '*' : ''}</Box>
-      </Box>
-    </>
+    <Box className={customClassName !== undefined ? customClassName : 'detailsFieldLabel'}>
+      {renderLabel}
+      <Box className="requiredAsterisk">{isRequired === true ? '*' : ''}</Box>
+    </Box>
   );
 };
