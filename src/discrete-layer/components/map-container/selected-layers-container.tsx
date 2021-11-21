@@ -7,6 +7,7 @@ import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LinkModelType } from '../../models/LinkModel';
 import { LayerRasterRecordModelType } from '../../models';
+import { generateLayerRectangle } from '../helpers/layersUtils';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined
@@ -54,13 +55,13 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     }
     switch(layerLink.protocol){
       case 'XYZ_LAYER':
-        return <CesiumXYZLayer key={layer.id} options={{url: layerLink.url as string}}/>
+        return <CesiumXYZLayer rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)} key={layer.id} options={{url: layerLink.url as string}}/>
       case '3DTiles':
       case '3D_LAYER':
         return <Cesium3DTileset key={layer.id} url={layerLink.url as string}/>
       case 'WMTS_tile':
       case 'WMTS_LAYER':
-        return <CesiumWMTSLayer options={optionsWMTS as RCesiumWMTSLayerOptions}/>;
+        return <CesiumWMTSLayer rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)} options={optionsWMTS as RCesiumWMTSLayerOptions}/>;
       default:
         return undefined;
     }
