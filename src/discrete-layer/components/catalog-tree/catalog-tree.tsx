@@ -7,6 +7,7 @@ import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
 import { get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
+import CONFIG from '../../../common/config';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
 import { Loading } from '../../../common/components/tree/statuses/Loading';
@@ -56,7 +57,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
               eq: store.discreteLayersStore.searchParams.recordType
             }
           ]
-        }
+        },
+        end: CONFIG.RUNNING_MODE.END_RECORD,
+        start: CONFIG.RUNNING_MODE.START_RECORD,
       })
 
     // store.queryCatalogItems({},`
