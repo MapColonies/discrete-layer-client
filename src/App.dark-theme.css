@@ -112,6 +112,7 @@
   border-radius: 0;
   height: 24px;
   margin-right: 1px;
+  width: 100%;
 }
 .dark-theme .mdc-text-field__input {
   color: var(--mdc-theme-text-primary-on-dark, #fff) !important;
