@@ -162,17 +162,16 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
             <Box className="dialogBboxRow">
-              <Box>
+              <Box className="dialogBboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLat"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.topRightLat}
-                  className="spacer"
                 />
               </Box>
-              <Box>
+              <Box className="dialogBboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLon"
@@ -182,10 +181,10 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   className="spacer"
                 />
               </Box>
-              <BBoxCorner corner={Corner.TOP_RIGHT} />
+              <BBoxCorner corner={Corner.TOP_RIGHT} className="dialogBboxField"/>
             </Box>
             <Box className="dialogBboxRow">
-              <Box>
+              <Box className="dialogBboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLat"
@@ -195,7 +194,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   className="spacer"
                 />
               </Box>
-              <Box>
+              <Box className="dialogBboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLon"
@@ -205,7 +204,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   className="spacer"
                 />
               </Box>
-              <BBoxCorner corner={Corner.BOTTOM_LEFT} />
+              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
             </Box>
             <Box className="buttons noMargin">
               {!!formErrors.latDistance || !!formErrors.lonDistance ? (
