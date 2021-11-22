@@ -7,15 +7,15 @@ import { types } from "mobx-state-tree"
  * Typescript enum
  */
 
-export enum ValidationType {
+export enum ValidationValueType {
   VALUE="VALUE",
 FIELD="FIELD"
 }
 
 /**
-* ValidationType
+* ValidationValueType
 */
-export const ValidationTypeEnumType = types.enumeration("ValidationType", [
+export const ValidationValueTypeEnumType = types.enumeration("ValidationValueType", [
         "VALUE",
   "FIELD",
       ])
