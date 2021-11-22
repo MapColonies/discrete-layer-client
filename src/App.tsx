@@ -61,7 +61,7 @@ const App: React.FC = () => {
   const customIntlErrorFunction = (error: any) => {
     // eslint-disable-next-line
     if (error.code !== 'MISSING_TRANSLATION') {
-      console.log(error);
+      console.warn(error);
     }
   };
 
