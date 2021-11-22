@@ -59,6 +59,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.id = DEFAULT_ID;
+      record.productType = ProductType.PHOTO_REALISTIC_3D;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
