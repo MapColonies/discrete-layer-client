@@ -178,7 +178,6 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.topRightLon}
-                  className="spacer"
                 />
               </Box>
               <BBoxCorner corner={Corner.TOP_RIGHT} className="dialogBboxField"/>
@@ -191,7 +190,6 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.bottomLeftLat}
-                  className="spacer"
                 />
               </Box>
               <Box className="dialogBboxField">
@@ -201,7 +199,6 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.bottomLeftLon}
-                  className="spacer"
                 />
               </Box>
               <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
