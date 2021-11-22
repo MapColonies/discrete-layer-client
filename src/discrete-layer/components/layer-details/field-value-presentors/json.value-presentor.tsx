@@ -16,17 +16,18 @@ interface JsonValuePresentorProps {
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({ mode, fieldInfo, value, formik, type }) => {
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
+    const stringifiedValue = JSON.stringify(value ?? {});
     return (
-      <Tooltip content={value}>
+      <Tooltip content={stringifiedValue}>
         <Box className="detailsFieldValue">
-          {value}
+          {stringifiedValue}
         </Box>
       </Tooltip>
     );
   } else {
     const value = get(formik, `values[${fieldInfo.fieldName as string}]`) as unknown;
     const controlValue = {
-      value: isEmpty(value) ? undefined : JSON.stringify(value)
+      value: isEmpty(value) ? undefined : JSON.stringify(value ?? {})
     };
 
     const handleBlur = (e: any): void => {
