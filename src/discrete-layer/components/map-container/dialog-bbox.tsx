@@ -160,7 +160,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           />
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
+          <form onSubmit={formik.handleSubmit} className="dialogBboxForm" noValidate>
             <Box className="dialogBboxRow">
               <Box className="dialogBboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
@@ -169,6 +169,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.topRightLat}
+                  required={true}
                 />
               </Box>
               <Box className="dialogBboxField">
@@ -178,6 +179,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.topRightLon}
+                  required={true}
                 />
               </Box>
               <BBoxCorner corner={Corner.TOP_RIGHT} className="dialogBboxField"/>
@@ -190,6 +192,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.bottomLeftLat}
+                  required={true}
                 />
               </Box>
               <Box className="dialogBboxField">
@@ -199,6 +202,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.bottomLeftLon}
+                  required={true}
                 />
               </Box>
               <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
