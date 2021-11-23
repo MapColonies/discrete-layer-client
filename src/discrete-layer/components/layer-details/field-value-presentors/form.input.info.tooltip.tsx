@@ -3,7 +3,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { Icon, Tooltip } from '@map-colonies/react-core';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
-import { ValidationConfigModelType, ValidationType } from '../../../models';
+import { ValidationConfigModelType, ValidationValueType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { getInfoMsgValidationType, getValidationType } from '../utils';
 
@@ -30,7 +30,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
           // eslint-disable-next-line
           const validationParamValue: string = val[validationType] ?? '';
           if (validationParamValue !== '') {
-            if (val.valueType === ValidationType.FIELD) {
+            if (val.valueType === ValidationValueType.FIELD) {
               const fieldLabel = fieldInfo.label as string;
               const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
               infoMsgParamValue = intl.formatMessage({ id: `${fieldLabelPrefix}.${validationParamValue}` });

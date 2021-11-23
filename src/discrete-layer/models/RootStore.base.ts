@@ -41,7 +41,7 @@ import { ProductType } from "./ProductTypeEnum"
 import { SensorType } from "./SensorTypeEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocomplitionType } from "./AutocomplitionTypeEnum"
-import { ValidationType } from "./ValidationTypeEnum"
+import { ValidationValueType } from "./ValidationValueTypeEnum"
 import { Status } from "./StatusEnum"
 
 export type SearchOptions = {
