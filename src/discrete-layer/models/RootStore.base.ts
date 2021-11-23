@@ -41,7 +41,7 @@ import { ProductType } from "./ProductTypeEnum"
 import { SensorType } from "./SensorTypeEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocomplitionType } from "./AutocomplitionTypeEnum"
-import { ValidationType } from "./ValidationTypeEnum"
+import { ValidationValueType } from "./ValidationValueTypeEnum"
 import { Status } from "./StatusEnum"
 
 export type SearchOptions = {
@@ -146,7 +146,7 @@ export type Layer3DRecordInput = {
   type?: RecordType
   productId: string
   productName: string
-  productVersion?: number
+  productVersion?: string
   productType: ProductType
   description?: string
   creationDate?: any
@@ -164,7 +164,7 @@ export type Layer3DRecordInput = {
   footprint?: any
   heightRangeFrom?: number
   heightRangeTo?: number
-  srsId?: number
+  srsId?: string
   srsName?: string
   srsOrigin?: string
   region?: string

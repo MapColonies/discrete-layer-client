@@ -160,52 +160,52 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           />
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={formik.handleSubmit} className="dialogBboxForm">
+          <form onSubmit={formik.handleSubmit} className="dialogBboxForm" noValidate>
             <Box className="dialogBboxRow">
-              <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label' isRequired={true}></FieldLabelComponent>
+              <Box className="dialogBboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLat"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.topRightLat}
-                  className="spacer"
+                  required={true}
                 />
               </Box>
-              <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label' isRequired={true}></FieldLabelComponent>
+              <Box className="dialogBboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLon"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.topRightLon}
-                  className="spacer"
+                  required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.TOP_RIGHT} />
+              <BBoxCorner corner={Corner.TOP_RIGHT} className="dialogBboxField"/>
             </Box>
             <Box className="dialogBboxRow">
-              <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label' isRequired={true}></FieldLabelComponent>
+              <Box className="dialogBboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLat"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.bottomLeftLat}
-                  className="spacer"
+                  required={true}
                 />
               </Box>
-              <Box>
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label' isRequired={true}></FieldLabelComponent>
+              <Box className="dialogBboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLon"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.bottomLeftLon}
-                  className="spacer"
+                  required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.BOTTOM_LEFT} />
+              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
             </Box>
             <Box className="buttons noMargin">
               {!!formErrors.latDistance || !!formErrors.lonDistance ? (

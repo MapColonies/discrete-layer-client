@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues, useFormik } from 'formik';
@@ -25,7 +25,7 @@ import {
   ValidationConfigModelType,
   FieldConfigModelType,
   ProductType,
-  ValidationType,
+  ValidationValueType,
   SensorType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
@@ -37,6 +37,7 @@ import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 
 import './entity-dialog.css';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
@@ -59,6 +60,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.id = DEFAULT_ID;
+      record.productType = ProductType.PHOTO_REALISTIC_3D;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
@@ -107,6 +109,15 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
+  const prevLayerRecord = usePrevious<ILayerImage | null | undefined>(layerRecord);
+  const cacheRef = useRef({} as ILayerImage | null | undefined);
+
+  useEffect(()=>{
+   if(layerRecord?.id !== prevLayerRecord?.id){
+    cacheRef.current = layerRecord;
+   }
+  }, [layerRecord, prevLayerRecord]);
+
   
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined) {
@@ -180,7 +191,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           const paramValue: string = val[paramType] ?? '';
           let secondParam = '';
           if (paramType !== '' && paramValue !== '') {
-            if (val.valueType === ValidationType.FIELD) {
+            if (val.valueType === ValidationValueType.FIELD) {
               const fieldLabel = field.label as string;
               const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
               secondParam = intl.formatMessage({ id: `${fieldLabelPrefix}.${paramValue}` });
@@ -321,7 +332,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
-              <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerRecord} mode={mode} formik={formik}/>
+              <LayersDetailsComponent 
+                entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} 
+                layerRecord={cacheRef.current} 
+                mode={mode} 
+                formik={formik}
+              />
             </Box>
             <Box className="footer">
               <Box className="messages">
