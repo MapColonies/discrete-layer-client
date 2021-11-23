@@ -16,10 +16,11 @@ interface JsonValuePresentorProps {
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({ mode, fieldInfo, value, formik, type }) => {
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
+    const stringifiedValue = JSON.stringify(value ?? {});
     return (
-      <Tooltip content={JSON.stringify(value ?? {})}>
+      <Tooltip content={stringifiedValue}>
         <Box className="detailsFieldValue">
-          {JSON.stringify(value ?? {})}
+          {stringifiedValue}
         </Box>
       </Tooltip>
       // <></>
