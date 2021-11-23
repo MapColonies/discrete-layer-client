@@ -180,7 +180,9 @@ const DiscreteLayerView: React.FC = observer(() => {
     setQuery(store.querySearch({
       opts: {
         filter: filters
-      }
+      },
+      end: CONFIG.RUNNING_MODE.END_RECORD,
+      start: CONFIG.RUNNING_MODE.START_RECORD,
     }));
   };
 

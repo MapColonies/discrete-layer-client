@@ -99,7 +99,9 @@ const APP_CONFIG = {
   BASE_MAPS: enreachBaseMaps(BASE_MAPS),
   RUNNING_MODE: {
     TYPE: RUNNING_MODE.type,
-    AUTOCOMPLETE: RUNNING_MODE.autocomplete
+    AUTOCOMPLETE: RUNNING_MODE.autocomplete,
+    START_RECORD: 1,
+    END_RECORD: 1000
   }
 };
 

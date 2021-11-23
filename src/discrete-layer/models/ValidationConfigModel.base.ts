@@ -5,7 +5,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { ValidationTypeEnumType } from "./ValidationTypeEnum"
+import { ValidationValueTypeEnumType } from "./ValidationValueTypeEnum"
 import { RootStoreType } from "./index"
 
 
@@ -18,7 +18,7 @@ export const ValidationConfigModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("ValidationConfig"), "ValidationConfig"),
     errorMsgCode: types.union(types.undefined, types.string),
-    valueType: types.union(types.undefined, types.null, ValidationTypeEnumType),
+    valueType: types.union(types.undefined, types.null, ValidationValueTypeEnumType),
     min: types.union(types.undefined, types.null, types.string),
     max: types.union(types.undefined, types.null, types.string),
     minLength: types.union(types.undefined, types.null, types.number),
