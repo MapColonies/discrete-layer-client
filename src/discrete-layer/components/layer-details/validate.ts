@@ -3,7 +3,7 @@ import moment from 'moment';
 import vest, { test, enforce } from 'vest';
 import { IEnforceRules } from 'vest/enforce';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
-import { FieldConfigModelType, ValidationConfigModelType, ValidationType } from '../../models';
+import { FieldConfigModelType, ValidationConfigModelType, ValidationValueType } from '../../models';
 import { FieldInfoName } from './layer-details.field-info';
 import { getBasicType, getValidationType } from './utils';
 
@@ -41,7 +41,7 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
     const value = getValidationType(validation) ?? '';
     // @ts-ignore
     const param = validation[value] as string | number;
-    if (validation.valueType === ValidationType.FIELD) {
+    if (validation.valueType === ValidationValueType.FIELD) {
       if (data[param] !== undefined) {
         return data[param as string] as number;
       }

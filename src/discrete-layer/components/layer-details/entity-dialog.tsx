@@ -25,7 +25,7 @@ import {
   ValidationConfigModelType,
   FieldConfigModelType,
   ProductType,
-  ValidationType,
+  ValidationValueType,
   SensorType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
@@ -181,7 +181,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           const paramValue: string = val[paramType] ?? '';
           let secondParam = '';
           if (paramType !== '' && paramValue !== '') {
-            if (val.valueType === ValidationType.FIELD) {
+            if (val.valueType === ValidationValueType.FIELD) {
               const fieldLabel = field.label as string;
               const fieldLabelPrefix = fieldLabel.substring(START, fieldLabel.lastIndexOf('.'));
               secondParam = intl.formatMessage({ id: `${fieldLabelPrefix}.${paramValue}` });

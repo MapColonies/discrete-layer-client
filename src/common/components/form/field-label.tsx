@@ -9,12 +9,14 @@ interface FieldLabelProps {
   value?: string;
   isRequired?: boolean;
   customClassName?: string;
+  showTooltip?: boolean;
 }
 
 export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
   value,
   isRequired,
   customClassName,
+  showTooltip,
 }) => {
   const intl = useIntl();
 
@@ -24,7 +26,7 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
     const label = intl.formatMessage({ id: value });
     const tooltip = intl.formatMessage({ id: `${value as string}.tooltip` });
 
-    if (tooltip !== `${value as string}.tooltip` || label.length > MAX_LABEL_LENGTH) {
+    if (showTooltip !== false && (tooltip !== `${value as string}.tooltip` || label.length > MAX_LABEL_LENGTH)) {
       return (
         <Tooltip content={tooltip !== `${value as string}.tooltip` ? tooltip : label}>
           <span>
