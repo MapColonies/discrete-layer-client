@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues, useFormik } from 'formik';
 import { cloneDeep } from 'lodash';
+import moment from 'moment';
 import * as Yup from 'yup';
 import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
@@ -24,7 +25,8 @@ import {
   ValidationConfigModelType,
   FieldConfigModelType,
   ProductType,
-  ValidationType
+  ValidationType,
+  SensorType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
@@ -57,6 +59,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.id = DEFAULT_ID;
+      record.productType = ProductType.PHOTO_REALISTIC_3D;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
@@ -64,6 +67,8 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.id = DEFAULT_ID;
+      record.updateDate = moment();
+      record.sensorType = SensorType.UNDEFINED;
       record.productType = ProductType.ORTHOPHOTO;
       record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
