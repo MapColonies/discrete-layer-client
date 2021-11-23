@@ -23,6 +23,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           {stringifiedValue}
         </Box>
       </Tooltip>
+      // <></>
     );
   } else {
     const value = get(formik, `values[${fieldInfo.fieldName as string}]`) as unknown;
