@@ -17,13 +17,8 @@ body[dir='rtl'] #bboxDialog .closeIcon {
   margin-bottom: 16px;
 }
 
-#bboxDialog .spacer {
-  margin-right: 16px;
-}
-
-body[dir='rtl'] #bboxDialog .spacer{
-  margin-right: unset;
-  margin-left: 16px;
+#bboxDialog .dialogBboxField {
+  margin: 0 8px;
 }
 
 #bboxDialog .noMargin {

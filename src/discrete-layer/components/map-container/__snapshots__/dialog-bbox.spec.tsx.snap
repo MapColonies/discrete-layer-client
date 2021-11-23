@@ -21,71 +21,86 @@ exports[`DialogBBox component renders correctly 1`] = `
     <Function>
       <form
         className="dialogBboxForm"
+        noValidate={true}
         onSubmit={[Function]}
       >
         <Component
           className="dialogBboxRow"
         >
-          <Component>
+          <Component
+            className="dialogBboxField"
+          >
             <FieldLabelComponent
               isRequired={true}
+              showTooltip={false}
               value="custom-bbox.dialog-field.top_right_lat.label"
             />
             <Function
-              className="spacer"
               name="topRightLat"
               onChange={[Function]}
+              required={true}
               type="number"
               value={0}
             />
           </Component>
-          <Component>
+          <Component
+            className="dialogBboxField"
+          >
             <FieldLabelComponent
               isRequired={true}
+              showTooltip={false}
               value="custom-bbox.dialog-field.top_right_lon.label"
             />
             <Function
-              className="spacer"
               name="topRightLon"
               onChange={[Function]}
+              required={true}
               type="number"
               value={0}
             />
           </Component>
           <BBoxCorner
+            className="dialogBboxField"
             corner="TOP_RIGHT"
           />
         </Component>
         <Component
           className="dialogBboxRow"
         >
-          <Component>
+          <Component
+            className="dialogBboxField"
+          >
             <FieldLabelComponent
               isRequired={true}
+              showTooltip={false}
               value="custom-bbox.dialog-field.bottom_left_lat.label"
             />
             <Function
-              className="spacer"
               name="bottomLeftLat"
               onChange={[Function]}
+              required={true}
               type="number"
               value={0}
             />
           </Component>
-          <Component>
+          <Component
+            className="dialogBboxField"
+          >
             <FieldLabelComponent
               isRequired={true}
+              showTooltip={false}
               value="custom-bbox.dialog-field.bottom_left_lon.label"
             />
             <Function
-              className="spacer"
               name="bottomLeftLon"
               onChange={[Function]}
+              required={true}
               type="number"
               value={0}
             />
           </Component>
           <BBoxCorner
+            className="dialogBboxField"
             corner="BOTTOM_LEFT"
           />
         </Component>
