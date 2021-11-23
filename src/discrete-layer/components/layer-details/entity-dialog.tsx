@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues, useFormik } from 'formik';
@@ -37,6 +37,7 @@ import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 
 import './entity-dialog.css';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
@@ -108,6 +109,15 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
+  const prevLayerRecord = usePrevious<ILayerImage | null | undefined>(layerRecord);
+  const cacheRef = useRef({} as ILayerImage | null | undefined);
+
+  useEffect(()=>{
+   if(layerRecord?.id !== prevLayerRecord?.id){
+    cacheRef.current = layerRecord;
+   }
+  }, [layerRecord, prevLayerRecord]);
+
   
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined) {
@@ -322,7 +332,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
-              <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerRecord} mode={mode} formik={formik}/>
+              <LayersDetailsComponent 
+                entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} 
+                layerRecord={cacheRef.current} 
+                mode={mode} 
+                formik={formik}
+              />
             </Box>
             <Box className="footer">
               <Box className="messages">
