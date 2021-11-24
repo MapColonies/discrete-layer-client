@@ -15,8 +15,9 @@
   display: flex;
   flex-wrap: wrap;
   flex: 100%;
-  gap: 10%;
+  gap: 12%;
   margin-bottom: 8px;
+  align-items: center;
 }
 
 .categoryField {
@@ -50,19 +51,15 @@
 
 .detailsFieldValue {
   color: var(--mdc-theme-text-primary-on-dark);
-  margin-left: 12px;
-  overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  word-break: break-all;
   position: relative;
-  width: 100%;
+  flex: 1 1;
 }
 
 body[dir='rtl'] .detailsFieldValue {
   margin-left: unset;
   margin-right: 12px;
-  
-
 }
 
 .noSelection {

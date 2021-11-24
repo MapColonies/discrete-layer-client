@@ -146,7 +146,7 @@ export type Layer3DRecordInput = {
   type?: RecordType
   productId: string
   productName: string
-  productVersion?: number
+  productVersion?: string
   productType: ProductType
   description?: string
   creationDate?: any
@@ -164,7 +164,7 @@ export type Layer3DRecordInput = {
   footprint?: any
   heightRangeFrom?: number
   heightRangeTo?: number
-  srsId?: number
+  srsId?: string
   srsName?: string
   srsOrigin?: string
   region?: string
