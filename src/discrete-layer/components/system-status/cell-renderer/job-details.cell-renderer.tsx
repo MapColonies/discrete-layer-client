@@ -7,6 +7,7 @@ import { dateFormatter } from '../../../../common/helpers/type-formatters';
 import { JobModelType } from '../../../models';
 
 import './job-details.cell-renderer.css';
+import { JobDetailsHeader } from './job-details.header';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -82,44 +83,48 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
         return {};
     }
   }
-  return (
-    <Box className="tableFixHead">
-      {
-        <table className="tasksTable">
-          <thead>
-            <tr>
-              {
-                taskFileds.map(field => (
-                  <th 
-                    key={`${keyPrefix}_${field.name}`} 
-                    className="tasksTableColumnHeader"
-                    style={getColumnStyle(field)}
-                  >
-                    <FormattedMessage id={field.label} />
-                  </th>    
-                ))
-              }
-            </tr>
-          </thead>
-          <tbody>
-            {
-              tasksData.map(task => (
-                <tr key={`${keyPrefix}_${task.id as string}`}>
-                  {
-                  taskFileds.map(field => (
-                    <td key={`${keyPrefix}_${task.id as string}_${field.name}`}>
-                      {/* {(task[field.name] as string)} */}
-                      {getValuePresentor(task, field)}
-                    </td>
-                  ))
-                  }
-                </tr>
-              ))
 
-            }
-          </tbody>
-        </table>
+
+
+  return <Box className="tableFixHead">
+      {
+        <>
+          <JobDetailsHeader />
+          <table className="tasksTable">
+            <thead>
+              <tr>
+                {
+                  taskFileds.map(field => (
+                    <th 
+                      key={`${keyPrefix}_${field.name}`} 
+                      className="tasksTableColumnHeader"
+                      style={getColumnStyle(field)}
+                    >
+                      <FormattedMessage id={field.label} />
+                    </th>    
+                  ))
+                }
+              </tr>
+            </thead>
+            <tbody>
+              {
+                tasksData.map(task => (
+                  <tr key={`${keyPrefix}_${task.id as string}`}>
+                    {
+                    taskFileds.map(field => (
+                      <td key={`${keyPrefix}_${task.id as string}_${field.name}`}>
+                        {/* {(task[field.name] as string)} */}
+                        {getValuePresentor(task, field)}
+                      </td>
+                    ))
+                    }
+                  </tr>
+                ))
+
+              }
+            </tbody>
+          </table>
+        </>
       }
     </Box>
-  );
 };
