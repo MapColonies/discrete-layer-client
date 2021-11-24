@@ -198,18 +198,18 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.created.label',
       }),
-      width: 120,
+      width: 165,
       field: 'created',
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
     },
     {
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.updated.label',
       }),
-      width: 120,
+      width: 165,
       field: 'updated',
       sortable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
     },
@@ -255,8 +255,9 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     suppressCellSelection: true,
     singleClickEdit: true,
     onGridReady: onGridReady,
-    immutableData: true //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
+    immutableData: true, //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
     // suppressRowClickSelection: true,
+    suppressMenuHide: true // Used to show filter icon at all times (not only when hovering the header).
   };
 
   return (
