@@ -36,6 +36,7 @@ import './layer-details.css';
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
   mode: Mode;
+  isFromDetailsPanel?: boolean;
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
   formik?: unknown;
@@ -98,7 +99,7 @@ export const getValuePresentor = (
 };
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
-  const { entityDescriptors, mode, isBrief, layerRecord, formik } = props;
+  const { entityDescriptors, mode, isBrief, layerRecord, formik, isFromDetailsPanel = false } = props;
 
 
   const renderCategory = (category: IRecordCategoryFieldsInfo): JSX.Element =>
@@ -114,7 +115,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       >
         <FormattedMessage id={category.categoryTitle} />
       </Typography>
-      <Box className="categoryFieldsContainer">
+      <Box className={['categoryFieldsContainer', isFromDetailsPanel ? 'detailsPanelProductView' : ''].join(' ')}>
         {category.fields?.filter((fieldInfo)=>{
           // eslint-disable-next-line
           return (mode !== Mode.NEW && get(fieldInfo,'isCreationEssential') !== true) ||
