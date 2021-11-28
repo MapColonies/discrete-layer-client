@@ -15,16 +15,3 @@ body[dir='rtl'] .detailsTitle {
   height: calc(100% - 60px);
   overflow: auto;
 }
-
-.detailsPanelProductView {
-  gap: 0.5em;
-  font-size: 0.9em;
-}
-
-.detailsPanelProductView .detailsFieldLabel {
-  flex: 0 0 7.5em;
-}
-
-.detailsPanelProductView .categoryField {
-  padding: 0;
-}

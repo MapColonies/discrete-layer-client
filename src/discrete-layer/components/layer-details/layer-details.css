@@ -101,3 +101,24 @@ body[dir='rtl'] .textFieldInfoIcon {
   left:2px;
  
 }
+
+.detailsPanelProductView {
+  gap: 0.5em;
+  font-size: 0.9em;
+}
+
+.detailsPanelProductView .detailsFieldLabel {
+  flex: 0 0 7.5em;
+}
+
+.detailsPanelProductView .categoryField {
+  padding: 0;
+}
+
+.detailsPanelProductView .categoryFieldsTitle{
+  font-size: 1.2em;
+}
+
+.categoryFieldsParentContainer.detailsPanelProductView{
+  margin-top: 4px;
+}
