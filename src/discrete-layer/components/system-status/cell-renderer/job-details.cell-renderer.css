@@ -1,15 +1,18 @@
 .tasksTable{
-  margin: 0 auto;
-  padding-left: 8px;
-  width: 90%;
+  margin: 0 auto 20px auto;
+  width: 94%;
   border: solid 1px #455570;
   border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px
+  border-bottom-right-radius: 20px;
+  line-height: 1.2em;
+  padding: 8px;
 }
 
 .tableFixHead { 
   overflow: auto; 
-  height: 100px; 
+  height: 160px;
+  width:95%;
+  margin: 0 auto;
 }
 .tableFixHead thead th {
   position: sticky;

@@ -201,6 +201,9 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       width: 165,
       field: 'created',
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
+      sortable: true,
+      // @ts-ignore
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
     },
     {
       headerName:  intl.formatMessage({
@@ -238,7 +241,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       return data.id as string;
     },
     detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 100,
+    detailsRowHeight: 180,
     detailsRowExapnderPosition: 'start',
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
@@ -257,7 +260,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     onGridReady: onGridReady,
     immutableData: true, //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
     // suppressRowClickSelection: true,
-    suppressMenuHide: true // Used to show filter icon at all times (not only when hovering the header).
+    suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
+    unSortIcon: true, // Used to show un-sorted icon.
   };
 
   return (
