@@ -162,7 +162,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     );
 
     const getYupRequiredFieldConfig = (field: FieldConfigModelType): MixedSchema => {
-      console.log(field.fieldName, field);
       return Yup.mixed().required(
         intl.formatMessage(
           { id: 'validation-general.required' },
