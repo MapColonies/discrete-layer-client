@@ -10,7 +10,7 @@
 
 .tableFixHead { 
   overflow: auto; 
-  height: 160px;
+  height: 220px;
   width:95%;
   margin: 0 auto;
 }
@@ -36,4 +36,11 @@ body[dir=rtl] .tasksTable{
   margin-right: 60px;
   padding-left: unset;
   padding-right: 8px;
+}
+
+.tasksTable .failed {
+  display: flex;
+  justify-content: space-between;
+  width: 10ch;
+  align-items: center;
 }

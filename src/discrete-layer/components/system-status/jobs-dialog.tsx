@@ -241,7 +241,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       return data.id as string;
     },
     detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 180,
+    detailsRowHeight: 230,
     detailsRowExapnderPosition: 'start',
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',

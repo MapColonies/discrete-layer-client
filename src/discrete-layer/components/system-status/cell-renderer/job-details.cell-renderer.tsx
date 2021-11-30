@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage } from 'react-intl';
 import { Moment } from 'moment';
 import { Box } from '@map-colonies/react-components';
 import { dateFormatter } from '../../../../common/helpers/type-formatters';
-import { JobModelType } from '../../../models';
+import { JobModelType, Status } from '../../../models';
 
 import './job-details.cell-renderer.css';
 import { JobDetailsHeader } from './job-details.header';
+import { CollapseButton } from '../../../../common/components/collapse-button/collapse.button';
+import { FailReasonArea } from './job-details.fail-reason-area';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -48,7 +50,13 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
 ) => {
   const tasksData = (props.data as JobModelType).tasks as Record<string,unknown>[];
   const keyPrefix = `${(props.data as JobModelType).resourceId as string}`;
-  const getValuePresentor = (task: Record<string,unknown>, field: ITaskField): JSX.Element => {
+
+  const getValuePresentor = (
+     task: Record<string,unknown>,
+     field: ITaskField,
+     setCollapsed?: ((collapsed?: boolean)=> void)
+  ): JSX.Element => {
+    console.log('task', task, 'field', field);
     switch(field.valueType){
       case "date":
         return (
@@ -60,6 +68,9 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
         return (
           <Box className={`${(task[field.name] as string).toLowerCase()}`}>
             {task[field.name] as string}
+            {task.status === Status.Failed && setCollapsed &&
+              <CollapseButton onClick={(collapsed: boolean):void=>{setCollapsed(!collapsed)}}/>
+            }
           </Box>
         );
       default:
@@ -84,6 +95,36 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
     }
   }
 
+interface TaskRowProps{
+  key: string;
+  task: Record<string,unknown>;
+}
+
+const TaskRow: React.FC<TaskRowProps> = ({task, key}) => {
+
+  const [collapsed, setCollapsed] = useState(true)
+
+  return (
+    <>
+      <tr key={key} className={'taskRow'}>
+          {
+            taskFileds.map(field => (
+              <td key={`${key}_${field.name}`} style={{verticalAlign: 'baseline'}}>
+                <Box style={{display: 'flex', flexDirection:'row'}}>
+                  {getValuePresentor(task, field, setCollapsed as ((collapsed?: boolean)=> void))}
+                </Box>
+              </td>
+            ))
+          }
+        
+      </tr>
+      <tr>
+        {!collapsed && <FailReasonArea failReason={task.reason as string} key={`${key}_failReason`}/>}
+      </tr>
+    </>
+  )
+
+}
 
 
   return <Box className="tableFixHead">
@@ -109,18 +150,8 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
             <tbody>
               {
                 tasksData.map(task => (
-                  <tr key={`${keyPrefix}_${task.id as string}`}>
-                    {
-                    taskFileds.map(field => (
-                      <td key={`${keyPrefix}_${task.id as string}_${field.name}`}>
-                        {/* {(task[field.name] as string)} */}
-                        {getValuePresentor(task, field)}
-                      </td>
-                    ))
-                    }
-                  </tr>
+                  <TaskRow key={`${keyPrefix}_${task.id as string}`} task={task} />
                 ))
-
               }
             </tbody>
           </table>
