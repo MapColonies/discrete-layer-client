@@ -54,9 +54,8 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
   const getValuePresentor = (
      task: Record<string,unknown>,
      field: ITaskField,
-     setCollapsed?: ((collapsed?: boolean)=> void)
+     setCollapsed?: ((collapsed: boolean)=> void)
   ): JSX.Element => {
-    console.log('task', task, 'field', field);
     switch(field.valueType){
       case "date":
         return (
@@ -68,9 +67,13 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
         return (
           <Box className={`${(task[field.name] as string).toLowerCase()}`}>
             {task[field.name] as string}
-            {task.status === Status.Failed && setCollapsed &&
-              <CollapseButton onClick={(collapsed: boolean):void=>{setCollapsed(!collapsed)}}/>
-            }
+            {task.status === Status.Failed && (
+              <CollapseButton
+                onClick={(collapsed: boolean): void => {
+                  setCollapsed?.(!collapsed);
+                }}
+              />
+            )}
           </Box>
         );
       default:
@@ -119,7 +122,7 @@ const TaskRow: React.FC<TaskRowProps> = ({task, key}) => {
         
       </tr>
       <tr>
-        {!collapsed && <FailReasonArea failReason={task.reason as string} key={`${key}_failReason`}/>}
+        <FailReasonArea show={!collapsed} failReason={task.reason as string} key={`${key}_failReason`}/>
       </tr>
     </>
   )

@@ -1,5 +1,26 @@
-.failReasonAreaContainer{
-    display:flex;
-    justify-content: center;
-    align-items: center;
+.failReasonAreaContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  line-height: 0px;
+  padding: 0 10px;
+  height:0;
+  transition: all 0.1s ease-out;
+}
+
+.failReasonAreaContainer.show{
+    opacity: 1;
+    padding: 10px;
+    line-height: 20px;
+    height: 1em;
+    transition: all 0.1s ease-in;
+}
+  
+
+.failReasonText {
+  max-width: 50ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
