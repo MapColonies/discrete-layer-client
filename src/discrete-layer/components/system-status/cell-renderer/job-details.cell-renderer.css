@@ -9,7 +9,7 @@
 }
 
 .tableFixHead { 
-  overflow: auto; 
+  overflow: overlay; 
   height: 220px;
   width:95%;
   margin: 0 auto;

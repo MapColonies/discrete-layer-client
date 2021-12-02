@@ -12,6 +12,10 @@
   margin-left: auto;
 }
 
+.jobsBody .ag-body-viewport.ag-layout-normal.ag-row-no-animation {
+  overflow-y: overlay !important;
+}
+
 body[dir=rtl] #jobsDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
