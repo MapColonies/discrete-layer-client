@@ -14,7 +14,7 @@ export const stringFormatter: FormatterFunc = (val): string =>{
 export const dateFormatter: FormatterFunc = (date, withTime = false): string => {
   const formatType = withTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT;
   // eslint-disable-next-line
-  return date !== undefined && 'toISOString' in (date as any)
+  return date !== undefined && 'toISOString' in (moment(date) as moment.Moment)
     ? moment(date).format(formatType)
     : '-';
 };
