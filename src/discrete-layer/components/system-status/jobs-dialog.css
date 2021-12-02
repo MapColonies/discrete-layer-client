@@ -94,3 +94,8 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   margin-right: 250%;
 }
+
+#jobsDialog .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"]{
+  background: unset;
+  overflow: visible;
+}
