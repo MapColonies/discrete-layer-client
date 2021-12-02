@@ -23,6 +23,9 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
+// Fake jobs data, use for testing.
+// import JOBS_MOCK_DATA from './jobs.mock_data';
+
 import './jobs-dialog.css';
 
 const pagination = true;
@@ -74,6 +77,9 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const store = useStore();
 
   useEffect(() => {
+    //  For testing with mock data.
+    //  setGridRowData(cloneDeep(JOBS_MOCK_DATA as JobModelType[]));
+    
     setGridRowData(data ? cloneDeep(data.jobs) : []);
     setUpdatingPriority(undefined);
   }, [data]);
