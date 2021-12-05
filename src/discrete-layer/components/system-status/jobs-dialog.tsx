@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
+import { Button, Dialog, DialogTitle, Icon, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { 
@@ -23,10 +23,9 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
-// Fake jobs data, use for testing.
-// import JOBS_MOCK_DATA from './jobs.mock_data';
 
 import './jobs-dialog.css';
+import { ColDef, ColGroupDef, ValueFormatterParams } from 'ag-grid-community';
 
 const pagination = true;
 const pageSize = 10;
@@ -77,9 +76,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const store = useStore();
 
   useEffect(() => {
-    //  For testing with mock data.
-    //  setGridRowData(cloneDeep(JOBS_MOCK_DATA as JobModelType[]));
-    
     setGridRowData(data ? cloneDeep(data.jobs) : []);
     setUpdatingPriority(undefined);
   }, [data]);
@@ -141,6 +137,37 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   };
 
   const colDef = [
+    {
+      headerName: '',
+      width: 40,
+      field: 'type_icon',
+      valueFormatter: (props: ValueFormatterParams): string => {
+        // TODO: Here we should parse Product type enum into icon name / url..
+        // The returned value here will be passed to the cellRenderer via props.value, to render the icon.
+        return props.value as string;
+      },
+      cellRendererFramework: (props: any): ColDef | ColGroupDef => {
+      const styles = {
+        iconContainer: {
+          textAlign: 'center' as const,
+        },
+        typeIcon: {
+          marginTop:'10px',
+          color: 'skyblue',
+        }
+      }
+
+        // TODO: use props.value for the icon source
+        return (
+          <Box style={styles.iconContainer}>
+            <Icon
+              style={styles.typeIcon}
+              icon={{ icon: 'star_rate', size: 'small' }}
+            />
+          </Box>
+        );
+      },
+    },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
