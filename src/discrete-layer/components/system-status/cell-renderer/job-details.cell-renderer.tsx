@@ -130,35 +130,29 @@ const TaskRow: React.FC<TaskRowProps> = ({task, key}) => {
 }
 
 
-  return <Box className="tableFixHead">
-      {
-        <>
-          <JobDetailsHeader />
-          <table className="tasksTable">
-            <thead>
-              <tr>
-                {
-                  taskFileds.map(field => (
-                    <th 
-                      key={`${keyPrefix}_${field.name}`} 
-                      className="tasksTableColumnHeader"
-                      style={getColumnStyle(field)}
-                    >
-                      <FormattedMessage id={field.label} />
-                    </th>    
-                  ))
-                }
-              </tr>
-            </thead>
-            <tbody>
-              {
-                tasksData.map(task => (
-                  <TaskRow key={`${keyPrefix}_${task.id as string}`} task={task} />
-                ))
-              }
-            </tbody>
-          </table>
-        </>
-      }
+  return (
+    <Box className="tableFixHead">
+      <JobDetailsHeader />
+      <table className="tasksTable">
+        <thead>
+          <tr>
+            {taskFileds.map((field) => (
+              <th
+                key={`${keyPrefix}_${field.name}`}
+                className="tasksTableColumnHeader"
+                style={getColumnStyle(field)}
+              >
+                <FormattedMessage id={field.label} />
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tasksData.map((task) => (
+            <TaskRow key={`${keyPrefix}_${task.id as string}`} task={task} />
+          ))}
+        </tbody>
+      </table>
     </Box>
+  );
 };

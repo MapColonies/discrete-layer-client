@@ -207,7 +207,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       field: 'priority',
       editable: true,
       cellStyle: (params: Record<string, any>): Record<string, string> => {
-        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)'};
+        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)', maxHeight:'50px'};
       },
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
@@ -263,6 +263,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       {colId: 'updated', sort: 'desc'}
     ];
     params.api.setSortModel(sortModel);
+    params.api.sizeColumnsToFit();
   };
 
   const gridOptions: GridComponentOptions = {
