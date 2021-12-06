@@ -13,3 +13,39 @@
 .failed{
   color: var(--mdc-theme-gc-error-medium);
 }
+
+.completedArea {
+  background: var(--mdc-theme-gc-success);
+}
+
+.failedArea {
+  background: var(--mdc-theme-gc-error-medium);
+}
+
+.inProgressArea {
+  background: var(--mdc-theme-gc-warning-medium);
+}
+
+.progressSectionsContainer {
+  display:flex;
+  align-items: flex-start;
+}
+
+.statusBarContainer {
+  display: flex;
+  width: 190px;
+  height: 38px;
+  align-items: center;
+  flex-direction: column-reverse;
+  position: relative;
+  padding:2px;
+}
+.statusText {
+  position: absolute;
+  bottom:-2px;
+}
+.statusBar {
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+}

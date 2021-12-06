@@ -252,6 +252,11 @@
   "system-status.job.fields.priority.label": "Priority",
   "system-status.job.fields.created.label": "Created",
   "system-status.job.fields.updated.label": "Updated",
+
+  "system-status.job.status_translation.Pending": "Pending",
+  "system-status.job.status_translation.InProgress": "In Progress",
+  "system-status.job.status_translation.Completed": "Completed",
+  "system-status.job.status_translation.Failed": "Failed",
   
   "system-status.task.fields.type.label": "Task Type",
   "system-status.task.fields.status.label": "Status",
