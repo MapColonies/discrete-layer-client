@@ -146,7 +146,35 @@ const ACTIONS_CONFIG: IEntityActions[] = [
         ],
       }
     ]
-  }
+  },
+  {
+    entity: 'LayerDEMRecord',
+    actions: [
+      {
+        id: 1,
+        titleTranslationId: 'CRUD',
+        type: 'CRUD',
+        group: [
+          {
+            action: 'edit',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Edit',
+            titleTranslationId: 'action.edit.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          // {
+          //   action: 'delete',
+          //   frequent: false,
+          //   icon: '',
+          //   class: 'mc-icon-Delete',
+          //   titleTranslationId: 'action.delete.tooltip',
+          //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          // },
+        ],
+      }
+    ]
+  },
 ]
 
 export default ACTIONS_CONFIG;

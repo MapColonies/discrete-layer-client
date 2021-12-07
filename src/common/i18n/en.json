@@ -44,6 +44,7 @@
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
+  "record-type.record_dem.label": "DEM",
   "record-type.record_all.label": "All",
 
   "polygon-selection.draw-btn.tooltip": "Draw an Area to export",
@@ -162,8 +163,8 @@
   "field-names.3d.accuracySE90": "Spherical accuracy",
   "field-names.3d.relativeAccuracyLEP90": "Rel. vertical acc.",
   "field-names.3d.visualAccuracy": "Visual accuracy",
-  "field-names.3d.sensors": "Sensor",
-  "field-names.3d.sensors.tooltip": "List of sensors used as a source for the product",
+  "field-names.3d.sensorType": "Sensor",
+  "field-names.3d.sensorType.tooltip": "List of sensors used as a source for the product",
   "field-names.3d.footprint": "Footprint",
   "field-names.3d.heightRangeFrom": "Min height range",
   "field-names.3d.heightRangeTo": "Max height range",
