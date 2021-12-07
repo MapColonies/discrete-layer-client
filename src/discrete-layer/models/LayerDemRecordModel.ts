@@ -11,6 +11,7 @@ export { selectFromLayerDemRecord, layerDemRecordModelPrimitives, LayerDemRecord
 /**
  * LayerDemRecordModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const LayerDemRecordModel = LayerDemRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
