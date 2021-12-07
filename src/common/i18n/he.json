@@ -44,6 +44,7 @@
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
+  "record-type.record_dem.label": "מודל גבהים ספרתי",
   "record-type.record_all.label": "הכל",
 
   "polygon-selection.draw-btn.tooltip": "צייר אזור ליצוא",

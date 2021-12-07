@@ -44,6 +44,7 @@
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
+  "record-type.record_dem.label": "DEM",
   "record-type.record_all.label": "All",
 
   "polygon-selection.draw-btn.tooltip": "Draw an Area to export",

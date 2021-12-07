@@ -10,6 +10,7 @@ import { types } from "mobx-state-tree"
 export enum RecordType {
   RECORD_RASTER="RECORD_RASTER",
 RECORD_3D="RECORD_3D",
+RECORD_DEM="RECORD_DEM",
 RECORD_ALL="RECORD_ALL"
 }
 
@@ -19,5 +20,6 @@ RECORD_ALL="RECORD_ALL"
 export const RecordTypeEnumType = types.enumeration("RecordType", [
         "RECORD_RASTER",
   "RECORD_3D",
+  "RECORD_DEM",
   "RECORD_ALL",
       ])

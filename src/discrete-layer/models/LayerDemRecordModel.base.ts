@@ -5,11 +5,16 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { DataTypeEnumType } from "./DataTypeEnum"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { NoDataValueEnumType } from "./NoDataValueEnum"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { SensorTypeEnumType } from "./SensorTypeEnum"
+import { UndulationModelEnumType } from "./UndulationModelEnum"
+import { UnitsEnumType } from "./UnitsEnum"
+import { VerticalDatumEnumType } from "./VerticalDatumEnum"
 import { RootStoreType } from "./index"
 
 
@@ -22,29 +27,34 @@ export const LayerDemRecordModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("LayerDEMRecord"), "LayerDEMRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
-    classification: types.union(types.undefined, types.string),
+    classification: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
     srsId: types.union(types.undefined, types.null, types.string),
-    srsName: types.union(types.undefined, types.string),
+    srsName: types.union(types.undefined, types.null, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
-    sourceDateStart: types.union(types.undefined, types.frozen()),
-    sourceDateEnd: types.union(types.undefined, types.frozen()),
+    sourceDateStart: types.union(types.undefined, types.null, types.frozen()),
+    sourceDateEnd: types.union(types.undefined, types.null, types.frozen()),
     sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     region: types.union(types.undefined, types.null, types.string),
     productId: types.union(types.undefined, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
-    footprint: types.union(types.undefined, types.frozen()),
-    absoluteAccuracyLEP90: types.union(types.undefined, types.number),
-    relativeAccuracyLEP90: types.union(types.undefined, types.number),
+    footprint: types.union(types.undefined, types.null, types.frozen()),
+    absoluteAccuracyLEP90: types.union(types.undefined, types.null, types.number),
+    relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
     resolutionDegree: types.union(types.undefined, types.null, types.number),
     resolutionMeter: types.union(types.undefined, types.number),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
-    heightRangeFrom: types.union(types.undefined, types.number),
-    heightRangeTo: types.union(types.undefined, types.number),
+    heightRangeFrom: types.union(types.undefined, types.null, types.number),
+    heightRangeTo: types.union(types.undefined, types.null, types.number),
+    verticalDatum: types.union(types.undefined, VerticalDatumEnumType),
+    units: types.union(types.undefined, types.null, UnitsEnumType),
     geographicArea: types.union(types.undefined, types.null, types.string),
+    undulationModel: types.union(types.undefined, UndulationModelEnumType),
+    dataType: types.union(types.undefined, DataTypeEnumType),
+    noDataValue: types.union(types.undefined, NoDataValueEnumType),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -82,7 +92,12 @@ export class LayerDemRecordModelSelector extends QueryBuilder {
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
   get heightRangeFrom() { return this.__attr(`heightRangeFrom`) }
   get heightRangeTo() { return this.__attr(`heightRangeTo`) }
+  get verticalDatum() { return this.__attr(`verticalDatum`) }
+  get units() { return this.__attr(`units`) }
   get geographicArea() { return this.__attr(`geographicArea`) }
+  get undulationModel() { return this.__attr(`undulationModel`) }
+  get dataType() { return this.__attr(`dataType`) }
+  get noDataValue() { return this.__attr(`noDataValue`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get wktGeometry() { return this.__attr(`wktGeometry`) }
@@ -93,4 +108,4 @@ export function selectFromLayerDemRecord() {
   return new LayerDemRecordModelSelector()
 }
 
-export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensorType.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.geographicArea.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
+export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensorType.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.verticalDatum.units.geographicArea.undulationModel.dataType.noDataValue.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
