@@ -30,7 +30,7 @@ export const JobModelBase = ModelBase
     percentage: types.union(types.undefined, types.null, types.number),
     priority: types.union(types.undefined, types.null, types.number),
     expirationDate: types.union(types.undefined, types.null, types.number),
-    internalId: types.union(types.undefined, types.null, types.number),
+    internalId: types.union(types.undefined, types.null, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, types.null, types.string),

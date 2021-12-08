@@ -8,14 +8,19 @@ import { JobModelType, Status } from '../../../models';
 
 import './job-details.cell-renderer.css';
 import { JobDetailsHeader } from './job-details.header';
-import { CollapseButton } from '../../../../common/components/collapse-button/collapse.button';
-import { FailReasonArea } from './job-details.fail-reason-area';
+import {
+  Icon,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@map-colonies/react-core';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
-  name: string,
-  label: string,
-  valueType: ValueType
+  name: string;
+  label: string;
+  valueType: ValueType;
 }
 const taskFileds: ITaskField[] = [
   {
@@ -45,114 +50,86 @@ const taskFileds: ITaskField[] = [
   },
 ];
 
-export const JobDetailsRenderer: React.FC<ICellRendererParams> = (
-  props
-) => {
-  const tasksData = (props.data as JobModelType).tasks as Record<string,unknown>[];
+export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
+  const tasksData = (props.data as JobModelType).tasks as Record<
+    string,
+    unknown
+  >[];
   const keyPrefix = `${(props.data as JobModelType).resourceId as string}`;
 
+  const statusPresentor = (task: Record<string, unknown>): JSX.Element => {
+    if (task.status === Status.Failed) {
+      return (
+        <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
+          {task.status as string}
+          <Tooltip content={task.reason as string}>
+            <IconButton
+              style={{
+                fontSize: '20px',
+                color: 'var(--mdc-theme-gc-error-medium)',
+              }}
+              className={'mc-icon-Warning'}
+              label="failReasonIcon"
+            />
+          </Tooltip>
+          <CopyToClipboard text={task.reason as string}>
+            <IconButton
+              style={{ fontSize: '20px'}}
+              className="mc-icon-Copy"
+            />
+          </CopyToClipboard>
+        </Box>
+      );
+    }
+    return (
+      <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
+        {task.status as string}
+      </Box>
+    );
+  };
+
   const getValuePresentor = (
-     task: Record<string,unknown>,
-     field: ITaskField,
-     setCollapsed?: ((collapsed: boolean)=> void)
+    task: Record<string, unknown>,
+    field: ITaskField,
+    setCollapsed?: (collapsed: boolean) => void
   ): JSX.Element => {
-    switch(field.valueType){
-      case "date":
+    switch (field.valueType) {
+      case 'date':
         return (
-          <>
+          <Box className={'gridCell'}>
             {dateFormatter(task[field.name] as Moment)}
-          </>
-        );
-      case "Status":
-        return (
-          <Box className={`${(task[field.name] as string).toLowerCase()}`}>
-            {task[field.name] as string}
-            {task.status === Status.Failed && (
-              <CollapseButton
-                onClick={(collapsed: boolean): void => {
-                  setCollapsed?.(!collapsed);
-                }}
-              />
-            )}
           </Box>
         );
+        break;
+      case 'Status':
+        return statusPresentor(task);
+        break;
       default:
-        return (
-          <>
-            {task[field.name] as string}
-          </>
-        );
+        return <Box className={'gridCell'}>{task[field.name] as string} </Box>;
+        break;
     }
-
   };
-  const getColumnStyle = (field: ITaskField): Record<string,string> => {
-    switch(field.name){
-      case 'attempts':
-        return {width: '25%'};
-      case 'status':
-        return {width: '29%'};
-      case 'created':
-          return {width: '15%'};
-      default:
-        return {};
-    }
-  }
-
-interface TaskRowProps{
-  key: string;
-  task: Record<string,unknown>;
-}
-
-const TaskRow: React.FC<TaskRowProps> = ({task, key}) => {
-
-  const [collapsed, setCollapsed] = useState(true)
-
-  return (
-    <>
-      <tr key={key} className={'taskRow'}>
-          {
-            taskFileds.map(field => (
-              <td key={`${key}_${field.name}`} style={{verticalAlign: 'baseline'}}>
-                <Box style={{display: 'flex', flexDirection:'row'}}>
-                  {getValuePresentor(task, field, setCollapsed as ((collapsed?: boolean)=> void))}
-                </Box>
-              </td>
-            ))
-          }
-        
-      </tr>
-      <tr>
-        <FailReasonArea show={!collapsed} failReason={task.reason as string} key={`${key}_failReason`}/>
-      </tr>
-    </>
-  )
-
-}
-
 
   return (
     <Box className="tableFixHead">
-      <JobDetailsHeader />
-      <table className="tasksTable">
-        <thead>
-          <tr>
-            {taskFileds.map((field) => (
-              <th
-                key={`${keyPrefix}_${field.name}`}
-                className="tasksTableColumnHeader"
-                style={getColumnStyle(field)}
-              >
-                <FormattedMessage id={field.label} />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tasksData.map((task) => (
-            <TaskRow key={`${keyPrefix}_${task.id as string}`} task={task} />
-          ))}
-        </tbody>
-      </table>
+      <JobDetailsHeader job={props.data as JobModelType} />
+      <Box className={'gridContainer'}>
+        {taskFileds.map((field) => (
+          <Typography
+            key={`${keyPrefix}_${field.name}`}
+            tag="div"
+            className="column-label"
+            style={{ fontWeight: 'bold' }}
+          >
+            <FormattedMessage id={field.label} />
+          </Typography>
+        ))}
+        {tasksData.map((task) => {
+          return taskFileds.map((field) => {
+            return getValuePresentor(task, field);
+          });
+        })}
+      </Box>
     </Box>
   );
 };
