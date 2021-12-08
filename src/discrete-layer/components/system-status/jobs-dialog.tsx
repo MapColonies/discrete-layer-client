@@ -25,7 +25,7 @@ import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
 
 import './jobs-dialog.css';
-import { ColDef, ColGroupDef, ValueFormatterParams } from 'ag-grid-community';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 
 const pagination = true;
 const pageSize = 10;
@@ -140,40 +140,15 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     {
       headerName: '',
       width: 40,
-      field: 'type_icon',
-      valueFormatter: (props: ValueFormatterParams): string => {
-        // TODO: Here we should parse Product type enum into icon name / url..
-        // The returned value here will be passed to the cellRenderer via props.value, to render the icon.
-        return props.value as string;
-      },
-      cellRendererFramework: (props: any): ColDef | ColGroupDef => {
-      const styles = {
-        iconContainer: {
-          textAlign: 'center' as const,
-        },
-        typeIcon: {
-          marginTop:'10px',
-          color: 'skyblue',
-        }
-      }
-
-        // TODO: use props.value for the icon source
-        return (
-          <Box style={styles.iconContainer}>
-            <Icon
-              style={styles.typeIcon}
-              icon={{ icon: 'star_rate', size: 'small' }}
-            />
-          </Box>
-        );
-      },
+      field: 'productType',
+      cellRenderer: 'productTypeRenderer'
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'resourceId',
+      field: 'productName',
     },
     {
       headerName: intl.formatMessage({
@@ -285,6 +260,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
       priorityRenderer: PriorityRenderer,
+      productTypeRenderer: ProductTypeRenderer
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
