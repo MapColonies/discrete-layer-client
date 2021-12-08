@@ -254,10 +254,14 @@
   "system-status.job.fields.updated.label": "עודכן",
 
   "system-status.job.status_translation.Pending": "ממתין",
-  "system-status.job.status_translation.InProgress": "בפעולה",
+  "system-status.job.status_translation.InProgress": "בתהליך",
   "system-status.job.status_translation.Completed": "הושלם",
   "system-status.job.status_translation.Failed": "נכשל",
   
+  "system-status.job-details.header.internalId": "מזהה פנימי",
+  "system-status.job-details.header.extetnalId": "מזהה חיצוני",
+  "system-status.job-details.header.producerName": "שם יצרן",
+
   "system-status.task.fields.type.label": "מטלה",
   "system-status.task.fields.status.label": "סטטוס",
   "system-status.task.fields.attempts.label": "ניסיונות",
