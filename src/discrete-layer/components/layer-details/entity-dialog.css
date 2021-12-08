@@ -1,6 +1,6 @@
 @media (min-width: 800px) {
   #entityDialog .mdc-dialog .mdc-dialog__surface {
-    max-width: 728px;
+    max-width: 730px;
   }
 } 
 
@@ -36,7 +36,6 @@ body[dir='rtl'] #entityDialog .closeIcon {
   display: flex;
   justify-content: flex-start;
   gap: 20px;
-  margin: 20px;
   height: 60px;
 }
 

@@ -6,7 +6,7 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
-import { LinkModelSelector } from "./LinkModel.base"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { SensorTypeEnumType } from "./SensorTypeEnum"
@@ -28,6 +28,7 @@ export const Layer3DRecordModelBase = ModelBase
     productType: types.union(types.undefined, ProductTypeEnumType),
     description: types.union(types.undefined, types.null, types.string),
     creationDate: types.union(types.undefined, types.null, types.frozen()),
+    updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.null, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.null, types.frozen()),
     minResolutionMeter: types.union(types.undefined, types.null, types.number),
@@ -38,7 +39,7 @@ export const Layer3DRecordModelBase = ModelBase
     accuracySE90: types.union(types.undefined, types.null, types.number),
     relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
     visualAccuracy: types.union(types.undefined, types.null, types.number),
-    sensors: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
+    sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     footprint: types.union(types.undefined, types.null, types.frozen()),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
     heightRangeTo: types.union(types.undefined, types.null, types.number),
@@ -76,6 +77,7 @@ export class Layer3DRecordModelSelector extends QueryBuilder {
   get productType() { return this.__attr(`productType`) }
   get description() { return this.__attr(`description`) }
   get creationDate() { return this.__attr(`creationDate`) }
+  get updateDate() { return this.__attr(`updateDate`) }
   get sourceDateStart() { return this.__attr(`sourceDateStart`) }
   get sourceDateEnd() { return this.__attr(`sourceDateEnd`) }
   get minResolutionMeter() { return this.__attr(`minResolutionMeter`) }
@@ -86,7 +88,7 @@ export class Layer3DRecordModelSelector extends QueryBuilder {
   get accuracySE90() { return this.__attr(`accuracySE90`) }
   get relativeAccuracyLEP90() { return this.__attr(`relativeAccuracyLEP90`) }
   get visualAccuracy() { return this.__attr(`visualAccuracy`) }
-  get sensors() { return this.__attr(`sensors`) }
+  get sensorType() { return this.__attr(`sensorType`) }
   get footprint() { return this.__attr(`footprint`) }
   get heightRangeFrom() { return this.__attr(`heightRangeFrom`) }
   get heightRangeTo() { return this.__attr(`heightRangeTo`) }
@@ -113,4 +115,4 @@ export function selectFromLayer3DRecord() {
   return new Layer3DRecordModelSelector()
 }
 
-export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().type.productId.productName.productVersion.productType.description.creationDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.nominalResolution.maxAccuracyCE90.absoluteAccuracyLEP90.accuracySE90.relativeAccuracyLEP90.visualAccuracy.sensors.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.srsOrigin.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.minFlightAlt.maxFlightAlt.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords
+export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.nominalResolution.maxAccuracyCE90.absoluteAccuracyLEP90.accuracySE90.relativeAccuracyLEP90.visualAccuracy.sensorType.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.srsOrigin.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.minFlightAlt.maxFlightAlt.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
