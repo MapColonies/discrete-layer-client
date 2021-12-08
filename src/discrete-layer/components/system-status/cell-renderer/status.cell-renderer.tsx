@@ -2,7 +2,7 @@ import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Box } from '@map-colonies/react-components';
 import { Typography } from '@map-colonies/react-core';
-import { JobModelType } from '../../../models';
+import { JobModelType, Status } from '../../../models';
 
 import './status.cell-renderer.css';
 import { useIntl } from 'react-intl';
@@ -25,14 +25,13 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   };
 
   const getProgressComponent = (): JSX.Element => {
-
-    const statusText = intl.formatMessage({ id: `system-status.job.status_translation.${status as string}`});
-
+    const statusText = intl.formatMessage({
+      id: `system-status.job.status_translation.${status as string}`,
+    });
 
     return (
       <Box>
         {`${statusText}  ${getProgress()}`}
-        {/* {statusText}&nbsp;&nbsp;{getProgress()} */}
       </Box>
     );
   };
@@ -41,47 +40,63 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
 
   const calcStatusWidth = (statusCount: StatusCountType): number => {
     const { taskCount } = jobData;
-    return (taskCount as number) > NO_DATA
-      ? ((statusCount as number) / (taskCount as number)) * STATUS_BAR_WIDTH
-      : NO_WIDTH;
+
+    if(taskCount === NO_DATA) return NO_WIDTH;
+
+    return ((statusCount as number) / (taskCount as number)) * STATUS_BAR_WIDTH;
   };
 
-  const getProgressbarSections = () => {
-    const { completedTasks, inProgressTasks, failedTasks } = jobData;
+  const getSectionComponent = (
+    statusType: Status,
+    width: number
+  ): JSX.Element | null => {
+    if (width === NO_WIDTH) return null;
+
+    const className = `${statusType}Area`;
+
+    return (
+      <Box
+        className={className}
+        style={{
+          width: `${width}px`,
+          height: `${STATUS_BAR_HEIGHT}px`,
+        }}
+      />
+    );
+  };
+
+  const getProgressbarSections = (): JSX.Element | null => {
+    const { completedTasks, inProgressTasks, failedTasks, status} = jobData;
+
+    switch(status){
+      case Status.Completed:
+        return getSectionComponent(Status.Completed, STATUS_BAR_WIDTH);
+        break;
+      case Status.Failed:
+        return getSectionComponent(Status.Failed, STATUS_BAR_WIDTH);
+        break;
+      default: 
+        // Do nothing
+        break;
+    }
+
+
     const completedWidth = calcStatusWidth(completedTasks);
     const failedWidth = calcStatusWidth(failedTasks);
     const inProgressWidth = calcStatusWidth(inProgressTasks);
 
     return (
       <Box className={'progressSectionsContainer'}>
-        <Box
-          className={'completedArea'}
-          style={{
-            width: `${completedWidth}px`,
-            height: `${STATUS_BAR_HEIGHT}px`,
-          }}
-        />
-        <Box
-          className={'failedArea'}
-          style={{
-            width: `${failedWidth}px`,
-            height: `${STATUS_BAR_HEIGHT}px`,
-          }}
-        />
-        <Box
-          className={'inProgressArea'}
-          style={{
-            width: `${inProgressWidth}px`,
-            height: `${STATUS_BAR_HEIGHT}px`,
-          }}
-        />
+        {getSectionComponent(Status.Completed, completedWidth)}
+        {getSectionComponent(Status.Failed, failedWidth)}
+        {getSectionComponent(Status.InProgress, inProgressWidth)}
       </Box>
     );
   };
 
   return (
     <Box className={'statusBarContainer'}>
-      <Typography style={{fontSize: '12px'}} tag="p" className="statusText">
+      <Typography style={{ fontSize: '12px' }} tag="p" className="statusText">
         {getProgressComponent()}
       </Typography>
       <Box

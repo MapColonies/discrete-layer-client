@@ -8,22 +8,29 @@
 
 .completed{
   color: var(--mdc-theme-gc-success);
+
 }
 
 .failed{
   color: var(--mdc-theme-gc-error-medium);
+
 }
 
-.completedArea {
+.CompletedArea {
   background: var(--mdc-theme-gc-success);
+  opacity: 0.85;
 }
 
-.failedArea {
+.FailedArea {
   background: var(--mdc-theme-gc-error-medium);
+  opacity: 0.85;
+
 }
 
-.inProgressArea {
+.InProgressArea {
   background: var(--mdc-theme-gc-warning-medium);
+  opacity: 0.85;
+
 }
 
 .progressSectionsContainer {
