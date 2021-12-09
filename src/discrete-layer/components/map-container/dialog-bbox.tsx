@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import * as turf from '@turf/helpers';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -18,6 +19,8 @@ import { FieldLabelComponent } from '../../../common/components/form/field-label
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
 import './dialog-bbox.css';
+
+const NONE = 0;
 
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,13 +93,24 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
   const { isOpen, onSetOpen, onPolygonUpdate } = props;
   const classes = useStyle();
   const intl = useIntl();
+  const coordinates = {
+    topRightLat: 0,
+    topRightLon: 0,
+    bottomLeftLat: 0,
+    bottomLeftLon: 0,
+  };
+  const yupSchema: Record<string, any> = {};
+  Object.keys(coordinates).forEach(fieldName => {
+    yupSchema[fieldName] = Yup.number().required(
+      intl.formatMessage({ id: 'validation-general.required' })
+    );
+  });
+
   const formik = useFormik({
-    initialValues: {
-      bottomLeftLat: 0,
-      bottomLeftLon: 0,
-      topRightLat: 0,
-      topRightLon: 0,
-    },
+    initialValues: coordinates,
+    validationSchema: Yup.object({
+      ...yupSchema
+    }),
     onSubmit: (values) => {
       const err = validate(values, intl);
       if (!err.latDistance && !err.lonDistance) {
@@ -148,6 +162,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
   const handleClose = (isOpened: boolean): void => {
     onSetOpen(isOpened);
   };
+
   return (
     <Box id="bboxDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -208,18 +223,18 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
             </Box>
             <Box className="buttons noMargin">
-              {!!formErrors.latDistance || !!formErrors.lonDistance ? (
+              {Object.keys(formik.errors).length === NONE && (!!formErrors.latDistance || !!formErrors.lonDistance) ? (
                 <div id="errorContainer" className={classes.errorContainer}>
                   {`${intl.formatMessage({ id: 'general.error.text' })}: ${
                     formErrors.latDistance
                   } ${formErrors.lonDistance}`}
                 </div>
               ) : null}
-              <Button raised type="submit">
-                <FormattedMessage id="general.ok-btn.text" />
+              <Button raised type="submit" disabled={Object.keys(formik.errors).length > NONE}>
+                <FormattedMessage id="general.ok-btn.text"/>
               </Button>
-              <Button type="button" onClick={(): void => {handleClose(false);}}>
-                <FormattedMessage id="general.cancel-btn.text" />
+              <Button type="button" onClick={ (): void => { handleClose(false); } }>
+                <FormattedMessage id="general.cancel-btn.text"/>
               </Button>
             </Box>
           </form>

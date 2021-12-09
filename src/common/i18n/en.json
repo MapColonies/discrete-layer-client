@@ -61,8 +61,8 @@
   "custom-bbox.dialog-field.top_right_lon.label": "Top Right Lon",
   "custom-bbox.dialog-field.bottom_left_lat.label": "Bottom Left Lat",
   "custom-bbox.dialog-field.bottom_left_lon.label": "Bottom Left Lon",
-  "custom-bbox.form-error.x-distance.text": "X distance is exceeded the limit",
-  "custom-bbox.form-error.y-distance.text": "Y distance is exceeded the limit",
+  "custom-bbox.form-error.x-distance.text": "X distance exceeds the limit",
+  "custom-bbox.form-error.y-distance.text": "Y distance exceeds the limit",
 
   "filters.title": "Filters",
   "filters.sub-title": " ",
