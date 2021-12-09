@@ -10,7 +10,7 @@ import { useIntl } from 'react-intl';
 const NO_DATA = 0;
 const NO_WIDTH = 0;
 
-const STATUS_BAR_WIDTH = 190;
+const STATUS_BAR_WIDTH = 134;
 const STATUS_BAR_HEIGHT = 18;
 
 export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {

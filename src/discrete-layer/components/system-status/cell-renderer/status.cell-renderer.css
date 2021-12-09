@@ -40,7 +40,7 @@
 
 .statusBarContainer {
   display: flex;
-  width: 190px;
+  width: 134px;
   height: 38px;
   align-items: center;
   flex-direction: column-reverse;
