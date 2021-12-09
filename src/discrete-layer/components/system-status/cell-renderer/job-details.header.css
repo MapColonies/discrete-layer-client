@@ -1,50 +1,80 @@
 .jobDetailsHeaderContainer {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    background-color: var(--mdc-theme-alternative-surface);
-    margin:0 auto;
-    padding-top: 4px;
-
+  display: flex;
+  flex-direction: column;
+  width: 98%;
+  background-color: var(--mdc-theme-alternative-surface);
+  padding-top: 4px;
 }
 
-.jobInfoTop{
-    background-color: var(--mdc-theme-gc-selection-background);
-    width:100%;
-    display: flex;
-    flex-direction: column;
+.jobInfoTop {
+  background-color: var(--mdc-theme-gc-selection-background);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+}
+.detailsRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.taskCountsRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.counterField {
+    display:flex;
     align-items: center;
-    padding: 10px 0;
-}
-.detailsRow{
-    display: flex;
-    flex-direction: row;
     justify-content: center;
-    width:55%;
-    
 }
 
-.taskCountsRow{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    width:30%;
+.countLabel {
+    color: var(--mdc-theme-text-icon-on-dark);
 }
-.failReasonBottom{
-    display: flex;
-    justify-content: center;
+
+.countValue {
+  margin: 4px 10px;
+  color: var(--mdc-theme-text-primary-on-dark);
+}
+
+.failReasonBottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 1.2em;
+  /* border-bottom: 1px solid var(--mdc-theme-gc-selection-background); */
+}
+
+.failReasonText {
+  max-width: 35ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.detailsField{
+    max-width: 35ch;
+    margin: 0 12px;
+    display:flex;
     align-items: center;
-    padding: 10px 0;
-    font-weight: bold;
-    font-size: 1.2em;
-    border-bottom: 1px solid var(--mdc-theme-gc-selection-background) ;
+    justify-content: center;
 }
 
-.detailText{
-    max-width:30ch;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    margin: 4px 12px;
-    
+.detailLabel {
+    color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.detailValue {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 4px 12px;
+  color: var(--mdc-theme-text-primary-on-dark);
 }

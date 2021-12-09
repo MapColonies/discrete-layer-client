@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@map-colonies/react-components';
 import './job-details.header.css';
 import { JobModelType, Status } from '../../../models';
-import { IconButton, Typography } from '@map-colonies/react-core';
+import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -44,60 +44,73 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
 
   const dataToPresent = {
     detailsRow: {
-      internalId: `${getDetailsTranslation('internalId')}: ${
-        internalId as string
-      }`,
-      externalId: `${getDetailsTranslation('extetnalId')}: ${
-        resourceId as string
-      }`,
-      producerName: `${getDetailsTranslation('producerName')}: ${
-        producerName as string
-      }`,
+      internalId: {
+        label: getDetailsTranslation('internalId'),
+        value: internalId as string,
+      },
+      externalId: {
+        label: getDetailsTranslation('extetnalId'),
+        value: resourceId as string,
+      },
+      producerName: {
+        label: getDetailsTranslation('producerName'),
+        value: producerName as string,
+      },
     },
     taskCountRow: {
-      completed: `${getStatusTranslation(Status.Completed)}: ${
-        (completedTasks as unknown) as string
-      }`,
-      failed: `${getStatusTranslation(Status.Failed)}: ${
-        (failedTasks as unknown) as string
-      }`,
-      inProgress: `${getStatusTranslation(Status.InProgress)}: ${
-        (inProgressTasks as unknown) as string
-      }`,
-      pending: `${getStatusTranslation(Status.Pending)}: ${
-        (pendingTasks as unknown) as string
-      }`,
+      completed: {
+        label: getStatusTranslation(Status.Completed),
+        value: (completedTasks as unknown) as string,
+      },
+      failed: {
+        label: getStatusTranslation(Status.Failed),
+        value: (failedTasks as unknown) as string,
+      },
+      inProgress: {
+        label: getStatusTranslation(Status.InProgress),
+        value: (inProgressTasks as unknown) as string,
+      },
+      pending: {
+        label: getStatusTranslation(Status.Pending),
+        value: (pendingTasks as unknown) as string,
+      },
     },
     failReason: {
-      reason: status === Status.Failed ? reason : 'null',
+      reason: status === Status.Failed ? reason : null,
     },
   };
 
-  const renderCopyBtn = (text: string, iconSize?: number): JSX.Element => {
-    const DEFAULT_ICON_SIZE = 20;
-    iconSize = iconSize ?? DEFAULT_ICON_SIZE;
-
+  const DEFAULT_ICON_SIZE = 20;
+  const renderCopyBtn = (
+    text: string,
+    iconSize = DEFAULT_ICON_SIZE
+  ): JSX.Element => {
     return (
-      <CopyToClipboard text={text}>
-        <IconButton
-          style={{ fontSize: `${iconSize}px` }}
-          className="mc-icon-Copy"
-        />
-      </CopyToClipboard>
+      <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+        <CopyToClipboard text={text}>
+          <IconButton
+            style={{ fontSize: `${iconSize}px` }}
+            className="mc-icon-Copy"
+          />
+        </CopyToClipboard>
+      </Tooltip>
     );
   };
 
   const generateDetailsRow = (): JSX.Element => {
     return (
       <>
-        {Object.values(dataToPresent.detailsRow).map((val) => {
+        {Object.values(dataToPresent.detailsRow).map(({ label, value }) => {
           return (
-            <>
-              <Typography tag="p" className="detailText">
-                {val}
+            <Box className={'detailsField'}>
+              <Typography tag="p" className="detailLabel">
+                {`${label}:`}
               </Typography>
-              {renderCopyBtn(val)}
-            </>
+              <Typography tag="p" className="detailValue">
+                {value}
+              </Typography>
+              {renderCopyBtn(value)}
+            </Box>
           );
         })}
       </>
@@ -107,11 +120,16 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
   const generateTaskCounts = (): JSX.Element => {
     return (
       <>
-        {Object.values(dataToPresent.taskCountRow).map((val) => {
+        {Object.values(dataToPresent.taskCountRow).map(({ label, value }) => {
           return (
-            <Typography tag="p" className="countText">
-              {val}
-            </Typography>
+            <Box className={'counterField'}>
+              <Typography tag="p" className="countLabel">
+                {`${label}:`}
+              </Typography>
+              <Typography tag="p" className="countValue">
+                {value}
+              </Typography>
+            </Box>
           );
         })}
       </>
@@ -123,7 +141,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
     if (!failReason) return null;
     return (
       <>
-        <Typography tag="p" className="countText">
+        <Typography tag="p" className="failReasonText">
           {failReason}
         </Typography>
         {renderCopyBtn(failReason)}
