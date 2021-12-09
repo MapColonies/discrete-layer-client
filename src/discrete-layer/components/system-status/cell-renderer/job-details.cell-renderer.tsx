@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Moment } from 'moment';
 import { Box } from '@map-colonies/react-components';
 import { dateFormatter } from '../../../../common/helpers/type-formatters';
@@ -8,13 +8,9 @@ import { JobModelType, Status } from '../../../models';
 
 import './job-details.cell-renderer.css';
 import { JobDetailsHeader } from './job-details.header';
-import {
-  Icon,
-  IconButton,
-  Tooltip,
-  Typography,
-} from '@map-colonies/react-core';
+import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { truncate } from 'lodash';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -34,11 +30,6 @@ const taskFileds: ITaskField[] = [
     valueType: 'string',
   },
   {
-    label: 'system-status.task.fields.status.label',
-    name: 'status',
-    valueType: 'Status',
-  },
-  {
     label: 'system-status.task.fields.created.label',
     name: 'created',
     valueType: 'date',
@@ -48,9 +39,15 @@ const taskFileds: ITaskField[] = [
     name: 'updated',
     valueType: 'date',
   },
+  {
+    label: 'system-status.task.fields.status.label',
+    name: 'status',
+    valueType: 'Status',
+  },
 ];
 
 export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
+  const intl = useIntl();
   const tasksData = (props.data as JobModelType).tasks as Record<
     string,
     unknown
@@ -62,7 +59,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
       return (
         <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
           {task.status as string}
-          <Tooltip content={task.reason as string}>
+          <Tooltip content={truncate(task.reason as string, { length: 35 })}>
             <IconButton
               style={{
                 fontSize: '20px',
@@ -72,12 +69,14 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
               label="failReasonIcon"
             />
           </Tooltip>
-          <CopyToClipboard text={task.reason as string}>
-            <IconButton
-              style={{ fontSize: '20px'}}
-              className="mc-icon-Copy"
-            />
-          </CopyToClipboard>
+          <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+            <CopyToClipboard text={task.reason as string}>
+              <IconButton
+                style={{ fontSize: '20px' }}
+                className="mc-icon-Copy"
+              />
+            </CopyToClipboard>
+          </Tooltip>
         </Box>
       );
     }
@@ -97,7 +96,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
       case 'date':
         return (
           <Box className={'gridCell'}>
-            {dateFormatter(task[field.name] as Moment)}
+            {dateFormatter(task[field.name] as Moment, true)}
           </Box>
         );
         break;
@@ -111,7 +110,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
   };
 
   return (
-    <Box className="tableFixHead">
+    <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
       <Box className={'gridContainer'}>
         {taskFileds.map((field) => (

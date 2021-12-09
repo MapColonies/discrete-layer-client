@@ -168,14 +168,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     },
     {
       headerName:  intl.formatMessage({
-        id: 'system-status.job.fields.status.label',
-      }),
-      width: 160,
-      field: 'status',
-      cellRenderer: 'statusRenderer',
-    },
-    {
-      headerName:  intl.formatMessage({
         id: 'system-status.job.fields.priority.label',
       }),
       width: 100,
@@ -223,6 +215,14 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+    },
+    {
+      headerName:  intl.formatMessage({
+        id: 'system-status.job.fields.status.label',
+      }),
+      width: 160,
+      field: 'status',
+      cellRenderer: 'statusRenderer',
     },
     // {
     //   headerName: 'actions',
@@ -302,7 +302,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             rowData={gridRowData}
             style={{
               height: 'calc(100% - 64px)',
-              width: 'calc(100% - 8px)'
+              width: 'calc(100% - 8px)',
+              padding: '12px'
             }}
           />
           <Box className="buttons">
