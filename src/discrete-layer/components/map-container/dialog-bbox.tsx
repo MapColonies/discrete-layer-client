@@ -15,6 +15,7 @@ import {
 } from '@map-colonies/react-core';
 import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
@@ -101,8 +102,12 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
   };
   const yupSchema: Record<string, any> = {};
   Object.keys(coordinates).forEach(fieldName => {
+    const fieldLabel = `custom-bbox.dialog-field.${fieldName}.label`;
     yupSchema[fieldName] = Yup.number().required(
-      intl.formatMessage({ id: 'validation-general.required' })
+      intl.formatMessage(
+        { id: 'validation-general.required' },
+        { fieldName: `<strong>${intl.formatMessage({ id: fieldLabel })}</strong>` }
+      )
     );
   });
 
@@ -163,6 +168,14 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     onSetOpen(isOpened);
   };
 
+  const getYupErrors = (): Record<string, string[]> => {
+    const validationResults: Record<string, string[]> = {};
+    Object.entries(formik.errors).forEach(([key, value]) => {
+      validationResults[key] = [ value as string ];
+    });
+    return validationResults;
+  };
+
   return (
     <Box id="bboxDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -178,7 +191,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           <form onSubmit={formik.handleSubmit} className="dialogBboxForm" noValidate>
             <Box className="dialogBboxRow">
               <Box className="dialogBboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.topRightLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLat"
                   type="number"
@@ -188,7 +201,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                 />
               </Box>
               <Box className="dialogBboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.top_right_lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.topRightLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLon"
                   type="number"
@@ -201,7 +214,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
             </Box>
             <Box className="dialogBboxRow">
               <Box className="dialogBboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLat"
                   type="number"
@@ -211,7 +224,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                 />
               </Box>
               <Box className="dialogBboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottom_left_lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLon"
                   type="number"
@@ -222,20 +235,29 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               </Box>
               <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
             </Box>
-            <Box className="buttons noMargin">
-              {Object.keys(formik.errors).length === NONE && (!!formErrors.latDistance || !!formErrors.lonDistance) ? (
-                <div id="errorContainer" className={classes.errorContainer}>
-                  {`${intl.formatMessage({ id: 'general.error.text' })}: ${
-                    formErrors.latDistance
-                  } ${formErrors.lonDistance}`}
-                </div>
-              ) : null}
-              <Button raised type="submit" disabled={Object.keys(formik.errors).length > NONE}>
-                <FormattedMessage id="general.ok-btn.text"/>
-              </Button>
-              <Button type="button" onClick={ (): void => { handleClose(false); } }>
-                <FormattedMessage id="general.cancel-btn.text"/>
-              </Button>
+            <Box className="footer">
+              <Box className="messages">
+                {
+                  Object.keys(formik.errors).length > NONE && 
+                  <ValidationsError errors={getYupErrors()}/>
+                }
+                {
+                  Object.keys(formik.errors).length === NONE && (!!formErrors.latDistance || !!formErrors.lonDistance) &&
+                  <div id="errorContainer" className={classes.errorContainer}>
+                    {`${intl.formatMessage({ id: 'general.error.text' })}: ${
+                      formErrors.latDistance
+                    } ${formErrors.lonDistance}`}
+                  </div>
+                }
+              </Box>
+              <Box className="buttons">
+                <Button raised type="submit" disabled={Object.keys(formik.errors).length > NONE}>
+                  <FormattedMessage id="general.ok-btn.text"/>
+                </Button>
+                <Button type="button" onClick={ (): void => { handleClose(false); } }>
+                  <FormattedMessage id="general.cancel-btn.text"/>
+                </Button>
+              </Box>
             </Box>
           </form>
         </DialogContent>

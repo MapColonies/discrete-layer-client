@@ -21,13 +21,26 @@ body[dir='rtl'] #bboxDialog .closeIcon {
   margin: 0 8px;
 }
 
-#bboxDialog .noMargin {
-  margin: 0 !important;
+#bboxDialog .footer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 60px;
 }
 
 #bboxDialog .buttons {
   display: flex;
-  justify-content: flex-end;
   gap: 20px;
-  margin: 20px;
+  align-items: center;
+  margin-left: auto;
+}
+
+body[dir='rtl'] #bboxDialog .buttons {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#bboxDialog .messages {
+  display: flex;
+  flex-direction: column;
 }
