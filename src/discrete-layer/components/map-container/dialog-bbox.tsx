@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import * as turf from '@turf/helpers';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Dialog,
   DialogTitle,
@@ -23,22 +22,11 @@ import './dialog-bbox.css';
 
 const NONE = 0;
 
-const useStyle = makeStyles((theme: Theme) =>
-  createStyles({
-    errorContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      marginRight: 'auto',
-      color: theme.palette.error.main,
-    },
-  })
-);
-
 interface BBoxCorners {
-  bottomLeftLat: number;
-  bottomLeftLon: number;
   topRightLat: number;
   topRightLon: number;
+  bottomLeftLat: number;
+  bottomLeftLon: number;
 }
 
 interface BBoxCornersError {
@@ -92,16 +80,15 @@ interface DialogBBoxProps {
 
 export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
   const { isOpen, onSetOpen, onPolygonUpdate } = props;
-  const classes = useStyle();
   const intl = useIntl();
-  const coordinates = {
+  const corners = {
     topRightLat: 0,
     topRightLon: 0,
     bottomLeftLat: 0,
     bottomLeftLon: 0,
   };
   const yupSchema: Record<string, any> = {};
-  Object.keys(coordinates).forEach(fieldName => {
+  Object.keys(corners).forEach(fieldName => {
     const fieldLabel = `custom-bbox.dialog-field.${fieldName}.label`;
     yupSchema[fieldName] = Yup.number().required(
       intl.formatMessage(
@@ -112,49 +99,53 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
   });
 
   const formik = useFormik({
-    initialValues: coordinates,
+    initialValues: corners,
     validationSchema: Yup.object({
       ...yupSchema
     }),
     onSubmit: (values) => {
-      const err = validate(values, intl);
-      if (!err.latDistance && !err.lonDistance) {
-        onPolygonUpdate({
-          primitive: undefined,
-          type: DrawType.BOX,
-          geojson: {
-            type : 'FeatureCollection',
-            features: [
-              { 
-                type : 'Feature', 
-                properties : {  
-                  type : BboxCorner.TOP_RIGHT,
-                }, 
-                geometry : { 
-                  type : 'Point', 
-                  coordinates : [ values.topRightLon, values.topRightLat ] 
+      const errors = validate(values, intl);
+      if (!errors.latDistance && !errors.lonDistance) {
+        try {
+          onPolygonUpdate({
+            primitive: undefined,
+            type: DrawType.BOX,
+            geojson: {
+              type : 'FeatureCollection',
+              features: [
+                { 
+                  type : 'Feature', 
+                  properties : {  
+                    type : BboxCorner.TOP_RIGHT,
+                  }, 
+                  geometry : { 
+                    type : 'Point', 
+                    coordinates : [ values.topRightLon, values.topRightLat ] 
+                  }
+                },
+                { 
+                  type : 'Feature', 
+                  properties : {  
+                    type : BboxCorner.BOTTOM_LEFT
+                  }, 
+                  geometry : { 
+                    type : 'Point', 
+                    coordinates : [ values.bottomLeftLon, values.bottomLeftLat ]  
+                  }
                 }
-              },
-              { 
-                type : 'Feature', 
-                properties : {  
-                  type : BboxCorner.BOTTOM_LEFT
-                }, 
-                geometry : { 
-                  type : 'Point', 
-                  coordinates : [ values.bottomLeftLon, values.bottomLeftLat ]  
-                }
-              }
-            ]
-          }
-        });
-        handleClose(false);
-        setFormErrors({
-          latDistance: '',
-          lonDistance: '',
-        });
+              ]
+            }
+          });
+          handleClose(false);
+          setFormErrors({
+            latDistance: '',
+            lonDistance: '',
+          });
+        } catch(e) {
+          console.error(e);
+        }
       } else {
-        setFormErrors(err);
+        setFormErrors(errors);
       }
     },
   });
@@ -168,9 +159,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     onSetOpen(isOpened);
   };
 
-  const getYupErrors = (): Record<string, string[]> => {
+  const getValidationErrors = (errors: Record<string, any>): Record<string, string[]> => {
     const validationResults: Record<string, string[]> = {};
-    Object.entries(formik.errors).forEach(([key, value]) => {
+    Object.entries(errors).forEach(([key, value]) => {
       validationResults[key] = [ value as string ];
     });
     return validationResults;
@@ -239,15 +230,11 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               <Box className="messages">
                 {
                   Object.keys(formik.errors).length > NONE && 
-                  <ValidationsError errors={getYupErrors()}/>
+                  <ValidationsError errors={getValidationErrors(formik.errors)}/>
                 }
                 {
                   Object.keys(formik.errors).length === NONE && (!!formErrors.latDistance || !!formErrors.lonDistance) &&
-                  <div id="errorContainer" className={classes.errorContainer}>
-                    {`${intl.formatMessage({ id: 'general.error.text' })}: ${
-                      formErrors.latDistance
-                    } ${formErrors.lonDistance}`}
-                  </div>
+                  <ValidationsError errors={getValidationErrors(formErrors)}/>
                 }
               </Box>
               <Box className="buttons">
