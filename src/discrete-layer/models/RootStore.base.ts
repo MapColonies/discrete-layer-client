@@ -106,16 +106,16 @@ export type IngestionRasterData = {
 }
 export type LayerRasterRecordInput = {
   type?: RecordType
-  classification?: string
+  classification: string
   productName: string
   description?: string
-  srsId?: string
+  srsId: string
   producerName?: string
   creationDate?: any
   ingestionDate?: any
   updateDate?: any
-  sourceDateStart?: any
-  sourceDateEnd?: any
+  sourceDateStart: any
+  sourceDateEnd: any
   accuracyCE90?: number
   sensorType?: SensorType[]
   region?: string
@@ -123,12 +123,12 @@ export type LayerRasterRecordInput = {
   productVersion?: string
   productType: ProductType
   productSubType?: string
-  srsName?: string
+  srsName: string
   resolution?: number
   maxResolutionMeter?: number
   rms?: number
   scale?: string
-  footprint?: any
+  footprint: any
   layerPolygonParts?: any
   includedInBests?: string[]
   productBoundingBox?: string
@@ -158,25 +158,25 @@ export type Layer3DRecordInput = {
   description?: string
   creationDate?: any
   updateDate?: any
-  sourceDateStart?: any
-  sourceDateEnd?: any
+  sourceDateStart: any
+  sourceDateEnd: any
   minResolutionMeter?: number
   maxResolutionMeter?: number
   nominalResolution?: number
   maxAccuracyCE90?: number
-  absoluteAccuracyLEP90?: number
+  absoluteAccuracyLEP90: number
   accuracySE90?: number
   relativeAccuracyLEP90?: number
   visualAccuracy?: number
   sensorType?: SensorType[]
-  footprint?: any
+  footprint: any
   heightRangeFrom?: number
   heightRangeTo?: number
-  srsId?: string
-  srsName?: string
+  srsId: string
+  srsName: string
   srsOrigin?: string
   region?: string
-  classification?: string
+  classification: string
   productionSystem?: string
   productionSystemVer?: string
   producerName?: string
