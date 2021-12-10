@@ -105,24 +105,32 @@ exports[`DialogBBox component renders correctly 1`] = `
           />
         </Component>
         <Component
-          className="buttons noMargin"
+          className="footer"
         >
-          <withRipple(Function)
-            raised={true}
-            type="submit"
+          <Component
+            className="messages"
+          />
+          <Component
+            className="buttons"
           >
-            <FormattedMessage
-              id="general.ok-btn.text"
-            />
-          </withRipple(Function)>
-          <withRipple(Function)
-            onClick={[Function]}
-            type="button"
-          >
-            <FormattedMessage
-              id="general.cancel-btn.text"
-            />
-          </withRipple(Function)>
+            <withRipple(Function)
+              disabled={false}
+              raised={true}
+              type="submit"
+            >
+              <FormattedMessage
+                id="general.ok-btn.text"
+              />
+            </withRipple(Function)>
+            <withRipple(Function)
+              onClick={[Function]}
+              type="button"
+            >
+              <FormattedMessage
+                id="general.cancel-btn.text"
+              />
+            </withRipple(Function)>
+          </Component>
         </Component>
       </form>
     </Function>
