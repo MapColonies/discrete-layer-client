@@ -29,11 +29,13 @@ export const ProductTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (
     RASTER_VECTOR,
     RASTER_VECTOR_BEST,
     VECTOR_BEST,
+    PHOTO_REALISTIC_3D,
+    /*
     DTM,
     DSM,
     QUANTIZED_MESH,
-    PHOTO_REALISTIC_3D,
     POINT_CLOUD,
+    */
   } = ProductType;
 
   interface ProductTypeIconsAndValues {

@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogTitle, Icon, IconButton } from '@map-colonies/react-core';
+import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { 
