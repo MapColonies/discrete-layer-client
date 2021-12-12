@@ -101,7 +101,7 @@ export const Filters: React.FC<FiltersProps> = (
             <form onSubmit={props.handleSubmit}>
               <TextField
                 label={intl.formatMessage({
-                  id: 'custom-bbox.dialog-field.top_right_lat.label',
+                  id: 'custom-bbox.dialog-field.topRightLat.label',
                 })}
                 id="sensor"
                 name="sensor"

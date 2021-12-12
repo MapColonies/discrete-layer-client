@@ -33,7 +33,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.top_right_lat.label"
+              value="custom-bbox.dialog-field.topRightLat.label"
             />
             <Function
               name="topRightLat"
@@ -49,7 +49,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.top_right_lon.label"
+              value="custom-bbox.dialog-field.topRightLon.label"
             />
             <Function
               name="topRightLon"
@@ -73,7 +73,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.bottom_left_lat.label"
+              value="custom-bbox.dialog-field.bottomLeftLat.label"
             />
             <Function
               name="bottomLeftLat"
@@ -89,7 +89,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.bottom_left_lon.label"
+              value="custom-bbox.dialog-field.bottomLeftLon.label"
             />
             <Function
               name="bottomLeftLon"
@@ -105,24 +105,32 @@ exports[`DialogBBox component renders correctly 1`] = `
           />
         </Component>
         <Component
-          className="buttons noMargin"
+          className="footer"
         >
-          <withRipple(Function)
-            raised={true}
-            type="submit"
+          <Component
+            className="messages"
+          />
+          <Component
+            className="buttons"
           >
-            <FormattedMessage
-              id="general.ok-btn.text"
-            />
-          </withRipple(Function)>
-          <withRipple(Function)
-            onClick={[Function]}
-            type="button"
-          >
-            <FormattedMessage
-              id="general.cancel-btn.text"
-            />
-          </withRipple(Function)>
+            <withRipple(Function)
+              disabled={false}
+              raised={true}
+              type="submit"
+            >
+              <FormattedMessage
+                id="general.ok-btn.text"
+              />
+            </withRipple(Function)>
+            <withRipple(Function)
+              onClick={[Function]}
+              type="button"
+            >
+              <FormattedMessage
+                id="general.cancel-btn.text"
+              />
+            </withRipple(Function)>
+          </Component>
         </Component>
       </form>
     </Function>
