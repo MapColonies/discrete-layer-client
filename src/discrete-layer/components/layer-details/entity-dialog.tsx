@@ -10,6 +10,7 @@ import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { usePrevious } from '../../../common/hooks/previous.hook';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import CONFIG from '../../../common/config';
@@ -38,7 +39,6 @@ import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 
 import './entity-dialog.css';
-import { usePrevious } from '../../../common/hooks/previous.hook';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;

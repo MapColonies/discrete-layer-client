@@ -24,26 +24,27 @@ export const BestRecordModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("BestRecord"), "BestRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
-    classification: types.union(types.undefined, types.null, types.string),
+    classification: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
-    srsId: types.union(types.undefined, types.null, types.string),
+    srsId: types.union(types.undefined, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     creationDate: types.union(types.undefined, types.null, types.frozen()),
     ingestionDate: types.union(types.undefined, types.null, types.frozen()),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
-    sourceDateStart: types.union(types.undefined, types.null, types.frozen()),
-    sourceDateEnd: types.union(types.undefined, types.null, types.frozen()),
+    sourceDateStart: types.union(types.undefined, types.frozen()),
+    sourceDateEnd: types.union(types.undefined, types.frozen()),
     accuracyCE90: types.union(types.undefined, types.null, types.number),
     sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     region: types.union(types.undefined, types.null, types.string),
+    productId: types.union(types.undefined, types.string),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
-    srsName: types.union(types.undefined, types.null, types.string),
+    srsName: types.union(types.undefined, types.string),
     resolution: types.union(types.undefined, types.null, types.number),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.string),
-    footprint: types.union(types.undefined, types.null, types.frozen()),
+    footprint: types.union(types.undefined, types.frozen()),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     discretes: types.union(types.undefined, types.null, types.array(types.late((): any => DiscreteOrderModel))),
     //id: types.union(types.undefined, types.string),
@@ -73,6 +74,7 @@ export class BestRecordModelSelector extends QueryBuilder {
   get accuracyCE90() { return this.__attr(`accuracyCE90`) }
   get sensorType() { return this.__attr(`sensorType`) }
   get region() { return this.__attr(`region`) }
+  get productId() { return this.__attr(`productId`) }
   get productVersion() { return this.__attr(`productVersion`) }
   get productType() { return this.__attr(`productType`) }
   get srsName() { return this.__attr(`srsName`) }
@@ -91,4 +93,4 @@ export function selectFromBestRecord() {
   return new BestRecordModelSelector()
 }
 
-export const bestRecordModelPrimitives = selectFromBestRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.insertDate.keywords.id.links(linkModelPrimitives).discretes(discreteOrderModelPrimitives)
+export const bestRecordModelPrimitives = selectFromBestRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productId.productVersion.productType.srsName.resolution.rms.scale.footprint.layerPolygonParts.insertDate.keywords.id.links(linkModelPrimitives).discretes(discreteOrderModelPrimitives)

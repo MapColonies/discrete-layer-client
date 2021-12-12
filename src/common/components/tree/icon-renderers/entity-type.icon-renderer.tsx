@@ -27,6 +27,10 @@ export const EntityTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ da
       icon = 'mc-icon-Bests';
       value = 'BEST';
       break;
+    case 'LayerDEMRecord':
+      icon = 'mc-icon-Map-Terrain';
+      value = 'DEM';
+      break;
     default:
       icon = '';
   }

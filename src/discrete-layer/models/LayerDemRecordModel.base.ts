@@ -5,52 +5,60 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { DataTypeEnumType } from "./DataTypeEnum"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { NoDataValueEnumType } from "./NoDataValueEnum"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { SensorTypeEnumType } from "./SensorTypeEnum"
+import { UndulationModelEnumType } from "./UndulationModelEnum"
+import { UnitsEnumType } from "./UnitsEnum"
+import { VerticalDatumEnumType } from "./VerticalDatumEnum"
 import { RootStoreType } from "./index"
 
 
 /**
- * LayerRasterRecordBase
- * auto generated base class for the model LayerRasterRecordModel.
+ * LayerDemRecordBase
+ * auto generated base class for the model LayerDemRecordModel.
  */
-export const LayerRasterRecordModelBase = ModelBase
-  .named('LayerRasterRecord')
+export const LayerDemRecordModelBase = ModelBase
+  .named('LayerDemRecord')
   .props({
-    __typename: types.optional(types.literal("LayerRasterRecord"), "LayerRasterRecord"),
+    __typename: types.optional(types.literal("LayerDEMRecord"), "LayerDEMRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
     classification: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
     srsId: types.union(types.undefined, types.string),
+    srsName: types.union(types.undefined, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
-    creationDate: types.union(types.undefined, types.null, types.frozen()),
-    ingestionDate: types.union(types.undefined, types.null, types.frozen()),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.frozen()),
-    accuracyCE90: types.union(types.undefined, types.null, types.number),
     sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
     region: types.union(types.undefined, types.null, types.string),
     productId: types.union(types.undefined, types.string),
-    productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
-    productSubType: types.union(types.undefined, types.null, types.string),
-    srsName: types.union(types.undefined, types.string),
-    resolution: types.union(types.undefined, types.null, types.number),
-    maxResolutionMeter: types.union(types.undefined, types.null, types.number),
-    rms: types.union(types.undefined, types.null, types.number),
-    scale: types.union(types.undefined, types.null, types.string),
     footprint: types.union(types.undefined, types.frozen()),
+    absoluteAccuracyLEP90: types.union(types.undefined, types.number),
+    relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
+    resolutionDegree: types.union(types.undefined, types.null, types.number),
+    resolutionMeter: types.union(types.undefined, types.number),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
-    includedInBests: types.union(types.undefined, types.null, types.array(types.string)),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
+    heightRangeFrom: types.union(types.undefined, types.null, types.number),
+    heightRangeTo: types.union(types.undefined, types.null, types.number),
+    verticalDatum: types.union(types.undefined, VerticalDatumEnumType),
+    units: types.union(types.undefined, types.null, UnitsEnumType),
+    geographicArea: types.union(types.undefined, types.null, types.string),
+    undulationModel: types.union(types.undefined, UndulationModelEnumType),
+    dataType: types.union(types.undefined, DataTypeEnumType),
+    noDataValue: types.union(types.undefined, NoDataValueEnumType),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
+    wktGeometry: types.union(types.undefined, types.null, types.string),
     keywords: types.union(types.undefined, types.null, types.string),
     links: types.union(types.undefined, types.null, types.array(types.late((): any => LinkModel))),
   })
@@ -60,41 +68,44 @@ export const LayerRasterRecordModelBase = ModelBase
     }
   }))
 
-export class LayerRasterRecordModelSelector extends QueryBuilder {
+export class LayerDemRecordModelSelector extends QueryBuilder {
   get type() { return this.__attr(`type`) }
   get classification() { return this.__attr(`classification`) }
   get productName() { return this.__attr(`productName`) }
   get description() { return this.__attr(`description`) }
   get srsId() { return this.__attr(`srsId`) }
+  get srsName() { return this.__attr(`srsName`) }
   get producerName() { return this.__attr(`producerName`) }
-  get creationDate() { return this.__attr(`creationDate`) }
-  get ingestionDate() { return this.__attr(`ingestionDate`) }
   get updateDate() { return this.__attr(`updateDate`) }
   get sourceDateStart() { return this.__attr(`sourceDateStart`) }
   get sourceDateEnd() { return this.__attr(`sourceDateEnd`) }
-  get accuracyCE90() { return this.__attr(`accuracyCE90`) }
   get sensorType() { return this.__attr(`sensorType`) }
   get region() { return this.__attr(`region`) }
   get productId() { return this.__attr(`productId`) }
-  get productVersion() { return this.__attr(`productVersion`) }
   get productType() { return this.__attr(`productType`) }
-  get productSubType() { return this.__attr(`productSubType`) }
-  get srsName() { return this.__attr(`srsName`) }
-  get resolution() { return this.__attr(`resolution`) }
-  get maxResolutionMeter() { return this.__attr(`maxResolutionMeter`) }
-  get rms() { return this.__attr(`rms`) }
-  get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
+  get absoluteAccuracyLEP90() { return this.__attr(`absoluteAccuracyLEP90`) }
+  get relativeAccuracyLEP90() { return this.__attr(`relativeAccuracyLEP90`) }
+  get resolutionDegree() { return this.__attr(`resolutionDegree`) }
+  get resolutionMeter() { return this.__attr(`resolutionMeter`) }
   get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
-  get includedInBests() { return this.__attr(`includedInBests`) }
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
+  get heightRangeFrom() { return this.__attr(`heightRangeFrom`) }
+  get heightRangeTo() { return this.__attr(`heightRangeTo`) }
+  get verticalDatum() { return this.__attr(`verticalDatum`) }
+  get units() { return this.__attr(`units`) }
+  get geographicArea() { return this.__attr(`geographicArea`) }
+  get undulationModel() { return this.__attr(`undulationModel`) }
+  get dataType() { return this.__attr(`dataType`) }
+  get noDataValue() { return this.__attr(`noDataValue`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
+  get wktGeometry() { return this.__attr(`wktGeometry`) }
   get keywords() { return this.__attr(`keywords`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }
 }
-export function selectFromLayerRasterRecord() {
-  return new LayerRasterRecordModelSelector()
+export function selectFromLayerDemRecord() {
+  return new LayerDemRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productId.productVersion.productType.productSubType.srsName.resolution.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensorType.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.verticalDatum.units.geographicArea.undulationModel.dataType.noDataValue.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)

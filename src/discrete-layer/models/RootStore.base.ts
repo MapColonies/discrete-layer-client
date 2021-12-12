@@ -15,6 +15,8 @@ import { BestRecordModel, BestRecordModelType } from "./BestRecordModel"
 import { bestRecordModelPrimitives, BestRecordModelSelector } from "./BestRecordModel.base"
 import { DiscreteOrderModel, DiscreteOrderModelType } from "./DiscreteOrderModel"
 import { discreteOrderModelPrimitives, DiscreteOrderModelSelector } from "./DiscreteOrderModel.base"
+import { LayerDemRecordModel, LayerDemRecordModelType } from "./LayerDemRecordModel"
+import { layerDemRecordModelPrimitives, LayerDemRecordModelSelector } from "./LayerDemRecordModel.base"
 import { StringArrayObjectTypeModel, StringArrayObjectTypeModelType } from "./StringArrayObjectTypeModel"
 import { stringArrayObjectTypeModelPrimitives, StringArrayObjectTypeModelSelector } from "./StringArrayObjectTypeModel.base"
 import { EntityDescriptorModel, EntityDescriptorModelType } from "./EntityDescriptorModel"
@@ -39,6 +41,11 @@ import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , La
 import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
 import { SensorType } from "./SensorTypeEnum"
+import { VerticalDatum } from "./VerticalDatumEnum"
+import { Units } from "./UnitsEnum"
+import { UndulationModel } from "./UndulationModelEnum"
+import { DataType } from "./DataTypeEnum"
+import { NoDataValue } from "./NoDataValueEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocomplitionType } from "./AutocomplitionTypeEnum"
 import { ValidationValueType } from "./ValidationValueTypeEnum"
@@ -99,16 +106,16 @@ export type IngestionRasterData = {
 }
 export type LayerRasterRecordInput = {
   type?: RecordType
-  classification?: string
+  classification: string
   productName: string
   description?: string
-  srsId?: string
+  srsId: string
   producerName?: string
   creationDate?: any
   ingestionDate?: any
   updateDate?: any
-  sourceDateStart?: any
-  sourceDateEnd?: any
+  sourceDateStart: any
+  sourceDateEnd: any
   accuracyCE90?: number
   sensorType?: SensorType[]
   region?: string
@@ -116,12 +123,12 @@ export type LayerRasterRecordInput = {
   productVersion?: string
   productType: ProductType
   productSubType?: string
-  srsName?: string
+  srsName: string
   resolution?: number
   maxResolutionMeter?: number
   rms?: number
   scale?: string
-  footprint?: any
+  footprint: any
   layerPolygonParts?: any
   includedInBests?: string[]
   productBoundingBox?: string
@@ -150,25 +157,26 @@ export type Layer3DRecordInput = {
   productType: ProductType
   description?: string
   creationDate?: any
-  sourceDateStart?: any
-  sourceDateEnd?: any
+  updateDate?: any
+  sourceDateStart: any
+  sourceDateEnd: any
   minResolutionMeter?: number
   maxResolutionMeter?: number
   nominalResolution?: number
   maxAccuracyCE90?: number
-  absoluteAccuracyLEP90?: number
+  absoluteAccuracyLEP90: number
   accuracySE90?: number
   relativeAccuracyLEP90?: number
   visualAccuracy?: number
-  sensors?: SensorType[]
-  footprint?: any
+  sensorType?: SensorType[]
+  footprint: any
   heightRangeFrom?: number
   heightRangeTo?: number
-  srsId?: string
-  srsName?: string
+  srsId: string
+  srsName: string
   srsOrigin?: string
   region?: string
-  classification?: string
+  classification: string
   productionSystem?: string
   productionSystemVer?: string
   producerName?: string
@@ -195,6 +203,7 @@ export type JobUpdateData = {
 type Refs = {
   layerRasterRecords: ObservableMap<string, LayerRasterRecordModelType>,
   layer3DRecords: ObservableMap<string, Layer3DRecordModelType>,
+  layerDemRecords: ObservableMap<string, LayerDemRecordModelType>,
   bestRecords: ObservableMap<string, BestRecordModelType>,
   entityDescriptors: ObservableMap<string, EntityDescriptorModelType>
 }
@@ -222,10 +231,11 @@ mutateUpdateJob="mutateUpdateJob"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'EntityDescriptor'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDEMRecord', () => LayerDemRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDEMRecord', 'BestRecord', 'EntityDescriptor'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
+    layerDemRecords: types.optional(types.map(types.late((): any => LayerDemRecordModel)), {}),
     bestRecords: types.optional(types.map(types.late((): any => BestRecordModel)), {}),
     entityDescriptors: types.optional(types.map(types.late((): any => EntityDescriptorModel)), {})
   })

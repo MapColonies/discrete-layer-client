@@ -1,6 +1,6 @@
 {
   "name": "discrete-layer-client",
-  "version": "1.10.4",
+  "version": "1.11.1",
   "bugs": {
     "url": "https://github.com/MapColonies/discrete-layer-client/issues"
   },
@@ -21,7 +21,7 @@
   },
   "scripts": {
     "postinstall": "patch-package",
-    "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,BestRecord,EntityDescriptor --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
+    "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,LayerDEMRecord,BestRecord,EntityDescriptor --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
     "start": "yarn run copyassets:all && react-scripts start",
     "build": "react-scripts --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
     "test": "react-scripts test --env=jsdom-fourteen --verbose",

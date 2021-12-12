@@ -45,6 +45,7 @@
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
+  "record-type.record_dem.label": "DEM",
   "record-type.record_all.label": "All",
 
   "polygon-selection.draw-btn.tooltip": "Draw an Area to export",
@@ -57,12 +58,12 @@
   "polygon-selection.clear-menu_option.text": "Clear",
 
   "custom-bbox.dialog.title": "Define bbox coordinates",
-  "custom-bbox.dialog-field.top_right_lat.label": "Top Right Lat",
-  "custom-bbox.dialog-field.top_right_lon.label": "Top Right Lon",
-  "custom-bbox.dialog-field.bottom_left_lat.label": "Bottom Left Lat",
-  "custom-bbox.dialog-field.bottom_left_lon.label": "Bottom Left Lon",
-  "custom-bbox.form-error.x-distance.text": "X distance is exceeded the limit",
-  "custom-bbox.form-error.y-distance.text": "Y distance is exceeded the limit",
+  "custom-bbox.dialog-field.topRightLat.label": "Top Right Lat",
+  "custom-bbox.dialog-field.topRightLon.label": "Top Right Lon",
+  "custom-bbox.dialog-field.bottomLeftLat.label": "Bottom Left Lat",
+  "custom-bbox.dialog-field.bottomLeftLon.label": "Bottom Left Lon",
+  "custom-bbox.form-error.x-distance.text": "X distance exceeds the limit",
+  "custom-bbox.form-error.y-distance.text": "Y distance exceeds the limit",
 
   "filters.title": "Filters",
   "filters.sub-title": " ",
@@ -163,8 +164,8 @@
   "field-names.3d.accuracySE90": "Spherical accuracy",
   "field-names.3d.relativeAccuracyLEP90": "Rel. vertical acc.",
   "field-names.3d.visualAccuracy": "Visual accuracy",
-  "field-names.3d.sensors": "Sensor",
-  "field-names.3d.sensors.tooltip": "List of sensors used as a source for the product",
+  "field-names.3d.sensorType": "Sensor",
+  "field-names.3d.sensorType.tooltip": "List of sensors used as a source for the product",
   "field-names.3d.footprint": "Footprint",
   "field-names.3d.heightRangeFrom": "Min height range",
   "field-names.3d.heightRangeTo": "Max height range",
