@@ -10,10 +10,15 @@
 
 .jobDetailsContainer { 
   overflow-y: scroll; 
-  height: 230px;
+  height: 220px;
   width: 1300px;
-  margin: 0 35px;
-
+  margin: 0px 35px;
+  background:var(--ag-selected-details-row-background);
+  padding-left: 20px;
+}
+body[dir="rtl"] .jobDetailsContainer {
+  padding-left: unset;
+  
 }
 
 .gridContainer {
@@ -31,8 +36,9 @@
   z-index: 1;
   text-align: left;
   position: sticky;
+  font-size: var(--ag-font-size);
   top:0;
-  background-color: var(--mdc-theme-alternative-surface);
+  background:var(--ag-selected-details-row-background);
   width:100%;
   height:100%;
   padding:10px 0;

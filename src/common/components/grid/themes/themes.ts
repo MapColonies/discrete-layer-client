@@ -20,8 +20,10 @@ export class GridThemes {
       "--ag-row-border-color": alternativeSurfaceColor,
       "--ag-secondary-border-color": alternativeSurfaceColor,
       "--ag-odd-row-background-color": alternativeSurfaceColor,
-      "--ag-selected-row-background-color": selectionBackground,
+      "--ag-selected-row-background-color": "transparent",
       "--ag-foreground-color": foregroundColor,
+      "--ag-font-size": '13px',
+      "--ag-selected-details-row-background": '#38455c', /*GC_SELECTION_BACKGROUND with opacity 0.5*/
     };
   }
 };

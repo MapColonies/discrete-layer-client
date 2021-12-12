@@ -1,18 +1,15 @@
 .jobDetailsHeaderContainer {
   display: flex;
   flex-direction: column;
-  width: 98%;
   background-color: var(--mdc-theme-alternative-surface);
-  padding-top: 4px;
 }
 
 .jobInfoTop {
-  background-color: var(--mdc-theme-gc-selection-background);
+  background-color: var(--ag-selected-details-row-background);
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 0;
 }
 .detailsRow {
   display: flex;
@@ -32,14 +29,16 @@
     display:flex;
     align-items: center;
     justify-content: center;
+
 }
 
 .countLabel {
     color: var(--mdc-theme-text-icon-on-dark);
+    margin: 0;
 }
 
 .countValue {
-  margin: 4px 10px;
+  margin: 0 10px;
   color: var(--mdc-theme-text-primary-on-dark);
 }
 
@@ -47,21 +46,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 0;
   font-weight: bold;
   font-size: 1.2em;
-  /* border-bottom: 1px solid var(--mdc-theme-gc-selection-background); */
+  background:var(--ag-selected-details-row-background);
 }
 
 .failReasonText {
   max-width: 35ch;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: var(--mdc-theme-gc-error-medium);
+  margin:0;
 }
 
 .detailsField{
     max-width: 35ch;
-    margin: 0 12px;
+    margin: 2px 12px;
     display:flex;
     align-items: center;
     justify-content: center;
@@ -69,12 +69,13 @@
 
 .detailLabel {
     color: var(--mdc-theme-text-icon-on-dark);
+    margin:0;
 }
 
 .detailValue {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  margin: 4px 12px;
+  margin: 0px 12px;
   color: var(--mdc-theme-text-primary-on-dark);
 }

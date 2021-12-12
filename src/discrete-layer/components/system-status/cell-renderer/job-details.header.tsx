@@ -102,7 +102,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
       <>
         {Object.values(dataToPresent.detailsRow).map(({ label, value }) => {
           return (
-            <Box className={'detailsField'}>
+            <Box className="detailsField">
               <Typography tag="p" className="detailLabel">
                 {`${label}:`}
               </Typography>
@@ -122,7 +122,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
       <>
         {Object.values(dataToPresent.taskCountRow).map(({ label, value }) => {
           return (
-            <Box className={'counterField'}>
+            <Box className="counterField">
               <Typography tag="p" className="countLabel">
                 {`${label}:`}
               </Typography>
@@ -150,12 +150,12 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
   };
 
   return (
-    <Box className={'jobDetailsHeaderContainer'}>
-      <Box className={'jobInfoTop'}>
-        <Box className={'detailsRow'}>{generateDetailsRow()}</Box>
-        <Box className={'taskCountsRow'}>{generateTaskCounts()}</Box>
+    <Box className="jobDetailsHeaderContainer">
+      <Box className="jobInfoTop">
+        <Box className="detailsRow">{generateDetailsRow()}</Box>
+        <Box className="taskCountsRow">{generateTaskCounts()}</Box>
       </Box>
-      <Box className={'failReasonBottom'}>{generateFailReason()}</Box>
+      <Box className="failReasonBottom">{generateFailReason()}</Box>
     </Box>
   );
 };
