@@ -14,7 +14,7 @@ import {
   LayerDemRecordModel
 } from '../../models';
 
-export type FieldInfoName = keyof Layer3DRecordModelType | keyof LayerRasterRecordModelType | keyof BestRecordModelType | keyof LinkModelType;
+export type FieldInfoName = keyof LayerDemRecordModelType | keyof Layer3DRecordModelType | keyof LayerRasterRecordModelType | keyof BestRecordModelType | keyof LinkModelType;
 export interface IRecordFieldInfo extends FieldConfigModelType {};
 export interface IRecordCategoryFieldsInfo extends CategoryConfigModelType {};
 // eslint-disable-next-line @typescript-eslint/array-type
@@ -45,7 +45,7 @@ export const FieldConfigModelKeys: FieldConfigModelArray = Object.keys(FieldConf
 
 export const cleanUpEntity = (
   data: Record<string,unknown>,
-  entityKeys: BestRecordModelArray | LayerRasterRecordModelArray | Layer3DRecordModelArray): Record<string,unknown> => 
+  entityKeys: BestRecordModelArray | LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray): Record<string,unknown> => 
 {
   const keysNotInModel = Object.keys(data).filter(key => {
     // @ts-ignore

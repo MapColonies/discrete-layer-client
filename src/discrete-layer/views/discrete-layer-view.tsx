@@ -337,6 +337,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
+      isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
       isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
@@ -378,7 +379,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             {
               (tabIdx === TabViews.CATALOG) && 
-              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
+              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {
@@ -405,7 +406,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   }
                   {
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_DEM') &&
-                    permissions.isLayer3DRecordIngestAllowed &&
+                    permissions.isLayerDemRecordIngestAllowed &&
                     <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_dem' })}>
                       <IconButton
                         className="operationIcon mc-icon-Map-Terrain"

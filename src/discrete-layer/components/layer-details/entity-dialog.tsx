@@ -62,6 +62,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.id = DEFAULT_ID;
+      record.productType = ProductType.DTM;
       record['__typename'] = LayerDemRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_3D:
