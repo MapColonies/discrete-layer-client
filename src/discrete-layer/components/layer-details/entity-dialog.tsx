@@ -27,12 +27,13 @@ import {
   FieldConfigModelType,
   ProductType,
   ValidationValueType,
-  SensorType
+  SensorType,
+  LayerDemRecordModel
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
-import { Layer3DRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
+import { Layer3DRecordInput, LayerDemRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
-import { FieldConfigModelKeys, IRecordFieldInfo, Layer3DRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
+import { FieldConfigModelKeys, IRecordFieldInfo, Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
 import { IngestionFields } from './ingestion-fields';
 import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
@@ -56,6 +57,13 @@ interface EntityDialogComponentProps {
 const buildRecord = (recordType: RecordType): ILayerImage => {
   const record = {} as Record<string, any>;
   switch(recordType) {
+    case RecordType.RECORD_DEM:
+      LayerDemRecordModelKeys.forEach(key => {
+        record[key as string] = undefined;
+      });
+      record.id = DEFAULT_ID;
+      record['__typename'] = LayerDemRecordModel.properties['__typename'].name.replaceAll('"','');
+      break;
     case RecordType.RECORD_3D:
       Layer3DRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
@@ -91,11 +99,17 @@ const buildFieldInfo = (): IRecordFieldInfo => {
 };
 
 const getLabel = (recordType: RecordType): string => {
-  return recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames' : 'field-names.raster.fileNames';
+  if (recordType === RecordType.RECORD_3D) {
+    return 'field-names.3d.fileNames';
+  }
+  return 'field-names.raster.fileNames';
 };
 
 const getTooltip = (recordType: RecordType): string => {
-  return recordType === RecordType.RECORD_3D ? 'field-names.3d.fileNames.tooltip' : 'field-names.raster.fileNames.tooltip';
+  if (recordType === RecordType.RECORD_3D) {
+    return 'field-names.3d.fileNames.tooltip';
+  }
+  return 'field-names.raster.fileNames.tooltip';
 };
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
@@ -264,7 +278,17 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
       } else {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { directory, fileNames, __typename, ...metadata } = inputValues;
-        switch(recordType){
+        switch (recordType) {
+          case RecordType.RECORD_DEM:
+            mutationQuery.setQuery(store.mutateStartDemIngestion({
+              data: {
+                directory: directory as string,
+                fileNames: (fileNames as string).split(","),
+                metadata: metadata as LayerDemRecordInput,
+                type: RecordType.RECORD_DEM
+              }
+            }));
+            break;
           case RecordType.RECORD_3D:
             mutationQuery.setQuery(store.mutateStart3DIngestion({
               data: {
