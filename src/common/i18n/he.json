@@ -57,10 +57,10 @@
   "polygon-selection.clear-menu_option.text": "נקה",
 
   "custom-bbox.dialog.title": "הגדר קואורדינטות אזור היצוא",
-  "custom-bbox.dialog-field.top_right_lat.label": "רוחב נק' ימין עליונה",
-  "custom-bbox.dialog-field.top_right_lon.label": "אורך נק' ימין עליונה",
-  "custom-bbox.dialog-field.bottom_left_lat.label": "רוחב נק' שמאל תחתונה",
-  "custom-bbox.dialog-field.bottom_left_lon.label": "אורך נק' שמאל תחתונה",
+  "custom-bbox.dialog-field.topRightLat.label": "רוחב נק' ימין עליונה",
+  "custom-bbox.dialog-field.topRightLon.label": "אורך נק' ימין עליונה",
+  "custom-bbox.dialog-field.bottomLeftLat.label": "רוחב נק' שמאל תחתונה",
+  "custom-bbox.dialog-field.bottomLeftLon.label": "אורך נק' שמאל תחתונה",
   "custom-bbox.form-error.x-distance.text": "אורך מעל המותר",
   "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
 
