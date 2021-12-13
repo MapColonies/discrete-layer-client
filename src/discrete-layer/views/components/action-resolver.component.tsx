@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { BestRecordModelKeys, LayerRasterRecordModelKeys, Layer3DRecordModelKeys, cleanUpEntity } from '../../components/layer-details/layer-details.field-info';
+import { BestRecordModelKeys, LayerRasterRecordModelKeys, LayerDemRecordModelKeys, Layer3DRecordModelKeys, cleanUpEntity } from '../../components/layer-details/layer-details.field-info';
 import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
@@ -30,13 +30,16 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerRasterRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion);
-          
           props.handleOpenEntityDialog(true);
           break;
         case 'Layer3DRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
-          
+          props.handleOpenEntityDialog(true);
+          break;
+        case 'LayerDEMRecord.edit':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
           break;
         case 'LayerRasterRecord.delete':

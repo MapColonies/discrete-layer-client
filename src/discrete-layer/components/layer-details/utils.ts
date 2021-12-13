@@ -6,6 +6,7 @@ import { BestRecordModel,
   EntityDescriptorModelType,
   FieldConfigModelType,
   Layer3DRecordModel,
+  LayerDemRecordModel,
   LayerMetadataMixedUnion,
   LayerRasterRecordModel,
   LinkModel,
@@ -15,7 +16,10 @@ import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-
 
 export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entityDescriptors: EntityDescriptorModelType[]): IRecordCategoryFieldsInfo[] => {
   let entityDesc;
-  switch(layerRecord.__typename){
+  switch (layerRecord.__typename) {
+    case 'LayerDEMRecord':
+      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswDEMCatalogRecord')
+      break;
     case 'Layer3DRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
       break;
@@ -42,7 +46,10 @@ export const getFlatEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, e
 
 export const getBasicType = (fieldName: FieldInfoName, typename: string): string => {
   let recordModel;
-  switch(typename) {
+  switch (typename) {
+    case 'LayerDEMRecord':
+      recordModel = LayerDemRecordModel;
+      break;
     case 'Layer3DRecord':
       recordModel = Layer3DRecordModel;
       break;
