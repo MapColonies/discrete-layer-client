@@ -28,7 +28,7 @@ export const EntityTypeIcon: React.FC<IEntityTypeProps> = ({ data, style }) => {
       includedInBests ? 'mc-icon-Map-Best-Orthophoto' : 'mc-icon-Map-Orthophoto',
       `Orthophoto ${includedInBests ? (' included in: ' + includedInBests.join(' , ')) : ''}`
     ],
-    'LayerDRecord': ['mc-icon-Map-3D', '3D'],
+    'Layer3DRecord': ['mc-icon-Map-3D', '3D'],
     'BestRecord': ['mc-icon-Bests', 'BEST'],
     'LayerDEMRecord': ['mc-icon-Map-Terrain', 'DEM'],
   };
