@@ -11,6 +11,7 @@ import { JobDetailsHeader } from './job-details.header';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { truncate } from 'lodash';
+import { CopyButton } from '../job-details.copy-button';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -55,28 +56,27 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
   const keyPrefix = `${(props.data as JobModelType).resourceId as string}`;
 
   const statusPresentor = (task: Record<string, unknown>): JSX.Element => {
+    
     if (task.status === Status.Failed) {
+      const FAIL_REASON_MAX_LEN = 35;
+      const ERROR_ICON_SIZE = 20;
+      const ERROR_ICON_COLOR = 'var(--mdc-theme-gc-error-medium)';
+      const ellipsizedFailReason = truncate(task.reason as string, { length: FAIL_REASON_MAX_LEN });
+      
       return (
         <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
           {task.status as string}
-          <Tooltip content={truncate(task.reason as string, { length: 35 })}>
+          <Tooltip content={ellipsizedFailReason}>
             <IconButton
               style={{
-                fontSize: '20px',
-                color: 'var(--mdc-theme-gc-error-medium)',
+                fontSize: `${ERROR_ICON_SIZE}px`,
+                color: ERROR_ICON_COLOR
               }}
               className={'mc-icon-Warning'}
               label="failReasonIcon"
             />
           </Tooltip>
-          <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
-            <CopyToClipboard text={task.reason as string}>
-              <IconButton
-                style={{ fontSize: '20px' }}
-                className="mc-icon-Copy"
-              />
-            </CopyToClipboard>
-          </Tooltip>
+          <CopyButton text={task.reason as string}/>
         </Box>
       );
     }

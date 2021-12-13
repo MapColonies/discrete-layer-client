@@ -5,6 +5,7 @@ import { JobModelType, Status } from '../../../models';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { CopyButton } from '../job-details.copy-button';
 
 interface JobDetailsHeaderProps {
   job: JobModelType;
@@ -80,22 +81,6 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
     },
   };
 
-  const DEFAULT_ICON_SIZE = 20;
-  const renderCopyBtn = (
-    text: string,
-    iconSize = DEFAULT_ICON_SIZE
-  ): JSX.Element => {
-    return (
-      <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
-        <CopyToClipboard text={text}>
-          <IconButton
-            style={{ fontSize: `${iconSize}px` }}
-            className="mc-icon-Copy"
-          />
-        </CopyToClipboard>
-      </Tooltip>
-    );
-  };
 
   const generateDetailsRow = (): JSX.Element => {
     return (
@@ -109,7 +94,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
               <Typography tag="p" className="detailValue">
                 {value}
               </Typography>
-              {renderCopyBtn(value)}
+              <CopyButton text={value}/>
             </Box>
           );
         })}
@@ -144,7 +129,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
         <Typography tag="p" className="failReasonText">
           {failReason}
         </Typography>
-        {renderCopyBtn(failReason)}
+        <CopyButton text={failReason}/>
       </>
     );
   };
