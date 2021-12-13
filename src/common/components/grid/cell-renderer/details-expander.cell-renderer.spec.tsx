@@ -67,7 +67,7 @@ describe('AgGrid DetailsExpanderRenderer component', () => {
       <DetailsExpanderRenderer {...mockData} />
     );
     
-    const iconContainer = wrapper.find('.expanderContainer');
+    const iconContainer = wrapper.find('CollapseButton');
     iconContainer.simulate('click');
     expect(spyGetRonNode).toHaveBeenCalledWith(`${ID}${DETAILS_ROW_ID_SUFFIX}`);
   });
