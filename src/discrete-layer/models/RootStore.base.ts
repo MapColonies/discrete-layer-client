@@ -191,6 +191,54 @@ export type Layer3DRecordInput = {
   keywords?: string
   links?: LinkInput[]
 }
+export type IngestionDemData = {
+  directory: string
+  fileNames: string[]
+  metadata: LayerDemRecordInput
+  type: RecordType
+}
+export type LayerDemRecordInput = {
+  type?: RecordType
+  productId: string
+  productName: string
+  productVersion?: string
+  productType: ProductType
+  description?: string
+  creationDate?: any
+  updateDate?: any
+  sourceDateStart: any
+  sourceDateEnd: any
+  minResolutionMeter?: number
+  maxResolutionMeter?: number
+  nominalResolution?: number
+  maxAccuracyCE90?: number
+  absoluteAccuracyLEP90: number
+  accuracySE90?: number
+  relativeAccuracyLEP90?: number
+  visualAccuracy?: number
+  sensorType?: SensorType[]
+  footprint: any
+  heightRangeFrom?: number
+  heightRangeTo?: number
+  srsId: string
+  srsName: string
+  srsOrigin?: string
+  region?: string
+  classification: string
+  productionSystem?: string
+  productionSystemVer?: string
+  producerName?: string
+  productionMethod?: string
+  minFlightAlt?: number
+  maxFlightAlt?: number
+  geographicArea?: string
+  productBoundingBox?: string
+  id: string
+  insertDate?: any
+  wktGeometry?: string
+  keywords?: string
+  links?: LinkInput[]
+}
 export type JobUpdateData = {
   parameters?: any
   status?: string
@@ -223,6 +271,7 @@ export enum RootStoreBaseMutations {
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
 mutateStart3DIngestion="mutateStart3DIngestion",
+mutateStartDemIngestion="mutateStartDemIngestion",
 mutateUpdateJob="mutateUpdateJob"
 }
 
@@ -273,6 +322,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     mutateStart3DIngestion(variables: { data: Ingestion3DData }, optimisticUpdate?: () => void) {
       return self.mutate<{ start3DIngestion: string }>(`mutation start3DIngestion($data: Ingestion3DData!) { start3DIngestion(data: $data) }`, variables, optimisticUpdate)
+    },
+    mutateStartDemIngestion(variables: { data: IngestionDemData }, optimisticUpdate?: () => void) {
+      return self.mutate<{ startDemIngestion: string }>(`mutation startDemIngestion($data: IngestionDemData!) { startDemIngestion(data: $data) }`, variables, optimisticUpdate)
     },
     mutateUpdateJob(variables: { data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateJob: string }>(`mutation updateJob($data: JobUpdateData!, $id: String!) { updateJob(data: $data, id: $id) }`, variables, optimisticUpdate)

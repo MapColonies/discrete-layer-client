@@ -92,6 +92,7 @@
 
   "tab-views.catalog.actions.ingest_raster": "Ingest discrete",
   "tab-views.catalog.actions.ingest_3d": "Ingest 3D model",
+  "tab-views.catalog.actions.ingest_dem": "Ingest DEM",
   "tab-views.catalog.actions.new_best": "Create new BEST",
 
   "tab-views.best-edit.actions.import": "Add layer\\s from list",
