@@ -36,7 +36,8 @@
   "action.expand.tooltip": "Expand",
   "action.collapse.tooltip": "Collapse",
   "action.close.tooltip": "Close",
-  "action.copy.tooltip": "Copy URL",
+  "action.copy-url.tooltip": "Copy URL",
+  "action.copy.tooltip": "Copy Text",
   "action.layer.move-to-top.tooltip": "Bring to top",
   "action.layer.move-up.tooltip": "Move up",
   "action.layer.move-down.tooltip": "Move down",
@@ -303,6 +304,15 @@
   "system-status.job.fields.priority.label": "Priority",
   "system-status.job.fields.created.label": "Created",
   "system-status.job.fields.updated.label": "Updated",
+
+  "system-status.job.status_translation.Pending": "Pending",
+  "system-status.job.status_translation.InProgress": "In Progress",
+  "system-status.job.status_translation.Completed": "Completed",
+  "system-status.job.status_translation.Failed": "Failed",
+
+  "system-status.job-details.header.internalId": "Internal Id",
+  "system-status.job-details.header.extetnalId": "External Id",
+  "system-status.job-details.header.producerName": "Producer Name",
   
   "system-status.task.fields.type.label": "Task Type",
   "system-status.task.fields.status.label": "Status",
