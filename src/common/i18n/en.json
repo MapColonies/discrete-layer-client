@@ -232,7 +232,7 @@
   "field-names.dem.units": "Units",
   "field-names.dem.undulationModel": "Undulation model",
   "field-names.dem.dataType": "Data type",
-  "field-names.dem.noDateValue": "No date value",
+  "field-names.dem.noDataValue": "No data value",
   "field-names.dem.links": "Links",
   "field-names.dem.link.name": "Name",
   "field-names.dem.link.description": "Description",
