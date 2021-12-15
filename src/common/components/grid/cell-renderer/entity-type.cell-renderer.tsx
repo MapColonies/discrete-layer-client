@@ -8,7 +8,10 @@ interface IEntityTypeCellRendererParams extends ICellRendererParams {
 }
 
 export const EntityTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (props) => {
+
+  const data = props.data as ILayerImage;
+
   return (
-    <EntityTypeIcon data={props.data as ILayerImage} style={props.style}/>
+    <EntityTypeIcon entityType={data.__typename} style={props.style}/>
   );
 };

@@ -2,17 +2,14 @@
 import React from 'react';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { ILayerImage } from '../../../discrete-layer/models/layerImage';
 import { ProductType } from '../../../discrete-layer/models';
 
 interface IProductTypeProps {
-  data: ILayerImage;
+  productType: ProductType;
   style?: Record<string, unknown>;
 }
 
-export const ProductTypeIcon: React.FC<IProductTypeProps> = ({ data, style }) => {
-
-  const type = data.productType as ProductType;
+export const ProductTypeIcon: React.FC<IProductTypeProps> = ({ productType, style }) => {
 
   const {
     ORTHOPHOTO,
@@ -54,7 +51,7 @@ export const ProductTypeIcon: React.FC<IProductTypeProps> = ({ data, style }) =>
     [POINT_CLOUD]: ['mc-icon-Map-3D', POINT_CLOUD],
   };
   
-  const [icon, tooltip] = productTypeIconsAndTooltips[type] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+  const [icon, tooltip] = productTypeIconsAndTooltips[productType] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
 
   return (
     <Box style={style}>

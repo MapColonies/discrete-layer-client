@@ -8,6 +8,6 @@ interface ILayerImageCellRendererParams {
 
 export const EntityTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ data }) => {
   return (
-    <EntityTypeIcon data={data}/>
+    <EntityTypeIcon entityType={data.__typename}/>
   );
 };
