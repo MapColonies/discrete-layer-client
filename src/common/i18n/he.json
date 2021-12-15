@@ -232,7 +232,7 @@
   "field-names.dem.units": "יחידות גאוגרפיות",
   "field-names.dem.undulationModel": "מודל גליות בשימוש",
   "field-names.dem.dataType": "סוג מידע",
-  "field-names.dem.noDateValue": "ערך שמציין מידע לא קיים",
+  "field-names.dem.noDataValue": "ערך שמציין מידע לא קיים",
   "field-names.dem.links": "קישורים",
   "field-names.dem.link.name": "שם",
   "field-names.dem.link.description": "תאור",
