@@ -15,7 +15,7 @@ import {
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
+import { dateFormatter, relativeDateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
@@ -200,7 +200,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       }),
       width: 165,
       field: 'created',
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
+      valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
       sortable: true,
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
@@ -212,7 +212,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       width: 165,
       field: 'updated',
       sortable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
+      valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
     },

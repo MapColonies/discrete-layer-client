@@ -3,13 +3,12 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Moment } from 'moment';
 import { Box } from '@map-colonies/react-components';
-import { dateFormatter } from '../../../../common/helpers/type-formatters';
+import { relativeDateFormatter } from '../../../../common/helpers/type-formatters';
 import { JobModelType, Status } from '../../../models';
 
 import './job-details.cell-renderer.css';
 import { JobDetailsHeader } from './job-details.header';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { truncate } from 'lodash';
 import { CopyButton } from '../job-details.copy-button';
 
@@ -56,6 +55,10 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
   const keyPrefix = `${(props.data as JobModelType).resourceId as string}`;
 
   const statusPresentor = (task: Record<string, unknown>): JSX.Element => {
+
+    const statusText = intl.formatMessage({
+      id: `system-status.job.status_translation.${task.status as string}`,
+    });
     
     if (task.status === Status.Failed) {
       const FAIL_REASON_MAX_LEN = 35;
@@ -65,7 +68,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
       
       return (
         <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
-          {task.status as string}
+          {statusText}
           <Tooltip content={ellipsizedFailReason}>
             <IconButton
               style={{
@@ -82,7 +85,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
     }
     return (
       <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
-        {task.status as string}
+        {statusText}
       </Box>
     );
   };
@@ -96,7 +99,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
       case 'date':
         return (
           <Box className={'gridCell'}>
-            {dateFormatter(task[field.name] as Moment, true)}
+            {relativeDateFormatter(task[field.name] as Moment)}
           </Box>
         );
         break;
