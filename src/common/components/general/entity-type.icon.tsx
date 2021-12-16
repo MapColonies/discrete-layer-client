@@ -2,31 +2,21 @@
 import React from 'react';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { entityTypeIconsAndTooltips } from '../../../discrete-layer/models/products';
 
 interface IEntityTypeProps {
-  entityType: string;
+  value: string;
   style?: Record<string, unknown>;
 }
 
-export const EntityTypeIcon: React.FC<IEntityTypeProps> = ({ entityType, style }) => {
-
-  interface EntityTypeIconsAndTooltips {
-    [key: string]: [string, string] | undefined;
-  }
-
-  const entityTypeIconsAndTooltips: EntityTypeIconsAndTooltips = {
-    'LayerRasterRecord': ['mc-icon-Map-Orthophoto', 'Orthophoto'],
-    'Layer3DRecord': ['mc-icon-Map-3D', '3D'],
-    'BestRecord': ['mc-icon-Bests', 'BEST'],
-    'LayerDEMRecord': ['mc-icon-Map-Terrain', 'DEM'],
-  };
+export const EntityTypeIcon: React.FC<IEntityTypeProps> = ({ value, style }) => {
   
-  const [icon, tooltip] = entityTypeIconsAndTooltips[entityType] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+  const [icon, tooltip] = entityTypeIconsAndTooltips[value] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
 
   return (
     <Box style={style}>
       <Tooltip content={tooltip}>
-        <IconButton className={icon} label="ENTITY TYPE ICON"/>
+        <IconButton className={icon}/>
       </Tooltip>
     </Box>
   );

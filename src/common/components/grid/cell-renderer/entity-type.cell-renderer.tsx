@@ -12,6 +12,6 @@ export const EntityTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (prop
   const data = props.data as ILayerImage;
 
   return (
-    <EntityTypeIcon entityType={data.__typename} style={props.style}/>
+    <EntityTypeIcon value={data.__typename} style={props.style}/>
   );
 };
