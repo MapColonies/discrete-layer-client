@@ -1,0 +1,28 @@
+import { IconButton, Tooltip } from '@map-colonies/react-core';
+import React from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useIntl } from 'react-intl';
+const DEFAULT_ICON_SIZE = 20;
+
+interface CopyButtonProps {
+  text: string;
+  iconSize?: number;
+}
+
+export const CopyButton: React.FC<CopyButtonProps> = ({
+  text,
+  iconSize = DEFAULT_ICON_SIZE,
+}) => {
+  const intl = useIntl();
+
+  return (
+    <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+      <CopyToClipboard text={text}>
+        <IconButton
+          style={{ fontSize: `${iconSize}px` }}
+          className="mc-icon-Copy"
+        />
+      </CopyToClipboard>
+    </Tooltip>
+  );
+};

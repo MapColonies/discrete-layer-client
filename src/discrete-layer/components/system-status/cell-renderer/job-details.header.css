@@ -1,0 +1,81 @@
+.jobDetailsHeaderContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--mdc-theme-alternative-surface);
+}
+
+.jobInfoTop {
+  background-color: var(--ag-selected-details-row-background);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.detailsRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.taskCountsRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.counterField {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.countLabel {
+    color: var(--mdc-theme-text-icon-on-dark);
+    margin: 0;
+}
+
+.countValue {
+  margin: 0 10px;
+  color: var(--mdc-theme-text-primary-on-dark);
+}
+
+.failReasonBottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  background:var(--ag-selected-details-row-background);
+}
+
+.failReasonText {
+  max-width: 35ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: var(--mdc-theme-gc-error-medium);
+  margin:0;
+}
+
+.detailsField{
+    max-width: 35ch;
+    margin: 2px 12px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detailLabel {
+    color: var(--mdc-theme-text-icon-on-dark);
+    margin:0;
+}
+
+.detailValue {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0px 12px;
+  color: var(--mdc-theme-text-primary-on-dark);
+}

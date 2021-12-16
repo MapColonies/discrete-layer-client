@@ -38,12 +38,13 @@ const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
     })
   }
 }
-
+const DATE_FORMAT = 'DD/MM/YYYY';
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
   SERVICE_NAME: SERVICE_NAME,
   LOCALE: {
-    DATE_TIME_FORMAT: 'DD/MM/YYYY',
+    DATE_FORMAT: DATE_FORMAT,
+    DATE_TIME_FORMAT: `${DATE_FORMAT} HH:mm`,
   },
   I18N: {
     DEFAULT_LANGUAGE: LANGUAGE,
