@@ -1,36 +1,57 @@
 .tasksTable{
-  margin-left: 60px;
-  padding-left: 8px;
-  width: 90%;
-  border: solid 1px #455570;
+  margin: 0 auto 20px auto;
+  width: 100%;
+  border: solid 1px var(--mdc-theme-text-secondary-on-dark);
   border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px
+  border-bottom-right-radius: 20px;
+  line-height: 1.2em;
+  padding: 8px;
 }
 
-.tableFixHead { 
-  overflow: auto; 
-  height: 100px; 
+.jobDetailsContainer { 
+  overflow-y: scroll; 
+  height: 220px;
+  width: 1300px;
+  margin: 0px 35px;
+  background:var(--ag-selected-details-row-background);
+  padding-left: 20px;
 }
-.tableFixHead thead th {
-  position: sticky;
-  top: 0;
+body[dir="rtl"] .jobDetailsContainer {
+  padding-left: unset;
+  
+}
+
+.gridContainer {
+  display: grid;
+  max-width: 98%;
+  grid-template-columns: 0.5fr 0.655fr 0.38fr 0.38fr 0.2fr;
+  border: solid 1px var(--mdc-theme-gc-selection-background);
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 8px;
+
+}
+
+.column-label {
   z-index: 1;
-  background-color: var(--mdc-theme-alternative-surface, #fff);
-}
-
-.tasksTableColumnHeader{
-  width: 20%;
   text-align: left;
-  font-size: 13px;
+  position: sticky;
+  font-size: var(--ag-font-size);
+  top:0;
+  background:var(--ag-selected-details-row-background);
+  width:100%;
+  height:100%;
+  padding:10px 0;
+  border-bottom: solid 1px var(--mdc-theme-text-secondary-on-dark);
 }
 
-body[dir=rtl] .tasksTableColumnHeader{
+body[dir='rtl'] .column-label {
   text-align: right;
 }
 
-body[dir=rtl] .tasksTable{
-  margin-left: unset;
-  margin-right: 60px;
-  padding-left: unset;
-  padding-right: 8px;
+.gridCell{
+  display:flex;
+  align-items: center;
+  justify-content: flex-start;
+  height:40px;
 }

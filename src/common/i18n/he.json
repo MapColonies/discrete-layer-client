@@ -36,7 +36,8 @@
   "action.expand.tooltip": "הרחב תצוגה",
   "action.collapse.tooltip": "צמצם תצוגה",
   "action.close.tooltip": "סגור",
-  "action.copy.tooltip": "העתק קישור",
+  "action.copy-url.tooltip": "העתק קישור",
+  "action.copy.tooltip": "העתק טקסט",
   "action.layer.move-to-top.tooltip": "העלה מעל כולם",
   "action.layer.move-up.tooltip": "הזז למעלה",
   "action.layer.move-down.tooltip": "הזז למטה",
@@ -303,7 +304,16 @@
   "system-status.job.fields.priority.label": "עדיפות",
   "system-status.job.fields.created.label": "נוצר",
   "system-status.job.fields.updated.label": "עודכן",
+
+  "system-status.job.status_translation.Pending": "ממתין",
+  "system-status.job.status_translation.InProgress": "בתהליך",
+  "system-status.job.status_translation.Completed": "הושלם",
+  "system-status.job.status_translation.Failed": "נכשל",
   
+  "system-status.job-details.header.internalId": "מזהה פנימי",
+  "system-status.job-details.header.extetnalId": "מזהה חיצוני",
+  "system-status.job-details.header.producerName": "שם יצרן",
+
   "system-status.task.fields.type.label": "מטלה",
   "system-status.task.fields.status.label": "סטטוס",
   "system-status.task.fields.attempts.label": "ניסיונות",
