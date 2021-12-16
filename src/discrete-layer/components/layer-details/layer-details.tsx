@@ -83,6 +83,14 @@ export const getValuePresentor = (
       return (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
       );
+    case 'DataType':
+    case 'NoDataValue':
+    case 'VerticalDatum':
+    case 'Units':
+    case 'UndulationModel':
+      return (
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></EnumValuePresentorComponent>
+      );
     case 'RecordType':
       return (
         <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
