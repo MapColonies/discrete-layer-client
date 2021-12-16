@@ -1,13 +1,15 @@
 import React from 'react';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
-import { EntityTypeIcon } from '../../general/entity-type.icon';
+import { TypeIcon } from '../../general/type-icon';
 
 interface ILayerImageCellRendererParams {
   data: ILayerImage;
 }
 
 export const EntityTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ data }) => {
+
   return (
-    <EntityTypeIcon value={data.__typename}/>
+    <TypeIcon typeName={data.__typename}/>
   );
+  
 };

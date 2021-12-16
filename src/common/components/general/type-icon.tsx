@@ -2,16 +2,16 @@
 import React from 'react';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { entityTypeIconsAndTooltips } from '../../../discrete-layer/models/products';
+import { iconsAndTooltips } from '../../../discrete-layer/models/products';
 
-interface IEntityTypeProps {
-  value: string;
+interface ITypeIconProps {
+  typeName: string;
   style?: Record<string, unknown>;
 }
 
-export const EntityTypeIcon: React.FC<IEntityTypeProps> = ({ value, style }) => {
+export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, style }) => {
   
-  const [icon, tooltip] = entityTypeIconsAndTooltips[value] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+  const [icon, tooltip] = iconsAndTooltips[typeName] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
 
   return (
     <Box style={style}>

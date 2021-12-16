@@ -1,17 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { ProductType } from '.';
 
-interface EntityTypeIconsAndTooltips {
-  [key: string]: [string, string] | undefined;
-}
-
-export const entityTypeIconsAndTooltips: EntityTypeIconsAndTooltips = {
-  'LayerRasterRecord': ['mc-icon-Map-Orthophoto', 'Orthophoto'],
-  'Layer3DRecord': ['mc-icon-Map-3D', '3D'],
-  'BestRecord': ['mc-icon-Bests', 'BEST'],
-  'LayerDEMRecord': ['mc-icon-Map-Terrain', 'DEM'],
-};
-
 const {
   ORTHOPHOTO,
   ORTHOPHOTO_HISTORY,
@@ -30,11 +19,15 @@ const {
   POINT_CLOUD,
 } = ProductType;
 
-interface ProductTypeIconsAndTooltips {
+interface IconsAndTooltips {
   [key: string]: [string, string] | undefined;
 }
 
-export const productTypeIconsAndTooltips: ProductTypeIconsAndTooltips = {
+export const iconsAndTooltips: IconsAndTooltips = {
+  'LayerRasterRecord': ['mc-icon-Map-Orthophoto', 'Orthophoto'],
+  'Layer3DRecord': ['mc-icon-Map-3D', '3D'],
+  'BestRecord': ['mc-icon-Bests', 'BEST'],
+  'LayerDEMRecord': ['mc-icon-Map-Terrain', 'DEM'],
   [ORTHOPHOTO]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO],
   [ORTHOPHOTO_HISTORY]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO_HISTORY],
   [ORTHOPHOTO_BEST]: ['mc-icon-Map-Best-Orthophoto', ORTHOPHOTO_BEST],
