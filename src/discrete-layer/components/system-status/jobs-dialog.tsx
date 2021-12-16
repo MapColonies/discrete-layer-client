@@ -23,7 +23,9 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
+
 import './jobs-dialog.css';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 
 const pagination = true;
 const pageSize = 10;
@@ -136,11 +138,17 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   const colDef = [
     {
+      headerName: '',
+      width: 40,
+      field: 'productType',
+      cellRenderer: 'productTypeRenderer'
+    },
+    {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'resourceId',
+      field: 'productName',
     },
     {
       headerName: intl.formatMessage({
@@ -160,21 +168,13 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     },
     {
       headerName:  intl.formatMessage({
-        id: 'system-status.job.fields.status.label',
-      }),
-      width: 160,
-      field: 'status',
-      cellRenderer: 'statusRenderer',
-    },
-    {
-      headerName:  intl.formatMessage({
         id: 'system-status.job.fields.priority.label',
       }),
       width: 100,
       field: 'priority',
       editable: true,
       cellStyle: (params: Record<string, any>): Record<string, string> => {
-        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)'};
+        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)', maxHeight:'50px'};
       },
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
@@ -198,20 +198,31 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.created.label',
       }),
-      width: 120,
+      width: 165,
       field: 'created',
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
+      sortable: true,
+      // @ts-ignore
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
     },
     {
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.updated.label',
       }),
-      width: 120,
+      width: 165,
       field: 'updated',
       sortable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+    },
+    {
+      headerName:  intl.formatMessage({
+        id: 'system-status.job.fields.status.label',
+      }),
+      width: 160,
+      field: 'status',
+      cellRenderer: 'statusRenderer',
     },
     // {
     //   headerName: 'actions',
@@ -227,6 +238,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       {colId: 'updated', sort: 'desc'}
     ];
     params.api.setSortModel(sortModel);
+    params.api.sizeColumnsToFit();
   };
 
   const gridOptions: GridComponentOptions = {
@@ -238,7 +250,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       return data.id as string;
     },
     detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 100,
+    detailsRowHeight: 230,
     detailsRowExapnderPosition: 'start',
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
@@ -248,6 +260,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
       priorityRenderer: PriorityRenderer,
+      productTypeRenderer: ProductTypeRenderer
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
@@ -255,8 +268,10 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     suppressCellSelection: true,
     singleClickEdit: true,
     onGridReady: onGridReady,
-    immutableData: true //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
+    immutableData: true, //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
     // suppressRowClickSelection: true,
+    suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
+    unSortIcon: true, // Used to show un-sorted icon.
   };
 
   return (
@@ -287,7 +302,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             rowData={gridRowData}
             style={{
               height: 'calc(100% - 64px)',
-              width: 'calc(100% - 8px)'
+              width: 'calc(100% - 8px)',
+              padding: '12px'
             }}
           />
           <Box className="buttons">

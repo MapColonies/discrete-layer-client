@@ -1,15 +1,32 @@
-#jobsDialog .mdc-dialog__surface{
+
+#jobsDialog .mdc-dialog__surface {
   max-width: unset;
+  right:12px;
+  top:20px;
+}
+
+body[dir=rtl] #jobsDialog .mdc-dialog__surface {
+  right: unset;
+  left:12px;
+}
+
+#jobsDialog .mdc-dialog{
+  justify-content: flex-end;
 }
 
 #jobsDialog .jobsBody{
   overflow-y: hidden !important;
-  height: 600px;
-  width: 950px;
+  height: 750px;
+  width: 1420px;
+  padding: 8px 8px;
 }
 
 #jobsDialog .closeIcon {
   margin-left: auto;
+}
+
+.jobsBody .ag-body-viewport.ag-layout-normal.ag-row-no-animation {
+  overflow-y: overlay !important;
 }
 
 body[dir=rtl] #jobsDialog .closeIcon {
@@ -89,4 +106,9 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 
 body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   margin-right: 250%;
+}
+
+#jobsDialog .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
+  background: unset;
+  overflow: visible;
 }

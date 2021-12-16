@@ -18,7 +18,7 @@ interface DateValuePresentorProps {
 
 export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
   const local = {
-    placeHolderText: CONFIG.LOCALE.DATE_TIME_FORMAT,
+    placeHolderText: CONFIG.LOCALE.DATE_FORMAT,
     calendarLocale: CONFIG.I18N.DEFAULT_LANGUAGE as SupportedLocales,
   };
 
