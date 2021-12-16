@@ -45,7 +45,7 @@
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
-  "record-type.record_dem.label": "מודל גבהים ספרתי",
+  "record-type.record_dem.label": "גבהים",
   "record-type.record_all.label": "הכל",
 
   "polygon-selection.draw-btn.tooltip": "צייר אזור ליצוא",
@@ -233,7 +233,7 @@
   "field-names.dem.units": "יחידות גאוגרפיות",
   "field-names.dem.undulationModel": "מודל גליות בשימוש",
   "field-names.dem.dataType": "סוג מידע",
-  "field-names.dem.noDateValue": "ערך שמציין מידע לא קיים",
+  "field-names.dem.noDataValue": "ערך שמציין מידע לא קיים",
   "field-names.dem.links": "קישורים",
   "field-names.dem.link.name": "שם",
   "field-names.dem.link.description": "תאור",
