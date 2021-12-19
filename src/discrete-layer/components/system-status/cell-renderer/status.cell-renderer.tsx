@@ -1,11 +1,11 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Box } from '@map-colonies/react-components';
 import { Typography } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
 
 import './status.cell-renderer.css';
-import { useIntl } from 'react-intl';
 
 const NO_DATA = 0;
 const NO_WIDTH = 0;
@@ -71,10 +71,8 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
     switch(status){
       case Status.Completed:
         return getSectionComponent(Status.Completed, STATUS_BAR_WIDTH);
-        break;
       case Status.Failed:
         return getSectionComponent(Status.Failed, STATUS_BAR_WIDTH);
-        break;
       default: 
         // Do nothing
         break;
