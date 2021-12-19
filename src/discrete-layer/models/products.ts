@@ -26,7 +26,7 @@ interface IconsAndTooltips {
 export const iconsAndTooltips: IconsAndTooltips = {
   'LayerRasterRecord': ['mc-icon-Map-Orthophoto', 'Orthophoto', ''],
   'Layer3DRecord': ['mc-icon-Map-3D', '3D', ''],
-  'LayerDEMRecord': ['mc-icon-Map-Terrain', 'DEM', ''],
+  'LayerDemRecord': ['mc-icon-Map-Terrain', 'DEM', ''],
   'BestRecord': ['mc-icon-Bests', 'BEST', ''],
   [ORTHOPHOTO]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO, 'LayerRasterRecord'],
   [ORTHOPHOTO_HISTORY]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO_HISTORY, 'LayerRasterRecord'],
@@ -38,9 +38,9 @@ export const iconsAndTooltips: IconsAndTooltips = {
   [RASTER_VECTOR]: ['mc-icon-Map-Vector', RASTER_VECTOR, 'LayerRasterRecord'],
   [RASTER_VECTOR_BEST]: ['mc-icon-Map-Vector', RASTER_VECTOR_BEST, 'BestRecord'],
   [VECTOR_BEST]: ['mc-icon-Map-Vector', VECTOR_BEST, 'BestRecord'],
-  [DTM]: ['mc-icon-Map-Terrain', DTM, 'LayerDEMRecord'],
-  [DSM]: ['mc-icon-Map-Terrain', DSM, 'LayerDEMRecord'],
-  [QUANTIZED_MESH]: ['mc-icon-Map-Terrain', QUANTIZED_MESH, 'LayerDEMRecord'],
+  [DTM]: ['mc-icon-Map-Terrain', DTM, 'LayerDemRecord'],
+  [DSM]: ['mc-icon-Map-Terrain', DSM, 'LayerDemRecord'],
+  [QUANTIZED_MESH]: ['mc-icon-Map-Terrain', QUANTIZED_MESH, 'LayerDemRecord'],
   [PHOTO_REALISTIC_3D]: ['mc-icon-Map-3D', PHOTO_REALISTIC_3D, 'Layer3DRecord'],
   [POINT_CLOUD]: ['mc-icon-Map-3D', POINT_CLOUD, 'Layer3DRecord'],
 };
