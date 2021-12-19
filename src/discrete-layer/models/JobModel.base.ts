@@ -5,6 +5,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { StatusEnumType } from "./StatusEnum"
 import { TaskModel, TaskModelType } from "./TaskModel"
 import { TaskModelSelector, taskModelPrimitives } from "./TaskModel.base"
@@ -33,7 +34,8 @@ export const JobModelBase = ModelBase
     internalId: types.union(types.undefined, types.null, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.null, types.string),
-    productType: types.union(types.undefined, types.null, types.string),
+    //productType: types.union(types.undefined, types.null, types.string),
+    productType: types.union(types.undefined, ProductTypeEnumType),
     tasks: types.union(types.undefined, types.array(types.late((): any => TaskModel))),
     created: types.union(types.undefined, types.null, types.frozen()),
     updated: types.union(types.undefined, types.null, types.frozen()),
