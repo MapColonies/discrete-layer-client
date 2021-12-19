@@ -8,7 +8,7 @@ import { ModelBase } from "./ModelBase"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { StatusEnumType } from "./StatusEnum"
 import { TaskModel, TaskModelType } from "./TaskModel"
-import { TaskModelSelector } from "./TaskModel.base"
+import { TaskModelSelector, taskModelPrimitives } from "./TaskModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -30,7 +30,7 @@ export const JobModelBase = ModelBase
     type: types.union(types.undefined, types.null, types.string),
     percentage: types.union(types.undefined, types.null, types.number),
     priority: types.union(types.undefined, types.null, types.number),
-    expirationDate: types.union(types.undefined, types.null, types.frozen()),
+    expirationDate: types.union(types.undefined, types.null, types.number),
     internalId: types.union(types.undefined, types.null, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.null, types.string),
@@ -83,4 +83,4 @@ export function selectFromJob() {
   return new JobModelSelector()
 }
 
-export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned
+export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.id.tasks(taskModelPrimitives)
