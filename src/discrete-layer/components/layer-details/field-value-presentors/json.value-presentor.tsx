@@ -36,7 +36,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
       // eslint-disable-next-line
       const val = (e.target as any).value;
       
-      let formikValue: unknown = null;
+      let formikValue: unknown = undefined;
       try {
         formikValue = JSON.parse(val) as unknown;
         // eslint-disable-next-line
@@ -44,7 +44,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
       // eslint-disable-next-line no-empty
       } catch(e) {
         // eslint-disable-next-line
-        (formik as any).setFieldValue(fieldInfo.fieldName, null);
+        (formik as any).setFieldValue(fieldInfo.fieldName, undefined);
       }
       
       // eslint-disable-next-line
