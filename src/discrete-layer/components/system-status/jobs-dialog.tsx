@@ -141,21 +141,29 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName: '',
       width: 40,
       field: 'productType',
-      cellRenderer: 'productTypeRenderer'
+      cellRenderer: 'productTypeRenderer',
+      cellRendererParams: {
+        style: {
+          height: '40px',
+          width: '40px',
+          display: 'flex',
+          alignItems: 'center'
+        }
+      }
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'productName',
+      field: 'productName'
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.version.label',
       }),
       width: 80,
-      field: 'version',
+      field: 'version'
     },
     {
       headerName:  intl.formatMessage({
@@ -164,7 +172,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       width: 120,
       field: 'type',
       filter: true,
-      sortable: true,
+      sortable: true
     },
     {
       headerName:  intl.formatMessage({
@@ -214,7 +222,15 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       sortable: true,
       valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
+    },
+    {
+      headerName:  intl.formatMessage({
+        id: 'system-status.job.fields.status.label',
+      }),
+      width: 160,
+      field: 'status',
+      cellRenderer: 'statusRenderer'
     },
     {
       headerName:  intl.formatMessage({

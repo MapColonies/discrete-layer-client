@@ -3,6 +3,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { Moment } from 'moment';
+import { truncate } from 'lodash';
+import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { relativeDateFormatter } from '../../../../common/helpers/type-formatters';
 import { JobModelType, Status, TaskModelType } from '../../../models';

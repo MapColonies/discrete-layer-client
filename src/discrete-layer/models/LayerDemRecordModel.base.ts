@@ -25,7 +25,7 @@ import { RootStoreType } from "./index"
 export const LayerDemRecordModelBase = ModelBase
   .named('LayerDemRecord')
   .props({
-    __typename: types.optional(types.literal("LayerDEMRecord"), "LayerDEMRecord"),
+    __typename: types.optional(types.literal("LayerDemRecord"), "LayerDemRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
     classification: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),

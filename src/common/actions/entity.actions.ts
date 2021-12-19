@@ -148,7 +148,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     ]
   },
   {
-    entity: 'LayerDEMRecord',
+    entity: 'LayerDemRecord',
     actions: [
       {
         id: 1,

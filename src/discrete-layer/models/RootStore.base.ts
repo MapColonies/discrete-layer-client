@@ -202,40 +202,34 @@ export type IngestionDemData = {
 }
 export type LayerDemRecordInput = {
   type?: RecordType
-  productId: string
+  classification: string
   productName: string
-  productVersion?: string
-  productType: ProductType
   description?: string
-  creationDate?: any
+  srsId: string
+  srsName: string
+  producerName?: string
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
-  minResolutionMeter?: number
-  maxResolutionMeter?: number
-  nominalResolution?: number
-  maxAccuracyCE90?: number
-  absoluteAccuracyLEP90: number
-  accuracySE90?: number
-  relativeAccuracyLEP90?: number
-  visualAccuracy?: number
   sensorType?: SensorType[]
+  region?: string
+  productId: string
+  productType: ProductType
   footprint: any
+  absoluteAccuracyLEP90: number
+  relativeAccuracyLEP90?: number
+  resolutionDegree?: number
+  resolutionMeter: number
+  layerPolygonParts?: any
+  productBoundingBox?: string
   heightRangeFrom?: number
   heightRangeTo?: number
-  srsId: string
-  srsName: string
-  srsOrigin?: string
-  region?: string
-  classification: string
-  productionSystem?: string
-  productionSystemVer?: string
-  producerName?: string
-  productionMethod?: string
-  minFlightAlt?: number
-  maxFlightAlt?: number
+  verticalDatum: VerticalDatum
+  units?: Units
   geographicArea?: string
-  productBoundingBox?: string
+  undulationModel: UndulationModel
+  dataType: DataType
+  noDataValue: NoDataValue
   id: string
   insertDate?: any
   wktGeometry?: string
@@ -275,7 +269,7 @@ export enum RootStoreBaseMutations {
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
 mutateStart3DIngestion="mutateStart3DIngestion",
-mutateStartDemIngestion="mutateStartDemIngestion",
+mutateStartDEMIngestion="mutateStartDEMIngestion",
 mutateUpdateJob="mutateUpdateJob"
 }
 
@@ -284,7 +278,7 @@ mutateUpdateJob="mutateUpdateJob"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDEMRecord', () => LayerDemRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDEMRecord', 'BestRecord', 'EntityDescriptor'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['Task', () => TaskModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -332,8 +326,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     mutateStart3DIngestion(variables: { data: Ingestion3DData }, optimisticUpdate?: () => void) {
       return self.mutate<{ start3DIngestion: string }>(`mutation start3DIngestion($data: Ingestion3DData!) { start3DIngestion(data: $data) }`, variables, optimisticUpdate)
     },
-    mutateStartDemIngestion(variables: { data: IngestionDemData }, optimisticUpdate?: () => void) {
-      return self.mutate<{ startDemIngestion: string }>(`mutation startDemIngestion($data: IngestionDemData!) { startDemIngestion(data: $data) }`, variables, optimisticUpdate)
+    mutateStartDEMIngestion(variables: { data: IngestionDemData }, optimisticUpdate?: () => void) {
+      return self.mutate<{ startDEMIngestion: string }>(`mutation startDEMIngestion($data: IngestionDEMData!) { startDEMIngestion(data: $data) }`, variables, optimisticUpdate)
     },
     mutateUpdateJob(variables: { data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateJob: string }>(`mutation updateJob($data: JobUpdateData!, $id: String!) { updateJob(data: $data, id: $id) }`, variables, optimisticUpdate)
