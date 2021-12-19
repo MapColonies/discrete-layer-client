@@ -37,7 +37,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
           break;
-        case 'LayerDEMRecord.edit':
+        case 'LayerDemRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
