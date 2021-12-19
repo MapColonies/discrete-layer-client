@@ -58,7 +58,7 @@ interface ProductTree {
 
 export const getProductsHierarchy = (): any => {
   const productsList: ProductTree = {};
-  Object.keys(iconsAndTooltips).map((key: string) => {
+  Object.keys(iconsAndTooltips).forEach((key: string) => {
     const value = iconsAndTooltips[key] as string[];
     const [icon, tooltip, parent] = value;
     if (parent === '') {
