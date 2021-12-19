@@ -281,7 +281,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         const { directory, fileNames, __typename, ...metadata } = inputValues;
         switch (recordType) {
           case RecordType.RECORD_DEM:
-            mutationQuery.setQuery(store.mutateStartDEMIngestion({
+            mutationQuery.setQuery(store.mutateStartDemIngestion({
               data: {
                 directory: directory as string,
                 fileNames: (fileNames as string).split(","),

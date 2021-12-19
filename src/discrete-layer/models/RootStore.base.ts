@@ -265,7 +265,7 @@ export enum RootStoreBaseMutations {
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
 mutateStart3DIngestion="mutateStart3DIngestion",
-mutateStartDEMIngestion="mutateStartDEMIngestion",
+mutateStartDemIngestion="mutateStartDemIngestion",
 mutateUpdateJob="mutateUpdateJob"
 }
 
@@ -317,8 +317,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     mutateStart3DIngestion(variables: { data: Ingestion3DData }, optimisticUpdate?: () => void) {
       return self.mutate<{ start3DIngestion: string }>(`mutation start3DIngestion($data: Ingestion3DData!) { start3DIngestion(data: $data) }`, variables, optimisticUpdate)
     },
-    mutateStartDEMIngestion(variables: { data: IngestionDemData }, optimisticUpdate?: () => void) {
-      return self.mutate<{ startDEMIngestion: string }>(`mutation startDEMIngestion($data: IngestionDEMData!) { startDEMIngestion(data: $data) }`, variables, optimisticUpdate)
+    mutateStartDemIngestion(variables: { data: IngestionDemData }, optimisticUpdate?: () => void) {
+      return self.mutate<{ startDemIngestion: string }>(`mutation startDemIngestion($data: IngestionDemData!) { startDemIngestion(data: $data) }`, variables, optimisticUpdate)
     },
     mutateUpdateJob(variables: { data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateJob: string }>(`mutation updateJob($data: JobUpdateData!, $id: String!) { updateJob(data: $data, id: $id) }`, variables, optimisticUpdate)
