@@ -15,6 +15,7 @@ import {
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
@@ -23,9 +24,7 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
-
 import './jobs-dialog.css';
-import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 
 const pagination = true;
 const pageSize = 10;
@@ -141,21 +140,29 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName: '',
       width: 40,
       field: 'productType',
-      cellRenderer: 'productTypeRenderer'
+      cellRenderer: 'productTypeRenderer',
+      cellRendererParams: {
+        style: {
+          height: '40px',
+          width: '40px',
+          display: 'flex',
+          alignItems: 'center'
+        }
+      }
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'productName',
+      field: 'productName'
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.version.label',
       }),
       width: 80,
-      field: 'version',
+      field: 'version'
     },
     {
       headerName:  intl.formatMessage({
@@ -164,7 +171,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       width: 120,
       field: 'type',
       filter: true,
-      sortable: true,
+      sortable: true
     },
     {
       headerName:  intl.formatMessage({
@@ -203,7 +210,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
       sortable: true,
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
     },
     {
       headerName:  intl.formatMessage({
@@ -214,7 +221,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       sortable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
     },
     {
       headerName:  intl.formatMessage({
@@ -222,7 +229,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       }),
       width: 160,
       field: 'status',
-      cellRenderer: 'statusRenderer',
+      cellRenderer: 'statusRenderer'
     },
     // {
     //   headerName: 'actions',
