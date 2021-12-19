@@ -88,6 +88,9 @@ export type JobsSearchParams = {
   status?: Status
   type?: string
 }
+export type TasksSearchParams = {
+  jobId: string
+}
 export type RecordUpdatePartial = {
   productName?: string
   description?: string
@@ -265,7 +268,8 @@ querySearch="querySearch",
 querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
 queryEntityDescriptors="queryEntityDescriptors",
-queryJobs="queryJobs"
+queryJobs="queryJobs",
+queryTasks="queryTasks"
 }
 export enum RootStoreBaseMutations {
 mutateUpdateMetadata="mutateUpdateMetadata",
@@ -312,6 +316,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryJobs(variables: { params?: JobsSearchParams }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ jobs: JobModelType[]}>(`query jobs($params: JobsSearchParams) { jobs(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryTasks(variables: { params?: TasksSearchParams }, resultSelector: string | ((qb: TaskModelSelector) => TaskModelSelector) = taskModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ tasks: TaskModelType[]}>(`query tasks($params: TasksSearchParams) { tasks(params: $params) {
+        ${typeof resultSelector === "function" ? resultSelector(new TaskModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     mutateUpdateMetadata(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {

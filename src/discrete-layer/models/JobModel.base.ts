@@ -6,8 +6,6 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { StatusEnumType } from "./StatusEnum"
-import { TaskModel, TaskModelType } from "./TaskModel"
-import { TaskModelSelector, taskModelPrimitives } from "./TaskModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -29,12 +27,11 @@ export const JobModelBase = ModelBase
     type: types.union(types.undefined, types.null, types.string),
     percentage: types.union(types.undefined, types.null, types.number),
     priority: types.union(types.undefined, types.null, types.number),
-    expirationDate: types.union(types.undefined, types.null, types.number),
+    expirationDate: types.union(types.undefined, types.null, types.frozen()),
     internalId: types.union(types.undefined, types.null, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, types.null, types.string),
-    tasks: types.union(types.undefined, types.array(types.late((): any => TaskModel))),
     created: types.union(types.undefined, types.null, types.frozen()),
     updated: types.union(types.undefined, types.null, types.frozen()),
     taskCount: types.union(types.undefined, types.null, types.number),
@@ -76,10 +73,9 @@ export class JobModelSelector extends QueryBuilder {
   get pendingTasks() { return this.__attr(`pendingTasks`) }
   get inProgressTasks() { return this.__attr(`inProgressTasks`) }
   get isCleaned() { return this.__attr(`isCleaned`) }
-  tasks(builder?: string | TaskModelSelector | ((selector: TaskModelSelector) => TaskModelSelector)) { return this.__child(`tasks`, TaskModelSelector, builder) }
 }
 export function selectFromJob() {
   return new JobModelSelector()
 }
 
-export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.id.tasks(taskModelPrimitives)
+export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.id
