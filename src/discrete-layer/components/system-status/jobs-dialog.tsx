@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
@@ -15,7 +15,7 @@ import {
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { dateFormatter, relativeDateFormatter } from '../../../common/helpers/type-formatters';
+import { relativeDateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
@@ -241,12 +241,12 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     params.api.sizeColumnsToFit();
   };
 
-  const gridOptions: GridComponentOptions = {
+  const gridOptions: GridComponentOptions = useMemo(()=>({
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,
-    getRowNodeId: (data: JobModelType) => {
+    getRowNodeId: (data: JobModelType): string => {
       return data.id as string;
     },
     detailsRowCellRenderer: 'detailsRenderer',
@@ -272,7 +272,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     // suppressRowClickSelection: true,
     suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
     unSortIcon: true, // Used to show un-sorted icon.
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }),[]);
 
   return (
     <Box id="jobsDialog">
