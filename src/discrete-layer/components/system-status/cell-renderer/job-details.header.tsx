@@ -2,9 +2,8 @@ import React from 'react';
 import { Box } from '@map-colonies/react-components';
 import './job-details.header.css';
 import { JobModelType, Status } from '../../../models';
-import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
+import { Typography } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { CopyButton } from '../job-details.copy-button';
 
 interface JobDetailsHeaderProps {
