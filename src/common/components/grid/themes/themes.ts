@@ -10,7 +10,7 @@ export class GridThemes {
   // },
   public static getTheme(mainTheme: IOptions): IOptions {
     const alternativeSurfaceColor = get(mainTheme, 'custom.GC_ALTERNATIVE_SURFACE', mainTheme.surface) as string;
-    const selectionBackground = get(mainTheme, 'custom.GC_SELECTION_BACKGROUND', mainTheme.surface) as string;
+    // const selectionBackground = get(mainTheme, 'custom.GC_SELECTION_BACKGROUND', mainTheme.surface) as string;
     const foregroundColor = get(mainTheme, 'textIconOnDark', mainTheme.textPrimaryOnDark) as string;
     
     return {

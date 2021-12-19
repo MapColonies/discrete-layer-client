@@ -1,17 +1,16 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Moment } from 'moment';
+import { truncate } from 'lodash';
+import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { dateFormatter } from '../../../../common/helpers/type-formatters';
 import { JobModelType, Status } from '../../../models';
+import { CopyButton } from '../job-details.copy-button';
+import { JobDetailsHeader } from './job-details.header';
 
 import './job-details.cell-renderer.css';
-import { JobDetailsHeader } from './job-details.header';
-import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { truncate } from 'lodash';
-import { CopyButton } from '../job-details.copy-button';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -48,7 +47,6 @@ const taskFileds: ITaskField[] = [
 ];
 
 export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
-  const intl = useIntl();
   const tasksData = (props.data as JobModelType).tasks as Record<
     string,
     unknown
@@ -99,13 +97,10 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
             {dateFormatter(task[field.name] as Moment, true)}
           </Box>
         );
-        break;
       case 'Status':
         return statusPresentor(task);
-        break;
       default:
         return <Box className={'gridCell'}>{task[field.name] as string} </Box>;
-        break;
     }
   };
 
