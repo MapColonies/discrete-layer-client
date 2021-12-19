@@ -18,7 +18,7 @@ export class LayerMetadataMixedModelSelector extends QueryBuilder {
   layer3DRecord(builder?: string | Layer3DRecordModelSelector | ((selector: Layer3DRecordModelSelector) => Layer3DRecordModelSelector)) { return this.__inlineFragment(`Layer3DRecord`, Layer3DRecordModelSelector, builder) }
   layerRasterRecord(builder?: string | LayerRasterRecordModelSelector | ((selector: LayerRasterRecordModelSelector) => LayerRasterRecordModelSelector)) { return this.__inlineFragment(`LayerRasterRecord`, LayerRasterRecordModelSelector, builder) }
   bestRecord(builder?: string | BestRecordModelSelector | ((selector: BestRecordModelSelector) => BestRecordModelSelector)) { return this.__inlineFragment(`BestRecord`, BestRecordModelSelector, builder) }
-  layerDemRecord(builder?: string | LayerDemRecordModelSelector | ((selector: LayerDemRecordModelSelector) => LayerDemRecordModelSelector)) { return this.__inlineFragment(`LayerDEMRecord`, LayerDemRecordModelSelector, builder) }
+  layerDemRecord(builder?: string | LayerDemRecordModelSelector | ((selector: LayerDemRecordModelSelector) => LayerDemRecordModelSelector)) { return this.__inlineFragment(`LayerDemRecord`, LayerDemRecordModelSelector, builder) }
 }
 export function selectFromLayerMetadataMixed() {
   return new LayerMetadataMixedModelSelector()
