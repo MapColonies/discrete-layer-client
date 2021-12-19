@@ -2,9 +2,8 @@ import React from 'react';
 import { Box } from '@map-colonies/react-components';
 import './job-details.header.css';
 import { JobModelType, Status } from '../../../models';
-import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
+import { Typography } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { CopyButton } from '../job-details.copy-button';
 
 interface JobDetailsHeaderProps {
@@ -103,6 +102,8 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
   };
 
   const generateTaskCounts = (): JSX.Element => {
+    const localeValueWithCommas = (value: string): string => Number(value).toLocaleString();
+
     return (
       <>
         {Object.values(dataToPresent.taskCountRow).map(({ label, value }) => {
@@ -112,7 +113,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
                 {`${label}:`}
               </Typography>
               <Typography tag="p" className="countValue">
-                {value}
+                {localeValueWithCommas(value)}
               </Typography>
             </Box>
           );
