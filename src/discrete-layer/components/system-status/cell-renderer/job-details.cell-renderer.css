@@ -29,7 +29,11 @@ body[dir="rtl"] .jobDetailsContainer {
   margin-top: 8px;
   margin-bottom: 12px;
   padding: 8px;
+}
 
+.loadingContainer{
+  grid-column: 1 / -1;
+  height:10em;
 }
 
 .column-label {

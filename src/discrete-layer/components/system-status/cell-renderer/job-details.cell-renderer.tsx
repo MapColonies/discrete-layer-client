@@ -3,8 +3,6 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { Moment } from 'moment';
-import { truncate } from 'lodash';
-import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { relativeDateFormatter } from '../../../../common/helpers/type-formatters';
 import { JobModelType, Status, TaskModelType } from '../../../models';
@@ -15,6 +13,7 @@ import { JobDetailsHeader } from './job-details.header';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { truncate } from 'lodash';
 import { CopyButton } from '../job-details.copy-button';
+import { Loading } from '../../../../common/components/tree/statuses/Loading';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -140,7 +139,12 @@ const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
     }
   }, [data]);
 
-  if (loading) return <Box>Loading...</Box>;
+  if (loading)
+    return (
+      <Box className='loadingContainer'>
+        <Loading />
+      </Box>
+    );
 
   return (
     <>
@@ -161,8 +165,6 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
 
   const keyPrefix = `${(props.data as JobModelType).resourceId as string}`;
 
-  console.log('rerender')
-
   return (
     <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
@@ -177,6 +179,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
             <FormattedMessage id={field.label} />
           </Typography>
         ))}
+
         <TasksRenderer jobId={jobId as string} />
       </Box>
     </Box>

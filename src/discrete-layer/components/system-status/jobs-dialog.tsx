@@ -232,20 +232,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       field: 'status',
       cellRenderer: 'statusRenderer'
     },
-    {
-      headerName:  intl.formatMessage({
-        id: 'system-status.job.fields.status.label',
-      }),
-      width: 160,
-      field: 'status',
-      cellRenderer: 'statusRenderer',
-    },
-    // {
-    //   headerName: 'actions',
-    //   width: 240,
-    //   pinned: 'right',
-    //   cellRenderer: 'actionsRenderer',
-    // },
   ];
 
   const onGridReady = (params: GridReadyEvent) => {
