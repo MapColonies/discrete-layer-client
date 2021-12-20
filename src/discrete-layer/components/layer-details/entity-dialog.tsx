@@ -61,7 +61,6 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       LayerDemRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
-      record.id = DEFAULT_ID;
       record.productType = ProductType.DTM;
       record['__typename'] = LayerDemRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
@@ -69,7 +68,6 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       Layer3DRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
-      record.id = DEFAULT_ID;
       record.productType = ProductType.PHOTO_REALISTIC_3D;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
@@ -77,7 +75,6 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
       LayerRasterRecordModelKeys.forEach(key => {
         record[key as string] = undefined;
       });
-      record.id = DEFAULT_ID;
       record.updateDate = moment();
       record.sensorType = SensorType.UNDEFINED;
       record.productType = ProductType.ORTHOPHOTO;
@@ -86,6 +83,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
     default:
       break;
   }
+  record.id = DEFAULT_ID;
   record.srsId = '4326';
   record.srsName = 'WGS84GEO';
   record.producerName = 'IDFMU';
