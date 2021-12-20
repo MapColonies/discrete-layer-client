@@ -26,6 +26,7 @@ import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
 import './jobs-dialog.css';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
+import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 
 const pagination = true;
 const pageSize = 10;
@@ -206,9 +207,13 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.created.label',
       }),
-      width: 165,
+      width: 172,
       field: 'created',
-      valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
+      // valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
+      cellRenderer: 'dateCellRenderer',
+      cellRendererParams: {
+        field: 'created'
+      },
       sortable: true,
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
@@ -217,10 +222,14 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.updated.label',
       }),
-      width: 165,
+      width: 172,
       field: 'updated',
       sortable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
+      // valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
+      cellRenderer: 'dateCellRenderer',
+      cellRendererParams: {
+        field: 'updated'
+      },
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
     },
@@ -262,7 +271,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
       priorityRenderer: PriorityRenderer,
-      productTypeRenderer: ProductTypeRenderer
+      productTypeRenderer: ProductTypeRenderer,
+      dateCellRenderer: DateCellRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,

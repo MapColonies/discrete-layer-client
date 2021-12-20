@@ -4,7 +4,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { Moment } from 'moment';
 import { Box } from '@map-colonies/react-components';
-import { relativeDateFormatter } from '../../../../common/helpers/type-formatters';
+import {
+  relativeDateFormatter,
+  dateFormatter,
+} from '../../../../common/helpers/type-formatters';
 import { JobModelType, Status, TaskModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
 
@@ -98,13 +101,21 @@ const getValuePresentor = (
   setCollapsed?: (collapsed: boolean) => void
 ): JSX.Element => {
   switch (field.valueType) {
-    case 'date':
+    case 'date': {
+      const dateAndTimeTooltipContent: string = dateFormatter(
+        task[field.name] as Moment,
+        true
+      );
+
       return (
-        <Box className={'gridCell'}>
-          {relativeDateFormatter(task[field.name] as Moment)}
-        </Box>
+        <Tooltip content={dateAndTimeTooltipContent}>
+          <Box className={'gridCell'}>
+            {relativeDateFormatter(task[field.name] as Moment)}
+          </Box>
+        </Tooltip>
       );
       break;
+    }
     case 'Status':
       return <StatusPresentor task={task} />;
       break;
@@ -141,7 +152,7 @@ const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
 
   if (loading)
     return (
-      <Box className='loadingContainer'>
+      <Box className="loadingContainer">
         <Loading />
       </Box>
     );
