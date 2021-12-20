@@ -86,6 +86,9 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
     default:
       break;
   }
+  record.srsId = '4326';
+  record.srsName = 'WGS84GEO';
+  record.producerName = 'IDFMU';
   record.type = recordType;
   return record as ILayerImage;
 };
