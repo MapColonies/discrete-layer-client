@@ -32,18 +32,20 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     (formik as any).handleChange(e);
     setInputVal(e.target.value);
   };
+  
+  const isCopyable = fieldInfo.isCopyable ?? false;
 
   if (
     formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
         <Tooltip content={value}>
-          <Box className={`detailsFieldValue ${fieldInfo.isCopyable ? 'detailFieldCopyable': ''}`}>
+          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable': ''}`}>
             {value}
           </Box>
         </Tooltip>
         {
-        fieldInfo.isCopyable && <Box className="detailsFieldCopyIcon">
+        isCopyable && <Box className="detailsFieldCopyIcon">
             <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
               <CopyToClipboard text={value as string}>
                 <IconButton className="mc-icon-Copy"/>

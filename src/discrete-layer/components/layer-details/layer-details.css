@@ -58,7 +58,6 @@
 }
 
 .detailFieldCopyable {
-  flex: 0 0 50%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -67,6 +66,7 @@
 
 .detailsFieldCopyIcon {
   margin: 0 16px;
+  height: 20px;
 }
 
 body[dir='rtl'] .detailsFieldValue {
