@@ -97,7 +97,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
-  const [isNewDEMEntityDialogOpen, setNewDEMEntityDialogOpen] = useState<boolean>(false);
+  const [isNewDemEntityDialogOpen, setNewDemEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
@@ -206,7 +206,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
         break;
       case RecordType.RECORD_DEM:
-        setNewDEMEntityDialogOpen(!isNewDEMEntityDialogOpen);
+        setNewDemEntityDialogOpen(!isNewDemEntityDialogOpen);
         break;
       default:
         break;
@@ -643,10 +643,10 @@ const DiscreteLayerView: React.FC = observer(() => {
           </EntityDialogComponent>
         }
         {
-          isNewDEMEntityDialogOpen &&
+          isNewDemEntityDialogOpen &&
           <EntityDialogComponent
-            isOpen={isNewDEMEntityDialogOpen}
-            onSetOpen={setNewDEMEntityDialogOpen}
+            isOpen={isNewDemEntityDialogOpen}
+            onSetOpen={setNewDemEntityDialogOpen}
             recordType={RecordType.RECORD_DEM}>
           </EntityDialogComponent>
         }

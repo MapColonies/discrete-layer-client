@@ -2,7 +2,7 @@
 import React from 'react';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { iconsAndTooltips } from '../../../discrete-layer/models/products';
+import { iconsAndTooltips } from '../../../discrete-layer/models/catalogProducts';
 
 interface ITypeIconProps {
   typeName: string;
