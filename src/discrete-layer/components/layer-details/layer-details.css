@@ -57,6 +57,18 @@
   flex: 1 1;
 }
 
+.detailFieldCopyable {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: ltr;
+}
+
+.detailsFieldCopyIcon {
+  margin: 0 16px;
+  height: 20px;
+}
+
 body[dir='rtl'] .detailsFieldValue {
   margin-left: unset;
   margin-right: 12px;

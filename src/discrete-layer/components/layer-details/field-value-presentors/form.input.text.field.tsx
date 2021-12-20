@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { get } from 'lodash';
-import { TextField, Tooltip } from '@map-colonies/react-core';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useIntl } from 'react-intl';
+import { TextField, Tooltip, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
@@ -22,6 +24,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     | undefined;
 
   const [inputVal, setInputVal] = useState(val ?? '');
+  const intl = useIntl();
 
 
   const handleInputChange= (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,15 +32,28 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     (formik as any).handleChange(e);
     setInputVal(e.target.value);
   };
+  
+  const isCopyable = fieldInfo.isCopyable ?? false;
 
   if (
     formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <Tooltip content={value}>
-        <Box className="detailsFieldValue">
-          {value}
-        </Box>
-      </Tooltip>
+      <>
+        <Tooltip content={value}>
+          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable': ''}`}>
+            {value}
+          </Box>
+        </Tooltip>
+        {
+        isCopyable && <Box className="detailsFieldCopyIcon">
+            <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+              <CopyToClipboard text={value as string}>
+                <IconButton className="mc-icon-Copy"/>
+              </CopyToClipboard>
+            </Tooltip>
+          </Box>
+        }
+      </>
     );
   } else {
     let min: string;
