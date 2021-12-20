@@ -45,26 +45,31 @@ export const iconsAndTooltips: IconsAndTooltips = {
   [POINT_CLOUD]: ['mc-icon-Map-3D', POINT_CLOUD, 'Layer3DRecord'],
 };
 
-interface ProductItem {
+interface CatalogProductItem {
   label: string;
   value: string;
   icon: string;
-  children?: ProductItem[];
+  children?: CatalogProductItem[];
 }
 
-interface ProductTree {
-  [key: string]: ProductItem;
+interface CatalogProductTree {
+  [key: string]: CatalogProductItem;
 }
 
-export const getProductsHierarchy = (): any => {
-  const productsList: ProductTree = {};
+export const getCatalogProductsHierarchy = (): CatalogProductItem[] => {
+  const productsList: CatalogProductTree = {};
   Object.keys(iconsAndTooltips).forEach((key: string) => {
     const value = iconsAndTooltips[key] as string[];
     const [icon, tooltip, parent] = value;
     if (parent === '') {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (productsList[key] === undefined) {
-        productsList[key] = { label: tooltip, value: tooltip, icon: icon, children: [] };
+        productsList[key] = {
+          label: tooltip, // intl.formatMessage({id: `record-type.${RecordType[tooltip].toLowerCase()}.label`}),
+          value: tooltip,
+          icon: icon,
+          children: []
+        };
       } else {
         productsList[key].label = tooltip;
         productsList[key].value = tooltip;
@@ -73,15 +78,24 @@ export const getProductsHierarchy = (): any => {
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (productsList[parent] === undefined) {
-        productsList[parent] = { label: '', value: '', icon: '', children: [] };
+        productsList[parent] = {
+          label: '',
+          value: '',
+          icon: '',
+          children: []
+        };
       }
-      productsList[parent].children?.push({ label: tooltip, value: tooltip, icon: icon });
+      productsList[parent].children?.push({
+        label: tooltip,
+        value: tooltip,
+        icon: icon
+      });
     }
   });
-  return productsList;
+  return Object.values(productsList);
 };
 
-export const getProductsByEntityType = (entityType: string): any => {
+export const getCatalogProductsByEntityType = (entityType: string): unknown => {
   return Object.values(iconsAndTooltips).filter((item) => {
     const [,,parent] = item as string[];
     return parent === entityType;
