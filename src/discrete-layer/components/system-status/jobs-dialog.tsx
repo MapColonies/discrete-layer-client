@@ -9,13 +9,11 @@ import CONFIG from '../../../common/config';
 import { 
   GridComponent,
   GridComponentOptions,
-  GridValueFormatterParams,
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { relativeDateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
@@ -209,7 +207,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       }),
       width: 172,
       field: 'created',
-      // valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
       cellRenderer: 'dateCellRenderer',
       cellRendererParams: {
         field: 'created'
@@ -225,7 +222,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       width: 172,
       field: 'updated',
       sortable: true,
-      // valueFormatter: (params: GridValueFormatterParams): string => relativeDateFormatter(params.value),
       cellRenderer: 'dateCellRenderer',
       cellRendererParams: {
         field: 'updated'
