@@ -45,19 +45,19 @@ export const iconsAndTooltips: IconsAndTooltips = {
   [POINT_CLOUD]: ['mc-icon-Map-3D', POINT_CLOUD, 'Layer3DRecord'],
 };
 
-interface ProductItem {
+interface CatalogProductItem {
   label: string;
   value: string;
   icon: string;
-  children?: ProductItem[];
+  children?: CatalogProductItem[];
 }
 
-interface ProductTree {
-  [key: string]: ProductItem;
+interface CatalogProductTree {
+  [key: string]: CatalogProductItem;
 }
 
-export const getProductsHierarchy = (): any => {
-  const productsList: ProductTree = {};
+export const getCatalogProductsHierarchy = (): unknown => {
+  const productsList: CatalogProductTree = {};
   Object.keys(iconsAndTooltips).forEach((key: string) => {
     const value = iconsAndTooltips[key] as string[];
     const [icon, tooltip, parent] = value;
@@ -81,7 +81,7 @@ export const getProductsHierarchy = (): any => {
   return productsList;
 };
 
-export const getProductsByEntityType = (entityType: string): any => {
+export const getCatalogProductsByEntityType = (entityType: string): unknown => {
   return Object.values(iconsAndTooltips).filter((item) => {
     const [,,parent] = item as string[];
     return parent === entityType;
