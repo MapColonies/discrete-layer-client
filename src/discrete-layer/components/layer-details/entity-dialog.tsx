@@ -104,14 +104,14 @@ const getLabel = (recordType: RecordType): string => {
   if (recordType === RecordType.RECORD_3D) {
     return 'field-names.3d.fileNames';
   }
-  return 'field-names.raster.fileNames';
+  return 'field-names.ingestion.fileNames';
 };
 
 const getTooltip = (recordType: RecordType): string => {
   if (recordType === RecordType.RECORD_3D) {
-    return 'field-names.3d.fileNames.tooltip';
+    return 'info-field-tooltip.3d.fileNames.tooltip';
   }
-  return 'field-names.raster.fileNames.tooltip';
+  return 'info-field-tooltip.ingestion.fileNames.tooltip';
 };
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {

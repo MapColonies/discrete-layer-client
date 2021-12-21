@@ -14,7 +14,7 @@ interface IngestionFieldsProps {
   formik?: unknown;
 }
 
-const MemoizedIngestionInputs = (fields: IRecordFieldInfo[], values: string[], formik: unknown) => (useMemo((): JSX.Element[] => {
+const MemoizedIngestionInputs = (fields: IRecordFieldInfo[], values: string[], formik: unknown): JSX.Element[] => (useMemo((): JSX.Element[] => {
   return fields.map((field: IRecordFieldInfo, index: number) => {
     return (
       <Box className="ingestionField" key={field.fieldName}>
