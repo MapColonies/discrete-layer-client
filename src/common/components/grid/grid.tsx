@@ -60,6 +60,7 @@ export interface GridRowNode extends RowNode {};
 export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const [rowData, setRowData] = useState<any[]>()
   const theme = useTheme();
+  const [gridApi, setGridApi] = useState<GridApi>();
   
   const {rowDataChangeDetectionStrategy, detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
   const reactGridConfig = {
@@ -113,25 +114,47 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     ...props.gridOptions?.frameworkComponents as {[key: string]: any},
     detailsExpanderRenderer: DetailsExpanderRenderer,
    },
-   localeText: GRID_MESSAGES[CONFIG.I18N.DEFAULT_LANGUAGE]
+   localeText: GRID_MESSAGES[CONFIG.I18N.DEFAULT_LANGUAGE],
+   onGridReady(params: GridReadyEvent) {
+    if(typeof(restGridOptions.onGridReady) === 'function'){
+      restGridOptions.onGridReady(params);
+    } 
+
+    setGridApi(params.api);
+   },
   };
 
   const {detailsRowCellRenderer, detailsRowHeight, ...gridOptions} = gridOptionsFromProps;
+
+  const getIsVisible = (id:string): boolean => {
+    let res = false;
+
+    gridApi?.forEachNode((node) => {
+      const nodeData = node.data as Record<string,any>;
+      if (nodeData.id === id) {
+        res = nodeData.isVisible as boolean;
+      }
+    });
+    return res;
+  }
+
 
   useEffect(()=>{
     const result: any[] = [];
     if(props.gridOptions?.detailsRowCellRenderer !== undefined){
       props.rowData?.forEach((element,idx) => {
+        const rowElement: Record<string, unknown> = element as Record<string, unknown>;
+
         result.push({
-          ...element,
+          ...rowElement,
           isVisible: true
         });
         result.push({
-          ...element, 
+          ...rowElement, 
           fullWidth: true,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          id: `${element.id as string}${DETAILS_ROW_ID_SUFFIX}`,
-          isVisible: false,
+          id: `${rowElement.id as string}${DETAILS_ROW_ID_SUFFIX}`,
+          isVisible: getIsVisible(`${rowElement.id as string}${DETAILS_ROW_ID_SUFFIX}`),
           rowHeight: props.gridOptions?.detailsRowHeight ?? DEFAULT_DETAILS_ROW_HEIGHT,
         });
       });
@@ -139,6 +162,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       result.push(...(props.rowData as []));
     }
     setRowData(result);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.rowData, props.gridOptions]);
 
   const agGridThemeOverrides = GridThemes.getTheme(theme);

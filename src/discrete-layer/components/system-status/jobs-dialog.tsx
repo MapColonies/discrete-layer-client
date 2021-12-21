@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
@@ -9,14 +9,11 @@ import CONFIG from '../../../common/config';
 import { 
   GridComponent,
   GridComponentOptions,
-  GridValueFormatterParams,
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
@@ -24,7 +21,10 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
+
 import './jobs-dialog.css';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
+import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 
 const pagination = true;
 const pageSize = 10;
@@ -205,21 +205,27 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.created.label',
       }),
-      width: 165,
+      width: 172,
       field: 'created',
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
+      cellRenderer: 'dateCellRenderer',
+      cellRendererParams: {
+        field: 'created'
+      },
       sortable: true,
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
     },
     {
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.updated.label',
       }),
-      width: 165,
+      width: 172,
       field: 'updated',
       sortable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value, true),
+      cellRenderer: 'dateCellRenderer',
+      cellRendererParams: {
+        field: 'updated'
+      },
       // @ts-ignore
       comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
     },
@@ -231,12 +237,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       field: 'status',
       cellRenderer: 'statusRenderer'
     },
-    // {
-    //   headerName: 'actions',
-    //   width: 240,
-    //   pinned: 'right',
-    //   cellRenderer: 'actionsRenderer',
-    // },
   ];
 
   const onGridReady = (params: GridReadyEvent) => {
@@ -248,12 +248,12 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     params.api.sizeColumnsToFit();
   };
 
-  const gridOptions: GridComponentOptions = {
+  const gridOptions: GridComponentOptions = useMemo(()=>({
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,
-    getRowNodeId: (data: JobModelType) => {
+    getRowNodeId: (data: JobModelType): string => {
       return data.id as string;
     },
     detailsRowCellRenderer: 'detailsRenderer',
@@ -267,7 +267,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
       priorityRenderer: PriorityRenderer,
-      productTypeRenderer: ProductTypeRenderer
+      productTypeRenderer: ProductTypeRenderer,
+      dateCellRenderer: DateCellRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
@@ -279,7 +280,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     // suppressRowClickSelection: true,
     suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
     unSortIcon: true, // Used to show un-sorted icon.
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }),[]);
 
   return (
     <Box id="jobsDialog">

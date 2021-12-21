@@ -18,3 +18,9 @@ export const dateFormatter: FormatterFunc = (date, withTime = false): string => 
     ? moment(date).format(formatType)
     : '-';
 };
+
+export const relativeDateFormatter: FormatterFunc = (date): string => {
+  return date !== undefined
+    ? moment(date).fromNow()
+    : '-';
+};

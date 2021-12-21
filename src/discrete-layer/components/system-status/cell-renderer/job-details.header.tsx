@@ -102,6 +102,8 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
   };
 
   const generateTaskCounts = (): JSX.Element => {
+    const localeValueWithCommas = (value: string): string => Number(value).toLocaleString();
+
     return (
       <>
         {Object.values(dataToPresent.taskCountRow).map(({ label, value }) => {
@@ -111,7 +113,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
                 {`${label}:`}
               </Typography>
               <Typography tag="p" className="countValue">
-                {value}
+                {localeValueWithCommas(value)}
               </Typography>
             </Box>
           );
