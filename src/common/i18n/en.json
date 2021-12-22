@@ -247,7 +247,7 @@
   "info-field-tooltip.creationDate.tooltip": "Date of production",
   "info-field-tooltip.updateDate.tooltip": "The latest update",
   "info-field-tooltip.sensorType.tooltip": "List of sensors used as a source for the product",
-  "info-field-tooltip.region.tooltip": "Coverage countries",
+  "info-field-tooltip.region.tooltip": "Coveraged countries",
   "info-field-tooltip.sourceDateEnd.min": "Date should be later than {value}",
   "info-field-tooltip.sourceDateStart.max": "Date should be earlier than {value}",
   "info-field-tooltip.productVersion.pattern": "Valid format: major.minor",
