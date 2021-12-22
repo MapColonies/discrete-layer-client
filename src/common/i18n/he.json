@@ -116,7 +116,7 @@
   "field-names.raster.productType": "סוג",
   "field-names.raster.productName": "שם",
   "field-names.raster.productVersion": "גירסה",
-  "field-names.raster.resolution": "רזולוציה",
+  "field-names.raster.resolution": "רזולוציה (°)",
   "field-names.raster.creation-date": "יצירה",
   "field-names.raster.update-date": "עדכניות",
   "field-names.raster.ingestion-date": "קליטה בקטלוג",
