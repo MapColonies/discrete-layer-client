@@ -10,24 +10,22 @@ import { RootStoreType } from "./index"
 
 
 /**
- * TaskBase
- * auto generated base class for the model TaskModel.
+ * TasksGroupBase
+ * auto generated base class for the model TasksGroupModel.
  */
-export const TaskModelBase = ModelBase
-  .named('Task')
+export const TasksGroupModelBase = ModelBase
+  .named('TasksGroup')
   .props({
-    __typename: types.optional(types.literal("Task"), "Task"),
-    id: types.union(types.undefined, types.string),
+    __typename: types.optional(types.literal("TasksGroup"), "TasksGroup"),
     jobId: types.union(types.undefined, types.null, types.string),
     type: types.union(types.undefined, types.null, types.string),
-    description: types.union(types.undefined, types.null, types.string),
     parameters: types.union(types.undefined, types.null, types.frozen()),
     created: types.union(types.undefined, types.null, types.frozen()),
     updated: types.union(types.undefined, types.null, types.frozen()),
     status: types.union(types.undefined, types.null, StatusEnumType),
     percentage: types.union(types.undefined, types.null, types.number),
     reason: types.union(types.undefined, types.null, types.string),
-    attempts: types.union(types.undefined, types.null, types.number),
+    counts: types.union(types.undefined, types.null, types.number),
   })
   .views(self => ({
     get store() {
@@ -35,21 +33,19 @@ export const TaskModelBase = ModelBase
     }
   }))
 
-export class TaskModelSelector extends QueryBuilder {
-  get id() { return this.__attr(`id`) }
+export class TasksGroupModelSelector extends QueryBuilder {
   get jobId() { return this.__attr(`jobId`) }
   get type() { return this.__attr(`type`) }
-  get description() { return this.__attr(`description`) }
   get parameters() { return this.__attr(`parameters`) }
   get created() { return this.__attr(`created`) }
   get updated() { return this.__attr(`updated`) }
   get status() { return this.__attr(`status`) }
   get percentage() { return this.__attr(`percentage`) }
   get reason() { return this.__attr(`reason`) }
-  get attempts() { return this.__attr(`attempts`) }
+  get counts() { return this.__attr(`counts`) }
 }
-export function selectFromTask() {
-  return new TaskModelSelector()
+export function selectFromTasksGroup() {
+  return new TasksGroupModelSelector()
 }
 
-export const taskModelPrimitives = selectFromTask().jobId.type.description.parameters.created.updated.status.percentage.reason.attempts
+export const tasksGroupModelPrimitives = selectFromTasksGroup().jobId.type.parameters.created.updated.status.percentage.reason.counts

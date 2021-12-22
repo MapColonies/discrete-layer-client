@@ -9,7 +9,7 @@ import { Box } from '@map-colonies/react-components';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/type-formatters';
 import { Loading } from '../../../../common/components/tree/statuses/Loading';
 import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
-import { JobModelType, Status, TaskModelType } from '../../../models';
+import { JobModelType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
 import { CopyButton } from '../job-details.copy-button';
 import { JobDetailsHeader } from './job-details.header';
@@ -29,8 +29,8 @@ const taskFileds: ITaskField[] = [
     valueType: 'string',
   },
   {
-    label: 'system-status.task.fields.attempts.label',
-    name: 'attempts',
+    label: 'system-status.task.fields.counts.label',
+    name: 'counts',
     valueType: 'string',
   },
   {
@@ -125,7 +125,7 @@ interface TasksRendererParams {
 }
 
 const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
-  const [tasksData, setTasksData] = useState<TaskModelType[]>([]);
+  const [tasksData, setTasksData] = useState<TasksGroupModelType[]>([]);
 
   const { loading, data } = useQuery(
     (store) =>

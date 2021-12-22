@@ -331,6 +331,7 @@
   "system-status.task.fields.type.label": "Task Type",
   "system-status.task.fields.status.label": "Status",
   "system-status.task.fields.attempts.label": "Attempts",
+  "system-status.task.fields.counts.label": "Count",
   "system-status.task.fields.created.label": "Created",
   "system-status.task.fields.updated.label": "Updated",
   

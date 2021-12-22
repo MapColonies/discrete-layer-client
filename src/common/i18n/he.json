@@ -331,6 +331,7 @@
   "system-status.task.fields.type.label": "מטלה",
   "system-status.task.fields.status.label": "סטטוס",
   "system-status.task.fields.attempts.label": "ניסיונות",
+  "system-status.task.fields.counts.label": "כמות",
   "system-status.task.fields.created.label": "נוצר",
   "system-status.task.fields.updated.label": "עודכן",
   
