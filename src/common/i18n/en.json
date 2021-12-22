@@ -107,7 +107,7 @@
 
   "field.actions.edit-draft": "Edit draft",
   "field.actions.more": "More options",
-  
+
   "field-names.ingestion.directory": "Directory",
 
   "field-names.raster.fileNames": "File names",
@@ -129,7 +129,7 @@
   "field-names.raster.sensor-type": "Sensor",
   "field-names.raster.region": "Countries",
   "field-names.raster.classification": "Permission",
-  "field-names.raster.accuracyCE90": "Hor. accuracy", 
+  "field-names.raster.accuracyCE90": "Hor. accuracy",
   "field-names.raster.srs": "System",
   "field-names.raster.srs-name": "System Name",
   "field-names.raster.link.name": "Name",
@@ -326,17 +326,19 @@
   "system-status.job.status_translation.Completed": "Completed",
   "system-status.job.status_translation.Failed": "Failed",
 
+  "system-status.job.filter.status.all": "All",
+
   "system-status.job-details.header.internalId": "Internal Id",
   "system-status.job-details.header.extetnalId": "External Id",
   "system-status.job-details.header.producerName": "Producer Name",
-  
+
   "system-status.task.fields.type.label": "Task Type",
   "system-status.task.fields.status.label": "Status",
   "system-status.task.fields.attempts.label": "Attempts",
   "system-status.task.fields.counts.label": "Count",
   "system-status.task.fields.created.label": "Created",
   "system-status.task.fields.updated.label": "Updated",
-  
+
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",
   "lookups.sensorType.pan_sharpen": "Pan_Sharpen",

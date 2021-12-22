@@ -89,7 +89,7 @@
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",
   "tab-views.catalog.top-categories.drafts": "טיוטות",
-  
+
   "tab-views.catalog.actions.ingest_raster": "הוסף מוצר",
   "tab-views.catalog.actions.ingest_3d": "הוסף מוצר תלת-מימד",
   "tab-views.catalog.actions.ingest_dem": "הוסף מודל גבהים ספרתי",
@@ -102,12 +102,12 @@
 
   "context-menu.title.tooltip": "פעולות על השכבה העליונה: ",
   "context-menu.sub-title.tooltip": "שכבות חופפות בנקודה שנבחרה",
-  
+
   "details-panel.no-selection": "לא נבחר פריט",
 
   "field.actions.edit-draft": "ערוך טיוטה",
   "field.actions.more": "פעולות נוספות",
-  
+
   "field-names.ingestion.directory": "נתיב מלא",
 
   "field-names.raster.fileNames": "שמות הקבצים",
@@ -129,7 +129,7 @@
   "field-names.raster.sensor-type": "חיישן",
   "field-names.raster.region": "מדינות",
   "field-names.raster.classification": "סודיות",
-  "field-names.raster.accuracyCE90": "טווח דיוק מישורי", 
+  "field-names.raster.accuracyCE90": "טווח דיוק מישורי",
   "field-names.raster.srs": "מערכת ייחוס",
   "field-names.raster.srs-name": "שם מערכת",
   "field-names.raster.link.name": "שם",
@@ -325,7 +325,9 @@
   "system-status.job.status_translation.InProgress": "בתהליך",
   "system-status.job.status_translation.Completed": "הושלם",
   "system-status.job.status_translation.Failed": "נכשל",
-  
+
+  "system-status.job.filter.status.all": "הכל",
+
   "system-status.job-details.header.internalId": "מזהה פנימי",
   "system-status.job-details.header.extetnalId": "מזהה חיצוני",
   "system-status.job-details.header.producerName": "שם יצרן",
@@ -336,7 +338,7 @@
   "system-status.task.fields.counts.label": "כמות",
   "system-status.task.fields.created.label": "נוצר",
   "system-status.task.fields.updated.label": "עודכן",
-  
+
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",
   "lookups.sensorType.pan_sharpen": "Pan_Sharpen",
