@@ -17,6 +17,7 @@ import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { truncate } from 'lodash';
 import { CopyButton } from '../job-details.copy-button';
 import { Loading } from '../../../../common/components/tree/statuses/Loading';
+import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -191,7 +192,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
           </Typography>
         ))}
 
-        <TasksRenderer jobId={jobId as string} />
+        <TasksRenderer jobId={(jobId as string).replace(DETAILS_ROW_ID_SUFFIX,'')} />
       </Box>
     </Box>
   );
