@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import React, { useState } from 'react';
 import { get } from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -26,8 +27,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   const [inputVal, setInputVal] = useState(val ?? '');
   const intl = useIntl();
 
-
-  const handleInputChange= (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange= (e: React.ChangeEvent<HTMLInputElement>): void => {
     // eslint-disable-next-line
     (formik as any).handleChange(e);
     setInputVal(e.target.value);
@@ -35,17 +35,20 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   
   const isCopyable = fieldInfo.isCopyable ?? false;
 
-  if (
-    formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
+  if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
-        <Tooltip content={value}>
-          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable': ''}`}>
-            {value}
-          </Box>
-        </Tooltip>
         {
-        isCopyable && <Box className="detailsFieldCopyIcon">
+          value !== '' && value !== null && value !== undefined &&
+          <Tooltip content={value}>
+            <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable': ''}`}>
+              {value}
+            </Box>
+          </Tooltip>
+        }
+        {
+          isCopyable &&
+          <Box className="detailsFieldCopyIcon">
             <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
               <CopyToClipboard text={value as string}>
                 <IconButton className="mc-icon-Copy"/>
