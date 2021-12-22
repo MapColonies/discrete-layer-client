@@ -1,18 +1,18 @@
 import { Instance, types } from "mobx-state-tree"
-import { TaskModelBase } from "./TaskModel.base"
+import { TasksGroupModelBase } from "./TasksGroupModel.base"
 import { momentDateType } from "./moment-date.type"
 
-/* The TypeScript type of an instance of TaskModel */
-export interface TaskModelType extends Instance<typeof TaskModel.Type> {}
+/* The TypeScript type of an instance of TasksGroupModel */
+export interface TasksGroupModelType extends Instance<typeof TasksGroupModel.Type> {}
 
-/* A graphql query fragment builders for TaskModel */
-export { selectFromTask, taskModelPrimitives, TaskModelSelector } from "./TaskModel.base"
+/* A graphql query fragment builders for TasksGroupModel */
+export { selectFromTasksGroup, tasksGroupModelPrimitives, TasksGroupModelSelector } from "./TasksGroupModel.base"
 
 /**
- * TaskModel
+ * TasksGroupModel
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TaskModel = TaskModelBase
+export const TasksGroupModel = TasksGroupModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {

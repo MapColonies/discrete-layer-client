@@ -8,7 +8,7 @@ import {
   relativeDateFormatter,
   dateFormatter,
 } from '../../../../common/helpers/type-formatters';
-import { JobModelType, Status, TaskModelType } from '../../../models';
+import { JobModelType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
 
 import './job-details.cell-renderer.css';
@@ -32,8 +32,8 @@ const taskFileds: ITaskField[] = [
     valueType: 'string',
   },
   {
-    label: 'system-status.task.fields.attempts.label',
-    name: 'attempts',
+    label: 'system-status.task.fields.counts.label',
+    name: 'counts',
     valueType: 'string',
   },
   {
@@ -131,7 +131,7 @@ interface TasksRendererParams {
 }
 
 const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
-  const [tasksData, setTasksData] = useState<TaskModelType[]>([]);
+  const [tasksData, setTasksData] = useState<TasksGroupModelType[]>([]);
 
   const { loading, data } = useQuery(
     (store) =>
