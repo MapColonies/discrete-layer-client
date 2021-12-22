@@ -60,13 +60,6 @@ const App: React.FC = () => {
     }
   };
 
-  const customIntlErrorFunction = (error: any) => {
-    // eslint-disable-next-line
-    if (error.code !== 'MISSING_TRANSLATION') {
-      console.warn(error);
-    }
-  };
-
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
   }, []);
@@ -76,7 +69,7 @@ const App: React.FC = () => {
   }, [lang])
 
   return (
-    <IntlProvider locale={lang} messages={MESSAGES[lang]} onError={customIntlErrorFunction}>
+    <IntlProvider locale={lang} messages={MESSAGES[lang]}>
       <RMWCProvider
         typography={{
           body1: 'span',

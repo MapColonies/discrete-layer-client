@@ -24,11 +24,10 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
     // Indicates when the label will overflow the container
     const MAX_LABEL_LENGTH = 12;
     const label = intl.formatMessage({ id: value });
-    const tooltip = intl.formatMessage({ id: `${value as string}.tooltip` });
 
-    if (showTooltip !== false && (tooltip !== `${value as string}.tooltip` || label.length > MAX_LABEL_LENGTH)) {
+    if (showTooltip !== false && label.length > MAX_LABEL_LENGTH) {
       return (
-        <Tooltip content={tooltip !== `${value as string}.tooltip` ? tooltip : label}>
+        <Tooltip content={label}>
           <span>
             <FormattedMessage id={value}/>
           </span>

@@ -2,22 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
-import { Moment } from 'moment';
-import { Box } from '@map-colonies/react-components';
-import {
-  relativeDateFormatter,
-  dateFormatter,
-} from '../../../../common/helpers/type-formatters';
-import { JobModelType, Status, TasksGroupModelType } from '../../../models';
-import { useQuery } from '../../../models/RootStore';
-
-import './job-details.cell-renderer.css';
-import { JobDetailsHeader } from './job-details.header';
-import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { truncate } from 'lodash';
-import { CopyButton } from '../job-details.copy-button';
+import { Moment } from 'moment';
+import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
+import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/type-formatters';
 import { Loading } from '../../../../common/components/tree/statuses/Loading';
 import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
+import { JobModelType, Status, TasksGroupModelType } from '../../../models';
+import { useQuery } from '../../../models/RootStore';
+import { CopyButton } from '../job-details.copy-button';
+import { JobDetailsHeader } from './job-details.header';
+
+import './job-details.cell-renderer.css';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -115,14 +112,11 @@ const getValuePresentor = (
           </Box>
         </Tooltip>
       );
-      break;
     }
     case 'Status':
       return <StatusPresentor task={task} />;
-      break;
     default:
       return <Box className={'gridCell'}>{task[field.name] as string} </Box>;
-      break;
   }
 };
 
