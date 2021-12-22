@@ -8,6 +8,7 @@ import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/type-formatters';
 import { Loading } from '../../../../common/components/tree/statuses/Loading';
+import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
 import { JobModelType, Status, TaskModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
 import { CopyButton } from '../job-details.copy-button';
@@ -185,7 +186,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
           </Typography>
         ))}
 
-        <TasksRenderer jobId={jobId as string} />
+        <TasksRenderer jobId={(jobId as string).replace(DETAILS_ROW_ID_SUFFIX,'')} />
       </Box>
     </Box>
   );
