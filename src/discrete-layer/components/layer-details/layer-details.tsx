@@ -12,22 +12,19 @@ import {
   FieldCategory,
   LayerMetadataMixedUnion,
   LinkModelType,
-  ProductType,
-  RecordType,
   SensorType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
-import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentors';
-import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentors';
-import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentors';
-import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentors';
-import { RecordTypeValuePresentorComponent } from  './field-value-presentors/record-type.value-presentors';
-import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentors';
-import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentors';
-import { ProductTypeValuePresentorComponent } from './field-value-presentors/product-type.value-presentors';
-import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentors';
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
+import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentor';
+import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentor';
+import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentor';
+import { TypeValuePresentorComponent } from  './field-value-presentors/type.value-presentor';
+import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentor';
+import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
+import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
 import { getBasicType, getEntityDescriptors } from './utils';
 
@@ -92,12 +89,9 @@ export const getValuePresentor = (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
-      return (
-        <RecordTypeValuePresentorComponent value={fieldValue as RecordType}></RecordTypeValuePresentorComponent>
-      );
     case 'ProductType':
       return (
-        <ProductTypeValuePresentorComponent value={fieldValue as ProductType}></ProductTypeValuePresentorComponent>
+        <TypeValuePresentorComponent value={fieldValue as string}></TypeValuePresentorComponent>
       );
     default:
       return (

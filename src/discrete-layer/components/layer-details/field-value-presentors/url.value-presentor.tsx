@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 
-import './url.value-presentors.css';
+import './url.value-presentor.css';
 
 interface UrlValuePresentorProps {
   value?: string;
