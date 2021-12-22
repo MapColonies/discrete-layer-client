@@ -151,6 +151,7 @@
   "field-names.3d.productType": "Type",
   "field-names.3d.description": "Description",
   "field-names.3d.creationDate": "Created",
+  "field-names.3d.updateDate": "Updated",
   "field-names.3d.sourceDateStart": "Imaging Oldest",
   "field-names.3d.sourceDateEnd": "Imaging Latest",
   "field-names.3d.minResolutionMeter": "Min Resolution",

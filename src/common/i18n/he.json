@@ -151,6 +151,7 @@
   "field-names.3d.productType": "סוג",
   "field-names.3d.description": "תאור",
   "field-names.3d.creationDate": "יצירה",
+  "field-names.3d.updateDate": "עדכניות",
   "field-names.3d.sourceDateStart": "הצילום הישן",
   "field-names.3d.sourceDateEnd": "הצילום החדש",
   "field-names.3d.minResolutionMeter": "רזולוציה מינימלית במ'",
