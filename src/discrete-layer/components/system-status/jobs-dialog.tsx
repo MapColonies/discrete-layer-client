@@ -25,6 +25,7 @@ import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 import './jobs-dialog.css';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
+import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 
 const pagination = true;
 const pageSize = 10;
@@ -235,7 +236,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       }),
       width: 160,
       field: 'status',
-      cellRenderer: 'statusRenderer'
+      cellRenderer: 'statusRenderer',
+      filter: 'jobDetailsStatusFilter'
     },
   ];
 
@@ -263,6 +265,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       id: 'results.nodata',
     }),
     frameworkComponents: {
+      jobDetailsStatusFilter: JobDetailsStatusFilter,
       detailsRenderer: JobDetailsRenderer,
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
