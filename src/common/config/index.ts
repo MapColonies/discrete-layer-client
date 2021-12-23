@@ -19,6 +19,7 @@ const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
+const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
 
 const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -103,7 +104,8 @@ const APP_CONFIG = {
     AUTOCOMPLETE: RUNNING_MODE.autocomplete,
     START_RECORD: 1,
     END_RECORD: 1000
-  }
+  },
+  NUMBER_OF_CHARACTERS_LIMIT: NUMBER_OF_CHARACTERS_LIMIT as number
 };
 
 export default APP_CONFIG;

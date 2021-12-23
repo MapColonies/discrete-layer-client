@@ -7,7 +7,7 @@ import { LinkModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { getValuePresentor } from '../layer-details';
 
-import './links.value-presentors.css';
+import './links.value-presentor.css';
 
 interface LinksValuePresentorProps {
   value?: LinkModelType[];
@@ -25,7 +25,8 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
               {
                 fieldInfo?.subFields.map((subFieldInfo: IRecordFieldInfo) => {
                   return (
-                    isString(get(link,subFieldInfo.fieldName as string)) && <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
+                    isString(get(link,subFieldInfo.fieldName as string)) &&
+                    <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
                       <FieldLabelComponent value={subFieldInfo.label} isRequired={false}></FieldLabelComponent>
                       {
                         getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName as string), Mode.VIEW)

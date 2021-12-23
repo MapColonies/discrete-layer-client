@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentors';
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';

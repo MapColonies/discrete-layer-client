@@ -79,14 +79,6 @@ body[dir='rtl'] .detailsFieldValue {
   text-align: center;
 }
 
-.directionHandler {
-  direction: ltr;
-}
-
-body[dir='rtl'] .directionHandler {
-  direction: rtl;
-}
-
 .textFieldInfoList {
   list-style: none;
   margin: 0;

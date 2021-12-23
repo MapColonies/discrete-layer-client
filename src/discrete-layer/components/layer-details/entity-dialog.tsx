@@ -145,6 +145,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     layerRecord = buildRecord(recordType);
   }
 
+  const dialogTitleParam = recordType ?? layerRecord?.type;
+  const dialogTitleParamTranslation = intl.formatMessage({ id: `record-type.${(dialogTitleParam as string).toLowerCase()}.label` });
+  const dialogTitle = intl.formatMessage({ id: `general.title.${(mode as string).toLowerCase()}` }, { value: dialogTitleParamTranslation });
+
   const ingestionFields = (layerRecord?.__typename !== 'BestRecord') ?
     [
       {
@@ -362,7 +366,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
-          <FormattedMessage id={ mode === Mode.NEW ? (recordType === RecordType.RECORD_3D ? 'general.title.new.3d' : 'general.title.new.raster') : 'general.title.edit' }/>
+          {dialogTitle}
           <IconButton
             className="closeIcon mc-icon-Close"
             label="CLOSE"
