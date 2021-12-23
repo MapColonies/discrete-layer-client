@@ -45,5 +45,6 @@ window._env_ = {
   RUNNING_MODE: {
     type: '{{ getv "/configuration/running/mode/type" "DEVELOPMENT" }}',
     autocomplete: {{ getv "/configuration/running/mode/autocomplete" "false" }}
-  }
+  },
+  NUMBER_OF_CHARACTERS_LIMIT: {{ getv "/configuration/number/of/characters/limit" "12" }}
 };

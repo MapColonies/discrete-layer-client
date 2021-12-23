@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import React, { useMemo, useState } from 'react';
 import { get } from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
 import { TextField, Tooltip, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import CONFIG from '../../../../common/config';
 import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import { ValidationConfigModelType, ValidationValueType } from '../../../models';
@@ -35,16 +36,31 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   
   const isCopyable = fieldInfo.isCopyable ?? false;
 
+  const valueRenderer = useMemo(() => {
+    const MAX_VALUE_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
+
+    if (value && value.length > MAX_VALUE_LENGTH) {
+      return (
+        <Tooltip content={value}>
+          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
+            {value}
+          </Box>
+        </Tooltip>
+      );
+    }
+    return (
+      <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
+        {value}
+      </Box>
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
         {
-          value !== '' && value !== null && value !== undefined &&
-          <Tooltip content={value}>
-            <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable': ''}`}>
-              {value}
-            </Box>
-          </Tooltip>
+          valueRenderer
         }
         {
           isCopyable &&
@@ -78,7 +94,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     // @ts-ignore
     if (min && max) {
       validationProps = { min, max, step: precisionAllowed };
-      placeholder = `${min} - ${max}`;
+      placeholder = CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE' ? `${max} - ${min}` : `${min} - ${max}`;
     }
     return (
       <>
@@ -97,10 +113,10 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             required={fieldInfo.isRequired === true}
             {...validationProps}
           />
-          {!(
-            fieldInfo.infoMsgCode?.length === 1 &&
-            fieldInfo.infoMsgCode[0].includes('required')
-          ) && <FormInputInfoTooltipComponent fieldInfo={fieldInfo} />}
+          {
+            !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
+            <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
+          }
         </Box>
       </>
     );
