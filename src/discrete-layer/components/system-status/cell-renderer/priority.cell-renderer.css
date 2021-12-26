@@ -1,0 +1,14 @@
+.priority_options.mdc-select:not(.mdc-select--disabled) .mdc-select__anchor{
+    border-radius: 0;
+}
+.priority_options{
+    position: fixed;
+    width:150px;
+}
+
+/* When selectbox is open, we need to prioritize it higher then the ag-grid row, and other cells, 
+   so that the options list will not be hidden.
+*/
+.priorityCellContainer .priority_options.mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--focused.mdc-select--activated{
+ z-index: 2;
+}

@@ -178,15 +178,19 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.priority.label',
       }),
-      width: 100,
+      width: 150,
       field: 'priority',
-      editable: true,
-      cellStyle: (params: Record<string, any>): Record<string, string> => {
-        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)', maxHeight:'50px'};
-      },
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
         isUpdating: getUpdating,
+        optionsData: {
+          2000: "Highest",
+          1500: "High",
+          1000: "Medium",
+          500: "Low",
+          0: "Lowest",
+          defaultVal: 1000 
+        }
       },
       onCellValueChanged: (evt: Record<string, any>): void => {
         const id = (evt.data as Record<string, string>).id;
@@ -252,6 +256,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   const gridOptions: GridComponentOptions = useMemo(()=>({
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
+    suppressRowTransform: true,
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,
