@@ -26,6 +26,7 @@ import './jobs-dialog.css';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
+import { ICellRendererParams } from 'ag-grid-community';
 
 const pagination = true;
 const pageSize = 10;
@@ -56,6 +57,36 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
+
+  const getPriorityOptions = useCallback(() => ({
+     // Priority is an integer, normal / default value is 1000. 
+     // It can be lower.
+      "2000": intl.formatMessage({
+        id: 'system-status.job-priority-highest',
+      }),
+      "1500": intl.formatMessage({
+        id: 'system-status.job-priority-high',
+      }),
+      "1000": intl.formatMessage({
+        id: 'system-status.job-priority-normal',
+      }),
+      "500": intl.formatMessage({
+        id: 'system-status.job-priority-low',
+      }),
+      "0": intl.formatMessage({
+        id: 'system-status.job-priority-lowest',
+      }),
+      defaultVal: "1000",
+    }),[intl])
+
+    const optionsIcons = {
+      "2000": "Arrows-Right" ,
+      "1500": "Arrow-Right",
+      "1000": "Move-Row",
+      "500": "Arrow-Left",
+      "0": "Arrows-Left",
+    }
+  
   
   // start the timer during the first render
   useEffect(() => {
@@ -127,15 +158,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     [onSetOpen]
   );
 
-  const getUpdating = function (): IUpdating | undefined {
-    let ret = undefined;
-    setUpdatingPriority((prev) => {
-      ret = prev;
-      return prev;
-    });
-    return ret;
-  };
-
   const colDef = [
     {
       headerName: '',
@@ -182,29 +204,27 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       field: 'priority',
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
-        isUpdating: getUpdating,
-        optionsData: {
-          2000: "Highest",
-          1500: "High",
-          1000: "Medium",
-          500: "Low",
-          0: "Lowest",
-          defaultVal: 1000 
+        optionsData: getPriorityOptions(),
+        optionsIcons,
+        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
+          const { id }  = jobData;
+          const chosenPriority: string | number = evt.currentTarget.value;
+
+          console.log(jobData, evt)
+
+          setUpdatingPriority({
+            updating: true,
+            newValue: chosenPriority
+          });
+          setUpdateTaskPayload({
+            id: id,
+            data: {
+              priority: parseInt(chosenPriority)
+            }
+          });
         }
       },
-      onCellValueChanged: (evt: Record<string, any>): void => {
-        const id = (evt.data as Record<string, string>).id;
-        setUpdatingPriority({
-          updating: true,
-          newValue: evt.newValue as string | number
-        });
-        setUpdateTaskPayload({
-          id: id,
-          data: {
-            priority: parseInt(evt.newValue)
-          }
-        });
-      }
+      
     },
     {
       headerName:  intl.formatMessage({
