@@ -1,34 +1,37 @@
-.priority_options.mdc-select:not(.mdc-select--disabled) .mdc-select__anchor{
-    border-radius: 0;
+.priority_options.mdc-select:not(.mdc-select--disabled) .mdc-select__anchor {
+  border-radius: 0;
 }
-.priority_options{
-    position: fixed;
-    width:150px;
+.priority_options {
+  position: fixed;
+  width: 150px;
 }
 
 .priorityCellContainer {
-    display: flex;
-    align-items: center;
-    width: 150px;
-    position: relative;
-    height: 40px;
+  display: flex;
+  align-items: center;
+  width: 150px;
+  position: relative;
+  height: 40px;
 }
 
 /* When selectbox is open, we need to prioritize it higher then the ag-grid row, and other cells, 
    so that the options list will not be hidden.
 */
-.priorityCellContainer .priority_options.mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--focused.mdc-select--activated{
- z-index: 2;
+.priorityCellContainer
+  .priority_options.mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--focused.mdc-select--activated {
+  z-index: 2;
 }
-.priorityCellContainer .mdc-select--with-leading-icon .mdc-select__icon{
-    top:7px;
-    left:10px;
+.priorityCellContainer .mdc-select--with-leading-icon .mdc-select__icon {
+  top: 7px;
+  left: 10px;
 }
 
-.loadingContainer{
- display:flex;
- width: 100%;
- height: 40px;
- align-items: center;
- justify-content: center;
+.loadingContainer {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }

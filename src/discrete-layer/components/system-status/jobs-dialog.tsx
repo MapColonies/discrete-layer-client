@@ -40,52 +40,28 @@ interface SystemJobsComponentProps {
   onSetOpen: (open: boolean) => void;
 }
 
-export interface IUpdating {
-  updating: boolean;
-  newValue: string | number;
-}
-
 export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer((props: SystemJobsComponentProps) => {
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [updatingPriority, setUpdatingPriority] = useState<IUpdating>();
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
 
-  const getPriorityOptions = useCallback(() => ({
-     // Priority is an integer, normal / default value is 1000. 
-     // It can be lower.
-      "2000": intl.formatMessage({
-        id: 'system-status.job-priority-highest',
-      }),
-      "1500": intl.formatMessage({
-        id: 'system-status.job-priority-high',
-      }),
-      "1000": intl.formatMessage({
-        id: 'system-status.job-priority-normal',
-      }),
-      "500": intl.formatMessage({
-        id: 'system-status.job-priority-low',
-      }),
-      "0": intl.formatMessage({
-        id: 'system-status.job-priority-lowest',
-      }),
-      defaultVal: "1000",
-    }),[intl])
+  const getPriorityOptions = useCallback(() => {
+    const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
 
-    const optionsIcons = {
-      "2000": "Arrows-Right" ,
-      "1500": "Arrow-Right",
-      "1000": "Move-Row",
-      "500": "Arrow-Left",
-      "0": "Arrows-Left",
-    }
+    return priorityList.map((option) => {
+      const optionCpy = {...option};
+      optionCpy.label = intl.formatMessage({
+        id: option.label,
+      });
+      return optionCpy
+    });
+  }, [intl]);
   
   
   // start the timer during the first render
@@ -108,7 +84,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
-    setUpdatingPriority(undefined);
   }, [data]);
 
   useEffect(() => {
@@ -129,7 +104,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   useEffect(() => {
     if(mutationQuery.error){
-      setUpdatingPriority(undefined);
       gridApi?.refreshCells({
         suppressFlash: true,
         force: true
@@ -205,17 +179,10 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
         optionsData: getPriorityOptions(),
-        optionsIcons,
         onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
           const { id }  = jobData;
           const chosenPriority: string | number = evt.currentTarget.value;
 
-          console.log(jobData, evt)
-
-          setUpdatingPriority({
-            updating: true,
-            newValue: chosenPriority
-          });
           setUpdateTaskPayload({
             id: id,
             data: {

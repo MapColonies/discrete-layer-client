@@ -39,6 +39,47 @@ const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
     })
   }
 }
+
+
+const systemJobsPriorityOptions =
+  // Priority is an integer, normal / default value is 1000.
+  // It can be lower.
+  [
+    {
+      label: 'system-status.job-priority-highest',
+      value: '2000',
+      icon: 'Arrows-Right',
+      iconColor: 'red',
+    },
+    {
+      label: 'system-status.job-priority-high',
+      value: '1500',
+      icon: 'Arrow-Right',
+      iconColor: 'green',
+    },
+    {
+      label: 'system-status.job-priority-normal',
+      value: '1000',
+      icon: 'Move-Row',
+      iconColor: 'blue',
+    },
+    {
+      label: 'system-status.job-priority-low',
+      value: '500',
+      icon: 'Arrow-Left',
+      iconColor: 'pink',
+    },
+    {
+      label: 'system-status.job-priority-lowest',
+      value: '0',
+      icon: 'Arrows-Left',
+      iconColor: 'orange',
+    },
+  ];
+
+
+
+
 const DATE_FORMAT = 'DD/MM/YYYY';
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
@@ -105,7 +146,8 @@ const APP_CONFIG = {
     START_RECORD: 1,
     END_RECORD: 1000
   },
-  NUMBER_OF_CHARACTERS_LIMIT: NUMBER_OF_CHARACTERS_LIMIT as number
+  NUMBER_OF_CHARACTERS_LIMIT: NUMBER_OF_CHARACTERS_LIMIT as number,
+  SYSTEM_JOBS_PRIORITY_OPTIONS: systemJobsPriorityOptions,
 };
 
 export default APP_CONFIG;

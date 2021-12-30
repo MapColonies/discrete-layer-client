@@ -2,14 +2,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Box } from '@map-colonies/react-components';
-import { CircularProgress, Select } from '@map-colonies/react-core';
-import { IUpdating } from '../jobs-dialog';
+import { get } from 'lodash';
+import {
+  CircularProgress,
+  FormattedOption,
+  Select,
+} from '@map-colonies/react-core';
 import './priority.cell-renderer.css';
 import { JobModelType } from '../../../models';
 
+interface PriorityOption {
+  label: string;
+  value: string;
+  icon: string;
+  iconColor: string;
+}
 interface IPriorityCellRendererParams extends ICellRendererParams {
-  optionsData: { [priorityVal: number]: string; defaultVal: string };
-  optionsIcons: { [val: string]: string };
+  optionsData: PriorityOption[];
   onChange: (e: Record<string, any>, jobData: ICellRendererParams) => void;
 }
 
@@ -18,69 +27,56 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
 ) => {
   const jobData: JobModelType = props.data as JobModelType;
   const { optionsData } = props;
+  const [value, setValue] = useState(
+    (get(jobData, 'priority') as number).toString()
+  );
 
   const [loading, setLoading] = useState(false);
 
-  let initialPriority: number | string | undefined;
-
-  if (
-    typeof jobData.priority !== 'undefined' &&
-    jobData.priority !== null &&
-    jobData.priority in optionsData
-  ) {
-    initialPriority = jobData.priority;
-  } else {
-    initialPriority = optionsData.defaultVal;
+  interface IconObj {
+    icon: string;
+    color: string;
   }
 
-  const icon = props.optionsIcons[initialPriority];
+  const getIconObjForVal = useCallback((val: string): IconObj => {
+    const selectedOption: PriorityOption = optionsData.find(
+      (option: PriorityOption) => option.value === val
+    ) as PriorityOption;
 
-  const defaultSelection = (optionsData as Record<string, string>)[
-    initialPriority
-  ];
-
-  const sortOptions = (
-    options: Record<string, string>
-  ): Record<string, string> =>
-    Object.fromEntries(Object.entries(options).sort(([key1],[key2]) => {
-      if(key2 > key1){
-        return 1;
-      }else{
-        return -1;
-      }
-    }));
-
-  const cleanOptionsList = useCallback(() => {
-    const options = { ...optionsData } as Record<string, string>;
-    delete options[initialPriority as string];
-    delete options.defaultVal;
-    return sortOptions(options);
+    return { icon: selectedOption.icon, color: selectedOption.iconColor };
   }, []);
 
-  if (loading)
-    return (
-      <Box className="loadingContainer">
-        <CircularProgress />
-      </Box>
-    );
+  const [icon, setIcon] = useState(getIconObjForVal(value));
+
+  useEffect(() => {
+    setIcon(getIconObjForVal(value));
+  }, [value, getIconObjForVal]);
 
   return (
     <Box className="priorityCellContainer">
+      {loading && (
+        <Box className="loadingContainer">
+          <CircularProgress />
+        </Box>
+      )}
       <Select
+        disabled={loading}
         enhanced
         outlined
         className={'priority_options'}
-        placeholder={defaultSelection}
-        options={cleanOptionsList()}
+        value={value}
+        options={optionsData as FormattedOption[]}
         icon={{
-          icon: icon,
+          icon: icon.icon,
+          style: { color: icon.color },
           strategy: 'className',
           basename: 'icon',
-          prefix: 'mc-icon-',
+          prefix: 'glow-missing-icon mc-icon-',
           size: 'small',
         }}
-        onChange={(e) => {
+        onChange={(e): void => {
           setLoading(true);
+          setValue(e.currentTarget.value);
           props.onChange(e, props.data);
         }}
       />
