@@ -39,23 +39,29 @@ interface SystemJobsComponentProps {
   onSetOpen: (open: boolean) => void;
 }
 
-export interface IUpdating {
-  updating: boolean;
-  newValue: string | number;
-}
-
 export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer((props: SystemJobsComponentProps) => {
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [updatingPriority, setUpdatingPriority] = useState<IUpdating>();
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
+
+  const getPriorityOptions = useCallback(() => {
+    const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
+
+    return priorityList.map((option) => {
+      const optionCpy = {...option};
+      optionCpy.label = intl.formatMessage({
+        id: option.label,
+      });
+      return optionCpy
+    });
+  }, [intl]);
+  
   
   // start the timer during the first render
   useEffect(() => {
@@ -77,7 +83,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
-    setUpdatingPriority(undefined);
   }, [data]);
 
   useEffect(() => {
@@ -98,7 +103,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   useEffect(() => {
     if(mutationQuery.error){
-      setUpdatingPriority(undefined);
       gridApi?.refreshCells({
         suppressFlash: true,
         force: true
@@ -126,15 +130,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     },
     [onSetOpen]
   );
-
-  const getUpdating = function (): IUpdating | undefined {
-    let ret = undefined;
-    setUpdatingPriority((prev) => {
-      ret = prev;
-      return prev;
-    });
-    return ret;
-  };
 
   const colDef = [
     {
@@ -178,29 +173,24 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       headerName:  intl.formatMessage({
         id: 'system-status.job.fields.priority.label',
       }),
-      width: 100,
+      width: 150,
       field: 'priority',
-      editable: true,
-      cellStyle: (params: Record<string, any>): Record<string, string> => {
-        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)', maxHeight:'50px'};
-      },
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
-        isUpdating: getUpdating,
+        optionsData: getPriorityOptions(),
+        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
+          const { id }  = jobData;
+          const chosenPriority: string | number = evt.currentTarget.value;
+
+          setUpdateTaskPayload({
+            id: id,
+            data: {
+              priority: parseInt(chosenPriority)
+            }
+          });
+        }
       },
-      onCellValueChanged: (evt: Record<string, any>): void => {
-        const id = (evt.data as Record<string, string>).id;
-        setUpdatingPriority({
-          updating: true,
-          newValue: evt.newValue as string | number
-        });
-        setUpdateTaskPayload({
-          id: id,
-          data: {
-            priority: parseInt(evt.newValue)
-          }
-        });
-      }
+      
     },
     {
       headerName:  intl.formatMessage({
@@ -252,6 +242,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   const gridOptions: GridComponentOptions = useMemo(()=>({
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
+    suppressRowTransform: true,
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,

@@ -1,36 +1,85 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Box } from '@map-colonies/react-components';
-import { CircularProgress } from '@map-colonies/react-core';
-import { IUpdating } from '../jobs-dialog';
+import { get } from 'lodash';
+import {
+  CircularProgress,
+  FormattedOption,
+  Select,
+} from '@map-colonies/react-core';
+import './priority.cell-renderer.css';
+import { JobModelType } from '../../../models';
 
+interface PriorityOption {
+  label: string;
+  value: string;
+  icon: string;
+  iconColor: string;
+}
 interface IPriorityCellRendererParams extends ICellRendererParams {
-  isUpdating: () => IUpdating | undefined;
+  optionsData: PriorityOption[];
+  onChange: (e: Record<string, any>, jobData: ICellRendererParams) => void;
 }
 
-export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (props) => {
-  const updatingObj = props.isUpdating();
+export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
+  props
+) => {
+  const jobData: JobModelType = props.data as JobModelType;
+  const { optionsData } = props;
+  const [value, setValue] = useState(
+    (get(jobData, 'priority') as number).toString()
+  );
+
+  const [loading, setLoading] = useState(false);
+
+  interface IconObj {
+    icon: string;
+    color: string;
+  }
+
+  const getIconObjForVal = useCallback((val: string): IconObj => {
+    const selectedOption: PriorityOption = optionsData.find(
+      (option: PriorityOption) => option.value === val
+    ) as PriorityOption;
+
+    return { icon: selectedOption.icon, color: selectedOption.iconColor };
+  }, []);
+
+  const [icon, setIcon] = useState(getIconObjForVal(value));
+
+  useEffect(() => {
+    setIcon(getIconObjForVal(value));
+  }, [value, getIconObjForVal]);
+
   return (
-    <Box style={{
-      display: 'flex',
-      flexDirection: 'row-reverse',
-      justifyContent: 'flex-end'
-    }}>
-      {updatingObj && 
-        <>
-          <CircularProgress size="xsmall" style={{
-            top: '10px',
-            right: '40px'
-          }}/>
-          <span>{updatingObj.newValue}</span>
-        </>
-      }
-      {!updatingObj && 
-        <>
-          <span>{props.data.priority}</span>
-        </>
-      }
+    <Box className="priorityCellContainer">
+      {loading && (
+        <Box className="loadingContainer">
+          <CircularProgress />
+        </Box>
+      )}
+      <Select
+        disabled={loading}
+        enhanced
+        outlined
+        className={'priority_options'}
+        value={value}
+        options={optionsData as FormattedOption[]}
+        icon={{
+          icon: icon.icon,
+          style: { color: icon.color },
+          strategy: 'className',
+          basename: 'icon',
+          prefix: 'glow-missing-icon mc-icon-',
+          size: 'small',
+        }}
+        onChange={(e): void => {
+          setLoading(true);
+          setValue(e.currentTarget.value);
+          props.onChange(e, props.data);
+        }}
+      />
     </Box>
- );
+  );
 };

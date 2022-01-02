@@ -325,6 +325,12 @@
 
   "system-status.job.filter.status.all": "הכל",
 
+  "system-status.job-priority-lowest": "נמוך מאוד",
+  "system-status.job-priority-low": "נמוך",
+  "system-status.job-priority-normal": "רגיל",
+  "system-status.job-priority-high": "גבוה",
+  "system-status.job-priority-highest": "גבוה מאוד",
+
   "system-status.job-details.header.internalId": "מזהה פנימי",
   "system-status.job-details.header.extetnalId": "מזהה חיצוני",
   "system-status.job-details.header.producerName": "שם יצרן",

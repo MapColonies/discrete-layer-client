@@ -112,3 +112,7 @@ body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   background: unset;
   overflow: visible;
 }
+
+#jobDialog .ag-cell {
+  overflow: visible !important;
+}
