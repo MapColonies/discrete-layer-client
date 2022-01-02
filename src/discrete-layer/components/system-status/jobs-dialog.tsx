@@ -26,7 +26,6 @@ import './jobs-dialog.css';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
-import { ICellRendererParams } from 'ag-grid-community';
 
 const pagination = true;
 const pageSize = 10;
