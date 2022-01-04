@@ -74,6 +74,10 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
           }
           break;
+        case 'Job.retry':
+            console.log('DO CALL TO RETRY')
+
+            break;
         default:
           break;
       }

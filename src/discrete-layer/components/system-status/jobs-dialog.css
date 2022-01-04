@@ -84,8 +84,9 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 }
 
 /* Hide border of right-cols-container */
-#jobsDialog .ag-pinned-right-cols-container .ag-cell {
+.jobsBody  .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
   border: none !important;
+  overflow: visible;
 }
 
 /* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
@@ -113,6 +114,23 @@ body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   overflow: visible;
 }
 
-#jobDialog .ag-cell {
+.jobsBody .actionsContainer {
+  right:0 !important;
+  position:relative;
   overflow: visible !important;
 }
+
+.jobsBody .actionsContainer .mdc-menu-surface--open {
+ z-index:2 !important;
+}
+
+
+.jobsBody [aria-hidden="true"] {
+  display: none;
+}
+
+.jobsBody [aria-hidden="false"] {
+  display: unset;
+}
+
+

@@ -18,15 +18,16 @@ import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
 import { StatusRenderer } from './cell-renderer/status.cell-renderer';
-import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
 
 import './jobs-dialog.css';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
-import { ICellRendererParams } from 'ag-grid-community';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 
 const pagination = true;
 const pageSize = 10;
@@ -34,6 +35,7 @@ const START_CYCLE_ITTERACTION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILISECONDS_IN_SEC = 1000;
+const JOB_ENTITY = 'Job';
 
 interface SystemJobsComponentProps {
   isOpen: boolean;
@@ -62,7 +64,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       return optionCpy
     });
   }, [intl]);
-  
+
+ 
   
   // start the timer during the first render
   useEffect(() => {
@@ -81,6 +84,33 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   );
   const mutationQuery = useQuery();
   const store = useStore();
+
+
+
+  const getJobActions = useCallback(() => {
+
+    const actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(JOB_ENTITY);
+    
+    actions[0].group = actions[0].group.map(action=> {
+      return ({...action, titleTranslationId: intl.formatMessage({
+        id: action.titleTranslationId,
+      })})
+    })
+      
+    console.log({
+      [JOB_ENTITY]: actions
+    }
+)
+    return {
+      [JOB_ENTITY]: actions
+    }
+
+
+  }, [intl]);
+
+ 
+
+
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
@@ -131,6 +161,15 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     },
     [onSetOpen]
   );
+
+  const dispatchAction = (action: Record<string,unknown>): void => {
+    store.actionDispatcherStore.dispatchAction(
+      {
+        action: action.action,
+        data: action.data,
+      } as IDispatchAction
+    );
+  };
 
   const colDef = [
     {
@@ -230,6 +269,16 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       cellRenderer: 'statusRenderer',
       filter: 'jobDetailsStatusFilter'
     },
+    {
+      pinned:'right',
+      headerName: '',
+      width: 100,
+      cellRenderer: 'actionsRenderer',
+      cellRendererParams: {
+        actions: getJobActions(),
+        actionHandler: dispatchAction
+      }
+    }
   ];
 
   const onGridReady = (params: GridReadyEvent) => {

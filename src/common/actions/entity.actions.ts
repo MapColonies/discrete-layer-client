@@ -175,6 +175,43 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       }
     ]
   },
+  {
+    entity: 'Job',
+    actions: [
+      {
+        id: 1,
+        titleTranslationId: 'OperationsOnJobs',
+        type: 'jobActions',
+        group: [
+          {
+            action: 'retry',
+            frequent: false,
+            icon: 'vertical_align_top',
+            class: '',
+            titleTranslationId: 'action.edit.tooltip',
+            views: []
+          },
+          {
+            action: 'retry1',
+            frequent: false,
+            icon: 'vertical_align_top',
+            class: '',
+            titleTranslationId: 'action.delete.tooltip',
+            views: []
+          },
+          {
+            action: 'retry2',
+            frequent: false,
+            icon: 'vertical_align_top',
+            class: '',
+            titleTranslationId: 'action.layer.move-to-bottom.tooltip',
+            views: []
+          }
+        ],
+      }
+    ]
+    
+  }
 ]
 
 export default ACTIONS_CONFIG;
