@@ -75,8 +75,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           }
           break;
         case 'Job.retry':
-            console.log('DO CALL TO RETRY')
-
+            // Handled in job-dialog.tsx
             break;
         default:
           break;

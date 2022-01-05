@@ -28,6 +28,7 @@ import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { IActionGroup } from '../../../common/actions/entity.actions';
+import { Query } from 'mst-gql';
 
 const pagination = true;
 const pageSize = 10;
@@ -49,11 +50,13 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
+  const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
 
-  const getPriorityOptions = useCallback(() => {
+  const getPriorityOptions = useMemo(() => {
+    console.log('here?')
     const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
 
     return priorityList.map((option) => {
@@ -87,29 +90,56 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
 
 
-  const getJobActions = useCallback(() => {
+  const getJobActions = useMemo(() => {
+    console.log('Here>')
+    const actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
+      JOB_ENTITY
+    );
 
-    const actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(JOB_ENTITY);
-    
-    actions[0].group = actions[0].group.map(action=> {
-      return ({...action, titleTranslationId: intl.formatMessage({
-        id: action.titleTranslationId,
-      })})
-    })
-      
-    console.log({
-      [JOB_ENTITY]: actions
-    }
-)
+    actions[0].group = actions[0].group.map((action) => {
+      return {
+        ...action,
+        titleTranslationId: intl.formatMessage({
+          id: action.titleTranslationId,
+        }),
+      };
+    });
+
     return {
-      [JOB_ENTITY]: actions
+      [JOB_ENTITY]: actions,
+    };
+  }, []);
+
+
+
+  // Retry action handler
+
+  useEffect(() => {
+    if (typeof store.actionDispatcherStore.action !== 'undefined') {
+     
+      const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
+
+      const performRetry = async () => {
+        try{
+          const res = await store.mutateJobRetry({ id: data.id as string })
+        }catch(e){
+          // TODO: Error handling
+          console.log(e)
+        }
+        // setRetryErr(res.error)
+      }
+
+      switch (action) {
+        case 'Job.retry':
+         void performRetry()
+        
+          break;
+
+        default:
+          break;
+      }
     }
-
-
-  }, [intl]);
-
- 
-
+  }, [store.actionDispatcherStore.action]);
 
 
   useEffect(() => {
@@ -182,72 +212,75 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           height: '40px',
           width: '40px',
           display: 'flex',
-          alignItems: 'center'
-        }
-      }
+          alignItems: 'center',
+        },
+      },
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'productName'
+      field: 'productName',
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.version.label',
       }),
       width: 80,
-      field: 'version'
+      field: 'version',
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.type.label',
       }),
       width: 120,
       field: 'type',
       filter: true,
-      sortable: true
+      sortable: true,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.priority.label',
       }),
       width: 150,
       field: 'priority',
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
-        optionsData: getPriorityOptions(),
-        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
-          const { id }  = jobData;
+        optionsData: getPriorityOptions,
+        onChange: (
+          evt: React.FormEvent<HTMLInputElement>,
+          jobData: JobModelType
+        ): void => {
+          const { id } = jobData;
           const chosenPriority: string | number = evt.currentTarget.value;
 
           setUpdateTaskPayload({
             id: id,
             data: {
-              priority: parseInt(chosenPriority)
-            }
+              priority: parseInt(chosenPriority),
+            },
           });
-        }
+        },
       },
-      
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.created.label',
       }),
       width: 172,
       field: 'created',
       cellRenderer: 'dateCellRenderer',
       cellRendererParams: {
-        field: 'created'
+        field: 'created',
       },
       sortable: true,
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+        valueA - valueB,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.updated.label',
       }),
       width: 172,
@@ -255,30 +288,31 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       sortable: true,
       cellRenderer: 'dateCellRenderer',
       cellRendererParams: {
-        field: 'updated'
+        field: 'updated',
       },
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+        valueA - valueB,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.status.label',
       }),
       width: 160,
       field: 'status',
       cellRenderer: 'statusRenderer',
-      filter: 'jobDetailsStatusFilter'
+      filter: 'jobDetailsStatusFilter',
     },
     {
-      pinned:'right',
+      pinned: 'right',
       headerName: '',
       width: 100,
       cellRenderer: 'actionsRenderer',
       cellRendererParams: {
-        actions: getJobActions(),
-        actionHandler: dispatchAction
-      }
-    }
+        actions: getJobActions,
+        actionHandler: dispatchAction,
+      },
+    },
   ];
 
   const onGridReady = (params: GridReadyEvent) => {
