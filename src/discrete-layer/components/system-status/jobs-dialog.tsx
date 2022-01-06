@@ -55,7 +55,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
 
   const getPriorityOptions = useMemo(() => {
-    console.log('here?')
     const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
 
     return priorityList.map((option) => {
@@ -249,21 +248,19 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
         optionsData: getPriorityOptions,
-        onChange: (
-          evt: React.FormEvent<HTMLInputElement>,
-          jobData: JobModelType
-        ): void => {
-          const { id } = jobData;
+        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
+          const { id }  = jobData;
           const chosenPriority: string | number = evt.currentTarget.value;
 
           setUpdateTaskPayload({
             id: id,
             data: {
-              priority: parseInt(chosenPriority),
-            },
+              priority: parseInt(chosenPriority)
+            }
           });
-        },
+        }
       },
+      
     },
     {
       headerName: intl.formatMessage({
