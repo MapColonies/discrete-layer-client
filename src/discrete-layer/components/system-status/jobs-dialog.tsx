@@ -306,7 +306,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     {
       pinned: 'right',
       headerName: '',
-      width: 100,
+      width: 0,
       cellRenderer: 'actionsRenderer',
       cellRendererParams: {
         actions: getJobActions,
@@ -389,7 +389,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             rowData={gridRowData}
             style={{
               height: 'calc(100% - 64px)',
-              width: 'calc(100% - 8px)',
+              // width: 'calc(100% - 100px)',
               padding: '12px'
             }}
           />
