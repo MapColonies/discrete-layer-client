@@ -28,7 +28,6 @@ import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { IActionGroup } from '../../../common/actions/entity.actions';
-import { Query } from 'mst-gql';
 
 const pagination = true;
 const pageSize = 10;
@@ -56,7 +55,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
 
   const getPriorityOptions = useMemo(() => {
-    console.log('here?')
     const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
 
     return priorityList.map((option) => {
@@ -86,12 +84,11 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     }
   );
   const mutationQuery = useQuery();
+
   const store = useStore();
 
 
-
   const getJobActions = useMemo(() => {
-    console.log('Here>')
     const actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
       JOB_ENTITY
     );
@@ -112,35 +109,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
 
 
-  // Retry action handler
-
-  useEffect(() => {
-    if (typeof store.actionDispatcherStore.action !== 'undefined') {
-     
-      const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
-
-      const performRetry = async () => {
-        try{
-          const res = await store.mutateJobRetry({ id: data.id as string })
-        }catch(e){
-          // TODO: Error handling
-          console.log(e)
-        }
-        // setRetryErr(res.error)
-      }
-
-      switch (action) {
-        case 'Job.retry':
-         void performRetry()
-        
-          break;
-
-        default:
-          break;
-      }
-    }
-  }, [store.actionDispatcherStore.action]);
-
+ 
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
@@ -192,14 +161,45 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     [onSetOpen]
   );
 
-  const dispatchAction = (action: Record<string,unknown>): void => {
-    store.actionDispatcherStore.dispatchAction(
-      {
-        action: action.action,
-        data: action.data,
-      } as IDispatchAction
-    );
+  const dispatchAction = (action: Record<string,unknown> | undefined): void => {
+
+    const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction
+      store.actionDispatcherStore.dispatchAction(
+        actionToDispatch
+      );
+
   };
+
+   // Job actions handler
+
+   useEffect(() => {
+     if (typeof store.actionDispatcherStore.action !== 'undefined') {
+       const { action, data } = store.actionDispatcherStore
+         .action as IDispatchAction;
+
+       switch (action) {
+         case 'Job.retry':
+           mutationQuery.setQuery(
+             store.mutateJobRetry({
+               id: data.id as string,
+             })
+           );
+           break;
+
+         default:
+           break;
+       }
+     }
+   }, [store.actionDispatcherStore.action]);
+
+
+  // Reset action value on store when unmounting.
+
+  useEffect(() => {
+    return (): void => {
+      dispatchAction(undefined)
+    };
+  }, []);
 
   const colDef = [
     {
@@ -248,21 +248,19 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
         optionsData: getPriorityOptions,
-        onChange: (
-          evt: React.FormEvent<HTMLInputElement>,
-          jobData: JobModelType
-        ): void => {
-          const { id } = jobData;
+        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
+          const { id }  = jobData;
           const chosenPriority: string | number = evt.currentTarget.value;
 
           setUpdateTaskPayload({
             id: id,
             data: {
-              priority: parseInt(chosenPriority),
-            },
+              priority: parseInt(chosenPriority)
+            }
           });
-        },
+        }
       },
+      
     },
     {
       headerName: intl.formatMessage({

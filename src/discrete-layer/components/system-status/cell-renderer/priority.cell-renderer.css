@@ -14,7 +14,7 @@
   height: 40px;
 }
 
-/* When selectbox is open, we need to prioritize it higher than the ag-grid row, and other cells, 
+/* When selectbox is open, we need to prioritize it higher then the ag-grid row, and other cells, 
    so that the options list will not be hidden.
 */
 .priorityCellContainer
