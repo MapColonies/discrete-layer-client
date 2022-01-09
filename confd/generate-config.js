@@ -22,16 +22,20 @@ if (process.platform === 'darwin') {
 }
 
 const confdBasePath = __dirname;
-const confdDevBasePath = path.join(confdBasePath,'dev');
+const confdDevBasePath = path.join(confdBasePath, 'dev');
+const confdPath = path.join(confdBasePath, `confd${confdExeExtension}`);
+
 const confdTmplRelPath = 'production.tmpl';
 const confdConfigPath = path.join(confdBasePath, 'production.toml');
 const confdTmplPath = path.join(confdBasePath, confdTmplRelPath);
-const devTmplPath = path.join(
-  confdDevBasePath,
-  '/templates/' + confdTmplRelPath
-);
+const devTmplPath = path.join(confdDevBasePath, '/templates/' + confdTmplRelPath);
 const devConfigPath = path.join(confdDevBasePath, 'conf.d/development.toml');
-const confdPath = path.join(confdBasePath, `confd${confdExeExtension}`);
+
+const indexTmplRelPath = 'index.tmpl';
+const indexConfigPath = path.join(confdBasePath, 'index.toml');
+const indexTmplPath = path.join(confdBasePath, indexTmplRelPath);
+const devIndexTmplPath = path.join(confdDevBasePath, '/templates/' + indexTmplRelPath);
+const devIndexConfigPath = path.join(confdDevBasePath, 'conf.d/index.toml');
 
 const download = (uri, filename) => {
   console.log(`Downloading ${filename} from ${uri}`);
@@ -108,12 +112,17 @@ const createDevConfdConfigFile = (env, isInDocker) => {
   if (!env) {
     env = 'default';
   }
-  console.log('Creating a development toml file.');
+  console.log('Creating a development toml and tmpl files.');
   const tmplCopy = copyFile(confdTmplPath, devTmplPath);
   const tomlCopy = copyFile(confdConfigPath, devConfigPath, data => {
-    const target = 'dest = "' + path.join(confdBasePath,'..','html') +'/'; 
-    return !isInDocker ? data : data.replace('dest = "public/',target);
-    //data.replace(/dest = .*/g, `dest = "config/${env}.json"`)
+    const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
+    return !isInDocker ? data : data.replace('dest = "public/', target);
+  });
+  const indexTmplCopy = copyFile(indexTmplPath, devIndexTmplPath);
+  const indexTomlCopy = copyFile(indexConfigPath, devIndexConfigPath, data => {
+    const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
+    return !isInDocker ? data : data.replace('dest = "public/', target);
+    //TODO: replace version from package.json
   });
 
   return Promise.all([tmplCopy, tomlCopy]);
