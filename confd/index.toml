@@ -3,5 +3,5 @@ src = "index.tmpl"
 dest = "public/index.html"
 keys = [
   "/configuration/public/url",
-  "/configuration/imageTag"
+  "/configuration/image/tag"
 ]
