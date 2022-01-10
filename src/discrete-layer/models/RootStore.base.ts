@@ -273,7 +273,8 @@ mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
 mutateStart3DIngestion="mutateStart3DIngestion",
 mutateStartDemIngestion="mutateStartDemIngestion",
-mutateUpdateJob="mutateUpdateJob"
+mutateUpdateJob="mutateUpdateJob",
+mutateJobRetry="mutateJobRetry"
 }
 
 /**
@@ -335,5 +336,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     mutateUpdateJob(variables: { data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateJob: string }>(`mutation updateJob($data: JobUpdateData!, $id: String!) { updateJob(data: $data, id: $id) }`, variables, optimisticUpdate)
+    },
+    mutateJobRetry(variables: { id: string }, optimisticUpdate?: () => void) {
+      return self.mutate<{ jobRetry: string }>(`mutation jobRetry($id: String!) { jobRetry(id: $id) }`, variables, optimisticUpdate)
     },
   })))

@@ -3,7 +3,6 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
 import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
@@ -11,14 +10,13 @@ import './actions.cell-renderer.css';
 const FIRST = 0;
 
 interface IActionsRendererParams extends ICellRendererParams {
-  actions: IActionGroup[];
+  actions: Record<string,IActionGroup[]>;
   actionHandler: (action: Record<string,unknown>) => void;
 }
 
 export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
-  const entity = (props.data as ILayerImage).__typename as string;
-  // @ts-ignore
-  const actions = props.actions[entity] as IActionGroup[];
+  const entity = (props.data as Record<string,unknown>).__typename as string;
+  const actions = props.actions[entity];
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -38,7 +36,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   const [openActionsMenu, setOpenActionsMenu] = useState<boolean>(false);
 
   const sendAction = (entity: string, action: IAction, data: Record<string,unknown>): void => {
-    console.log(`SEND ${action.action} EVENT`);
+    console.log(`SEND for ${entity} ${action.action} EVENT`);
     props.actionHandler({
       action: `${entity}.${action.action}`,
       data: data,
@@ -53,7 +51,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
             <IconButton
               className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
               icon={action.icon}
-              key={`freqAct_${(props.data as ILayerImage).id}_${idx}`}
+              key={`freqAct_${action.action}_${idx}`}
               onClick={(evt): void => { 
                 sendAction(entity, action, props.data);
               }}
@@ -70,7 +68,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           {
             actions.map((actionGroup: IActionGroup, groupIdx: number) => {
               return (
-                <>
+                <React.Fragment key={`actGroup_${groupIdx}`}>
                   {groupIdx > FIRST && 
                     <MenuItem key={`menuItemSeparator_groupId_${groupIdx}`}>
                       <Box className="menuSeparator"></Box>
@@ -78,7 +76,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
                   }
                   {actionGroup.group.map((action: IAction, idx: number) => {
                     return (
-                      <MenuItem key={`menuItemAct_${(props.data as ILayerImage).id}_${idx}`}>
+                      <MenuItem key={`menuItemAct_${action.action}_${idx}`}>
                         <Box 
                           onClick={(evt): void => {
                             sendAction(entity, action, props.data);
@@ -100,7 +98,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
                       </MenuItem>
                     );
                   })}
-                </>
+                </React.Fragment>
               )
             })
           }
