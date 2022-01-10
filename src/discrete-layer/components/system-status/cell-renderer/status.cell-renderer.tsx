@@ -94,9 +94,10 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
 
   return (
     <Box className={'statusBarContainer'}>
-      <Typography style={{ fontSize: '12px' }} tag="p" className="statusText">
+      <Box className="statusText">
+      <Typography style={{ fontSize: '12px' }} tag="div" />
         {getProgressComponent()}
-      </Typography>
+      </Box>
       <Box
         className={'statusBar'}
         style={{

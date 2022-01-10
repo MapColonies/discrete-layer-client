@@ -18,14 +18,16 @@ import { useQuery, useStore } from '../../models/RootStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
 import { StatusRenderer } from './cell-renderer/status.cell-renderer';
-import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 
 
 import './jobs-dialog.css';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 
 const pagination = true;
 const pageSize = 10;
@@ -33,6 +35,7 @@ const START_CYCLE_ITTERACTION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILISECONDS_IN_SEC = 1000;
+const JOB_ENTITY = 'Job';
 
 interface SystemJobsComponentProps {
   isOpen: boolean;
@@ -46,11 +49,12 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
+  const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
 
-  const getPriorityOptions = useCallback(() => {
+  const getPriorityOptions = useMemo(() => {
     const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
 
     return priorityList.map((option) => {
@@ -61,7 +65,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       return optionCpy
     });
   }, [intl]);
-  
+
+ 
   
   // start the timer during the first render
   useEffect(() => {
@@ -79,7 +84,37 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     }
   );
   const mutationQuery = useQuery();
+
   const store = useStore();
+
+
+  const getJobActions = useMemo(() => {
+    let actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
+      JOB_ENTITY
+    );
+
+    actions = actions.map((action) => {
+      const groupsWithTranslation = action.group.map((action) => {
+        return {
+          ...action,
+          titleTranslationId: intl.formatMessage({
+            id: action.titleTranslationId,
+          }),
+        };
+      });
+
+      return {...action, group: groupsWithTranslation}
+    })
+
+
+    return {
+      [JOB_ENTITY]: actions,
+    };
+  }, []);
+
+
+
+ 
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
@@ -131,6 +166,46 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     [onSetOpen]
   );
 
+  const dispatchAction = (action: Record<string,unknown> | undefined): void => {
+
+    const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction
+      store.actionDispatcherStore.dispatchAction(
+        actionToDispatch
+      );
+
+  };
+
+   // Job actions handler
+
+   useEffect(() => {
+     if (typeof store.actionDispatcherStore.action !== 'undefined') {
+       const { action, data } = store.actionDispatcherStore
+         .action as IDispatchAction;
+
+       switch (action) {
+         case 'Job.retry':
+           mutationQuery.setQuery(
+             store.mutateJobRetry({
+               id: data.id as string,
+             })
+           );
+           break;
+
+         default:
+           break;
+       }
+     }
+   }, [store.actionDispatcherStore.action]);
+
+
+  // Reset action value on store when unmounting.
+
+  useEffect(() => {
+    return (): void => {
+      dispatchAction(undefined)
+    };
+  }, []);
+
   const colDef = [
     {
       headerName: '',
@@ -142,42 +217,42 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           height: '40px',
           width: '40px',
           display: 'flex',
-          alignItems: 'center'
-        }
-      }
+          alignItems: 'center',
+        },
+      },
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'productName'
+      field: 'productName',
     },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.version.label',
       }),
       width: 80,
-      field: 'version'
+      field: 'version',
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.type.label',
       }),
       width: 120,
       field: 'type',
       filter: true,
-      sortable: true
+      sortable: true,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.priority.label',
       }),
       width: 150,
       field: 'priority',
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
-        optionsData: getPriorityOptions(),
+        optionsData: getPriorityOptions,
         onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
           const { id }  = jobData;
           const chosenPriority: string | number = evt.currentTarget.value;
@@ -193,21 +268,22 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.created.label',
       }),
       width: 172,
       field: 'created',
       cellRenderer: 'dateCellRenderer',
       cellRendererParams: {
-        field: 'created'
+        field: 'created',
       },
       sortable: true,
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+        valueA - valueB,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.updated.label',
       }),
       width: 172,
@@ -215,19 +291,30 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       sortable: true,
       cellRenderer: 'dateCellRenderer',
       cellRendererParams: {
-        field: 'updated'
+        field: 'updated',
       },
       // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+        valueA - valueB,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.status.label',
       }),
       width: 160,
       field: 'status',
       cellRenderer: 'statusRenderer',
-      filter: 'jobDetailsStatusFilter'
+      filter: 'jobDetailsStatusFilter',
+    },
+    {
+      pinned: 'right',
+      headerName: '',
+      width: 0,
+      cellRenderer: 'actionsRenderer',
+      cellRendererParams: {
+        actions: getJobActions,
+        actionHandler: dispatchAction,
+      },
     },
   ];
 
@@ -305,7 +392,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             rowData={gridRowData}
             style={{
               height: 'calc(100% - 64px)',
-              width: 'calc(100% - 8px)',
               padding: '12px'
             }}
           />
