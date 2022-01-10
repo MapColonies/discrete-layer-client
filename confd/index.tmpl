@@ -28,7 +28,7 @@
     <script type="text/javascript">
       (function(){
         const getTime = () => new Date().getTime().toString();
-        const getVersion = () => '1.11.1';
+        const getVersion = () => '{{ getv "/configuration/imageTag" "v1.0.0" }}';
         
         // Render SCRIPTS
         const scripts = [

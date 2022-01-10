@@ -122,7 +122,6 @@ const createDevConfdConfigFile = (env, isInDocker) => {
   const indexTomlCopy = copyFile(indexConfigPath, devIndexConfigPath, data => {
     const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
     return !isInDocker ? data : data.replace('dest = "public/', target);
-    //TODO: replace version from package.json
   });
 
   return Promise.all([tmplCopy, tomlCopy]);
