@@ -40,7 +40,7 @@ export const actionDispatcherStore = ModelBase
       return actions ?? undefined;
     };
     
-    function dispatchAction(action:IDispatchAction): void {
+    function dispatchAction(action:IDispatchAction | undefined): void {
       self.action = cloneDeep(action);
     };
 

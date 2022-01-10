@@ -41,6 +41,7 @@
   "action.layer.move-up.tooltip": "הזז למעלה",
   "action.layer.move-down.tooltip": "הזז למטה",
   "action.layer.move-to-bottom.tooltip": "הורד לתחתית",
+  "action.job.retry": "נסה שוב",
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
