@@ -1,4 +1,5 @@
 
+
 #jobsDialog .mdc-dialog__surface {
   max-width: unset;
   right:12px;
@@ -75,7 +76,7 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 /* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
 #jobsDialog .ag-pinned-right-cols-container {
   position: absolute !important;
-  right: 0;
+  right: 0px;
   pointer-events: none;
 }
 /* Reset pointer-events so that click can happen on action buttons */
@@ -84,8 +85,22 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 }
 
 /* Hide border of right-cols-container */
-#jobsDialog .ag-pinned-right-cols-container .ag-cell {
+.jobsBody  .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
   border: none !important;
+  overflow: visible;
+}
+
+.jobsBody .ag-pinned-right-cols-container .ag-cell {
+  border: none !important;
+  width: 20px!important;
+  height: 30px!important;
+  left: -40px !important;
+ 
+}
+
+body[dir=rtl] .jobsBody .ag-pinned-right-cols-container .ag-cell {
+  left: unset;
+  right: -40px !important;
 }
 
 /* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
@@ -100,7 +115,11 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
   border-width: 0px !important;
 }
 
-#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected.ag-row-hover{
+#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected,
+#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected .ag-cell,
+#jobsDialog .ag-row.ag-row-selected,
+#jobsDialog .ag-row.ag-row-selected .actionsContainer {
+
   background-color: #455570;
 }
 
@@ -113,6 +132,28 @@ body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   overflow: visible;
 }
 
-#jobDialog .ag-cell {
+.jobsBody .actionsContainer {
+  right:0 !important;
+  position:relative;
+
   overflow: visible !important;
+  width: min-content !important;
+
+  border-radius: 0 !important;
+
 }
+
+.jobsBody .actionsContainer .mdc-menu-surface--open {
+ z-index:2 !important;
+}
+
+
+.jobsBody [aria-hidden="true"] {
+  display: none;
+}
+
+.jobsBody [aria-hidden="false"] {
+  display: unset;
+}
+
+

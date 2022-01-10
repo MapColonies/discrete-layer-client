@@ -175,6 +175,27 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       }
     ]
   },
+  {
+    entity: 'Job',
+    actions: [
+      {
+        id: 1,
+        titleTranslationId: 'OperationsOnJobs',
+        type: 'jobActions',
+        group: [
+          {
+            action: 'retry',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Refresh',
+            titleTranslationId: 'action.job.retry',
+            views: []
+          }
+        ],
+      }
+    ]
+    
+  }
 ]
 
 export default ACTIONS_CONFIG;
