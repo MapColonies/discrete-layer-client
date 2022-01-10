@@ -74,10 +74,15 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 }
 
 /* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
-#jobsDialog .ag-pinned-right-cols-container {
+.jobsBody .ag-pinned-right-cols-container {
   position: absolute !important;
-  right: 0px;
+  right: 45px;
   pointer-events: none;
+}
+
+body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
+  right: unset;
+  left: 45px;
 }
 /* Reset pointer-events so that click can happen on action buttons */
 #jobsDialog .ag-pinned-right-cols-container * {
@@ -88,26 +93,16 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 .jobsBody  .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
   border: none !important;
   overflow: visible;
+  border-radius: 50% !important;
 }
 
-.jobsBody .ag-pinned-right-cols-container .ag-cell {
-  border: none !important;
-  width: 20px!important;
-  height: 30px!important;
-  left: -40px !important;
- 
-}
-
-body[dir=rtl] .jobsBody .ag-pinned-right-cols-container .ag-cell {
-  left: unset;
-  right: -40px !important;
-}
 
 /* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
 #jobsDialog .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover),
 #jobsDialog .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover) .ag-cell {
   width: 0 !important;
   padding: 0 !important;
+  border: none;
 }
 
 #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover{
@@ -119,12 +114,8 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container .ag-cell {
 #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected .ag-cell,
 #jobsDialog .ag-row.ag-row-selected,
 #jobsDialog .ag-row.ag-row-selected .actionsContainer {
-
+  border: none !important;
   background-color: #455570;
-}
-
-body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
-  margin-right: 250%;
 }
 
 #jobsDialog .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
@@ -135,12 +126,9 @@ body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
 .jobsBody .actionsContainer {
   right:0 !important;
   position:relative;
-
   overflow: visible !important;
-  width: min-content !important;
-
-  border-radius: 0 !important;
-
+  width: 15px !important;
+  height: 5px !important;
 }
 
 .jobsBody .actionsContainer .mdc-menu-surface--open {
