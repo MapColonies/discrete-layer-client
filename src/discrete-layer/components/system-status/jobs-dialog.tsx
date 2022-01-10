@@ -89,18 +89,23 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
 
   const getJobActions = useMemo(() => {
-    const actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
+    let actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
       JOB_ENTITY
     );
 
-    actions[0].group = actions[0].group.map((action) => {
-      return {
-        ...action,
-        titleTranslationId: intl.formatMessage({
-          id: action.titleTranslationId,
-        }),
-      };
-    });
+    actions = actions.map((action) => {
+      const groupsWithTranslation = action.group.map((action) => {
+        return {
+          ...action,
+          titleTranslationId: intl.formatMessage({
+            id: action.titleTranslationId,
+          }),
+        };
+      });
+
+      return {...action, group: groupsWithTranslation}
+    })
+
 
     return {
       [JOB_ENTITY]: actions,
@@ -387,7 +392,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             rowData={gridRowData}
             style={{
               height: 'calc(100% - 64px)',
-              // width: 'calc(100% - 100px)',
               padding: '12px'
             }}
           />
