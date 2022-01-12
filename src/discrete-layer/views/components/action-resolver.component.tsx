@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { BestRecordModelKeys, LayerRasterRecordModelKeys, LayerDemRecordModelKeys, Layer3DRecordModelKeys, cleanUpEntity } from '../../components/layer-details/layer-details.field-info';
+import { BestRecordModelKeys, LayerRasterRecordModelKeys, LayerDemRecordModelKeys, Layer3DRecordModelKeys, VectorBestRecordModelKeys } from '../../components/layer-details/entity-types-keys';
+import {cleanUpEntity} from '../../components/layer-details/utils'
 import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
@@ -40,6 +41,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerDemRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
+          props.handleOpenEntityDialog(true);
+          break;
+        case 'VectorBestRecord.edit':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
           break;
         case 'LayerRasterRecord.delete':

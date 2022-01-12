@@ -147,6 +147,28 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       }
     ]
   },
+
+  {
+    entity: 'VectorBestRecord',
+    actions: [
+      {
+        id: 1,
+        titleTranslationId: 'CRUD',
+        type: 'CRUD',
+        group: [
+          {
+            action: 'edit',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Edit',
+            titleTranslationId: 'action.edit.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      }
+    ]
+  },
+
   {
     entity: 'LayerDemRecord',
     actions: [

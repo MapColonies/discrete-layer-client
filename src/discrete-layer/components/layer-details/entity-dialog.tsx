@@ -34,7 +34,8 @@ import {
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerDemRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
 import { LayersDetailsComponent } from './layer-details';
-import { FieldConfigModelKeys, IRecordFieldInfo, Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './layer-details.field-info';
+import { FieldConfigModelKeys, Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './entity-types-keys';
+import {IRecordFieldInfo} from './layer-details.field-info'
 import { IngestionFields } from './ingestion-fields';
 import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
