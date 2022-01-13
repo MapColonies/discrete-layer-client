@@ -25,6 +25,9 @@ export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entit
     case 'LayerDemRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswDemCatalogRecord')
       break;
+      case 'VectorBestRecord':
+        entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswVectorBestCatalogRecord')
+      break;
     case 'Layer3DRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
       break;

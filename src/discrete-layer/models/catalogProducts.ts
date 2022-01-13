@@ -28,7 +28,7 @@ export const iconsAndTooltips: IconsAndTooltips = {
   'Layer3DRecord': ['mc-icon-Map-3D', '3D', ''],
   'LayerDemRecord': ['mc-icon-Map-Terrain', 'DEM', ''],
   'BestRecord': ['mc-icon-Bests', 'BEST', ''],
-  'VectorBestRecord': ['mc-icon-Bests', 'BEST', ''], 
+  'VectorBestRecord': ['mc-icon-Map-Vector', VECTOR_BEST, ''], 
   [ORTHOPHOTO]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO, 'LayerRasterRecord'],
   [ORTHOPHOTO_HISTORY]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO_HISTORY, 'LayerRasterRecord'],
   [ORTHOPHOTO_BEST]: ['mc-icon-Map-Best-Orthophoto', ORTHOPHOTO_BEST, 'BestRecord'],
