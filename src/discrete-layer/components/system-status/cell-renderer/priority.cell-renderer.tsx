@@ -44,6 +44,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
     ) as PriorityOption;
 
     return { icon: selectedOption.icon, color: selectedOption.iconColor };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [icon, setIcon] = useState(getIconObjForVal(value));
