@@ -6,28 +6,27 @@ import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 import { 
   GridComponent,
   GridComponentOptions,
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import { useQuery, useStore } from '../../models/RootStore';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
 import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
-
-
-import './jobs-dialog.css';
-import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { IActionGroup } from '../../../common/actions/entity.actions';
+
+import './jobs-dialog.css';
 
 const pagination = true;
 const pageSize = 10;
@@ -66,8 +65,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     });
   }, [intl]);
 
- 
-  
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
@@ -104,31 +101,27 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       });
 
       return {...action, group: groupsWithTranslation}
-    })
-
+    });
 
     return {
       [JOB_ENTITY]: actions,
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
-
- 
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
   }, [data]);
 
   useEffect(() => {
-    if(mutationQuery.data){
+    if (mutationQuery.data) {
       setUpdateTaskPayload({});
       void query?.refetch();
     }
   }, [mutationQuery.data, query]);
 
   useEffect(() => {
-    if(updateTaskPayload.id !== undefined){
+    if (updateTaskPayload.id !== undefined) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
@@ -137,14 +130,14 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   }, [updateTaskPayload, store]);
 
   useEffect(() => {
-    if(mutationQuery.error){
+    if (mutationQuery.error) {
       gridApi?.refreshCells({
         suppressFlash: true,
         force: true
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[mutationQuery.error]);
+  }, [mutationQuery.error]);
 
   useEffect(() => {
     const pollingInterval = setInterval(() => {
@@ -168,10 +161,10 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
 
   const dispatchAction = (action: Record<string,unknown> | undefined): void => {
 
-    const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction
-      store.actionDispatcherStore.dispatchAction(
-        actionToDispatch
-      );
+    const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction;
+    store.actionDispatcherStore.dispatchAction(
+      actionToDispatch
+    );
 
   };
 
@@ -195,6 +188,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
            break;
        }
      }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [store.actionDispatcherStore.action]);
 
 
@@ -204,6 +198,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     return (): void => {
       dispatchAction(undefined)
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const colDef = [
@@ -265,7 +260,6 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
           });
         }
       },
-      
     },
     {
       headerName: intl.formatMessage({
@@ -362,7 +356,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
     unSortIcon: true, // Used to show un-sorted icon.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }),[]);
+  }), []);
 
   return (
     <Box id="jobsDialog">
