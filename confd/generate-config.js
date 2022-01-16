@@ -21,6 +21,8 @@ if (process.platform === 'darwin') {
   confdExeExtension = '';
 }
 
+const isInDocker = process.argv.indexOf('--indocker') !== -1;
+
 const confdBasePath = __dirname;
 const confdDevBasePath = path.join(confdBasePath, 'dev');
 const confdPath = path.join(confdBasePath, `confd${confdExeExtension}`);
@@ -31,10 +33,10 @@ const confdTmplPath = path.join(confdBasePath, confdTmplRelPath);
 const devTmplPath = path.join(confdDevBasePath, '/templates/' + confdTmplRelPath);
 const devConfigPath = path.join(confdDevBasePath, 'conf.d/development.toml');
 
-const indexTmplRelPath = 'index.tmpl';
+const indexTmplRelPath = 'index.html';
 const indexConfigPath = path.join(confdBasePath, 'index.toml');
-const indexTmplPath = path.join(confdBasePath, indexTmplRelPath);
-const devIndexTmplPath = path.join(confdDevBasePath, '/templates/' + indexTmplRelPath);
+const indexTmplPath = path.join(confdBasePath, !isInDocker ? '/../public/' : '/../html/',indexTmplRelPath);
+const devIndexTmplPath = path.join(confdDevBasePath, '/templates/', indexTmplRelPath);
 const devIndexConfigPath = path.join(confdDevBasePath, 'conf.d/index.toml');
 
 const download = (uri, filename) => {
@@ -127,6 +129,15 @@ const createDevConfdConfigFile = (env, isInDocker) => {
   return Promise.all([tmplCopy, tomlCopy]);
 };
 
+const replacePlaceHolders = () => {
+  return copyFile(indexTmplPath, indexTmplPath, (content) => {
+    console.log('**** Replace PLACEHOLDERS by CONFD syntax ****')
+    return content
+          .replace(/{PUBLIC_URL_PLACEHOLDER}/g, '{{ getv "/configuration/public/url" "." }}')
+          .replace(/{APP_VERSION_PLACEHOLDER}/g, '{{ getv "/configuration/image/tag" "vUnknown" }}');
+  });
+};
+
 const runConfd = () => {
   console.log('Running confd');
   exec(
@@ -164,10 +175,13 @@ const main = () => {
     help();
   }
   const envIdx = process.argv.indexOf('--environment');
-  const isInDocker = process.argv.indexOf('--indocker') !== -1;
   const env = envIdx !== -1 ? process.argv[envIdx + 1] : null;
   downloadIfNotExists(confdUrl, confdPath)
-    .then(() => createDevConfdConfigFile(env, isInDocker))
+    .then(() => {
+      replacePlaceHolders().then(()=>{
+        createDevConfdConfigFile(env, isInDocker);
+      });
+    })
     // .then(createTargetDir())
     .then(() => runConfd())
     .catch(err => {

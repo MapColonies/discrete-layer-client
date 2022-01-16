@@ -1,5 +1,5 @@
 [template]
-src = "index.tmpl"
+src = "index.html"
 dest = "public/index.html"
 keys = [
   "/configuration/public/url",
