@@ -21,6 +21,8 @@ if (process.platform === 'darwin') {
   confdExeExtension = '';
 }
 
+const isInDocker = process.argv.indexOf('--indocker') !== -1;
+
 const confdBasePath = __dirname;
 const confdDevBasePath = path.join(confdBasePath, 'dev');
 const confdPath = path.join(confdBasePath, `confd${confdExeExtension}`);
@@ -33,7 +35,7 @@ const devConfigPath = path.join(confdDevBasePath, 'conf.d/development.toml');
 
 const indexTmplRelPath = 'index.html';
 const indexConfigPath = path.join(confdBasePath, 'index.toml');
-const indexTmplPath = path.join(confdBasePath, '/../public/',indexTmplRelPath);
+const indexTmplPath = path.join(confdBasePath, !isInDocker ? '/../public/' : '/../html/',indexTmplRelPath);
 const devIndexTmplPath = path.join(confdDevBasePath, '/templates/', indexTmplRelPath);
 const devIndexConfigPath = path.join(confdDevBasePath, 'conf.d/index.toml');
 
@@ -173,7 +175,6 @@ const main = () => {
     help();
   }
   const envIdx = process.argv.indexOf('--environment');
-  const isInDocker = process.argv.indexOf('--indocker') !== -1;
   const env = envIdx !== -1 ? process.argv[envIdx + 1] : null;
   downloadIfNotExists(confdUrl, confdPath)
     .then(() => {
