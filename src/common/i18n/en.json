@@ -351,6 +351,7 @@
   "system-status.job.status_translation.InProgress": "In Progress",
   "system-status.job.status_translation.Completed": "Completed",
   "system-status.job.status_translation.Failed": "Failed",
+  "system-status.job.status_translation.Expired": "Expired",
 
   "system-status.job.filter.status.all": "All",
 

@@ -351,6 +351,7 @@
   "system-status.job.status_translation.InProgress": "בתהליך",
   "system-status.job.status_translation.Completed": "הושלם",
   "system-status.job.status_translation.Failed": "נכשל",
+  "system-status.job.status_translation.Expired": "פג תוקף",
 
   "system-status.job.filter.status.all": "הכל",
 
