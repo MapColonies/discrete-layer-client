@@ -118,7 +118,7 @@ export const cleanUpEntity = (
   return omit(data, keysNotInModel);
 };
 
-export const checkIsBest = (entity: ILayerImage): boolean => {
+const checkIsBest = (entity: ILayerImage): boolean => {
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST  } = ProductType;
@@ -126,4 +126,12 @@ export const checkIsBest = (entity: ILayerImage): boolean => {
   const bestProductTypes:ProductType[] = [ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST];
 
   return bestProductTypes.includes(entity.productType as ProductType);
+}
+
+export const isDiscrete = (entity: ILayerImage): boolean => {
+  return !checkIsBest(entity)
+}
+
+export const isBest = (entity: ILayerImage): boolean => {
+  return checkIsBest(entity)
 }

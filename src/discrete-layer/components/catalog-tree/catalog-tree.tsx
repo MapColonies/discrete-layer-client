@@ -24,7 +24,7 @@ import { TabViews } from '../../views/tab-views';
 import { BestInEditDialogComponent } from '../dialogs/best-in-edit.dialog';
 
 import './catalog-tree.css';
-import { checkIsBest } from '../layer-details/utils';
+import { isBest } from '../layer-details/utils';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -173,7 +173,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       );
 
       // get BESTs shortcuts
-      const arrBests = arr.filter(checkIsBest);
+      const arrBests = arr.filter(isBest);
       const drafts = store.bestStore.getDrafts();
       const draftNode = (drafts.length > 0) ? [{
         title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
