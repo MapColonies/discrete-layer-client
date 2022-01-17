@@ -19,6 +19,7 @@ import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { isDiscrete } from '../layer-details/utils';
 
 import './best-catalog.css';
 
@@ -102,7 +103,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     if (data && data.search) {
       const arr: ILayerImage[] = [];
       data.search
-      .filter((item) => !discretesIds?.includes(item.id))
+      .filter((item) => !discretesIds?.includes(item.id) && isDiscrete(item))
       .forEach((item) => arr.push({...item}));
 
       store.discreteLayersStore.setLayersImagesData(

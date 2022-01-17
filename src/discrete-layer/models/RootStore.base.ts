@@ -17,6 +17,8 @@ import { DiscreteOrderModel, DiscreteOrderModelType } from "./DiscreteOrderModel
 import { discreteOrderModelPrimitives, DiscreteOrderModelSelector } from "./DiscreteOrderModel.base"
 import { LayerDemRecordModel, LayerDemRecordModelType } from "./LayerDemRecordModel"
 import { layerDemRecordModelPrimitives, LayerDemRecordModelSelector } from "./LayerDemRecordModel.base"
+import { VectorBestRecordModel, VectorBestRecordModelType } from "./VectorBestRecordModel"
+import { vectorBestRecordModelPrimitives, VectorBestRecordModelSelector } from "./VectorBestRecordModel.base"
 import { StringArrayObjectTypeModel, StringArrayObjectTypeModelType } from "./StringArrayObjectTypeModel"
 import { stringArrayObjectTypeModelPrimitives, StringArrayObjectTypeModelSelector } from "./StringArrayObjectTypeModel.base"
 import { EntityDescriptorModel, EntityDescriptorModelType } from "./EntityDescriptorModel"
@@ -250,7 +252,8 @@ type Refs = {
   layer3DRecords: ObservableMap<string, Layer3DRecordModelType>,
   layerDemRecords: ObservableMap<string, LayerDemRecordModelType>,
   bestRecords: ObservableMap<string, BestRecordModelType>,
-  entityDescriptors: ObservableMap<string, EntityDescriptorModelType>
+  entityDescriptors: ObservableMap<string, EntityDescriptorModelType>,
+  vectorBestRecords: ObservableMap<string, VectorBestRecordModelType>
 }
 
 
@@ -279,13 +282,14 @@ mutateJobRetry="mutateJobRetry"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
     layerDemRecords: types.optional(types.map(types.late((): any => LayerDemRecordModel)), {}),
     bestRecords: types.optional(types.map(types.late((): any => BestRecordModel)), {}),
-    entityDescriptors: types.optional(types.map(types.late((): any => EntityDescriptorModel)), {})
+    entityDescriptors: types.optional(types.map(types.late((): any => EntityDescriptorModel)), {}),
+    vectorBestRecords: types.optional(types.map(types.late((): any => VectorBestRecordModel)), {})
   })
   .actions(self => ({
     querySearch(variables: { opts?: SearchOptions, end?: number, start?: number }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {

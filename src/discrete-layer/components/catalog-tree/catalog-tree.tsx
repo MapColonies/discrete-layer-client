@@ -24,6 +24,7 @@ import { TabViews } from '../../views/tab-views';
 import { BestInEditDialogComponent } from '../dialogs/best-in-edit.dialog';
 
 import './catalog-tree.css';
+import { isBest } from '../layer-details/utils';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -119,7 +120,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord',].forEach( entityName => {
+    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord','VectorBestRecord'].forEach( entityName => {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
@@ -152,6 +153,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   useEffect(() => {
 
     const layersList = get(data,'search') as ILayerImage[];
+
     if (!isEmpty(layersList)) {
       const arr: ILayerImage[] = [];
       layersList.forEach((item) => arr.push({...item}));
@@ -171,11 +173,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       );
 
       // get BESTs shortcuts
-      const arrBests = arr.filter((item) => {
-        // @ts-ignore
-        const itemObjectBag =  item as Record<string,unknown>;
-        return ('discretes' in itemObjectBag) && itemObjectBag.discretes !== null;
-      });
+      const arrBests = arr.filter(isBest);
       const drafts = store.bestStore.getDrafts();
       const draftNode = (drafts.length > 0) ? [{
         title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),

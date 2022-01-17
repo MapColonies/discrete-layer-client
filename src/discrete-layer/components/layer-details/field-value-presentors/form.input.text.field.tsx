@@ -54,7 +54,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
       </Box>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [value]);
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (

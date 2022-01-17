@@ -16,16 +16,19 @@ interface IActionsRendererParams {
 export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions, entity, actionHandler}) => {
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
-  actions.forEach(actionGroup => {
-    frequentActions = [
-      ...frequentActions,
-      ...actionGroup.group.filter(action => action.frequent)
-    ];
-    allFlatActions = [
-      ...allFlatActions,
-      ...actionGroup.group
-    ];
-  });
+  
+  if(typeof actions !== 'undefined'){
+    actions.forEach(actionGroup => {
+      frequentActions = [
+        ...frequentActions,
+        ...actionGroup.group.filter(action => action.frequent)
+      ];
+      allFlatActions = [
+        ...allFlatActions,
+        ...actionGroup.group
+      ];
+    });
+  }
 
   const [openActionsMenu, setOpenActionsMenu] = useState<boolean>(false);
 
