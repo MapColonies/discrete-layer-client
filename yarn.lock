@@ -1425,6 +1425,11 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@here/quantized-mesh-decoder@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@here/quantized-mesh-decoder/-/quantized-mesh-decoder-1.2.8.tgz#ddb28a8ad7a8fbf4dfe1654293b57ef0a5611f07"
+  integrity sha512-fYOgpANVVMT38cHlCAIqzUun0cvhWGjpTI+jCbFtdfWgE24+sHtoCqPFvue6UhC9LA64j//lrdMKtryUvskqiA==
+
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.9.0.tgz#79b1bc06fb74a8cfb01cbdedf945584b1b9707f0"
@@ -1606,12 +1611,13 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.8.0.tgz#af6cd633419ec141d5eaddcd3201425372a671ff"
-  integrity sha512-hLth5Xq+iqTtumsB8lVd4+sUpdU3tq8ZAwAL3U2VYIS0V/AMoFLFT75bbmYvICnCsqOoTy1HIg+AgDUN7iCowA==
+"@map-colonies/react-components@3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.9.0.tgz#cf79e354af895bfd8860c7ff213b1ca725eb45af"
+  integrity sha512-FijlfJyjEzmA/d86meIMz6i1mh1Qp7jxdUQlX3Je0Py3+dc1xfOeoeO30Aapz+eE8nP5FTRPPbnL2XzUMFa5tw==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
+    "@here/quantized-mesh-decoder" "^1.2.8"
     "@map-colonies/react-core" "^3.3.1"
     "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"
@@ -1631,7 +1637,7 @@
     "@types/react" "^16.9.0"
     "@types/react-dom" "^16.9.0"
     "@types/textarea-caret" "^3.0.1"
-    cesium "^1.82.0"
+    cesium "1.84.0"
     copy-webpack-plugin "^6.3.1"
     copyfiles "2.3.0"
     cross-env "7.0.2"
@@ -5122,10 +5128,10 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-cesium@^1.82.0:
-  version "1.82.1"
-  resolved "https://registry.yarnpkg.com/cesium/-/cesium-1.82.1.tgz#ca231d4dee8bc02126dfbd57e9474b7bd65d8f40"
-  integrity sha512-BpyQ3KF6ZPPicW5L3khPJA0fKWL1ViA5cV1hFa/8zWiJ/1ix3+kyzrvaAlUdy/knn9xY70ePnNYwokIs+d2znw==
+cesium@1.84.0:
+  version "1.84.0"
+  resolved "https://registry.yarnpkg.com/cesium/-/cesium-1.84.0.tgz#b93ab6f570cf342f63192dd8104982639cda8e8d"
+  integrity sha512-rf3aBs+HKboKm1QATN0YKO+OnskV/q5T6Su1ew3gmXxFdD+k8BIxdf5fRSLQyxOIGk6ZB1LC3pCV9VG4+EzfzA==
 
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
