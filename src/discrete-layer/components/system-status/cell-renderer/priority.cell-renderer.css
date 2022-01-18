@@ -2,7 +2,6 @@
   border-radius: 0;
 }
 .priority_options {
-  position: fixed;
   width: 150px;
 }
 
@@ -21,6 +20,11 @@
   .priority_options.mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--focused.mdc-select--activated {
   z-index: 2;
 }
+
+.ag-cell-value[col-id="priority"]{
+  overflow: visible;
+}
+
 .priorityCellContainer .mdc-select--with-leading-icon .mdc-select__icon {
   top: 7px;
   left: 10px;

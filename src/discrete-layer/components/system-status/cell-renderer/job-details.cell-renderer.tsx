@@ -52,9 +52,10 @@ const taskFileds: ITaskField[] = [
 
 interface StatusPresentorParams {
   task: Record<string, unknown>;
+  reactKey?: string
 }
 
-const StatusPresentor: React.FC<StatusPresentorParams> = ({ task }) => {
+const StatusPresentor: React.FC<StatusPresentorParams> = ({ task, reactKey = '' }) => {
   const intl = useIntl();
 
   const statusText = intl.formatMessage({
@@ -70,7 +71,7 @@ const StatusPresentor: React.FC<StatusPresentorParams> = ({ task }) => {
     });
 
     return (
-      <Box className={`${(task.status as string).toLowerCase()} gridCell`}>
+      <Box key={reactKey} className={`${(task.status as string).toLowerCase()} gridCell`}>
         {statusText}
         <Tooltip content={ellipsizedFailReason}>
           <IconButton
@@ -96,6 +97,7 @@ const StatusPresentor: React.FC<StatusPresentorParams> = ({ task }) => {
 const getValuePresentor = (
   task: Record<string, unknown>,
   field: ITaskField,
+  idx: number,
   setCollapsed?: (collapsed: boolean) => void
 ): JSX.Element => {
   switch (field.valueType) {
@@ -106,7 +108,7 @@ const getValuePresentor = (
       );
 
       return (
-        <Tooltip content={dateAndTimeTooltipContent}>
+        <Tooltip content={dateAndTimeTooltipContent} key={`DATE_${idx}`}>
           <Box className={'gridCell'}>
             {relativeDateFormatter(task[field.name] as Moment)}
           </Box>
@@ -114,9 +116,9 @@ const getValuePresentor = (
       );
     }
     case 'Status':
-      return <StatusPresentor task={task} />;
+      return <StatusPresentor key={`STATUS_${idx}`} task={task} />;
     default:
-      return <Box className={'gridCell'}>{task[field.name] as string} </Box>;
+      return <Box key={`gridCdellDefault_${idx}`} className={'gridCell'}>{task[field.name] as string} </Box>;
   }
 };
 
@@ -155,10 +157,11 @@ const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
   return (
     <>
       {tasksData.map((task) => {
-        return taskFileds.map((field) => {
+        return taskFileds.map((field, idx) => {
           return getValuePresentor(
             (task as unknown) as Record<string, unknown>,
-            field
+            field,
+            idx
           );
         });
       })}
