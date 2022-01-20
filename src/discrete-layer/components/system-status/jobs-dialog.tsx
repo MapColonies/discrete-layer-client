@@ -245,7 +245,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
         id: 'system-status.job.fields.priority.label',
       }),
       width: 150,
-      field: 'priority',
+      // Binding status field to priority col, in order to keep it updated when status is changed.
+      field: 'status',
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
         optionsData: getPriorityOptions,

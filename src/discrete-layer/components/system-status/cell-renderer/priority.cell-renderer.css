@@ -21,7 +21,8 @@
   z-index: 2;
 }
 
-.ag-cell-value[col-id="priority"]{
+/* Priority is binded to status field... */
+.ag-cell-value[col-id="status"]{
   overflow: visible;
 }
 
