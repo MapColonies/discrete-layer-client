@@ -84,9 +84,9 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
   const generateDetailsRow = (): JSX.Element => {
     return (
       <>
-        {Object.values(dataToPresent.detailsRow).map(({ label, value }) => {
+        {Object.values(dataToPresent.detailsRow).map(({ label, value }, index) => {
           return (
-            <Box className="detailsField">
+            <Box className="detailsField" key={`${label}${index}`}>
               <Typography tag="p" className="detailLabel">
                 {`${label}:`}
               </Typography>
@@ -106,9 +106,9 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
 
     return (
       <>
-        {Object.values(dataToPresent.taskCountRow).map(({ label, value }) => {
+        {Object.values(dataToPresent.taskCountRow).map(({ label, value },index) => {
           return (
-            <Box className="counterField">
+            <Box className="counterField" key={`${label}${index}`}>
               <Typography tag="p" className="countLabel">
                 {`${label}:`}
               </Typography>

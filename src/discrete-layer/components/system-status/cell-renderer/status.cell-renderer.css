@@ -16,6 +16,10 @@
 
 }
 
+.expired{
+  color: var(--mdc-theme-text-disabled-on-dark);
+}
+
 .CompletedArea {
   background: var(--mdc-theme-gc-success);
   opacity: 0.85;
@@ -31,6 +35,10 @@
   background: var(--mdc-theme-gc-warning-medium);
   opacity: 0.85;
 
+}
+.ExpiredArea {
+  background: var(--mdc-theme-text-disabled-on-dark);
+  opacity: 0.85;
 }
 
 .progressSectionsContainer {

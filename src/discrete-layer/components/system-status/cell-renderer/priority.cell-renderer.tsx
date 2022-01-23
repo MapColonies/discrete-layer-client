@@ -10,6 +10,7 @@ import {
 } from '@map-colonies/react-core';
 import './priority.cell-renderer.css';
 import { JobModelType, Status } from '../../../models';
+import { FINAL_STATUSES } from '../job.types'
 interface PriorityOption {
   label: string;
   value: string;
@@ -25,13 +26,20 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
   props
 ) => {
   const jobData: JobModelType = props.data as JobModelType;
-  const finalStatuses: Status[] = [Status.Completed, Status.Failed];
   const { optionsData } = props;
   const [value, setValue] = useState(
     (get(jobData, 'priority') as number).toString()
   );
 
   const [loading, setLoading] = useState(false);
+
+  const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    const shouldBeDisabled = loading || FINAL_STATUSES.includes(jobData.status as Status)
+    setDisabled(shouldBeDisabled)
+
+  }, [loading, jobData.status])
 
   interface IconObj {
     icon: string;
@@ -61,7 +69,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
         </Box>
       )}
       <Select
-        disabled={loading || finalStatuses.includes(jobData.status as Status)}
+        disabled={disabled}
         enhanced
         outlined
         className={'priority_options'}
@@ -81,6 +89,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
           props.onChange(e, props.data);
         }}
       />
+      
     </Box>
   );
 };

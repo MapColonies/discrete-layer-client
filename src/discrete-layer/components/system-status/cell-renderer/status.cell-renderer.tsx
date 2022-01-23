@@ -6,6 +6,8 @@ import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
 
 import './status.cell-renderer.css';
+import { FINAL_STATUSES } from '../job.types';
+import { get } from 'lodash';
 
 const NO_DATA = 0;
 const NO_WIDTH = 0;
@@ -19,8 +21,21 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   const status = jobData.status;
 
   const getProgress = (): string => {
-    const finalStatusCount: number =
-      (jobData.failedTasks as number) + (jobData.completedTasks as number);
+    const SUM_INIT = 0;
+
+    const finalStatusCount = FINAL_STATUSES.reduce(
+      (sum: number, finalStatus: Status) => {
+        const lowerCasedStatus = finalStatus.toLowerCase();
+        const nextSum: number =
+          sum + (get(jobData, `${lowerCasedStatus}Tasks`) as number);
+
+        return nextSum;
+      },
+      SUM_INIT
+    );
+
+    // FINAL STATUSES TASKS / TOTAL TASKS COUNT
+
     return `(${finalStatusCount}/${jobData.taskCount as number})`;
   };
 
@@ -66,27 +81,26 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   };
 
   const getProgressbarSections = (): JSX.Element | null => {
-    const { completedTasks, inProgressTasks, failedTasks, status} = jobData;
+    const { completedTasks, inProgressTasks, failedTasks, expiredTasks, status} = jobData;
 
-    switch(status){
-      case Status.Completed:
-        return getSectionComponent(Status.Completed, STATUS_BAR_WIDTH);
-      case Status.Failed:
-        return getSectionComponent(Status.Failed, STATUS_BAR_WIDTH);
-      default: 
-        // Do nothing
-        break;
+    const jobStatusFinal = FINAL_STATUSES.find(finalStatus => finalStatus === status);
+
+    // If job status is a final status - we should return a full bar with its color.
+    if(typeof jobStatusFinal !== 'undefined'){
+      return getSectionComponent(jobStatusFinal, STATUS_BAR_WIDTH);
     }
 
-
+    // Render sections
     const completedWidth = calcStatusWidth(completedTasks);
     const failedWidth = calcStatusWidth(failedTasks);
     const inProgressWidth = calcStatusWidth(inProgressTasks);
+    const expiredWidth = calcStatusWidth(expiredTasks);
 
     return (
       <Box className={'progressSectionsContainer'}>
         {getSectionComponent(Status.Completed, completedWidth)}
         {getSectionComponent(Status.Failed, failedWidth)}
+        {getSectionComponent(Status.Expired, expiredWidth)}
         {getSectionComponent(Status.InProgress, inProgressWidth)}
       </Box>
     );

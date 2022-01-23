@@ -27,6 +27,7 @@ import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 
 import './jobs-dialog.css';
+import { JOB_ENTITY } from './job.types';
 
 const pagination = true;
 const pageSize = 10;
@@ -34,7 +35,7 @@ const START_CYCLE_ITTERACTION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILISECONDS_IN_SEC = 1000;
-const JOB_ENTITY = 'Job';
+
 
 interface SystemJobsComponentProps {
   isOpen: boolean;
@@ -244,7 +245,8 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
         id: 'system-status.job.fields.priority.label',
       }),
       width: 150,
-      field: 'priority',
+      // Binding status field to priority col, in order to keep it updated when status is changed.
+      field: 'status',
       cellRenderer: 'priorityRenderer',
       cellRendererParams: {
         optionsData: getPriorityOptions,
