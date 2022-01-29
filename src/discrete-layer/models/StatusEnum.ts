@@ -11,7 +11,8 @@ export enum Status {
   Pending="Pending",
 InProgress="InProgress",
 Completed="Completed",
-Failed="Failed"
+Failed="Failed",
+Expired="Expired"
 }
 
 /**
@@ -22,4 +23,5 @@ export const StatusEnumType = types.enumeration("Status", [
   "InProgress",
   "Completed",
   "Failed",
+  "Expired",
       ])

@@ -8,7 +8,7 @@ import CONFIG from '../../../../common/config';
 import { RecordType, useQuery } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 
-import './autocomplete.value-presentors.css';
+import './autocomplete.value-presentor.css';
 
 interface AutocompleteValuePresentorProps {
   mode: Mode;

@@ -38,7 +38,7 @@ import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
-import { BestRecordModelKeys } from '../components/layer-details/layer-details.field-info';
+import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
@@ -97,6 +97,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
+  const [isNewDemEntityDialogOpen, setNewDemEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
@@ -196,12 +197,20 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   };
 
-  const handleNewRasterEntityDialogClick = (): void => {
-    setNewRasterEntityDialogOpen(!isNewRasterEntityDialogOpen);
-  };
-
-  const handleNew3DEntityDialogClick = (): void => {
-    setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
+  const handleNewEntityDialogClick = (recordType: RecordType): void => {
+    switch (recordType) {
+      case RecordType.RECORD_RASTER:
+        setNewRasterEntityDialogOpen(!isNewRasterEntityDialogOpen);
+        break;
+      case RecordType.RECORD_3D:
+        setNew3DEntityDialogOpen(!isNew3DEntityDialogOpen);
+        break;
+      case RecordType.RECORD_DEM:
+        setNewDemEntityDialogOpen(!isNewDemEntityDialogOpen);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleCreateBestDraft = (): void => {
@@ -328,6 +337,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
+      isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
       isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
@@ -369,7 +379,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             {
               (tabIdx === TabViews.CATALOG) && 
-              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
+              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {
@@ -379,7 +389,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                       <IconButton
                         className="operationIcon mc-icon-Map-Orthophoto"
                         label="NEW RASTER"
-                        onClick={ (): void => { setOpenNew(false); handleNewRasterEntityDialogClick(); } }
+                        onClick={ (): void => { setOpenNew(false); handleNewEntityDialogClick(RecordType.RECORD_RASTER); } }
                       />
                     </Tooltip>
                   }
@@ -390,7 +400,18 @@ const DiscreteLayerView: React.FC = observer(() => {
                       <IconButton
                         className="operationIcon mc-icon-Map-3D"
                         label="NEW 3D"
-                        onClick={ (): void => { setOpenNew(false); handleNew3DEntityDialogClick(); } }
+                        onClick={ (): void => { setOpenNew(false); handleNewEntityDialogClick(RecordType.RECORD_3D); } }
+                      />
+                    </Tooltip>
+                  }
+                  {
+                    CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_DEM') &&
+                    permissions.isLayerDemRecordIngestAllowed &&
+                    <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_dem' })}>
+                      <IconButton
+                        className="operationIcon mc-icon-Map-Terrain"
+                        label="NEW DEM"
+                        onClick={ (): void => { setOpenNew(false); handleNewEntityDialogClick(RecordType.RECORD_DEM); } }
                       />
                     </Tooltip>
                   }
@@ -606,17 +627,27 @@ const DiscreteLayerView: React.FC = observer(() => {
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
         {
-          isNewRasterEntityDialogOpen && <EntityDialogComponent
+          isNewRasterEntityDialogOpen &&
+          <EntityDialogComponent
             isOpen={isNewRasterEntityDialogOpen}
             onSetOpen={setNewRasterEntityDialogOpen}
             recordType={RecordType.RECORD_RASTER}>
           </EntityDialogComponent>
         }
         {
-          isNew3DEntityDialogOpen && <EntityDialogComponent
+          isNew3DEntityDialogOpen &&
+          <EntityDialogComponent
             isOpen={isNew3DEntityDialogOpen}
             onSetOpen={setNew3DEntityDialogOpen}
             recordType={RecordType.RECORD_3D}>
+          </EntityDialogComponent>
+        }
+        {
+          isNewDemEntityDialogOpen &&
+          <EntityDialogComponent
+            isOpen={isNewDemEntityDialogOpen}
+            onSetOpen={setNewDemEntityDialogOpen}
+            recordType={RecordType.RECORD_DEM}>
           </EntityDialogComponent>
         }
       </Box>

@@ -10,9 +10,11 @@
 .linkFieldsSeparator {
   border-bottom: 1px dashed;
   margin-right: 12px;
+  margin-bottom: 6px;
 }
 
 body[dir='rtl'] .linkFieldsSeparator {
   margin-right: unset;
   margin-left: 12px;
+  margin-bottom: 6px;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
@@ -6,24 +6,28 @@ import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 import { 
   GridComponent,
   GridComponentOptions,
-  GridValueFormatterParams,
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
 import { useQuery, useStore } from '../../models/RootStore';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { JobModelType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
 import { StatusRenderer } from './cell-renderer/status.cell-renderer';
-import { ActionsRenderer } from './cell-renderer/actions.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
+import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
+import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 
 import './jobs-dialog.css';
+import { JOB_ENTITY } from './job.types';
 
 const pagination = true;
 const pageSize = 10;
@@ -32,14 +36,10 @@ const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILISECONDS_IN_SEC = 1000;
 
+
 interface SystemJobsComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
-}
-
-export interface IUpdating {
-  updating: boolean;
-  newValue: string | number;
 }
 
 export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer((props: SystemJobsComponentProps) => {
@@ -47,14 +47,25 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [updatingPriority, setUpdatingPriority] = useState<IUpdating>();
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
+  const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
-  
+
+  const getPriorityOptions = useMemo(() => {
+    const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
+
+    return priorityList.map((option) => {
+      const optionCpy = {...option};
+      optionCpy.label = intl.formatMessage({
+        id: option.label,
+      });
+      return optionCpy
+    });
+  }, [intl]);
+
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
@@ -71,22 +82,47 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     }
   );
   const mutationQuery = useQuery();
+
   const store = useStore();
+
+
+  const getJobActions = useMemo(() => {
+    let actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
+      JOB_ENTITY
+    );
+
+    actions = actions.map((action) => {
+      const groupsWithTranslation = action.group.map((action) => {
+        return {
+          ...action,
+          titleTranslationId: intl.formatMessage({
+            id: action.titleTranslationId,
+          }),
+        };
+      });
+
+      return {...action, group: groupsWithTranslation}
+    });
+
+    return {
+      [JOB_ENTITY]: actions,
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
-    setUpdatingPriority(undefined);
   }, [data]);
 
   useEffect(() => {
-    if(mutationQuery.data){
+    if (mutationQuery.data) {
       setUpdateTaskPayload({});
       void query?.refetch();
     }
   }, [mutationQuery.data, query]);
 
   useEffect(() => {
-    if(updateTaskPayload.id !== undefined){
+    if (updateTaskPayload.id !== undefined) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
@@ -95,15 +131,14 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   }, [updateTaskPayload, store]);
 
   useEffect(() => {
-    if(mutationQuery.error){
-      setUpdatingPriority(undefined);
+    if (mutationQuery.error) {
       gridApi?.refreshCells({
         suppressFlash: true,
         force: true
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[mutationQuery.error]);
+  }, [mutationQuery.error]);
 
   useEffect(() => {
     const pollingInterval = setInterval(() => {
@@ -125,22 +160,69 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     [onSetOpen]
   );
 
-  const getUpdating = function (): IUpdating | undefined {
-    let ret = undefined;
-    setUpdatingPriority((prev) => {
-      ret = prev;
-      return prev;
-    });
-    return ret;
+  const dispatchAction = (action: Record<string,unknown> | undefined): void => {
+
+    const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction;
+    store.actionDispatcherStore.dispatchAction(
+      actionToDispatch
+    );
+
   };
 
+   // Job actions handler
+
+   useEffect(() => {
+     if (typeof store.actionDispatcherStore.action !== 'undefined') {
+       const { action, data } = store.actionDispatcherStore
+         .action as IDispatchAction;
+
+       switch (action) {
+         case 'Job.retry':
+           mutationQuery.setQuery(
+             store.mutateJobRetry({
+               id: data.id as string,
+             })
+           );
+           break;
+
+         default:
+           break;
+       }
+     }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [store.actionDispatcherStore.action]);
+
+
+  // Reset action value on store when unmounting.
+
+  useEffect(() => {
+    return (): void => {
+      dispatchAction(undefined)
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const colDef = [
+    {
+      headerName: '',
+      width: 40,
+      field: 'productType',
+      cellRenderer: 'productTypeRenderer',
+      cellRendererParams: {
+        style: {
+          height: '40px',
+          width: '40px',
+          display: 'flex',
+          alignItems: 'center',
+        },
+      },
+    },
     {
       headerName: intl.formatMessage({
         id: 'system-status.job.fields.resource-id.label',
       }),
       width: 120,
-      field: 'resourceId',
+      field: 'productName',
     },
     {
       headerName: intl.formatMessage({
@@ -150,7 +232,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       field: 'version',
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.type.label',
       }),
       width: 120,
@@ -159,66 +241,77 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       sortable: true,
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
+        id: 'system-status.job.fields.priority.label',
+      }),
+      width: 150,
+      // Binding status field to priority col, in order to keep it updated when status is changed.
+      field: 'status',
+      cellRenderer: 'priorityRenderer',
+      cellRendererParams: {
+        optionsData: getPriorityOptions,
+        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
+          const { id }  = jobData;
+          const chosenPriority: string | number = evt.currentTarget.value;
+
+          setUpdateTaskPayload({
+            id: id,
+            data: {
+              priority: parseInt(chosenPriority)
+            }
+          });
+        }
+      },
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'system-status.job.fields.created.label',
+      }),
+      width: 172,
+      field: 'created',
+      cellRenderer: 'dateCellRenderer',
+      cellRendererParams: {
+        field: 'created',
+      },
+      sortable: true,
+      // @ts-ignore
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+        valueA - valueB,
+    },
+    {
+      headerName: intl.formatMessage({
+        id: 'system-status.job.fields.updated.label',
+      }),
+      width: 172,
+      field: 'updated',
+      sortable: true,
+      cellRenderer: 'dateCellRenderer',
+      cellRendererParams: {
+        field: 'updated',
+      },
+      // @ts-ignore
+      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+        valueA - valueB,
+    },
+    {
+      headerName: intl.formatMessage({
         id: 'system-status.job.fields.status.label',
       }),
       width: 160,
       field: 'status',
       cellRenderer: 'statusRenderer',
+      filter: 'jobDetailsStatusFilter',
     },
     {
-      headerName:  intl.formatMessage({
-        id: 'system-status.job.fields.priority.label',
-      }),
-      width: 100,
-      field: 'priority',
-      editable: true,
-      cellStyle: (params: Record<string, any>): Record<string, string> => {
-        return {border: 'solid 1px var(--mdc-theme-gc-selection-background, #fff)'};
-      },
-      cellRenderer: 'priorityRenderer',
+      pinned: 'right',
+      headerName: '',
+      width: 0,
+      cellRenderer: 'actionsRenderer',
       cellRendererParams: {
-        isUpdating: getUpdating,
+        actions: getJobActions,
+        actionHandler: dispatchAction,
       },
-      onCellValueChanged: (evt: Record<string, any>): void => {
-        const id = (evt.data as Record<string, string>).id;
-        setUpdatingPriority({
-          updating: true,
-          newValue: evt.newValue as string | number
-        });
-        setUpdateTaskPayload({
-          id: id,
-          data: {
-            priority: parseInt(evt.newValue)
-          }
-        });
-      }
     },
-    {
-      headerName:  intl.formatMessage({
-        id: 'system-status.job.fields.created.label',
-      }),
-      width: 120,
-      field: 'created',
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
-    },
-    {
-      headerName:  intl.formatMessage({
-        id: 'system-status.job.fields.updated.label',
-      }),
-      width: 120,
-      field: 'updated',
-      sortable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
-      // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number => valueA - valueB,
-    },
-    // {
-    //   headerName: 'actions',
-    //   width: 240,
-    //   pinned: 'right',
-    //   cellRenderer: 'actionsRenderer',
-    // },
   ];
 
   const onGridReady = (params: GridReadyEvent) => {
@@ -227,27 +320,32 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
       {colId: 'updated', sort: 'desc'}
     ];
     params.api.setSortModel(sortModel);
+    params.api.sizeColumnsToFit();
   };
 
-  const gridOptions: GridComponentOptions = {
+  const gridOptions: GridComponentOptions = useMemo(()=>({
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
+    suppressRowTransform: true,
     pagination: pagination,
     paginationPageSize: pageSize,
     columnDefs: colDef,
-    getRowNodeId: (data: JobModelType) => {
+    getRowNodeId: (data: JobModelType): string => {
       return data.id as string;
     },
     detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 100,
+    detailsRowHeight: 230,
     detailsRowExapnderPosition: 'start',
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
     frameworkComponents: {
+      jobDetailsStatusFilter: JobDetailsStatusFilter,
       detailsRenderer: JobDetailsRenderer,
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
       priorityRenderer: PriorityRenderer,
+      productTypeRenderer: ProductTypeRenderer,
+      dateCellRenderer: DateCellRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
@@ -255,9 +353,12 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     suppressCellSelection: true,
     singleClickEdit: true,
     onGridReady: onGridReady,
-    immutableData: true //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
+    immutableData: true, //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
     // suppressRowClickSelection: true,
-  };
+    suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
+    unSortIcon: true, // Used to show un-sorted icon.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), []);
 
   return (
     <Box id="jobsDialog">
@@ -287,7 +388,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
             rowData={gridRowData}
             style={{
               height: 'calc(100% - 64px)',
-              width: 'calc(100% - 8px)'
+              padding: '12px'
             }}
           />
           <Box className="buttons">

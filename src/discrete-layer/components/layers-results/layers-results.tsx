@@ -141,8 +141,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
           justifyContent: 'center',
           paddingTop: '8px'
         }
-      },
-
+      }
     },
     {
       headerName: intl.formatMessage({
@@ -162,7 +161,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       width: 120,
       field: 'updateDate',
       suppressMovable: true,
-      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value),
+      valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
     },
     {
       headerName: intl.formatMessage({

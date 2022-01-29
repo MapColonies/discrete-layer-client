@@ -8,8 +8,58 @@
 
 .completed{
   color: var(--mdc-theme-gc-success);
+
 }
 
 .failed{
   color: var(--mdc-theme-gc-error-medium);
+
+}
+
+.expired{
+  color: var(--mdc-theme-text-disabled-on-dark);
+}
+
+.CompletedArea {
+  background: var(--mdc-theme-gc-success);
+  opacity: 0.85;
+}
+
+.FailedArea {
+  background: var(--mdc-theme-gc-error-medium);
+  opacity: 0.85;
+
+}
+
+.InProgressArea {
+  background: var(--mdc-theme-gc-warning-medium);
+  opacity: 0.85;
+
+}
+.ExpiredArea {
+  background: var(--mdc-theme-text-disabled-on-dark);
+  opacity: 0.85;
+}
+
+.progressSectionsContainer {
+  display:flex;
+  align-items: flex-start;
+}
+
+.statusBarContainer {
+  display: flex;
+  width: 134px;
+  height: 38px;
+  align-items: center;
+  flex-direction: column-reverse;
+  position: relative;
+}
+.statusText {
+  position: absolute;
+  top:-10px;
+}
+.statusBar {
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
 }

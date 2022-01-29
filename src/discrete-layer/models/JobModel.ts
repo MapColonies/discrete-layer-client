@@ -24,6 +24,7 @@ export const JobModel = JobModelBase
     /* tslint:disable */
     created: types.maybe(momentDateType),
     updated: types.maybe(momentDateType),
+    expirationDate: types.maybe(momentDateType),
     /* tslint:enable */
     /* eslint-enable */
   })

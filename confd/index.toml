@@ -1,0 +1,7 @@
+[template]
+src = "index.html"
+dest = "public/index.html"
+keys = [
+  "/configuration/public/url",
+  "/configuration/image/tag"
+]

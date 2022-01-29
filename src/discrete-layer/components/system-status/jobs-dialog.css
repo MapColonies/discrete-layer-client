@@ -1,15 +1,33 @@
-#jobsDialog .mdc-dialog__surface{
+
+
+#jobsDialog .mdc-dialog__surface {
   max-width: unset;
+  right:12px;
+  top:20px;
+}
+
+body[dir=rtl] #jobsDialog .mdc-dialog__surface {
+  right: unset;
+  left:12px;
+}
+
+#jobsDialog .mdc-dialog{
+  justify-content: flex-end;
 }
 
 #jobsDialog .jobsBody{
   overflow-y: hidden !important;
-  height: 600px;
-  width: 950px;
+  height: 750px;
+  width: 1420px;
+  padding: 8px 8px;
 }
 
 #jobsDialog .closeIcon {
   margin-left: auto;
+}
+
+.jobsBody .ag-body-viewport.ag-layout-normal.ag-row-no-animation {
+  overflow-y: overlay !important;
 }
 
 body[dir=rtl] #jobsDialog .closeIcon {
@@ -56,10 +74,15 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 }
 
 /* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
-#jobsDialog .ag-pinned-right-cols-container {
+.jobsBody .ag-pinned-right-cols-container {
   position: absolute !important;
-  right: 0;
+  right: 45px;
   pointer-events: none;
+}
+
+body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
+  right: unset;
+  left: 45px;
 }
 /* Reset pointer-events so that click can happen on action buttons */
 #jobsDialog .ag-pinned-right-cols-container * {
@@ -67,15 +90,19 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
 }
 
 /* Hide border of right-cols-container */
-#jobsDialog .ag-pinned-right-cols-container .ag-cell {
+.jobsBody  .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
   border: none !important;
+  overflow: visible;
+  border-radius: 50% !important;
 }
+
 
 /* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
 #jobsDialog .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover),
 #jobsDialog .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover) .ag-cell {
   width: 0 !important;
   padding: 0 !important;
+  border: none;
 }
 
 #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover{
@@ -83,10 +110,38 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
   border-width: 0px !important;
 }
 
-#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected.ag-row-hover{
+#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected,
+#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-selected .ag-cell,
+#jobsDialog .ag-row.ag-row-selected,
+#jobsDialog .ag-row.ag-row-selected .actionsContainer {
+  border: none !important;
   background-color: #455570;
 }
 
-body[dir=rtl] #jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
-  margin-right: 250%;
+#jobsDialog .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
+  background: unset;
+  overflow: visible;
 }
+
+.jobsBody .actionsContainer {
+  right:0 !important;
+  position:relative;
+  overflow: visible !important;
+  width: 15px !important;
+  height: 5px !important;
+}
+
+.jobsBody .actionsContainer .mdc-menu-surface--open {
+ z-index:2 !important;
+}
+
+
+.jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+  display: none;
+}
+
+.jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+  display: unset;
+}
+
+

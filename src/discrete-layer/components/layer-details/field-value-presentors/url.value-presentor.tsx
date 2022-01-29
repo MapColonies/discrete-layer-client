@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 
-import './url.value-presentors.css';
+import './url.value-presentor.css';
 
 interface UrlValuePresentorProps {
   value?: string;
@@ -22,7 +22,7 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
         </Box>
       </Tooltip>
       <Box className="detailsUrlFieldUrlCopy">
-        <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+        <Tooltip content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}>
           <CopyToClipboard text={value as string} onCopy={(): void => setCopied(true)}>
             <IconButton className="mc-icon-Copy"/>
           </CopyToClipboard>

@@ -147,8 +147,30 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       }
     ]
   },
+
   {
-    entity: 'LayerDEMRecord',
+    entity: 'VectorBestRecord',
+    actions: [
+      {
+        id: 1,
+        titleTranslationId: 'CRUD',
+        type: 'CRUD',
+        group: [
+          {
+            action: 'edit',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Edit',
+            titleTranslationId: 'action.edit.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      }
+    ]
+  },
+
+  {
+    entity: 'LayerDemRecord',
     actions: [
       {
         id: 1,
@@ -175,6 +197,27 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       }
     ]
   },
+  {
+    entity: 'Job',
+    actions: [
+      {
+        id: 1,
+        titleTranslationId: 'OperationsOnJobs',
+        type: 'jobActions',
+        group: [
+          {
+            action: 'retry',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Refresh',
+            titleTranslationId: 'action.job.retry',
+            views: []
+          }
+        ],
+      }
+    ]
+    
+  }
 ]
 
 export default ACTIONS_CONFIG;

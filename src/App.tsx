@@ -1,5 +1,7 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect,useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
+import Moment from 'moment';
+import 'moment/locale/he'; // TODO: improve dynamic moment locales loading
 
 // Import from react core components
 import {
@@ -58,19 +60,16 @@ const App: React.FC = () => {
     }
   };
 
-  const customIntlErrorFunction = (error: any) => {
-    // eslint-disable-next-line
-    if (error.code !== 'MISSING_TRANSLATION') {
-      console.warn(error);
-    }
-  };
-
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
   }, []);
+  
+  useEffect(() => {
+    Moment.locale(lang);
+  }, [lang])
 
   return (
-    <IntlProvider locale={lang} messages={MESSAGES[lang]} onError={customIntlErrorFunction}>
+    <IntlProvider locale={lang} messages={MESSAGES[lang]}>
       <RMWCProvider
         typography={{
           body1: 'span',

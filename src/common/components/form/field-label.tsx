@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Tooltip } from '@map-colonies/react-core';
+import { Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import CONFIG from '../../../common/config';
 
 import './field-label.css';
 
@@ -20,32 +21,26 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
 }) => {
   const intl = useIntl();
 
-  const renderLabel = useMemo(() => {
-    // Indicates when the label will overflow the container
-    const MAX_LABEL_LENGTH = 12;
+  const labelRenderer = useMemo(() => {
+    const MAX_LABEL_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
     const label = intl.formatMessage({ id: value });
-    const tooltip = intl.formatMessage({ id: `${value as string}.tooltip` });
 
-    if (showTooltip !== false && (tooltip !== `${value as string}.tooltip` || label.length > MAX_LABEL_LENGTH)) {
+    if (showTooltip !== false && label.length > MAX_LABEL_LENGTH) {
       return (
-        <Tooltip content={tooltip !== `${value as string}.tooltip` ? tooltip : label}>
-          <span>
-            <FormattedMessage id={value}/>
-          </span>
+        <Tooltip content={label}>
+          <Typography tag="span"><FormattedMessage id={value}/></Typography>
         </Tooltip>
       );
     }
     return (
-      <span>
-        <FormattedMessage id={value}/>
-      </span>
+      <Typography tag="span"><FormattedMessage id={value}/></Typography>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Box className={customClassName !== undefined ? customClassName : 'detailsFieldLabel'}>
-      {renderLabel}
+      {labelRenderer}
       <Box className="requiredAsterisk">{isRequired === true ? '*' : ''}</Box>
     </Box>
   );
