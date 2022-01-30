@@ -1,0 +1,13 @@
+#filePickerDialog .closeIcon{
+  margin-left: auto;
+}
+
+#filePickerDialog .dialogBody {
+  display: flex;
+  align-items: center;
+}
+
+body[dir='rtl'] #filePickerDialog .closeIcon{
+  margin-left: unset;
+  margin-right: auto;
+}
