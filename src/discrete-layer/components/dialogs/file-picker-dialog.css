@@ -1,13 +1,21 @@
-#filePickerDialog .closeIcon{
-  margin-left: auto;
-}
-
 #filePickerDialog .dialogBody {
   display: flex;
   align-items: center;
 }
 
-body[dir='rtl'] #filePickerDialog .closeIcon{
+#filePickerDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #filePickerDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
+}
+
+#filePickerDialog .MuiPopover-root {
+  left: -100% !important;
+}
+
+body[dir='rtl'] #filePickerDialog .MuiPopover-root {
+  left: -120% !important;
 }

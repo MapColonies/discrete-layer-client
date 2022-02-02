@@ -12,6 +12,7 @@
   "general.loading.text": "Loading...",
   "general.title.new": "New {value} product",
   "general.title.edit": "Edit {value} product's metadata",
+  "general.title.choose": "Choose files",
   "general.dialog.exit.title": "Are you sure?",
   "general.dialog.exit.message": "You'll lose any unsaved changes.",
   "general.dialog.best-in-edit.title": "You are editing the BEST",
