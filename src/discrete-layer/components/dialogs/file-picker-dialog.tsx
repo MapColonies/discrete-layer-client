@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box, FilePicker, FilePickerView } from '@map-colonies/react-components';
+import { Button, Dialog, DialogActions, DialogTitle, IconButton, useTheme } from '@map-colonies/react-core';
+import { Box, FilePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 // import FsMap from './fs-map.json';
 
@@ -79,6 +79,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   const folderChain = useFolderChain(currentFolderId);
   const handleFileAction = useFileActionHandler(setCurrentFolderId);
   */
+  const theme = useTheme();
   const closeDialog = useCallback(
     () => {
       onSetOpen(false);
@@ -98,7 +99,17 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <FilePicker readOnlyMode={true} isDarkTheme={true} locale={CONFIG.I18N.DEFAULT_LANGUAGE} />
+          <FilePicker 
+            theme={{
+              primary: theme.primary as string,
+              background: theme.background as string,
+              textOnBackground: theme.textSecondaryOnBackground as string,
+              selectionBackground: theme.custom?.GC_SELECTION_BACKGROUND as string,
+            }}
+            readOnlyMode={true} 
+            isDarkTheme={true} 
+            locale={SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]} 
+          />
         </DialogContent>
         <DialogActions>
           <Button raised type="button" disabled={true} onClick={(): void => { closeDialog(); }}>

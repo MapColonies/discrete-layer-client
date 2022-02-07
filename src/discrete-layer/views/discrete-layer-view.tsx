@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect } from 'react';
-import { find, get } from 'lodash';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
