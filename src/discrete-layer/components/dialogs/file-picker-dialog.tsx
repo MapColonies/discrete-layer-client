@@ -103,6 +103,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             theme={{
               primary: theme.primary as string,
               background: theme.background as string,
+              surface: theme.surface as string,
               textOnBackground: theme.textSecondaryOnBackground as string,
               selectionBackground: theme.custom?.GC_SELECTION_BACKGROUND as string,
             }}
