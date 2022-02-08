@@ -106,8 +106,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
               textOnBackground: theme.textSecondaryOnBackground as string,
               selectionBackground: theme.custom?.GC_SELECTION_BACKGROUND as string,
             }}
-            readOnlyMode={true} 
-            isDarkTheme={true} 
+            readOnlyMode={true}
             locale={SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]} 
           />
         </DialogContent>
