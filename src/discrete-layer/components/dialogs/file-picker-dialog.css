@@ -1,6 +1,7 @@
 #filePickerDialog .dialogBody {
   display: flex;
   align-items: center;
+  height: 400px;
 }
 
 #filePickerDialog .closeIcon {
