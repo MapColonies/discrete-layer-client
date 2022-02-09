@@ -47,8 +47,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values
       </Button>
       {
         <FilePickerDialogComponent
-            isOpen={isFilePickerDialogOpen}
-            onSetOpen={setFilePickerDialogOpen}/>
+          isOpen={isFilePickerDialogOpen}
+          onSetOpen={setFilePickerDialogOpen}
+        />
       }
     </Box>
   );
