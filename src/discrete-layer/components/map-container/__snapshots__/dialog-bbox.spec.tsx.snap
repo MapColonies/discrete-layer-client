@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DialogBBox component renders correctly 1`] = `
-<Component
+<McBox
   id="bboxDialog"
 >
   <Function
@@ -24,10 +24,10 @@ exports[`DialogBBox component renders correctly 1`] = `
         noValidate={true}
         onSubmit={[Function]}
       >
-        <Component
+        <McBox
           className="dialogBboxRow"
         >
-          <Component
+          <McBox
             className="dialogBboxField"
           >
             <FieldLabelComponent
@@ -42,8 +42,8 @@ exports[`DialogBBox component renders correctly 1`] = `
               type="number"
               value={0}
             />
-          </Component>
-          <Component
+          </McBox>
+          <McBox
             className="dialogBboxField"
           >
             <FieldLabelComponent
@@ -58,16 +58,16 @@ exports[`DialogBBox component renders correctly 1`] = `
               type="number"
               value={0}
             />
-          </Component>
+          </McBox>
           <BBoxCorner
             className="dialogBboxField"
             corner="TOP_RIGHT"
           />
-        </Component>
-        <Component
+        </McBox>
+        <McBox
           className="dialogBboxRow"
         >
-          <Component
+          <McBox
             className="dialogBboxField"
           >
             <FieldLabelComponent
@@ -82,8 +82,8 @@ exports[`DialogBBox component renders correctly 1`] = `
               type="number"
               value={0}
             />
-          </Component>
-          <Component
+          </McBox>
+          <McBox
             className="dialogBboxField"
           >
             <FieldLabelComponent
@@ -98,19 +98,19 @@ exports[`DialogBBox component renders correctly 1`] = `
               type="number"
               value={0}
             />
-          </Component>
+          </McBox>
           <BBoxCorner
             className="dialogBboxField"
             corner="BOTTOM_LEFT"
           />
-        </Component>
-        <Component
+        </McBox>
+        <McBox
           className="footer"
         >
-          <Component
+          <McBox
             className="messages"
           />
-          <Component
+          <McBox
             className="buttons"
           >
             <withRipple(Function)
@@ -130,10 +130,10 @@ exports[`DialogBBox component renders correctly 1`] = `
                 id="general.cancel-btn.text"
               />
             </withRipple(Function)>
-          </Component>
-        </Component>
+          </McBox>
+        </McBox>
       </form>
     </Function>
   </Function>
-</Component>
+</McBox>
 `;

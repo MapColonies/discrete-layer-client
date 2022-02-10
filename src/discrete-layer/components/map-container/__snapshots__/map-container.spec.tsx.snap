@@ -50,7 +50,7 @@ exports[`MapContainer component renders correctly 1`] = `
       </div>
     </div>
   </div>
-  <Component
+  <CesiumMap
     center={
       Array [
         34.811,
@@ -68,7 +68,7 @@ exports[`MapContainer component renders correctly 1`] = `
     <Memo(wrappedComponent) />
     <Memo(wrappedComponent) />
     <Memo(wrappedComponent) />
-    <Component
+    <CesiumDrawingsDataSource
       drawState={
         Object {
           "drawing": false,
@@ -95,6 +95,6 @@ exports[`MapContainer component renders correctly 1`] = `
         ]
       }
     />
-  </Component>
+  </CesiumMap>
 </div>
 `;
