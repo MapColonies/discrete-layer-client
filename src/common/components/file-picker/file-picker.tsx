@@ -3,17 +3,18 @@ import { useTheme } from '@map-colonies/react-core';
 import { FileActionData, FileData, FilePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../config';
 
+export interface Selection {
+  files: FileData[];
+  folderChain: FileData[];
+}
+
 interface FilePickerComponentProps {
   files: FileData[];
-  currentSelection: {
-    // directory: string,
-    files: string[];
-    folderChain: FileData[];
-  };
+  selection: Selection;
   onFileAction: (data: FileActionData) => void;
 }
 
-export const FilePickerComponent: React.FC<FilePickerComponentProps> = ({files, currentSelection, onFileAction}) => {
+export const FilePickerComponent: React.FC<FilePickerComponentProps> = ({files, selection, onFileAction}) => {
   const theme = useTheme();
   return (
     <FilePicker 
@@ -27,7 +28,7 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = ({files, 
       readOnlyMode={true}
       locale={SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]}
       files={files}
-      folderChain={currentSelection.folderChain}
+      folderChain={selection.folderChain}
       onFileAction={onFileAction}
     />
   );

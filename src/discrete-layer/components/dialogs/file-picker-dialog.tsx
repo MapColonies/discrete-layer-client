@@ -1,18 +1,45 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box, FileActionData, FilePickerActions } from '@map-colonies/react-components';
-import { FilePickerComponent } from '../../../common/components/file-picker';
+import { Box, FileActionData, FileData, FilePickerActions } from '@map-colonies/react-components';
+import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
 
 import './file-picker-dialog.css';
+
 interface FilePickerDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
 
 export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(({ isOpen, onSetOpen }) => {
+  const [files, setFiles] = useState<FileData[]>([]);
+  const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [] });
+
+  useEffect(() => {
+    setFiles([ 
+      {
+        "id": "qwerty123456",
+        "name": "PersistentVolume",
+        "selectable": false,
+        "isDir": true,
+      },
+      {
+        "id": "e598a85f843c",
+        "name": "Chonky Source Code",
+        "isDir": true,
+        "selectable": false,
+        "modDate": "2020-10-24T17:48:39.866Z",
+      },
+      {
+        "id": "12dd195bb146",
+        "name": "README.md",
+        "size": 1457,
+        "modDate": "2020-10-22T04:17:54.294Z",
+      }
+    ]);
+  }, []);
 
   const closeDialog = useCallback(
     () => {
@@ -22,14 +49,19 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   );
 
   const handleAction = (data: FileActionData): void => {
+    console.log(data);
     // eslint-disable-next-line
     if (data.id === FilePickerActions.OpenFiles.id) {
-      console.log('*** OpenFiles *** ', data);
     // eslint-disable-next-line
-    } else if (data.id === FilePickerActions.DeleteFiles.id) {
-      console.log('*** DeleteFiles *** ', data);
+    } else if (data.id === FilePickerActions.ChangeSelection.id) {
+      setSelection((currentSelection) => {
+        const newSelection = { ...currentSelection };
+        newSelection.files = [ ...data.state.selectedFiles ];
+        console.log(newSelection);
+        return newSelection;
+      });
     }
-  }
+  };
   
   return (
     <Box id="filePickerDialog">
@@ -44,23 +76,8 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         </DialogTitle>
         <DialogContent className="dialogBody">
           <FilePickerComponent
-            files={[ 
-              {
-                "id": "qwerty123456",
-                "name": "PersistentVolume",
-                "isDir": true,
-              },
-              {
-                "id": "e598a85f843c",
-                "name": "Chonky Source Code",
-                "isDir": true,
-                "modDate": "2020-10-24T17:48:39.866Z",
-              }
-            ]}
-            currentSelection={{
-              files: [],
-              folderChain: []
-            }} 
+            files={files}
+            selection={selection} 
             onFileAction={handleAction}
           />
         </DialogContent>
