@@ -13,6 +13,7 @@ import { Box } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
+import { Selection } from '../../../common/components/file-picker';
 import CONFIG from '../../../common/config';
 import { Mode } from '../../../common/models/mode.enum';
 import {
@@ -363,6 +364,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     return validationResults;
   };
 
+  const onMetadataSelection = (selected: Selection): void => {
+    console.log('selection', selected);
+  };
+
   return (
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -377,7 +382,13 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form" noValidate>
             {
-              mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
+              mode === Mode.NEW &&
+              <IngestionFields
+                fields={ingestionFields}
+                values={[ directory, fileNames ]}
+                onMetadataSelection={onMetadataSelection}
+                formik={formik}
+              />
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 

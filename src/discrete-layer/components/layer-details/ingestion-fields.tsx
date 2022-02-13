@@ -2,8 +2,9 @@
 import React, { useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { Box, FileData } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
+import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
@@ -14,6 +15,7 @@ import './ingestion-fields.css';
 interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
   values: string[];
+  onMetadataSelection: (selected: Selection) => void;
   formik?: unknown;
 }
 
@@ -33,15 +35,26 @@ const MemoizedIngestionInputs = (fields: IRecordFieldInfo[], values: string[], f
     );
   });
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []));
+}, [values]));
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, formik }) => {
+export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, onMetadataSelection, formik }) => {
 
-  const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
+  const [ isFilePickerDialogOpen, setFilePickerDialogOpen ] = useState<boolean>(false);
+  const [ selection, setSelection ] = useState<string[]>(values);
+
+  const onFilesSelection = (selected: Selection): void => {
+    (formik as any).setFieldValue('directory', selected.folderChain.map((folder: FileData) => folder.name).join('/'));
+    (formik as any).setFieldValue('fileNames', selected.files.map((file: FileData) => file.name).join(','));
+    setSelection([
+      selected.folderChain.map((folder: FileData) => folder.name).join('/'),
+      selected.files.map((file: FileData) => file.name).join(',')
+    ]);
+    onMetadataSelection(selected);
+  };
   
   return (
     <Box className="ingestionFields">
-      {MemoizedIngestionInputs(fields, values, formik)}
+      {MemoizedIngestionInputs(fields, selection, formik)}
       <Button type="button" onClick={(): void => { setFilePickerDialogOpen(true); }}>
         <FormattedMessage id="general.choose-btn.text"/>
       </Button>
@@ -49,6 +62,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values
         <FilePickerDialogComponent
           isOpen={isFilePickerDialogOpen}
           onSetOpen={setFilePickerDialogOpen}
+          onFilesSelection={onFilesSelection}
         />
       }
     </Box>
