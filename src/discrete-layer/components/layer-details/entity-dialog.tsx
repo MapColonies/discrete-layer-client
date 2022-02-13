@@ -132,7 +132,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const cacheRef = useRef({} as ILayerImage | null | undefined);
 
   useEffect(() => {
-   if(layerRecord?.id !== prevLayerRecord?.id){
+   if (layerRecord?.id !== prevLayerRecord?.id) {
     cacheRef.current = layerRecord;
    }
   }, [layerRecord, prevLayerRecord]);
