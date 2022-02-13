@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 
@@ -33,11 +36,21 @@ const MemoizedIngestionInputs = (fields: IRecordFieldInfo[], values: string[], f
 }, []));
 
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, formik }) => {
+
+  const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
+  
   return (
     <Box className="ingestionFields">
-    {
-      MemoizedIngestionInputs(fields, values, formik)
-    }
+      {MemoizedIngestionInputs(fields, values, formik)}
+      <Button type="button" onClick={(): void => { setFilePickerDialogOpen(true); }}>
+        <FormattedMessage id="general.choose-btn.text"/>
+      </Button>
+      {
+        <FilePickerDialogComponent
+          isOpen={isFilePickerDialogOpen}
+          onSetOpen={setFilePickerDialogOpen}
+        />
+      }
     </Box>
   );
 };

@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { find } from 'lodash';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
+import {
+  Button,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerSubtitle,
+  DrawerTitle,
+  useTheme
+} from '@map-colonies/react-core';
 import { 
   DrawType, 
   BboxCorner,
@@ -17,16 +27,15 @@ import {
   DateTimeRangePickerFormControl,
   SupportedLocales
 } from '@map-colonies/react-components';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Button, Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, useTheme } from '@map-colonies/react-core';
 import CONFIG from '../../../common/config';
 import { LayersResultsComponent } from '../layers-results/layers-results';
 import { DrawerOpener } from '../drawer-opener/drawer-opener';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { SelectedLayersContainer } from './selected-layers-container';
-import './map-container.css';
 import { LayersFootprints } from './layers-footprints';
 import { HighlightedLayer } from './highlighted-layer';
+
+import './map-container.css';
 
 interface IDrawingObject {
   type: DrawType;
