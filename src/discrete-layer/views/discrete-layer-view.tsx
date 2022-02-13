@@ -546,7 +546,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               {
                 getActiveTabHeader(activeTabView)
               }
-              <Box className="detailsContent" style={{ overflow: 'hidden' }}>
+              <Box className="panelContent" style={{ overflow: 'hidden' }}>
                 <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>

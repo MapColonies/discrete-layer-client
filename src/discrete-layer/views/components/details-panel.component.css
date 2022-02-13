@@ -11,11 +11,19 @@ body[dir='rtl'] .detailsTitle {
   margin-left: auto;
 }
 
-.detailsContent {
+.panelContent {
   height: calc(100% - 60px);
   overflow: auto;
 }
 
+.detailsContent {
+  margin-right: 12px;
+}
+
+body[dir='rtl'] .detailsContent {
+  margin-right: unset;
+  margin-left: 12px;
+}
 
 .detailsPanelProductView {
   gap: 0.5em;
