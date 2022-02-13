@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
@@ -47,13 +46,13 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         "id": "12d31953b136",
         "name": "fileset.json",
         "size": 2457,
-        "modDate": "2021-12-22T04:17:54.294Z",
+        "modDate": "2021-12-22T04:18:54.294Z",
       },
       {
         "id": "14dd495b4146",
         "name": "metadata.json",
         "size": 3457,
-        "modDate": "2022-01-02T04:17:54.294Z",
+        "modDate": "2022-01-02T04:19:54.294Z",
       }
     ]);
   }, []);
