@@ -10,9 +10,11 @@ import { StringValuePresentorComponent } from './field-value-presentors/string.v
 import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';
+import { RecordType } from '../../models';
 
 interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
+  recordType: RecordType;
   values: string[];
   formik?: unknown;
 }
@@ -35,7 +37,7 @@ const MemoizedIngestionInputs = (fields: IRecordFieldInfo[], values: string[], f
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []));
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, formik }) => {
+export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, recordType, formik }) => {
 
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
   
@@ -47,6 +49,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values
       </Button>
       {
         <FilePickerDialogComponent
+          recordType={recordType}
           isOpen={isFilePickerDialogOpen}
           onSetOpen={setFilePickerDialogOpen}
         />

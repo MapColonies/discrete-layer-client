@@ -2,10 +2,12 @@ import React from 'react';
 import { useTheme } from '@map-colonies/react-core';
 import { FileActionData, FileData, FilePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../config';
+import { LayerMetadataMixedUnion } from '../../../discrete-layer/models';
 
 export interface Selection {
   files: FileData[];
   folderChain: FileData[];
+  metadata: LayerMetadataMixedUnion;
 }
 
 interface FilePickerComponentProps {

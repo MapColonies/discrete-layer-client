@@ -377,7 +377,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form" noValidate>
             {
-              mode === Mode.NEW && <IngestionFields fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
+              mode === Mode.NEW && <IngestionFields recordType={recordType as RecordType} fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 

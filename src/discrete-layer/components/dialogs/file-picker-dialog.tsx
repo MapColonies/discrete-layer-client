@@ -7,39 +7,59 @@ import { Box, FileActionData, FileData, FilePickerActions } from '@map-colonies/
 import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
 
 import './file-picker-dialog.css';
+import { FileModelType, LayerMetadataMixedUnion, RecordType, useQuery, useStore } from '../../models';
+import { cloneDeep } from 'lodash';
 
 interface FilePickerDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
+  recordType: RecordType;
 }
 
-export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(({ isOpen, onSetOpen }) => {
+export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(({ isOpen, onSetOpen, recordType }) => {
   const [files, setFiles] = useState<FileData[]>([]);
-  const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [] });
+  const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [], metadata: {} as LayerMetadataMixedUnion });
+  const [pathSuffix, setPathSuffix] = useState<string>('/');
+
+  const store = useStore();
+  const queryDirectory = useCallback(()=> useQuery<{ getDirectory: FileModelType[]}>(), [])();
+  const queryMetadata = useCallback(()=> useQuery<{ getFile: LayerMetadataMixedUnion}>(), [])();
 
   useEffect(() => {
-    setFiles([ 
-      {
-        "id": "qwerty123456",
-        "name": "PersistentVolume",
-        "selectable": false,
-        "isDir": true,
-      },
-      {
-        "id": "e598a85f843c",
-        "name": "Chonky Source Code",
-        "isDir": true,
-        "selectable": false,
-        "modDate": "2020-10-24T17:48:39.866Z",
-      },
-      {
-        "id": "12dd195bb146",
-        "name": "README.md",
-        "size": 1457,
-        "modDate": "2020-10-22T04:17:54.294Z",
+    queryDirectory.setQuery(store.queryGetDirectory({
+      data: {
+        pathSuffix,
+        type: recordType,
       }
-    ]);
-  }, []);
+    }))
+    setSelection(selection => ({...selection, metadata: {} as LayerMetadataMixedUnion }))
+  },[pathSuffix])
+
+  useEffect(()=> {
+    if(queryDirectory.data){
+      const dirContent = cloneDeep(queryDirectory.data.getDirectory) as FileData[]
+      setFiles(dirContent);
+
+      if(dirContent.length){
+        const hasMetadata = dirContent.some(file => file.name === 'metadata.json');
+  
+        if(hasMetadata) {
+          queryMetadata.setQuery(store.queryGetFile({
+            data: {
+              pathSuffix: pathSuffix + 'metadata.json',
+              type: recordType,
+            }
+          }))
+        }
+      }
+    }
+  },[queryDirectory.data])
+
+  useEffect(() => {
+    if(queryMetadata.data){
+      setSelection({ ...selection, metadata: cloneDeep(queryMetadata.data.getFile) })
+    }
+  }, [queryMetadata.data])
 
   const closeDialog = useCallback(
     () => {
@@ -49,10 +69,14 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   );
 
   const handleAction = (data: FileActionData): void => {
-    console.log(data);
+
     // eslint-disable-next-line
     if (data.id === FilePickerActions.OpenFiles.id) {
-    // eslint-disable-next-line
+      if(typeof data.payload.targetFile !== 'undefined' && data.payload.targetFile.isDir as boolean) {
+        const dirName = data.payload.targetFile.name;
+        setPathSuffix(`${pathSuffix}${dirName}/`);
+      }
+      // eslint-disable-next-line
     } else if (data.id === FilePickerActions.ChangeSelection.id) {
       setSelection((currentSelection) => {
         const newSelection = { ...currentSelection };
