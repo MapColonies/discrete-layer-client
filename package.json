@@ -50,7 +50,7 @@
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
       "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
       "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control|date-picker|autocomplete).css": "<rootDir>/src/__mocks__/styleMock.js",
-      "(drawHelper|coordinates-tracker.tool|scale-tracker.tool|scene-modes|base-maps|settings).css": "<rootDir>/src/__mocks__/styleMock.js",
+      "(drawHelper|coordinates-tracker.tool|scale-tracker.tool|scene-modes|base-maps|settings|file-picker).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(ag-grid|ag-theme-alpine|ag-theme-alpine-dark).css": "<rootDir>/src/__mocks__/styleMock.js"
     },
     "snapshotSerializers": [
