@@ -85,12 +85,12 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fi
       <Button type="button" onClick={(): void => { setFilePickerDialogOpen(true); }}>
         <FormattedMessage id="general.choose-btn.text"/>
       </Button>
-        <FilePickerDialogComponent
-          recordType={recordType}
-          isOpen={isFilePickerDialogOpen}
-          onSetOpen={setFilePickerDialogOpen}
-          onFilesSelection={onFilesSelection}
-        />
+      <FilePickerDialogComponent
+        recordType={recordType}
+        isOpen={isFilePickerDialogOpen}
+        onSetOpen={setFilePickerDialogOpen}
+        onFilesSelection={onFilesSelection}
+      />
     </Box>
   );
 };
