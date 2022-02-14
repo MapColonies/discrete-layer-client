@@ -6,18 +6,28 @@ import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box, FileActionData, FileData, FilePickerActions, FilePickerHandle } from '@map-colonies/react-components';
 import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
+import { RecordType } from '../../models';
 
 import './file-picker-dialog.css';
 
 const EMPTY = 0;
 
 interface FilePickerDialogComponentProps {
+  recordType: RecordType;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onFilesSelection: (selected: Selection) => void;
 }
 
-export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(({ isOpen, onSetOpen, onFilesSelection }) => {
+export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
+  (
+    {
+      recordType,
+      isOpen,
+      onSetOpen,
+      onFilesSelection
+    }
+  ) => {
   const filePickerRef = useRef<FilePickerHandle>(null);
   const [files, setFiles] = useState<FileData[]>([]);
   const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [] });
@@ -45,7 +55,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       },
       {
         "id": "12d31953b136",
-        "name": "fileset.json",
+        "name": "tileset.json",
         "size": 2457,
         "modDate": "2021-12-22T04:18:54.294Z",
       },
@@ -73,7 +83,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       if (fileToOpen.isDir === true) {
         setSelection((currentSelection) => {
           const newSelection = { ...currentSelection };
-          newSelection.folderChain.push(fileToOpen);
+          newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
           return newSelection;
         });
       }

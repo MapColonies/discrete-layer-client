@@ -384,6 +384,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             {
               mode === Mode.NEW &&
               <IngestionFields
+                recordType={recordType as RecordType}
                 fields={ingestionFields}
                 values={[ directory, fileNames ]}
                 onMetadataSelection={onMetadataSelection}

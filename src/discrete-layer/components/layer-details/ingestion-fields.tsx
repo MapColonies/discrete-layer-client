@@ -5,31 +5,36 @@ import { Button, TextField } from '@map-colonies/react-core';
 import { Box, FileData } from '@map-colonies/react-components';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
-import { LayerMetadataMixedUnion } from '../../models';
+import { LayerMetadataMixedUnion, RecordType } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';
 
 interface IngestionFieldsProps {
+  recordType: RecordType;
   fields: IRecordFieldInfo[];
   values: string[];
   onMetadataSelection: (selectedMetadata: LayerMetadataMixedUnion) => void;
   formik?: unknown;
 }
 
-const MemoizedIngestionInputs: React.FC<{fields: IRecordFieldInfo[], values: string[], formik: unknown}> = 
-  ({fields, values, formik }) =>  {
+const IngestionInputs: React.FC<{fields: IRecordFieldInfo[], values: string[], formik: unknown}> = ({fields, values, formik }) =>  {
   const [inputVal, setInputVal] = useState([...values]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setInputVal([...values]);
-  },[values]);
+  }, [values]);
 
-  const handleInputChange= (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange= (e: React.FormEvent<HTMLInputElement>, idx: number): void => {
     // eslint-disable-next-line
     (formik as any).handleChange(e);
-    setInputVal([e.target.value, e.target.value]);
+
+    setInputVal((prevValues) => {
+      const newValues = [...prevValues];
+      newValues[idx] = e.currentTarget.value;
+      return newValues;
+    });
   };
 
   return ( 
@@ -46,7 +51,8 @@ const MemoizedIngestionInputs: React.FC<{fields: IRecordFieldInfo[], values: str
                 id={field.fieldName as string}
                 name={field.fieldName as string}
                 // eslint-disable-next-line
-                onChange={handleInputChange}
+                onChange={(evt) => { handleInputChange(evt, index) }}
+                disabled
               />
             </Box>
           )
@@ -56,7 +62,7 @@ const MemoizedIngestionInputs: React.FC<{fields: IRecordFieldInfo[], values: str
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, onMetadataSelection, formik }) => {
+export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fields, values, onMetadataSelection, formik }) => {
 
   const [ isFilePickerDialogOpen, setFilePickerDialogOpen ] = useState<boolean>(false);
   const [ selection, setSelection ] = useState<string[]>(values);
@@ -71,7 +77,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values
   
   return (
     <Box className="ingestionFields">
-      <MemoizedIngestionInputs 
+      <IngestionInputs 
         fields = {fields}
         values = {selection}
         formik = {formik}
@@ -79,13 +85,12 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values
       <Button type="button" onClick={(): void => { setFilePickerDialogOpen(true); }}>
         <FormattedMessage id="general.choose-btn.text"/>
       </Button>
-      {
         <FilePickerDialogComponent
+          recordType={recordType}
           isOpen={isFilePickerDialogOpen}
           onSetOpen={setFilePickerDialogOpen}
           onFilesSelection={onFilesSelection}
         />
-      }
     </Box>
   );
 };
