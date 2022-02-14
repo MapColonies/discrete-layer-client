@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
@@ -13,7 +14,6 @@ import { Box } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
-import { Selection } from '../../../common/components/file-picker';
 import CONFIG from '../../../common/config';
 import { Mode } from '../../../common/models/mode.enum';
 import {

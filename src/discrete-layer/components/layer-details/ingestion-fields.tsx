@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button } from '@map-colonies/react-core';
+import { Button, TextField } from '@map-colonies/react-core';
 import { Box, FileData } from '@map-colonies/react-components';
-import { Mode } from '../../../common/models/mode.enum';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import { LayerMetadataMixedUnion } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';
@@ -15,27 +14,47 @@ import './ingestion-fields.css';
 interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
   values: string[];
-  onMetadataSelection: (selected: Selection) => void;
+  onMetadataSelection: (selectedMetadata: LayerMetadataMixedUnion) => void;
   formik?: unknown;
 }
 
-const MemoizedIngestionInputs = (fields: IRecordFieldInfo[], values: string[], formik: unknown): JSX.Element[] => (useMemo((): JSX.Element[] => {
-  return fields.map((field: IRecordFieldInfo, index: number) => {
-    return (
-      <Box className="ingestionField" key={field.fieldName}>
-        <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName as string}Spacer` }/>
-        <StringValuePresentorComponent 
-          mode={Mode.NEW} 
-          // @ts-ignore
-          fieldInfo={{ ...field }} 
-          value={values[index]} 
-          formik={formik}>
-        </StringValuePresentorComponent>
-      </Box>
-    );
-  });
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [values]));
+const MemoizedIngestionInputs: React.FC<{fields: IRecordFieldInfo[], values: string[], formik: unknown}> = 
+  ({fields, values, formik }) =>  {
+  const [inputVal, setInputVal] = useState([...values]);
+
+  useEffect(()=>{
+    setInputVal([...values]);
+  },[values]);
+
+  const handleInputChange= (e: React.ChangeEvent<HTMLInputElement>): void => {
+    // eslint-disable-next-line
+    (formik as any).handleChange(e);
+    setInputVal([e.target.value, e.target.value]);
+  };
+
+  return ( 
+    <>
+      {
+        fields.map((field: IRecordFieldInfo, index: number) => {
+          return (
+            <Box className="ingestionField" key={field.fieldName}>
+              <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName as string}Spacer` }/>
+              <TextField 
+                type="text"
+                value={inputVal[index]}
+                // @ts-ignore
+                id={field.fieldName as string}
+                name={field.fieldName as string}
+                // eslint-disable-next-line
+                onChange={handleInputChange}
+              />
+            </Box>
+          )
+        })
+      } 
+    </>
+  );
+};
 
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values, onMetadataSelection, formik }) => {
 
@@ -43,18 +62,20 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ fields, values
   const [ selection, setSelection ] = useState<string[]>(values);
 
   const onFilesSelection = (selected: Selection): void => {
-    (formik as any).setFieldValue('directory', selected.folderChain.map((folder: FileData) => folder.name).join('/'));
-    (formik as any).setFieldValue('fileNames', selected.files.map((file: FileData) => file.name).join(','));
     setSelection([
       selected.folderChain.map((folder: FileData) => folder.name).join('/'),
       selected.files.map((file: FileData) => file.name).join(',')
     ]);
-    onMetadataSelection(selected);
+    onMetadataSelection(selected.metadata as LayerMetadataMixedUnion);
   };
   
   return (
     <Box className="ingestionFields">
-      {MemoizedIngestionInputs(fields, selection, formik)}
+      <MemoizedIngestionInputs 
+        fields = {fields}
+        values = {selection}
+        formik = {formik}
+      />
       <Button type="button" onClick={(): void => { setFilePickerDialogOpen(true); }}>
         <FormattedMessage id="general.choose-btn.text"/>
       </Button>

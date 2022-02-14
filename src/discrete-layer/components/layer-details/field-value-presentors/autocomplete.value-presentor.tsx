@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, {useState, useEffect} from 'react';
 import { observer } from 'mobx-react';
 import { Box, Autocomplete } from '@map-colonies/react-components';

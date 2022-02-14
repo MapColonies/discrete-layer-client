@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useLayoutEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';

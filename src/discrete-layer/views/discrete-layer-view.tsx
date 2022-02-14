@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { find, get } from 'lodash';
