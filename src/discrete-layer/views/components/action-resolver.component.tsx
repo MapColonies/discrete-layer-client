@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { BestRecordModelKeys, LayerRasterRecordModelKeys, LayerDemRecordModelKeys, Layer3DRecordModelKeys, VectorBestRecordModelKeys } from '../../components/layer-details/entity-types-keys';
