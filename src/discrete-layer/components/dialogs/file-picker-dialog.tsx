@@ -67,6 +67,15 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   const handleAction = (data: FileActionData): void => {
     // eslint-disable-next-line
     if (data.id === FilePickerActions.OpenFiles.id) {
+      const { targetFile, files } = data.payload;
+      const fileToOpen = targetFile ?? files[0];
+      if (fileToOpen.isDir === true) {
+        setSelection((currentSelection) => {
+          const newSelection = { ...currentSelection };
+          newSelection.folderChain.push(fileToOpen);
+          return newSelection;
+        });
+      }
     // eslint-disable-next-line
     } else if (data.id === FilePickerActions.ChangeSelection.id) {
       setSelection((currentSelection) => {
