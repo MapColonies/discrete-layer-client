@@ -1,22 +1,34 @@
-import React, { useCallback, useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box, FileActionData, FileData, FilePickerActions } from '@map-colonies/react-components';
+import { Box, FileActionData, FileData, FilePickerActions, FilePickerHandle } from '@map-colonies/react-components';
 import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
-
-import './file-picker-dialog.css';
 import { FileModelType, LayerMetadataMixedUnion, RecordType, useQuery, useStore } from '../../models';
+import './file-picker-dialog.css';
 import { cloneDeep } from 'lodash';
 
+const EMPTY = 0;
+
 interface FilePickerDialogComponentProps {
+  recordType: RecordType;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
-  recordType: RecordType;
+  onFilesSelection: (selected: Selection) => void;
 }
 
-export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(({ isOpen, onSetOpen, recordType }) => {
+export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
+  (
+    {
+      recordType,
+      isOpen,
+      onSetOpen,
+      onFilesSelection
+    }
+  ) => {
+  const filePickerRef = useRef<FilePickerHandle>(null);
   const [files, setFiles] = useState<FileData[]>([]);
   const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [], metadata: {} as LayerMetadataMixedUnion });
   const [pathSuffix, setPathSuffix] = useState<string>('/');
@@ -69,19 +81,25 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   );
 
   const handleAction = (data: FileActionData): void => {
-
     // eslint-disable-next-line
     if (data.id === FilePickerActions.OpenFiles.id) {
-      if(typeof data.payload.targetFile !== 'undefined' && data.payload.targetFile.isDir as boolean) {
-        const dirName = data.payload.targetFile.name;
-        setPathSuffix(`${pathSuffix}${dirName}/`);
+      const { targetFile, files } = data.payload;
+      const fileToOpen = targetFile ?? files[0];
+      if (fileToOpen.isDir === true) {
+        setPathSuffix(`${pathSuffix}${fileToOpen.name}/`);
+        setSelection((currentSelection) => {
+          const newSelection = { ...currentSelection };
+          newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
+          return newSelection;
+        });
       }
-      // eslint-disable-next-line
+    // eslint-disable-next-line
     } else if (data.id === FilePickerActions.ChangeSelection.id) {
       setSelection((currentSelection) => {
         const newSelection = { ...currentSelection };
-        newSelection.files = [ ...data.state.selectedFiles ];
-        console.log(newSelection);
+        // eslint-disable-next-line
+        const selectedIds = filePickerRef?.current?.getFileSelection() as Set<string>;
+        newSelection.files = files.filter((file: FileData) => selectedIds.has(file.id));
         return newSelection;
       });
     }
@@ -100,13 +118,15 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         </DialogTitle>
         <DialogContent className="dialogBody">
           <FilePickerComponent
+            // @ts-ignore
+            ref={filePickerRef}
             files={files}
             selection={selection} 
             onFileAction={handleAction}
           />
         </DialogContent>
         <DialogActions>
-          <Button raised type="button" disabled={true} onClick={(): void => { closeDialog(); }}>
+          <Button raised type="button" disabled={selection.files.length === EMPTY} onClick={(): void => { onFilesSelection(selection); closeDialog(); }}>
             <FormattedMessage id="general.ok-btn.text"/>
           </Button>
           <Button type="button" onClick={(): void => { closeDialog(); }}>

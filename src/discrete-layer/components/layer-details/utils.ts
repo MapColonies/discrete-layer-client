@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, omit } from 'lodash';
 import { $enum } from 'ts-enum-util';
 import { ValidationTypeName } from '../../../common/models/validation.enum';

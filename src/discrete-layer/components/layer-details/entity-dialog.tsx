@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
@@ -131,7 +132,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const cacheRef = useRef({} as ILayerImage | null | undefined);
 
   useEffect(() => {
-   if(layerRecord?.id !== prevLayerRecord?.id){
+   if (layerRecord?.id !== prevLayerRecord?.id) {
     cacheRef.current = layerRecord;
    }
   }, [layerRecord, prevLayerRecord]);
@@ -363,6 +364,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     return validationResults;
   };
 
+  const onMetadataSelection = (selectedMetadata: LayerMetadataMixedUnion): void => {
+    console.log('selection', selectedMetadata);
+  };
+
   return (
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -377,7 +382,14 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         <DialogContent className="dialogBody">
           <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form" noValidate>
             {
-              mode === Mode.NEW && <IngestionFields recordType={recordType as RecordType} fields={ingestionFields} values={[ directory, fileNames ]} formik={formik}/>
+              mode === Mode.NEW &&
+              <IngestionFields
+                recordType={recordType as RecordType}
+                fields={ingestionFields}
+                values={[ directory, fileNames ]}
+                onMetadataSelection={onMetadataSelection}
+                formik={formik}
+              />
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 

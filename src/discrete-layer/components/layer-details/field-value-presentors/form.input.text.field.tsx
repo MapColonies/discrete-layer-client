@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState } from 'react';
 import { get } from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';

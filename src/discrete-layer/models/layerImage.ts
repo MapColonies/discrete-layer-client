@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Feature, Geometry, Polygon } from 'geojson';
 import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';

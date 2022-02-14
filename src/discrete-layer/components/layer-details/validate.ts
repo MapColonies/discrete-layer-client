@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import moment from 'moment';
 import vest, { test, enforce } from 'vest';
 import { IEnforceRules } from 'vest/enforce';

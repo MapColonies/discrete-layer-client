@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { Icon, Tooltip } from '@map-colonies/react-core';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FormattedMessage } from 'react-intl';
