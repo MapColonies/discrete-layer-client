@@ -7,7 +7,7 @@ import CONFIG from '../../config';
 export interface Selection {
   files: FileData[];
   folderChain: FileData[];
-  metadataJson?: LayerMetadataMixedUnion;
+  metadata?: LayerMetadataMixedUnion;
 }
 
 interface FilePickerComponentProps {

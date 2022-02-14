@@ -364,8 +364,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     return validationResults;
   };
 
-  const onMetadataSelection = (selected: Selection): void => {
-    console.log('selection', selected);
+  const onMetadataSelection = (selectedMetadata: LayerMetadataMixedUnion): void => {
+    console.log('selection', selectedMetadata);
   };
 
   return (
