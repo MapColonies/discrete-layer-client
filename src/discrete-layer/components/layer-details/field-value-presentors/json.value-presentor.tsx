@@ -5,12 +5,13 @@ import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import { EntityFormikHandlers } from '../layer-datails-form';
 
 interface JsonValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
-  formik?: unknown;
+  formik?: EntityFormikHandlers;
   type?: string;
 }
 

@@ -313,7 +313,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   }, [vestValidationResults]);
   
   const formik = useFormik({
-    enableReinitialize: true,
     initialValues: layerRecord as FormikValues,
     validationSchema: Yup.object({
       ...schema
@@ -365,8 +364,11 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         </DialogTitle>
         <DialogContent className="dialogBody">
           <EntityForm 
+            mode={mode}
+            entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]}
             ingestionFields={ingestionFields} 
             recordType={recordType as RecordType}
+            layerRecord={layerRecord}
           />
         </DialogContent>
       </Dialog>

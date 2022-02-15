@@ -47,6 +47,7 @@ export const getValuePresentor = (
   mode: Mode,
   formik?: EntityFormikHandlers,
 ): JSX.Element => {
+
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
   
@@ -55,15 +56,15 @@ export const getValuePresentor = (
     case 'identifier':
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
-        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></StringValuePresentorComponent>
+        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></StringValuePresentorComponent>
     case 'json':
       return (
-        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></JsonValuePresentorComponent>
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></JsonValuePresentorComponent>
       );
     case 'number':
       return (
-        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></NumberValuePresentorComponent>
+        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></NumberValuePresentorComponent>
       );
     case 'links':
       return (
@@ -71,15 +72,15 @@ export const getValuePresentor = (
       );
     case 'url':
       return (
-        <UrlValuePresentorComponent value={fieldValue as string}></UrlValuePresentorComponent>
+        <UrlValuePresentorComponent value={formik?.getFieldProps(fieldInfo.fieldName).value as string}></UrlValuePresentorComponent>
       );
     case 'momentDateType':
       return (
-        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as moment.Moment} formik={formik}></DateValuePresentorComponent>
+        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
     case 'SensorType':
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(fieldValue !== undefined && fieldValue !== null) ? (fieldValue as SensorType[]).join(',') : ''} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(formik?.getFieldProps(fieldInfo.fieldName).value as SensorType[]).join(',')} formik={formik}></EnumValuePresentorComponent>
       );
     case 'DataType':
     case 'NoDataValue':
@@ -87,12 +88,12 @@ export const getValuePresentor = (
     case 'Units':
     case 'UndulationModel':
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={fieldValue as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
     case 'ProductType':
       return (
-        <TypeValuePresentorComponent value={fieldValue as string}></TypeValuePresentorComponent>
+        <TypeValuePresentorComponent value={formik?.getFieldProps(fieldInfo.fieldName).value as string}></TypeValuePresentorComponent>
       );
     default:
       return (
@@ -166,7 +167,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerRecord]);
+  }, [layerRecord, formik]);
 
   const briefInputs = useMemo(() => {
     const briefArr = layerRecord &&

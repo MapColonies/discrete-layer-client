@@ -98,7 +98,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             // eslint-disable-next-line
             onChange={formik?.handleChange}
             // eslint-disable-next-line
-            onBlur={(formik as any).handleBlur}
+            onBlur={formik?.handleBlur}
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
             {...validationProps}

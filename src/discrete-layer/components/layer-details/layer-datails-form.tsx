@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   withFormik,
@@ -8,10 +8,20 @@ import {
   FormikHandlers,
 } from 'formik';
 import { Button } from '@map-colonies/react-core';
-import { FieldConfigModelType, RecordType } from '../../models';
+import {
+  EntityDescriptorModelType,
+  FieldConfigModelType,
+  LayerMetadataMixedUnion,
+  RecordType,
+} from '../../models';
 import { IngestionFields } from './ingestion-fields';
 
 import './ingestion-fields.css';
+import { Box } from '@material-ui/core';
+import { Mode } from '../../../common/models/mode.enum';
+import { LayersDetailsComponent } from './layer-details';
+
+import './entity-dialog.css';
 
 // Shape of form values
 export interface FormValues {
@@ -22,6 +32,9 @@ export interface FormValues {
 interface OtherProps {
   recordType: RecordType;
   ingestionFields: FieldConfigModelType[];
+  mode: Mode;
+  entityDescriptors: EntityDescriptorModelType[];
+  layerRecord: LayerMetadataMixedUnion;
 }
 
 export interface EntityFormikHandlers extends FormikHandlers {
@@ -29,9 +42,13 @@ export interface EntityFormikHandlers extends FormikHandlers {
     values: React.SetStateAction<FormValues>,
     shouldValidate?: boolean | undefined
   ) => void;
+
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
 }
 
-const InnerForm = (props: OtherProps & FormikProps<FormValues>): JSX.Element => {
+const InnerForm = (
+  props: OtherProps & FormikProps<FormValues>
+): JSX.Element => {
   const {
     touched,
     errors,
@@ -45,8 +62,13 @@ const InnerForm = (props: OtherProps & FormikProps<FormValues>): JSX.Element => 
     getFieldProps,
     getFieldMeta,
     getFieldHelpers,
+    setFieldValue,
     recordType,
     ingestionFields,
+    entityDescriptors,
+    mode,
+    layerRecord,
+
   } = props;
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
@@ -59,27 +81,31 @@ const InnerForm = (props: OtherProps & FormikProps<FormValues>): JSX.Element => 
       getFieldProps,
       getFieldMeta,
       getFieldHelpers,
+      setFieldValue,
     }),
-    [
-      handleChange,
-      handleBlur,
-      setValues,
-      handleSubmit,
-      handleReset,
-      getFieldProps,
-      getFieldMeta,
-      getFieldHelpers,
-    ]
+    [getFieldProps]
   );
 
   return (
-    <Form>
-      <IngestionFields
-        values={values}
-        formik={entityFormikHandlers}
-        recordType={recordType}
-        fields={ingestionFields}
-      />
+    <Form onSubmit={handleSubmit} autoComplete={'off'} className="form" noValidate>
+      {mode === Mode.NEW && (
+        <IngestionFields
+          formik={entityFormikHandlers}
+          recordType={recordType}
+          fields={ingestionFields}
+        />
+      )}
+
+      <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
+       
+          <LayersDetailsComponent
+            entityDescriptors={entityDescriptors}
+            layerRecord={layerRecord}
+            mode={mode}
+            formik={entityFormikHandlers}
+          />
+
+      </Box>
       <Button type="submit" disabled={isSubmitting}>
         <FormattedMessage id="general.ok-btn.text" />
       </Button>
@@ -88,9 +114,11 @@ const InnerForm = (props: OtherProps & FormikProps<FormValues>): JSX.Element => 
 };
 
 interface MyFormProps {
-  initialEmail?: string;
   recordType: RecordType;
   ingestionFields: FieldConfigModelType[];
+  mode: Mode;
+  entityDescriptors: EntityDescriptorModelType[];
+  layerRecord: LayerMetadataMixedUnion;
 }
 
 export default withFormik<MyFormProps, FormValues>({
@@ -100,6 +128,7 @@ export default withFormik<MyFormProps, FormValues>({
       // directory: props.initialEmail || '',
       directory: '',
       fileNames: '',
+      ...props.layerRecord
     };
   },
 
@@ -112,4 +141,6 @@ export default withFormik<MyFormProps, FormValues>({
   handleSubmit: (values) => {
     console.log(values);
   },
+
+
 })(InnerForm);

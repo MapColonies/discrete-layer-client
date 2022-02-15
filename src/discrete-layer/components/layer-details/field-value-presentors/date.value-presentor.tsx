@@ -7,12 +7,13 @@ import CONFIG from '../../../../common/config';
 import { dateFormatter } from '../../../../common/helpers/type-formatters';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import { EntityFormikHandlers } from '../layer-datails-form';
 
 interface DateValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: moment.Moment;
-  formik?: unknown;
+  formik?: EntityFormikHandlers;
 }
 
 export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
@@ -28,7 +29,6 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
       </Box>
     );
   } else {
-    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as  (moment.Moment | undefined);
     return (
       <Box className="detailsFieldValue datePresentor">
         <DateTimePicker
@@ -37,11 +37,11 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
             (dateVal): void => {
               const momentVal = moment(dateVal);
               // eslint-disable-next-line
-              (formik as any).setFieldValue(fieldInfo.fieldName, momentVal);
+              formik?.setFieldValue(fieldInfo.fieldName as string, momentVal);
             }
           }
           // eslint-disable-next-line
-          onBlur={(formik as any).handleBlur}
+          onBlur={formik?.handleBlur}
           required={fieldInfo.isRequired === true}
           local={local}
           autoOk

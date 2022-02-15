@@ -7,21 +7,21 @@ import { FieldLabelComponent } from '../../../common/components/form/field-label
 import { RecordType } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
-import { EntityFormikHandlers, FormValues } from './layer-datails-form';
+import { EntityFormikHandlers } from './layer-datails-form';
 
 import './ingestion-fields.css';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { Mode } from '../../../common/models/mode.enum';
 
+import './entity-dialog.css';
+
 interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
-  values: FormValues;
   recordType: RecordType;
   formik?: EntityFormikHandlers;
 }
 
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({
-  values,
   formik,
   fields,
   recordType,
@@ -38,13 +38,13 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
             <FieldLabelComponent
               value={field.label}
               isRequired={true}
-              customClassName={`${field.fieldName as string}Spacer`}
+              customClassName={`${formik?.getFieldProps(field.fieldName).value as string}Spacer`}
             />
             <StringValuePresentorComponent
               mode={Mode.NEW}
               fieldInfo={field}
               // @ts-ignore
-              value={values[field.fieldName] as string}
+              value={formik?.getFieldProps(field.fieldName).value as string}
               formik={formik}
             />
           </Box>
@@ -71,6 +71,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
             directory: selected.folderChain
               .map((folder: FileData) => folder.name)
               .join('/'),
+            ...selected.metadata
           });
         }}
       />
