@@ -40,6 +40,7 @@ import {IRecordFieldInfo} from './layer-details.field-info'
 import { IngestionFields } from './ingestion-fields';
 import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
+import EntityForm from './layer-datails-form';
 
 import './entity-dialog.css';
 
@@ -118,9 +119,12 @@ const getLabel = (recordType: RecordType): string => {
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
-  let layerRecord = cloneDeep(props.layerRecord);
-  const directory = '';
-  let fileNames = '';
+  const [layerRecord, setLayerRecord] = useState<LayerMetadataMixedUnion>(
+    props.layerRecord ? cloneDeep(props.layerRecord) : buildRecord(recordType as RecordType)
+  );
+  // const [directory] = useState('');
+  // const [fileNames] = useState(recordType === RecordType.RECORD_3D ? 'tileset.json' : '');
+  const [mode] = useState<Mode>(!props.layerRecord ? Mode.NEW : Mode.EDIT)
   const mutationQuery = useQuery();
   const store = useStore();
   const intl = useIntl();
@@ -128,30 +132,13 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
-  const prevLayerRecord = usePrevious<ILayerImage | null | undefined>(layerRecord);
-  const cacheRef = useRef({} as ILayerImage | null | undefined);
 
-  useEffect(() => {
-   if (layerRecord?.id !== prevLayerRecord?.id) {
-    cacheRef.current = layerRecord;
-   }
-  }, [layerRecord, prevLayerRecord]);
 
-  
-  let mode = Mode.EDIT;
-  if (layerRecord === undefined && recordType !== undefined) {
-    mode = Mode.NEW;
-    if (recordType === RecordType.RECORD_3D) {
-      fileNames = 'tileset.json';
-    }
-    layerRecord = buildRecord(recordType);
-  }
-
-  const dialogTitleParam = recordType ?? layerRecord?.type;
+  const dialogTitleParam = recordType ?? layerRecord.type;
   const dialogTitleParamTranslation = intl.formatMessage({ id: `record-type.${(dialogTitleParam as string).toLowerCase()}.label` });
   const dialogTitle = intl.formatMessage({ id: `general.title.${(mode as string).toLowerCase()}` }, { value: dialogTitleParamTranslation });
 
-  const ingestionFields = (layerRecord?.__typename !== 'BestRecord') ?
+  const ingestionFields = (layerRecord.__typename !== 'BestRecord') ?
     [
       {
         ...buildFieldInfo(),
@@ -179,7 +166,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
 
   useEffect(() => {
     const descriptors = getFlatEntityDescriptors(
-      layerRecord as LayerMetadataMixedUnion,
+      layerRecord,
       store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
     );
 
@@ -326,6 +313,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   }, [vestValidationResults]);
   
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: layerRecord as FormikValues,
     validationSchema: Yup.object({
       ...schema
@@ -364,10 +352,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     return validationResults;
   };
 
-  const onMetadataSelection = (selectedMetadata: LayerMetadataMixedUnion): void => {
-    console.log('selection', selectedMetadata);
-  };
-
   return (
     <Box id="entityDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -380,58 +364,10 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <form onSubmit={formik.handleSubmit} autoComplete={isAutocompleteEnabled ? 'on' : 'off'} className="form" noValidate>
-            {
-              mode === Mode.NEW &&
-              <IngestionFields
-                recordType={recordType as RecordType}
-                fields={ingestionFields}
-                values={[ directory, fileNames ]}
-                onMetadataSelection={onMetadataSelection}
-                formik={formik}
-              />
-            }
-            <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
-              <LayersDetailsComponent 
-                entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} 
-                layerRecord={cacheRef.current} 
-                mode={mode} 
-                formik={formik}
-              />
-            </Box>
-            <Box className="footer">
-              <Box className="messages">
-                {
-                  (Object.keys(formik.errors).length > NONE) && 
-                  <ValidationsError errors={getYupErrors()}/>
-                }
-                {
-                  (Object.keys(formik.errors).length === NONE && vestValidationResults.errorCount > NONE) && 
-                  <ValidationsError errors={vestValidationResults.getErrors()}/>
-                }
-                {
-                  mutationQuery.error !== undefined && 
-                  // eslint-disable-next-line
-                  <GraphQLError error={mutationQuery.error}/>
-                }
-              </Box>
-              <Box className="buttons">
-                <Button
-                  raised 
-                  type="submit" 
-                  disabled={mutationQuery.loading || (layerRecord?.__typename !== 'BestRecord' && !formik.dirty) || Object.keys(formik.errors).length > NONE}
-                >
-                  <FormattedMessage id="general.ok-btn.text"/>
-                </Button>
-                <Button
-                  type="button"
-                  onClick={(): void => { closeDialog(); }}
-                >
-                  <FormattedMessage id="general.cancel-btn.text"/>
-                </Button>
-              </Box>
-            </Box>
-          </form>
+          <EntityForm 
+            ingestionFields={ingestionFields} 
+            recordType={recordType as RecordType}
+          />
         </DialogContent>
       </Dialog>
     </Box>
