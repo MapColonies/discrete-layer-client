@@ -1,36 +1,34 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, TextField } from '@map-colonies/react-core';
+import { Button } from '@map-colonies/react-core';
 import { Box, FileData } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { RecordType } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
-import { FormValues } from './layer-datails-form';
+import { EntityFormikHandlers, FormValues } from './layer-datails-form';
 
 import './ingestion-fields.css';
-
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import { Mode } from '../../../common/models/mode.enum';
 
 interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
   values: FormValues;
-  handleChange: (e: React.ChangeEvent<any>) => void;
   recordType: RecordType;
-  // onMetadataSelection: (selectedMetadata: LayerMetadataMixedUnion) => void;
-  setValues: (
-    values: React.SetStateAction<FormValues>,
-    shouldValidate?: boolean | undefined
-  ) => void;
+  formik?: EntityFormikHandlers;
 }
+
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({
   values,
-  handleChange,
+  formik,
   fields,
   recordType,
-  setValues,
 }) => {
-  const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>( false);
+  const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(
+    false
+  );
 
   return (
     <Box className="ingestionFields">
@@ -42,13 +40,12 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
               isRequired={true}
               customClassName={`${field.fieldName as string}Spacer`}
             />
-            <TextField
-              type="text"
+            <StringValuePresentorComponent
+              mode={Mode.NEW}
+              fieldInfo={field}
               // @ts-ignore
               value={values[field.fieldName] as string}
-              id={field.fieldName as string}
-              name={field.fieldName as string}
-              onChange={handleChange}
+              formik={formik}
             />
           </Box>
         );
@@ -67,7 +64,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
         isOpen={isFilePickerDialogOpen}
         onSetOpen={setFilePickerDialogOpen}
         onFilesSelection={(selected): void => {
-          setValues({
+          formik?.setValues({
             fileNames: selected.files
               .map((file: FileData) => file.name)
               .join(','),

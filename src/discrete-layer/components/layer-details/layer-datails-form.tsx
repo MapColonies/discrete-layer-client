@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { withFormik, FormikProps, FormikErrors, Form } from 'formik';
+import {
+  withFormik,
+  FormikProps,
+  FormikErrors,
+  Form,
+  FormikHandlers,
+} from 'formik';
 import { Button } from '@map-colonies/react-core';
 import { FieldConfigModelType, RecordType } from '../../models';
 import { IngestionFields } from './ingestion-fields';
@@ -18,24 +24,60 @@ interface OtherProps {
   ingestionFields: FieldConfigModelType[];
 }
 
-const InnerForm = (props: OtherProps & FormikProps<FormValues>) => {
+export interface EntityFormikHandlers extends FormikHandlers {
+  setValues: (
+    values: React.SetStateAction<FormValues>,
+    shouldValidate?: boolean | undefined
+  ) => void;
+}
+
+const InnerForm = (props: OtherProps & FormikProps<FormValues>): JSX.Element => {
   const {
     touched,
     errors,
     isSubmitting,
     values,
     handleChange,
+    handleBlur,
     setValues,
+    handleSubmit,
+    handleReset,
+    getFieldProps,
+    getFieldMeta,
+    getFieldHelpers,
     recordType,
     ingestionFields,
   } = props;
+
+  const entityFormikHandlers: EntityFormikHandlers = useMemo(
+    () => ({
+      handleChange,
+      handleBlur,
+      setValues,
+      handleSubmit,
+      handleReset,
+      getFieldProps,
+      getFieldMeta,
+      getFieldHelpers,
+    }),
+    [
+      handleChange,
+      handleBlur,
+      setValues,
+      handleSubmit,
+      handleReset,
+      getFieldProps,
+      getFieldMeta,
+      getFieldHelpers,
+    ]
+  );
+
   return (
     <Form>
       <IngestionFields
         values={values}
-        handleChange={handleChange}
+        formik={entityFormikHandlers}
         recordType={recordType}
-        setValues={setValues}
         fields={ingestionFields}
       />
       <Button type="submit" disabled={isSubmitting}>

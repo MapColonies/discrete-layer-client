@@ -11,30 +11,19 @@ import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import { ValidationConfigModelType, ValidationValueType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface FormInputTextFieldProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
-  formik?: unknown;
+  formik?: EntityFormikHandlers;
   type?: string;
 }
 
 export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({mode, fieldInfo, value, formik, type}) => {
-  const val = get(formik, `values[${fieldInfo.fieldName as string}]`) as
-    | string
-    | undefined;
-
-  const [inputVal, setInputVal] = useState(val ?? '');
   const intl = useIntl();
-
-  const handleInputChange= (e: React.ChangeEvent<HTMLInputElement>): void => {
-    // eslint-disable-next-line
-    (formik as any).handleChange(e);
-    setInputVal(e.target.value);
-  };
-  
   const isCopyable = fieldInfo.isCopyable ?? false;
 
   const valueRenderer = useMemo(() => {
@@ -101,13 +90,13 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
       <>
         <Box className="detailsFieldValue">
           <TextField
-            value={inputVal}
+            value={value}
             // @ts-ignore
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             type={type}
             // eslint-disable-next-line
-            onChange={handleInputChange}
+            onChange={formik?.handleChange}
             // eslint-disable-next-line
             onBlur={(formik as any).handleBlur}
             placeholder={placeholder}

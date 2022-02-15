@@ -27,6 +27,7 @@ import { EnumValuePresentorComponent } from './field-value-presentors/enum.value
 import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
 import { getBasicType, getEntityDescriptors } from './utils';
+import { EntityFormikHandlers } from './layer-datails-form';
 
 import './layer-details.css';
 
@@ -36,7 +37,7 @@ interface LayersDetailsComponentProps {
   className?: string;
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
-  formik?: unknown;
+  formik?: EntityFormikHandlers;
 }
 
 export const getValuePresentor = (
@@ -44,7 +45,7 @@ export const getValuePresentor = (
   fieldInfo: IRecordFieldInfo,
   fieldValue: unknown,
   mode: Mode,
-  formik?: unknown,
+  formik?: EntityFormikHandlers,
 ): JSX.Element => {
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
