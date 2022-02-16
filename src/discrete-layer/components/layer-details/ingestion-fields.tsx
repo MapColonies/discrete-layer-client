@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -30,8 +31,29 @@ const FileItem: React.FC<{file: FileData}> = ({file}) => {
   return (
     <>
       <Box><Icon className="fileIcon mc-icon-Map-Vector" /></Box>
-      <Box><Typography tag="span">{file.name}</Typography></Box>
-      <Box><Typography tag="span">{file.size}</Typography></Box>
+      <Box>{file.name}</Box>
+      <Box>{file.size}</Box>
+    </>
+  );
+};
+
+const MoreItem: React.FC<{files: FileData[]}> = ({files}) => {
+  return (
+    <>
+      <Box className="fileIconSpacer"></Box>
+      <Tooltip content={
+        <Box className="filesList moreTooltip">
+          {
+            files.map((f: FileData, i: number) => {
+              if (i >= NUM_OF_ROWS - 1) {
+                return <FileItem key={f.id} file={f} />;
+              }
+            })
+          }
+        </Box>
+      }>
+        <Box className="moreButton"><FormattedMessage id="general.more.text" /></Box>
+      </Tooltip>
     </>
   );
 };
@@ -82,32 +104,10 @@ const IngestionInputs: React.FC<{recordType: RecordType, fields: IRecordFieldInf
                       selection.files.map((file: FileData, idx: number): JSX.Element | undefined => {
                         if ((recordType === RecordType.RECORD_3D && idx === FIRST) ||
                           (recordType !== RecordType.RECORD_3D && (idx < NUM_OF_ROWS - 1 || (selection.files.length === NUM_OF_ROWS && idx === NUM_OF_ROWS - 1)))) {
-                          return <FileItem file={file} />;
+                          return <FileItem key={file.id} file={file} />;
                         }
                         if (recordType !== RecordType.RECORD_3D && selection.files.length > NUM_OF_ROWS && idx === NUM_OF_ROWS - 1) {
-                          return (
-                            <>
-                              <Box className="fileIconSpacer"></Box>
-                              <Box className="more">
-                                <Tooltip content={
-                                  <ul className="textFieldInfoList">
-                                    {
-                                      selection.files.map((f: FileData, i: number) => {
-                                        if (i >= NUM_OF_ROWS - 1) {
-                                          return (
-                                            <li key={i} dangerouslySetInnerHTML={{__html: f.name}}></li>
-                                          );
-                                        }
-                                      })
-                                    }
-                                  </ul>
-                                }>
-                                  <FormattedMessage id="general.more.text" />
-                                </Tooltip>
-                                {'...'}
-                              </Box>
-                            </>
-                          );
+                          return <MoreItem key={file.id} files={selection.files} />;
                         }
                       })
                     }

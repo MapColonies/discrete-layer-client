@@ -20,7 +20,7 @@
   "general.best-draft.new.tooltip": "New",
   "general.login-user.tooltip": "Logged in user: {user}",
   "general.empty.text": "Empty",
-  "general.more.text": "more",
+  "general.more.text": "more...",
 
   "action.tab-views.catalog.tooltip": "Catalog tab",
   "action.tab-views.search-results.tooltip": "Search results tab",
