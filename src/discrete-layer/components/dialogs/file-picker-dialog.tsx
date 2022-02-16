@@ -64,6 +64,12 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         "name": "metadata.json",
         "size": 3457,
         "modDate": "2022-01-02T04:19:54.294Z",
+      },
+      {
+        "id": "125d595b5146",
+        "name": "stam.txt",
+        "size": 15,
+        "modDate": "2022-02-14T00:30:00.294Z",
       }
     ]);
   }, []);

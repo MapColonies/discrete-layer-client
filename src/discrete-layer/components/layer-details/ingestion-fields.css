@@ -1,7 +1,12 @@
+.header {
+  display: flex;
+  height: 88px;
+}
+
 .ingestionFields {
   display: flex;
-  justify-content: center;
-  margin: 24px 0;
+  flex-direction: column;
+  width: 90%;
 }
 
 .ingestionField {
@@ -12,20 +17,53 @@
   text-overflow: ellipsis;
 }
 
+.ingestionButton {
+  display: flex;
+  align-items: center;
+}
+
 .directorySpacer {
   display: flex;
-  margin: 0 4px 0 0;
+  margin: 0 12px 0 0;
 }
 
 body[dir='rtl'] .directorySpacer {
-  margin: 0 0 0 4px;
+  margin: 0 0 0 12px;
 }
 
 .fileNamesSpacer {
   display: flex;
-  margin: 0 4px 0 24px;
+  margin: 0 12px 0 24px;
 }
 
 body[dir='rtl'] .fileNamesSpacer {
-  margin: 0 24px 0 4px;
+  margin: 0 24px 0 12px;
+}
+
+.hiddenField {
+  display: none;
+}
+
+.disabledText {
+  color: var(--mdc-theme-text-hint-on-dark, #fff);
+  opacity: 0.5;
+}
+
+.filesList {
+  display: grid;
+  grid-template-columns: 0.25fr 2fr 1fr;
+}
+
+.fileIcon {
+  font-size: 16px;
+  cursor: default;
+}
+
+.fileIconSpacer {
+  width: 28px;
+}
+
+.more {
+  color: var(--mdc-theme-primary);
+  cursor: pointer;
 }

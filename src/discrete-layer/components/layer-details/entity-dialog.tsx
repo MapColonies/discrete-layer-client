@@ -120,7 +120,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
   const directory = '';
-  let fileNames = '';
+  const fileNames = '';
   const mutationQuery = useQuery();
   const store = useStore();
   const intl = useIntl();
@@ -141,9 +141,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined) {
     mode = Mode.NEW;
-    if (recordType === RecordType.RECORD_3D) {
-      fileNames = 'tileset.json';
-    }
     layerRecord = buildRecord(recordType);
   }
 
@@ -391,6 +388,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
                 formik={formik}
               />
             }
+            <Box className="curtain"></Box>
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 
                 entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} 
