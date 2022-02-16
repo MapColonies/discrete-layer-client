@@ -128,6 +128,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
+  const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const prevLayerRecord = usePrevious<ILayerImage | null | undefined>(layerRecord);
   const cacheRef = useRef({} as ILayerImage | null | undefined);
 
@@ -362,6 +363,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   };
 
   const onMetadataSelection = (selectedMetadata: LayerMetadataMixedUnion): void => {
+    setIsSelectedFiles(true);
     console.log('selection', selectedMetadata);
   };
 
@@ -388,7 +390,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
                 formik={formik}
               />
             }
-            <Box className="curtain"></Box>
+            {
+              !isSelectedFiles && <Box className="curtain"></Box>
+            }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 
                 entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} 
