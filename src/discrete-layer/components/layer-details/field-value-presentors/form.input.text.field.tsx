@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { get } from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
@@ -9,6 +9,7 @@ import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
+import useDebounceField from '../../../../common/hooks/debounce-field.hook';
 import { ValidationConfigModelType, ValidationValueType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
@@ -25,26 +26,27 @@ interface FormInputTextFieldProps {
 export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({mode, fieldInfo, value, formik, type}) => {
   const intl = useIntl();
   const isCopyable = fieldInfo.isCopyable ?? false;
+  const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value);
 
   const valueRenderer = useMemo(() => {
     const MAX_VALUE_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
 
-    if (value && value.length > MAX_VALUE_LENGTH) {
+    if (innerValue && innerValue.length > MAX_VALUE_LENGTH) {
       return (
-        <Tooltip content={value}>
+        <Tooltip content={innerValue}>
           <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
-            {value}
+            {innerValue}
           </Box>
         </Tooltip>
       );
     }
     return (
       <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
-        {value}
+        {innerValue}
       </Box>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [innerValue]);
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -90,13 +92,13 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
       <>
         <Box className="detailsFieldValue">
           <TextField
-            value={value}
+            value={innerValue}
             // @ts-ignore
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             type={type}
             // eslint-disable-next-line
-            onChange={formik?.handleChange}
+            onChange={handleOnChange}
             // eslint-disable-next-line
             onBlur={formik?.handleBlur}
             placeholder={placeholder}

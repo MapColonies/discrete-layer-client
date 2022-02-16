@@ -56,7 +56,7 @@ export const getValuePresentor = (
     case 'identifier':
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
-        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} changeHandler={(formik as any).setFieldValue}></AutocompleteValuePresentorComponent> :
+        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></StringValuePresentorComponent>
     case 'json':
       return (
@@ -181,7 +181,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerRecord]);
+  }, [layerRecord, formik]);
 
   return (
     <>

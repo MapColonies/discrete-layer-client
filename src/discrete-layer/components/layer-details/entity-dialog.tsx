@@ -369,6 +369,25 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
             ingestionFields={ingestionFields} 
             recordType={recordType as RecordType}
             layerRecord={layerRecord}
+            yupSchema={
+              Yup.object({
+                ...schema
+              })
+            }
+            onSubmit={ values => {
+              console.log(values);
+              
+              setInputValues(values);
+              // eslint-disable-next-line
+              const vestSuite = suite(descriptors as FieldConfigModelType[], values );
+              // eslint-disable-next-line
+              setVestValidationResults(vestSuite.get());
+            }}
+            vestValidationResults={vestValidationResults}
+            // eslint-disable-next-line
+            mutationQueryError={mutationQuery.error}
+            mutationQueryLoading={mutationQuery.loading}
+            closeDialog={closeDialog}
           />
         </DialogContent>
       </Dialog>

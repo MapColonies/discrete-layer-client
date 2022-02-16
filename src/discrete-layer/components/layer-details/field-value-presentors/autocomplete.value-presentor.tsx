@@ -8,6 +8,8 @@ import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
 import { RecordType, useQuery } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+import { EntityFormikHandlers } from '../layer-datails-form';
+import useDebounceField, { GCHTMLInputElement } from '../../../../common/hooks/debounce-field.hook';
 
 import './autocomplete.value-presentor.css';
 
@@ -15,10 +17,11 @@ interface AutocompleteValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
+  formik?: EntityFormikHandlers;
   changeHandler?: (e: any)=>void; //unknown;
 }
 
-export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, changeHandler }) => {
+export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, formik ,changeHandler }) => {
   const { data }  = useQuery((store) =>
     store.queryGetDomain({
       recordType: RecordType.RECORD_RASTER, 
@@ -26,6 +29,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
       domain: fieldInfo.autocomplete.value, // 'mc:productName'
     })
   );
+  const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value);
   const [autocompleteValues, setAutocompleteValues] = useState<string[]>([]);
     
 
@@ -38,7 +42,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
     setAutocompleteValues(data ? data.getDomain.value as [] : []);
   }, [data]);
 
-  const controlValue = {value: value ?? undefined};
+  const controlValue = {value: innerValue ?? undefined};
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -62,8 +66,15 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
               },
               ...controlValue,
               onChange: (eStr): void => {
-                // @ts-ignore
-                changeHandler(fieldInfo.fieldName, eStr);
+                handleOnChange({
+                  // eslint-disable-next-line
+                  persist: () =>{},
+                  // @ts-ignore
+                  currentTarget: {
+                    value: eStr,
+                    name: fieldInfo.fieldName
+                  } as GCHTMLInputElement
+                })
               },
               mode: 'autocomplete',
               options: autocompleteValues,

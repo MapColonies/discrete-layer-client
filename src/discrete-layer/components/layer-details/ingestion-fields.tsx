@@ -19,12 +19,14 @@ interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
   recordType: RecordType;
   formik?: EntityFormikHandlers;
+  reloadFormMetadata? : (metadata: any) => void;
 }
 
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({
   formik,
   fields,
   recordType,
+  reloadFormMetadata
 }) => {
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(
     false
@@ -38,7 +40,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
             <FieldLabelComponent
               value={field.label}
               isRequired={true}
-              customClassName={`${formik?.getFieldProps(field.fieldName).value as string}Spacer`}
+              customClassName={`${field.fieldName as string}Spacer`}
             />
             <StringValuePresentorComponent
               mode={Mode.NEW}
@@ -64,15 +66,17 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
         isOpen={isFilePickerDialogOpen}
         onSetOpen={setFilePickerDialogOpen}
         onFilesSelection={(selected): void => {
-          formik?.setValues({
-            fileNames: selected.files
-              .map((file: FileData) => file.name)
-              .join(','),
-            directory: selected.folderChain
-              .map((folder: FileData) => folder.name)
-              .join('/'),
-            ...selected.metadata
-          });
+          if(reloadFormMetadata){
+            reloadFormMetadata({
+                fileNames: selected.files
+                  .map((file: FileData) => file.name)
+                  .join(','),
+                directory: selected.folderChain
+                  .map((folder: FileData) => folder.name)
+                  .join('/'),
+                ...selected.metadata
+              })
+          }
         }}
       />
     </Box>
