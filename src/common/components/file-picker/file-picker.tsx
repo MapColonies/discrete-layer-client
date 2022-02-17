@@ -45,6 +45,7 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
       
       useImperativeHandle(ref, () => ({
         focus: (): void => {
+          console.log('xxx');
         },
         getFileSelection(): Selection {
           // @ts-ignore

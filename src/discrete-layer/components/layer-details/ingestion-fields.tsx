@@ -33,7 +33,7 @@ const FileItem: React.FC<{file: FileData}> = ({file}) => {
     <>
       <Box><Icon className="fileIcon mc-icon-Map-Vector" /></Box>
       <Box>{file.name}</Box>
-      <Box>{defaultFormatters.formatFileSize(file)}</Box>
+      <Box className="dateField">{defaultFormatters.formatFileSize(file)}</Box>
     </>
   );
 };

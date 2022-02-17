@@ -107,7 +107,6 @@
     "copyfiles": "^2.4.0",
     "date-fns": "^2.14.0",
     "enzyme-to-json": "^3.6.1",
-    "filesize": "^8.0.7",
     "formik": "^2.1.6",
     "graphql-request": "^3.4.0",
     "lodash": "^4.17.20",
