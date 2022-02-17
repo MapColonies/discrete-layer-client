@@ -8,6 +8,7 @@ import { Button, Icon, TextField, Tooltip, Typography } from '@map-colonies/reac
 import { Box, FileData } from '@map-colonies/react-components';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import { fileSizeFormatter } from '../../../common/helpers/type-formatters';
 import { LayerMetadataMixedUnion, RecordType } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
@@ -32,7 +33,7 @@ const FileItem: React.FC<{file: FileData}> = ({file}) => {
     <>
       <Box><Icon className="fileIcon mc-icon-Map-Vector" /></Box>
       <Box>{file.name}</Box>
-      <Box>{file.size}</Box>
+      <Box>{fileSizeFormatter(file.size as number)}</Box>
     </>
   );
 };
