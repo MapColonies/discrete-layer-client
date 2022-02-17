@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { get, isEmpty } from  'lodash';
+import React, { useState, useEffect } from 'react';
 import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -16,41 +15,38 @@ interface JsonValuePresentorProps {
 }
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({ mode, fieldInfo, value, formik, type }) => {
-  const [jsonValue, setJsonValue] = useState(value as string);
+  const [jsonValue, setJsonValue] = useState('');
+
+  useEffect(()=>{
+    if(typeof value !== 'undefined'){
+      setJsonValue(value)
+    }
+
+  },[value])
+  
+
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
-    const stringifiedValue = JSON.stringify(value ?? {});
+    const stringifiedValue = JSON.stringify(value);
     return (
       <Tooltip content={stringifiedValue}>
         <Box className="detailsFieldValue">
           {stringifiedValue}
         </Box>
       </Tooltip>
-      // <></>
     );
   } else {
-    // const value = get(formik, `values[${fieldInfo.fieldName as string}]`) as unknown;
-    // const controlValue = {
-    //   value: isEmpty(value) ? undefined : JSON.stringify(value ?? {})
-    // };
-
-    const handleBlur = (e: any): void => {
-
-      // eslint-disable-next-line
-      
+    const handleBlur = (e: any): void => {      
       let formikValue: unknown = undefined;
+
       try {
         formikValue = JSON.parse(jsonValue) as unknown;
-        // eslint-disable-next-line
-        formik?.setFieldValue(fieldInfo.fieldName as string, formikValue);
-      // eslint-disable-next-line no-empty
+        formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
       } catch(e) {
-        // eslint-disable-next-line
-        formik?.setFieldValue(fieldInfo.fieldName as string, undefined);
+        formik.setFieldValue(fieldInfo.fieldName as string, undefined);
       }
-      
-      // eslint-disable-next-line
-      formik?.handleBlur(e);
+
+      formik.handleBlur(e);
     };
 
     return (
@@ -62,7 +58,6 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             type={type}
             value={jsonValue}
             onChange={(e): void => setJsonValue(e.currentTarget.value)}
-            // eslint-disable-next-line
             onBlur={handleBlur}
             placeholder={'JSON'}
             required={fieldInfo.isRequired === true}

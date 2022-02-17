@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   withFormik,
@@ -9,8 +9,13 @@ import {
   FormikBag,
 } from 'formik';
 import * as Yup from 'yup';
+import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
+import { AnyObject } from 'yup/lib/types';
+import { DraftResult } from 'vest/vestResult';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { LayersDetailsComponent } from './layer-details';
+import { IngestionFields } from './ingestion-fields';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -18,16 +23,12 @@ import {
   RecordType,
 } from '../../models';
 import { Mode } from '../../../common/models/mode.enum';
-import { LayersDetailsComponent } from './layer-details';
-import { IngestionFields } from './ingestion-fields';
-import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
-import { AnyObject } from 'yup/lib/types';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
-import { DraftResult } from 'vest/vestResult';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { MetadataFile } from '../../../common/components/file-picker';
 
 import './ingestion-fields.css';
-import './entity-dialog.css';
+import './layer-details-form.css';
 
 const NONE = 0;
 
@@ -83,9 +84,18 @@ const InnerForm = (
     closeDialog,
   } = props;
 
+  const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
+
+  useEffect(() => {
+    setGraphQLError(mutationQueryError);
+  }, [mutationQueryError]);
+
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
-      handleChange,
+      handleChange: (e: React.ChangeEvent<any>): void => {
+        setGraphQLError(undefined);
+        handleChange(e);
+      },
       handleBlur,
       handleSubmit,
       handleReset,
@@ -108,66 +118,84 @@ const InnerForm = (
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      autoComplete={'off'}
-      className="form"
-      noValidate
-    >
-      {mode === Mode.NEW && (
-        <IngestionFields
-          formik={entityFormikHandlers}
-          reloadFormMetadata={(metadata: any) => setValues(metadata)}
-          recordType={recordType}
-          fields={ingestionFields}
-        />
-      )}
+    <Box id="layerDetailsForm">
+      <Form
+        onSubmit={handleSubmit}
+        autoComplete={'off'}
+        className="form"
+        noValidate
+      >
+        {mode === Mode.NEW && (
+          <IngestionFields
+            formik={entityFormikHandlers}
+            reloadFormMetadata={(
+              injestionFields: FormValues,
+              metadata: MetadataFile
+            ): void => {
+              // Check for null fields
+              for(const [key, val] of Object.entries(metadata.recordModel)){
+                if(val === null){
+                  delete (metadata.recordModel as unknown as Record<string, unknown>)[key]
+                }
+              }
 
-      <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
-        <LayersDetailsComponent
-          entityDescriptors={entityDescriptors}
-          layerRecord={layerRecord}
-          mode={mode}
-          formik={entityFormikHandlers}
-        />
-      </Box>
-      <Box className="footer">
-        <Box className="messages">
-          {Object.keys(errors).length > NONE && (
-            <ValidationsError errors={getYupErrors()} />
-          )}
-          {Object.keys(errors).length === NONE &&
-            vestValidationResults.errorCount > NONE && (
-              <ValidationsError errors={vestValidationResults.getErrors()} />
-            )}
-          {mutationQueryError !== undefined && (
-            // eslint-disable-next-line
-            <GraphQLError error={mutationQueryError} />
-          )}
-        </Box>
-        <Box className="buttons">
-          <Button
-            raised
-            type="submit"
-            disabled={
-              mutationQueryLoading ||
-              (layerRecord.__typename !== 'BestRecord' && !dirty) ||
-              Object.keys(errors).length > NONE
-            }
-          >
-            <FormattedMessage id="general.ok-btn.text" />
-          </Button>
-          <Button
-            type="button"
-            onClick={(): void => {
-              closeDialog();
+              setValues({ ...injestionFields, ...metadata.recordModel });
+              if (metadata.error !== null) {
+                setGraphQLError(metadata.error);
+              }
             }}
-          >
-            <FormattedMessage id="general.cancel-btn.text" />
-          </Button>
+            recordType={recordType}
+            fields={ingestionFields}
+            values={values}
+          />
+        )}
+
+        <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
+          <LayersDetailsComponent
+            entityDescriptors={entityDescriptors}
+            layerRecord={layerRecord}
+            mode={mode}
+            formik={entityFormikHandlers}
+          />
         </Box>
-      </Box>
-    </Form>
+        <Box className="footer">
+          <Box className="messages">
+            {Object.keys(errors).length > NONE && (
+              <ValidationsError errors={getYupErrors()} />
+            )}
+            {Object.keys(errors).length === NONE &&
+              vestValidationResults.errorCount > NONE && (
+                <ValidationsError errors={vestValidationResults.getErrors()} />
+              )}
+            {graphQLError !== undefined && (
+              // eslint-disable-next-line
+              <GraphQLError error={graphQLError} />
+            )}
+          </Box>
+          <Box className="buttons">
+            <Button
+              raised
+              type="submit"
+              disabled={
+                mutationQueryLoading ||
+                (layerRecord.__typename !== 'BestRecord' && !dirty) ||
+                Object.keys(errors).length > NONE
+              }
+            >
+              <FormattedMessage id="general.ok-btn.text" />
+            </Button>
+            <Button
+              type="button"
+              onClick={(): void => {
+                closeDialog();
+              }}
+            >
+              <FormattedMessage id="general.cancel-btn.text" />
+            </Button>
+          </Box>
+        </Box>
+      </Form>
+    </Box>
   );
 };
 
@@ -209,6 +237,6 @@ export default withFormik<MyFormProps, FormValues>({
   validationSchema: (props: MyFormProps) => props.yupSchema,
 
   handleSubmit: (values, formikBag: FormikBag<MyFormProps, FormValues>) => {
-    formikBag.props.onSubmit(values as unknown as Record<string, unknown>);
+    formikBag.props.onSubmit((values as unknown) as Record<string, unknown>);
   },
 })(InnerForm);

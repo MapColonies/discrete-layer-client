@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
@@ -8,7 +9,6 @@ import { Box, FileActionData, FileData, FilePickerActions, FilePickerHandle } fr
 import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
 import { FileModelType, LayerMetadataMixedUnion, RecordType, useQuery, useStore } from '../../models';
 import './file-picker-dialog.css';
-import { cloneDeep } from 'lodash';
 
 const EMPTY = 0;
 
@@ -30,22 +30,37 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   ) => {
   const filePickerRef = useRef<FilePickerHandle>(null);
   const [files, setFiles] = useState<FileData[]>([]);
-  const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [], metadata: {} as LayerMetadataMixedUnion });
+  const [selection, setSelection] = useState<Selection>({
+    files: [],
+    folderChain: [],
+    metadata: { recordModel: {} as LayerMetadataMixedUnion, error: null },
+  });
   const [pathSuffix, setPathSuffix] = useState<string>('/');
 
   const store = useStore();
   const queryDirectory = useCallback(()=> useQuery<{ getDirectory: FileModelType[]}>(), [])();
   const queryMetadata = useCallback(()=> useQuery<{ getFile: LayerMetadataMixedUnion}>(), [])();
+  const intl = useIntl();
+
 
   useEffect(() => {
-    queryDirectory.setQuery(store.queryGetDirectory({
-      data: {
-        pathSuffix,
-        type: recordType,
-      }
-    }))
-    setSelection(selection => ({...selection, metadata: {} as LayerMetadataMixedUnion }))
-  },[pathSuffix])
+    queryDirectory.setQuery(
+      store.queryGetDirectory({
+        data: {
+          pathSuffix,
+          type: recordType,
+        },
+      })
+    );
+
+    setSelection((selection) => ({
+      ...selection,
+      metadata: {
+        recordModel: {} as LayerMetadataMixedUnion,
+        error: null,
+      },
+    }));
+  }, [pathSuffix]);
 
   useEffect(()=> {
     if(queryDirectory.data){
@@ -69,9 +84,44 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
 
   useEffect(() => {
     if(queryMetadata.data){
-      setSelection({ ...selection, metadata: cloneDeep(queryMetadata.data.getFile) })
+      setSelection({
+        ...selection,
+        metadata: {
+          recordModel: cloneDeep(queryMetadata.data.getFile),
+          error: null,
+        },
+      });
     }
   }, [queryMetadata.data])
+
+  useEffect(() => {
+    if (queryMetadata.error) {
+      const metadataError = [
+        {
+          message: intl.formatMessage({
+            id: 'ingestion.error.invalid-metadata',
+          }),
+        },
+        // eslint-disable-next-line
+        ...queryMetadata.error.response.errors,
+      ];
+
+      // eslint-disable-next-line
+      const queryError = { ...queryMetadata.error };
+
+      // eslint-disable-next-line
+      queryError.response.errors = metadataError;
+
+      setSelection({
+        ...selection,
+        metadata: {
+          recordModel: {} as LayerMetadataMixedUnion,
+          // eslint-disable-next-line
+          error: queryError,
+        },
+      });
+    }
+  }, [queryMetadata.error]);
 
   const closeDialog = useCallback(
     () => {

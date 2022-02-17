@@ -1,32 +1,38 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { FormikValues } from 'formik';
 import { Button } from '@map-colonies/react-core';
 import { Box, FileData } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import { Mode } from '../../../common/models/mode.enum';
+import { MetadataFile } from '../../../common/components/file-picker';
 import { RecordType } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
-import { EntityFormikHandlers } from './layer-datails-form';
+import { EntityFormikHandlers, FormValues } from './layer-datails-form';
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 
 import './ingestion-fields.css';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
-import { Mode } from '../../../common/models/mode.enum';
-
 import './entity-dialog.css';
 
 interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
   recordType: RecordType;
   formik?: EntityFormikHandlers;
-  reloadFormMetadata? : (metadata: any) => void;
+  reloadFormMetadata?: (
+    injestionFields: FormValues,
+    metadata: MetadataFile
+  ) => void;
+  values: FormikValues;
 }
 
 export const IngestionFields: React.FC<IngestionFieldsProps> = ({
   formik,
   fields,
   recordType,
-  reloadFormMetadata
+  reloadFormMetadata,
+  values,
 }) => {
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(
     false
@@ -66,16 +72,19 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
         isOpen={isFilePickerDialogOpen}
         onSetOpen={setFilePickerDialogOpen}
         onFilesSelection={(selected): void => {
-          if(reloadFormMetadata){
-            reloadFormMetadata({
+          if (reloadFormMetadata) {
+            reloadFormMetadata(
+              {
+                ...values,
                 fileNames: selected.files
                   .map((file: FileData) => file.name)
                   .join(','),
                 directory: selected.folderChain
                   .map((folder: FileData) => folder.name)
                   .join('/'),
-                ...selected.metadata
-              })
+              },
+              selected.metadata as MetadataFile
+            );
           }
         }}
       />

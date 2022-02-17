@@ -60,7 +60,7 @@ export const getValuePresentor = (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></StringValuePresentorComponent>
     case 'json':
       return (
-        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></JsonValuePresentorComponent>
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={JSON.stringify(formik?.getFieldProps(fieldInfo.fieldName).value)} formik={formik}></JsonValuePresentorComponent>
       );
     case 'number':
       return (

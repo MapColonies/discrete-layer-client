@@ -113,6 +113,7 @@
 
   "field-names.ingestion.directory": "Directory",
   "field-names.ingestion.fileNames": "File names",
+  "ingestion.error.invalid-metadata": "Metadata format is not valid",
 
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",

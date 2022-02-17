@@ -4,10 +4,15 @@ import { FileActionData, FileData, FilePicker, FilePickerHandle, SupportedLocale
 import { LayerMetadataMixedUnion } from '../../../discrete-layer/models';
 import CONFIG from '../../config';
 
+export interface MetadataFile {
+  recordModel: LayerMetadataMixedUnion,
+  error: any,
+}
+
 export interface Selection {
   files: FileData[];
   folderChain: FileData[];
-  metadata?: LayerMetadataMixedUnion;
+  metadata?: MetadataFile;
 }
 
 interface FilePickerComponentProps {

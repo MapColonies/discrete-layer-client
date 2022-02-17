@@ -1,0 +1,58 @@
+@media (min-width: 800px) {
+    #layerDetailsForm .mdc-dialog .mdc-dialog__surface {
+      max-width: 730px;
+    }
+  } 
+  
+  #layerDetailsForm .closeIcon {
+    margin-left: auto;
+  }
+  
+  body[dir='rtl'] #layerDetailsForm .closeIcon {
+    margin-left: unset;
+    margin-right: auto;
+  }
+  
+  #layerDetailsForm .dialogBody {
+    overflow-y: hidden !important;
+  }
+  
+  #layerDetailsForm .form {
+    max-height: 880px !important;
+  }
+  
+  #layerDetailsForm .content {
+    max-height: 660px;
+    overflow-y: auto;
+    padding: 20px;
+  }
+  
+  #layerDetailsForm .section {
+    border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
+    border-radius: 10px;
+  }
+  
+  #layerDetailsForm .footer {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    height: 60px;
+  }
+  
+  #layerDetailsForm .buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-left: auto;
+  }
+  
+  body[dir='rtl'] #layerDetailsForm .buttons {
+    margin-left: unset;
+    margin-right: auto;
+  }
+  
+  #layerDetailsForm .messages {
+    display: flex;
+    flex-direction: column;
+  }
+  
