@@ -20,7 +20,7 @@ import { FootprintRenderer } from '../../../common/components/grid/cell-renderer
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { EntityTypeRenderer } from '../../../common/components/grid/cell-renderer/entity-type.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
+import { dateFormatter } from '../../../common/helpers/formatters';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 

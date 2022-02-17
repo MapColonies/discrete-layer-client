@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -5,10 +6,9 @@
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Icon, TextField, Tooltip, Typography } from '@map-colonies/react-core';
-import { Box, FileData } from '@map-colonies/react-components';
+import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
-import { fileSizeFormatter } from '../../../common/helpers/type-formatters';
 import { LayerMetadataMixedUnion, RecordType } from '../../models';
 import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
@@ -33,7 +33,7 @@ const FileItem: React.FC<{file: FileData}> = ({file}) => {
     <>
       <Box><Icon className="fileIcon mc-icon-Map-Vector" /></Box>
       <Box>{file.name}</Box>
-      <Box>{fileSizeFormatter(file.size as number)}</Box>
+      <Box>{defaultFormatters.formatFileSize(file)}</Box>
     </>
   );
 };
@@ -166,12 +166,16 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fi
           </Button>
         </Box>
       </Box>
-      <FilePickerDialogComponent
-        recordType={recordType}
-        isOpen={isFilePickerDialogOpen}
-        onSetOpen={setFilePickerDialogOpen}
-        onFilesSelection={onFilesSelection}
-      />
+      {
+        isFilePickerDialogOpen &&
+        <FilePickerDialogComponent
+          recordType={recordType}
+          isOpen={isFilePickerDialogOpen}
+          onSetOpen={setFilePickerDialogOpen}
+          onFilesSelection={onFilesSelection}
+          selection={selection}
+        />
+      }
     </>
   );
 };

@@ -4,19 +4,20 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box, FileActionData, FileData, FilePickerActions, FilePickerHandle } from '@map-colonies/react-components';
-import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
+import { Box, FileData } from '@map-colonies/react-components';
+import { FilePickerComponent, FilePickerComponentHandle, Selection } from '../../../common/components/file-picker';
 import { RecordType } from '../../models';
 
 import './file-picker-dialog.css';
 
-const EMPTY = 0;
+// const EMPTY = 0;
 
 interface FilePickerDialogComponentProps {
   recordType: RecordType;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onFilesSelection: (selected: Selection) => void;
+  selection: Selection;
 }
 
 export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
@@ -25,12 +26,12 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       recordType,
       isOpen,
       onSetOpen,
-      onFilesSelection
+      onFilesSelection,
+      selection
     }
   ) => {
-  const filePickerRef = useRef<FilePickerHandle>(null);
+  const filePickerRef = useRef<FilePickerComponentHandle>(null);
   const [files, setFiles] = useState<FileData[]>([]);
-  const [selection, setSelection] = useState<Selection>({ files: [], folderChain: [] });
 
   useEffect(() => {
     setFiles([ 
@@ -81,30 +82,6 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     [onSetOpen]
   );
 
-  const handleAction = (data: FileActionData): void => {
-    // eslint-disable-next-line
-    if (data.id === FilePickerActions.OpenFiles.id) {
-      const { targetFile, files } = data.payload;
-      const fileToOpen = targetFile ?? files[0];
-      if (fileToOpen.isDir === true) {
-        setSelection((currentSelection) => {
-          const newSelection = { ...currentSelection };
-          newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
-          return newSelection;
-        });
-      }
-    // eslint-disable-next-line
-    } else if (data.id === FilePickerActions.ChangeSelection.id) {
-      setSelection((currentSelection) => {
-        const newSelection = { ...currentSelection };
-        // eslint-disable-next-line
-        const selectedIds = filePickerRef?.current?.getFileSelection() as Set<string>;
-        newSelection.files = files.filter((file: FileData) => selectedIds.has(file.id));
-        return newSelection;
-      });
-    }
-  };
-  
   return (
     <Box id="filePickerDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -122,11 +99,16 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             ref={filePickerRef}
             files={files}
             selection={selection} 
-            onFileAction={handleAction}
           />
         </DialogContent>
         <DialogActions>
-          <Button raised type="button" disabled={selection.files.length === EMPTY} onClick={(): void => { onFilesSelection(selection); closeDialog(); }}>
+          <Button 
+            raised 
+            type="button" 
+            // disabled={selection.files.length === EMPTY} 
+            // @ts-ignore
+            onClick={(): void => { onFilesSelection(filePickerRef.current?.getFileSelection() as Selection); closeDialog(); }}
+          >
             <FormattedMessage id="general.ok-btn.text"/>
           </Button>
           <Button type="button" onClick={(): void => { closeDialog(); }}>
