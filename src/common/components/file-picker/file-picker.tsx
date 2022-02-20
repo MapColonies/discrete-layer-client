@@ -14,6 +14,9 @@ import {
 import { LayerMetadataMixedUnion } from '../../../discrete-layer/models';
 import CONFIG from '../../config';
 
+const NOT_FOUND = -1;
+const START = 0;
+
 export interface FilePickerComponentHandle {
   isMultiSelection: () => boolean;
   getFileSelection: () => Selection;
@@ -78,7 +81,12 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
           if (fileToOpen.isDir === true) {
             setSelection((currentSelection) => {
               const newSelection = { ...currentSelection };
-              newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
+              const index = newSelection.folderChain.findIndex(file => file.id === fileToOpen.id);
+              if (index > NOT_FOUND) {
+                newSelection.folderChain = [ ...newSelection.folderChain.slice(START, index + 1) ];
+              } else {
+                newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
+              }
               return newSelection;
             });
           }

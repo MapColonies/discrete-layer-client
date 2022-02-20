@@ -38,15 +38,22 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       {
         "id": "qwerty123456",
         "name": "PersistentVolume",
-        "selectable": false,
         "isDir": true,
+        "selectable": false,
       },
       {
         "id": "e598a85f843c",
-        "name": "Chonky Source Code",
+        "name": "Chonky",
         "isDir": true,
         "selectable": false,
         "modDate": "2020-10-24T17:48:39.866Z",
+      },
+      {
+        "id": "e191a851841c",
+        "name": "Logs",
+        "isDir": true,
+        "selectable": false,
+        "modDate": "2022-02-14T14:00:00.866Z",
       },
       {
         "id": "12dd195bb146",
@@ -108,7 +115,10 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             type="button" 
             // disabled={selection.files.length === EMPTY} 
             // @ts-ignore
-            onClick={(): void => { onFilesSelection(filePickerRef.current?.getFileSelection() as Selection); closeDialog(); }}
+            onClick={(): void => {
+              onFilesSelection(filePickerRef.current?.getFileSelection() as Selection);
+              closeDialog();
+            }}
           >
             <FormattedMessage id="general.ok-btn.text"/>
           </Button>
