@@ -1,3 +1,5 @@
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useTheme } from '@map-colonies/react-core';
 import {
@@ -12,6 +14,13 @@ import {
 import { LayerMetadataMixedUnion } from '../../../discrete-layer/models';
 import CONFIG from '../../config';
 
+export interface FilePickerComponentHandle {
+  isMultiSelection: () => boolean;
+  getFileSelection: () => Selection;
+  setFileSelection: (selection: Set<string>, reset?: boolean) => void;
+  requestFileAction: <Action extends FilePickerAction>(action: Action, payload: Action['__payloadType']) => Promise<void>;
+}
+
 export interface Selection {
   files: FileData[];
   folderChain: FileData[];
@@ -21,13 +30,7 @@ export interface Selection {
 interface FilePickerComponentProps {
   files: FileData[];
   selection: Selection;
-}
-
-export interface FilePickerComponentHandle {
-   focus: () => void;
-   getFileSelection: () => Selection;
-   setFileSelection: (selection: Set<string>, reset?: boolean) => void;
-   requestFileAction: <Action extends FilePickerAction>(action: Action, payload: Action['__payloadType']) => Promise<void>;
+  isMultiSelection: boolean;
 }
 
 export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
@@ -36,25 +39,24 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
       {
         files,
         selection: currentSelection,
+        isMultiSelection
       },
       ref
     ) => {
       const theme = useTheme();
-      const fpRef =  useRef<FilePickerHandle>();
+      const fpRef = useRef<FilePickerHandle>();
       const [selection, setSelection] = useState<Selection>(currentSelection);
       
       useImperativeHandle(ref, () => ({
-        focus: (): void => {
-          console.log('xxx');
+        isMultiSelection: (): boolean => {
+          return isMultiSelection;
         },
         getFileSelection(): Selection {
-          // @ts-ignore
           return selection;
         },
         setFileSelection(selection, reset = true): void {
           return fpRef.current?.setFileSelection(selection, reset);
         },
-        // @ts-ignore
         async requestFileAction<Action extends FilePickerAction>(
           action: Action,
           payload: Action['__payloadType']

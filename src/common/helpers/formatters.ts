@@ -9,7 +9,7 @@ export interface FormatterFunc {
 export const stringFormatter: FormatterFunc = (val): string => {
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   return val !== undefined ? val.toString() : '';
-}
+};
 
 export const dateFormatter: FormatterFunc = (date, withTime = false): string => {
   const formatType = withTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT;

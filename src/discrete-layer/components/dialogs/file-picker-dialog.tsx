@@ -98,7 +98,8 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             // @ts-ignore
             ref={filePickerRef}
             files={files}
-            selection={selection} 
+            selection={selection}
+            isMultiSelection={recordType !== RecordType.RECORD_3D}
           />
         </DialogContent>
         <DialogActions>
