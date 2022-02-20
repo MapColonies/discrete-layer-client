@@ -76,7 +76,3 @@ body[dir='rtl'] .fileNamesSpacer {
 body[dir='rtl'] .moreTooltip {
   text-align: right;
 }
-
-.dateField {
-  direction: 'ltr';
-}
