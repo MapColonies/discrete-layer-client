@@ -391,7 +391,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
               />
             }
             {
-              !isSelectedFiles && <Box className="curtain"></Box>
+              mode === Mode.NEW && !isSelectedFiles && <Box className="curtain"></Box>
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 

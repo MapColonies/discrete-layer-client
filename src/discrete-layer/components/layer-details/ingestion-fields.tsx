@@ -150,7 +150,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fi
   
   return (
     <>
-      <Box className="header">
+      <Box className="header section">
         <Box className="ingestionFields">
           <IngestionInputs
             recordType={recordType}

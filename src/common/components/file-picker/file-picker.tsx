@@ -85,11 +85,17 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
         // eslint-disable-next-line
         } else if (data.id === FilePickerActions.ChangeSelection.id) {
           setSelection((currentSelection) => {
-            const newSelection = { ...currentSelection };
             // eslint-disable-next-line
             const selectedIds = fpRef?.current?.getFileSelection() as Set<string>;
-            newSelection.files = files.filter((file: FileData) => selectedIds.has(file.id));
-            return newSelection;
+
+            if (!isMultiSelection && selectedIds.size > 1) {
+              fpRef.current?.setFileSelection(new Set(currentSelection.files.map(file => file.id)));
+              return currentSelection;
+            } else {
+              const newSelection = { ...currentSelection };
+              newSelection.files = files.filter((file: FileData) => selectedIds.has(file.id));
+              return newSelection;
+            }
           });
         }
       };
