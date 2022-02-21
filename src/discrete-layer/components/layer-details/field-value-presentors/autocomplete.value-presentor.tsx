@@ -9,7 +9,6 @@ import CONFIG from '../../../../common/config';
 import { RecordType, useQuery } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
-import useDebounceField, { GCHTMLInputElement } from '../../../../common/hooks/debounce-field.hook';
 
 import './autocomplete.value-presentor.css';
 
@@ -18,10 +17,9 @@ interface AutocompleteValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
-  changeHandler?: (e: any)=>void; //unknown;
 }
 
-export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, formik ,changeHandler }) => {
+export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, formik }) => {
   const { data }  = useQuery((store) =>
     store.queryGetDomain({
       recordType: RecordType.RECORD_RASTER, 
@@ -29,7 +27,6 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
       domain: fieldInfo.autocomplete.value, // 'mc:productName'
     })
   );
-  const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value);
   const [autocompleteValues, setAutocompleteValues] = useState<string[]>([]);
     
 
@@ -42,7 +39,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
     setAutocompleteValues(data ? data.getDomain.value as [] : []);
   }, [data]);
 
-  const controlValue = {value: innerValue ?? undefined};
+  const controlValue = {value: value ?? undefined};
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -65,16 +62,8 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
                 ...required
               },
               ...controlValue,
-              onChange: (eStr): void => {
-                handleOnChange({
-                  // eslint-disable-next-line
-                  persist: () =>{},
-                  // @ts-ignore
-                  currentTarget: {
-                    value: eStr,
-                    name: fieldInfo.fieldName
-                  } as GCHTMLInputElement
-                })
+              onBlur: (e: React.FocusEvent<HTMLInputElement>): void => {
+                formik?.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
               },
               mode: 'autocomplete',
               options: autocompleteValues,
