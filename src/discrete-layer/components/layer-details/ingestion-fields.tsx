@@ -15,7 +15,6 @@ import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';
 
-const FIRST = 0;
 const DIRECTORY = 0;
 const FILES = 1;
 const NUM_OF_ROWS = 3;
@@ -103,11 +102,10 @@ const IngestionInputs: React.FC<{recordType: RecordType, fields: IRecordFieldInf
                   <Box className="filesList">
                     {
                       selection.files.map((file: FileData, idx: number): JSX.Element | undefined => {
-                        if ((recordType === RecordType.RECORD_3D && idx === FIRST) ||
-                          (recordType !== RecordType.RECORD_3D && (idx < NUM_OF_ROWS - 1 || (selection.files.length === NUM_OF_ROWS && idx === NUM_OF_ROWS - 1)))) {
+                        if (idx < NUM_OF_ROWS - 1 || (selection.files.length === NUM_OF_ROWS && idx === NUM_OF_ROWS - 1)) {
                           return <FileItem key={file.id} file={file} />;
                         }
-                        if (recordType !== RecordType.RECORD_3D && selection.files.length > NUM_OF_ROWS && idx === NUM_OF_ROWS - 1) {
+                        if (selection.files.length > NUM_OF_ROWS && idx === NUM_OF_ROWS - 1) {
                           return <MoreItem key={file.id} files={selection.files} />;
                         }
                       })
