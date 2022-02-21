@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
-import { dateFormatter } from '../../../../common/helpers/type-formatters';
+import { dateFormatter } from '../../../../common/helpers/formatters';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 

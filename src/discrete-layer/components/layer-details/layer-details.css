@@ -69,11 +69,6 @@
   height: 20px;
 }
 
-body[dir='rtl'] .detailsFieldValue {
-  margin-left: unset;
-  margin-right: 12px;
-}
-
 .noSelection {
   padding-top: 20px;
   text-align: center;

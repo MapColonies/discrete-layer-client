@@ -2,7 +2,7 @@ import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
-import { dateFormatter, FormatterFunc, stringFormatter } from '../../../helpers/type-formatters';
+import { dateFormatter, FormatterFunc, stringFormatter } from '../../../helpers/formatters';
 
 import './layer-details.cell-renderer.css';
 

@@ -20,7 +20,7 @@ import { FootprintRenderer } from '../../../common/components/grid/cell-renderer
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { EntityTypeRenderer } from '../../../common/components/grid/cell-renderer/entity-type.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
-import { dateFormatter } from '../../../common/helpers/type-formatters';
+import { dateFormatter } from '../../../common/helpers/formatters';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 
@@ -45,7 +45,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const selectedLayersRef = useRef(INITIAL_ORDER);
 
   useEffect(()=>{
-    if(discreteLayersStore.layersImages){
+    if (discreteLayersStore.layersImages) {
       setlayersImages(discreteLayersStore.layersImages);
     }
   }, [discreteLayersStore.layersImages]);
@@ -110,7 +110,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowLayerImageRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          // setTimeout(()=> node.setDataValue('layerImageShown', value), immediateExecution);
+          // setTimeout(() => node.setDataValue('layerImageShown', value), immediateExecution);
           if (value) {
             selectedLayersRef.current++;
           } else {
@@ -125,7 +125,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
           }
           const order = value ? selectedLayersRef.current : null;
-          // setTimeout(()=> node.setDataValue('order', order), immediateExecution) ;
+          // setTimeout(() => node.setDataValue('order', order), immediateExecution) ;
           discreteLayersStore.showLayer(id, value, order);
         }
       }

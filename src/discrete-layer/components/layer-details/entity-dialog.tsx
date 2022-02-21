@@ -120,7 +120,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
   const directory = '';
-  let fileNames = '';
+  const fileNames = '';
   const mutationQuery = useQuery();
   const store = useStore();
   const intl = useIntl();
@@ -128,6 +128,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   const [descriptors, setDescriptors] = useState<any[]>([]);
   const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
   const [inputValues, setInputValues] = useState<FormikValues>({});
+  const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const prevLayerRecord = usePrevious<ILayerImage | null | undefined>(layerRecord);
   const cacheRef = useRef({} as ILayerImage | null | undefined);
 
@@ -141,9 +142,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   let mode = Mode.EDIT;
   if (layerRecord === undefined && recordType !== undefined) {
     mode = Mode.NEW;
-    if (recordType === RecordType.RECORD_3D) {
-      fileNames = 'tileset.json';
-    }
     layerRecord = buildRecord(recordType);
   }
 
@@ -365,6 +363,7 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
   };
 
   const onMetadataSelection = (selectedMetadata: LayerMetadataMixedUnion): void => {
+    setIsSelectedFiles(true);
     console.log('selection', selectedMetadata);
   };
 
@@ -390,6 +389,9 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
                 onMetadataSelection={onMetadataSelection}
                 formik={formik}
               />
+            }
+            {
+              mode === Mode.NEW && !isSelectedFiles && <Box className="curtain"></Box>
             }
             <Box className={(mode === Mode.NEW) ? 'content section' : 'content'}>
               <LayersDetailsComponent 
