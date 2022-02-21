@@ -1,20 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useCallback, useState, useRef } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import React, { useEffect, useCallback, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
-import { FormikValues, useFormik } from 'formik';
+import { FormikValues } from 'formik';
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
 import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
+import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { usePrevious } from '../../../common/hooks/previous.hook';
-import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
-import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
-import CONFIG from '../../../common/config';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   BestRecordModelType,
@@ -34,10 +30,8 @@ import {
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordInput, LayerDemRecordInput, LayerRasterRecordInput } from '../../models/RootStore.base';
-import { LayersDetailsComponent } from './layer-details';
 import { FieldConfigModelKeys, Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './entity-types-keys';
 import {IRecordFieldInfo} from './layer-details.field-info'
-import { IngestionFields } from './ingestion-fields';
 import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
@@ -48,8 +42,6 @@ const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
-const isAutocompleteEnabled = CONFIG.RUNNING_MODE.AUTOCOMPLETE as boolean;
-
 interface EntityDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
@@ -119,11 +111,9 @@ const getLabel = (recordType: RecordType): string => {
   
 export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
   const { isOpen, onSetOpen, recordType } = props;
-  const [layerRecord, setLayerRecord] = useState<LayerMetadataMixedUnion>(
+  const [layerRecord] = useState<LayerMetadataMixedUnion>(
     props.layerRecord ? cloneDeep(props.layerRecord) : buildRecord(recordType as RecordType)
   );
-  // const [directory] = useState('');
-  // const [fileNames] = useState(recordType === RecordType.RECORD_3D ? 'tileset.json' : '');
   const [mode] = useState<Mode>(!props.layerRecord ? Mode.NEW : Mode.EDIT)
   const mutationQuery = useQuery();
   const store = useStore();
@@ -311,22 +301,6 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vestValidationResults]);
-  
-  const formik = useFormik({
-    initialValues: layerRecord as FormikValues,
-    validationSchema: Yup.object({
-      ...schema
-    }),
-    onSubmit: values => {
-      console.log(values);
-      
-      setInputValues(values);
-      // eslint-disable-next-line
-      const vestSuite = suite(descriptors as FieldConfigModelType[], values);
-      // eslint-disable-next-line
-      setVestValidationResults(vestSuite.get());
-    }
-  });
  
   const closeDialog = useCallback(() => {
     onSetOpen(false);
@@ -336,20 +310,11 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
     // @ts-ignore
     if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
       closeDialog();
-      store.discreteLayersStore.updateLayer(formik.values as ILayerImage);
-      store.discreteLayersStore.selectLayerByID((formik.values as ILayerImage).id);
+      store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
+      store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id);
     }
-  }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, formik.values]);
+  }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 
-  const getYupErrors = (): Record<string, string[]> => {
-    const validationResults: Record<string, string[]> = {};
-    Object.entries(formik.errors).forEach(([key, value]) => {
-      if (formik.getFieldMeta(key).touched) {
-        validationResults[key] = [ value as string ];
-      }
-    });
-    return validationResults;
-  };
 
   return (
     <Box id="entityDialog">
@@ -374,9 +339,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
                 ...schema
               })
             }
-            onSubmit={ values => {
-              console.log(values);
-              
+            onSubmit={(values): void => {
+        
               setInputValues(values);
               // eslint-disable-next-line
               const vestSuite = suite(descriptors as FieldConfigModelType[], values );

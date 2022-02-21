@@ -55,7 +55,6 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
           inputValue={inputValue()}
           onChange={
             (dateVal, val): void => {
-              console.log(dateVal, val)
               const momentVal = moment(dateVal);
               handleOnChange({
                 // eslint-disable-next-line

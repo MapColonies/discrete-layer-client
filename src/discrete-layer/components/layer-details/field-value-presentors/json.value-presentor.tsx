@@ -3,8 +3,8 @@ import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 import { EntityFormikHandlers } from '../layer-datails-form';
+import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface JsonValuePresentorProps {
   mode: Mode;

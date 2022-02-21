@@ -14,8 +14,6 @@ import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { LayersDetailsComponent } from './layer-details';
-import { IngestionFields } from './ingestion-fields';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -26,6 +24,8 @@ import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../common/components/file-picker';
+import { LayersDetailsComponent } from './layer-details';
+import { IngestionFields } from './ingestion-fields';
 
 import './ingestion-fields.css';
 import './layer-details-form.css';
@@ -38,7 +38,7 @@ export interface FormValues {
   fileNames: string;
 }
 
-interface OtherProps {
+interface LayerDetailsFormCustomProps {
   recordType: RecordType;
   ingestionFields: FieldConfigModelType[];
   mode: Mode;
@@ -55,12 +55,10 @@ export interface EntityFormikHandlers extends FormikHandlers {
 }
 
 const InnerForm = (
-  props: OtherProps & FormikProps<FormValues>
+  props: LayerDetailsFormCustomProps & FormikProps<FormValues>
 ): JSX.Element => {
   const {
-    touched,
     errors,
-    isSubmitting,
     values,
     dirty,
     handleChange,
@@ -199,7 +197,7 @@ const InnerForm = (
   );
 };
 
-interface MyFormProps {
+interface LayerDetailsFormProps {
   recordType: RecordType;
   ingestionFields: FieldConfigModelType[];
   mode: Mode;
@@ -217,26 +215,23 @@ interface MyFormProps {
   closeDialog: () => void;
 }
 
-export default withFormik<MyFormProps, FormValues>({
-  // Transform outer props into form values
+export default withFormik<LayerDetailsFormProps, FormValues>({
   mapPropsToValues: (props) => {
     return {
-      // directory: props.initialEmail || '',
       directory: '',
       fileNames: '',
       ...props.layerRecord,
     };
   },
 
-  // Add a custom validation function (this can be async too!)
   validate: (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
     return errors;
   },
 
-  validationSchema: (props: MyFormProps) => props.yupSchema,
+  validationSchema: (props: LayerDetailsFormProps) => props.yupSchema,
 
-  handleSubmit: (values, formikBag: FormikBag<MyFormProps, FormValues>) => {
+  handleSubmit: (values, formikBag: FormikBag<LayerDetailsFormProps, FormValues>) => {
     formikBag.props.onSubmit((values as unknown) as Record<string, unknown>);
   },
 })(InnerForm);
