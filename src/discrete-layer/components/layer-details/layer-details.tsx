@@ -78,10 +78,16 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'SensorType':
+    case 'SensorType':{
+      const sensorType = formik?.getFieldProps(fieldInfo.fieldName).value as SensorType[];
+      let sensorTypeVal = '';
+      if(Array.isArray(sensorTypeVal)) {
+        sensorTypeVal = sensorType.join(',');
+      }
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={(formik?.getFieldProps(fieldInfo.fieldName).value as SensorType[]).join(',')} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={sensorTypeVal} formik={formik}></EnumValuePresentorComponent>
       );
+    }
     case 'DataType':
     case 'NoDataValue':
     case 'VerticalDatum':
