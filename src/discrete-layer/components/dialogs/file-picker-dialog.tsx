@@ -4,13 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box, FileData } from '@map-colonies/react-components';
+import { Box, FileActionData, FileData, FilePickerActions } from '@map-colonies/react-components';
 import { FilePickerComponent, FilePickerComponentHandle, Selection } from '../../../common/components/file-picker';
 import { RecordType } from '../../models';
+import { isMultiSelection } from '../layer-details/utils';
 
 import './file-picker-dialog.css';
 
-// const EMPTY = 0;
+const EMPTY = 0;
 
 interface FilePickerDialogComponentProps {
   recordType: RecordType;
@@ -32,6 +33,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   ) => {
   const filePickerRef = useRef<FilePickerComponentHandle>(null);
   const [files, setFiles] = useState<FileData[]>([]);
+  const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
 
   useEffect(() => {
     setFiles([ 
@@ -89,6 +91,18 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     [onSetOpen]
   );
 
+  const handleAction = useCallback(
+    (data: FileActionData): void => {
+      if (data.id === FilePickerActions.ChangeSelection.id) {
+        const curSelection = filePickerRef.current?.getFileSelection();
+        if (curSelection) {
+          setIsFileSelected(curSelection.files.length > EMPTY);
+        }
+      }
+    },
+    []
+  );
+
   return (
     <Box id="filePickerDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -106,15 +120,15 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             ref={filePickerRef}
             files={files}
             selection={selection}
-            isMultiSelection={recordType !== RecordType.RECORD_3D}
+            isMultiSelection={isMultiSelection(recordType)}
+            onFileAction={handleAction}
           />
         </DialogContent>
         <DialogActions>
           <Button 
             raised 
             type="button" 
-            // disabled={selection.files.length === EMPTY} 
-            // @ts-ignore
+            disabled={!isFileSelected} 
             onClick={(): void => {
               onFilesSelection(filePickerRef.current?.getFileSelection() as Selection);
               closeDialog();

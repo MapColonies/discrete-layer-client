@@ -1,6 +1,7 @@
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { isFunction } from 'lodash';
 import { useTheme } from '@map-colonies/react-core';
 import {
   FileActionData,
@@ -18,7 +19,6 @@ const NOT_FOUND = -1;
 const START = 0;
 
 export interface FilePickerComponentHandle {
-  isMultiSelection: () => boolean;
   getFileSelection: () => Selection;
   setFileSelection: (selection: Set<string>, reset?: boolean) => void;
   requestFileAction: <Action extends FilePickerAction>(action: Action, payload: Action['__payloadType']) => Promise<void>;
@@ -34,6 +34,7 @@ interface FilePickerComponentProps {
   files: FileData[];
   selection: Selection;
   isMultiSelection: boolean;
+  onFileAction?: (data: FileActionData) => void;
 }
 
 export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
@@ -42,7 +43,8 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
       {
         files,
         selection: currentSelection,
-        isMultiSelection
+        isMultiSelection,
+        onFileAction
       },
       ref
     ) => {
@@ -51,9 +53,6 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
       const [selection, setSelection] = useState<Selection>(currentSelection);
       
       useImperativeHandle(ref, () => ({
-        isMultiSelection: (): boolean => {
-          return isMultiSelection;
-        },
         getFileSelection(): Selection {
           return selection;
         },
@@ -74,7 +73,6 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
       }, [currentSelection, files]);
 
       const handleAction = (data: FileActionData): void => {
-        // eslint-disable-next-line
         if (data.id === FilePickerActions.OpenFiles.id) {
           const { targetFile, files } = data.payload;
           const fileToOpen = targetFile ?? files[0];
@@ -90,11 +88,9 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
               return newSelection;
             });
           }
-        // eslint-disable-next-line
         } else if (data.id === FilePickerActions.ChangeSelection.id) {
           setSelection((currentSelection) => {
-            // eslint-disable-next-line
-            const selectedIds = fpRef?.current?.getFileSelection() as Set<string>;
+            const selectedIds = fpRef.current?.getFileSelection() as Set<string>;
 
             if (!isMultiSelection && selectedIds.size > 1) {
               fpRef.current?.setFileSelection(new Set(currentSelection.files.map(file => file.id)));
@@ -106,11 +102,14 @@ export const FilePickerComponent: React.FC<FilePickerComponentProps> = (
             }
           });
         }
+        if (isFunction(onFileAction)) {
+          onFileAction(data);
+        }
       };
       
       return (
         <FilePicker
-          // @ts-ignore 
+          // @ts-ignore
           ref={fpRef}
           theme={{
             primary: theme.primary as string,
