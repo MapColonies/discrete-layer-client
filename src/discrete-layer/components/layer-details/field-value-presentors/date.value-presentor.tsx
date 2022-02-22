@@ -3,7 +3,7 @@ import moment, {Moment} from 'moment';
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
-import { dateFormatter } from '../../../../common/helpers/type-formatters';
+import { dateFormatter, dateSerializer } from '../../../../common/helpers/type-formatters';
 import useDebounceField, { GCHTMLInputElement } from '../../../../common/hooks/debounce-field.hook';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
@@ -31,12 +31,12 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     if(innerValue === null || !moment(innerValue).isValid()){
       return undefined;
     } 
-    return moment(innerValue).format(CONFIG.LOCALE.DATE_FORMAT);
+    return dateFormatter(innerValue);
   }
 
   const getDate = (): Date | null => {
     if(innerValue !== null){
-      return new Date((innerValue as Moment).toISOString());
+      return new Date(dateSerializer(innerValue))
     }
     return null;
   }

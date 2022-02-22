@@ -50,36 +50,37 @@ export const getValuePresentor = (
 
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+  const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown;
   
   switch (basicType) {
     case 'string':
     case 'identifier':
       return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
-        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></AutocompleteValuePresentorComponent> :
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></StringValuePresentorComponent>
+        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
     case 'json':
       return (
-        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={JSON.stringify(formik?.getFieldProps(fieldInfo.fieldName).value)} formik={formik}></JsonValuePresentorComponent>
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={JSON.stringify(value as string)} formik={formik}></JsonValuePresentorComponent>
       );
     case 'number':
       return (
-        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></NumberValuePresentorComponent>
+        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></NumberValuePresentorComponent>
       );
     case 'links':
       return (
-        <LinksValuePresentorComponent value={fieldValue as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
+        <LinksValuePresentorComponent value={value as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
       );
     case 'url':
       return (
-        <UrlValuePresentorComponent value={formik?.getFieldProps(fieldInfo.fieldName).value as string}></UrlValuePresentorComponent>
+        <UrlValuePresentorComponent value={value as string}></UrlValuePresentorComponent>
       );
     case 'momentDateType':
       return (
-        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as moment.Moment} formik={formik}></DateValuePresentorComponent>
+        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
     case 'SensorType':{
-      const sensorType = formik?.getFieldProps(fieldInfo.fieldName).value as SensorType[];
+      const sensorType = value as SensorType[];
       let sensorTypeVal = '';
       if(Array.isArray(sensorTypeVal)) {
         sensorTypeVal = sensorType.join(',');
@@ -94,12 +95,12 @@ export const getValuePresentor = (
     case 'Units':
     case 'UndulationModel':
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={formik?.getFieldProps(fieldInfo.fieldName).value as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
     case 'ProductType':
       return (
-        <TypeValuePresentorComponent value={formik?.getFieldProps(fieldInfo.fieldName).value as string}></TypeValuePresentorComponent>
+        <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
       );
     default:
       return (

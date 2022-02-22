@@ -24,3 +24,19 @@ export const relativeDateFormatter: FormatterFunc = (date): string => {
     ? moment(date).fromNow()
     : '-';
 };
+
+export const dateSerializer: FormatterFunc = (date): string => {
+  if (typeof date !== 'undefined') {
+    return (date as Date | moment.Moment).toISOString();
+  }
+
+  if (typeof date === 'string') {
+    try {
+      return new Date(date).toISOString();
+    } catch (e) {
+      return '-';
+    }
+  }
+
+  return '-';
+};
