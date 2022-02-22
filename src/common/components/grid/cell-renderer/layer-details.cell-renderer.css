@@ -1,4 +1,4 @@
-.layerDetailsContainer{
+.layerDetailsContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -9,14 +9,14 @@
   padding-top: 2px;
   margin-left: -12px;
 }
-.detailsColumn{
+.detailsColumn {
   line-height: 16px;
   padding: 4px 8px 4px 28px;
   display: flex;
   flex-direction: column;
   row-gap: 4px;
 }
-.detailsProp{
+.detailsProp {
   padding: 2px 0px;
   margin: 0px;
   width: 165px;

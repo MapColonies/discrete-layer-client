@@ -12,18 +12,19 @@ import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
+import { isEmpty } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../common/models/mode.enum';
+import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { MetadataFile } from '../../../common/components/file-picker';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   RecordType,
 } from '../../models';
-import { Mode } from '../../../common/models/mode.enum';
-import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
-import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
-import { MetadataFile } from '../../../common/components/file-picker';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
 
@@ -62,13 +63,14 @@ const InnerForm = (
     dirty,
     handleChange,
     handleBlur,
-    setValues,
     handleSubmit,
     handleReset,
     getFieldProps,
     getFieldMeta,
     getFieldHelpers,
+    resetForm,
     setFieldValue,
+    setValues,
     recordType,
     ingestionFields,
     entityDescriptors,
@@ -100,7 +102,9 @@ const InnerForm = (
       getFieldProps,
       getFieldMeta,
       getFieldHelpers,
+      resetForm,
       setFieldValue,
+      setValues,
     }),
     [getFieldProps]
   );
@@ -114,24 +118,28 @@ const InnerForm = (
     });
     return validationResults;
   };
- 
-  const reloadFormMetadata =  (
+
+  const reloadFormMetadata = (
     ingestionFields: FormValues,
     metadata: MetadataFile
   ): void => {
-    
     setIsSelectedFiles(!!ingestionFields.fileNames);
 
     // Check for null fields
-    for(const [key, val] of Object.entries(metadata.recordModel ?? {})){
+    for (const [key, val] of Object.entries(metadata.recordModel ?? {})) {
       if (val === null) {
-        delete (metadata.recordModel as unknown as Record<string, unknown>)[key]
+        delete ((metadata.recordModel as unknown) as Record<string, unknown>)[
+          key
+        ];
       }
     }
 
-    setValues({ ...values ,...ingestionFields, ...(Object.keys(metadata.recordModel).length === 0 ? layerRecord: metadata.recordModel) });
-    console.log('values -->', values);
-    console.log('metadata -->', {...(Object.keys(metadata.recordModel).length === 0 ? layerRecord: metadata.recordModel) });
+    setValues({
+      ...values,
+      ...ingestionFields,
+      ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
+    });
+
     if (metadata.error !== null) {
       setGraphQLError(metadata.error);
     }
@@ -242,7 +250,10 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
 
   validationSchema: (props: LayerDetailsFormProps) => props.yupSchema,
 
-  handleSubmit: (values, formikBag: FormikBag<LayerDetailsFormProps, FormValues>) => {
+  handleSubmit: (
+    values,
+    formikBag: FormikBag<LayerDetailsFormProps, FormValues>
+  ) => {
     formikBag.props.onSubmit((values as unknown) as Record<string, unknown>);
   },
 })(InnerForm);

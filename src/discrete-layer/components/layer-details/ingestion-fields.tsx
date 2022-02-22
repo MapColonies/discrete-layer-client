@@ -7,7 +7,11 @@ import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues } from 'formik';
 import { Button, Icon, Tooltip, Typography } from '@map-colonies/react-core';
-import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
+import {
+  Box,
+  defaultFormatters,
+  FileData,
+} from '@map-colonies/react-components';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
@@ -35,77 +39,94 @@ interface IngestionFieldsProps {
   formik?: EntityFormikHandlers;
 }
 
-const FileItem: React.FC<{file: FileData}> = ({file}) => {
+const FileItem: React.FC<{ file: FileData }> = ({ file }) => {
   return (
     <>
       <Box><Icon className="fileIcon mc-icon-Map-Vector" /></Box>
       <Box>{file.name}</Box>
-      <Box style={{ direction: 'ltr' }}>{defaultFormatters.formatFileSize(null, file)}</Box>
+      <Box style={{ direction: 'ltr' }}>
+        {defaultFormatters.formatFileSize(null, file)}
+      </Box>
     </>
   );
 };
 
-const MoreItem: React.FC<{files: FileData[]}> = ({files}) => {
+const MoreItem: React.FC<{ files: FileData[] }> = ({ files }) => {
   return (
     <>
       <Box className="fileIconSpacer"></Box>
-      <Tooltip content={
-        <Box className="filesList moreTooltip">
-          {
-            files.map((f: FileData, i: number) => {
-              if (i >= NUM_OF_ROWS - 1) {
-                return <FileItem key={f.id} file={f} />;
-              }
-            })
-          }
+      <Tooltip
+        content={
+          <Box className="filesList moreTooltip">
+            {
+              files.map((f: FileData, i: number) => {
+                if (i >= NUM_OF_ROWS - 1) {
+                  return <FileItem key={f.id} file={f} />;
+                }
+              })
+            }
+          </Box>
+        }
+      >
+        <Box className="moreButton">
+          <FormattedMessage id="general.more.text" />
         </Box>
-      }>
-        <Box className="moreButton"><FormattedMessage id="general.more.text" /></Box>
       </Tooltip>
     </>
   );
 };
 
-const IngestionInputs: React.FC<{recordType: RecordType, fields: IRecordFieldInfo[], values: string[], selection: Selection, formik: EntityFormikHandlers}> =
-  (
-    { recordType, fields, values, selection, formik }
-  ) =>  {
-
-  return ( 
+const IngestionInputs: React.FC<{
+  recordType: RecordType;
+  fields: IRecordFieldInfo[];
+  values: string[];
+  selection: Selection;
+  formik: EntityFormikHandlers;
+}> = ({ recordType, fields, values, selection, formik }) => {
+  return (
     <>
-      {
-        fields.map((field: IRecordFieldInfo, index: number) => {
-          return (
-            <Box className="ingestionField" key={field.fieldName}>
-              <FieldLabelComponent value={field.label} isRequired={true} customClassName={ `${field.fieldName as string}Spacer` }/>
-              <Box className="detailsFieldValue">
-                {
-                  values[index] === '' &&
-                  <Typography tag="span" className="disabledText">{'<'}<FormattedMessage id="general.empty.text" />{'>'}</Typography>
-                }
-                {
-                  index === DIRECTORY &&
-                  values[index] !== '' &&
-                  <Box>{values[index]}</Box>
-                }
-                {
-                  index === FILES &&
-                  values[index] !== '' &&
-                  <Box className="filesList">
-                    {
-                      selection.files.map((file: FileData, idx: number): JSX.Element | undefined => {
-                        if (idx < NUM_OF_ROWS - 1 || (selection.files.length === NUM_OF_ROWS && idx === NUM_OF_ROWS - 1)) {
-                          return <FileItem key={file.id} file={file} />;
-                        }
-                        if (selection.files.length > NUM_OF_ROWS && idx === NUM_OF_ROWS - 1) {
-                          return <MoreItem key={file.id} files={selection.files} />;
-                        }
-                      })
+      {fields.map((field: IRecordFieldInfo, index: number) => {
+        return (
+          <Box className="ingestionField" key={field.fieldName}>
+            <FieldLabelComponent
+              value={field.label}
+              isRequired={true}
+              customClassName={`${field.fieldName as string}Spacer`}
+            />
+            <Box className="detailsFieldValue">
+              {values[index] === '' && (
+                <Typography tag="span" className="disabledText">
+                  {'<'}
+                  <FormattedMessage id="general.empty.text" />
+                  {'>'}
+                </Typography>
+              )}
+              {index === DIRECTORY && values[index] !== '' && (
+                <Box>{values[index]}</Box>
+              )}
+              {index === FILES && values[index] !== '' && (
+                <Box className="filesList">
+                  {selection.files.map((file: FileData, idx: number):
+                    | JSX.Element
+                    | undefined => {
+                    if (
+                      idx < NUM_OF_ROWS - 1 ||
+                      (selection.files.length === NUM_OF_ROWS &&
+                        idx === NUM_OF_ROWS - 1)
+                    ) {
+                      return <FileItem key={file.id} file={file} />;
                     }
-                  </Box>
-                }
-              </Box>
-              <Box className="hiddenField">
+                    if (
+                      selection.files.length > NUM_OF_ROWS &&
+                      idx === NUM_OF_ROWS - 1
+                    ) {
+                      return <MoreItem key={file.id} files={selection.files} />;
+                    }
+                  })}
+                </Box>
+              )}
+            </Box>
+            <Box className="hiddenField">
               <StringValuePresentorComponent
                 mode={Mode.NEW}
                 fieldInfo={field}
@@ -113,18 +134,22 @@ const IngestionInputs: React.FC<{recordType: RecordType, fields: IRecordFieldInf
                 value={formik?.getFieldProps(field.fieldName).value as string}
                 formik={formik}
               />
-              </Box>
             </Box>
-          )
-        })
-      } 
+          </Box>
+        );
+      })}
     </>
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fields, values, reloadFormMetadata, formik }) => {
-
-  const [ isFilePickerDialogOpen, setFilePickerDialogOpen ] = useState<boolean>(false);
+export const IngestionFields: React.FC<IngestionFieldsProps> = ({
+  recordType,
+  fields,
+  values,
+  reloadFormMetadata,
+  formik,
+}) => {
+  const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
   const [selection, setSelection] = useState<Selection>({
     files: [],
     folderChain: [],
@@ -152,7 +177,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fi
       );
     }
   };
-  
+
   return (
     <>
       <Box className="header section">
@@ -166,8 +191,14 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fi
           />
         </Box>
         <Box className="ingestionButton">
-          <Button raised type="button" onClick={(): void => { setFilePickerDialogOpen(true); }}>
-            <FormattedMessage id="general.choose-btn.text"/>
+          <Button
+            raised
+            type="button"
+            onClick={(): void => {
+              setFilePickerDialogOpen(true);
+            }}
+          >
+            <FormattedMessage id="general.choose-btn.text" />
           </Button>
         </Box>
       </Box>

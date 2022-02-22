@@ -1,9 +1,11 @@
-
 import moment from 'moment';
 import CONFIG from '../config';
 
 export interface FormatterFunc {
-  (source: string | Date | moment.Moment | undefined, option?: boolean | undefined): string;
+  (
+    source: string | Date | moment.Moment | undefined,
+    option?: boolean | undefined
+  ): string;
 }
 
 export const stringFormatter: FormatterFunc = (val): string => {
