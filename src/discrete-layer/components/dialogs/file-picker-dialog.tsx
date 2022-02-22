@@ -116,7 +116,6 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         </DialogTitle>
         <DialogContent className="dialogBody">
           <FilePickerComponent
-            // @ts-ignore
             ref={filePickerRef}
             files={files}
             selection={selection}
