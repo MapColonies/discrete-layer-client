@@ -27,7 +27,6 @@ import { MetadataFile } from '../../../common/components/file-picker';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
 
-import './ingestion-fields.css';
 import './layer-details-form.css';
 
 const NONE = 0;
@@ -83,6 +82,7 @@ const InnerForm = (
   } = props;
 
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
+  const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -114,6 +114,28 @@ const InnerForm = (
     });
     return validationResults;
   };
+ 
+  const reloadFormMetadata =  (
+    ingestionFields: FormValues,
+    metadata: MetadataFile
+  ): void => {
+    
+    setIsSelectedFiles(!!ingestionFields.fileNames);
+
+    // Check for null fields
+    for(const [key, val] of Object.entries(metadata.recordModel ?? {})){
+      if (val === null) {
+        delete (metadata.recordModel as unknown as Record<string, unknown>)[key]
+      }
+    }
+
+    setValues({ ...values ,...ingestionFields, ...(Object.keys(metadata.recordModel).length === 0 ? layerRecord: metadata.recordModel) });
+    console.log('values -->', values);
+    console.log('metadata -->', {...(Object.keys(metadata.recordModel).length === 0 ? layerRecord: metadata.recordModel) });
+    if (metadata.error !== null) {
+      setGraphQLError(metadata.error);
+    }
+  };
 
   return (
     <Box id="layerDetailsForm">
@@ -126,28 +148,17 @@ const InnerForm = (
         {mode === Mode.NEW && (
           <IngestionFields
             formik={entityFormikHandlers}
-            reloadFormMetadata={(
-              injestionFields: FormValues,
-              metadata: MetadataFile
-            ): void => {
-              // Check for null fields
-              for(const [key, val] of Object.entries(metadata.recordModel)){
-                if(val === null){
-                  delete (metadata.recordModel as unknown as Record<string, unknown>)[key]
-                }
-              }
-
-              setValues({ ...injestionFields, ...metadata.recordModel });
-              if (metadata.error !== null) {
-                setGraphQLError(metadata.error);
-              }
-            }}
+            reloadFormMetadata={reloadFormMetadata}
             recordType={recordType}
             fields={ingestionFields}
             values={values}
           />
         )}
 
+        {
+          mode === Mode.NEW && !isSelectedFiles &&
+          <Box className="curtain"></Box>
+        }
         <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
           <LayersDetailsComponent
             entityDescriptors={entityDescriptors}

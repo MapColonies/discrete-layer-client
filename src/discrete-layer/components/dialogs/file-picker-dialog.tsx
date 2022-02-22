@@ -5,9 +5,11 @@ import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box, FileActionData, FileData, FilePickerActions, FilePickerHandle } from '@map-colonies/react-components';
-import { FilePickerComponent, Selection } from '../../../common/components/file-picker';
+import { Box, FileActionData, FileData, FilePickerActions } from '@map-colonies/react-components';
+import { FilePickerComponent, FilePickerComponentHandle, Selection } from '../../../common/components/file-picker';
 import { FileModelType, LayerMetadataMixedUnion, RecordType, useQuery, useStore } from '../../models';
+import { isMultiSelection } from '../layer-details/utils';
+
 import './file-picker-dialog.css';
 
 const EMPTY = 0;
@@ -17,6 +19,11 @@ interface FilePickerDialogComponentProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onFilesSelection: (selected: Selection) => void;
+  selection: Selection;
+}
+
+const getSuffixFromFolderChain = (folderChain: FileData[]): string => {
+  return '/' + folderChain.map(file => file.name).join('/');
 }
 
 export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
@@ -25,17 +32,15 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       recordType,
       isOpen,
       onSetOpen,
-      onFilesSelection
+      onFilesSelection,
+      selection
     }
   ) => {
-  const filePickerRef = useRef<FilePickerHandle>(null);
+  const filePickerRef = useRef<FilePickerComponentHandle>(null);
   const [files, setFiles] = useState<FileData[]>([]);
-  const [selection, setSelection] = useState<Selection>({
-    files: [],
-    folderChain: [],
-    metadata: { recordModel: {} as LayerMetadataMixedUnion, error: null },
-  });
-  const [pathSuffix, setPathSuffix] = useState<string>('/');
+  
+  const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
+  const [pathSuffix, setPathSuffix] = useState<string>(getSuffixFromFolderChain(selection.folderChain));
 
   const store = useStore();
   const queryDirectory = useCallback(()=> useQuery<{ getDirectory: FileModelType[]}>(), [])();
@@ -53,16 +58,19 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       })
     );
 
-    setSelection((selection) => ({
-      ...selection,
+    const prevSelection = filePickerRef.current?.getFileSelection();
+  
+    onFilesSelection({
+      ...prevSelection,
       metadata: {
         recordModel: {} as LayerMetadataMixedUnion,
         error: null,
       },
-    }));
+    } as Selection);
+
   }, [pathSuffix]);
 
-  useEffect(()=> {
+  useEffect(() => {
     if(queryDirectory.data){
       const dirContent = cloneDeep(queryDirectory.data.getDirectory) as FileData[]
       setFiles(dirContent);
@@ -83,14 +91,16 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
   },[queryDirectory.data])
 
   useEffect(() => {
-    if(queryMetadata.data){
-      setSelection({
-        ...selection,
+    if (queryMetadata.data) {
+      const prevSelection = filePickerRef.current?.getFileSelection();
+
+      onFilesSelection({
+        ...prevSelection,
         metadata: {
           recordModel: cloneDeep(queryMetadata.data.getFile),
           error: null,
         },
-      });
+      } as Selection);
     }
   }, [queryMetadata.data])
 
@@ -112,14 +122,16 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       // eslint-disable-next-line
       queryError.response.errors = metadataError;
 
-      setSelection({
-        ...selection,
+      const prevSelection = filePickerRef.current?.getFileSelection();
+
+      onFilesSelection({
+        ...prevSelection,
         metadata: {
           recordModel: {} as LayerMetadataMixedUnion,
-          // eslint-disable-next-line
           error: queryError,
         },
-      });
+      } as Selection);
+
     }
   }, [queryMetadata.error]);
 
@@ -130,31 +142,21 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     [onSetOpen]
   );
 
-  const handleAction = (data: FileActionData): void => {
-    // eslint-disable-next-line
-    if (data.id === FilePickerActions.OpenFiles.id) {
-      const { targetFile, files } = data.payload;
-      const fileToOpen = targetFile ?? files[0];
-      if (fileToOpen.isDir === true) {
-        setPathSuffix(`${pathSuffix}${fileToOpen.name}/`);
-        setSelection((currentSelection) => {
-          const newSelection = { ...currentSelection };
-          newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
-          return newSelection;
-        });
+  const handleAction = useCallback(
+    (data: FileActionData): void => {
+      const curSelection = filePickerRef.current?.getFileSelection() as Selection;
+      if (data.id === FilePickerActions.OpenFiles.id) {
+        const pathFromChain = getSuffixFromFolderChain(curSelection.folderChain);
+        setPathSuffix(pathFromChain);
+      } else if (data.id === FilePickerActions.ChangeSelection.id) {
+        if (curSelection) {
+          setIsFileSelected(curSelection.files.length > EMPTY);
+        }
       }
-    // eslint-disable-next-line
-    } else if (data.id === FilePickerActions.ChangeSelection.id) {
-      setSelection((currentSelection) => {
-        const newSelection = { ...currentSelection };
-        // eslint-disable-next-line
-        const selectedIds = filePickerRef?.current?.getFileSelection() as Set<string>;
-        newSelection.files = files.filter((file: FileData) => selectedIds.has(file.id));
-        return newSelection;
-      });
-    }
-  };
-  
+    },
+    []
+  );
+
   return (
     <Box id="filePickerDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -168,15 +170,23 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         </DialogTitle>
         <DialogContent className="dialogBody">
           <FilePickerComponent
-            // @ts-ignore
             ref={filePickerRef}
             files={files}
-            selection={selection} 
+            selection={selection}
+            isMultiSelection={isMultiSelection(recordType)}
             onFileAction={handleAction}
           />
         </DialogContent>
         <DialogActions>
-          <Button raised type="button" disabled={selection.files.length === EMPTY} onClick={(): void => { onFilesSelection(selection); closeDialog(); }}>
+          <Button 
+            raised 
+            type="button" 
+            disabled={!isFileSelected} 
+            onClick={(): void => {
+              onFilesSelection(filePickerRef.current?.getFileSelection() as Selection);
+              closeDialog();
+            }}
+          >
             <FormattedMessage id="general.ok-btn.text"/>
           </Button>
           <Button type="button" onClick={(): void => { closeDialog(); }}>

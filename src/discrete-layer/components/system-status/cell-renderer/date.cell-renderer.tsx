@@ -1,12 +1,12 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Tooltip } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
 import moment, { Moment } from 'moment';
 import {
   dateFormatter,
   relativeDateFormatter,
-} from '../../../../common/helpers/type-formatters';
-import { Box } from '@map-colonies/react-components';
+} from '../../../../common/helpers/formatters';
 
 interface IDateCellRendererParams extends ICellRendererParams {
   field: string;

@@ -25,7 +25,7 @@ describe('BBoxCorner component', () => {
     expect(labelContainer).toBeTruthy();
   });
 
-  it('render DIV with marked corner and defined css className ', () => {
+  it('render DIV with marked corner and defined css className', () => {
     const className = 'test';
     const wrapper = shallow(
       <BBoxCorner corner={corner} className={className} />
