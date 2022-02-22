@@ -51,7 +51,7 @@ export const FilePickerComponent = React.forwardRef<
     ref
   ) => {
     const theme = useTheme();
-    const fpRef = useRef<FilePickerHandle>();
+    const fpRef = useRef<FilePickerHandle>(null);
     const [selection, setSelection] = useState<Selection>(currentSelection);
 
     useImperativeHandle(ref, () => ({
@@ -124,7 +124,6 @@ export const FilePickerComponent = React.forwardRef<
 
     return (
       <FilePicker
-        // @ts-ignore
         ref={fpRef}
         theme={{
           primary: theme.primary as string,
