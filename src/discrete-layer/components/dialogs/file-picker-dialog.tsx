@@ -151,6 +151,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           ...prevSelection,
           metadata: {
             recordModel: {} as LayerMetadataMixedUnion,
+            // eslint-disable-next-line
             error: queryError,
           },
         } as Selection);
