@@ -26,7 +26,7 @@ interface FormInputTextFieldProps {
 export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({mode, fieldInfo, value, formik, type}) => {
   const intl = useIntl();
   const isCopyable = fieldInfo.isCopyable ?? false;
-  const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value);
+  const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
   const valueRenderer = useMemo(() => {
     const MAX_VALUE_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;

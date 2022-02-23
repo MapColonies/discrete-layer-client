@@ -11,7 +11,17 @@ import { getBasicType, getValidationType } from './utils';
 enforce.extend({
   afterOrSame: (val1, val2) => (val1 as moment.Moment).isAfter(val2) || (val1 as moment.Moment).isSame(val2),
   beforeOrSame: (val1, val2) => (val1 as moment.Moment).isBefore(val2) || (val1 as moment.Moment).isSame(val2),
-  isJson: (val) => val !== null,
+  isJson: (val) => {
+    try{
+      if(typeof val === 'string'){
+        JSON.parse(val);
+      }
+      
+      return true;
+    }catch(e){
+      return false;
+    }
+  },
 });
 
 const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): any => {

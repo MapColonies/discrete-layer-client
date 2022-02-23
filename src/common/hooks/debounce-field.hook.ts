@@ -19,9 +19,7 @@ const useDebounceField = <T> (
   const INPUT_DELAY = 300;
 
   useEffect(() => {
-    if (value) {
       setInnerValue(value);
-    } 
   }, [value]);
 
   const debouncedHandleOnChange = useDebouncedCallback(

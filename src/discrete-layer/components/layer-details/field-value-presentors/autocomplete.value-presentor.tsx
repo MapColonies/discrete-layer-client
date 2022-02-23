@@ -39,7 +39,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
     setAutocompleteValues(data ? data.getDomain.value as [] : []);
   }, [data]);
 
-  const controlValue = {value: value ?? undefined};
+  const controlValue = {value: value ?? ''};
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (

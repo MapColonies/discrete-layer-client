@@ -52,6 +52,10 @@ interface LayerDetailsFormCustomProps {
 
 export interface EntityFormikHandlers extends FormikHandlers {
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  setFieldError: (field: string, message: string | undefined) => void;
+  setFieldTouched: (field: string, isTouched?: boolean | undefined, shouldValidate?: boolean | undefined) => void;
+  setStatus: (status?: any) => void;
+  status: any;
 }
 
 const InnerForm = (
@@ -71,6 +75,10 @@ const InnerForm = (
     resetForm,
     setFieldValue,
     setValues,
+    setFieldError,
+    setFieldTouched,
+    setStatus,
+    status,
     recordType,
     ingestionFields,
     entityDescriptors,
@@ -85,10 +93,18 @@ const InnerForm = (
 
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
+  const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
   }, [mutationQueryError]);
+
+  useEffect(() => {
+    setFirstPhaseErrors({
+      ...getYupErrors(),
+      ...status?.errors
+    })
+  }, [errors, status]);
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
@@ -105,6 +121,10 @@ const InnerForm = (
       resetForm,
       setFieldValue,
       setValues,
+      setFieldError,
+      setFieldTouched,
+      setStatus,
+      status,
     }),
     [getFieldProps]
   );
@@ -133,7 +153,7 @@ const InnerForm = (
         ];
       }
     }
-
+    resetForm();
     setValues({
       ...values,
       ...ingestionFields,
@@ -177,8 +197,8 @@ const InnerForm = (
         </Box>
         <Box className="footer">
           <Box className="messages">
-            {Object.keys(errors).length > NONE && (
-              <ValidationsError errors={getYupErrors()} />
+            {Object.keys(firstPhaseErrors).length > NONE && (
+              <ValidationsError errors={firstPhaseErrors} />
             )}
             {Object.keys(errors).length === NONE &&
               vestValidationResults.errorCount > NONE && (
@@ -196,7 +216,8 @@ const InnerForm = (
               disabled={
                 mutationQueryLoading ||
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
-                Object.keys(errors).length > NONE
+                Object.keys(errors).length > NONE ||
+                Object.keys(status?.errors ?? {}).length > NONE 
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

@@ -50,7 +50,7 @@ export const getValuePresentor = (
 
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
-  const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown;
+  const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown || fieldValue;
   
   switch (basicType) {
     case 'string':
@@ -61,7 +61,7 @@ export const getValuePresentor = (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
     case 'json':
       return (
-        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={JSON.stringify(value as string)} formik={formik}></JsonValuePresentorComponent>
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></JsonValuePresentorComponent>
       );
     case 'number':
       return (

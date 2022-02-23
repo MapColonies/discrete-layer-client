@@ -5,6 +5,7 @@ import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import { useIntl } from 'react-intl';
 
 interface JsonValuePresentorProps {
   mode: Mode;
@@ -15,13 +16,11 @@ interface JsonValuePresentorProps {
 }
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({ mode, fieldInfo, value, formik, type }) => {
-  const [jsonValue, setJsonValue] = useState('');
+  const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
+  const intl = useIntl();
 
   useEffect(()=>{
-    if(typeof value !== 'undefined'){
-      setJsonValue(value)
-    }
-
+      setJsonValue(JSON.stringify(value ?? {}));
   },[value])
   
 
@@ -38,15 +37,36 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   } else {
     const handleBlur = (e: any): void => {      
       let formikValue: unknown = undefined;
-
+      
       try {
         formikValue = JSON.parse(jsonValue) as unknown;
-        formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
-      } catch(e) {
-        formik.setFieldValue(fieldInfo.fieldName as string, undefined);
+        setTimeout(()=>{
+          formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
+          formik.setStatus({});
+        }, 0);
+      } catch(err) {
+        const error = {id: `validation-field.${fieldInfo.fieldName}.json`};
+        
+        if(fieldInfo.isRequired || jsonValue.length > 0){
+          if(fieldInfo.isRequired && jsonValue.length === 0){
+            error.id = 'validation-general.required';
+          }
+          const errorMsg = intl.formatMessage(
+            error,
+            { fieldName: `<strong>${intl.formatMessage({ id: fieldInfo.label })}</strong>` }
+          );
+          
+          formik.setStatus({
+            errors: {
+                ...formik.status.errors,
+                [fieldInfo.fieldName as string]: [errorMsg]
+              }
+          })
+        }
+        else {
+          formik.setStatus({});
+        }
       }
-
-      formik.handleBlur(e);
     };
 
     return (
@@ -56,7 +76,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             type={type}
-            value={jsonValue}
+            value={jsonValue === '{}' ? '' : jsonValue}
             onChange={(e): void => setJsonValue(e.currentTarget.value)}
             onBlur={handleBlur}
             placeholder={'JSON'}
