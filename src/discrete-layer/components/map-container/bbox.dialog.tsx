@@ -18,7 +18,7 @@ import { ValidationsError } from '../../../common/components/error/validations.e
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
-import './dialog-bbox.css';
+import './bbox.dialog.css';
 
 const NONE = 0;
 
@@ -53,13 +53,11 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
       [values.topRightLon, values.bottomLeftLat]
     );
 
-    // eslint-disable-next-line
     if (yDistance > CONFIG.BOUNDARIES.MAX_Y_KM) {
       errors.latDistance = intl.formatMessage({
         id: 'custom-bbox.form-error.y-distance.text',
       });
     }
-    // eslint-disable-next-line
     if (xDistance > CONFIG.BOUNDARIES.MAX_X_KM) {
       errors.lonDistance = intl.formatMessage({
         id: 'custom-bbox.form-error.x-distance.text',
@@ -72,13 +70,13 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
   return errors;
 };
 
-interface DialogBBoxProps {
+interface BBoxDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
 }
 
-export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
+export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
   const { isOpen, onSetOpen, onPolygonUpdate } = props;
   const intl = useIntl();
   const corners = {
@@ -179,9 +177,9 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           />
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={formik.handleSubmit} className="dialogBboxForm" noValidate>
-            <Box className="dialogBboxRow">
-              <Box className="dialogBboxField">
+          <form onSubmit={formik.handleSubmit} className="bboxForm" noValidate>
+            <Box className="bboxRow">
+              <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.topRightLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLat"
@@ -191,7 +189,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <Box className="dialogBboxField">
+              <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.topRightLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLon"
@@ -201,10 +199,10 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.TOP_RIGHT} className="dialogBboxField"/>
+              <BBoxCorner corner={Corner.TOP_RIGHT} className="bboxField"/>
             </Box>
-            <Box className="dialogBboxRow">
-              <Box className="dialogBboxField">
+            <Box className="bboxRow">
+              <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLat"
@@ -214,7 +212,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <Box className="dialogBboxField">
+              <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLon"
@@ -224,7 +222,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
+              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="bboxField"/>
             </Box>
             <Box className="footer">
               <Box className="messages">

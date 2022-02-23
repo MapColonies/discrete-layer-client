@@ -6,11 +6,12 @@ import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
 import { RecordType } from '../../models/RecordTypeEnum';
-import { DialogBBox } from './dialog-bbox';
+import { BBoxDialog } from './bbox.dialog';
+import { PoiDialog } from './poi.dialog';
 
 import './polygon-selection-ui.css';
 
-export const Devider: React.FC = () => {
+export const Divider: React.FC = () => {
   const theme = useTheme();
   return (
     <Box style={{
@@ -45,6 +46,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
   const intl = useIntl();
   const { discreteLayersStore } = useStore();
   const [open, setOpen] = useState(false);
+  const [openPoiDialog, setOpenPoiDialog] = useState(false);
   const recordTypeOptions = useMemo(() => {
     return CONFIG.SERVED_ENTITY_TYPES.map((entity) => {
       const value = entity as keyof typeof RecordType;
@@ -71,9 +73,10 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       <Tooltip content={intl.formatMessage({ id: 'action.point.tooltip' })}>
         <IconButton 
           className="mc-icon-Coordinates"
-          label="POINT"/>
+          label="POINT"
+          onClick={(): void => {setOpenPoiDialog(true);}}/>
       </Tooltip>
-      <Devider/>
+      <Divider/>
       <Tooltip content={intl.formatMessage({ id: 'action.box.tooltip' })}>
         <IconButton 
           className="mc-icon-Rectangle"
@@ -92,11 +95,11 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
           label="BBOX CORNERS" 
           onClick={(): void => {setOpen(true);}}/>
       </Tooltip>
-      <Devider/>
+      <Divider/>
       <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
         <IconButton className="mc-icon-Delete" label="CLEAR" onClick={onReset}/>
       </Tooltip>
-      <Devider/>
+      <Divider/>
       <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
         <Select
           enhanced
@@ -115,11 +118,21 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
         <IconButton icon="search" label="SEARCH" className="searcIconBtn"/>
       </Tooltip>
-      <DialogBBox
-        isOpen={open}
-        onSetOpen={setOpen}
-        onPolygonUpdate={onPolygonUpdate}
-      />
+      {
+        open &&
+        <BBoxDialog
+          isOpen={open}
+          onSetOpen={setOpen}
+          onPolygonUpdate={onPolygonUpdate}
+        />
+      }
+      {
+        openPoiDialog &&
+        <PoiDialog
+          isOpen={openPoiDialog}
+          onSetOpen={setOpenPoiDialog}
+        />
+      }
     </Box>
   );
 };

@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Drawer, DrawerContent, List, ListItem, ListItemGraphic, ListItemText } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
-import { DialogBBox } from './dialog-bbox';
+import { BBoxDialog } from './bbox.dialog';
 
 import './polygon-selection-ui.css';
 
@@ -76,11 +76,11 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
         >
           <FormattedMessage id="polygon-selection.draw-btn.text" />
         </Button>
-        <DialogBBox
+        <BBoxDialog
           isOpen={open}
           onSetOpen={setOpen}
           onPolygonUpdate={onPolygonUpdate}
-        ></DialogBBox>
+        ></BBoxDialog>
         {menuOpen && (
           <Box style={{
             height:'210px', 

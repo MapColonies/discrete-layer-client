@@ -9,11 +9,11 @@ import { FilePickerComponent, FilePickerComponentHandle, Selection } from '../..
 import { RecordType } from '../../models';
 import { isMultiSelection } from '../layer-details/utils';
 
-import './file-picker-dialog.css';
+import './file-picker.dialog.css';
 
 const EMPTY = 0;
 
-interface FilePickerDialogComponentProps {
+interface FilePickerDialogProps {
   recordType: RecordType;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
@@ -21,7 +21,7 @@ interface FilePickerDialogComponentProps {
   selection: Selection;
 }
 
-export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
+export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
   (
     {
       recordType,

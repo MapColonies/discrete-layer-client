@@ -10,7 +10,7 @@ import { Box, defaultFormatters, FileData } from '@map-colonies/react-components
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { LayerMetadataMixedUnion, RecordType } from '../../models';
-import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
+import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
 
 import './ingestion-fields.css';
@@ -166,7 +166,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({ recordType, fi
       </Box>
       {
         isFilePickerDialogOpen &&
-        <FilePickerDialogComponent
+        <FilePickerDialog
           recordType={recordType}
           isOpen={isFilePickerDialogOpen}
           onSetOpen={setFilePickerDialogOpen}

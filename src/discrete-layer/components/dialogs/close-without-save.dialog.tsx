@@ -1,19 +1,18 @@
 import React, { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
-import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { useStore } from '../../models';
 
-import './close-without-save-dialog.css';
+import './close-without-save.dialog.css';
 
-interface CloseWithoutSaveDialogComponentProps {
+interface CloseWithoutSaveDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
 
-export const CloseWithoutSaveDialogComponent: React.FC<CloseWithoutSaveDialogComponentProps> = observer(({ isOpen, onSetOpen }) => {
+export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = observer(({ isOpen, onSetOpen }) => {
   const store = useStore();
   
   const closeDialog = useCallback(

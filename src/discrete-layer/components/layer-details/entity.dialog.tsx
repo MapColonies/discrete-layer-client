@@ -41,7 +41,7 @@ import { IngestionFields } from './ingestion-fields';
 import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 
-import './entity-dialog.css';
+import './entity.dialog.css';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
@@ -49,7 +49,7 @@ const NONE = 0;
 const START = 0;
 const isAutocompleteEnabled = CONFIG.RUNNING_MODE.AUTOCOMPLETE as boolean;
 
-interface EntityDialogComponentProps {
+interface EntityDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   recordType?: RecordType;
@@ -116,7 +116,7 @@ const getLabel = (recordType: RecordType): string => {
   return 'info-field-tooltip.ingestion.fileNames.tooltip';
 };*/
   
-export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer((props: EntityDialogComponentProps) => {
+export const EntityDialog: React.FC<EntityDialogProps> = observer((props: EntityDialogProps) => {
   const { isOpen, onSetOpen, recordType } = props;
   let layerRecord = cloneDeep(props.layerRecord);
   const directory = '';

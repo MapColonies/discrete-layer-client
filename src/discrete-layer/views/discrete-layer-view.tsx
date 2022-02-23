@@ -38,7 +38,7 @@ import { PolygonSelectionUi } from '../components/map-container/polygon-selectio
 import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
-import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { EntityDialog } from '../components/layer-details/entity.dialog';
 import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
 import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
@@ -629,27 +629,27 @@ const DiscreteLayerView: React.FC = observer(() => {
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
         {
           isNewRasterEntityDialogOpen &&
-          <EntityDialogComponent
+          <EntityDialog
             isOpen={isNewRasterEntityDialogOpen}
             onSetOpen={setNewRasterEntityDialogOpen}
             recordType={RecordType.RECORD_RASTER}>
-          </EntityDialogComponent>
+          </EntityDialog>
         }
         {
           isNew3DEntityDialogOpen &&
-          <EntityDialogComponent
+          <EntityDialog
             isOpen={isNew3DEntityDialogOpen}
             onSetOpen={setNew3DEntityDialogOpen}
             recordType={RecordType.RECORD_3D}>
-          </EntityDialogComponent>
+          </EntityDialog>
         }
         {
           isNewDemEntityDialogOpen &&
-          <EntityDialogComponent
+          <EntityDialog
             isOpen={isNewDemEntityDialogOpen}
             onSetOpen={setNewDemEntityDialogOpen}
             recordType={RecordType.RECORD_DEM}>
-          </EntityDialogComponent>
+          </EntityDialog>
         }
       </Box>
     </>
