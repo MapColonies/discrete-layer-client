@@ -106,7 +106,18 @@ const InnerForm = (
       setFieldValue,
       setValues,
     }),
-    [getFieldProps]
+    [
+      getFieldHelpers,
+      getFieldMeta,
+      getFieldProps,
+      handleBlur,
+      handleChange,
+      handleReset,
+      handleSubmit,
+      resetForm,
+      setFieldValue,
+      setValues
+    ]
   );
 
   const getYupErrors = (): Record<string, string[]> => {
@@ -139,7 +150,7 @@ const InnerForm = (
       ...ingestionFields,
       ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
     });
-
+    
     if (metadata.error !== null) {
       setGraphQLError(metadata.error);
     }

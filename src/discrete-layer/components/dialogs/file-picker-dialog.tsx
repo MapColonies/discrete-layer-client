@@ -87,6 +87,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           error: null,
         },
       } as Selection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathSuffix]);
 
     useEffect(() => {
@@ -111,6 +112,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           }
         }
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryDirectory.data]);
 
     useEffect(() => {
@@ -153,6 +155,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           },
         } as Selection);
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryMetadata.error]);
 
     const closeDialog = useCallback(() => {
