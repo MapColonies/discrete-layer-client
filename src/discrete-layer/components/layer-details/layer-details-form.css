@@ -1,9 +1,3 @@
-@media (min-width: 800px) {
-  #layerDetailsForm .mdc-dialog .mdc-dialog__surface {
-    max-width: 730px;
-  }
-}
-
 #layerDetailsForm .form {
   max-height: 880px !important;
 }
