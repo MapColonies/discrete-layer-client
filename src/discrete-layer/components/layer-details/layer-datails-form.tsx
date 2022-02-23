@@ -126,7 +126,18 @@ const InnerForm = (
       setStatus,
       status,
     }),
-    [getFieldProps]
+    [
+      getFieldHelpers,
+      getFieldMeta,
+      getFieldProps,
+      handleBlur,
+      handleChange,
+      handleReset,
+      handleSubmit,
+      resetForm,
+      setFieldValue,
+      setValues
+    ]
   );
 
   const getYupErrors = (): Record<string, string[]> => {
@@ -145,12 +156,9 @@ const InnerForm = (
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
 
-    // Check for null fields
-    for (const [key, val] of Object.entries(metadata.recordModel ?? {})) {
+    for (const [key, val] of Object.entries(metadata.recordModel)) {
       if (val === null) {
-        delete ((metadata.recordModel as unknown) as Record<string, unknown>)[
-          key
-        ];
+        delete ((metadata.recordModel as unknown) as Record<string, unknown>)[key];
       }
     }
     resetForm();

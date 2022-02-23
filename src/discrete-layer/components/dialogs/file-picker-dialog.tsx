@@ -87,6 +87,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           error: null,
         },
       } as Selection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathSuffix]);
 
     useEffect(() => {
@@ -111,6 +112,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           }
         }
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryDirectory.data]);
 
     useEffect(() => {
@@ -149,10 +151,12 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           ...prevSelection,
           metadata: {
             recordModel: {} as LayerMetadataMixedUnion,
+            // eslint-disable-next-line
             error: queryError,
           },
         } as Selection);
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryMetadata.error]);
 
     const closeDialog = useCallback(() => {
@@ -165,9 +169,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         const pathFromChain = getSuffixFromFolderChain(selected.folderChain);
         setPathSuffix(pathFromChain);
       } else if (data.id === FilePickerActions.ChangeSelection.id) {
-        if (selected) {
-          setIsFileSelected(selected.files.length > EMPTY);
-        }
+        setIsFileSelected(selected.files.length > EMPTY);
       }
     }, []);
 

@@ -131,7 +131,7 @@ const IngestionInputs: React.FC<{
                 mode={Mode.NEW}
                 fieldInfo={field}
                 // @ts-ignore
-                value={formik?.getFieldProps(field.fieldName).value as string}
+                value={formik.getFieldProps(field.fieldName).value as string}
                 formik={formik}
               />
             </Box>
@@ -173,7 +173,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
             .map((file: FileData) => file.name)
             .join(','),
         },
-        (selected.metadata as MetadataFile) ?? {}
+        selected.metadata as MetadataFile
       );
     }
   };

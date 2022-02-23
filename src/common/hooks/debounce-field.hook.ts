@@ -35,7 +35,8 @@ const useDebounceField = <T> (
       const newValue = event.currentTarget.value as (T | string);
       setInnerValue(newValue);
       debouncedHandleOnChange(event);
-    },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
   return [innerValue, handleOnChange];
 };

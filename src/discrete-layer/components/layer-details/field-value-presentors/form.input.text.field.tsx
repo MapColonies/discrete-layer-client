@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo } from 'react';
-import { get } from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
 import { TextField, Tooltip, IconButton } from '@map-colonies/react-core';

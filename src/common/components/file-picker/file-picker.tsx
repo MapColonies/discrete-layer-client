@@ -16,6 +16,7 @@ import CONFIG from '../../config';
 
 const NOT_FOUND = -1;
 const START = 0;
+
 export interface MetadataFile {
   recordModel: LayerMetadataMixedUnion;
   error: unknown;
