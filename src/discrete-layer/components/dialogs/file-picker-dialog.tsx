@@ -168,9 +168,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
         const pathFromChain = getSuffixFromFolderChain(selected.folderChain);
         setPathSuffix(pathFromChain);
       } else if (data.id === FilePickerActions.ChangeSelection.id) {
-        if (selected) {
-          setIsFileSelected(selected.files.length > EMPTY);
-        }
+        setIsFileSelected(selected.files.length > EMPTY);
       }
     }, []);
 

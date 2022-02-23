@@ -136,12 +136,9 @@ const InnerForm = (
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
 
-    // Check for null fields
-    for (const [key, val] of Object.entries(metadata.recordModel ?? {})) {
+    for (const [key, val] of Object.entries(metadata.recordModel)) {
       if (val === null) {
-        delete ((metadata.recordModel as unknown) as Record<string, unknown>)[
-          key
-        ];
+        delete ((metadata.recordModel as unknown) as Record<string, unknown>)[key];
       }
     }
 
@@ -150,7 +147,7 @@ const InnerForm = (
       ...ingestionFields,
       ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
     });
-    
+
     if (metadata.error !== null) {
       setGraphQLError(metadata.error);
     }
