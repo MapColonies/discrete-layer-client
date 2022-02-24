@@ -80,8 +80,9 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
           isOpen={open}
           onSetOpen={setOpen}
           onPolygonUpdate={onPolygonUpdate}
-        ></BBoxDialog>
-        {menuOpen && (
+        />
+        {
+          menuOpen &&
           <Box style={{
             height:'210px', 
             width: mapActionsWidth}}
@@ -138,7 +139,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
               </DrawerContent>
             </Drawer>
             
-          </Box>)
+          </Box>
         }
       </Box>
     );

@@ -131,6 +131,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         <PoiDialog
           isOpen={openPoiDialog}
           onSetOpen={setOpenPoiDialog}
+          onPolygonUpdate={onPolygonUpdate}
         />
       }
     </Box>

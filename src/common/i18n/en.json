@@ -72,6 +72,7 @@
   "custom-bbox.dialog-field.bottomLeftLon.label": "Bottom Left Lon",
   "custom-bbox.form-error.x-distance.text": "X distance exceeds the limit",
   "custom-bbox.form-error.y-distance.text": "Y distance exceeds the limit",
+  "custom-bbox.form-error.invalid.text": "Invalid coordinates",
 
   "filters.title": "Filters",
   "filters.sub-title": " ",

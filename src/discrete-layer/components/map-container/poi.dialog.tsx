@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
+import { isEmpty } from 'lodash';
 import * as Yup from 'yup';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { Box, IDrawingEvent } from '@map-colonies/react-components';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 
@@ -19,6 +20,7 @@ interface IPOI {
 interface PoiDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
+  onPolygonUpdate: (polygon: IDrawingEvent) => void;
 }
 
 export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
@@ -31,7 +33,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
     [onSetOpen]
   );
 
-  const poi: IPOI = { lon: 0, lat: 0 };
+  const [poi] = useState<IPOI>({ lon: 0, lat: 0 });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const yupSchema: Record<string, any> = {};
@@ -51,7 +53,45 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
       ...yupSchema
     }),
     onSubmit: (values) => {
-      console.log(values);
+      /*try {
+        onPolygonUpdate({
+          primitive: undefined,
+          type: DrawType.BOX,
+          geojson: {
+            type : 'FeatureCollection',
+            features: [
+              { 
+                type : 'Feature', 
+                properties : {  
+                  type : BboxCorner.TOP_RIGHT,
+                }, 
+                geometry : { 
+                  type : 'Point', 
+                  coordinates : [ values.topRightLon, values.topRightLat ] 
+                }
+              },
+              { 
+                type : 'Feature', 
+                properties : {  
+                  type : BboxCorner.BOTTOM_LEFT
+                }, 
+                geometry : { 
+                  type : 'Point', 
+                  coordinates : [ values.bottomLeftLon, values.bottomLeftLat ]  
+                }
+              }
+            ]
+          }
+        });
+        closeDialog();
+        setFormErrors({
+          latDistance: '',
+          lonDistance: '',
+          invalid: '',
+        });
+      } catch(e) {
+        console.error(e);
+      }*/
     },
   });
 
@@ -102,7 +142,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
             <Box className="footer">
               <Box className="messages">
                 {
-                  Object.keys(formik.errors).length > NONE && 
+                  !isEmpty(formik.errors) &&
                   <ValidationsError errors={getValidationErrors(formik.errors)}/>
                 }
               </Box>

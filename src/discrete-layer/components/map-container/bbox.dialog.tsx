@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import { useFormik } from 'formik';
+import { isEmpty } from 'lodash';
 import * as Yup from 'yup';
 import * as turf from '@turf/helpers';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
@@ -30,12 +31,13 @@ interface BBoxCorners {
 }
 
 interface BBoxCornersError {
-  latDistance: string;
-  lonDistance: string;
+  latDistance?: string;
+  lonDistance?: string;
+  invalid?: string;
 }
 
 const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
-  const errors: BBoxCornersError = { latDistance: '', lonDistance: '' };
+  const errors: BBoxCornersError = {};
 
   try {
     turf.lineString([
@@ -64,7 +66,9 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
       });
     }
   } catch (err) {
-    errors.latDistance = 'Not valid coordinates';
+    errors.invalid = intl.formatMessage({
+      id: 'custom-bbox.form-error.invalid.text',
+    });
   }
 
   return errors;
@@ -79,12 +83,12 @@ interface BBoxDialogProps {
 export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
   const { isOpen, onSetOpen, onPolygonUpdate } = props;
   const intl = useIntl();
-  const corners = {
+  const [corners] = useState<BBoxCorners>({
     topRightLat: 0,
     topRightLon: 0,
     bottomLeftLat: 0,
     bottomLeftLon: 0,
-  };
+  });
   const yupSchema: Record<string, any> = {};
   Object.keys(corners).forEach(fieldName => {
     const fieldLabel = `custom-bbox.dialog-field.${fieldName}.label`;
@@ -103,7 +107,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
     }),
     onSubmit: (values) => {
       const errors = validate(values, intl);
-      if (!errors.latDistance && !errors.lonDistance) {
+      if (errors.latDistance === undefined && errors.lonDistance === undefined && errors.invalid === undefined) {
         try {
           onPolygonUpdate({
             primitive: undefined,
@@ -134,10 +138,11 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
               ]
             }
           });
-          handleClose(false);
+          closeDialog();
           setFormErrors({
             latDistance: '',
             lonDistance: '',
+            invalid: '',
           });
         } catch(e) {
           console.error(e);
@@ -148,14 +153,11 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
     },
   });
 
-  const [formErrors, setFormErrors] = useState({
-    latDistance: '',
-    lonDistance: '',
-  });
+  const [formErrors, setFormErrors] = useState<BBoxCornersError>({});
 
-  const handleClose = (isOpened: boolean): void => {
-    onSetOpen(isOpened);
-  };
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
 
   const getValidationErrors = (errors: Record<string, any>): Record<string, string[]> => {
     const validationResults: Record<string, string[]> = {};
@@ -173,7 +175,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
           <IconButton
             className="closeIcon mc-icon-Close"
             label="CLOSE"
-            onClick={ (): void => { handleClose(false); } }
+            onClick={ (): void => { closeDialog(); } }
           />
         </DialogTitle>
         <DialogContent>
@@ -227,11 +229,12 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
             <Box className="footer">
               <Box className="messages">
                 {
-                  Object.keys(formik.errors).length > NONE && 
+                  !isEmpty(formik.errors) &&
                   <ValidationsError errors={getValidationErrors(formik.errors)}/>
                 }
                 {
-                  Object.keys(formik.errors).length === NONE && (!!formErrors.latDistance || !!formErrors.lonDistance) &&
+                  isEmpty(formik.errors) &&
+                  !isEmpty(formErrors) &&
                   <ValidationsError errors={getValidationErrors(formErrors)}/>
                 }
               </Box>
@@ -239,7 +242,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
                 <Button raised type="submit" disabled={Object.keys(formik.errors).length > NONE}>
                   <FormattedMessage id="general.ok-btn.text"/>
                 </Button>
-                <Button type="button" onClick={ (): void => { handleClose(false); } }>
+                <Button type="button" onClick={ (): void => { closeDialog(); } }>
                   <FormattedMessage id="general.cancel-btn.text"/>
                 </Button>
               </Box>

@@ -71,6 +71,7 @@
   "custom-bbox.dialog-field.bottomLeftLon.label": "אורך נק' שמאל תחתונה",
   "custom-bbox.form-error.x-distance.text": "אורך מעל המותר",
   "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
+  "custom-bbox.form-error.invalid.text": "קואורדינטות לא תקינות",
 
   "filters.title": "מסננים",
   "filters.sub-title": " ",
