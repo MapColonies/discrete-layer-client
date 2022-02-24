@@ -1,4 +1,4 @@
-#closeWithoutSaveDialog .closeIcon{
+#closeWithoutSaveDialog .closeIcon {
   margin-left: auto;
 }
 
@@ -9,7 +9,7 @@
   align-items: center;
 }
 
-body[dir='rtl'] #closeWithoutSaveDialog .closeIcon{
+body[dir='rtl'] #closeWithoutSaveDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
 }

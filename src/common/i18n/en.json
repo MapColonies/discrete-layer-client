@@ -47,7 +47,6 @@
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
   "action.job.retry": "Try again",
 
-
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
   "record-type.record_dem.label": "DEM",
@@ -115,6 +114,7 @@
 
   "field-names.ingestion.directory": "Directory",
   "field-names.ingestion.fileNames": "File names",
+  "ingestion.error.invalid-metadata": "Metadata file format is not valid",
 
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",
@@ -133,7 +133,7 @@
   "field-names.raster.sensor-type": "Sensor",
   "field-names.raster.region": "Countries",
   "field-names.raster.classification": "Classification",
-  "field-names.raster.accuracyCE90": "Hor. Accuracy", 
+  "field-names.raster.accuracyCE90": "Hor. Accuracy",
   "field-names.raster.srs": "EPSG",
   "field-names.raster.srs-name": "Srs Name",
   "field-names.raster.link.name": "Name",

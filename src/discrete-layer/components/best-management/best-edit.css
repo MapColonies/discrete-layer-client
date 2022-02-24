@@ -13,7 +13,7 @@
   left: 414px;
 }
 
-body[dir=rtl] .editBestIcon {
+body[dir='rtl'] .editBestIcon {
   left: unset;
   right: 414px;
 }
@@ -42,7 +42,7 @@ body[dir=rtl] .editBestIcon {
   padding: 8px;
 }
 
-body[dir=rtl] .bestCatalogImportContainer {
+body[dir='rtl'] .bestCatalogImportContainer {
   left: unset;
   right: calc(100% + 24px);
 }
@@ -72,7 +72,7 @@ body[dir=rtl] .bestCatalogImportContainer {
   right: 0;
 }
 
-body[dir=rtl] .bestCatalogImportWrapper .buttons {
+body[dir='rtl'] .bestCatalogImportWrapper .buttons {
   right: unset;
   left: 0;
 }
