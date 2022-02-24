@@ -30,6 +30,7 @@ import {
   useStore,
 } from '../../models';
 import { isMultiSelection } from '../layer-details/utils';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 
 import './file-picker-dialog.css';
 
@@ -62,6 +63,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     const [pathSuffix, setPathSuffix] = useState<string>(
       getSuffixFromFolderChain(currentSelection.folderChain)
     );
+    const [graphQLError, setGraphQLError] = useState<Record<string, unknown> | null>(null);
     const [selection, setSelection] = useState<Selection>(currentSelection);
     const store = useStore();
     const queryDirectory = useCallback(
@@ -116,6 +118,13 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryDirectory.data]);
+
+    useEffect(() => {
+      if (typeof queryDirectory.error !== 'undefined') {
+        setGraphQLError(queryDirectory.error)
+      }
+
+    }, [queryDirectory.error]);
 
     useEffect(() => {
       if (queryMetadata.data) {
@@ -198,28 +207,34 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             />
           </DialogContent>
           <DialogActions>
-            <Button
-              raised
-              type="button"
-              disabled={!isFileSelected}
-              onClick={(): void => {
-                onFilesSelection({
-                  ...(filePickerRef.current?.getFileSelection() as Selection),
-                  metadata: selection.metadata,
-                });
-                closeDialog();
-              }}
-            >
-              <FormattedMessage id="general.ok-btn.text" />
-            </Button>
-            <Button
-              type="button"
-              onClick={(): void => {
-                closeDialog();
-              }}
-            >
-              <FormattedMessage id="general.cancel-btn.text" />
-            </Button>
+            <Box id="graphql_error">
+              <GraphQLError error={graphQLError ?? {}} />
+            </Box>
+
+            <Box id="buttons">
+              <Button
+                raised
+                type="button"
+                disabled={!isFileSelected}
+                onClick={(): void => {
+                  onFilesSelection({
+                    ...(filePickerRef.current?.getFileSelection() as Selection),
+                    metadata: selection.metadata,
+                  });
+                  closeDialog();
+                }}
+              >
+                <FormattedMessage id="general.ok-btn.text" />
+              </Button>
+              <Button
+                type="button"
+                onClick={(): void => {
+                  closeDialog();
+                }}
+              >
+                <FormattedMessage id="general.cancel-btn.text" />
+              </Button>
+            </Box>
           </DialogActions>
         </Dialog>
       </Box>
