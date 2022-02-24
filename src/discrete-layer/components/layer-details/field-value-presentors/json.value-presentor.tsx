@@ -6,7 +6,9 @@ import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 
+const NONE = 0;
 interface JsonValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
@@ -22,7 +24,6 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   useEffect(()=>{
       setJsonValue(JSON.stringify(value ?? {}));
   },[value])
-  
 
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
@@ -35,36 +36,56 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
       </Tooltip>
     );
   } else {
-    const handleBlur = (e: any): void => {      
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {     
+      formik.setFieldTouched(fieldInfo.fieldName as string, true, false); 
+
       let formikValue: unknown = undefined;
-      
+      const currentErrors = get(formik.status, 'errors') as { [fieldName: string]: string[]; };
+
+      const removeStatusErrors = (): void => {
+        setTimeout(() => {
+          if (typeof currentErrors !== 'undefined') {
+            // Remove valid field from errors obj if exists
+            delete currentErrors[fieldInfo.fieldName as string];
+            formik.setStatus({ errors: currentErrors });
+          } else {
+            formik.setStatus({});
+          }
+        }, NONE);
+      };
+
       try {
+        if(jsonValue === '{}' && fieldInfo.isRequired as boolean){
+          throw new Error('Required field');
+        }
+
         formikValue = JSON.parse(jsonValue) as unknown;
-        setTimeout(()=>{
-          formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
-          formik.setStatus({});
-        }, 0);
+        formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
+
+          removeStatusErrors();
+
       } catch(err) {
-        const error = {id: `validation-field.${fieldInfo.fieldName}.json`};
+        const error = {id: `validation-field.${fieldInfo.fieldName as string}.json`};
+        const isFieldRequired = fieldInfo.isRequired as boolean
         
-        if(fieldInfo.isRequired || jsonValue.length > 0){
-          if(fieldInfo.isRequired && jsonValue.length === 0){
+        if (isFieldRequired || jsonValue.length > NONE) {
+          if (isFieldRequired && (jsonValue.length === NONE || jsonValue === '{}')) {
             error.id = 'validation-general.required';
           }
           const errorMsg = intl.formatMessage(
             error,
             { fieldName: `<strong>${intl.formatMessage({ id: fieldInfo.label })}</strong>` }
           );
-          
+
           formik.setStatus({
             errors: {
-                ...formik.status.errors,
+                ...currentErrors,
                 [fieldInfo.fieldName as string]: [errorMsg]
               }
           })
         }
         else {
-          formik.setStatus({});
+          removeStatusErrors();
         }
       }
     };
@@ -80,7 +101,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             onChange={(e): void => setJsonValue(e.currentTarget.value)}
             onBlur={handleBlur}
             placeholder={'JSON'}
-            required={fieldInfo.isRequired === true}
+            required={fieldInfo.isRequired as boolean}
             textarea
             rows={4}
           />

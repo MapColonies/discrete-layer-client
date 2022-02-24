@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   withFormik,
@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
-import { isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { Button } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
@@ -50,12 +50,18 @@ interface LayerDetailsFormCustomProps {
   closeDialog: () => void;
 }
 
+export interface StatusError {
+  errors: {
+    [fieldName: string]: string[];
+  }
+}
+
 export interface EntityFormikHandlers extends FormikHandlers {
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   setFieldError: (field: string, message: string | undefined) => void;
   setFieldTouched: (field: string, isTouched?: boolean | undefined, shouldValidate?: boolean | undefined) => void;
-  setStatus: (status?: any) => void;
-  status: any;
+  setStatus: (status?: StatusError | Record<string, unknown>) => void;
+  status: StatusError | Record<string, unknown>;
 }
 
 const InnerForm = (
@@ -78,7 +84,6 @@ const InnerForm = (
     setFieldError,
     setFieldTouched,
     setStatus,
-    status,
     recordType,
     ingestionFields,
     entityDescriptors,
@@ -91,9 +96,29 @@ const InnerForm = (
     closeDialog,
   } = props;
 
+  const status = props.status as StatusError | Record<string, unknown>;
+
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
+
+  const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
+    return get(status, 'errors') as Record<string, string[]> | null ?? {};
+  },[status])
+
+  const getYupErrors = useCallback(
+    (): Record<string, string[]> => {
+      const validationResults: Record<string, string[]> = {};
+      Object.entries(errors).forEach(([key, value]) => {
+        if (getFieldMeta(key).touched) {
+          validationResults[key] = [value as string];
+        }
+      });
+      return validationResults;
+    },
+    [errors, getFieldMeta],
+  )
+
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -102,9 +127,9 @@ const InnerForm = (
   useEffect(() => {
     setFirstPhaseErrors({
       ...getYupErrors(),
-      ...status?.errors
+      ...getStatusErrors() as { [fieldName: string]: string[]; },
     })
-  }, [errors, status]);
+  }, [errors, getYupErrors, getStatusErrors]);
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
@@ -112,7 +137,10 @@ const InnerForm = (
         setGraphQLError(undefined);
         handleChange(e);
       },
-      handleBlur,
+      handleBlur: (e: React.FocusEvent<any>): void => {
+        setGraphQLError(undefined);
+        handleBlur(e);
+      },
       handleSubmit,
       handleReset,
       getFieldProps,
@@ -135,20 +163,16 @@ const InnerForm = (
       handleReset,
       handleSubmit,
       resetForm,
+      setFieldError,
+      setFieldTouched,
       setFieldValue,
-      setValues
+      setStatus,
+      setValues,
+      status,
     ]
   );
 
-  const getYupErrors = (): Record<string, string[]> => {
-    const validationResults: Record<string, string[]> = {};
-    Object.entries(errors).forEach(([key, value]) => {
-      if (getFieldMeta(key).touched) {
-        validationResults[key] = [value as string];
-      }
-    });
-    return validationResults;
-  };
+ 
 
   const reloadFormMetadata = (
     ingestionFields: FormValues,
@@ -225,7 +249,9 @@ const InnerForm = (
                 mutationQueryLoading ||
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
-                Object.keys(status?.errors ?? {}).length > NONE 
+                (
+                  Object.keys(getStatusErrors()).length > NONE 
+                )
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

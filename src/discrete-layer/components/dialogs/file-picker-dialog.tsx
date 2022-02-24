@@ -33,6 +33,7 @@ import { isMultiSelection } from '../layer-details/utils';
 
 import './file-picker-dialog.css';
 
+const NUMBER_OF_TEMPLATE_FILES = 4;
 const EMPTY = 0;
 
 interface FilePickerDialogComponentProps {
@@ -70,6 +71,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     const intl = useIntl();
 
     useEffect(() => {
+      setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null) as FileData[])
       queryDirectory.setQuery(
         store.queryGetDirectory({
           data: {
@@ -92,25 +94,25 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
 
     useEffect(() => {
       if (queryDirectory.data) {
-        const dirContent = cloneDeep(
-          queryDirectory.data.getDirectory
-        ) as FileData[];
-        setFiles(dirContent);
-        if (dirContent.length) {
-          const hasMetadata = dirContent.some(
-            (file) => file.name === 'metadata.json'
-          );
-          if (hasMetadata) {
-            queryMetadata.setQuery(
-              store.queryGetFile({
-                data: {
-                  pathSuffix: pathSuffix + 'metadata.json',
-                  type: recordType,
-                },
-              })
+          const dirContent = cloneDeep(
+            queryDirectory.data.getDirectory
+          ) as FileData[];
+          setFiles(dirContent);
+          if (dirContent.length) {
+            const hasMetadata = dirContent.some(
+              (file) => file.name === 'metadata.json'
             );
+            if (hasMetadata) {
+              queryMetadata.setQuery(
+                store.queryGetFile({
+                  data: {
+                    pathSuffix: pathSuffix + 'metadata.json',
+                    type: recordType,
+                  },
+                })
+              );
+            }
           }
-        }
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryDirectory.data]);

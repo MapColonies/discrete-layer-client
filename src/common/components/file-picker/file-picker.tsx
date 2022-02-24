@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { isFunction } from 'lodash';
+import { get, isFunction } from 'lodash';
 import { useTheme } from '@map-colonies/react-core';
 import {
   FileActionData,
@@ -112,7 +112,7 @@ export const FilePickerComponent = React.forwardRef<
           } else {
             const newSelection = { ...currentSelection };
             newSelection.files = files.filter((file: FileData) =>
-              selectedIds.has(file.id)
+              selectedIds.has(get(file, 'id'))
             );
             return newSelection;
           }
