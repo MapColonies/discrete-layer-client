@@ -140,11 +140,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
             }
           });
           closeDialog();
-          setFormErrors({
-            latDistance: '',
-            lonDistance: '',
-            invalid: '',
-          });
+          setFormErrors({});
         } catch(e) {
           console.error(e);
         }
