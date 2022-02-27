@@ -1,9 +1,11 @@
-
 import moment from 'moment';
 import CONFIG from '../config';
 
 export interface FormatterFunc {
-  (source: string | Date | moment.Moment | undefined, option?: boolean | undefined): string;
+  (
+    source: string | Date | moment.Moment | undefined,
+    option?: boolean | undefined
+  ): string;
 }
 
 export const stringFormatter: FormatterFunc = (val): string => {
@@ -23,4 +25,20 @@ export const relativeDateFormatter: FormatterFunc = (date): string => {
   return date !== undefined
     ? moment(date).fromNow()
     : '-';
+};
+
+export const dateSerializer: FormatterFunc = (date): string => {
+  if (typeof date !== 'undefined') {
+    return (date as Date | moment.Moment).toISOString();
+  }
+
+  if (typeof date === 'string') {
+    try {
+      return new Date(date).toISOString();
+    } catch (e) {
+      return '-';
+    }
+  }
+
+  return '-';
 };

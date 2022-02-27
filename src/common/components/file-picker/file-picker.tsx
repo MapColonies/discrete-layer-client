@@ -1,7 +1,6 @@
-
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { isFunction } from 'lodash';
+import { get, isFunction } from 'lodash';
 import { useTheme } from '@map-colonies/react-core';
 import {
   FileActionData,
@@ -10,7 +9,7 @@ import {
   FilePickerAction,
   FilePickerActions,
   FilePickerHandle,
-  SupportedLocales
+  SupportedLocales,
 } from '@map-colonies/react-components';
 import { LayerMetadataMixedUnion } from '../../../discrete-layer/models';
 import CONFIG from '../../config';
@@ -18,16 +17,23 @@ import CONFIG from '../../config';
 const NOT_FOUND = -1;
 const START = 0;
 
+export interface MetadataFile {
+  recordModel: LayerMetadataMixedUnion;
+  error: unknown;
+}
 export interface FilePickerComponentHandle {
   getFileSelection: () => Selection;
   setFileSelection: (selection: Set<string>, reset?: boolean) => void;
-  requestFileAction: <Action extends FilePickerAction>(action: Action, payload: Action['__payloadType']) => Promise<void>;
+  requestFileAction: <Action extends FilePickerAction>(
+    action: Action,
+    payload: Action['__payloadType']
+  ) => Promise<void>;
 }
 
 export interface Selection {
   files: FileData[];
   folderChain: FileData[];
-  metadata?: LayerMetadataMixedUnion;
+  metadata?: MetadataFile;
 }
 
 interface FilePickerComponentProps {
@@ -37,20 +43,18 @@ interface FilePickerComponentProps {
   onFileAction?: (data: FileActionData) => void;
 }
 
-export const FilePickerComponent = React.forwardRef<FilePickerComponentHandle, FilePickerComponentProps>(
+export const FilePickerComponent = React.forwardRef<
+  FilePickerComponentHandle,
+  FilePickerComponentProps
+>(
   (
-    {
-      files,
-      selection: currentSelection,
-      isMultiSelection,
-      onFileAction
-    },
+    { files, selection: currentSelection, isMultiSelection, onFileAction },
     ref
   ) => {
     const theme = useTheme();
-    const fpRef = useRef<FilePickerHandle>();
+    const fpRef = useRef<FilePickerHandle>(null);
     const [selection, setSelection] = useState<Selection>(currentSelection);
-    
+
     useImperativeHandle(ref, () => ({
       getFileSelection(): Selection {
         return selection;
@@ -67,7 +71,9 @@ export const FilePickerComponent = React.forwardRef<FilePickerComponentHandle, F
     }));
 
     useEffect(() => {
-      const selectedFiles = new Set(currentSelection.files.map((file) => file.id));
+      const selectedFiles = new Set(
+        currentSelection.files.map((file) => file.id)
+      );
       fpRef.current?.setFileSelection(selectedFiles, false);
     }, [currentSelection, files]);
 
@@ -78,11 +84,18 @@ export const FilePickerComponent = React.forwardRef<FilePickerComponentHandle, F
         if (fileToOpen.isDir === true) {
           setSelection((currentSelection) => {
             const newSelection = { ...currentSelection };
-            const index = newSelection.folderChain.findIndex(file => file.id === fileToOpen.id);
+            const index = newSelection.folderChain.findIndex(
+              (file) => file.id === fileToOpen.id
+            );
             if (index > NOT_FOUND) {
-              newSelection.folderChain = [ ...newSelection.folderChain.slice(START, index + 1) ];
+              newSelection.folderChain = [
+                ...newSelection.folderChain.slice(START, index + 1),
+              ];
             } else {
-              newSelection.folderChain = [ ...newSelection.folderChain, fileToOpen ];
+              newSelection.folderChain = [
+                ...newSelection.folderChain,
+                fileToOpen,
+              ];
             }
             return newSelection;
           });
@@ -92,11 +105,15 @@ export const FilePickerComponent = React.forwardRef<FilePickerComponentHandle, F
           const selectedIds = fpRef.current?.getFileSelection() as Set<string>;
 
           if (!isMultiSelection && selectedIds.size > 1) {
-            fpRef.current?.setFileSelection(new Set(currentSelection.files.map(file => file.id)));
+            fpRef.current?.setFileSelection(
+              new Set(currentSelection.files.map((file) => file.id))
+            );
             return currentSelection;
           } else {
             const newSelection = { ...currentSelection };
-            newSelection.files = files.filter((file: FileData) => selectedIds.has(file.id));
+            newSelection.files = files.filter((file: FileData) =>
+              selectedIds.has(get(file, 'id'))
+            );
             return newSelection;
           }
         });
@@ -105,10 +122,9 @@ export const FilePickerComponent = React.forwardRef<FilePickerComponentHandle, F
         onFileAction(data);
       }
     };
-    
+
     return (
       <FilePicker
-        // @ts-ignore
         ref={fpRef}
         theme={{
           primary: theme.primary as string,
@@ -118,7 +134,11 @@ export const FilePickerComponent = React.forwardRef<FilePickerComponentHandle, F
           selectionBackground: theme.custom?.GC_SELECTION_BACKGROUND as string,
         }}
         readOnlyMode={true}
-        locale={SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]}
+        locale={
+          SupportedLocales[
+            CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales
+          ]
+        }
         files={files}
         folderChain={selection.folderChain}
         onFileAction={handleAction}

@@ -45,7 +45,7 @@ export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entit
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
       break;
   }
-  return get(entityDesc, 'categories') as IRecordCategoryFieldsInfo[];
+  return (get(entityDesc, 'categories') ?? []) as IRecordCategoryFieldsInfo[];
 };
 
 export const getFlatEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entityDescriptors: EntityDescriptorModelType[]): FieldConfigModelType[] => {

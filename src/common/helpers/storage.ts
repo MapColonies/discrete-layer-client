@@ -1,8 +1,8 @@
 export interface IStorage {
   get: (key: string) => string | null;
   set: (key: string, value: string) => void;
-  setObject: (key: string, value: Record<string,unknown>) => void;
-  getObject: (key: string) => Record<string,unknown> | null;
+  setObject: (key: string, value: Record<string, unknown>) => void;
+  getObject: (key: string) => Record<string, unknown> | null;
   remove: (key: string) => void;
   clear: () => void;
   key: (index: number) => string | null;
@@ -15,7 +15,7 @@ function storageFactory(storage: Storage, prefix = ''): IStorage {
 
   const isSupported = ((): boolean => {
     try {
-      const testKey = "__test-key__";
+      const testKey = '__test-key__';
       storage.setItem(testKey, testKey);
       storage.removeItem(testKey);
       return true;
@@ -26,7 +26,7 @@ function storageFactory(storage: Storage, prefix = ''): IStorage {
 
   function getPrefixedKey(key: string): string {
     return prefix + key;
-  };
+  }
 
   function clear(): void {
     if (isSupported) {
@@ -57,16 +57,16 @@ function storageFactory(storage: Storage, prefix = ''): IStorage {
     }
   }
 
-  function setObject(key: string, value: Record<string,unknown>): void {
+  function setObject(key: string, value: Record<string, unknown>): void {
     set(key, JSON.stringify(value));
   }
 
-  function getObject(key: string): Record<string,unknown> | null {
+  function getObject(key: string): Record<string, unknown> | null {
     const value = get(key) as string;
-    try{
-      return JSON.parse(value) as Record<string,unknown> | null ;
-    } catch(e) {
-      return {}; 
+    try {
+      return JSON.parse(value) as Record<string, unknown> | null;
+    } catch (e) {
+      return {};
     }
   }
 
@@ -74,7 +74,7 @@ function storageFactory(storage: Storage, prefix = ''): IStorage {
     if (isSupported) {
       return storage.key(index);
     } else {
-       return Object.keys(inMemoryStorage)[index] || null;
+      return Object.keys(inMemoryStorage)[index] || null;
     }
   }
 

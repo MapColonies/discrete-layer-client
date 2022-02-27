@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mode } from '../../../../common/models/mode.enum';
+import { EntityFormikHandlers } from '../layer-datails-form';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { FormInputTextFieldComponent } from './form.input.text.field';
 
@@ -7,7 +8,7 @@ interface StringValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
-  formik?: unknown;
+  formik?: EntityFormikHandlers;
 }
 
 export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = (props) => {
