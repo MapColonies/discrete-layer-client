@@ -22,6 +22,7 @@ import {
   FilePickerComponentHandle,
   Selection,
 } from '../../../common/components/file-picker';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import {
   FileModelType,
   LayerMetadataMixedUnion,
@@ -30,14 +31,13 @@ import {
   useStore,
 } from '../../models';
 import { isMultiSelection } from '../layer-details/utils';
-import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 
-import './file-picker-dialog.css';
+import './file-picker.dialog.css';
 
 const NUMBER_OF_TEMPLATE_FILES = 4;
 const EMPTY = 0;
 
-interface FilePickerDialogComponentProps {
+interface FilePickerDialogProps {
   recordType: RecordType;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
@@ -49,7 +49,7 @@ const getSuffixFromFolderChain = (folderChain: FileData[]): string => {
   return '/' + folderChain.map((file) => file.name).join('/');
 };
 
-export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
+export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
   ({
     recordType,
     isOpen,

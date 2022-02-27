@@ -28,7 +28,7 @@ import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 import { JOB_ENTITY } from './job.types';
 
-import './jobs-dialog.css';
+import './jobs.dialog.css';
 
 const pagination = true;
 const pageSize = 10;
@@ -37,12 +37,12 @@ const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILISECONDS_IN_SEC = 1000;
 
-interface SystemJobsComponentProps {
+interface JobsDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
 
-export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer((props: SystemJobsComponentProps) => {
+export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialogProps) => {
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 

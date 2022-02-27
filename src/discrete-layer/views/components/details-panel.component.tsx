@@ -5,7 +5,7 @@ import { Box } from '@map-colonies/react-components';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Mode } from '../../../common/models/mode.enum';
 import { hasOwnProperty } from '../../../common/helpers/object';
-import { EntityDialogComponent } from '../../components/layer-details/entity-dialog';
+import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
 import { useStore } from '../../models/RootStore';
 import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
@@ -59,11 +59,12 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           </Tooltip>
         }
         {
-          isEditEntityDialogOpen && <EntityDialogComponent
+          isEditEntityDialogOpen &&
+          <EntityDialog
             isOpen={isEditEntityDialogOpen}
             onSetOpen={setEditEntityDialogOpen}
-            layerRecord={layerToPresent ?? editingBest}>
-          </EntityDialogComponent>
+            layerRecord={layerToPresent ?? editingBest}
+          />
         }
         <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
           <IconButton 

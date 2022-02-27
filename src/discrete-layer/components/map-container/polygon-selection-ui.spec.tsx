@@ -5,7 +5,7 @@ import { Button, Drawer, ListItemText } from '@map-colonies/react-core';
 // eslint-disable-next-line
 import '../../../__mocks__/confEnvShim';
 import { PolygonSelectionUi } from './polygon-selection-ui';
-import { DialogBBox } from './dialog-bbox';
+import { BBoxDialog } from './bbox.dialog';
 
 // Enzyme doesn’t work properly with hooks in general, especially for `shallow` so this is the way to mock `react-intl` module.
 // Enspired by https://github.com/formatjs/formatjs/issues/1477
@@ -126,7 +126,7 @@ describe('Polygon Selection component', () => {
       });
     item.parent().simulate('click');
 
-    expect(wrapper.find(DialogBBox).prop('isOpen')).toBe(true);
+    expect(wrapper.find(BBoxDialog).prop('isOpen')).toBe(true);
   });
 
   it('clicking the clear menu item calls onreset and closes the menu', () => {

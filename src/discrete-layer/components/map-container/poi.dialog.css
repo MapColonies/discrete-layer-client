@@ -1,0 +1,46 @@
+#poiDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #poiDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#poiDialog .poiForm {
+  padding-top: 16px;
+  font-size: 0.875rem;
+}
+
+#poiDialog .poiRow {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+#poiDialog .poiField {
+  margin: 0 8px;
+}
+
+#poiDialog .footer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 60px;
+}
+
+#poiDialog .messages {
+  display: flex;
+  flex-direction: column;
+}
+
+#poiDialog .buttons {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-left: auto;
+}
+
+body[dir='rtl'] #poiDialog .buttons {
+  margin-left: unset;
+  margin-right: auto;
+}

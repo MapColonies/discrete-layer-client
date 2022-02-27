@@ -13,6 +13,9 @@
   "general.title.new": "הוספת מוצר {value}",
   "general.title.edit": "עריכת מידע של מוצר {value}",
   "general.title.choose": "בחירת קבצים",
+  "general.dialog.poi.title": "הגדר נקודת ציון",
+  "general.dialog-field.lon.label": "קואורדינטת קו אורך",
+  "general.dialog-field.lat.label": "קואורדינטת קו רוחב",
   "general.dialog.exit.title": "בטוח שברצונך להמשיך?",
   "general.dialog.exit.message": "שינויים שלא נשמרו ייאבדו.",
   "general.dialog.best-in-edit.title": "אתה עורך BEST",
@@ -68,6 +71,7 @@
   "custom-bbox.dialog-field.bottomLeftLon.label": "אורך נק' שמאל תחתונה",
   "custom-bbox.form-error.x-distance.text": "אורך מעל המותר",
   "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
+  "custom-bbox.form-error.invalid.text": "קואורדינטות לא תקינות",
 
   "filters.title": "מסננים",
   "filters.sub-title": " ",

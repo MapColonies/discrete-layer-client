@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DialogBBox component renders correctly 1`] = `
+exports[`BBoxDialog component renders correctly 1`] = `
 <McBox
   id="bboxDialog"
 >
@@ -20,15 +20,15 @@ exports[`DialogBBox component renders correctly 1`] = `
     </Function>
     <Function>
       <form
-        className="dialogBboxForm"
+        className="bboxForm"
         noValidate={true}
         onSubmit={[Function]}
       >
         <McBox
-          className="dialogBboxRow"
+          className="bboxRow"
         >
           <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -44,7 +44,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             />
           </McBox>
           <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -60,15 +60,15 @@ exports[`DialogBBox component renders correctly 1`] = `
             />
           </McBox>
           <BBoxCorner
-            className="dialogBboxField"
+            className="bboxField"
             corner="TOP_RIGHT"
           />
         </McBox>
         <McBox
-          className="dialogBboxRow"
+          className="bboxRow"
         >
           <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -84,7 +84,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             />
           </McBox>
           <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -100,7 +100,7 @@ exports[`DialogBBox component renders correctly 1`] = `
             />
           </McBox>
           <BBoxCorner
-            className="dialogBboxField"
+            className="bboxField"
             corner="BOTTOM_LEFT"
           />
         </McBox>

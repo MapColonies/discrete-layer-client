@@ -45,14 +45,14 @@ import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
 
-import './entity-dialog.css';
+import './entity.dialog.css';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
 
-interface EntityDialogComponentProps {
+interface EntityDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   recordType?: RecordType;
@@ -112,8 +112,8 @@ const getLabel = (recordType: RecordType): string => {
   return 'field-names.ingestion.fileNames';
 };
 
-export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer(
-  (props: EntityDialogComponentProps) => {
+export const EntityDialog: React.FC<EntityDialogProps> = observer(
+  (props: EntityDialogProps) => {
     const { isOpen, onSetOpen, recordType } = props;
     const [layerRecord] = useState<LayerMetadataMixedUnion>(
       props.layerRecord
