@@ -4,13 +4,14 @@ import { useFormik } from 'formik';
 import { isEmpty } from 'lodash';
 import * as Yup from 'yup';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@map-colonies/react-core';
-import { Box, IDrawingEvent } from '@map-colonies/react-components';
+import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 
 import './poi.dialog.css';
 
 const NONE = 0;
+const DELTA = 0.01;
 
 interface IPOI {
   lon: number;
@@ -23,7 +24,7 @@ interface PoiDialogProps {
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
 }
 
-export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
+export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPolygonUpdate }) => {
   const intl = useIntl();
   
   const closeDialog = useCallback(
@@ -53,7 +54,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
       ...yupSchema
     }),
     onSubmit: (values) => {
-      /*try {
+      try {
         onPolygonUpdate({
           primitive: undefined,
           type: DrawType.BOX,
@@ -61,37 +62,32 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen }) => {
             type : 'FeatureCollection',
             features: [
               { 
-                type : 'Feature', 
+                type : 'Feature',
                 properties : {  
                   type : BboxCorner.TOP_RIGHT,
                 }, 
                 geometry : { 
-                  type : 'Point', 
-                  coordinates : [ values.topRightLon, values.topRightLat ] 
+                  type : 'Point',
+                  coordinates : [ values.lon + DELTA, values.lat + DELTA ] 
                 }
               },
               { 
-                type : 'Feature', 
+                type : 'Feature',
                 properties : {  
                   type : BboxCorner.BOTTOM_LEFT
                 }, 
                 geometry : { 
-                  type : 'Point', 
-                  coordinates : [ values.bottomLeftLon, values.bottomLeftLat ]  
+                  type : 'Point',
+                  coordinates : [ values.lon - DELTA, values.lat - DELTA ]  
                 }
               }
             ]
           }
         });
         closeDialog();
-        setFormErrors({
-          latDistance: '',
-          lonDistance: '',
-          invalid: '',
-        });
       } catch(e) {
         console.error(e);
-      }*/
+      }
     },
   });
 
