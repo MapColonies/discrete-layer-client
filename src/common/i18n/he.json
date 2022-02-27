@@ -118,7 +118,6 @@
 
   "field-names.ingestion.directory": "נתיב מלא",
   "field-names.ingestion.fileNames": "שמות הקבצים",
-  "ingestion.error.invalid-metadata": "קובץ מטא-דאטה בפורמט לא תקין",
 
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
@@ -137,7 +136,7 @@
   "field-names.raster.sensor-type": "סנסור",
   "field-names.raster.region": "מדינות",
   "field-names.raster.classification": "סיווג",
-  "field-names.raster.accuracyCE90": "דיוק מישורי",
+  "field-names.raster.accuracyCE90": "דיוק מישורי", 
   "field-names.raster.srs": "מזהה מערכת ייחוס",
   "field-names.raster.srs-name": "שם מערכת ייחוס",
   "field-names.raster.link.name": "שם",
@@ -270,6 +269,7 @@
   "field-names.vector-raster.link.description": "תאור",
   "field-names.vector-raster.link.protocol": "פרוטוקול",
   "field-names.vector-raster.link.url": "קישור",
+
 
   "info-general-tooltip.required": "שדה חובה",
 

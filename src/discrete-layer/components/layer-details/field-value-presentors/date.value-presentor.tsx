@@ -1,45 +1,25 @@
 import React from 'react';
-import moment, {Moment} from 'moment'; 
+import moment from 'moment';
+import { get } from 'lodash';
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
-import useDebounceField, { GCHTMLInputElement } from '../../../../common/hooks/debounce-field.hook';
-import { dateFormatter, dateSerializer } from '../../../../common/helpers/formatters';
+import { dateFormatter } from '../../../../common/helpers/formatters';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface DateValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: moment.Moment;
-  formik?: EntityFormikHandlers;
+  formik?: unknown;
 }
 
 export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
-  const [innerValue, handleOnChange] = useDebounceField(
-    formik as EntityFormikHandlers ,
-    value ?? null
-  );
-
   const local = {
     placeHolderText: CONFIG.LOCALE.DATE_FORMAT,
     calendarLocale: CONFIG.I18N.DEFAULT_LANGUAGE as SupportedLocales,
   };
-
-  const inputValue = (): string | undefined => {
-    if(innerValue === null || !moment(innerValue).isValid()){
-      return undefined;
-    } 
-    return dateFormatter(innerValue);
-  }
-
-  const getDate = (): Date | null => {
-    if(innerValue !== null){
-      return new Date(dateSerializer(innerValue))
-    }
-    return null;
-  }
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -48,27 +28,20 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
       </Box>
     );
   } else {
+    const value = get(formik,`values[${fieldInfo.fieldName as string}]`) as  (moment.Moment | undefined);
     return (
       <Box className="detailsFieldValue datePresentor">
         <DateTimePicker
-          value={getDate()}
-          inputValue={inputValue()}
+          value={value === undefined ? null : value}
           onChange={
-            (dateVal, val): void => {
+            (dateVal): void => {
               const momentVal = moment(dateVal);
-              handleOnChange({
-                // eslint-disable-next-line
-                persist: () => {},
-                // @ts-ignore
-                currentTarget: {
-                  value: momentVal,
-                  name: fieldInfo.fieldName,
-                } as GCHTMLInputElement
-              });
+              // eslint-disable-next-line
+              (formik as any).setFieldValue(fieldInfo.fieldName, momentVal);
             }
-          
           }
-          onBlur={formik?.handleBlur}
+          // eslint-disable-next-line
+          onBlur={(formik as any).handleBlur}
           required={fieldInfo.isRequired === true}
           local={local}
           autoOk

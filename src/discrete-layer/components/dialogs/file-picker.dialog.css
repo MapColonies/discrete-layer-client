@@ -20,24 +20,3 @@ body[dir='rtl'] #filePickerDialog .closeIcon {
 body[dir='rtl'] #filePickerDialog .MuiPopover-root {
   left: -120% !important;
 }
-
-#filePickerDialog .mdc-dialog__surface {
-  overflow-y: hidden;
-}
-
-#filePickerDialog #graphql_error {
-  height: 40px;
-}
-
-#filePickerDialog #buttons {
- display: flex;
- align-self: flex-start; 
-}
-
-#filePickerDialog #buttons button {
-  padding: 0 20px;
-}
-
-#filePickerDialog .mdc-dialog__actions {
-  justify-content: space-between;
-}

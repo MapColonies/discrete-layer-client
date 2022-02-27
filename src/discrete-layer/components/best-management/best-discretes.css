@@ -15,7 +15,7 @@
   max-width: 164px; */
 }
 
-body[dir='rtl'] #bestDiscretes .ag-pinned-right-cols-container {
+body[dir=rtl] #bestDiscretes .ag-pinned-right-cols-container {
   position: absolute !important;
   left: 10px;
   right: unset;
@@ -24,6 +24,7 @@ body[dir='rtl'] #bestDiscretes .ag-pinned-right-cols-container {
   min-width: 164px;
   max-width: 164px; */
 }
+
 
 /* Reset pointer-events so that click can happen on action buttons */
 #bestDiscretes .ag-pinned-right-cols-container * {
@@ -37,7 +38,7 @@ body[dir='rtl'] #bestDiscretes .ag-pinned-right-cols-container {
   left: -82px !important;
 }
 
-body[dir='rtl'] #bestDiscretes .ag-pinned-right-cols-container .ag-cell {
+body[dir=rtl] #bestDiscretes .ag-pinned-right-cols-container .ag-cell {
   left: unset;
   right: -82px !important;
 }
@@ -50,7 +51,7 @@ body[dir='rtl'] #bestDiscretes .ag-pinned-right-cols-container .ag-cell {
 }
 
 #bestDiscretes .ag-pinned-right-cols-container .ag-row.ag-row-hover {
-  background-color: rgb(44, 65, 89);
+  background-color: rgb(44,65,89);
   border-width: 0px !important;
 }
 
@@ -58,7 +59,7 @@ body[dir='rtl'] #bestDiscretes .ag-pinned-right-cols-container .ag-cell {
   background-color: var(--ag-selected-row-background-color, rgba(33, 150, 243, 0.3));
 }
 
-#bestDiscretes .ag-pinned-right-cols-container div[role='row'] {
+#bestDiscretes .ag-pinned-right-cols-container div[role=row] {
   height: 268px !important;
 }
 

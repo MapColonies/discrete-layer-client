@@ -1,9 +1,10 @@
+
 .catalogContainer {
   height: calc(100% - 12px);
   margin: 12px 12px 0 12px;
 }
 
-body[dir='rtl'] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer {
+body[dir=rtl] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer{
   margin-right: -12px;
 }
 
@@ -16,7 +17,7 @@ body[dir='rtl'] .catalogContainer .ReactVirtualized__Grid__innerScrollContainer 
   right: 30px;
 }
 
-body[dir='rtl'] .actionIcon {
+body[dir=rtl] .actionIcon {
   right: unset;
   left: 30px;
 }

@@ -1,7 +1,7 @@
 .categoryFieldsParentContainer {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 16px
 }
 
 .categoryFieldsTitle {
@@ -36,14 +36,14 @@
 }
 
 .detailsFieldLabel {
-  display: flex;
+  display:flex;
   color: var(--mdc-theme-text-icon-on-dark);
   flex: 0 0 95px;
   overflow: hidden;
 }
 
 .detailsFieldLabel > span {
-  min-width: 0;
+  min-width: 0;      
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -89,13 +89,14 @@ body[dir='rtl'] .textFieldInfoList {
   color: var(--mdc-theme-primary);
   cursor: help;
   position: absolute;
-  right: 2px;
-  top: 50%;
+  right:2px;
+  top:50%;
   transform: translateY(-50%);
 }
 
 body[dir='rtl'] .textFieldInfoIcon {
   margin-left: unset;
   right: unset;
-  left: 2px;
+  left:2px;
+ 
 }

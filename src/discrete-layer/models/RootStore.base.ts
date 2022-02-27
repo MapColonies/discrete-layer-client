@@ -35,10 +35,6 @@ import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
 import { enumAspectsModelPrimitives, EnumAspectsModelSelector } from "./EnumAspectsModel.base"
 import { JobModel, JobModelType } from "./JobModel"
 import { jobModelPrimitives, JobModelSelector } from "./JobModel.base"
-import { FileModel, FileModelType } from "./FileModel"
-import { fileModelPrimitives, FileModelSelector } from "./FileModel.base"
-import { DecryptedIdModel, DecryptedIdModelType } from "./DecryptedIdModel"
-import { decryptedIdModelPrimitives, DecryptedIdModelSelector } from "./DecryptedIdModel.base"
 import { TasksGroupModel, TasksGroupModelType } from "./TasksGroupModel"
 import { tasksGroupModelPrimitives, TasksGroupModelSelector } from "./TasksGroupModel.base"
 
@@ -93,14 +89,6 @@ export type JobsSearchParams = {
   isCleaned?: boolean
   status?: Status
   type?: string
-}
-export type ExplorerGetByPathSuffix = {
-  pathSuffix: string
-  type: RecordType
-}
-export type ExplorerGetById = {
-  id: string
-  type: RecordType
 }
 export type TasksSearchParams = {
   jobId: string
@@ -278,11 +266,6 @@ querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
 queryEntityDescriptors="queryEntityDescriptors",
 queryJobs="queryJobs",
-queryGetDirectory="queryGetDirectory",
-queryGetDirectoryById="queryGetDirectoryById",
-queryGetFile="queryGetFile",
-queryGetFileById="queryGetFileById",
-queryGetDecryptedId="queryGetDecryptedId",
 queryTasks="queryTasks"
 }
 export enum RootStoreBaseMutations {
@@ -299,7 +282,7 @@ mutateJobRetry="mutateJobRetry"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -332,31 +315,6 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryJobs(variables: { params?: JobsSearchParams }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ jobs: JobModelType[]}>(`query jobs($params: JobsSearchParams) { jobs(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
-      } }`, variables, options)
-    },
-    queryGetDirectory(variables: { data: ExplorerGetByPathSuffix }, resultSelector: string | ((qb: FileModelSelector) => FileModelSelector) = fileModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getDirectory: FileModelType[]}>(`query getDirectory($data: ExplorerGetByPathSuffix!) { getDirectory(data: $data) {
-        ${typeof resultSelector === "function" ? resultSelector(new FileModelSelector()).toString() : resultSelector}
-      } }`, variables, options)
-    },
-    queryGetDirectoryById(variables: { data: ExplorerGetById }, resultSelector: string | ((qb: FileModelSelector) => FileModelSelector) = fileModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getDirectoryById: FileModelType[]}>(`query getDirectoryById($data: ExplorerGetById!) { getDirectoryById(data: $data) {
-        ${typeof resultSelector === "function" ? resultSelector(new FileModelSelector()).toString() : resultSelector}
-      } }`, variables, options)
-    },
-    queryGetFile(variables: { data: ExplorerGetByPathSuffix }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getFile: LayerMetadataMixedUnion}>(`query getFile($data: ExplorerGetByPathSuffix!) { getFile(data: $data) {
-        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
-      } }`, variables, options)
-    },
-    queryGetFileById(variables: { data: ExplorerGetById }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getFileById: LayerMetadataMixedUnion}>(`query getFileById($data: ExplorerGetById!) { getFileById(data: $data) {
-        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
-      } }`, variables, options)
-    },
-    queryGetDecryptedId(variables: { data: ExplorerGetById }, resultSelector: string | ((qb: DecryptedIdModelSelector) => DecryptedIdModelSelector) = decryptedIdModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getDecryptedId: DecryptedIdModelType}>(`query getDecryptedId($data: ExplorerGetById!) { getDecryptedId(data: $data) {
-        ${typeof resultSelector === "function" ? resultSelector(new DecryptedIdModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryTasks(variables: { params?: TasksSearchParams }, resultSelector: string | ((qb: TasksGroupModelSelector) => TasksGroupModelSelector) = tasksGroupModelPrimitives.toString(), options: QueryOptions = {}) {

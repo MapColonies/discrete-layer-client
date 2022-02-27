@@ -1,107 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { get, isEmpty } from  'lodash';
 import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-import { useIntl } from 'react-intl';
-import { get } from 'lodash';
 
-const NONE = 0;
 interface JsonValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
-  formik?: EntityFormikHandlers;
+  formik?: unknown;
   type?: string;
 }
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({ mode, fieldInfo, value, formik, type }) => {
-  const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
-  const intl = useIntl();
-
-  useEffect(()=>{
-      setJsonValue(JSON.stringify(value ?? {}));
-  },[value])
-
-
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
-    const stringifiedValue = JSON.stringify(value);
+    const stringifiedValue = JSON.stringify(value ?? {});
     return (
       <Tooltip content={stringifiedValue}>
         <Box className="detailsFieldValue">
           {stringifiedValue}
         </Box>
       </Tooltip>
+      // <></>
     );
   } else {
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {     
-      formik.setFieldTouched(fieldInfo.fieldName as string, true, false); 
+    const value = get(formik, `values[${fieldInfo.fieldName as string}]`) as unknown;
+    const controlValue = {
+      value: isEmpty(value) ? undefined : JSON.stringify(value ?? {})
+    };
 
+    const handleBlur = (e: any): void => {
+
+      // eslint-disable-next-line
+      const val = (e.target as any).value;
+      
       let formikValue: unknown = undefined;
-      const currentErrors = get(formik.status, 'errors') as { [fieldName: string]: string[]; };
-
-      const removeStatusErrors = (): void => {
-        setTimeout(() => {
-          if (typeof currentErrors !== 'undefined') {
-            // Remove valid field from errors obj if exists
-            delete currentErrors[fieldInfo.fieldName as string];
-            formik.setStatus({ errors: currentErrors });
-          } else {
-            formik.setStatus({});
-          }
-        }, NONE);
-      };
-
       try {
-        if(jsonValue === '{}' && fieldInfo.isRequired as boolean){
-          throw new Error('Required field');
-        }
-
-        formikValue = JSON.parse(jsonValue) as unknown;
-        formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
-
-          removeStatusErrors();
-
-      } catch(err) {
-        const error = {id: `validation-field.${fieldInfo.fieldName as string}.json`};
-        const isFieldRequired = fieldInfo.isRequired as boolean
-        
-        if (isFieldRequired || jsonValue.length > NONE) {
-          if (isFieldRequired && (jsonValue.length === NONE || jsonValue === '{}')) {
-            error.id = 'validation-general.required';
-          }
-          const errorMsg = intl.formatMessage(
-            error,
-            { fieldName: `<strong>${intl.formatMessage({ id: fieldInfo.label })}</strong>` }
-          );
-
-          formik.setStatus({
-            errors: {
-                ...currentErrors,
-                [fieldInfo.fieldName as string]: [errorMsg]
-              }
-          })
-        }
-        else {
-          removeStatusErrors();
-        }
+        formikValue = JSON.parse(val) as unknown;
+        // eslint-disable-next-line
+        (formik as any).setFieldValue(fieldInfo.fieldName, formikValue);
+      // eslint-disable-next-line no-empty
+      } catch(e) {
+        // eslint-disable-next-line
+        (formik as any).setFieldValue(fieldInfo.fieldName, undefined);
       }
+      
+      // eslint-disable-next-line
+      (formik as any).handleBlur(e);
     };
 
     return (
       <>
         <Box className="detailsFieldValue">
           <TextField
+            {...controlValue}
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             type={type}
-            value={jsonValue === '{}' ? '' : jsonValue}
-            onChange={(e): void => setJsonValue(e.currentTarget.value)}
+            // eslint-disable-next-line
             onBlur={handleBlur}
             placeholder={'JSON'}
-            required={fieldInfo.isRequired as boolean}
+            required={fieldInfo.isRequired === true}
             textarea
             rows={4}
           />

@@ -8,7 +8,6 @@ import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
 import { RecordType, useQuery } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-import { EntityFormikHandlers } from '../layer-datails-form';
 
 import './autocomplete.value-presentor.css';
 
@@ -16,10 +15,10 @@ interface AutocompleteValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
-  formik?: EntityFormikHandlers;
+  changeHandler?: (e: any)=>void; //unknown;
 }
 
-export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, formik }) => {
+export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, changeHandler }) => {
   const { data }  = useQuery((store) =>
     store.queryGetDomain({
       recordType: RecordType.RECORD_RASTER, 
@@ -39,7 +38,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
     setAutocompleteValues(data ? data.getDomain.value as [] : []);
   }, [data]);
 
-  const controlValue = {value: value ?? ''};
+  const controlValue = {value: value ?? undefined};
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -62,8 +61,9 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
                 ...required
               },
               ...controlValue,
-              onBlur: (e: React.FocusEvent<HTMLInputElement>): void => {
-                formik?.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
+              onChange: (eStr): void => {
+                // @ts-ignore
+                changeHandler(fieldInfo.fieldName, eStr);
               },
               mode: 'autocomplete',
               options: autocompleteValues,
