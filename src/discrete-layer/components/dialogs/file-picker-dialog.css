@@ -27,6 +27,8 @@ body[dir='rtl'] #filePickerDialog .MuiPopover-root {
 
 #filePickerDialog #graphql_error {
   height: 40px;
+  width: 430px;
+  overflow-y: auto;
 }
 
 #filePickerDialog #buttons {
