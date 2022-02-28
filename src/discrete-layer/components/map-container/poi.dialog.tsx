@@ -11,7 +11,7 @@ import { FieldLabelComponent } from '../../../common/components/form/field-label
 import './poi.dialog.css';
 
 const NONE = 0;
-const DELTA = 0.01;
+const DELTA = 0.00001;
 
 interface IPOI {
   lon: number;
@@ -117,22 +117,22 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPolyg
           <form onSubmit={formik.handleSubmit} className="poiForm" noValidate>
             <Box className="poiRow">
               <Box className="poiField">
-                <FieldLabelComponent value='general.dialog-field.lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
-                <TextField
-                  name="lon"
-                  type="number"
-                  onChange={formik.handleChange}
-                  value={formik.values.lon}
-                  required={true}
-                />
-              </Box>
-              <Box className="poiField">
                 <FieldLabelComponent value='general.dialog-field.lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="lat"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.lat}
+                  required={true}
+                />
+              </Box>
+              <Box className="poiField">
+                <FieldLabelComponent value='general.dialog-field.lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <TextField
+                  name="lon"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.lon}
                   required={true}
                 />
               </Box>
