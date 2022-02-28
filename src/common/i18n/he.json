@@ -314,7 +314,7 @@
   "info-field-tooltip.scale.pattern": "מספר בין 0 ל-100000000",
 
   "validation-general.required": "{fieldName} הוא שדה חובה",
-  "validation-general.number": "{fieldName} צריך להיות ערך מספרי",
+  "validation-general.number": "{fieldName} הוא שדה חובה ומספרי",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",

@@ -95,15 +95,9 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
     const fieldLabel = `custom-bbox.dialog-field.${fieldName}.label`;
     yupSchema[fieldName] = Yup
     .number()
-    .typeError(
-      intl.formatMessage(
-        { id: 'validation-general.number' },
-        { fieldName: `<strong>${intl.formatMessage({ id: fieldLabel })}</strong>` }
-      )
-    )
     .required(
       intl.formatMessage(
-        { id: 'validation-general.required' },
+        { id: 'validation-general.number' },
         { fieldName: `<strong>${intl.formatMessage({ id: fieldLabel })}</strong>` }
       )
     );

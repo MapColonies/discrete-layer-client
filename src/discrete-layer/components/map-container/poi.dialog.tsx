@@ -40,9 +40,11 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPolyg
   const yupSchema: Record<string, any> = {};
   Object.keys(poi).forEach(fieldName => {
     const fieldLabel = `general.dialog-field.${fieldName}.label`;
-    yupSchema[fieldName] = Yup.number().required(
+    yupSchema[fieldName] = Yup
+    .number()
+    .required(
       intl.formatMessage(
-        { id: 'validation-general.required' },
+        { id: 'validation-general.number' },
         { fieldName: `<strong>${intl.formatMessage({ id: fieldLabel })}</strong>` }
       )
     );
