@@ -4,14 +4,13 @@ import { useFormik } from 'formik';
 import { isEmpty } from 'lodash';
 import * as Yup from 'yup';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@map-colonies/react-core';
-import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
+import { Box } from '@map-colonies/react-components';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 
 import './poi.dialog.css';
 
 const NONE = 0;
-const DELTA = 0.00001;
 
 interface IPOI {
   lon: number;
@@ -21,10 +20,10 @@ interface IPOI {
 interface PoiDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
-  onPolygonUpdate: (polygon: IDrawingEvent) => void;
+  onPoiUpdate: (longitude: number, latitude: number) => void;
 }
 
-export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPolygonUpdate }) => {
+export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUpdate }) => {
   const intl = useIntl();
   
   const closeDialog = useCallback(
@@ -57,35 +56,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPolyg
     }),
     onSubmit: (values) => {
       try {
-        onPolygonUpdate({
-          primitive: undefined,
-          type: DrawType.BOX,
-          geojson: {
-            type : 'FeatureCollection',
-            features: [
-              { 
-                type : 'Feature',
-                properties : {  
-                  type : BboxCorner.TOP_RIGHT,
-                }, 
-                geometry : { 
-                  type : 'Point',
-                  coordinates : [ values.lon + DELTA, values.lat + DELTA ] 
-                }
-              },
-              { 
-                type : 'Feature',
-                properties : {  
-                  type : BboxCorner.BOTTOM_LEFT
-                }, 
-                geometry : { 
-                  type : 'Point',
-                  coordinates : [ values.lon - DELTA, values.lat - DELTA ]  
-                }
-              }
-            ]
-          }
-        });
+        onPoiUpdate(values.lon, values.lat);
         closeDialog();
       } catch(e) {
         console.error(e);

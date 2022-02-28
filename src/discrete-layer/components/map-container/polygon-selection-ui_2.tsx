@@ -30,6 +30,7 @@ export interface PolygonSelectionUiProps {
   onCancelDraw: () => void;
   onReset: () => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
+  onPoiUpdate: (longitude: number, latitude: number) => void;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
@@ -41,6 +42,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     onStartDraw,
     onReset,
     onPolygonUpdate,
+    onPoiUpdate,
   } = props;
 
   const intl = useIntl();
@@ -131,7 +133,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         <PoiDialog
           isOpen={openPoiDialog}
           onSetOpen={setOpenPoiDialog}
-          onPolygonUpdate={onPolygonUpdate}
+          onPoiUpdate={onPoiUpdate}
         />
       }
     </Box>

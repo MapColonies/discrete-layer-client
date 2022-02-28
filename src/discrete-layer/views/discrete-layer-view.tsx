@@ -28,6 +28,9 @@ import {
   BboxCorner,
   Box,
   CesiumPolylineDashMaterialProperty,
+  CesiumEntity,
+  CesiumCartesian3,
+  CesiumVerticalOrigin,
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
@@ -64,6 +67,7 @@ import './discrete-layer-view.css';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
+const DELTA = 0.00001;
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
@@ -109,6 +113,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
+  const [position, setPosition] = useState<CesiumCartesian3>();
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -119,33 +124,32 @@ const DiscreteLayerView: React.FC = observer(() => {
   ]);
   const memoizedLayers =  useMemo(() => {
     return(
-    <>
-      <SelectedLayersContainer/>
-      <HighlightedLayer/>
-      <LayersFootprints/>
-      <BestLayersPresentor/>
-    </>
-  );
+      <>
+        <SelectedLayersContainer/>
+        <HighlightedLayer/>
+        <LayersFootprints/>
+        <BestLayersPresentor/>
+      </>
+    );
   }, []);
 
 
   useEffect(() => {
     const layers = get(data,'search', []) as ILayerImage[];
-
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
-    if(activeTabView !== targetViewIdx){
+    if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);
       store.discreteLayersStore.restoreTabviewData(targetViewIdx);
   
-      if(activeTabView === TabViews.CREATE_BEST){
+      if (activeTabView === TabViews.CREATE_BEST) {
         store.bestStore.preserveData();
         store.bestStore.resetData();
       }
   
-      if(targetViewIdx === TabViews.CREATE_BEST){
+      if (targetViewIdx === TabViews.CREATE_BEST) {
         store.bestStore.restoreData();
       }
   
@@ -175,7 +179,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
     void store.discreteLayersStore.clearLayersImages();
-    // void store.discreteLayersStore.getLayersImages();
 
     // TODO: build query params: FILTERS and SORTS
     const filters = buildFilters();
@@ -278,6 +281,39 @@ const DiscreteLayerView: React.FC = observer(() => {
   const setDrawType = (drawType: DrawType): void => {
     setIsDrawing(true);
     setDrawPrimitive(createDrawPrimitive(drawType));
+  };
+
+  const onPoiSelection = (longitude: number, latitude: number): void => {
+    onPolygonSelection({
+      primitive: undefined,
+      type: DrawType.BOX,
+      geojson: {
+        type : 'FeatureCollection',
+        features: [
+          { 
+            type : 'Feature',
+            properties : {  
+              type : BboxCorner.TOP_RIGHT,
+            }, 
+            geometry : { 
+              type : 'Point',
+              coordinates : [ longitude + DELTA, latitude + DELTA ] 
+            }
+          },
+          { 
+            type : 'Feature',
+            properties : {  
+              type : BboxCorner.BOTTOM_LEFT
+            }, 
+            geometry : { 
+              type : 'Point',
+              coordinates : [ longitude - DELTA, latitude - DELTA ]  
+            }
+          }
+        ]
+      }
+    });
+    setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, 100));
   };
 
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
@@ -510,6 +546,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             onStartDraw={setDrawType}
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
+            onPoiUpdate={onPoiSelection}
           />
         </Box>
 
@@ -527,10 +564,11 @@ const DiscreteLayerView: React.FC = observer(() => {
             </Tooltip>
           }
           {
-            isSystemsJobsDialogOpen && <JobsDialog
+            isSystemsJobsDialogOpen &&
+            <JobsDialog
               isOpen={isSystemsJobsDialogOpen}
-              onSetOpen={setSystemsJobsDialogOpen}>
-            </JobsDialog>
+              onSetOpen={setSystemsJobsDialogOpen}
+            />
           }
         </Box>
       </Box>
@@ -622,6 +660,23 @@ const DiscreteLayerView: React.FC = observer(() => {
                   outlineWidth={2}
                   material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
                 />
+                {
+                  position &&
+                  <CesiumEntity
+                    name="POI"
+                    position={position}
+                    billboard={{
+                      verticalOrigin: CesiumVerticalOrigin.BOTTOM,
+                      scale: 0.7,
+                      image: 'assets/img/map-marker.gif',
+                    }}
+                    description={`
+                      Lon: ${position.x} </br>
+                      Lat: ${position.y} </br>
+                      Height(m): <span style="font-weight: 500">${position.z}</span>
+                    `}
+                  />
+                }
             </CesiumMap>
           }
         </Box>
