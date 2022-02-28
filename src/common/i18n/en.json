@@ -314,6 +314,7 @@
   "info-field-tooltip.scale.pattern": "Valid number between 0 to 100000000",
 
   "validation-general.required": "{fieldName} is required",
+  "validation-general.number": "{fieldName} should be a number",
   "validation-field.sourceDateEnd.min": "{fieldName} should be later than {value}",
   "validation-field.sourceDateStart.max": "{fieldName} should be earlier than {value}",
   "validation-field.productVersion.pattern": "{fieldName} does not comply with the format: major.minor",
