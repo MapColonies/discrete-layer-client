@@ -27,22 +27,10 @@ exports[`BBoxDialog component renders correctly 1`] = `
         <McBox
           className="bboxRow"
         >
-          <McBox
+          <BBoxCorner
             className="bboxField"
-          >
-            <FieldLabelComponent
-              isRequired={true}
-              showTooltip={false}
-              value="custom-bbox.dialog-field.topRightLat.label"
-            />
-            <Function
-              name="topRightLat"
-              onChange={[Function]}
-              required={true}
-              type="number"
-              value={0}
-            />
-          </McBox>
+            corner="TOP_RIGHT"
+          />
           <McBox
             className="bboxField"
           >
@@ -59,30 +47,30 @@ exports[`BBoxDialog component renders correctly 1`] = `
               value={0}
             />
           </McBox>
-          <BBoxCorner
-            className="bboxField"
-            corner="TOP_RIGHT"
-          />
-        </McBox>
-        <McBox
-          className="bboxRow"
-        >
           <McBox
             className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.bottomLeftLat.label"
+              value="custom-bbox.dialog-field.topRightLat.label"
             />
             <Function
-              name="bottomLeftLat"
+              name="topRightLat"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
           </McBox>
+        </McBox>
+        <McBox
+          className="bboxRow"
+        >
+          <BBoxCorner
+            className="bboxField"
+            corner="BOTTOM_LEFT"
+          />
           <McBox
             className="bboxField"
           >
@@ -99,10 +87,22 @@ exports[`BBoxDialog component renders correctly 1`] = `
               value={0}
             />
           </McBox>
-          <BBoxCorner
+          <McBox
             className="bboxField"
-            corner="BOTTOM_LEFT"
-          />
+          >
+            <FieldLabelComponent
+              isRequired={true}
+              showTooltip={false}
+              value="custom-bbox.dialog-field.bottomLeftLat.label"
+            />
+            <Function
+              name="bottomLeftLat"
+              onChange={[Function]}
+              required={true}
+              type="number"
+              value={0}
+            />
+          </McBox>
         </McBox>
         <McBox
           className="footer"
