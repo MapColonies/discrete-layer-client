@@ -36,6 +36,7 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
     // eslint-disable-next-line
     void promise.then(
       (updatedPositions) => {
+        // eslint-disable-next-line
         setHeight(updatedPositions[0].height);
       }
     );
