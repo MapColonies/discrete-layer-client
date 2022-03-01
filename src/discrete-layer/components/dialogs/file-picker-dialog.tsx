@@ -108,7 +108,7 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
               queryMetadata.setQuery(
                 store.queryGetFile({
                   data: {
-                    pathSuffix: pathSuffix + 'metadata.json',
+                    pathSuffix: pathSuffix + '/metadata.json',
                     type: recordType,
                   },
                 })

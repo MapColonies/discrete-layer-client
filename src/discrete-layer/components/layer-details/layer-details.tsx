@@ -50,7 +50,7 @@ export const getValuePresentor = (
 
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
-  const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown || fieldValue;
+  const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
   
   switch (basicType) {
     case 'string':
