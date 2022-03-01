@@ -20,6 +20,7 @@ const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
+const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
 
 const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -148,6 +149,11 @@ const APP_CONFIG = {
   },
   NUMBER_OF_CHARACTERS_LIMIT: NUMBER_OF_CHARACTERS_LIMIT as number,
   SYSTEM_JOBS_PRIORITY_OPTIONS: systemJobsPriorityOptions,
+  ACCESS_TOKEN: {
+    ATTRIBUTE_NAME: ACCESS_TOKEN.attributeName,
+    INJECTION_TYPE: ACCESS_TOKEN.injectionType,
+    TOKEN_VALUE: ACCESS_TOKEN.tokenValue
+  }
 };
 
 export default APP_CONFIG;

@@ -46,5 +46,10 @@ window._env_ = {
     type: '{{ getv "/configuration/running/mode/type" "DEVELOPMENT" }}',
     autocomplete: {{ getv "/configuration/running/mode/autocomplete" "false" }}
   },
+  ACCESS_TOKEN: {
+    attributeName:'{{getv "/configuration/access/token/attribute/name" "access-token"}}',
+    injectionType:'{{getv "/configuration/access/token/injection/type" "header"}}',
+    tokenValue:'{{getv "/configuration/access/token/token/value" "abc"}}',
+  },
   NUMBER_OF_CHARACTERS_LIMIT: {{ getv "/configuration/number/of/characters/limit" "12" }}
 };

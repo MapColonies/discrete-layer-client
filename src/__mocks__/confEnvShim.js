@@ -51,6 +51,11 @@ if (!window._env_) {
         autocomplete: false,
       },
       NUMBER_OF_CHARACTERS_LIMIT: 12,
+      ACCESS_TOKEN: {
+        attributeName: 'ao',
+        injectionType: 'header',
+        tokenValue: ''
+      },
     };
   })(void 0);
 }
