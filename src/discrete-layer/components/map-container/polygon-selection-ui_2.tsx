@@ -120,22 +120,16 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
         <IconButton icon="search" label="SEARCH" className="searcIconBtn"/>
       </Tooltip>
-      {
-        open &&
-        <BBoxDialog
-          isOpen={open}
-          onSetOpen={setOpen}
-          onPolygonUpdate={onPolygonUpdate}
-        />
-      }
-      {
-        openPoiDialog &&
-        <PoiDialog
-          isOpen={openPoiDialog}
-          onSetOpen={setOpenPoiDialog}
-          onPoiUpdate={onPoiUpdate}
-        />
-      }
+      <BBoxDialog
+        isOpen={open}
+        onSetOpen={setOpen}
+        onPolygonUpdate={onPolygonUpdate}
+      />
+      <PoiDialog
+        isOpen={openPoiDialog}
+        onSetOpen={setOpenPoiDialog}
+        onPoiUpdate={onPoiUpdate}
+      />
     </Box>
   );
 };

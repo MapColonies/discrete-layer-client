@@ -28,9 +28,6 @@ import {
   BboxCorner,
   Box,
   CesiumPolylineDashMaterialProperty,
-  CesiumEntity,
-  CesiumCartesian3,
-  CesiumVerticalOrigin,
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
@@ -54,6 +51,8 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { IPOI } from '../components/map-container/poi.dialog';
+import { PoiEntity } from '../components/map-container/poi-entity';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -113,7 +112,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
-  const [position, setPosition] = useState<CesiumCartesian3>();
+  const [poi, setPoi] = useState<IPOI>();
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -283,7 +282,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     setDrawPrimitive(createDrawPrimitive(drawType));
   };
 
-  const onPoiSelection = (longitude: number, latitude: number): void => {
+  const onPoiSelection = (lon: number, lat: number): void => {
     onPolygonSelection({
       primitive: undefined,
       type: DrawType.BOX,
@@ -297,7 +296,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }, 
             geometry : { 
               type : 'Point',
-              coordinates : [ longitude + DELTA, latitude + DELTA ] 
+              coordinates : [ lon + DELTA, lat + DELTA ] 
             }
           },
           { 
@@ -307,13 +306,13 @@ const DiscreteLayerView: React.FC = observer(() => {
             }, 
             geometry : { 
               type : 'Point',
-              coordinates : [ longitude - DELTA, latitude - DELTA ]  
+              coordinates : [ lon - DELTA, lat - DELTA ]  
             }
           }
         ]
       }
     });
-    setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, 100));
+    setPoi({lon, lat});
   };
 
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
@@ -416,7 +415,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             {
               (tabIdx === TabViews.CATALOG) && 
-              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
+              (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {
@@ -473,16 +472,16 @@ const DiscreteLayerView: React.FC = observer(() => {
               </MenuSurfaceAnchor>
             }
             { 
-            (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
+              (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
               <>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
                   <IconButton
                     className="operationIcon mc-icon-Edit"
                     label="EDIT"
-                    onClick={ (): void => {
+                    onClick={(): void => {
                       store.discreteLayersStore.selectLayer(undefined);
                       setEditEntityDialogOpen(!isEditEntityDialogOpen);
-                    } }
+                    }}
                   />
                 </Tooltip>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
@@ -555,7 +554,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
           {
-            permissions.isSystemsJobsAllowed && <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
+            permissions.isSystemsJobsAllowed as boolean &&
+            <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
                 className="operationIcon mc-icon-System-Missions"
                 label="SYSTEM JOBS"
@@ -661,21 +661,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
                 />
                 {
-                  position &&
-                  <CesiumEntity
-                    name="POI"
-                    position={position}
-                    billboard={{
-                      verticalOrigin: CesiumVerticalOrigin.BOTTOM,
-                      scale: 0.7,
-                      image: 'assets/img/map-marker.gif',
-                    }}
-                    description={`
-                      Lon: ${position.x} </br>
-                      Lat: ${position.y} </br>
-                      Height(m): <span style="font-weight: 500">${position.z}</span>
-                    `}
-                  />
+                  poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
                 }
             </CesiumMap>
           }

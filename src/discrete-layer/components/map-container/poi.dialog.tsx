@@ -12,7 +12,7 @@ import './poi.dialog.css';
 
 const NONE = 0;
 
-interface IPOI {
+export interface IPOI {
   lon: number;
   lat: number;
 }
@@ -77,7 +77,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
     <Box id="poiDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
-          <FormattedMessage id={ 'general.dialog.poi.title' }/>
+          <FormattedMessage id={ 'poi.dialog.title' }/>
           <IconButton
             className="closeIcon mc-icon-Close"
             label="CLOSE"
@@ -88,7 +88,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
           <form onSubmit={formik.handleSubmit} className="poiForm" noValidate>
             <Box className="poiRow">
               <Box className="poiField">
-                <FieldLabelComponent value='general.dialog-field.lat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='poi.dialog.latitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="lat"
                   type="number"
@@ -98,7 +98,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
                 />
               </Box>
               <Box className="poiField">
-                <FieldLabelComponent value='general.dialog-field.lon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='poi.dialog.longitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="lon"
                   type="number"
