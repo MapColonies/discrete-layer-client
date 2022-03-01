@@ -180,16 +180,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className="bboxForm" noValidate>
             <Box className="bboxRow">
-              <Box className="bboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.topRightLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
-                <TextField
-                  name="topRightLat"
-                  type="number"
-                  onChange={formik.handleChange}
-                  value={formik.values.topRightLat}
-                  required={true}
-                />
-              </Box>
+              <BBoxCorner corner={Corner.TOP_RIGHT} className="bboxField"/>
               <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.topRightLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
@@ -200,19 +191,19 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.TOP_RIGHT} className="bboxField"/>
-            </Box>
-            <Box className="bboxRow">
               <Box className="bboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='custom-bbox.dialog-field.topRightLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
-                  name="bottomLeftLat"
+                  name="topRightLat"
                   type="number"
                   onChange={formik.handleChange}
-                  value={formik.values.bottomLeftLat}
+                  value={formik.values.topRightLat}
                   required={true}
                 />
               </Box>
+            </Box>
+            <Box className="bboxRow">
+              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="bboxField"/>
               <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
@@ -223,7 +214,16 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="bboxField"/>
+              <Box className="bboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <TextField
+                  name="bottomLeftLat"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.bottomLeftLat}
+                  required={true}
+                />
+              </Box>
             </Box>
             <Box className="footer">
               <Box className="messages">

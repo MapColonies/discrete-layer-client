@@ -88,22 +88,22 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
           <form onSubmit={formik.handleSubmit} className="poiForm" noValidate>
             <Box className="poiRow">
               <Box className="poiField">
-                <FieldLabelComponent value='poi.dialog.latitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
-                <TextField
-                  name="lat"
-                  type="number"
-                  onChange={formik.handleChange}
-                  value={formik.values.lat}
-                  required={true}
-                />
-              </Box>
-              <Box className="poiField">
                 <FieldLabelComponent value='poi.dialog.longitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="lon"
                   type="number"
                   onChange={formik.handleChange}
                   value={formik.values.lon}
+                  required={true}
+                />
+              </Box>
+              <Box className="poiField">
+                <FieldLabelComponent value='poi.dialog.latitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <TextField
+                  name="lat"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.lat}
                   required={true}
                 />
               </Box>

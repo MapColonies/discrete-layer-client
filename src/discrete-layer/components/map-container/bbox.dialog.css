@@ -17,6 +17,10 @@ body[dir='rtl'] #bboxDialog .closeIcon {
   margin-bottom: 16px;
 }
 
+body[dir='rtl'] #bboxDialog .bboxRow {
+  flex-direction: row-reverse;
+}
+
 #bboxDialog .bboxField {
   margin: 0 8px;
 }

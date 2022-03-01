@@ -17,6 +17,10 @@ body[dir='rtl'] #poiDialog .closeIcon {
   margin-bottom: 16px;
 }
 
+body[dir='rtl'] #poiDialog .poiRow {
+  flex-direction: row-reverse;
+}
+
 #poiDialog .poiField {
   margin: 0 8px;
 }
