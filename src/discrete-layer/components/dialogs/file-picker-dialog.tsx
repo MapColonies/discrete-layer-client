@@ -36,6 +36,8 @@ import './file-picker-dialog.css';
 
 const NUMBER_OF_TEMPLATE_FILES = 4;
 const EMPTY = 0;
+const BASE_PATH_SUFFIX = '/';
+const AUTO_SELECT_SINGLE_MOUNT = true;
 
 interface FilePickerDialogComponentProps {
   recordType: RecordType;
@@ -46,7 +48,7 @@ interface FilePickerDialogComponentProps {
 }
 
 const getSuffixFromFolderChain = (folderChain: FileData[]): string => {
-  return '/' + folderChain.map((file) => file.name).join('/');
+  return BASE_PATH_SUFFIX + folderChain.map((file) => file.name).join('/');
 };
 
 export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
@@ -73,7 +75,10 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     const intl = useIntl();
 
     useEffect(() => {
-      setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null) as FileData[])
+      // This condition is to prevent flickers when there is one mount point (We go in automatically)
+      if(!files.length || files.some(f => (f as null | FileData) !== null)){
+        setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null) as FileData[])
+      }
       queryDirectory.setQuery(
         store.queryGetDirectory({
           data: {
@@ -99,20 +104,35 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
           const dirContent = cloneDeep(
             queryDirectory.data.getDirectory
           ) as FileData[];
-          setFiles(dirContent);
-          if (dirContent.length) {
-            const hasMetadata = dirContent.some(
-              (file) => file.name === 'metadata.json'
-            );
-            if (hasMetadata) {
-              queryMetadata.setQuery(
-                store.queryGetFile({
-                  data: {
-                    pathSuffix: pathSuffix + '/metadata.json',
-                    type: recordType,
-                  },
-                })
+          
+          const shouldAutoSelectMountDir =
+            AUTO_SELECT_SINGLE_MOUNT as boolean &&
+            pathSuffix === BASE_PATH_SUFFIX &&
+            dirContent.length === 1 &&
+            (dirContent[0].isDir as boolean);
+
+          if (shouldAutoSelectMountDir) {
+           void filePickerRef.current?.requestFileAction(
+              FilePickerActions.OpenFiles,
+              {targetFile: dirContent[0], files:[dirContent[0]]}
+           );
+
+          } else {
+            setFiles(dirContent);
+            if (dirContent.length) {
+              const hasMetadata = dirContent.some(
+                (file) => file.name === 'metadata.json'
               );
+              if (hasMetadata) {
+                queryMetadata.setQuery(
+                  store.queryGetFile({
+                    data: {
+                      pathSuffix: pathSuffix + '/metadata.json',
+                      type: recordType,
+                    },
+                  })
+                );
+              }
             }
           }
       }
