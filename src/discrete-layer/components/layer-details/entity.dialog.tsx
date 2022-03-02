@@ -11,6 +11,7 @@ import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { emphasize } from '../../../common/helpers/formatters';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   BestRecordModelType,
@@ -174,11 +175,12 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         return Yup.mixed().required(
           intl.formatMessage(
             { id: 'validation-general.required' },
-            { fieldName: `<strong>${intl.formatMessage({ id: field.label })}</strong>` }
+            { fieldName: emphasize(`${intl.formatMessage({ id: field.label })}`) }
           )
         );
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const yupSchema: Record<string, any> = {};
       [
         ...ingestionFields,
@@ -231,8 +233,8 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                 const finalMsg = intl.formatMessage(
                   { id: val.errorMsgCode },
                   {
-                    fieldName: `<strong>${firstParam}</strong>`,
-                    value: `<strong>${secondParam}</strong>`,
+                    fieldName: emphasize(`${firstParam}`),
+                    value: emphasize(`${secondParam}`),
                   }
                 );
                 return {

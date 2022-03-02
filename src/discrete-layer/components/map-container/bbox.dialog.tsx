@@ -17,6 +17,7 @@ import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-co
 import CONFIG from '../../../common/config';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import { emphasize } from '../../../common/helpers/formatters';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
 import './bbox.dialog.css';
@@ -90,6 +91,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
     bottomLeftLat: 0,
     bottomLeftLon: 0,
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const yupSchema: Record<string, any> = {};
   Object.keys(corners).forEach(fieldName => {
     const fieldLabel = `custom-bbox.dialog-field.${fieldName}.label`;
@@ -98,7 +100,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
     .required(
       intl.formatMessage(
         { id: 'validation-general.number' },
-        { fieldName: `<strong>${intl.formatMessage({ id: fieldLabel })}</strong>` }
+        { fieldName: emphasize(`${intl.formatMessage({ id: fieldLabel })}`) }
       )
     );
   });

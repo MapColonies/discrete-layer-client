@@ -227,11 +227,10 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
             />
           </DialogContent>
           <DialogActions>
-            <Box id="graphql_error">
+            <Box className="messages">
               <GraphQLError error={graphQLError ?? {}} />
             </Box>
-
-            <Box id="buttons">
+            <Box className="buttons">
               <Button
                 raised
                 type="button"

@@ -15,6 +15,7 @@ body[dir='rtl'] #poiDialog .closeIcon {
 #poiDialog .poiRow {
   display: flex;
   margin-bottom: 16px;
+  justify-content: center;
 }
 
 body[dir='rtl'] #poiDialog .poiRow {
@@ -35,6 +36,7 @@ body[dir='rtl'] #poiDialog .poiRow {
 #poiDialog .messages {
   display: flex;
   flex-direction: column;
+  width: 312px;
 }
 
 #poiDialog .buttons {

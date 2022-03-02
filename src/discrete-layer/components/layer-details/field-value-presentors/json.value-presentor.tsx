@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { emphasize } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-import { useIntl } from 'react-intl';
-import { get } from 'lodash';
 
 const NONE = 0;
 interface JsonValuePresentorProps {
@@ -74,7 +75,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           }
           const errorMsg = intl.formatMessage(
             error,
-            { fieldName: `<strong>${intl.formatMessage({ id: fieldInfo.label })}</strong>` }
+            { fieldName: emphasize(`${intl.formatMessage({ id: fieldInfo.label })}`) }
           );
 
           formik.setStatus({

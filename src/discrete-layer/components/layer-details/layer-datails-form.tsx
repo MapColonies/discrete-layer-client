@@ -171,9 +171,7 @@ const InnerForm = (
       status,
     ]
   );
-
- 
-
+  
   const reloadFormMetadata = (
     ingestionFields: FormValues,
     metadata: MetadataFile
