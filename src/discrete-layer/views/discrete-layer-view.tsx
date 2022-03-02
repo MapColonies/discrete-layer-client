@@ -112,7 +112,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
-  const [poi, setPoi] = useState<IPOI>();
+  const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -546,6 +546,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
             onPoiUpdate={onPoiSelection}
+            poi={poi}
           />
         </Box>
 

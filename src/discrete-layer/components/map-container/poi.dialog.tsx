@@ -22,9 +22,17 @@ interface PoiDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onPoiUpdate: (longitude: number, latitude: number) => void;
+  poi?: IPOI;
 }
 
-export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUpdate }) => {
+export const PoiDialog: React.FC<PoiDialogProps> = (
+  {
+    isOpen,
+    onSetOpen,
+    onPoiUpdate,
+    poi: currentPoi
+  }
+) => {
   const intl = useIntl();
   
   const closeDialog = useCallback(
@@ -34,7 +42,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
     [onSetOpen]
   );
 
-  const [poi] = useState<IPOI>({ lon: 0, lat: 0 });
+  const [poi] = useState<IPOI>(currentPoi ?? { lon: 0, lat: 0 });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const yupSchema: Record<string, any> = {};

@@ -7,7 +7,7 @@ import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { BBoxDialog } from './bbox.dialog';
-import { PoiDialog } from './poi.dialog';
+import { IPOI, PoiDialog } from './poi.dialog';
 
 import './polygon-selection-ui.css';
 
@@ -31,6 +31,7 @@ export interface PolygonSelectionUiProps {
   onReset: () => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
   onPoiUpdate: (longitude: number, latitude: number) => void;
+  poi?: IPOI;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
@@ -43,6 +44,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     onReset,
     onPolygonUpdate,
     onPoiUpdate,
+    poi,
   } = props;
 
   const intl = useIntl();
@@ -120,16 +122,23 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
         <IconButton icon="search" label="SEARCH" className="searcIconBtn"/>
       </Tooltip>
-      <BBoxDialog
-        isOpen={open}
-        onSetOpen={setOpen}
-        onPolygonUpdate={onPolygonUpdate}
-      />
-      <PoiDialog
-        isOpen={openPoiDialog}
-        onSetOpen={setOpenPoiDialog}
-        onPoiUpdate={onPoiUpdate}
-      />
+      {
+        open &&
+        <BBoxDialog
+          isOpen={open}
+          onSetOpen={setOpen}
+          onPolygonUpdate={onPolygonUpdate}
+        />
+      }
+      {
+        openPoiDialog &&
+        <PoiDialog
+          isOpen={openPoiDialog}
+          onSetOpen={setOpenPoiDialog}
+          onPoiUpdate={onPoiUpdate}
+          poi={poi}
+        />
+      }
     </Box>
   );
 };
