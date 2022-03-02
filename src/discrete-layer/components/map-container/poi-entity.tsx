@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import {
   CesiumCartesian3,
   CesiumCartographic,
@@ -27,17 +28,14 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
   const [heightStr] = useState(intl.formatMessage({ id: 'poi.dialog.description.height' }));
 
   useEffect(() => {
-    // eslint-disable-next-line
-    const promise = cesiumSampleTerrainMostDetailed(
+    void cesiumSampleTerrainMostDetailed(
       mapViewer.terrainProvider,
-      // eslint-disable-next-line
       [ CesiumCartographic.fromDegrees(longitude, latitude) ]
-    );
-    // eslint-disable-next-line
-    void promise.then(
+    ).then(
       (updatedPositions) => {
-        // eslint-disable-next-line
-        setHeight(updatedPositions[0].height);
+        if (!isEmpty(updatedPositions)) {
+          setHeight(updatedPositions[0].height);
+        }
       }
     );
     setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, height));
