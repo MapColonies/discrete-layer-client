@@ -47,9 +47,9 @@ window._env_ = {
     autocomplete: {{ getv "/configuration/running/mode/autocomplete" "false" }}
   },
   ACCESS_TOKEN: {
-    attributeName:'{{getv "/configuration/access/token/attribute/name" "access-token"}}',
-    injectionType:'{{getv "/configuration/access/token/injection/type" "header"}}',
-    tokenValue:'{{getv "/configuration/access/token/token/value" "abc"}}',
+    attributeName:'{{getv "/configuration/access/token/attribute/name" "token-att"}}',
+    injectionType:'{{getv "/configuration/access/token/injection/type" "queryParam"}}',
+    tokenValue:'{{getv "/configuration/access/token/token/value" "TOKEN"}}',
   },
   NUMBER_OF_CHARACTERS_LIMIT: {{ getv "/configuration/number/of/characters/limit" "12" }}
 };
