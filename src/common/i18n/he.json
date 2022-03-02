@@ -280,7 +280,7 @@
 
   "info-field-tooltip.ingestion.fileNames.tooltip": "רשימת קבצים מופרדת עם פסיקים",
   "info-field-tooltip.3d.fileNames.tooltip": "שם קובץ ה-JSON הראשי",
-  "info-field-tooltip.productId.tooltip": "המזהה ממערכת אגירה חיצונית",
+  "info-field-tooltip.productId.tooltip": "מזהה ממערכת אגירה חיצונית",
   "info-field-tooltip.resolution.tooltip": "מעלות עשרוניות",
   "info-field-tooltip.resolutionDegree.tooltip": "מעלות עשרוניות לפיקסל",
   "info-field-tooltip.resolutionMeter.tooltip": "מטר לפיקסל",
