@@ -27,6 +27,7 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
   const [latitudeStr] = useState(intl.formatMessage({ id: 'poi.dialog.description.latitude' }));
   const [heightStr] = useState(intl.formatMessage({ id: 'poi.dialog.description.height' }));
 
+  /* eslint-disable */
   useEffect(() => {
     void cesiumSampleTerrainMostDetailed(
       mapViewer.terrainProvider,
@@ -39,8 +40,8 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
       }
     );
     setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, height));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [longitude, latitude, height]);
+  /* eslint-enable */
 
   return (
     <>
