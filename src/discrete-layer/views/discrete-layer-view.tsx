@@ -195,8 +195,8 @@ const DiscreteLayerView: React.FC = observer(() => {
       store.discreteLayersStore.searchParams.resetLocation();
       store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.selectLayer(undefined);
-  
       setDrawEntities([]);
+      setPoi(undefined);
     }
   };
 
