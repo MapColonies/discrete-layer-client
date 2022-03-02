@@ -71,8 +71,8 @@
   "custom-bbox.form-error.invalid.text": "Invalid coordinates",
 
   "poi.dialog.title": "Define POI",
-  "poi.dialog.longitude-field.label": "Longitude coordinate",
-  "poi.dialog.latitude-field.label": "Latitude coordinate",
+  "poi.dialog.lon-field.label": "Longitude coordinate",
+  "poi.dialog.lat-field.label": "Latitude coordinate",
   "poi.dialog.description.title": "POI",
   "poi.dialog.description.longitude": "Longitude",
   "poi.dialog.description.latitude": "Latitude",

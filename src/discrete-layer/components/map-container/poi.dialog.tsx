@@ -38,7 +38,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const yupSchema: Record<string, any> = {};
   Object.keys(poi).forEach(fieldName => {
-    const fieldLabel = `general.dialog-field.${fieldName}.label`;
+    const fieldLabel = `poi.dialog.${fieldName}-field.label`;
     yupSchema[fieldName] = Yup
     .number()
     .required(
@@ -88,7 +88,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
           <form onSubmit={formik.handleSubmit} className="poiForm" noValidate>
             <Box className="poiRow">
               <Box className="poiField">
-                <FieldLabelComponent value='poi.dialog.longitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='poi.dialog.lon-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="lon"
                   type="number"
@@ -98,7 +98,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = ({ isOpen, onSetOpen, onPoiUp
                 />
               </Box>
               <Box className="poiField">
-                <FieldLabelComponent value='poi.dialog.latitude-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <FieldLabelComponent value='poi.dialog.lat-field.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="lat"
                   type="number"
