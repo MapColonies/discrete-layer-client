@@ -6,7 +6,7 @@ import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
 import { RecordType } from '../../models/RecordTypeEnum';
-import { BBoxDialog } from './bbox.dialog';
+import { BBoxCorners, BBoxDialog } from './bbox.dialog';
 import { IPOI, PoiDialog } from './poi.dialog';
 
 import './polygon-selection-ui.css';
@@ -32,6 +32,7 @@ export interface PolygonSelectionUiProps {
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
   onPoiUpdate: (longitude: number, latitude: number) => void;
   poi?: IPOI;
+  corners?: BBoxCorners;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
@@ -45,6 +46,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     onPolygonUpdate,
     onPoiUpdate,
     poi,
+    corners,
   } = props;
 
   const intl = useIntl();
@@ -128,6 +130,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
           isOpen={open}
           onSetOpen={setOpen}
           onPolygonUpdate={onPolygonUpdate}
+          corners={corners}
         />
       }
       {

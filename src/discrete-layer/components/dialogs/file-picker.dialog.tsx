@@ -34,8 +34,8 @@ import { isMultiSelection } from '../layer-details/utils';
 
 import './file-picker.dialog.css';
 
-const NUMBER_OF_TEMPLATE_FILES = 4;
 const EMPTY = 0;
+const NUMBER_OF_TEMPLATE_FILES = 4;
 const BASE_PATH_SUFFIX = '/';
 const AUTO_SELECT_SINGLE_MOUNT = true;
 
@@ -75,9 +75,8 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
     const intl = useIntl();
 
     useEffect(() => {
-      // This condition is to prevent flickers when there is one mount point (We go in automatically)
-      if(!files.length || files.some(f => (f as null | FileData) !== null)){
-        setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null) as FileData[])
+      if (files.length === EMPTY || files.some((f: FileData | null) => f !== null)) {
+        setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null));
       }
       queryDirectory.setQuery(
         store.queryGetDirectory({
@@ -116,7 +115,6 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
               FilePickerActions.OpenFiles,
               {targetFile: dirContent[0], files:[dirContent[0]]}
            );
-
           } else {
             setFiles(dirContent);
             if (dirContent.length) {

@@ -24,7 +24,7 @@ import './bbox.dialog.css';
 
 const NONE = 0;
 
-interface BBoxCorners {
+export interface BBoxCorners {
   topRightLat: number;
   topRightLon: number;
   bottomLeftLat: number;
@@ -80,12 +80,19 @@ interface BBoxDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
+  corners?: BBoxCorners;
 }
 
-export const BBoxDialog: React.FC<BBoxDialogProps> = (props) => {
-  const { isOpen, onSetOpen, onPolygonUpdate } = props;
+export const BBoxDialog: React.FC<BBoxDialogProps> = (
+  {
+    isOpen,
+    onSetOpen,
+    onPolygonUpdate,
+    corners: currentCorners
+  }
+) => {
   const intl = useIntl();
-  const [corners] = useState<BBoxCorners>({
+  const [corners] = useState<BBoxCorners>(currentCorners ?? {
     topRightLat: 0,
     topRightLon: 0,
     bottomLeftLat: 0,

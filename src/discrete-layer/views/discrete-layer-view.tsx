@@ -51,6 +51,7 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
 import { ActionResolver } from './components/action-resolver.component';
@@ -113,6 +114,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
+  const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -197,6 +199,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       store.discreteLayersStore.selectLayer(undefined);
       setDrawEntities([]);
       setPoi(undefined);
+      setCorners(undefined);
     }
   };
 
@@ -323,6 +326,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
       return feat.properties?.type === BboxCorner.TOP_RIGHT;
     }) as Feature<Point>;
+    setCorners({
+      topRightLat: rightTopPoint.geometry.coordinates[1],
+      topRightLon: rightTopPoint.geometry.coordinates[0],
+      bottomLeftLat: bottomLeftPoint.geometry.coordinates[1],
+      bottomLeftLon: bottomLeftPoint.geometry.coordinates[0],
+    });
     const line = lineString([
       [
         bottomLeftPoint.geometry.coordinates[0],
@@ -547,6 +556,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             onPolygonUpdate={onPolygonSelection}
             onPoiUpdate={onPoiSelection}
             poi={poi}
+            corners={corners}
           />
         </Box>
 
