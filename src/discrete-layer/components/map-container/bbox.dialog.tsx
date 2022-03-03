@@ -17,7 +17,7 @@ import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-co
 import CONFIG from '../../../common/config';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
-import { emphasize } from '../../../common/helpers/formatters';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
 import './bbox.dialog.css';
@@ -107,7 +107,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (
     .required(
       intl.formatMessage(
         { id: 'validation-general.number' },
-        { fieldName: emphasize(`${intl.formatMessage({ id: fieldLabel })}`) }
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: fieldLabel })}`) }
       )
     );
   });

@@ -7,7 +7,7 @@ import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } fro
 import { Box } from '@map-colonies/react-components';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
-import { emphasize } from '../../../common/helpers/formatters';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 
 import './poi.dialog.css';
 
@@ -53,7 +53,7 @@ export const PoiDialog: React.FC<PoiDialogProps> = (
     .required(
       intl.formatMessage(
         { id: 'validation-general.number' },
-        { fieldName: emphasize(`${intl.formatMessage({ id: fieldLabel })}`) }
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: fieldLabel })}`) }
       )
     );
   });

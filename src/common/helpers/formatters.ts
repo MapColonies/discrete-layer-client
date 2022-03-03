@@ -43,6 +43,6 @@ export const dateSerializer: FormatterFunc = (date): string => {
   return '-';
 };
 
-export const emphasize: FormatterFunc = (value): string => {
+export const emphasizeByHTML: FormatterFunc = (value): string => {
   return `<strong>${value as string}</strong>`;
 };

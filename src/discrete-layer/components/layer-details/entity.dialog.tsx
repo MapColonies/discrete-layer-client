@@ -11,7 +11,7 @@ import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { emphasize } from '../../../common/helpers/formatters';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   BestRecordModelType,
@@ -175,7 +175,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         return Yup.mixed().required(
           intl.formatMessage(
             { id: 'validation-general.required' },
-            { fieldName: emphasize(`${intl.formatMessage({ id: field.label })}`) }
+            { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
           )
         );
       };
@@ -233,8 +233,8 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                 const finalMsg = intl.formatMessage(
                   { id: val.errorMsgCode },
                   {
-                    fieldName: emphasize(`${firstParam}`),
-                    value: emphasize(`${secondParam}`),
+                    fieldName: emphasizeByHTML(`${firstParam}`),
+                    value: emphasizeByHTML(`${secondParam}`),
                   }
                 );
                 return {
