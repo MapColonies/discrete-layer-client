@@ -11,6 +11,7 @@ import {
 } from '@map-colonies/react-components';
 
 const DEFAULT_HEIGHT = 100;
+const CAMERA_HEIGHT_OFFSET = 500;
 
 interface PoiEntityProps {
   longitude: number;
@@ -40,6 +41,7 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
       }
     );
     setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, height));
+    mapViewer.camera.flyTo({destination: CesiumCartesian3.fromDegrees(longitude, latitude, height + CAMERA_HEIGHT_OFFSET)}); //TODO: extract to a generic component
   }, [longitude, latitude, height]);
   /* eslint-enable */
 
