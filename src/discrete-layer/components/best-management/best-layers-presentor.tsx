@@ -34,7 +34,6 @@ export const BestLayersPresentor: React.FC = observer((props) => {
         tileMatrixSetID: 'newGrids',
         tilingScheme: new CesiumGeographicTilingScheme(),
         rectangle: generateLayerRectangle(layer),
-
      };
     }
     return {
