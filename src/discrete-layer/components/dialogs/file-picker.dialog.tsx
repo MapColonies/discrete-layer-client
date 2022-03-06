@@ -48,7 +48,7 @@ interface FilePickerDialogProps {
 }
 
 const getSuffixFromFolderChain = (folderChain: FileData[]): string => {
-  return BASE_PATH_SUFFIX + folderChain.map((file) => file.name).join('/');
+  return BASE_PATH_SUFFIX + folderChain.map((file) => file.name.replaceAll('\\', '\\\\')).join('/');
 };
 
 export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
