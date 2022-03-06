@@ -17,7 +17,7 @@ import { FieldLabelComponent } from '../../../common/components/form/field-label
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
 import { RecordType, LayerMetadataMixedUnion } from '../../models';
-import { FilePickerDialogComponent } from '../dialogs/file-picker-dialog';
+import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
@@ -204,7 +204,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
       </Box>
       {
         isFilePickerDialogOpen &&
-        <FilePickerDialogComponent
+        <FilePickerDialog
           recordType={recordType}
           isOpen={isFilePickerDialogOpen}
           onSetOpen={setFilePickerDialogOpen}
