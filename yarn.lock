@@ -3041,10 +3041,10 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.10.3":
-  version "3.10.3"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.10.3.tgz#65a88481870d6913fbdc9fa3c40f6a856a2d68b7"
-  integrity sha512-YMU2uZck0grTj41UTprxFEOOY8OJjo8oULNDB3TQG0ggR8gelr/rsAOEyh1f3Cmd2/dK485HFpirdUguAEL1kg==
+"@map-colonies/react-components@3.10.4":
+  version "3.10.4"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.10.4.tgz#8a19e346ce39a8fd1d0ecbe4cabc100bf768b0ba"
+  integrity sha512-CXAxBnTWuFh/LUmmAcynH6w+xWiRRFwhc6RAxQGFLkKBkhZE9jwPxi1Ninmo4EzXA44y1aefX9TO+uiWBvVIUw==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
     "@here/quantized-mesh-decoder" "^1.2.8"

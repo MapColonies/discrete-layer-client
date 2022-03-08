@@ -68,6 +68,15 @@
   "custom-bbox.dialog-field.bottomLeftLon.label": "Bottom Left Lon",
   "custom-bbox.form-error.x-distance.text": "X distance exceeds the limit",
   "custom-bbox.form-error.y-distance.text": "Y distance exceeds the limit",
+  "custom-bbox.form-error.invalid.text": "Invalid coordinates",
+
+  "poi.dialog.title": "Define POI",
+  "poi.dialog.lon-field.label": "Longitude coordinate",
+  "poi.dialog.lat-field.label": "Latitude coordinate",
+  "poi.dialog.description.title": "POI",
+  "poi.dialog.description.longitude": "Longitude",
+  "poi.dialog.description.latitude": "Latitude",
+  "poi.dialog.description.height": "Height(m)",
 
   "filters.title": "Filters",
   "filters.sub-title": " ",
@@ -310,6 +319,7 @@
   "info-field-tooltip.scale.pattern": "Valid number between 0 to 100000000",
 
   "validation-general.required": "{fieldName} is required",
+  "validation-general.number": "{fieldName} is required and numeric",
   "validation-field.sourceDateEnd.min": "{fieldName} should be later than {value}",
   "validation-field.sourceDateStart.max": "{fieldName} should be earlier than {value}",
   "validation-field.productVersion.pattern": "{fieldName} does not comply with the format: major.minor",

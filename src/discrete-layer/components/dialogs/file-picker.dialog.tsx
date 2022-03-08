@@ -22,6 +22,7 @@ import {
   FilePickerComponentHandle,
   Selection,
 } from '../../../common/components/file-picker';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import {
   FileModelType,
   LayerMetadataMixedUnion,
@@ -30,16 +31,15 @@ import {
   useStore,
 } from '../../models';
 import { isMultiSelection } from '../layer-details/utils';
-import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 
-import './file-picker-dialog.css';
+import './file-picker.dialog.css';
 
-const NUMBER_OF_TEMPLATE_FILES = 4;
 const EMPTY = 0;
+const NUMBER_OF_TEMPLATE_FILES = 4;
 const BASE_PATH_SUFFIX = '/';
 const AUTO_SELECT_SINGLE_MOUNT = true;
 
-interface FilePickerDialogComponentProps {
+interface FilePickerDialogProps {
   recordType: RecordType;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
@@ -48,10 +48,10 @@ interface FilePickerDialogComponentProps {
 }
 
 const getSuffixFromFolderChain = (folderChain: FileData[]): string => {
-  return BASE_PATH_SUFFIX + folderChain.map((file) => file.name).join('/');
+  return BASE_PATH_SUFFIX + folderChain.map((file) => file.name.replaceAll('\\', '\\\\')).join('/');
 };
 
-export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps> = observer(
+export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
   ({
     recordType,
     isOpen,
@@ -75,9 +75,8 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
     const intl = useIntl();
 
     useEffect(() => {
-      // This condition is to prevent flickers when there is one mount point (We go in automatically)
-      if(!files.length || files.some(f => (f as null | FileData) !== null)){
-        setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null) as FileData[])
+      if (files.length === EMPTY || files.some((f: FileData | null) => f !== null)) {
+        setFiles(new Array(NUMBER_OF_TEMPLATE_FILES).fill(null));
       }
       queryDirectory.setQuery(
         store.queryGetDirectory({
@@ -116,7 +115,6 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
               FilePickerActions.OpenFiles,
               {targetFile: dirContent[0], files:[dirContent[0]]}
            );
-
           } else {
             setFiles(dirContent);
             if (dirContent.length) {
@@ -227,11 +225,10 @@ export const FilePickerDialogComponent: React.FC<FilePickerDialogComponentProps>
             />
           </DialogContent>
           <DialogActions>
-            <Box id="graphql_error">
+            <Box className="messages">
               <GraphQLError error={graphQLError ?? {}} />
             </Box>
-
-            <Box id="buttons">
+            <Box className="buttons">
               <Button
                 raised
                 type="button"

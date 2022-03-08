@@ -29,6 +29,7 @@ import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
 
 import './layer-details-form.css';
+import { removeEmptyObjFields } from './utils';
 
 const NONE = 0;
 
@@ -104,7 +105,7 @@ const InnerForm = (
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
-  },[status])
+  }, [status])
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -117,8 +118,7 @@ const InnerForm = (
       return validationResults;
     },
     [errors, getFieldMeta],
-  )
-
+  );
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -171,9 +171,7 @@ const InnerForm = (
       status,
     ]
   );
-
- 
-
+  
   const reloadFormMetadata = (
     ingestionFields: FormValues,
     metadata: MetadataFile
@@ -205,7 +203,8 @@ const InnerForm = (
         className="form"
         noValidate
       >
-        {mode === Mode.NEW && (
+        {
+          mode === Mode.NEW &&
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
@@ -213,8 +212,7 @@ const InnerForm = (
             fields={ingestionFields}
             values={values}
           />
-        )}
-
+        }
         {
           mode === Mode.NEW && !isSelectedFiles &&
           <Box className="curtain"></Box>
@@ -309,6 +307,8 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     values,
     formikBag: FormikBag<LayerDetailsFormProps, FormValues>
   ) => {
-    formikBag.props.onSubmit((values as unknown) as Record<string, unknown>);
+    formikBag.props.onSubmit(
+      removeEmptyObjFields(values as unknown as Record<string, unknown>)
+    );
   },
 })(InnerForm);

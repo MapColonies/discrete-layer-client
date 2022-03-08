@@ -9,7 +9,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, EntityDescriptorModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { LayersDetailsComponent } from '../layer-details/layer-details';
-import { CloseWithoutSaveDialogComponent } from '../dialogs/close-without-save-dialog';
+import { CloseWithoutSaveDialog } from '../dialogs/close-without-save.dialog';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestCatalogComponent } from './best-catalog';
 
@@ -184,7 +184,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       </Box>
       {
         isCloseWithoutSaveDialogOpen &&
-        <CloseWithoutSaveDialogComponent
+        <CloseWithoutSaveDialog
           isOpen={isCloseWithoutSaveDialogOpen}
           onSetOpen={setCloseWithoutSaveDialogOpen}/>
       }

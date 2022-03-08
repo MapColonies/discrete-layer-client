@@ -25,13 +25,13 @@ body[dir='rtl'] #filePickerDialog .MuiPopover-root {
   overflow-y: hidden;
 }
 
-#filePickerDialog #graphql_error {
+#filePickerDialog .messages {
   height: 40px;
   width: 430px;
   overflow-y: auto;
 }
 
-#filePickerDialog #buttons {
+#filePickerDialog .buttons {
  display: flex;
  align-self: flex-start; 
 }

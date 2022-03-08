@@ -68,6 +68,15 @@
   "custom-bbox.dialog-field.bottomLeftLon.label": "אורך נק' שמאל תחתונה",
   "custom-bbox.form-error.x-distance.text": "אורך מעל המותר",
   "custom-bbox.form-error.y-distance.text": "רוחב מעל המותר",
+  "custom-bbox.form-error.invalid.text": "קואורדינטות לא תקינות",
+
+  "poi.dialog.title": "הגדר נקודת ציון",
+  "poi.dialog.lon-field.label": "קואורדינטת קו אורך",
+  "poi.dialog.lat-field.label": "קואורדינטת קו רוחב",
+  "poi.dialog.description.title": "נקודת ציון",
+  "poi.dialog.description.longitude": "קו אורך",
+  "poi.dialog.description.latitude": "קו רוחב",
+  "poi.dialog.description.height": "גובה (במטרים)",
 
   "filters.title": "מסננים",
   "filters.sub-title": " ",
@@ -271,7 +280,7 @@
 
   "info-field-tooltip.ingestion.fileNames.tooltip": "רשימת קבצים מופרדת עם פסיקים",
   "info-field-tooltip.3d.fileNames.tooltip": "שם קובץ ה-JSON הראשי",
-  "info-field-tooltip.productId.tooltip": "המזהה ממערכת אגירה חיצונית",
+  "info-field-tooltip.productId.tooltip": "מזהה ממערכת אגירה חיצונית",
   "info-field-tooltip.resolution.tooltip": "מעלות עשרוניות",
   "info-field-tooltip.resolutionDegree.tooltip": "מעלות עשרוניות לפיקסל",
   "info-field-tooltip.resolutionMeter.tooltip": "מטר לפיקסל",
@@ -310,6 +319,7 @@
   "info-field-tooltip.scale.pattern": "מספר בין 0 ל-100000000",
 
   "validation-general.required": "{fieldName} הוא שדה חובה",
+  "validation-general.number": "{fieldName} הוא שדה חובה ומספרי",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",

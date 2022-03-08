@@ -4,13 +4,35 @@ import moment from 'moment';
 import vest, { test, enforce } from 'vest';
 import { IEnforceRules } from 'vest/enforce';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
-import { FieldConfigModelType, ValidationConfigModelType, ValidationValueType } from '../../models';
+import { DateGranularityType, FieldConfigModelType, ValidationConfigModelType, ValidationValueType } from '../../models';
 import { FieldInfoName } from './layer-details.field-info';
 import { getBasicType, getValidationType } from './utils';
 
 enforce.extend({
-  afterOrSame: (val1, val2) => (val1 as moment.Moment).isAfter(val2) || (val1 as moment.Moment).isSame(val2),
-  beforeOrSame: (val1, val2) => (val1 as moment.Moment).isBefore(val2) || (val1 as moment.Moment).isSame(val2),
+  afterOrSame: (val1: moment.Moment, val2: moment.Moment, validateTime = false) => {
+    // startOf method mutates the obj
+    const value1 = val1.clone();
+    const value2 = val2.clone();
+
+    if (validateTime === false) {
+      value1.startOf('day');
+      value2.startOf('day');
+    }
+
+    return value1.isAfter(value2) || value1.isSame(value2)
+  },
+  beforeOrSame: (val1: moment.Moment, val2: moment.Moment, validateTime = false) => {
+    // startOf method mutates the obj
+    const value1 = val1.clone();
+    const value2 = val2.clone();
+
+    if (validateTime === false) {
+      value1.startOf('day');
+      value2.startOf('day');
+    }
+
+    return value1.isBefore(value2) || value1.isSame(value2)
+  },
   isJson: (val) => {
     try{
       if(typeof val === 'string'){
@@ -26,10 +48,10 @@ enforce.extend({
 
 const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): any => {
 
-  const greaterThanOrEquals = (basicType: string, value1: unknown, value2: unknown): IEnforceRules => {
+  const greaterThanOrEquals = (basicType: string, value1: unknown, value2: unknown, validateTime = false): IEnforceRules => {
     switch (basicType) {
       case 'momentDateType':
-        return enforce(value1).afterOrSame(value2);
+        return enforce(value1).afterOrSame(value2, validateTime);
       case 'number':
         return enforce(value1).greaterThanOrEquals(value2 as number);
       default:
@@ -37,10 +59,10 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
     }
   };
 
-  const lessThanOrEquals = (basicType: string, value1: unknown, value2: unknown): IEnforceRules => {
+  const lessThanOrEquals = (basicType: string, value1: unknown, value2: unknown, validateTime = false): IEnforceRules => {
     switch (basicType) {
       case 'momentDateType':
-        return enforce(value1).beforeOrSame(value2);
+        return enforce(value1).beforeOrSame(value2, validateTime);
       case 'number':
         return enforce(value1).lessThanOrEquals(value2 as number);
       default:
@@ -67,6 +89,8 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
       let value2Compare;
       const fieldName = field.fieldName as string;
       const basicType = getBasicType(fieldName as FieldInfoName, data.__typename as string);
+      const shouldValidateTime = field.dateGranularity === DateGranularityType.DATE_AND_TIME;
+
       field.validation?.forEach((validation: ValidationConfigModelType): void => {
         /* eslint-disable */
         test(fieldName, validation.errorMsgTranslation as string, () => {
@@ -83,13 +107,13 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
                 case ValidationTypeName.min:
                   value2Compare = getValueToCompare(validation, data);
                   if (value2Compare !== undefined) {
-                    greaterThanOrEquals(basicType, data[fieldName], value2Compare);
+                    greaterThanOrEquals(basicType, data[fieldName], value2Compare, shouldValidateTime);
                   }
                   break;
                 case ValidationTypeName.max:
                   value2Compare = getValueToCompare(validation, data);
                   if (value2Compare !== undefined) {
-                    lessThanOrEquals(basicType, data[fieldName], value2Compare);
+                    lessThanOrEquals(basicType, data[fieldName], value2Compare, shouldValidateTime);
                   }
                   break;
                 case ValidationTypeName.minLength:

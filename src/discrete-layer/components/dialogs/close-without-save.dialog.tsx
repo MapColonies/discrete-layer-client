@@ -6,14 +6,14 @@ import { Button, Dialog, DialogActions, DialogTitle, IconButton } from '@map-col
 import { Box } from '@map-colonies/react-components';
 import { useStore } from '../../models';
 
-import './close-without-save-dialog.css';
+import './close-without-save.dialog.css';
 
-interface CloseWithoutSaveDialogComponentProps {
+interface CloseWithoutSaveDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
 
-export const CloseWithoutSaveDialogComponent: React.FC<CloseWithoutSaveDialogComponentProps> = observer(({ isOpen, onSetOpen }) => {
+export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = observer(({ isOpen, onSetOpen }) => {
   const store = useStore();
   
   const closeDialog = useCallback(

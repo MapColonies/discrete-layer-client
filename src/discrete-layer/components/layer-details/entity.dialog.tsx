@@ -11,6 +11,7 @@ import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   BestRecordModelType,
@@ -45,14 +46,14 @@ import { getFlatEntityDescriptors, getValidationType } from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
 
-import './entity-dialog.css';
+import './entity.dialog.css';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
 
-interface EntityDialogComponentProps {
+interface EntityDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   recordType?: RecordType;
@@ -112,8 +113,8 @@ const getLabel = (recordType: RecordType): string => {
   return 'field-names.ingestion.fileNames';
 };
 
-export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = observer(
-  (props: EntityDialogComponentProps) => {
+export const EntityDialog: React.FC<EntityDialogProps> = observer(
+  (props: EntityDialogProps) => {
     const { isOpen, onSetOpen, recordType } = props;
     const [layerRecord] = useState<LayerMetadataMixedUnion>(
       props.layerRecord
@@ -174,11 +175,12 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
         return Yup.mixed().required(
           intl.formatMessage(
             { id: 'validation-general.required' },
-            { fieldName: `<strong>${intl.formatMessage({ id: field.label })}</strong>` }
+            { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
           )
         );
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const yupSchema: Record<string, any> = {};
       [
         ...ingestionFields,
@@ -231,8 +233,8 @@ export const EntityDialogComponent: React.FC<EntityDialogComponentProps> = obser
                 const finalMsg = intl.formatMessage(
                   { id: val.errorMsgCode },
                   {
-                    fieldName: `<strong>${firstParam}</strong>`,
-                    value: `<strong>${secondParam}</strong>`,
+                    fieldName: emphasizeByHTML(`${firstParam}`),
+                    value: emphasizeByHTML(`${secondParam}`),
                   }
                 );
                 return {
