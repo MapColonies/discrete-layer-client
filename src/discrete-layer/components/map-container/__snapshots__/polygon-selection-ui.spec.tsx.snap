@@ -20,7 +20,7 @@ exports[`Polygon Selection component renders correctly 1`] = `
       id="polygon-selection.draw-btn.text"
     />
   </withRipple(Function)>
-  <DialogBBox
+  <BBoxDialog
     isOpen={false}
     onPolygonUpdate={[Function]}
     onSetOpen={[Function]}

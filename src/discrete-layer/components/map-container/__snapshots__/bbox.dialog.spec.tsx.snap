@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DialogBBox component renders correctly 1`] = `
+exports[`BBoxDialog component renders correctly 1`] = `
 <McBox
   id="bboxDialog"
 >
@@ -20,31 +20,19 @@ exports[`DialogBBox component renders correctly 1`] = `
     </Function>
     <Function>
       <form
-        className="dialogBboxForm"
+        className="bboxForm"
         noValidate={true}
         onSubmit={[Function]}
       >
         <McBox
-          className="dialogBboxRow"
+          className="bboxRow"
         >
+          <BBoxCorner
+            className="bboxField"
+            corner="TOP_RIGHT"
+          />
           <McBox
-            className="dialogBboxField"
-          >
-            <FieldLabelComponent
-              isRequired={true}
-              showTooltip={false}
-              value="custom-bbox.dialog-field.topRightLat.label"
-            />
-            <Function
-              name="topRightLat"
-              onChange={[Function]}
-              required={true}
-              type="number"
-              value={0}
-            />
-          </McBox>
-          <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -59,32 +47,32 @@ exports[`DialogBBox component renders correctly 1`] = `
               value={0}
             />
           </McBox>
-          <BBoxCorner
-            className="dialogBboxField"
-            corner="TOP_RIGHT"
-          />
-        </McBox>
-        <McBox
-          className="dialogBboxRow"
-        >
           <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.bottomLeftLat.label"
+              value="custom-bbox.dialog-field.topRightLat.label"
             />
             <Function
-              name="bottomLeftLat"
+              name="topRightLat"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
           </McBox>
+        </McBox>
+        <McBox
+          className="bboxRow"
+        >
+          <BBoxCorner
+            className="bboxField"
+            corner="BOTTOM_LEFT"
+          />
           <McBox
-            className="dialogBboxField"
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -99,10 +87,22 @@ exports[`DialogBBox component renders correctly 1`] = `
               value={0}
             />
           </McBox>
-          <BBoxCorner
-            className="dialogBboxField"
-            corner="BOTTOM_LEFT"
-          />
+          <McBox
+            className="bboxField"
+          >
+            <FieldLabelComponent
+              isRequired={true}
+              showTooltip={false}
+              value="custom-bbox.dialog-field.bottomLeftLat.label"
+            />
+            <Function
+              name="bottomLeftLat"
+              onChange={[Function]}
+              required={true}
+              type="number"
+              value={0}
+            />
+          </McBox>
         </McBox>
         <McBox
           className="footer"

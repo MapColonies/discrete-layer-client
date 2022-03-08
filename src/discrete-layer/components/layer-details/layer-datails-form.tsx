@@ -104,7 +104,7 @@ const InnerForm = (
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
-  },[status])
+  }, [status])
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -117,8 +117,7 @@ const InnerForm = (
       return validationResults;
     },
     [errors, getFieldMeta],
-  )
-
+  );
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -171,9 +170,7 @@ const InnerForm = (
       status,
     ]
   );
-
- 
-
+  
   const reloadFormMetadata = (
     ingestionFields: FormValues,
     metadata: MetadataFile
@@ -205,7 +202,8 @@ const InnerForm = (
         className="form"
         noValidate
       >
-        {mode === Mode.NEW && (
+        {
+          mode === Mode.NEW &&
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
@@ -213,8 +211,7 @@ const InnerForm = (
             fields={ingestionFields}
             values={values}
           />
-        )}
-
+        }
         {
           mode === Mode.NEW && !isSelectedFiles &&
           <Box className="curtain"></Box>

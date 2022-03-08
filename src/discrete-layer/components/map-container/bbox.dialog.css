@@ -7,17 +7,21 @@ body[dir='rtl'] #bboxDialog .closeIcon {
   margin-right: auto;
 }
 
-#bboxDialog .dialogBboxForm {
+#bboxDialog .bboxForm {
   padding-top: 16px;
   font-size: 0.875rem;
 }
 
-#bboxDialog .dialogBboxRow {
+#bboxDialog .bboxRow {
   display: flex;
   margin-bottom: 16px;
 }
 
-#bboxDialog .dialogBboxField {
+body[dir='rtl'] #bboxDialog .bboxRow {
+  flex-direction: row-reverse;
+}
+
+#bboxDialog .bboxField {
   margin: 0 8px;
 }
 

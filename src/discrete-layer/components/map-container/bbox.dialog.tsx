@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl, IntlShape } from 'react-intl';
 import { useFormik } from 'formik';
+import { isEmpty } from 'lodash';
 import * as Yup from 'yup';
 import * as turf from '@turf/helpers';
 import distance from '@turf/distance/dist/js'; //TODO: make a consumption "REGULAR"
@@ -16,13 +17,14 @@ import { BboxCorner, Box, DrawType, IDrawingEvent } from '@map-colonies/react-co
 import CONFIG from '../../../common/config';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import { BBoxCorner, Corner } from '../bbox/bbox-corner-indicator';
 
-import './dialog-bbox.css';
+import './bbox.dialog.css';
 
 const NONE = 0;
 
-interface BBoxCorners {
+export interface BBoxCorners {
   topRightLat: number;
   topRightLon: number;
   bottomLeftLat: number;
@@ -30,12 +32,13 @@ interface BBoxCorners {
 }
 
 interface BBoxCornersError {
-  latDistance: string;
-  lonDistance: string;
+  latDistance?: string;
+  lonDistance?: string;
+  invalid?: string;
 }
 
 const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
-  const errors: BBoxCornersError = { latDistance: '', lonDistance: '' };
+  const errors: BBoxCornersError = {};
 
   try {
     turf.lineString([
@@ -53,47 +56,58 @@ const validate = (values: BBoxCorners, intl: IntlShape): BBoxCornersError => {
       [values.topRightLon, values.bottomLeftLat]
     );
 
-    // eslint-disable-next-line
     if (yDistance > CONFIG.BOUNDARIES.MAX_Y_KM) {
       errors.latDistance = intl.formatMessage({
         id: 'custom-bbox.form-error.y-distance.text',
       });
     }
-    // eslint-disable-next-line
+
     if (xDistance > CONFIG.BOUNDARIES.MAX_X_KM) {
       errors.lonDistance = intl.formatMessage({
         id: 'custom-bbox.form-error.x-distance.text',
       });
     }
   } catch (err) {
-    errors.latDistance = 'Not valid coordinates';
+    errors.invalid = intl.formatMessage({
+      id: 'custom-bbox.form-error.invalid.text',
+    });
   }
 
   return errors;
 };
 
-interface DialogBBoxProps {
+interface BBoxDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
+  corners?: BBoxCorners;
 }
 
-export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
-  const { isOpen, onSetOpen, onPolygonUpdate } = props;
+export const BBoxDialog: React.FC<BBoxDialogProps> = (
+  {
+    isOpen,
+    onSetOpen,
+    onPolygonUpdate,
+    corners: currentCorners
+  }
+) => {
   const intl = useIntl();
-  const corners = {
+  const [corners] = useState<BBoxCorners>(currentCorners ?? {
     topRightLat: 0,
     topRightLon: 0,
     bottomLeftLat: 0,
     bottomLeftLon: 0,
-  };
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const yupSchema: Record<string, any> = {};
   Object.keys(corners).forEach(fieldName => {
     const fieldLabel = `custom-bbox.dialog-field.${fieldName}.label`;
-    yupSchema[fieldName] = Yup.number().required(
+    yupSchema[fieldName] = Yup
+    .number()
+    .required(
       intl.formatMessage(
-        { id: 'validation-general.required' },
-        { fieldName: `<strong>${intl.formatMessage({ id: fieldLabel })}</strong>` }
+        { id: 'validation-general.number' },
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: fieldLabel })}`) }
       )
     );
   });
@@ -105,7 +119,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     }),
     onSubmit: (values) => {
       const errors = validate(values, intl);
-      if (!errors.latDistance && !errors.lonDistance) {
+      if (errors.latDistance === undefined && errors.lonDistance === undefined && errors.invalid === undefined) {
         try {
           onPolygonUpdate({
             primitive: undefined,
@@ -136,11 +150,8 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
               ]
             }
           });
-          handleClose(false);
-          setFormErrors({
-            latDistance: '',
-            lonDistance: '',
-          });
+          closeDialog();
+          setFormErrors({});
         } catch(e) {
           console.error(e);
         }
@@ -150,14 +161,11 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
     },
   });
 
-  const [formErrors, setFormErrors] = useState({
-    latDistance: '',
-    lonDistance: '',
-  });
+  const [formErrors, setFormErrors] = useState<BBoxCornersError>({});
 
-  const handleClose = (isOpened: boolean): void => {
-    onSetOpen(isOpened);
-  };
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
 
   const getValidationErrors = (errors: Record<string, any>): Record<string, string[]> => {
     const validationResults: Record<string, string[]> = {};
@@ -175,23 +183,14 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
           <IconButton
             className="closeIcon mc-icon-Close"
             label="CLOSE"
-            onClick={ (): void => { handleClose(false); } }
+            onClick={(): void => { closeDialog(); }}
           />
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={formik.handleSubmit} className="dialogBboxForm" noValidate>
-            <Box className="dialogBboxRow">
-              <Box className="dialogBboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.topRightLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
-                <TextField
-                  name="topRightLat"
-                  type="number"
-                  onChange={formik.handleChange}
-                  value={formik.values.topRightLat}
-                  required={true}
-                />
-              </Box>
-              <Box className="dialogBboxField">
+          <form onSubmit={formik.handleSubmit} className="bboxForm" noValidate>
+            <Box className="bboxRow">
+              <BBoxCorner corner={Corner.TOP_RIGHT} className="bboxField"/>
+              <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.topRightLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="topRightLon"
@@ -201,20 +200,20 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.TOP_RIGHT} className="dialogBboxField"/>
-            </Box>
-            <Box className="dialogBboxRow">
-              <Box className="dialogBboxField">
-                <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+              <Box className="bboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.topRightLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
-                  name="bottomLeftLat"
+                  name="topRightLat"
                   type="number"
                   onChange={formik.handleChange}
-                  value={formik.values.bottomLeftLat}
+                  value={formik.values.topRightLat}
                   required={true}
                 />
               </Box>
-              <Box className="dialogBboxField">
+            </Box>
+            <Box className="bboxRow">
+              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="bboxField"/>
+              <Box className="bboxField">
                 <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLon.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
                 <TextField
                   name="bottomLeftLon"
@@ -224,16 +223,26 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                   required={true}
                 />
               </Box>
-              <BBoxCorner corner={Corner.BOTTOM_LEFT} className="dialogBboxField"/>
+              <Box className="bboxField">
+                <FieldLabelComponent value='custom-bbox.dialog-field.bottomLeftLat.label' isRequired={true} showTooltip={false}></FieldLabelComponent>
+                <TextField
+                  name="bottomLeftLat"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.bottomLeftLat}
+                  required={true}
+                />
+              </Box>
             </Box>
             <Box className="footer">
               <Box className="messages">
                 {
-                  Object.keys(formik.errors).length > NONE && 
+                  !isEmpty(formik.errors) && 
                   <ValidationsError errors={getValidationErrors(formik.errors)}/>
                 }
                 {
-                  Object.keys(formik.errors).length === NONE && (!!formErrors.latDistance || !!formErrors.lonDistance) &&
+                  isEmpty(formik.errors) &&
+                  !isEmpty(formErrors) &&
                   <ValidationsError errors={getValidationErrors(formErrors)}/>
                 }
               </Box>
@@ -241,7 +250,7 @@ export const DialogBBox: React.FC<DialogBBoxProps> = (props) => {
                 <Button raised type="submit" disabled={Object.keys(formik.errors).length > NONE}>
                   <FormattedMessage id="general.ok-btn.text"/>
                 </Button>
-                <Button type="button" onClick={ (): void => { handleClose(false); } }>
+                <Button type="button" onClick={(): void => { closeDialog(); }}>
                   <FormattedMessage id="general.cancel-btn.text"/>
                 </Button>
               </Box>
