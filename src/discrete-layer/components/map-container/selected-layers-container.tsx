@@ -3,12 +3,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Cesium3DTileset, CesiumGeographicTilingScheme, CesiumWMTSLayer, CesiumXYZLayer, RCesiumWMTSLayerOptions, useCesiumMap } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
+import { Resource } from 'cesium';
+import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LinkModelType } from '../../models/LinkModel';
 import { LayerRasterRecordModelType } from '../../models';
 import { generateLayerRectangle } from '../helpers/layersUtils';
+
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined
@@ -40,12 +43,34 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
     let optionsWMTS;
     let layerLink = layer.links?.find((link: LinkModelType)=> ['WMTS_tile','WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+    
+    const getTokenResource = (url: string): Resource => {
+      const tokenProps: Record<string, unknown> = {url};
+      
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE}= CONFIG.ACCESS_TOKEN as 
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string} ;
+      
+      if(INJECTION_TYPE.toLowerCase() === 'header') {
+        tokenProps.headers = {
+          [ATTRIBUTE_NAME]: TOKEN_VALUE
+        } as Record<string, unknown>;
+      } else if(INJECTION_TYPE.toLowerCase() === 'queryparam') {
+        tokenProps.queryParameters = {
+          [ATTRIBUTE_NAME]: TOKEN_VALUE
+        } as Record<string, unknown>;
+      }
+
+      return new Resource({...tokenProps as unknown as Resource})
+    }
+
     if(layerLink === undefined){
       layerLink = get(layer,'links[0]') as LinkModelType;
     }
     else{
       optionsWMTS = {
-        url: layerLink.url,
+        url: getTokenResource(layerLink.url as string),
         layer: `${(layer as LayerRasterRecordModelType).productId as string}-${(layer as LayerRasterRecordModelType).productVersion as string}`,
         style: 'default',
         format: 'image/jpeg',
@@ -54,20 +79,40 @@ export const SelectedLayersContainer: React.FC = observer(() => {
      };
 
     }
-    switch(layerLink.protocol){
+    switch (layerLink.protocol) {
       case 'XYZ_LAYER':
-        return <CesiumXYZLayer rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)} key={layer.id} options={{url: layerLink.url as string}}/>
+        return (
+          <CesiumXYZLayer
+            rectangle={generateLayerRectangle(
+              layer as LayerRasterRecordModelType
+            )}
+            key={layer.id}
+            options={{ url: getTokenResource(layerLink.url as string) }}
+          />
+        );
       case '3DTiles':
       case '3D_LAYER':
-        return <Cesium3DTileset key={layer.id} url={layerLink.url as string}/>
+        return (
+          <Cesium3DTileset
+            key={layer.id}
+            url={getTokenResource(layerLink.url as string)}
+          />
+        );
       case 'WMTS_tile':
       case 'WMTS_LAYER':
-        return <CesiumWMTSLayer rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)} options={optionsWMTS as RCesiumWMTSLayerOptions}/>;
+        return (
+          <CesiumWMTSLayer
+            rectangle={generateLayerRectangle(
+              layer as LayerRasterRecordModelType
+            )}
+            options={optionsWMTS as RCesiumWMTSLayerOptions}
+          />
+        );
       default:
         return undefined;
     }
   }
-
+  
   const getLayer = (layer: ILayerImage) : JSX.Element | null | undefined  => {
     const cache = cacheRef.current;
     if(layer.layerImageShown === true){

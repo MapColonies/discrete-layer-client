@@ -32,5 +32,8 @@ keys = [
   "/configuration/served/entity/types",
   "/configuration/basemaps",
   "/configuration/running/mode/type",
-  "/configuration/running/mode/autocomplete"
+  "/configuration/running/mode/autocomplete",
+  "/configuration/access/token/attribute/name",
+  "/configuration/access/token/injection/type",
+  "/configuration/access/token/token/value"
 ]
