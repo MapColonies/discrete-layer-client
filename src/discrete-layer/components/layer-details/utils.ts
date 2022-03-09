@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { get, omit } from 'lodash';
+import { get, isEmpty, omit } from 'lodash';
 import { $enum } from 'ts-enum-util';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import {
@@ -143,4 +143,24 @@ export const isBest = (entity: ILayerImage): boolean => {
 
 export const isMultiSelection = (recordType: RecordType): boolean => {
   return recordType !== RecordType.RECORD_3D;
+};
+
+const removeObjFields = (
+  obj: Record<string, unknown>,
+  cbFn: (curVal: unknown) => boolean
+): Record<string, unknown> => {
+  // if cbFn returns true it means the field *should be omitted*.
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, val]) => {
+      const shouldOmitField = cbFn(val);
+
+      return !shouldOmitField;
+    })
+  );
+};
+
+export const removeEmptyObjFields = (
+  obj: Record<string, unknown>
+): Record<string, unknown> => {
+  return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
 };
