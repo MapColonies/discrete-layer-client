@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import moment, {Moment} from 'moment'; 
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -8,6 +8,7 @@ import { dateFormatter, dateSerializer } from '../../../../common/helpers/format
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import { DateGranularityType } from '../../../models';
 
 interface DateValuePresentorProps {
   mode: Mode;
@@ -26,6 +27,8 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     placeHolderText: CONFIG.LOCALE.DATE_FORMAT,
     calendarLocale: CONFIG.I18N.DEFAULT_LANGUAGE as SupportedLocales,
   };
+
+  const shouldShowTime = useMemo(() => fieldInfo.dateGranularity === DateGranularityType.DATE_AND_TIME, [fieldInfo])
 
   const inputValue = (): string | undefined => {
     if(innerValue === null || !moment(innerValue).isValid()){
@@ -51,6 +54,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     return (
       <Box className="detailsFieldValue datePresentor">
         <DateTimePicker
+          showTime={shouldShowTime}
           value={getDate()}
           inputValue={inputValue()}
           onChange={

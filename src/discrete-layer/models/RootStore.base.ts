@@ -55,6 +55,7 @@ import { NoDataValue } from "./NoDataValueEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocomplitionType } from "./AutocomplitionTypeEnum"
 import { ValidationValueType } from "./ValidationValueTypeEnum"
+import { DateGranularityType } from "./DateGranularityTypeEnum"
 import { Status } from "./StatusEnum"
 
 export type SearchOptions = {
