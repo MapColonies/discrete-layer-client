@@ -36,10 +36,6 @@ body[dir='rtl'] #filePickerDialog .MuiPopover-root {
  align-self: flex-start; 
 }
 
-#filePickerDialog #buttons button {
-  padding: 0 20px;
-}
-
 #filePickerDialog .mdc-dialog__actions {
   justify-content: space-between;
 }

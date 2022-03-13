@@ -29,11 +29,13 @@ keys = [
   "/configuration/logger/log2console",
   "/configuration/job/status/polling/cycle/interval",
   "/configuration/default/user/role",
-  "/configuration/served/entity/types",
   "/configuration/basemaps",
   "/configuration/running/mode/type",
   "/configuration/running/mode/autocomplete",
+  "/configuration/raster/wmts/capabilities/url",
+  "/configuration/dem/wmts/capabilities/url",
   "/configuration/access/token/attribute/name",
   "/configuration/access/token/injection/type",
-  "/configuration/access/token/token/value"
+  "/configuration/access/token/token/value",
+  "/configuration/served/entity/types"
 ]
