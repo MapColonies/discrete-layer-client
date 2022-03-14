@@ -28,7 +28,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     if (discreteLayersStore.layersImages) {
       // @ts-ignore
       setlayersImages(discreteLayersStore.layersImages.slice().sort((curr, next) => curr.order - next.order));
-      if(isEmpty(discreteLayersStore.layersImages)) {
+      if (isEmpty(discreteLayersStore.layersImages)) {
         cacheRef.current = {};
       }
     }
@@ -48,15 +48,15 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       const tokenProps: Record<string, unknown> = {url};
       
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE}= CONFIG.ACCESS_TOKEN as 
+      const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as 
       // eslint-disable-next-line @typescript-eslint/naming-convention
       {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string} ;
       
-      if(INJECTION_TYPE.toLowerCase() === 'header') {
+      if (INJECTION_TYPE.toLowerCase() === 'header') {
         tokenProps.headers = {
           [ATTRIBUTE_NAME]: TOKEN_VALUE
         } as Record<string, unknown>;
-      } else if(INJECTION_TYPE.toLowerCase() === 'queryparam') {
+      } else if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
         tokenProps.queryParameters = {
           [ATTRIBUTE_NAME]: TOKEN_VALUE
         } as Record<string, unknown>;
@@ -65,10 +65,9 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       return new Resource({...tokenProps as unknown as Resource})
     }
 
-    if(layerLink === undefined){
+    if (layerLink === undefined) {
       layerLink = get(layer,'links[0]') as LinkModelType;
-    }
-    else{
+    } else {
       optionsWMTS = {
         url: getTokenResource(layerLink.url as string),
         layer: `${(layer as LayerRasterRecordModelType).productId as string}-${(layer as LayerRasterRecordModelType).productVersion as string}`,
@@ -77,7 +76,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         tileMatrixSetID: 'newGrids',
         tilingScheme: new CesiumGeographicTilingScheme()
      };
-
     }
     switch (layerLink.protocol) {
       case 'XYZ_LAYER':

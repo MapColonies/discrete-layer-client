@@ -26,10 +26,17 @@ export interface SearchResult {
 export type SearchResponse = ApiHttpResponse<SearchResult>;
 
 export interface ITabViewData {
-  idx: TabViews,
-  selectedLayer?: ILayerImage,
-  layersImages?: ILayerImage[],
-  filters?: unknown
+  idx: TabViews;
+  selectedLayer?: ILayerImage;
+  layersImages?: ILayerImage[];
+  filters?: unknown;
+}
+
+export interface ICapability {
+  identifier: string;
+  style: string;
+  format: string;
+  tileMatrixSet: string;
 }
 
 export const discreteLayersStore = ModelBase
@@ -45,6 +52,8 @@ export const discreteLayersStore = ModelBase
     tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
+    rasterWmtsCapabilities: types.maybe(types.frozen<ICapability[]>([])),
+    demWmtsCapabilities: types.maybe(types.frozen<ICapability[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -71,8 +80,8 @@ export const discreteLayersStore = ModelBase
           // const result = yield self.root.fetch('http://127.0.0.1:54532/?version=2.0.2&service=CSW&request=GetRecords&typeNames=csw:Record&ElementSetName=full&resultType=results&outputSchema=http://schema.mapcolonies.com&outputFormat=application/json', 'GET', {});
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          const result = yield  Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
-          self.layersImages = filterBySearchParams(result).map(item => ({...item, footprintShown: true, layerImageShown:false, order:null}));
+          const result = yield Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
+          self.layersImages = filterBySearchParams(result).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
           
         } catch (error) {
           console.error(error);
@@ -167,7 +176,7 @@ export const discreteLayersStore = ModelBase
     }
 
     function setTabviewData(tabView: TabViews): void {
-      if(self.tabViews) {
+      if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
         self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer;
@@ -203,6 +212,14 @@ export const discreteLayersStore = ModelBase
       self.previewedLayers = [];
     }
 
+    function setRasterCapabilities(data: ICapability[]): void {
+      self.rasterWmtsCapabilities = cloneDeep(data);
+    }
+
+    function setDemCapabilities(data: ICapability[]): void {
+      self.demWmtsCapabilities = cloneDeep(data);
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -221,6 +238,8 @@ export const discreteLayersStore = ModelBase
       cleanPreviewedLayer,
       removePreviewedLayer,
       isPreviewedLayer,
+      setRasterCapabilities,
+      setDemCapabilities,
     };
   });
 
