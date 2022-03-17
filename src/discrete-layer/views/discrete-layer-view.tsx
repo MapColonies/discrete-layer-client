@@ -64,6 +64,7 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -105,6 +106,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isNewDemEntityDialogOpen, setNewDemEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
+  const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
@@ -250,6 +252,10 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const handleSystemsJobsDialogClick = (): void => {
     setSystemsJobsDialogOpen(!isSystemsJobsDialogOpen);
+  };
+  
+  const handleSystemsCoreInfoDialogClick = (): void => {
+    setSystemCoreInfoDialogOpen(!isSystemCoreInfoDialogOpen);
   };
 
   const handleFilter = (): void => {
@@ -579,6 +585,23 @@ const DiscreteLayerView: React.FC = observer(() => {
             <JobsDialog
               isOpen={isSystemsJobsDialogOpen}
               onSetOpen={setSystemsJobsDialogOpen}
+            />
+          }
+
+          
+          <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
+            <IconButton
+              className="operationIcon mc-icon-System-Missions glow-missing-icon"
+              label="SYSTEM JOBS"
+              onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
+            />
+          </Tooltip>
+        
+          {
+            isSystemCoreInfoDialogOpen &&
+            <SystemCoreInfoDialog
+              isOpen={isSystemCoreInfoDialogOpen}
+              onSetOpen={setSystemCoreInfoDialogOpen}
             />
           }
         </Box>

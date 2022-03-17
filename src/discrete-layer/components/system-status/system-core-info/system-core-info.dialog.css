@@ -1,0 +1,74 @@
+#systemCoreInfoDialog .mdc-dialog__surface {
+    max-width: unset;
+    right:12px;
+    top:20px;
+    overflow-y: hidden !important;
+    overflow-x: hidden;
+  }
+  
+  body[dir=rtl] #systemCoreInfoDialog .mdc-dialog__surface {
+    right: unset;
+    left:12px;
+  }
+  
+  #systemCoreInfoDialog .mdc-dialog {
+    justify-content: center;
+  }
+  
+  #systemCoreInfoDialog #systemCoreInfoBody {
+    position: relative;
+    height: 600px;
+    width: 800px;
+    padding: 8px 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #systemCoreInfoDialog .closeIcon {
+    margin-left: auto;
+    margin-right: unset;
+  }
+  
+  body[dir=rtl] #systemCoreInfoDialog .closeIcon {
+    margin-left: unset;
+    margin-right: auto;
+  }
+  
+  #systemCoreInfoBody .loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #systemCoreInfoBody .flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #systemCoreInfoBody #seperator {
+    width: 100%;
+    height: 0.20rem;
+    background-color: var(--mdc-theme-gc-selection-background);
+    opacity: 0.4;
+    align-self: center;
+    justify-self: center;
+  }
+
+  #systemCoreInfoBody .section {
+    overflow-y: auto;
+    flex: 1;
+    margin: 5px 0 5px;
+  }
+
+  #systemCoreInfoBody .sectionTitle{
+    margin: 5px 0 10px;
+    font-weight: bold;
+
+  }

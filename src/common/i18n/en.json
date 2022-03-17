@@ -35,6 +35,7 @@
   "action.delete.tooltip": "Delete",
   "action.filter.tooltip": "Filter",
   "action.system-jobs.tooltip": "Display System Jobs",
+  "action.system-core-info.tooltip": "Display system core info",
   "action.edit.tooltip": "Edit",
   "action.expand.tooltip": "Expand",
   "action.collapse.tooltip": "Collapse",
@@ -385,6 +386,11 @@
   "system-status.task.fields.counts.label": "Count",
   "system-status.task.fields.created.label": "Created",
   "system-status.task.fields.updated.label": "Updated",
+
+  "system-core-info.title": "System Info",
+  "system-core-info.innerServicesTitle": "Internal Services",
+  "system-core-info.externalServicesTitle": "External Services",
+
 
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",

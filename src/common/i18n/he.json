@@ -35,6 +35,7 @@
   "action.delete.tooltip": "מחק",
   "action.filter.tooltip": "סנן",
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
+  "action.system-core-info.tooltip": "צפייה במידע המערכת",
   "action.edit.tooltip": "עריכה",
   "action.expand.tooltip": "הרחב תצוגה",
   "action.collapse.tooltip": "צמצם תצוגה",
@@ -385,6 +386,10 @@
   "system-status.task.fields.counts.label": "כמות",
   "system-status.task.fields.created.label": "נוצר",
   "system-status.task.fields.updated.label": "עודכן",
+
+  "system-core-info.title": "מידע המערכת",
+  "system-core-info.innerServicesTitle": "שירותים פנימיים",
+  "system-core-info.externalServicesTitle": "שירותים חיצוניים",
 
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",
