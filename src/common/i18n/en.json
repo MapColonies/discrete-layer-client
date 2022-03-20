@@ -390,7 +390,13 @@
   "system-core-info.title": "System Info",
   "system-core-info.innerServicesTitle": "Internal Services",
   "system-core-info.externalServicesTitle": "External Services",
-
+  "system-core-info.versionText" :"Version",
+  "system-core-info.servicesText":"Services",
+  "pycsw.raster.url": "PYCSW raster url",
+  "pycsw.3d.url": "PYCSW 3D url",
+  "pycsw.dem.url": "PYCSW DEM url",
+  "map_server.raster.url": "Map Server raster url",
+  "map_server.dem.url": "Map Server DEM url",
 
   "lookups.sensorType.vis": "VIS",
   "lookups.sensorType.rgb": "RGB",

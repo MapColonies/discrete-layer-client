@@ -8,6 +8,8 @@ import {
   DialogTitle,
   IconButton,
   Typography,
+  TabBar,
+  Tab,
 } from '@map-colonies/react-core';
 import { FormattedMessage } from 'react-intl';
 import { useQuery, useStore } from '../../../models/RootStore';
@@ -17,13 +19,27 @@ import { DeploymentWithServicesModelType } from '../../../models';
 import './system-core-info.dialog.css';
 import { cloneDeep } from 'lodash';
 import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
-import { ExternalService } from './external-service/external-service';
-import { ClusterService } from './cluster-service/cluster-service';
+import { ExternalServices } from './external-services/external-services';
+import { InternalService } from './internal-service/internal-service';
 
 interface SystemCoreInfoDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
+
+export type CategorizedServices = Record<string, ExternalServiceModelType[] | undefined>;
+
+const EXTERNAL_SERVICES_TAB_INDEX = 0;
+const INTERNAL_SERVICES_TAB_INDEX = 1;
+const INTERNAL_SERVICES_QUERY = 
+`name
+ status
+ image
+ services {
+  name
+  uid
+  addresses
+ }`;
 
 export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observer(
   ({ isOpen, onSetOpen }: SystemCoreInfoDialogProps) => {
@@ -32,13 +48,14 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
     const externalServicesQuery = useQuery();
 
     const [clusterServices, setClusterServices] = useState<DeploymentWithServicesModelType[]>([]);
-    const [externalServices, setExternalServices] = useState<ExternalServiceModelType[]>([]);
+    const [externalServices, setExternalServices] = useState<CategorizedServices>({});
     const [clusterServicesError, setClusterServicesError] = useState<Record<string, unknown> | null>(null);
     const [externalServicesError, setExternalServicesError] = useState<Record<string, unknown> | null>(null);
+    const [activeTab, setActiveTab] = useState<number>(EXTERNAL_SERVICES_TAB_INDEX);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      clusterServicesQuery.setQuery(store.queryGetClusterServices());
+      clusterServicesQuery.setQuery(store.queryGetClusterServices(undefined, INTERNAL_SERVICES_QUERY));
       externalServicesQuery.setQuery(store.queryGetExternalServices());
     }, []);
 
@@ -48,7 +65,6 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
 
       if (!loading) {
         if (error as boolean) {
-          console.log('cluster error', error);
           setClusterServicesError(error);
         } else if (data) {
           const internalServices = cloneDeep(
@@ -68,7 +84,6 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
     useEffect(() => {
       // eslint-disable-next-line
       const { data, loading, error } = externalServicesQuery;
-      console.log(data, loading, error);
       if (!loading) {
         if (error as boolean) {
           setExternalServicesError(error);
@@ -77,7 +92,22 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
             (data as { getExternalServices: ExternalServiceModelType[] })
               .getExternalServices
           );
-          setExternalServices(externalServices);
+
+          const getCategorizedServices = (): CategorizedServices => {
+            const categorizedServices: CategorizedServices = {};
+            for (const service of externalServices) {
+              const currentCategoryArr =
+                categorizedServices[service.type as string] ?? [];
+              categorizedServices[service.type as string] = [
+                ...currentCategoryArr,
+                service,
+              ];
+            }
+
+            return categorizedServices;
+          };
+
+          setExternalServices(getCategorizedServices());
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,9 +133,16 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
       if (clusterServicesError) {
         renderContent = <GraphQLError error={clusterServicesError} />;
       } else {
-        renderContent = clusterServices.map((service) => {
+        const sortedServicesByStatus = (clusterServices).sort(
+          (a, b) => {
+            const A_BEFORE_B = -1;
+            const B_BEFORE_A = 1;
+            return (a.status === true && b.status === false) ? A_BEFORE_B : B_BEFORE_A;
+          });
+
+        renderContent = sortedServicesByStatus.map((service) => {
           return (
-            <ClusterService service={service} key={service.name as string} />
+            <InternalService service={service} key={service.name as string} />
           );
         });
       }
@@ -120,16 +157,32 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
       if (externalServicesError) {
         renderContent = <GraphQLError error={externalServicesError} />;
       } else {
-        renderContent = externalServices.map((service) => {
-          return (
-            <ExternalService service={service} key={service.url as string} />
-          );
-        });
-      }
+        renderContent = <ExternalServices services={externalServices} />
+      };
 
       return <Box className="flex-column-center">{renderContent}</Box>;
 
     }, [externalServicesError, externalServices]);
+
+    const renderDialogContent = useCallback(() => {
+      if (isLoading) {
+        return (
+          <Box className="loader">
+            <CircularProgress />
+            <Typography className={'loaderText'} tag={'p'}>
+              <FormattedMessage id="general.loading.text" />
+            </Typography>
+          </Box>
+        );
+      }
+
+      if(activeTab === EXTERNAL_SERVICES_TAB_INDEX){
+        return <Box className="tabContent">{renderExternalServices()}</Box>
+      } else if(activeTab === INTERNAL_SERVICES_TAB_INDEX){
+        return <Box className="tabContent">{renderClusterServices()}</Box>
+
+      }
+    }, [isLoading, renderExternalServices, renderClusterServices, activeTab]);
 
     return (
       <Box id="systemCoreInfoDialog">
@@ -145,30 +198,18 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
             />
           </DialogTitle>
           <DialogContent id="systemCoreInfoBody">
-            {isLoading ? (
-              <Box className="loader">
-                <CircularProgress />
-                <Typography className={'loaderText'} tag={'p'}>
-                  <FormattedMessage id="general.loading.text" />
-                </Typography>
-              </Box>
-            ):(
-              <>
-                <Box className="sectionTitle flex-column-center">
-                  <FormattedMessage id="system-core-info.externalServicesTitle" />
-                </Box>
-
-                <Box className="section">{renderExternalServices()}</Box>
-
-                <Box id="seperator" />
-
-                <Box className="sectionTitle flex-column-center">
-                  <FormattedMessage id="system-core-info.innerServicesTitle" />
-                </Box>
-
-                <Box className="section">{renderClusterServices()}</Box>
-              </>
-            )}
+            <TabBar
+              activeTabIndex={activeTab}
+              onActivate={(evt): void => setActiveTab(evt.detail.index)}
+            >
+              <Tab>
+                <FormattedMessage id="system-core-info.externalServicesTitle" />
+              </Tab>
+              <Tab>
+                <FormattedMessage id="system-core-info.innerServicesTitle" />
+              </Tab>
+            </TabBar>
+            {renderDialogContent()}
           </DialogContent>
         </Dialog>
       </Box>

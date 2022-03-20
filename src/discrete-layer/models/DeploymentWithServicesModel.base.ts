@@ -19,7 +19,7 @@ export const DeploymentWithServicesModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("DeploymentWithServices"), "DeploymentWithServices"),
     name: types.union(types.undefined, types.null, types.string),
-    status: types.union(types.undefined, types.null, types.string),
+    status: types.union(types.undefined, types.null, types.boolean),
     image: types.union(types.undefined, types.null, types.string),
     services: types.union(types.undefined, types.null, types.array(types.late((): any => K8SServiceModel))),
   })

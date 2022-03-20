@@ -1,0 +1,25 @@
+
+
+#systemCoreInfoBody .statusIndicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.internalService {
+    display: flex;
+    align-items: center;
+    /* gap: 12px; */
+    justify-content: space-between;
+    width: 70%;
+}
+
+body[dir='rtl'] #systemCoreInfoBody .internalService {
+    flex-direction: row-reverse;
+}
+
+.internalService .serviceName {
+    text-align: left;
+    flex: 3;
+    margin-left: 20px;
+}
