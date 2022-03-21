@@ -32,13 +32,6 @@ export interface ITabViewData {
   filters?: unknown;
 }
 
-export interface ICapability {
-  identifier: string;
-  style: string;
-  format: string;
-  tileMatrixSet: string;
-}
-
 export const discreteLayersStore = ModelBase
   .props({
     state: types.enumeration<ResponseState>(
@@ -52,8 +45,6 @@ export const discreteLayersStore = ModelBase
     tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
-    rasterWmtsCapabilities: types.maybe(types.frozen<ICapability[]>([])),
-    demWmtsCapabilities: types.maybe(types.frozen<ICapability[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -212,14 +203,6 @@ export const discreteLayersStore = ModelBase
       self.previewedLayers = [];
     }
 
-    function setRasterCapabilities(data: ICapability[]): void {
-      self.rasterWmtsCapabilities = cloneDeep(data);
-    }
-
-    function setDemCapabilities(data: ICapability[]): void {
-      self.demWmtsCapabilities = cloneDeep(data);
-    }
-
     return {
       getLayersImages,
       setLayersImages,
@@ -238,8 +221,6 @@ export const discreteLayersStore = ModelBase
       cleanPreviewedLayer,
       removePreviewedLayer,
       isPreviewedLayer,
-      setRasterCapabilities,
-      setDemCapabilities,
     };
   });
 

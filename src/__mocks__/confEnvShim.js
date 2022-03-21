@@ -50,8 +50,6 @@ if (!window._env_) {
         autocomplete: false,
       },
       NUMBER_OF_CHARACTERS_LIMIT: 12,
-      RASTER_WMTS_CAPABILITIES_URL: 'https://mapproxy-dev-map-proxy-map-proxy-route-raster-dev.apps.v0h0bdx6.eastus.aroapp.io/wmts/1.0.0/WMTSCapabilities.xml',
-      DEM_WMTS_CAPABILITIES_URL: 'http://dem-dev-geoserver-development-dem-dev.apps.v0h0bdx6.eastus.aroapp.io/geoserver/gwc/service/wmts?REQUEST=GetCapabilities',
       ACCESS_TOKEN: {
         attributeName: 'X-API-KEY',
         injectionType: 'queryParam',
