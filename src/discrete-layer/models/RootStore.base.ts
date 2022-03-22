@@ -94,6 +94,8 @@ export type JobsSearchParams = {
   isCleaned?: boolean
   status?: Status
   type?: string
+  fromDate?: any
+  tillDate?: any
 }
 export type ExplorerGetByPathSuffix = {
   pathSuffix: string
@@ -169,7 +171,7 @@ export type Ingestion3DData = {
 }
 export type Layer3DRecordInput = {
   type?: RecordType
-  productId: string
+  productId?: string
   productName: string
   productVersion?: string
   productType: ProductType
