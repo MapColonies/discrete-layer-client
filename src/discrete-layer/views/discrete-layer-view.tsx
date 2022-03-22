@@ -564,6 +564,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
+          <a href='cookbook/v1/index.html' target='_blank'>CookBook</a>
           {
             permissions.isSystemsJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>

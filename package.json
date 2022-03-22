@@ -36,11 +36,13 @@
     "confd:prod": "node ./confd/generate-config.js --environment production",
     "confd:prod:indocker": "node ./confd/generate-config.js --environment production --indocker",
     "copyconf": "copyfiles ./confd/* ./build",
-    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:md-fonts && yarn run copyassets:components && yarn run copyassets:mc-fonts",
+    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:md-fonts && yarn run copyassets:components && yarn run copyassets:mc-fonts && yarn run copyassets:cookbook",
     "copyassets:cesium": "copyfiles -u 3 \"./node_modules/cesium/Build/Cesium/**/*\" \"./public\"",
     "copyassets:md-fonts": "copyfiles -u 3 \"./node_modules/material-design-icons/iconfont/*\" \"./public/fonts/material-icons\"",
     "copyassets:mc-fonts": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/fonts/*\" \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/style.css\" \"./public/fonts/mc-icons\"",
-    "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\""
+    "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\"",
+    "copyassets:cookbook": "copyfiles -u 4 \"./node_modules/@map-colonies/cookbook/dist/cookbook/**/*\" \"./public\"",
+    "copyassets:cookbook-from-assets": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/html/cookbook/**/*\" \"./public/cookbook\""
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -77,6 +79,7 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
+    "@map-colonies/cookbook": "https://github.com/MapColonies/cookbook.git",
     "@map-colonies/react-components": "3.10.4",
     "@map-colonies/react-core": "3.3.2",
     "@map-colonies/static-assets": "^0.2.0",

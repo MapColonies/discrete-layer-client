@@ -3029,6 +3029,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@map-colonies/cookbook@https://github.com/MapColonies/cookbook.git":
+  version "1.0.0"
+  resolved "https://github.com/MapColonies/cookbook.git#23ac17029923ce6ecceb0d76924022f45519ea98"
+
 "@map-colonies/eslint-config@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@map-colonies/eslint-config/-/eslint-config-1.0.3.tgz#5727f23d3df3279988b0d16cc895f0a9194fc272"
