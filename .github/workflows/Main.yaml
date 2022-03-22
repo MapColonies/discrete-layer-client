@@ -10,15 +10,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
+          persist-credentials: false
           repository: MapColonies/cookbook
           ref: master
           token: $ {{ secrets.GITHUB_TOKEN}}
       - uses: actions/cache@v2
         with:
-          persist-credentials: false
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Install yarn
         run: |
           curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
