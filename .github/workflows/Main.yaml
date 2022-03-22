@@ -9,6 +9,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          repository: MapColonies/cookbook
+          ref: master
+          token: $ {{ secrets.GITHUB_TOKEN}}
       - uses: actions/cache@v2
         with:
           persist-credentials: false
