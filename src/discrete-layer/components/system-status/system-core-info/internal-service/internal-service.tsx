@@ -21,8 +21,7 @@ const THEME_ERROR_COLOR = 'var(--mdc-theme-gc-error-high)';
 export const InternalService: React.FC<InternalServiceProps> = ({
   service: { image, services, status },
 }: InternalServiceProps) => {
-  const intl = useIntl();
-
+  
   const svcList = (services as
     | Services[]
     | undefined)?.map((service) => {

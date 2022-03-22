@@ -58,6 +58,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
     useEffect(() => {
       clusterServicesQuery.setQuery(store.queryGetClusterServices(undefined, INTERNAL_SERVICES_QUERY));
       externalServicesQuery.setQuery(store.queryGetExternalServices());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
