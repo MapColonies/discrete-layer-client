@@ -8,14 +8,14 @@ jobs:
 
     steps:
       - name: checkout
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
+        - uses: actions/checkout@v2
+          with:
+            persist-credentials: false
       - name: cache
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        - uses: actions/cache@v2
+          with:
+            path: '**/node_modules'
+            key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install yarn
         run: |
           curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
