@@ -11,9 +11,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
-          repository: MapColonies/cookbook
-          ref: master
-          token: $ {{ secrets.GITHUB_TOKEN}}
       - uses: actions/cache@v2
         with:
           path: '**/node_modules'
