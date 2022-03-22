@@ -41,31 +41,27 @@
     transform: translate(-50%, -50%);
   }
 
-  
-  #systemCoreInfoBody .mdc-tab-bar {
-    height: var(--tab-bar-height);
-  }
-
-  #systemCoreInfoBody .mdc-tab-bar .mdc-tab-indicator--active {
-    background-color: var(--mdc-theme-gc-tab-active-background);
-    
-  }
-  #systemCoreInfoBody .mdc-tab-bar .mdc-tab-indicator--active .mdc-tab__content .mdc-tab__text-label {
-    color: var(--mdc-theme-text-icon-on-dark);
-  }
-  
   #systemCoreInfoBody .flex-column-center {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     height: calc(100% - var(--tab-bar-height));
+    margin-top: 20px;
   }
   
   #systemCoreInfoBody .tabContent {
     overflow-y: auto;
     flex: 1;
-    margin-top: 20px;
+    border: 2px solid var(--mdc-theme-gc-selection-background);
+    border-top: none;
+    position: relative;
+  }
+
+  #systemCoreInfoBody .tabContent #closeBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
   }
 
   #systemCoreInfoBody .errorContainer {

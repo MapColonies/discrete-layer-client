@@ -34,11 +34,11 @@ export const InternalService: React.FC<InternalServiceProps> = ({
             backgroundColor: `${(status as boolean) ? THEME_SUCCESS_COLOR : THEME_ERROR_COLOR}`,
           }}
         />
-        <Typography className={'serviceName'} tag={'h3'}>
+        <Typography className={'serviceName'} tag={'p'}>
           {`${service.name}`}
         </Typography>
         <Typography className={'serviceVersion'} tag={'p'}>
-          {`${intl.formatMessage({id: 'system-core-info.versionText'})}: ${(image as string).split(':')[1]}`}
+          {(image as string).split(':')[1]}
         </Typography>
       </Box>
     );

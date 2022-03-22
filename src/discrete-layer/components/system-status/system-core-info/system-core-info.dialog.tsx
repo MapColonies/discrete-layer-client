@@ -10,6 +10,7 @@ import {
   Typography,
   TabBar,
   Tab,
+  Button,
 } from '@map-colonies/react-core';
 import { FormattedMessage } from 'react-intl';
 import { useQuery, useStore } from '../../../models/RootStore';
@@ -176,13 +177,30 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
         );
       }
 
-      if(activeTab === EXTERNAL_SERVICES_TAB_INDEX){
-        return <Box className="tabContent">{renderExternalServices()}</Box>
-      } else if(activeTab === INTERNAL_SERVICES_TAB_INDEX){
-        return <Box className="tabContent">{renderClusterServices()}</Box>
+      let activeTabToRender;
 
+      if (activeTab === EXTERNAL_SERVICES_TAB_INDEX) {
+        activeTabToRender = renderExternalServices();
+      } else if (activeTab === INTERNAL_SERVICES_TAB_INDEX) {
+        activeTabToRender = renderClusterServices();
       }
-    }, [isLoading, renderExternalServices, renderClusterServices, activeTab]);
+
+      return (
+        <Box className="tabContent">
+          {activeTabToRender}
+          <Button
+            raised
+            id="closeBtn"
+            type="button"
+            onClick={(): void => {
+              closeDialog();
+            }}
+          >
+            <FormattedMessage id="general.close-btn.text" />
+          </Button>
+        </Box>
+      );
+    }, [isLoading, renderExternalServices, renderClusterServices, activeTab, closeDialog]);
 
     return (
       <Box id="systemCoreInfoDialog">

@@ -27,6 +27,7 @@ import '@map-colonies/react-core/dist/drawer/styles';
 import '@map-colonies/react-core/dist/checkbox/styles';
 import '@map-colonies/react-core/dist/fab/styles';
 import '@map-colonies/react-core/dist/avatar/styles';
+import '@map-colonies/react-core/dist/tabs/styles';
 import 'react-sortable-tree/style.css';
 import './App.css';
 import './App.dark-theme.css';

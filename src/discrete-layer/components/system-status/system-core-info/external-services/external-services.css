@@ -1,3 +1,7 @@
+.listsContainer{
+    width:80%;
+}
+
 .externalService {
     display: flex;
     align-items: center;
@@ -32,6 +36,10 @@
 .tabContent .flex-column-center .rmwc-collapsible-list--open .rmwc-collapsible-list__handle {
     background-color: var(--mdc-theme-gc-selection-background);
     font-weight: bold;
+}
+
+#systemCoreInfoBody .tabContent .flex-column-center .rmwc-collapsible-list .rmwc-collapsible-list__handle {
+    border-bottom: 2px solid var(--mdc-theme-gc-selection-background);
 }
 
 body[dir='rtl'] #systemCoreInfoBody .tabContent .flex-column-center .rmwc-collapsible-list .rmwc-collapsible-list__handle {

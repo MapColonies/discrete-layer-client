@@ -22,13 +22,13 @@ export const ExternalServices: React.FC<ExternalServicesProps> = ({
   const intl = useIntl();
 
   return (
-    <>
+    <Box className="listsContainer">
       {Object.entries(services).map(([category, services]) => {
         return (
           <CollapsibleList
             handle={
               <SimpleListItem
-                text={`${category} ${intl.formatMessage({id: 'system-core-info.servicesText'})}`}
+                text={category}
                 metaIcon="chevron_right"
               />
             }
@@ -59,6 +59,6 @@ export const ExternalServices: React.FC<ExternalServicesProps> = ({
           </CollapsibleList>
         );
       })}
-    </>
+    </Box>
   );
 };
