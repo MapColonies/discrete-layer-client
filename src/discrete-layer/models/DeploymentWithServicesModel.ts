@@ -10,6 +10,7 @@ export { selectFromDeploymentWithServices, deploymentWithServicesModelPrimitives
 /**
  * DeploymentWithServicesModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const DeploymentWithServicesModel = DeploymentWithServicesModelBase
   .actions(self => ({
     // This is an auto-generated example action.

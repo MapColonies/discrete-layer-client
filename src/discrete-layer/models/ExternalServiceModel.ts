@@ -10,6 +10,7 @@ export { selectFromExternalService, externalServiceModelPrimitives, ExternalServ
 /**
  * ExternalServiceModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExternalServiceModel = ExternalServiceModelBase
   .actions(self => ({
     // This is an auto-generated example action.

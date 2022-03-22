@@ -10,6 +10,7 @@ export { selectFromK8SService, k8SServiceModelPrimitives, K8SServiceModelSelecto
 /**
  * K8SServiceModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const K8SServiceModel = K8SServiceModelBase
   .actions(self => ({
     // This is an auto-generated example action.
