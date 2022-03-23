@@ -79,7 +79,7 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/cookbook": "git@github.com:MapColonies/cookbook.git",
+    "@map-colonies/cookbook": "git+ssh://git@github.com:MapColonies/cookbook.git",
     "@map-colonies/react-components": "3.10.4",
     "@map-colonies/react-core": "3.3.2",
     "@map-colonies/static-assets": "^0.2.0",
