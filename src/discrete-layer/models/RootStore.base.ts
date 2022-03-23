@@ -33,8 +33,14 @@ import { ValidationConfigModel, ValidationConfigModelType } from "./ValidationCo
 import { validationConfigModelPrimitives, ValidationConfigModelSelector } from "./ValidationConfigModel.base"
 import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
 import { enumAspectsModelPrimitives, EnumAspectsModelSelector } from "./EnumAspectsModel.base"
+import { ExternalServiceModel, ExternalServiceModelType } from "./ExternalServiceModel"
+import { externalServiceModelPrimitives, ExternalServiceModelSelector } from "./ExternalServiceModel.base"
 import { JobModel, JobModelType } from "./JobModel"
 import { jobModelPrimitives, JobModelSelector } from "./JobModel.base"
+import { DeploymentWithServicesModel, DeploymentWithServicesModelType } from "./DeploymentWithServicesModel"
+import { deploymentWithServicesModelPrimitives, DeploymentWithServicesModelSelector } from "./DeploymentWithServicesModel.base"
+import { K8SServiceModel, K8SServiceModelType } from "./K8SServiceModel"
+import { k8SServiceModelPrimitives, K8SServiceModelSelector } from "./K8SServiceModel.base"
 import { FileModel, FileModelType } from "./FileModel"
 import { fileModelPrimitives, FileModelSelector } from "./FileModel.base"
 import { DecryptedIdModel, DecryptedIdModelType } from "./DecryptedIdModel"
@@ -56,6 +62,7 @@ import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocomplitionType } from "./AutocomplitionTypeEnum"
 import { ValidationValueType } from "./ValidationValueTypeEnum"
 import { DateGranularityType } from "./DateGranularityTypeEnum"
+import { ServiceType } from "./ServiceTypeEnum"
 import { Status } from "./StatusEnum"
 
 export type SearchOptions = {
@@ -169,7 +176,7 @@ export type Ingestion3DData = {
 }
 export type Layer3DRecordInput = {
   type?: RecordType
-  productId: string
+  productId?: string
   productName: string
   productVersion?: string
   productType: ProductType
@@ -278,7 +285,9 @@ querySearch="querySearch",
 querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
 queryEntityDescriptors="queryEntityDescriptors",
+queryGetExternalServices="queryGetExternalServices",
 queryJobs="queryJobs",
+queryGetClusterServices="queryGetClusterServices",
 queryGetDirectory="queryGetDirectory",
 queryGetDirectoryById="queryGetDirectoryById",
 queryGetFile="queryGetFile",
@@ -300,7 +309,7 @@ mutateJobRetry="mutateJobRetry"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['Job', () => JobModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
+  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -330,9 +339,19 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new EntityDescriptorModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
+    queryGetExternalServices(variables?: {  }, resultSelector: string | ((qb: ExternalServiceModelSelector) => ExternalServiceModelSelector) = externalServiceModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getExternalServices: ExternalServiceModelType[]}>(`query getExternalServices { getExternalServices {
+        ${typeof resultSelector === "function" ? resultSelector(new ExternalServiceModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
     queryJobs(variables: { params?: JobsSearchParams }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ jobs: JobModelType[]}>(`query jobs($params: JobsSearchParams) { jobs(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryGetClusterServices(variables?: {  }, resultSelector: string | ((qb: DeploymentWithServicesModelSelector) => DeploymentWithServicesModelSelector) = deploymentWithServicesModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getClusterServices: DeploymentWithServicesModelType[]}>(`query getClusterServices { getClusterServices {
+        ${typeof resultSelector === "function" ? resultSelector(new DeploymentWithServicesModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryGetDirectory(variables: { data: ExplorerGetByPathSuffix }, resultSelector: string | ((qb: FileModelSelector) => FileModelSelector) = fileModelPrimitives.toString(), options: QueryOptions = {}) {
