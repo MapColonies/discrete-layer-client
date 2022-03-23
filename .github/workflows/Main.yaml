@@ -22,8 +22,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends yarn 
           
-      - name: set cred
-        run: git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+      #- name: set cred
+        #run: git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
       - name: Install dependecies
         run: yarn
       - name: Lint
