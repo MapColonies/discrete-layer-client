@@ -392,10 +392,10 @@
   "system-core-info.externalServicesTitle": "External Services",
   "system-core-info.versionText" :"Version",
   "system-core-info.servicesText":"Services",
-  "pycsw.raster.url": "raster",
+  "pycsw.raster.url": "Raster",
   "pycsw.3d.url": "3D",
   "pycsw.dem.url": "DEM",
-  "map_server.raster.url": "raster",
+  "map_server.raster.url": "Raster",
   "map_server.dem.url": "DEM",
 
   "lookups.sensorType.vis": "VIS",

@@ -216,7 +216,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
               }}
             />
           </DialogTitle>
-          <DialogContent id="systemCoreInfoBody">
+          <DialogContent id="systemCoreInfoBody" style={{"--tab-bar-height": "50px"} as React.CSSProperties}>
             <TabBar
               activeTabIndex={activeTab}
               onActivate={(evt): void => setActiveTab(evt.detail.index)}

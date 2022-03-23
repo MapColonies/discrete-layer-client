@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@map-colonies/react-components';
-import { Typography } from '@map-colonies/react-core';
+import { Typography, useTheme } from '@map-colonies/react-core';
 import { DeploymentWithServicesModelType } from '../../../../models';
 
 import './internal-service.css';
@@ -15,12 +15,13 @@ interface Services {
   uid: string;
   addresses: string[];
 }
-const THEME_SUCCESS_COLOR = 'var(--mdc-theme-gc-success)';
-const THEME_ERROR_COLOR = 'var(--mdc-theme-gc-error-high)';
 
 export const InternalService: React.FC<InternalServiceProps> = ({
   service: { image, services, status },
 }: InternalServiceProps) => {
+
+  const theme = useTheme();
+
   
   const svcList = (services as
     | Services[]
@@ -30,7 +31,7 @@ export const InternalService: React.FC<InternalServiceProps> = ({
         <Box
           className="statusIndicator"
           style={{
-            backgroundColor: `${(status as boolean) ? THEME_SUCCESS_COLOR : THEME_ERROR_COLOR}`,
+            backgroundColor: `${(status as boolean) ? theme.custom?.GC_SUCCESS as string : theme.custom?.GC_ERROR_HIGH as string}`,
           }}
         />
         <Typography className={'serviceName'} tag={'p'}>
