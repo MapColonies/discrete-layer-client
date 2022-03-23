@@ -8,7 +8,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           persist-credentials: false
       - uses: actions/cache@v2
@@ -21,7 +21,9 @@ jobs:
           echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
           sudo apt-get update
           sudo apt-get install --no-install-recommends yarn
-
+          
+      - name: set cred
+        run: git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
       - name: Install dependecies
         run: yarn
       - name: Lint
