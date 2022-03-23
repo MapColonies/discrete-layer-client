@@ -50,8 +50,8 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
-  const [fromDate, setFromDate] = useState<Date>(new Date());
-  const [tillDate, setTillDate] = useState<Date>(moment().add(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
+  const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
+  const [tillDate, setTillDate] = useState<Date>(new Date());
 
   // const [retryErr, setRetryErr] = useState(false);
 
@@ -419,7 +419,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
               }}
               from={fromDate}
               to={tillDate}
-              disableFuture={false}
               local={{
                 setText: intl.formatMessage({ id: 'filters.date-picker.set-btn.text' }),
                 startPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.start-time.label' }),

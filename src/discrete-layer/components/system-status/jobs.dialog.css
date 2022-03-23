@@ -142,10 +142,12 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
   z-index: 2 !important;
 }
 
-.jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
-  display: none;
-}
+/* Not sure why I did it, it causes some problems with disappearing elements */ 
 
-.jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+/* .jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+  display: none;
+} */
+
+/* .jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
   display: unset;
-}
+} */
