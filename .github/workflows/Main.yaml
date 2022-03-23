@@ -22,10 +22,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends yarn
           
-      - name: set cred
-        run: git config --global url."https://${{ secrets.YARN_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
       - name: Install dependecies
-        run: yarn
+        run: |
+          git config --global url."https://${{ secrets.YARN_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+          yarn
       - name: Lint
         run: yarn run eslint:check
       - name: Test
