@@ -13,6 +13,7 @@ public/assets/*
 !public/assets/scripts/
 
 public/mock
+public/cookbook/*
 
 # dependencies
 /node_modules
