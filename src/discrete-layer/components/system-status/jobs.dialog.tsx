@@ -411,7 +411,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             <DateTimeRangePicker 
               controlsLayout='row'
               onChange={(dateRange): void => {
-                console.log('DateTimeRangePickerFormControl--->',dateRange.from, dateRange.to);
                 if(typeof dateRange.from !== 'undefined' && typeof dateRange.to !== 'undefined'){
                   setFromDate(dateRange.from)
                   setTillDate(dateRange.to)
