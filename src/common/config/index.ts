@@ -153,7 +153,8 @@ const APP_CONFIG = {
     ATTRIBUTE_NAME: ACCESS_TOKEN.attributeName,
     INJECTION_TYPE: ACCESS_TOKEN.injectionType,
     TOKEN_VALUE: ACCESS_TOKEN.tokenValue
-  }
+  },
+  JOB_MANAGER_END_OF_TIME: 21, // Days
 };
 
 export default APP_CONFIG;

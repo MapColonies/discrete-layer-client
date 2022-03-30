@@ -101,6 +101,8 @@ export type JobsSearchParams = {
   isCleaned?: boolean
   status?: Status
   type?: string
+  fromDate?: any
+  tillDate?: any
 }
 export type ExplorerGetByPathSuffix = {
   pathSuffix: string

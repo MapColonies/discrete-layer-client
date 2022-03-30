@@ -15,12 +15,19 @@ body[dir=rtl] #jobsDialog .mdc-dialog__surface {
   justify-content: flex-end;
 }
 
+#jobsDialog .jobsBody .drpContainer {
+  justify-content: center;
+  margin-top: 10px;
+  padding: 0;
+}
+
 #jobsDialog .jobsBody {
   overflow-y: hidden !important;
   height: 750px;
   width: 1420px;
   padding: 8px 8px;
 }
+
 
 #jobsDialog .closeIcon {
   margin-left: auto;
@@ -135,10 +142,12 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
   z-index: 2 !important;
 }
 
-.jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
-  display: none;
-}
+/* Not sure why I did it, it causes some problems with disappearing elements */ 
 
-.jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+/* .jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+  display: none;
+} */
+
+/* .jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
   display: unset;
-}
+} */

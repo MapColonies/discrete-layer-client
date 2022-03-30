@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { 
@@ -29,6 +29,7 @@ import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filte
 import { JOB_ENTITY } from './job.types';
 
 import './jobs.dialog.css';
+import moment from 'moment';
 
 const pagination = true;
 const pageSize = 10;
@@ -49,6 +50,9 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
+  const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
+  const [tillDate, setTillDate] = useState<Date>(new Date());
+
   // const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore
@@ -73,14 +77,18 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   }, []);
 
   // eslint-disable-next-line
-  const { loading, error, data, query } = useQuery((store) =>
+  const { setQuery, loading, error, data, query } = useQuery((store) =>
     store.queryJobs({
-      params: {}
+      params: {
+        fromDate,
+        tillDate
+      }
     }),
     {
       fetchPolicy: 'no-cache'
     }
   );
+
   const mutationQuery = useQuery();
 
   const store = useStore();
@@ -109,6 +117,19 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+  useEffect(() => {
+    setQuery(
+      (store) =>
+        store.queryJobs({
+          params: {
+            fromDate,
+            tillDate,
+          },
+        })
+    );
+  }, [fromDate, tillDate, setQuery]);
 
   useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
@@ -377,17 +398,39 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
               {`${(timeLeft as number)/MILISECONDS_IN_SEC}`}
             </Box>
           </Box>
+
+        
+
           <IconButton
             className="closeIcon mc-icon-Close"
             onClick={ (): void => { closeDialog(); } }
           />
         </DialogTitle>
         <DialogContent className="jobsBody">
+        <Box className="jobsTimeRangePicker">
+            <DateTimeRangePicker 
+              controlsLayout='row'
+              onChange={(dateRange): void => {
+                if(typeof dateRange.from !== 'undefined' && typeof dateRange.to !== 'undefined'){
+                  setFromDate(dateRange.from)
+                  setTillDate(dateRange.to)
+                }
+              }}
+              from={fromDate}
+              to={tillDate}
+              local={{
+                setText: intl.formatMessage({ id: 'filters.date-picker.set-btn.text' }),
+                startPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.start-time.label' }),
+                endPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.end-time.label' }),
+                calendarLocale: SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]
+              }}
+            />
+          </Box>
           <GridComponent
             gridOptions={gridOptions}
             rowData={gridRowData}
             style={{
-              height: 'calc(100% - 64px)',
+              height: 'calc(100% - 120px)',
               padding: '12px'
             }}
           />
