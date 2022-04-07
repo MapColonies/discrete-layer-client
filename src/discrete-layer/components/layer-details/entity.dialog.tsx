@@ -26,7 +26,6 @@ import {
   FieldConfigModelType,
   ProductType,
   ValidationValueType,
-  SensorType,
   LayerDemRecordModel,
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
@@ -82,7 +81,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.updateDate = moment();
-      record.sensorType = SensorType.UNDEFINED;
+      record.sensors = [];
       record.productType = ProductType.ORTHOPHOTO;
       record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
@@ -261,7 +260,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                   type: inputValues.type as RecordType,
                   productName: inputValues.productName as string,
                   description: inputValues.description as string,
-                  // sensorType: inputValues.sensorType as SensorType[],
                   productSubType: inputValues.productSubType as string,
                   producerName: inputValues.producerName as string,
                   classification: inputValues.classification as string,
@@ -274,10 +272,10 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               store.bestStore.editBest({
                 ...(inputValues as BestRecordModelType),
                 // @ts-ignore
-                sensorType:
-                  inputValues.sensorType !== undefined
+                sensors:
+                  inputValues.sensors !== undefined
                     ? (JSON.parse(
-                        '[' + (inputValues.sensorType as string) + ']'
+                        '[' + (inputValues.sensors as string) + ']'
                       ) as string[])
                     : [],
               });
@@ -341,7 +339,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
         closeDialog();
         store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
-        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id);
+        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id as string);
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 

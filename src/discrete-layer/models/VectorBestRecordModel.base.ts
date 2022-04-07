@@ -5,8 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel, LinkModelType } from "./LinkModel"
-import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { LinkModel } from "./LinkModel"
+import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
@@ -29,11 +29,11 @@ export const VectorBestRecordModelBase = ModelBase
     creationDate: types.union(types.undefined, types.null, types.frozen()),
     ingestionDate: types.union(types.undefined, types.null, types.frozen()),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
-    region: types.union(types.undefined, types.null, types.string),
+    region: types.union(types.undefined, types.null, types.array(types.string)),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     srsName: types.union(types.undefined, types.string),
-    scale: types.union(types.undefined, types.null, types.string),
+    scale: types.union(types.undefined, types.null, types.number),
     footprint: types.union(types.undefined, types.frozen()),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs

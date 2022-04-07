@@ -5,11 +5,10 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel, LinkModelType } from "./LinkModel"
-import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { LinkModel } from "./LinkModel"
+import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
-import { SensorTypeEnumType } from "./SensorTypeEnum"
 import { RootStoreType } from "./index"
 
 
@@ -32,18 +31,18 @@ export const LayerRasterRecordModelBase = ModelBase
     updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.frozen()),
-    accuracyCE90: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
-    region: types.union(types.undefined, types.null, types.string),
+    minHorizontalAccuracyCE90: types.union(types.undefined, types.null, types.number),
+    sensors: types.union(types.undefined, types.null, types.array(types.string)),
+    region: types.union(types.undefined, types.null, types.array(types.string)),
     productId: types.union(types.undefined, types.string),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     productSubType: types.union(types.undefined, types.null, types.string),
     srsName: types.union(types.undefined, types.string),
-    resolution: types.union(types.undefined, types.null, types.number),
+    maxResolutionDeg: types.union(types.undefined, types.null, types.number),
     maxResolutionMeter: types.union(types.undefined, types.null, types.number),
     rms: types.union(types.undefined, types.null, types.number),
-    scale: types.union(types.undefined, types.null, types.string),
+    scale: types.union(types.undefined, types.null, types.number),
     footprint: types.union(types.undefined, types.frozen()),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     includedInBests: types.union(types.undefined, types.null, types.array(types.string)),
@@ -72,15 +71,15 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get updateDate() { return this.__attr(`updateDate`) }
   get sourceDateStart() { return this.__attr(`sourceDateStart`) }
   get sourceDateEnd() { return this.__attr(`sourceDateEnd`) }
-  get accuracyCE90() { return this.__attr(`accuracyCE90`) }
-  get sensorType() { return this.__attr(`sensorType`) }
+  get minHorizontalAccuracyCE90() { return this.__attr(`minHorizontalAccuracyCE90`) }
+  get sensors() { return this.__attr(`sensors`) }
   get region() { return this.__attr(`region`) }
   get productId() { return this.__attr(`productId`) }
   get productVersion() { return this.__attr(`productVersion`) }
   get productType() { return this.__attr(`productType`) }
   get productSubType() { return this.__attr(`productSubType`) }
   get srsName() { return this.__attr(`srsName`) }
-  get resolution() { return this.__attr(`resolution`) }
+  get maxResolutionDeg() { return this.__attr(`maxResolutionDeg`) }
   get maxResolutionMeter() { return this.__attr(`maxResolutionMeter`) }
   get rms() { return this.__attr(`rms`) }
   get scale() { return this.__attr(`scale`) }
@@ -97,4 +96,4 @@ export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.accuracyCE90.sensorType.region.productId.productVersion.productType.productSubType.srsName.resolution.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.insertDate.keywords.id.links(linkModelPrimitives)

@@ -234,7 +234,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                         onClick={(data, value) => {
                           if (value) {
                             selectedLayersRef.current++;
-                            store.discreteLayersStore.addPreviewedLayer(data.id);
+                            store.discreteLayersStore.addPreviewedLayer(data.id as string);
                           } else {
                             const orders: number[] = [];
                             // eslint-disable-next-line
@@ -244,10 +244,10 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                               }
                             });
                             selectedLayersRef.current = (orders.length) ? getMax(orders) : selectedLayersRef.current-1;
-                            store.discreteLayersStore.removePreviewedLayer(data.id);
+                            store.discreteLayersStore.removePreviewedLayer(data.id as string);
                           }
                           const order = value ? selectedLayersRef.current : null;
-                          setTimeout(()=>{ store.discreteLayersStore.showLayer(data.id, value, order); }, IMMEDIATE_EXECUTION);
+                          setTimeout(()=>{ store.discreteLayersStore.showLayer(data.id as string, value, order); }, IMMEDIATE_EXECUTION);
                           data.layerImageShown = value;
                         }}
                       />,
