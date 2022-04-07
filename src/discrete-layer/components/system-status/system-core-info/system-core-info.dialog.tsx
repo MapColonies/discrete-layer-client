@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
+import { cloneDeep } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import {
   CircularProgress,
@@ -12,16 +14,14 @@ import {
   Tab,
   Button,
 } from '@map-colonies/react-core';
-import { FormattedMessage } from 'react-intl';
+import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { useQuery, useStore } from '../../../models/RootStore';
 import { ExternalServiceModelType } from '../../../models';
 import { DeploymentWithServicesModelType } from '../../../models';
-
-import './system-core-info.dialog.css';
-import { cloneDeep } from 'lodash';
-import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { ExternalServices } from './external-services/external-services';
 import { InternalService } from './internal-service/internal-service';
+
+import './system-core-info.dialog.css';
 
 interface SystemCoreInfoDialogProps {
   isOpen: boolean;

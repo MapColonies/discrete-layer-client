@@ -1,13 +1,13 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
+import { FINAL_STATUSES } from '../job.types';
 
 import './status.cell-renderer.css';
-import { FINAL_STATUSES } from '../job.types';
-import { get } from 'lodash';
 
 const NO_DATA = 0;
 const NO_WIDTH = 0;

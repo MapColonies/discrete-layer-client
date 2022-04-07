@@ -19,7 +19,7 @@ enforce.extend({
       value2.startOf('day');
     }
 
-    return value1.isAfter(value2) || value1.isSame(value2)
+    return value1.isAfter(value2) || value1.isSame(value2);
   },
   beforeOrSame: (val1: moment.Moment, val2: moment.Moment, validateTime = false) => {
     // startOf method mutates the obj
@@ -31,16 +31,15 @@ enforce.extend({
       value2.startOf('day');
     }
 
-    return value1.isBefore(value2) || value1.isSame(value2)
+    return value1.isBefore(value2) || value1.isSame(value2);
   },
   isJson: (val) => {
-    try{
-      if(typeof val === 'string'){
+    try {
+      if (typeof val === 'string') {
         JSON.parse(val);
       }
-      
       return true;
-    }catch(e){
+    } catch(e) {
       return false;
     }
   },

@@ -18,31 +18,31 @@ interface CacheMap {
 }
 
 export const SelectedLayersContainer: React.FC = observer(() => {
-  const { discreteLayersStore } = useStore();
+  const store = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as CacheMap);
   const mapViewer = useCesiumMap();
   
   useEffect(() => {
-    if (discreteLayersStore.layersImages) {
+    if (store.discreteLayersStore.layersImages) {
       // @ts-ignore
-      setlayersImages(discreteLayersStore.layersImages.slice().sort((curr, next) => curr.order - next.order));
-      if (isEmpty(discreteLayersStore.layersImages)) {
+      setlayersImages(store.discreteLayersStore.layersImages.slice().sort((curr, next) => curr.order - next.order));
+      if (isEmpty(store.discreteLayersStore.layersImages)) {
         cacheRef.current = {};
       }
     }
-  }, [discreteLayersStore.layersImages]);
+  }, [store.discreteLayersStore.layersImages]);
 
   useEffect(() => {
-    if (isEmpty(discreteLayersStore.previewedLayers)) {
+    if (isEmpty(store.discreteLayersStore.previewedLayers)) {
       cacheRef.current = {};
     }
-  }, [discreteLayersStore.previewedLayers]);
+  }, [store.discreteLayersStore.previewedLayers]);
 
   const generateLayerComponent = (layer: ILayerImage) : JSX.Element | undefined  => {
     let optionsWMTS;
-    let layerLink = layer.links?.find((link: LinkModelType)=> ['WMTS_tile','WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+    let layerLink = layer.links?.find((link: LinkModelType) => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
     
     const getTokenResource = (url: string): Resource => {
       const tokenProps: Record<string, unknown> = {url};
@@ -50,7 +50,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as 
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string} ;
+      {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};
       
       if (INJECTION_TYPE.toLowerCase() === 'header') {
         tokenProps.headers = {
@@ -62,11 +62,11 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         } as Record<string, unknown>;
       }
 
-      return new Resource({...tokenProps as unknown as Resource})
-    }
+      return new Resource({...tokenProps as unknown as Resource});
+    };
 
     if (layerLink === undefined) {
-      layerLink = get(layer,'links[0]') as LinkModelType;
+      layerLink = get(layer, 'links[0]') as LinkModelType;
     } else {
       optionsWMTS = {
         url: getTokenResource(layerLink.url as string),
@@ -75,7 +75,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         format: 'image/jpeg',
         tileMatrixSetID: 'newGrids',
         tilingScheme: new CesiumGeographicTilingScheme()
-     };
+      };
     }
     switch (layerLink.protocol) {
       case 'XYZ_LAYER':
@@ -113,22 +113,20 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   
   const getLayer = (layer: ILayerImage) : JSX.Element | null | undefined  => {
     const cache = cacheRef.current;
-    if(layer.layerImageShown === true){
-      if(cache[layer.id] !== undefined){
+    if (layer.layerImageShown === true) {
+      if (cache[layer.id] !== undefined) {
         return cache[layer.id];
-      } else{
-        if(mapViewer.layersManager?.get(layer.id) === undefined){
+      } else {
+        if (mapViewer.layersManager?.get(layer.id) === undefined) {
           cache[layer.id] = generateLayerComponent(layer);
           return cache[layer.id];
-        }
-        else{
+        } else {
           return <></>;
         }
       }
-    }
-    else{
+    } else {
       const prevLayer = (prevLayersImages as []).find((item: ILayerImage) => item.id === layer.id) as ILayerImage | undefined;
-      if(prevLayer?.layerImageShown === true){
+      if (prevLayer?.layerImageShown === true) {
         delete cache[layer.id];
         return null;
       }
@@ -138,7 +136,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   return (
     <>
       {
-        layersImages.map((layer)=>{
+        layersImages.map((layer) => {
           return getLayer(layer);
         })
       }
