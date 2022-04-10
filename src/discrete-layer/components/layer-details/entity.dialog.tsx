@@ -339,7 +339,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
         closeDialog();
         store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
-        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id as string);
+        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id);
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 
