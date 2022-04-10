@@ -11,8 +11,7 @@ import {
   EntityDescriptorModelType,
   FieldCategory,
   LayerMetadataMixedUnion,
-  LinkModelType,
-  SensorType
+  LinkModelType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
@@ -59,6 +58,13 @@ export const getValuePresentor = (
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+    case 'string[]': {
+      let strVal = fieldValue;
+      if(Array.isArray(fieldValue)){
+        strVal = fieldValue.join(', ');
+      }
+      return <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={strVal as string} formik={formik}></StringValuePresentorComponent>
+    }
     case 'json':
       return (
         <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></JsonValuePresentorComponent>
@@ -79,14 +85,14 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'SensorType':{
-      const sensorType = value as SensorType[];
-      let sensorTypeVal = '';
-      if(Array.isArray(sensorTypeVal)) {
-        sensorTypeVal = sensorType.join(',');
+    case 'sensors':{
+      const sensors = value as string[];
+      let sensorsVal = '';
+      if(Array.isArray(sensors)) {
+        sensorsVal = sensors.join(',');
       }
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={sensorTypeVal} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={sensorsVal} formik={formik}></EnumValuePresentorComponent>
       );
     }
     case 'DataType':
