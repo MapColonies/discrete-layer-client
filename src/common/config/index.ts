@@ -150,6 +150,7 @@ const APP_CONFIG = {
     TOKEN_VALUE: ACCESS_TOKEN.tokenValue
   },
   SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
+  JOB_MANAGER_END_OF_TIME: 21, // Days
 };
 
 export default APP_CONFIG;

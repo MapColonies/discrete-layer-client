@@ -189,16 +189,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
       return (
         <Box className="tabContent">
           {activeTabToRender}
-          <Button
-            raised
-            id="closeBtn"
-            type="button"
-            onClick={(): void => {
-              closeDialog();
-            }}
-          >
-            <FormattedMessage id="general.close-btn.text" />
-          </Button>
+         
         </Box>
       );
     }, [isLoading, renderExternalServices, renderClusterServices, activeTab, closeDialog]);
@@ -216,7 +207,10 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
               }}
             />
           </DialogTitle>
-          <DialogContent id="systemCoreInfoBody" style={{"--tab-bar-height": "50px"} as React.CSSProperties}>
+          <DialogContent
+            id="systemCoreInfoBody"
+            style={{ '--tab-bar-height': '50px' } as React.CSSProperties}
+          >
             <TabBar
               activeTabIndex={activeTab}
               onActivate={(evt): void => setActiveTab(evt.detail.index)}
@@ -230,6 +224,16 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
             </TabBar>
             {renderDialogContent()}
           </DialogContent>
+            <Button
+              raised
+              id="closeBtn"
+              type="button"
+              onClick={(): void => {
+                closeDialog();
+              }}
+            >
+              <FormattedMessage id="general.close-btn.text" />
+            </Button>
         </Dialog>
       </Box>
     );

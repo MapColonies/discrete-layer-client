@@ -4,16 +4,16 @@
 
 import { IObservableArray } from "mobx"
 import { types } from "mobx-state-tree"
-import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
+import { QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { AutocompletionModel, AutocompletionModelType } from "./AutocompletionModel"
-import { AutocompletionModelSelector, autocompletionModelPrimitives } from "./AutocompletionModel.base"
+import { AutocompletionModel } from "./AutocompletionModel"
+import { autocompletionModelPrimitives, AutocompletionModelSelector } from "./AutocompletionModel.base"
 import { DateGranularityTypeEnumType } from "./DateGranularityTypeEnum"
-import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
+import { EnumAspectsModel } from "./EnumAspectsModel"
 import { EnumAspectsModelSelector } from "./EnumAspectsModel.base"
 import { FieldConfigModel, FieldConfigModelType } from "./FieldConfigModel"
-import { ValidationConfigModel, ValidationConfigModelType } from "./ValidationConfigModel"
-import { ValidationConfigModelSelector, validationConfigModelPrimitives } from "./ValidationConfigModel.base"
+import { ValidationConfigModel } from "./ValidationConfigModel"
+import { validationConfigModelPrimitives, ValidationConfigModelSelector } from "./ValidationConfigModel.base"
 import { RootStoreType } from "./index"
 
 

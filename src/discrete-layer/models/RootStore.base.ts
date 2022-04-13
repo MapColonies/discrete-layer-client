@@ -52,7 +52,6 @@ import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , La
 
 import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
-import { SensorType } from "./SensorTypeEnum"
 import { VerticalDatum } from "./VerticalDatumEnum"
 import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
@@ -101,6 +100,8 @@ export type JobsSearchParams = {
   isCleaned?: boolean
   status?: Status
   type?: string
+  fromDate?: any
+  tillDate?: any
 }
 export type ExplorerGetByPathSuffix = {
   pathSuffix: string
@@ -141,18 +142,18 @@ export type LayerRasterRecordInput = {
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
-  accuracyCE90?: number
-  sensorType?: SensorType[]
-  region?: string
+  minHorizontalAccuracyCE90?: number
+  sensors?: string[]
+  region?: string[]
   productId: string
   productVersion?: string
   productType: ProductType
   productSubType?: string
   srsName: string
-  resolution?: number
+  maxResolutionDeg?: number
   maxResolutionMeter?: number
   rms?: number
-  scale?: string
+  scale?: number
   footprint: any
   layerPolygonParts?: any
   includedInBests?: string[]
@@ -193,14 +194,14 @@ export type Layer3DRecordInput = {
   accuracySE90?: number
   relativeAccuracyLEP90?: number
   visualAccuracy?: number
-  sensorType?: SensorType[]
+  sensors?: string[]
   footprint: any
   heightRangeFrom?: number
   heightRangeTo?: number
   srsId: string
   srsName: string
   srsOrigin?: string
-  region?: string
+  region?: string[]
   classification: string
   productionSystem?: string
   productionSystemVer?: string
@@ -233,8 +234,8 @@ export type LayerDemRecordInput = {
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
-  sensorType?: SensorType[]
-  region?: string
+  sensors?: string[]
+  region?: string[]
   productId: string
   productType: ProductType
   footprint: any

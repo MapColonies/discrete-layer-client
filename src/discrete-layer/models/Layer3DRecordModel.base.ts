@@ -6,10 +6,9 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
-import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
-import { SensorTypeEnumType } from "./SensorTypeEnum"
 import { RootStoreType } from "./index"
 
 
@@ -39,14 +38,14 @@ export const Layer3DRecordModelBase = ModelBase
     accuracySE90: types.union(types.undefined, types.null, types.number),
     relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
     visualAccuracy: types.union(types.undefined, types.null, types.number),
-    sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
+    sensors: types.union(types.undefined, types.null, types.array(types.string)),
     footprint: types.union(types.undefined, types.frozen()),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
     heightRangeTo: types.union(types.undefined, types.null, types.number),
     srsId: types.union(types.undefined, types.string),
     srsName: types.union(types.undefined, types.string),
     srsOrigin: types.union(types.undefined, types.null, types.string),
-    region: types.union(types.undefined, types.null, types.string),
+    region: types.union(types.undefined, types.null, types.array(types.string)),
     classification: types.union(types.undefined, types.string),
     productionSystem: types.union(types.undefined, types.null, types.string),
     productionSystemVer: types.union(types.undefined, types.null, types.string),
@@ -88,7 +87,7 @@ export class Layer3DRecordModelSelector extends QueryBuilder {
   get accuracySE90() { return this.__attr(`accuracySE90`) }
   get relativeAccuracyLEP90() { return this.__attr(`relativeAccuracyLEP90`) }
   get visualAccuracy() { return this.__attr(`visualAccuracy`) }
-  get sensorType() { return this.__attr(`sensorType`) }
+  get sensors() { return this.__attr(`sensors`) }
   get footprint() { return this.__attr(`footprint`) }
   get heightRangeFrom() { return this.__attr(`heightRangeFrom`) }
   get heightRangeTo() { return this.__attr(`heightRangeTo`) }
@@ -115,4 +114,4 @@ export function selectFromLayer3DRecord() {
   return new Layer3DRecordModelSelector()
 }
 
-export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.nominalResolution.maxAccuracyCE90.absoluteAccuracyLEP90.accuracySE90.relativeAccuracyLEP90.visualAccuracy.sensorType.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.srsOrigin.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.minFlightAlt.maxFlightAlt.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
+export const layer3DRecordModelPrimitives = selectFromLayer3DRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.nominalResolution.maxAccuracyCE90.absoluteAccuracyLEP90.accuracySE90.relativeAccuracyLEP90.visualAccuracy.sensors.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.srsOrigin.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.minFlightAlt.maxFlightAlt.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
