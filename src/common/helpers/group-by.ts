@@ -12,8 +12,13 @@ export const resolveProperty = (obj: any, property: string): any =>
   sum?: any;
 }
 
+export interface KeyPredicate {
+  name: string;
+  predicate: (val: any) => string;
+}
+
 export interface GroupBy {
-  keys: string[];
+  keys: KeyPredicate[];
   sum?: string[];
   thenby?: GroupBy;
 }
@@ -82,7 +87,7 @@ export const groupBy = (array: any[], grouping: GroupBy): Group[] => {
   }
   const keys = grouping.keys;
   const groups: Group[] = array.reduce((results: Group[], item) => {
-    const group = results.find(g => keys.every(key => item[key] === g.key[key]));
+    const group = results.find(g => keys.every(({ key, predicate }) => predicate(item[key]) === g.key[key]));
     const data = Object.getOwnPropertyNames(item).reduce((o, prop) => {
       // if (!keys.some(key => key === prop)) {
         o[prop] = item[prop];
@@ -94,7 +99,7 @@ export const groupBy = (array: any[], grouping: GroupBy): Group[] => {
     } else {
       results.push({
         key: keys.reduce((o, key) => {
-          o[key] = item[key];
+          o[key.name] = item[key.name];
           return o;
         }, {}),
         items: [data]
