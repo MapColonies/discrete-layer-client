@@ -9,7 +9,6 @@ import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LinkModelType } from '../../models/LinkModel';
-import { CapabilitiesLayerSearchParams } from '../../models/RootStore.base';
 import { CapabilityModelType, LayerRasterRecordModelType, RecordType, useQuery } from '../../models';
 import { generateLayerRectangle } from '../helpers/layersUtils';
 
@@ -20,8 +19,6 @@ interface CacheMap {
 
 export const SelectedLayersContainer: React.FC = observer(() => {
   const store = useStore();
-  const queryCapabilities = useCallback(
-    () => useQuery<{ capabilities: CapabilityModelType }>(), [])();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as CacheMap);
@@ -46,7 +43,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const generateLayerComponent = (layer: ILayerImage): JSX.Element | undefined  => {
     let optionsWMTS;
     let layerLink = layer.links?.find((link: LinkModelType) => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
-    const capabilitiesLink = layer.links?.find((link: LinkModelType) => ['WMS'].includes(link.protocol as string)) as LinkModelType | undefined;
     
     const getTokenResource = (url: string): Resource => {
       const tokenProps: Record<string, unknown> = {url};
@@ -72,15 +68,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     if (layerLink === undefined) {
       layerLink = get(layer, 'links[0]') as LinkModelType;
     }
-
-    queryCapabilities.setQuery(
-      store.queryCapabilities({
-        params: {
-          id: layer.id,
-          type: layer.type as RecordType,
-        },
-      })
-    );
 
     switch (layerLink.protocol) {
       case 'XYZ_LAYER':
