@@ -23,6 +23,7 @@ import { ILayerImage } from '../../models/layerImage';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { isBest } from '../layer-details/utils';
+import { LinksValuePresentorComponent } from '../layer-details/field-value-presentors/links.value-presentor';
 
 import './catalog-tree.css';
 
@@ -38,18 +39,24 @@ interface CatalogTreeComponentProps {
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(({refresh}) => {
-  const { loading, error, data, query, setQuery } = useQuery();
+  const { loading: loadingSearch, error: errorSearch, data: dataSearch, query: querySearch, setQuery: setQuerySearch } = useQuery();
+  const { loading: loadingCapabilities, error: errorCapabilities, data: dataCapabilities, query: queryCapabilities, setQuery: setQueryCapabilities } = useQuery();
 
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [hoveredNode, setHoveredNode] = useState<TreeItem>();
   const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
 
   useEffect(() => {
-    setQuery(
+    setLoading(loadingSearch || loadingCapabilities);
+  }, [loadingSearch, loadingCapabilities])
+
+  useEffect(() => {
+    setQuerySearch(
       store.querySearch({
         opts: {
           filter: [
@@ -96,6 +103,20 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     // }`)
     )
   }, [refresh]);
+
+  // useEffect(() => {
+  //   if (dataSearch) {
+  //     setQueryCapabilities(
+  //       store.queryCapabilities({
+  //         params: {
+  //           ids: dataSearch.map(layer => { 
+  //             id: layer.links.find(link => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)).name,
+  //             type: layer.type
+  //           }),
+  //         }
+  //     });
+  //   }
+  // }, [dataSearch]);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
@@ -152,7 +173,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
 
-    const layersList = get(data,'search') as ILayerImage[];
+    const layersList = get(dataSearch, 'search') as ILayerImage[];
 
     if (!isEmpty(layersList)) {
       const arr: ILayerImage[] = [];
@@ -217,7 +238,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         ]
       );
     }
-  }, [data]);
+  }, [dataSearch]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     if(!store.bestStore.isBestLoad()) {
@@ -233,8 +254,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   };
 
-  if (error) return <Error>{error.message}</Error>
-  if (data) {
+  if (errorSearch) return <Error>{errorSearch.message}</Error>
+  if (dataSearch) {
     return (
       <>
         {

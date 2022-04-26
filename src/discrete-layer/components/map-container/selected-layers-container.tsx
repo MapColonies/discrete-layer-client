@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Cesium3DTileset, CesiumGeographicTilingScheme, CesiumWMTSLayer, CesiumXYZLayer, RCesiumWMTSLayerOptions, useCesiumMap } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
@@ -9,7 +9,7 @@ import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LinkModelType } from '../../models/LinkModel';
-import { CapabilityModelType, LayerRasterRecordModelType, RecordType, useQuery } from '../../models';
+import { LayerRasterRecordModelType } from '../../models';
 import { generateLayerRectangle } from '../helpers/layersUtils';
 
 
