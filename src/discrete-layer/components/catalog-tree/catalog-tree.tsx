@@ -5,7 +5,7 @@ import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { get, isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
@@ -159,12 +159,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
     const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
-
     if (!isEmpty(capabilitiesList)) {
-      const capabilitiesArray: CapabilityModelType[] = [];
-      capabilitiesList.forEach((item) => capabilitiesArray.push({...item}));
-
-      store.discreteLayersStore.setCapabilities(capabilitiesArray);
+      store.discreteLayersStore.setCapabilities(cloneDeep(capabilitiesList));
     }
   }, [dataCapabilities]);
 
@@ -173,8 +169,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const layersList = get(dataSearch, 'search') as ILayerImage[];
 
     if (!isEmpty(layersList)) {
-      const arr: ILayerImage[] = [];
-      layersList.forEach((item) => arr.push({...item}));
+      const arr: ILayerImage[] = cloneDeep(layersList);
 
       store.discreteLayersStore.setLayersImages(arr, false);
 
