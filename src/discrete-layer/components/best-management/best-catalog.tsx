@@ -14,13 +14,11 @@ import { ImportRenderer } from '../../../common/components/tree/icon-renderers/i
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
-import { CapabilityModelType } from '../../models';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
-import { getLayerLink } from '../helpers/layersUtils';
 import { isDiscrete } from '../layer-details/utils';
 
 import './best-catalog.css';
@@ -37,12 +35,22 @@ interface BestCatalogComponentProps {
 }
 
 export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer(forwardRef((props, ref) => {
-  const { loading: loadingSearch, error: errorSearch, data: dataSearch, query: querySearch, setQuery: setQuerySearch } = useQuery();
-  const { loading: loadingCapabilities, error: errorCapabilities, data: dataCapabilities, query: queryCapabilities, setQuery: setQueryCapabilities } = useQuery();
+  const { loading, error, data, query } = useQuery((store) =>
+    store.querySearch({
+      opts: {
+        filter: [
+          {
+            field: 'mc:type',
+            eq: RecordType.RECORD_RASTER
+          }
+        ]
+      }
+    })
+  );
+
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [importList, setImportList] = useState<LayerRasterRecordModelType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
   const discretesIds = props.filterOut?.map((item) => item.id);
@@ -92,44 +100,13 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   };
 
   useEffect(() => {
-    setQuerySearch(
-      store.querySearch({
-        opts: {
-          filter: [
-            {
-              field: 'mc:type',
-              eq: RecordType.RECORD_RASTER
-            }
-          ]
-        }
-      })
-    );
-  }, []);
 
-  useEffect(() => {
-    setLoading(loadingSearch || loadingCapabilities);
-  }, [loadingSearch, loadingCapabilities]);
-
-  useEffect(() => {
-    
-    const layersList = get(dataSearch, 'search') as ILayerImage[];
+    const layersList = get(data, 'search') as ILayerImage[];
 
     if (!isEmpty(layersList)) {
       const arr: ILayerImage[] = cloneDeep(layersList.filter((item) => !discretesIds?.includes(item.id) && isDiscrete(item)));
 
       store.discreteLayersStore.setLayersImagesData([...arr]);
-
-      // get capabilities
-      const ids = layersList.map((layer: ILayerImage) => {
-        return getLayerLink(layer).name ?? '';
-      });
-      setQueryCapabilities(
-        store.queryCapabilities({
-          idList: {
-            value: [...ids]
-          }
-        })
-      );
       
       // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {
@@ -157,17 +134,10 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
         ]
       );
     }
-  }, [dataSearch]);
+  }, [data]);
 
-  useEffect(() => {
-    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
-    if (!isEmpty(capabilitiesList)) {
-      store.discreteLayersStore.setCapabilities(cloneDeep(capabilitiesList));
-    }
-  }, [dataCapabilities]);
-
-  if (errorSearch) return <Error>{errorSearch.message}</Error>
-  if (dataSearch) {
+  if (error) return (<Error>{error.message}</Error>);
+  if (data) {
     return (
       <>
         <Box id="bestCatalogContainer" className="bestCatalogContainer">
