@@ -20,10 +20,11 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
+import { CapabilityModelType, LinkModelType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
+import { findLayerLink } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
-import { LinksValuePresentorComponent } from '../layer-details/field-value-presentors/links.value-presentor';
 
 import './catalog-tree.css';
 
@@ -104,20 +105,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     )
   }, [refresh]);
 
-  // useEffect(() => {
-  //   if (dataSearch) {
-  //     setQueryCapabilities(
-  //       store.queryCapabilities({
-  //         params: {
-  //           ids: dataSearch.map(layer => { 
-  //             id: layer.links.find(link => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)).name,
-  //             type: layer.type
-  //           }),
-  //         }
-  //     });
-  //   }
-  // }, [dataSearch]);
-
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
     const treeDataUnlinked = groupBy(arr, groupByParams);
     return {
@@ -160,16 +147,26 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         }
        });
        entityActions[entityName] = permittedGroupsActions;
-       // entityActions[entityName] = getEntityActionGroups(entityName);
     })
     return entityActions;
   }, []);
 
   useEffect(() => {
-    if(store.actionDispatcherStore.action !== undefined){
+    if (store.actionDispatcherStore.action !== undefined) {
       setIsHoverAllowed(true);
     }
   });
+
+  useEffect(() => {
+    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
+
+    if (!isEmpty(capabilitiesList)) {
+      const capabilitiesArray: CapabilityModelType[] = [];
+      capabilitiesList.forEach((item) => capabilitiesArray.push({...item}));
+
+      store.discreteLayersStore.setCapabilities(capabilitiesArray);
+    }
+  }, [dataCapabilities]);
 
   useEffect(() => {
 
@@ -180,6 +177,22 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       layersList.forEach((item) => arr.push({...item}));
 
       store.discreteLayersStore.setLayersImages(arr, false);
+
+      // get capabilities
+      const ids = layersList.map((layer: ILayerImage) => {
+        let layerLink = findLayerLink(layer);
+        if (layerLink === undefined) {
+          layerLink = get(layer, 'links[0]') as LinkModelType;
+        }
+        return layerLink?.name ?? '';
+      });
+      setQueryCapabilities(
+        store.queryCapabilities({
+          idList: {
+            value: [...ids]
+          }
+        })
+      );
 
       // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {

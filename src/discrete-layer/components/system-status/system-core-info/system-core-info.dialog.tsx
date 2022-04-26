@@ -189,9 +189,9 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
       return (
         <Box className="tabContent">
           {activeTabToRender}
-         
         </Box>
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoading, renderExternalServices, renderClusterServices, activeTab, closeDialog]);
 
     return (

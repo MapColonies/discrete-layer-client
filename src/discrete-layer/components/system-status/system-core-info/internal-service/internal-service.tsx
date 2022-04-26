@@ -4,7 +4,6 @@ import { Typography, useTheme } from '@map-colonies/react-core';
 import { DeploymentWithServicesModelType } from '../../../../models';
 
 import './internal-service.css';
-import { useIntl } from 'react-intl';
 
 interface InternalServiceProps {
   service: DeploymentWithServicesModelType;

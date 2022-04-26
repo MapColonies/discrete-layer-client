@@ -10,7 +10,7 @@ import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LinkModelType } from '../../models/LinkModel';
 import { LayerRasterRecordModelType } from '../../models';
-import { generateLayerRectangle } from '../helpers/layersUtils';
+import { findLayerLink, generateLayerRectangle } from '../helpers/layersUtils';
 
 
 interface CacheMap {
@@ -41,8 +41,15 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   }, [store.discreteLayersStore.previewedLayers]);
 
   const generateLayerComponent = (layer: ILayerImage): JSX.Element | undefined  => {
+    let style = 'default';
+    let format = 'image/jpeg';
+    let tileMatrixSetID = 'newGrids';
+    let capability;
     let optionsWMTS;
-    let layerLink = layer.links?.find((link: LinkModelType) => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+    let layerLink = findLayerLink(layer);
+    if (layerLink === undefined) {
+      layerLink = get(layer, 'links[0]') as LinkModelType;
+    }
     
     const getTokenResource = (url: string): Resource => {
       const tokenProps: Record<string, unknown> = {url};
@@ -65,10 +72,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       return new Resource({...tokenProps as unknown as Resource});
     };
 
-    if (layerLink === undefined) {
-      layerLink = get(layer, 'links[0]') as LinkModelType;
-    }
-
     switch (layerLink.protocol) {
       case 'XYZ_LAYER':
         return (
@@ -90,12 +93,18 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         );
       case 'WMTS_tile':
       case 'WMTS_LAYER':
+        capability = store.discreteLayersStore.capabilities?.find(item => layerLink?.name === item.id);
+        if (capability) {
+          style = capability.style as string;
+          format = (capability.format as string[])[0];
+          tileMatrixSetID = (capability.tileMatrixSet as string[])[0];
+        }
         optionsWMTS = {
           url: getTokenResource(layerLink.url as string),
           layer: `${(layer as LayerRasterRecordModelType).productId as string}-${(layer as LayerRasterRecordModelType).productVersion as string}`,
-          style: 'default',
-          format: 'image/jpeg',
-          tileMatrixSetID: 'newGrids',
+          style,
+          format,
+          tileMatrixSetID,
           tilingScheme: new CesiumGeographicTilingScheme()
         };
         return (

@@ -5,7 +5,7 @@ import { isEmpty, get } from 'lodash';
 import { CesiumGeographicTilingScheme, useCesiumMap } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LayerRasterRecordModelType, LinkModelType, useStore } from '../../models';
-import { generateLayerRectangle } from '../helpers/layersUtils';
+import { findLayerLink, generateLayerRectangle } from '../helpers/layersUtils';
 
 interface IRasterLayerProperties {
   url: string;
@@ -22,9 +22,9 @@ export const BestLayersPresentor: React.FC = observer((props) => {
 
   const buildLayerProperties = (layer: LayerRasterRecordModelType): IRasterLayerProperties => {
     let options: Record<string, unknown> = {};
-    let layerLink = layer.links?.find((link: LinkModelType)=> ['WMTS_tile','WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+    let layerLink = findLayerLink(layer);
     if (layerLink === undefined) {
-      layerLink = get(layer,'links[0]') as LinkModelType;
+      layerLink = get(layer, 'links[0]') as LinkModelType;
     } else {
       options = {
         url: layerLink.url,
@@ -69,14 +69,12 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   };
 
   useLayoutEffect(() => {
-    if(!isEmpty(bestStore.layersList)){
+    if (!isEmpty(bestStore.layersList)) {
       const sortedLayers = [...(bestStore.layersList ?? [])].sort(
         // @ts-ignore
         (layer1, layer2) => layer1.order - layer2.order
       );
-  
       setlayersImages(sortedLayers);
-
     } else {
       mapViewer.layersManager?.removeNotBaseMapLayers();
       setlayersImages([]);
