@@ -2,15 +2,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Cesium3DTileset, CesiumGeographicTilingScheme, CesiumWMTSLayer, CesiumXYZLayer, RCesiumWMTSLayerOptions, useCesiumMap } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { isEmpty, get } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Resource } from 'cesium';
 import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
-import { LinkModelType } from '../../models/LinkModel';
 import { LayerRasterRecordModelType } from '../../models';
-import { findLayerLink, generateLayerRectangle } from '../helpers/layersUtils';
+import { getLayerLink, generateLayerRectangle } from '../helpers/layersUtils';
 
 
 interface CacheMap {
@@ -46,10 +45,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     let tileMatrixSetID = 'newGrids';
     let capability;
     let optionsWMTS;
-    let layerLink = findLayerLink(layer);
-    if (layerLink === undefined) {
-      layerLink = get(layer, 'links[0]') as LinkModelType;
-    }
+    const layerLink = getLayerLink(layer);
     
     const getTokenResource = (url: string): Resource => {
       const tokenProps: Record<string, unknown> = {url};

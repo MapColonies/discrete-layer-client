@@ -5,7 +5,7 @@ import React, {useEffect, useState, useRef, forwardRef, useImperativeHandle} fro
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/Error';
@@ -14,11 +14,13 @@ import { ImportRenderer } from '../../../common/components/tree/icon-renderers/i
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
 import { GroupBy, groupBy } from '../../../common/helpers/group-by';
+import { CapabilityModelType } from '../../models';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { getLayerLink } from '../helpers/layersUtils';
 import { isDiscrete } from '../layer-details/utils';
 
 import './best-catalog.css';
@@ -35,22 +37,12 @@ interface BestCatalogComponentProps {
 }
 
 export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observer(forwardRef((props, ref) => {
-  const { loading, error, data, query } = useQuery((store) =>
-    store.querySearch({
-      opts: {
-        filter: [
-          {
-            field: 'mc:type',
-            eq: RecordType.RECORD_RASTER
-          }
-        ]
-      }
-    })
-  );
-
+  const { loading: loadingSearch, error: errorSearch, data: dataSearch, query: querySearch, setQuery: setQuerySearch } = useQuery();
+  const { loading: loadingCapabilities, error: errorCapabilities, data: dataCapabilities, query: queryCapabilities, setQuery: setQueryCapabilities } = useQuery();
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [importList, setImportList] = useState<LayerRasterRecordModelType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const selectedLayersRef = useRef(INITIAL_ORDER);
   const intl = useIntl();
   const discretesIds = props.filterOut?.map((item) => item.id);
@@ -100,21 +92,49 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   };
 
   useEffect(() => {
-    if (data && data.search) {
-      const arr: ILayerImage[] = [];
-      data.search
-      .filter((item) => !discretesIds?.includes(item.id) && isDiscrete(item))
-      .forEach((item) => arr.push({...item}));
+    setQuerySearch(
+      store.querySearch({
+        opts: {
+          filter: [
+            {
+              field: 'mc:type',
+              eq: RecordType.RECORD_RASTER
+            }
+          ]
+        }
+      })
+    );
+  }, []);
 
-      store.discreteLayersStore.setLayersImagesData(
-        [
-          ...arr
-        ]
+  useEffect(() => {
+    setLoading(loadingSearch || loadingCapabilities);
+  }, [loadingSearch, loadingCapabilities]);
+
+  useEffect(() => {
+    
+    const layersList = get(dataSearch, 'search') as ILayerImage[];
+
+    if (!isEmpty(layersList)) {
+      const arr: ILayerImage[] = cloneDeep(layersList.filter((item) => !discretesIds?.includes(item.id) && isDiscrete(item)));
+
+      store.discreteLayersStore.setLayersImagesData([...arr]);
+
+      // get capabilities
+      const ids = layersList.map((layer: ILayerImage) => {
+        return getLayerLink(layer).name ?? '';
+      });
+      setQueryCapabilities(
+        store.queryCapabilities({
+          idList: {
+            value: [...ids]
+          }
+        })
       );
       
+      // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {
         // @ts-ignore
-        const itemObjectBag =  item as Record<string,unknown>;
+        const itemObjectBag = item as Record<string,unknown>;
         return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
       });
       const parentUnlinked = buildParentTreeNode(
@@ -137,15 +157,23 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
         ]
       );
     }
-  },[data]);
+  }, [dataSearch]);
 
-  if (error) return <Error>{error.message}</Error>
-  if (data) {
+  useEffect(() => {
+    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
+    if (!isEmpty(capabilitiesList)) {
+      store.discreteLayersStore.setCapabilities(cloneDeep(capabilitiesList));
+    }
+  }, [dataCapabilities]);
+
+  if (errorSearch) return <Error>{errorSearch.message}</Error>
+  if (dataSearch) {
     return (
       <>
         <Box id="bestCatalogContainer" className="bestCatalogContainer">
-          {loading && <Loading/>}
-
+          {
+            loading && <Loading/>
+          }
           {
             !loading && <TreeComponent
               treeData={treeRawData}

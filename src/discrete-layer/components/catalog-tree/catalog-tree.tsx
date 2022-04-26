@@ -23,7 +23,7 @@ import { ILayerImage } from '../../models/layerImage';
 import { CapabilityModelType, LinkModelType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
-import { findLayerLink } from '../helpers/layersUtils';
+import { findLayerLink, getLayerLink } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
 
 import './catalog-tree.css';
@@ -42,7 +42,6 @@ interface CatalogTreeComponentProps {
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(({refresh}) => {
   const { loading: loadingSearch, error: errorSearch, data: dataSearch, query: querySearch, setQuery: setQuerySearch } = useQuery();
   const { loading: loadingCapabilities, error: errorCapabilities, data: dataCapabilities, query: queryCapabilities, setQuery: setQueryCapabilities } = useQuery();
-
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [hoveredNode, setHoveredNode] = useState<TreeItem>();
@@ -54,7 +53,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
     setLoading(loadingSearch || loadingCapabilities);
-  }, [loadingSearch, loadingCapabilities])
+  }, [loadingSearch, loadingCapabilities]);
 
   useEffect(() => {
     setQuerySearch(
@@ -158,13 +157,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   });
 
   useEffect(() => {
-    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
-    if (!isEmpty(capabilitiesList)) {
-      store.discreteLayersStore.setCapabilities(cloneDeep(capabilitiesList));
-    }
-  }, [dataCapabilities]);
-
-  useEffect(() => {
 
     const layersList = get(dataSearch, 'search') as ILayerImage[];
 
@@ -175,11 +167,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
       // get capabilities
       const ids = layersList.map((layer: ILayerImage) => {
-        let layerLink = findLayerLink(layer);
-        if (layerLink === undefined) {
-          layerLink = get(layer, 'links[0]') as LinkModelType;
-        }
-        return layerLink?.name ?? '';
+        return getLayerLink(layer).name ?? '';
       });
       setQueryCapabilities(
         store.queryCapabilities({
@@ -248,16 +236,22 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   }, [dataSearch]);
 
+  useEffect(() => {
+    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
+    if (!isEmpty(capabilitiesList)) {
+      store.discreteLayersStore.setCapabilities(cloneDeep(capabilitiesList));
+    }
+  }, [dataCapabilities]);
+
   const dispatchAction = (action: Record<string,unknown>): void => {
-    if(!store.bestStore.isBestLoad()) {
+    if (!store.bestStore.isBestLoad()) {
       store.actionDispatcherStore.dispatchAction(
         {
           action: action.action,
           data: action.data,
         } as IDispatchAction
       );
-    }
-    else {
+    } else {
       setBestInEditDialogOpen(true);
     }
   };

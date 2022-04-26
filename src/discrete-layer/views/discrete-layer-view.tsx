@@ -138,7 +138,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
 
   useEffect(() => {
-    const layers = get(data,'search', []) as ILayerImage[];
+    const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
