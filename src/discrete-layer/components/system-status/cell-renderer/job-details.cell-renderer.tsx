@@ -189,7 +189,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
           </Typography>
         ))}
 
-        <TasksRenderer jobId={(jobId as string).replace(DETAILS_ROW_ID_SUFFIX,'')} />
+        <TasksRenderer jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
       </Box>
     </Box>
   );
