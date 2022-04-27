@@ -10,6 +10,7 @@ export { selectFromCapability, capabilityModelPrimitives, CapabilityModelSelecto
 /**
  * CapabilityModel
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const CapabilityModel = CapabilityModelBase
   .actions(self => ({
     // This is an auto-generated example action.

@@ -351,7 +351,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     paginationPageSize: pageSize,
     columnDefs: colDef,
     getRowNodeId: (data: JobModelType): string => {
-      return data.id as string;
+      return data.id;
     },
     detailsRowCellRenderer: 'detailsRenderer',
     detailsRowHeight: 230,
