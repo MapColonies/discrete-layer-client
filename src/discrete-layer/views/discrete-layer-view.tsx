@@ -31,6 +31,7 @@ import {
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { Error } from '../../common/components/tree/statuses/Error';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -95,7 +96,7 @@ const tileOptions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
-  const { loading, error, data, query, setQuery } = useQuery();
+  const { loading: searchLoading, error: searchError, data, query, setQuery } = useQuery();
   const store = useStore();
   const theme = useTheme();
   const intl = useIntl();
@@ -552,7 +553,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             activeTabView = {activeTabView}
           />
         </Box>
-
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
@@ -565,7 +565,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             corners={corners}
           />
         </Box>
-
         <Box className="headerSystemAreaContainer">
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
@@ -587,16 +586,13 @@ const DiscreteLayerView: React.FC = observer(() => {
               onSetOpen={setSystemsJobsDialogOpen}
             />
           }
-
-          
           <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-System-Missions glow-missing-icon"
-              label="SYSTEM JOBS"
+              label="SYSTEM CORE INFO"
               onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
             />
           </Tooltip>
-        
           {
             isSystemCoreInfoDialogOpen &&
             <SystemCoreInfoDialog
@@ -623,39 +619,40 @@ const DiscreteLayerView: React.FC = observer(() => {
                 <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>
-
-            {activeTabView === TabViews.SEARCH_RESULTS && <Box className="tabContentContainer">
-              {
-                getActiveTabHeader(activeTabView)
-              }
-              <LayersResultsComponent 
-                style={{
-                  height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)'
-                }}
-              />
-            </Box>
-            }
-
-            {activeTabView === TabViews.CREATE_BEST && <Box className="tabContentContainer">
-              {
-                getActiveTabHeader(activeTabView)
-              }
-              <Box 
-                style={{
-                  height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)',
-                  position: 'relative'
-                }}
-              >
-                <BestEditComponent 
-                  openImport={openImportFromCatalog} 
-                  handleCloseImport={setOpenImportFromCatalog}/>
+            {
+              activeTabView === TabViews.SEARCH_RESULTS &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <LayersResultsComponent 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)'
+                  }}
+                />
               </Box>
-            </Box>
+            }
+            {
+              activeTabView === TabViews.CREATE_BEST &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <Box 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)',
+                    position: 'relative'
+                  }}
+                >
+                  <BestEditComponent 
+                    openImport={openImportFromCatalog} 
+                    handleCloseImport={setOpenImportFromCatalog}/>
+                </Box>
+              </Box>
             }
           </Box>
-          
           <Box className="sidePanelContainer sideDetailsPanel" style={{
             backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
             height: detailsPanelExpanded ? '50%' : '25%',
@@ -670,35 +667,39 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="mapAppContainer">
           {
-            <CesiumMap 
-              projection={CONFIG.MAP.PROJECTION}  
-              center={center}
-              zoom={CONFIG.MAP.ZOOM}
-              sceneMode={CesiumSceneMode.SCENE2D}
-              imageryProvider={false}
-              baseMaps={BASE_MAPS}
-              // @ts-ignore
-              imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
-              imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
-              >
-                {memoizedLayers}
-                <CesiumDrawingsDataSource
-                  drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
-                  drawingMaterial={DRAWING_MATERIAL_COLOR}
-                  drawState={{
-                    drawing: isDrawing,
-                    type: drawPrimitive.type,
-                    handler: drawPrimitive.handler,
-                  }}
-                  hollow={true}
-                  outlineWidth={2}
-                  material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
-                />
-                {
-                  poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
-                }
-            </CesiumMap>
+            1 !== 1 &&
+            <Box className="curtain">
+              <Error>Error</Error>
+            </Box>
           }
+          <CesiumMap 
+            projection={CONFIG.MAP.PROJECTION}  
+            center={center}
+            zoom={CONFIG.MAP.ZOOM}
+            sceneMode={CesiumSceneMode.SCENE2D}
+            imageryProvider={false}
+            baseMaps={BASE_MAPS}
+            // @ts-ignore
+            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+            imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
+            >
+              {memoizedLayers}
+              <CesiumDrawingsDataSource
+                drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
+                drawingMaterial={DRAWING_MATERIAL_COLOR}
+                drawState={{
+                  drawing: isDrawing,
+                  type: drawPrimitive.type,
+                  handler: drawPrimitive.handler,
+                }}
+                hollow={true}
+                outlineWidth={2}
+                material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
+              />
+              {
+                poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+              }
+          </CesiumMap>
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>

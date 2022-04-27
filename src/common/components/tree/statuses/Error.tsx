@@ -7,7 +7,7 @@ const START = 0;
 
 export const Error: React.FC = (props) => {
   const formatMessage = (message: string): string => {
-    return message.slice(START, +message.indexOf(': '));
+    return (message+' ').slice(START, +message.indexOf(': '));
   };
 
   return (
