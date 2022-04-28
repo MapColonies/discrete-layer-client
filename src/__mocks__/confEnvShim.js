@@ -51,7 +51,7 @@ if (!window._env_) {
       },
       NUMBER_OF_CHARACTERS_LIMIT: 12,
       ACCESS_TOKEN: {
-        attributeName: 'X-API-KEY',
+        attributeName: 'x-api-key',
         injectionType: 'queryParam',
         tokenValue: 'TOKEN'
       },
