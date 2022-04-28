@@ -20,10 +20,10 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import { CapabilityModelType, LinkModelType } from '../../models';
+import { CapabilityModelType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
-import { findLayerLink, getLayerLink } from '../helpers/layersUtils';
+import { getLayerLink } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
 
 import './catalog-tree.css';
@@ -53,7 +53,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
     setLoading(loadingSearch || (loadingCapabilities && !errorCapabilities));
-  }, [loadingSearch, loadingCapabilities]);
+  }, [loadingSearch, loadingCapabilities, errorCapabilities]);
 
   useEffect(() => {
     if (errorCapabilities) {
@@ -175,7 +175,13 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
       store.discreteLayersStore.setLayersImages(arr, false);
 
-      // get capabilities
+      //#region getCapabilities()
+
+      // NOTE:
+      // Calling getCapabilities() should happen after querySearch.data
+      // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+      // are subsets of the catalog layers list
+
       const ids = layersList.map((layer: ILayerImage) => {
         return getLayerLink(layer).name ?? '';
       });
@@ -186,6 +192,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           }
         })
       );
+
+      //#endregion
 
       // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {
@@ -218,7 +226,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         isGroup: true,
         children: [
           ...draftNode,
-          ...arrBests.map(item=> {
+          ...arrBests.map(item => {
             return {
               ...item,
               title: item['productName'],
@@ -273,7 +281,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         {
           loading && <Loading/>
         }
-
         <Box id="catalogContainer" className="catalogContainer">
           {
             !loading && <TreeComponent
@@ -292,9 +299,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
               }}
               generateNodeProps={rowInfo => ({
                 onClick: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup){
+                  if (!rowInfo.node.isGroup) {
                     let newTreeData = treeRawData;
-                    if(!evt.ctrlKey){
+                    if (!evt.ctrlKey) {
                       // Remove prev selection
                       const selection = find({
                         treeData: newTreeData,
@@ -333,7 +340,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     });
 
                     // console.log('*** MOUSE ROW CLICK *****', (evt.target as any).className);
-                    if(evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)){
+                    if (evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)) {
                       setHoveredNode(undefined);
                       setIsHoverAllowed(false);
                     }
@@ -343,19 +350,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup && isHoverAllowed){
+                  if (!rowInfo.node.isGroup && isHoverAllowed) {
                     store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
-
                     setHoveredNode(rowInfo.node);
-                  }
-                  else{
+                  } else {
                     setHoveredNode(undefined);
                   }
                 },
                 onMouseOut: (evt: MouseEvent) => {
                   store.discreteLayersStore.highlightLayer(undefined);
                   // console.log('*** MOUSE OUT *****', (evt.target as any).className, nodeOutRegex.test((evt.target as any).className));
-                  if(evt.target !== null && nodeOutRegex.test((evt.target as any).className)){
+                  if (evt.target !== null && nodeOutRegex.test((evt.target as any).className)) {
                     setHoveredNode(undefined);
                   }
                 },
