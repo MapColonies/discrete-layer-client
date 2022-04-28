@@ -118,7 +118,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   useEffect(() => {
     setQuery(
       (store) =>
@@ -146,7 +145,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     if (updateTaskPayload.id !== undefined) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
+      mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTaskPayload, store]);

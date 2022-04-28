@@ -52,8 +52,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   const intl = useIntl();
 
   useEffect(() => {
-    setLoading(loadingSearch || loadingCapabilities);
+    setLoading(loadingSearch || (loadingCapabilities && !errorCapabilities));
   }, [loadingSearch, loadingCapabilities]);
+
+  useEffect(() => {
+    if (errorCapabilities) {
+      const msg = errorCapabilities.message;
+      const start = msg.indexOf('"url":"') + 7;
+      const end = msg.indexOf('","', start) - 1;
+      store.discreteLayersStore.setCapabilitiesError(msg.slice(start, end));
+    }
+  }, [errorCapabilities]);
 
   useEffect(() => {
     setQuerySearch(
@@ -69,39 +78,40 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         end: CONFIG.RUNNING_MODE.END_RECORD,
         start: CONFIG.RUNNING_MODE.START_RECORD,
       })
-
-    // store.queryCatalogItems({},`
-    // ... on LayerRasterRecord {
-    //   __typename
-    //   sourceName
-    //   creationDate
-    //   geometry 
-    //   type
-    //   links {
-    //     __typename
-    //     name
-    //     description
-    //     protocol
-    //     url
-    //   }
-    // }
-    // ... on Layer3DRecord {
-    //    __typename
-    //   sourceName
-    //   creationDate
-    //   geometry
-    //   type
-    //   links {
-    //     __typename
-    //     name
-    //     description
-    //     protocol
-    //     url
-    //   }
-    //   accuracyLE90
-    // }
-    // }`)
-    )
+      //#region query params
+      // store.queryCatalogItems({},`
+      // ... on LayerRasterRecord {
+      //   __typename
+      //   sourceName
+      //   creationDate
+      //   geometry 
+      //   type
+      //   links {
+      //     __typename
+      //     name
+      //     description
+      //     protocol
+      //     url
+      //   }
+      // }
+      // ... on Layer3DRecord {
+      //    __typename
+      //   sourceName
+      //   creationDate
+      //   geometry
+      //   type
+      //   links {
+      //     __typename
+      //     name
+      //     description
+      //     protocol
+      //     url
+      //   }
+      //   accuracyLE90
+      // }
+      // }`)
+      //#endregion
+    );
   }, [refresh]);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
@@ -239,7 +249,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   useEffect(() => {
     const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
     if (!isEmpty(capabilitiesList)) {
-      store.discreteLayersStore.setCapabilities(cloneDeep(capabilitiesList));
+      store.discreteLayersStore.setCapabilities(capabilitiesList);
     }
   }, [dataCapabilities]);
 

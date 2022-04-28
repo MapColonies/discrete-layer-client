@@ -47,6 +47,7 @@ export const discreteLayersStore = ModelBase
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>([])),
+    capabilitiesError: types.maybe(types.frozen<string>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -75,7 +76,6 @@ export const discreteLayersStore = ModelBase
           // @ts-ignore
           const result = yield Promise.resolve(MOCK_DATA_IMAGERY_LAYERS_ISRAEL);
           self.layersImages = filterBySearchParams(result).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
-          
         } catch (error) {
           console.error(error);
           self.state = ResponseState.ERROR;
@@ -111,7 +111,7 @@ export const discreteLayersStore = ModelBase
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
       for (const key in layerForUpdate){
-        set(layerForUpdate,key, get(data,key));
+        set(layerForUpdate, key, get(data,key));
       }
     }
 
@@ -120,7 +120,7 @@ export const discreteLayersStore = ModelBase
       return layers.filter((layer) => {
         let layerBBoxPolygon: Polygon;
         const geometry: Geometry = layer.footprint as Geometry;
-        switch(geometry.type){
+        switch (geometry.type) {
           case 'Polygon':
             layerBBoxPolygon = layer.footprint as Polygon;
             break;
@@ -209,6 +209,10 @@ export const discreteLayersStore = ModelBase
       self.capabilities = cloneDeep(data);
     }
 
+    function setCapabilitiesError(errorMessage: string): void {
+      self.capabilitiesError = errorMessage;
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -228,6 +232,7 @@ export const discreteLayersStore = ModelBase
       removePreviewedLayer,
       isPreviewedLayer,
       setCapabilities,
+      setCapabilitiesError,
     };
   });
 

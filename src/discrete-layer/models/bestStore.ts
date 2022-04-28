@@ -1,5 +1,5 @@
 import { types, getParent } from 'mobx-state-tree';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, cloneDeep } from 'lodash';
 import { localStore } from '../../common/helpers/storage';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MovedLayer } from '../components/best-management/interfaces/MovedLayer';
@@ -50,7 +50,7 @@ export const bestStore = ModelBase
   .actions((self) => {
 
     function setLayersList(layers: LayerRasterRecordModelType[]): void {
-      self.layersList = [...layers];
+      self.layersList = cloneDeep(layers);
     }
 
     function editBest(best: BestRecordModelType | undefined): void {
@@ -123,9 +123,9 @@ export const bestStore = ModelBase
     }
 
     function showFootprint(id: string, isShow: boolean): void {
-      // just update is footprint shown for persistancy
+      // just update is footprint shown for persistency
       self.layersList?.find((el) => {
-        if(el.id === id){
+        if (el.id === id) {
           el.footprintShown = isShow;
         } 
       });

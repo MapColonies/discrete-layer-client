@@ -110,6 +110,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
+  const [isCapabilitiesError, setIsCapabilitiesError] = useState<boolean>(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
@@ -137,11 +138,16 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   }, []);
 
-
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
+
+  useEffect(() => {
+    if (store.discreteLayersStore.capabilitiesError) {
+      setIsCapabilitiesError(true);
+    }
+  }, [store.discreteLayersStore.capabilitiesError]);
 
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
@@ -667,7 +673,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="mapAppContainer">
           {
-            1 !== 1 &&
+            isCapabilitiesError &&
             <Box className="curtain">
               <Error>Error</Error>
             </Box>
