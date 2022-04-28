@@ -27,6 +27,10 @@
   background-color: var(--mdc-theme-primary, #2979ff);
 }
 
+.mdc-snackbar--leading {
+  justify-content: flex-end;
+}
+
 .app-container {
   background-color: var(--mdc-theme-background);
   color: var(--mdc-theme-on-surface);

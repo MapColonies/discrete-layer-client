@@ -47,7 +47,6 @@ export const discreteLayersStore = ModelBase
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>([])),
-    capabilitiesError: types.maybe(types.frozen<string>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -209,10 +208,6 @@ export const discreteLayersStore = ModelBase
       self.capabilities = cloneDeep(data);
     }
 
-    function setCapabilitiesError(errorMessage: string): void {
-      self.capabilitiesError = errorMessage;
-    }
-
     return {
       getLayersImages,
       setLayersImages,
@@ -232,7 +227,6 @@ export const discreteLayersStore = ModelBase
       removePreviewedLayer,
       isPreviewedLayer,
       setCapabilities,
-      setCapabilitiesError,
     };
   });
 

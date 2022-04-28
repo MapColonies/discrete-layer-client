@@ -25,6 +25,7 @@ import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLayerLink } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
+import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
 
@@ -60,7 +61,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const msg = errorCapabilities.message;
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
-      store.discreteLayersStore.setCapabilitiesError(msg.slice(start, end));
+      queue.notify({
+        body: <Error>{`${msg.slice(start, end)}`}</Error>
+      });
     }
   }, [errorCapabilities]);
 

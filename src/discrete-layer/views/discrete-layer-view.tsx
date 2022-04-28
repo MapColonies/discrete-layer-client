@@ -31,7 +31,6 @@ import {
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
-import { Error } from '../../common/components/tree/statuses/Error';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -55,6 +54,7 @@ import { BestMapContextMenu } from '../components/best-management/best-map-conte
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
+import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -65,7 +65,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -110,7 +109,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
-  const [isCapabilitiesError, setIsCapabilitiesError] = useState<boolean>(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
@@ -142,12 +140,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
-
-  useEffect(() => {
-    if (store.discreteLayersStore.capabilitiesError) {
-      setIsCapabilitiesError(true);
-    }
-  }, [store.discreteLayersStore.capabilitiesError]);
 
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
@@ -403,7 +395,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
-    const tabView = find(tabViews, (tab)=>{
+    const tabView = find(tabViews, (tab) => {
       return tab.idx === tabIdx;
     });
 
