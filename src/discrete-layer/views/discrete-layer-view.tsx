@@ -672,12 +672,6 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>
         </Box>
         <Box className="mapAppContainer">
-          {
-            isCapabilitiesError &&
-            <Box className="curtain">
-              <Error>{store.discreteLayersStore.capabilitiesError}</Error>
-            </Box>
-          }
           <CesiumMap 
             projection={CONFIG.MAP.PROJECTION}  
             center={center}
