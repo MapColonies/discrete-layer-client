@@ -8,8 +8,8 @@ import { useIntl } from 'react-intl';
 import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { Error } from '../../../common/components/tree/statuses/Error';
-import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
@@ -136,7 +136,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     }
   }, [data]);
 
-  if (error) return (<Error>{error.message}</Error>);
+  if (error) return (<Error class="errorMessage">{error.message}</Error>);
   if (data) {
     return (
       <>

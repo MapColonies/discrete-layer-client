@@ -1,51 +1,38 @@
-.pending{
+.pending {
   color: var(--mdc-theme-gc-warning-high);
 }
-
-.inprogress{
+.inprogress {
   color: var(--mdc-theme-gc-warning-medium);
 }
-
-.completed{
+.completed {
   color: var(--mdc-theme-gc-success);
-
 }
-
-.failed{
+.failed {
   color: var(--mdc-theme-gc-error-medium);
-
 }
-
-.expired{
+.expired {
   color: var(--mdc-theme-text-disabled-on-dark);
 }
-
 .CompletedArea {
   background: var(--mdc-theme-gc-success);
   opacity: 0.85;
 }
-
 .FailedArea {
   background: var(--mdc-theme-gc-error-medium);
   opacity: 0.85;
-
 }
-
 .InProgressArea {
   background: var(--mdc-theme-gc-warning-medium);
   opacity: 0.85;
-
 }
 .ExpiredArea {
   background: var(--mdc-theme-text-disabled-on-dark);
   opacity: 0.85;
 }
-
 .progressSectionsContainer {
   display:flex;
   align-items: flex-start;
 }
-
 .statusBarContainer {
   display: flex;
   width: 134px;
@@ -59,7 +46,6 @@
   top:-10px;
 }
 .statusBar {
-
   border: 1px solid rgba(255, 255, 255, 0.5);
   overflow: hidden;
 }

@@ -88,7 +88,7 @@ const App: React.FC = () => {
           <StaticDataFetcher />
           <DiscreteLayerView />
           <SnackContainer />
-          <SnackbarQueue messages={queue.messages} timeout={-1} />
+          <SnackbarQueue messages={queue.messages} leading timeout={-1} />
         </RMWCThemeProvider>
       </RMWCProvider>
     </IntlProvider>

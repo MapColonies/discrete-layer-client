@@ -9,8 +9,8 @@ import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { Error } from '../../../common/components/tree/statuses/Error';
-import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
@@ -62,7 +62,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
       queue.notify({
-        body: <Error>{`${msg.slice(start, end)}`}</Error>
+        body: <Error class="errorNotification">{`${msg.slice(start, end)}`}</Error>
       });
     }
   }, [errorCapabilities]);
@@ -277,7 +277,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   };
 
-  if (errorSearch) return <Error>{errorSearch.message}</Error>
+  if (errorSearch) return <Error class="errorMessage">{errorSearch.message}</Error>
   if (dataSearch) {
     return (
       <>

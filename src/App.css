@@ -30,6 +30,20 @@
 .mdc-snackbar--leading {
   justify-content: flex-end;
 }
+.mdc-snackbar {
+  right: 8px;
+  bottom: 40px;
+  left: 8px;
+}
+.mdc-snackbar__label {
+  padding: 0;
+}
+.mdc-snackbar__surface {
+  padding: 0;
+}
+.mdc-snackbar__action:not(:disabled) {
+    color: var(--mdc-theme-primary, #2979ff);;
+}
 
 .app-container {
   background-color: var(--mdc-theme-background);

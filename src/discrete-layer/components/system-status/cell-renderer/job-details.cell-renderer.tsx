@@ -7,7 +7,7 @@ import { Moment } from 'moment';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
-import { Loading } from '../../../../common/components/tree/statuses/Loading';
+import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/formatters';
 import { JobModelType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
