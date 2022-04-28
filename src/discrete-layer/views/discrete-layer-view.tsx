@@ -675,7 +675,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           {
             isCapabilitiesError &&
             <Box className="curtain">
-              <Error>Error</Error>
+              <Error>{store.discreteLayersStore.capabilitiesError}</Error>
             </Box>
           }
           <CesiumMap 
