@@ -12,6 +12,7 @@ import {
   LayerMetadataMixedUnion,
   LayerRasterRecordModel,
   LinkModel,
+  LinkModelType,
   ProductType,
   RecordType,
   ValidationConfigModelType
@@ -164,3 +165,23 @@ export const removeEmptyObjFields = (
 ): Record<string, unknown> => {
   return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
 };
+
+export const transformFormFieldsToEntity = (
+  fields: Record<string, unknown>,
+  layerRecord: LayerMetadataMixedUnion | LinkModelType
+): Record<string, unknown> => {
+  const transformedFields = {...fields};
+
+  for (const fieldName of Object.keys(fields)) {
+    const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+
+    if(basicType === 'string[]') {
+      /* eslint-disable */
+      // @ts-ignore
+      transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
+      /* eslint-enable */
+    }
+  }
+
+  return transformedFields;
+}
