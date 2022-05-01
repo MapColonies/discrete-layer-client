@@ -62,7 +62,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
       queue.notify({
-        body: <Error class="errorNotification">{`${msg.slice(start, end)}`}</Error>
+        body: <Error className="errorNotification">An error occured with the following service: {`${msg.slice(start, end)}`}</Error>
       });
     }
   }, [errorCapabilities]);
@@ -277,7 +277,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   };
 
-  if (errorSearch) return <Error class="errorMessage">{errorSearch.message}</Error>
+  if (errorSearch) return <Error className="errorMessage">{errorSearch.message}</Error>
   if (dataSearch) {
     return (
       <>

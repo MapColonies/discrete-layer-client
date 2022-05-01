@@ -32,7 +32,7 @@ export const CollapseButton: React.FC<CollaseButtonProps> = ({
   return (
     <Box className="expanderContainer" onClick={handleClick}>
       <Icon
-        className={'expanderIcon'}
+        className="expanderIcon"
         style={{ transform: `rotate(${iconRotation}deg)` }}
         icon={{ icon: 'expand_more', size }}
       />

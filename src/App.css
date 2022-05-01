@@ -35,10 +35,10 @@
   bottom: 40px;
   left: 8px;
 }
-.mdc-snackbar__label {
+.mdc-snackbar__label, [dir=rtl] .mdc-snackbar__label {
   padding: 0;
 }
-.mdc-snackbar__surface {
+.mdc-snackbar__surface, [dir=rtl] .mdc-snackbar__surface {
   padding: 0;
 }
 .mdc-snackbar__action:not(:disabled) {

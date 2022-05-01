@@ -8,7 +8,7 @@ import './error.css';
 const START = 0;
 
 interface ErrorProps {
-  class: string;
+  className: string;
 }
 
 export const Error: React.FC<ErrorProps> = (props) => {
@@ -17,9 +17,9 @@ export const Error: React.FC<ErrorProps> = (props) => {
   };
 
   return (
-    <Box className="alignCenter {props.class}">
+    <Box className={props.className + ' alignCenter'}>
       <Box className="errorTitle"><Typography use="headline6" tag="div"><FormattedMessage id="general.error.text"/></Typography></Box>
-      <Box className="errorMessage"><Typography use="body2" tag="div"><FormattedMessage id="general.error.title"/></Typography></Box>
+      <Box><Typography use="body2" tag="div"><FormattedMessage id="general.error.title"/></Typography></Box>
       <Box className="errorDescription"><Typography use="body2" tag="div"><FormattedMessage id="general.error.description"/> {formatMessage(props.children as string)}</Typography></Box>
     </Box>
   );

@@ -132,7 +132,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       >
         <FormattedMessage id={category.categoryTitle} />
       </Typography>
-      <Box className={'categoryFieldsContainer'}>
+      <Box className="categoryFieldsContainer">
         {category.fields?.filter((fieldInfo)=>{
           // eslint-disable-next-line
           return (mode !== Mode.NEW && get(fieldInfo,'isCreationEssential') !== true) ||

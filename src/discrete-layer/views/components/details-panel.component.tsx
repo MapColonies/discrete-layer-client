@@ -75,7 +75,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
         </Tooltip>
       </Box>
       <Box className="detailsContent panelContent">
-        <LayersDetailsComponent className={'detailsPanelProductView'} entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
+        <LayersDetailsComponent className="detailsPanelProductView" entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
       </Box>
     </>
   );

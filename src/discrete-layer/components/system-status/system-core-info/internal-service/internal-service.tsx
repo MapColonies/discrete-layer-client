@@ -33,10 +33,10 @@ export const InternalService: React.FC<InternalServiceProps> = ({
             backgroundColor: `${(status as boolean) ? theme.custom?.GC_SUCCESS as string : theme.custom?.GC_ERROR_HIGH as string}`,
           }}
         />
-        <Typography className={'serviceName'} tag={'p'}>
+        <Typography className="serviceName" tag="p">
           {`${service.name}`}
         </Typography>
-        <Typography className={'serviceVersion'} tag={'p'}>
+        <Typography className="serviceVersion" tag="p">
           {(image as string).split(':')[1]}
         </Typography>
       </Box>

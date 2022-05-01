@@ -29,7 +29,7 @@ export const FailReasonArea: React.FC<FailReasonAreaProps> = ({
   return (
     <td colSpan={5}>
       <Box key={key} className={containerClass}>
-        <Typography className={'failReasonText'} tag={'p'}>
+        <Typography className="failReasonText" tag="p">
           {failReason}
         </Typography>
 

@@ -79,7 +79,7 @@ const StatusPresentor: React.FC<StatusPresentorParams> = ({ task, reactKey = '' 
               fontSize: `${ERROR_ICON_SIZE}px`,
               color: ERROR_ICON_COLOR,
             }}
-            className={'mc-icon-Warning'}
+            className="mc-icon-Warning"
             label="failReasonIcon"
           />
         </Tooltip>
@@ -109,7 +109,7 @@ const getValuePresentor = (
 
       return (
         <Tooltip content={dateAndTimeTooltipContent} key={`DATE_${idx}`}>
-          <Box className={'gridCell'}>
+          <Box className="gridCell">
             {relativeDateFormatter(task[field.name] as Moment)}
           </Box>
         </Tooltip>
@@ -118,7 +118,7 @@ const getValuePresentor = (
     case 'Status':
       return <StatusPresentor key={`STATUS_${idx}`} task={task} />;
     default:
-      return <Box key={`gridCdellDefault_${idx}`} className={'gridCell'}>{task[field.name] as string} </Box>;
+      return <Box key={`gridCdellDefault_${idx}`} className="gridCell">{task[field.name] as string} </Box>;
   }
 };
 
@@ -177,7 +177,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
   return (
     <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
-      <Box className={'gridContainer'}>
+      <Box className="gridContainer">
         {taskFileds.map((field) => (
           <Typography
             key={`${keyPrefix}_${field.name}`}

@@ -171,7 +171,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
         return (
           <Box className="loader">
             <CircularProgress />
-            <Typography className={'loaderText'} tag={'p'}>
+            <Typography className="loaderText" tag="p">
               <FormattedMessage id="general.loading.text" />
             </Typography>
           </Box>
