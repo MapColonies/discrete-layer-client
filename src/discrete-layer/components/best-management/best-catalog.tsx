@@ -117,14 +117,14 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
       const parentUnlinked = buildParentTreeNode(
         arrUnlinked,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-        {keys: ['region']}
+        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
       );
 
       // whole catalog as is
       const parentCatalog = buildParentTreeNode(
         arr,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
-        {keys: ['region']}
+        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
       );
 
       setTreeRawData(
