@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { BestRecordModelKeys, LayerRasterRecordModelKeys, LayerDemRecordModelKeys, Layer3DRecordModelKeys, VectorBestRecordModelKeys } from '../../components/layer-details/entity-types-keys';
-import {cleanUpEntity} from '../../components/layer-details/utils'
+import {
+  BestRecordModelKeys,
+  LayerRasterRecordModelKeys,
+  LayerDemRecordModelKeys,
+  Layer3DRecordModelKeys,
+  VectorBestRecordModelKeys
+} from '../../components/layer-details/entity-types-keys';
+import { cleanUpEntity } from '../../components/layer-details/utils'
 import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
@@ -82,8 +88,8 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           }
           break;
         case 'Job.retry':
-            // Handled in job-dialog.tsx
-            break;
+          // Is handled in jobs.dialog.tsx
+          break;
         default:
           break;
       }

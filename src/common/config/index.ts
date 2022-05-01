@@ -16,11 +16,11 @@ const ACTIVE_LAYER_PROPERTIES = (window as any)._env_.ACTIVE_LAYER_PROPERTIES;
 const MAP = (window as any)._env_.MAP;
 const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
-const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
 const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
+const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 
 const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -40,7 +40,6 @@ const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
     })
   }
 }
-
 
 const systemJobsPriorityOptions =
   // Priority is an integer, normal / default value is 1000.
@@ -77,9 +76,6 @@ const systemJobsPriorityOptions =
       iconColor: 'orange',
     },
   ];
-
-
-
 
 const DATE_FORMAT = 'DD/MM/YYYY';
 const APP_CONFIG = {
@@ -139,7 +135,6 @@ const APP_CONFIG = {
   DEFAULT_USER: {
     ROLE: DEFAULT_USER.role
   },
-  SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
   BASE_MAPS: enreachBaseMaps(BASE_MAPS),
   RUNNING_MODE: {
     TYPE: RUNNING_MODE.type,
@@ -147,13 +142,14 @@ const APP_CONFIG = {
     START_RECORD: 1,
     END_RECORD: 1000
   },
-  NUMBER_OF_CHARACTERS_LIMIT: NUMBER_OF_CHARACTERS_LIMIT as number,
   SYSTEM_JOBS_PRIORITY_OPTIONS: systemJobsPriorityOptions,
+  NUMBER_OF_CHARACTERS_LIMIT: NUMBER_OF_CHARACTERS_LIMIT as number,
   ACCESS_TOKEN: {
     ATTRIBUTE_NAME: ACCESS_TOKEN.attributeName,
     INJECTION_TYPE: ACCESS_TOKEN.injectionType,
     TOKEN_VALUE: ACCESS_TOKEN.tokenValue
   },
+  SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
   JOB_MANAGER_END_OF_TIME: 21, // Days
 };
 

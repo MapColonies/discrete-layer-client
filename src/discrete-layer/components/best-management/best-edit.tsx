@@ -60,7 +60,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   }, [newLayersToAdd]);
 
   useEffect(() => {
-    const layersList = get(data,'searchById') as LayerRasterRecordModelType[];
+    const layersList = get(data, 'searchById') as LayerRasterRecordModelType[];
     if (!isEmpty(layersList) && !isEmpty(discretesOrder)) {
       const layers = cloneDeep(layersList);
 
@@ -158,9 +158,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
   return (
     <>
-      <Box
-        className="bestDetails"
-      >
+      <Box className="bestDetails">
         <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
       </Box>
 

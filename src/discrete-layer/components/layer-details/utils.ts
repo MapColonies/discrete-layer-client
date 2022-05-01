@@ -175,7 +175,7 @@ export const transformFormFieldsToEntity = (
   for (const fieldName of Object.keys(fields)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
 
-    if(basicType === 'string[]') {
+    if (basicType === 'string[]') {
       /* eslint-disable */
       // @ts-ignore
       transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
@@ -184,4 +184,4 @@ export const transformFormFieldsToEntity = (
   }
 
   return transformedFields;
-}
+};

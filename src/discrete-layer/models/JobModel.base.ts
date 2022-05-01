@@ -18,7 +18,8 @@ export const JobModelBase = ModelBase
   .named('Job')
   .props({
     __typename: types.optional(types.literal("Job"), "Job"),
-    id: types.union(types.undefined, types.string),
+    //id: types.union(types.undefined, types.string),
+    id: types.identifier, //Alex change till proper deffs
     resourceId: types.union(types.undefined, types.null, types.string),
     version: types.union(types.undefined, types.null, types.string),
     description: types.union(types.undefined, types.null, types.string),

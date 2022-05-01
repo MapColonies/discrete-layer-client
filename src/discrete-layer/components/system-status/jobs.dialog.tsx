@@ -118,7 +118,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   useEffect(() => {
     setQuery(
       (store) =>
@@ -146,7 +145,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     if (updateTaskPayload.id !== undefined) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
+      mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTaskPayload, store]);
@@ -351,7 +350,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     paginationPageSize: pageSize,
     columnDefs: colDef,
     getRowNodeId: (data: JobModelType): string => {
-      return data.id as string;
+      return data.id;
     },
     detailsRowCellRenderer: 'detailsRenderer',
     detailsRowHeight: 230,

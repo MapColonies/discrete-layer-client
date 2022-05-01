@@ -54,6 +54,7 @@ import { BestMapContextMenu } from '../components/best-management/best-map-conte
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
+import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -64,7 +65,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -95,7 +95,7 @@ const tileOptions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
-  const { loading, error, data, query, setQuery } = useQuery();
+  const { loading: searchLoading, error: searchError, data, query, setQuery } = useQuery();
   const store = useStore();
   const theme = useTheme();
   const intl = useIntl();
@@ -136,9 +136,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   }, []);
 
-
   useEffect(() => {
-    const layers = get(data,'search', []) as ILayerImage[];
+    const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
@@ -396,7 +395,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
-    const tabView = find(tabViews, (tab)=>{
+    const tabView = find(tabViews, (tab) => {
       return tab.idx === tabIdx;
     });
 
@@ -552,7 +551,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             activeTabView = {activeTabView}
           />
         </Box>
-
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
@@ -565,7 +563,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             corners={corners}
           />
         </Box>
-
         <Box className="headerSystemAreaContainer">
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
@@ -587,16 +584,13 @@ const DiscreteLayerView: React.FC = observer(() => {
               onSetOpen={setSystemsJobsDialogOpen}
             />
           }
-
-          
           <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-System-Missions glow-missing-icon"
-              label="SYSTEM JOBS"
+              label="SYSTEM CORE INFO"
               onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
             />
           </Tooltip>
-        
           {
             isSystemCoreInfoDialogOpen &&
             <SystemCoreInfoDialog
@@ -623,39 +617,40 @@ const DiscreteLayerView: React.FC = observer(() => {
                 <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>
-
-            {activeTabView === TabViews.SEARCH_RESULTS && <Box className="tabContentContainer">
-              {
-                getActiveTabHeader(activeTabView)
-              }
-              <LayersResultsComponent 
-                style={{
-                  height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)'
-                }}
-              />
-            </Box>
-            }
-
-            {activeTabView === TabViews.CREATE_BEST && <Box className="tabContentContainer">
-              {
-                getActiveTabHeader(activeTabView)
-              }
-              <Box 
-                style={{
-                  height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)',
-                  position: 'relative'
-                }}
-              >
-                <BestEditComponent 
-                  openImport={openImportFromCatalog} 
-                  handleCloseImport={setOpenImportFromCatalog}/>
+            {
+              activeTabView === TabViews.SEARCH_RESULTS &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <LayersResultsComponent 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)'
+                  }}
+                />
               </Box>
-            </Box>
+            }
+            {
+              activeTabView === TabViews.CREATE_BEST &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <Box 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)',
+                    position: 'relative'
+                  }}
+                >
+                  <BestEditComponent 
+                    openImport={openImportFromCatalog} 
+                    handleCloseImport={setOpenImportFromCatalog}/>
+                </Box>
+              </Box>
             }
           </Box>
-          
           <Box className="sidePanelContainer sideDetailsPanel" style={{
             backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
             height: detailsPanelExpanded ? '50%' : '25%',
@@ -669,36 +664,34 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>
         </Box>
         <Box className="mapAppContainer">
-          {
-            <CesiumMap 
-              projection={CONFIG.MAP.PROJECTION}  
-              center={center}
-              zoom={CONFIG.MAP.ZOOM}
-              sceneMode={CesiumSceneMode.SCENE2D}
-              imageryProvider={false}
-              baseMaps={BASE_MAPS}
-              // @ts-ignore
-              imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
-              imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
-              >
-                {memoizedLayers}
-                <CesiumDrawingsDataSource
-                  drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
-                  drawingMaterial={DRAWING_MATERIAL_COLOR}
-                  drawState={{
-                    drawing: isDrawing,
-                    type: drawPrimitive.type,
-                    handler: drawPrimitive.handler,
-                  }}
-                  hollow={true}
-                  outlineWidth={2}
-                  material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
-                />
-                {
-                  poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
-                }
-            </CesiumMap>
-          }
+          <CesiumMap 
+            projection={CONFIG.MAP.PROJECTION}  
+            center={center}
+            zoom={CONFIG.MAP.ZOOM}
+            sceneMode={CesiumSceneMode.SCENE2D}
+            imageryProvider={false}
+            baseMaps={BASE_MAPS}
+            // @ts-ignore
+            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+            imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
+            >
+              {memoizedLayers}
+              <CesiumDrawingsDataSource
+                drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
+                drawingMaterial={DRAWING_MATERIAL_COLOR}
+                drawState={{
+                  drawing: isDrawing,
+                  type: drawPrimitive.type,
+                  handler: drawPrimitive.handler,
+                }}
+                hollow={true}
+                outlineWidth={2}
+                material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
+              />
+              {
+                poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+              }
+          </CesiumMap>
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>

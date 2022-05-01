@@ -1,0 +1,8 @@
+.errorMessage {
+  color: var(--mdc-theme-gc-error-medium);
+}
+
+.errorNotification {
+  background-color: var(--mdc-theme-gc-error-medium);
+  opacity: 0.9;
+}

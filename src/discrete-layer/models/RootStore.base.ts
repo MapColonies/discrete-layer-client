@@ -5,6 +5,8 @@ import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
+import { CapabilityModel, CapabilityModelType } from "./CapabilityModel"
+import { capabilityModelPrimitives, CapabilityModelSelector } from "./CapabilityModel.base"
 import { Layer3DRecordModel, Layer3DRecordModelType } from "./Layer3DRecordModel"
 import { layer3DRecordModelPrimitives, Layer3DRecordModelSelector } from "./Layer3DRecordModel.base"
 import { LinkModel, LinkModelType } from "./LinkModel"
@@ -64,6 +66,9 @@ import { DateGranularityType } from "./DateGranularityTypeEnum"
 import { ServiceType } from "./ServiceTypeEnum"
 import { Status } from "./StatusEnum"
 
+export type StringArray = {
+  value: string[]
+}
 export type SearchOptions = {
   filter?: FilterField[]
   sort?: SortField[]
@@ -90,9 +95,6 @@ export type Bbox = {
 export type SortField = {
   field: string
   desc?: boolean
-}
-export type StringArray = {
-  value: string[]
 }
 export type JobsSearchParams = {
   resourceId?: string
@@ -282,6 +284,7 @@ type Refs = {
 * Enums for the names of base graphql actions
 */
 export enum RootStoreBaseQueries {
+queryCapabilities="queryCapabilities",
 querySearch="querySearch",
 querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
@@ -310,7 +313,7 @@ mutateJobRetry="mutateJobRetry"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -320,6 +323,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     vectorBestRecords: types.optional(types.map(types.late((): any => VectorBestRecordModel)), {})
   })
   .actions(self => ({
+    queryCapabilities(variables: { idList: StringArray }, resultSelector: string | ((qb: CapabilityModelSelector) => CapabilityModelSelector) = capabilityModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ capabilities: CapabilityModelType[]}>(`query capabilities($idList: StringArray!) { capabilities(idList: $idList) {
+        ${typeof resultSelector === "function" ? resultSelector(new CapabilityModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
     querySearch(variables: { opts?: SearchOptions, end?: number, start?: number }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ search: LayerMetadataMixedUnion[]}>(`query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}

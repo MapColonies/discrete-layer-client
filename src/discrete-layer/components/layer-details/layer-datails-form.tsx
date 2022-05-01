@@ -27,9 +27,9 @@ import {
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
+import { removeEmptyObjFields, transformFormFieldsToEntity } from './utils';
 
 import './layer-details-form.css';
-import { removeEmptyObjFields, transformFormFieldsToEntity } from './utils';
 
 const NONE = 0;
 
@@ -105,7 +105,7 @@ const InnerForm = (
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
-  }, [status])
+  }, [status]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -227,17 +227,21 @@ const InnerForm = (
         </Box>
         <Box className="footer">
           <Box className="messages">
-            {Object.keys(firstPhaseErrors).length > NONE && (
+            {
+              Object.keys(firstPhaseErrors).length > NONE &&
               <ValidationsError errors={firstPhaseErrors} />
-            )}
-            {Object.keys(errors).length === NONE &&
-              vestValidationResults.errorCount > NONE && (
-                <ValidationsError errors={vestValidationResults.getErrors()} />
-              )}
-            {graphQLError !== undefined && (
-              // eslint-disable-next-line
-              <GraphQLError error={graphQLError} />
-            )}
+            }
+            {
+              Object.keys(errors).length === NONE &&
+              vestValidationResults.errorCount > NONE &&
+              <ValidationsError errors={vestValidationResults.getErrors()} />
+            }
+            {
+              graphQLError !== undefined && (
+                // eslint-disable-next-line
+                <GraphQLError error={graphQLError} />
+              )
+            }
           </Box>
           <Box className="buttons">
             <Button
@@ -247,9 +251,7 @@ const InnerForm = (
                 mutationQueryLoading ||
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
-                (
-                  Object.keys(getStatusErrors()).length > NONE 
-                )
+                (Object.keys(getStatusErrors()).length > NONE)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

@@ -7,7 +7,7 @@ import { Moment } from 'moment';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
-import { Loading } from '../../../../common/components/tree/statuses/Loading';
+import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/formatters';
 import { JobModelType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
@@ -79,7 +79,7 @@ const StatusPresentor: React.FC<StatusPresentorParams> = ({ task, reactKey = '' 
               fontSize: `${ERROR_ICON_SIZE}px`,
               color: ERROR_ICON_COLOR,
             }}
-            className={'mc-icon-Warning'}
+            className="mc-icon-Warning"
             label="failReasonIcon"
           />
         </Tooltip>
@@ -109,7 +109,7 @@ const getValuePresentor = (
 
       return (
         <Tooltip content={dateAndTimeTooltipContent} key={`DATE_${idx}`}>
-          <Box className={'gridCell'}>
+          <Box className="gridCell">
             {relativeDateFormatter(task[field.name] as Moment)}
           </Box>
         </Tooltip>
@@ -118,7 +118,7 @@ const getValuePresentor = (
     case 'Status':
       return <StatusPresentor key={`STATUS_${idx}`} task={task} />;
     default:
-      return <Box key={`gridCdellDefault_${idx}`} className={'gridCell'}>{task[field.name] as string} </Box>;
+      return <Box key={`gridCdellDefault_${idx}`} className="gridCell">{task[field.name] as string} </Box>;
   }
 };
 
@@ -177,7 +177,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
   return (
     <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
-      <Box className={'gridContainer'}>
+      <Box className="gridContainer">
         {taskFileds.map((field) => (
           <Typography
             key={`${keyPrefix}_${field.name}`}
@@ -189,7 +189,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
           </Typography>
         ))}
 
-        <TasksRenderer jobId={(jobId as string).replace(DETAILS_ROW_ID_SUFFIX,'')} />
+        <TasksRenderer jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
       </Box>
     </Box>
   );

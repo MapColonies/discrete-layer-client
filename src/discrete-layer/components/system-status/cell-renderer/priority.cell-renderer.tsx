@@ -72,7 +72,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
         disabled={disabled}
         enhanced
         outlined
-        className={'priority_options'}
+        className="priority_options"
         value={value}
         options={optionsData as FormattedOption[]}
         icon={{

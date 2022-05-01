@@ -106,7 +106,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         <IconButton className="mc-icon-Delete" label="CLEAR" onClick={onReset}/>
       </Tooltip>
       <Divider/>
-      <Box style={{width: '120px', padding: '0 6px 0 6px'}}>
+      <Box className="filterByCatalogEntitySelect">
         <Select
           enhanced
           defaultValue={recordTypeOptions[0].value}
@@ -122,7 +122,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         <TextField fullwidth style={{padding: '0 6px 0 6px'}}/>
       </Box>
       <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
-        <IconButton icon="search" label="SEARCH" className="searcIconBtn"/>
+        <IconButton icon="search" label="SEARCH" className="searchIconBtn"/>
       </Tooltip>
       {
         open &&

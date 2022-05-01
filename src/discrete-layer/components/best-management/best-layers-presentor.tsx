@@ -2,10 +2,10 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, get } from 'lodash';
-import { CesiumGeographicTilingScheme, useCesiumMap } from '@map-colonies/react-components';
+import { useCesiumMap } from '@map-colonies/react-components';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LayerRasterRecordModelType, LinkModelType, useStore } from '../../models';
-import { generateLayerRectangle } from '../helpers/layersUtils';
+import { findLayerLink, generateLayerRectangle, getWMTSOptions } from '../helpers/layersUtils';
 
 interface IRasterLayerProperties {
   url: string;
@@ -14,25 +14,22 @@ interface IRasterLayerProperties {
 }
 
 export const BestLayersPresentor: React.FC = observer((props) => {
-  const { bestStore } = useStore();
+  const store = useStore();
   const mapViewer = useCesiumMap();
 
   const [layersImages, setlayersImages] = useState<LayerRasterRecordModelType[]>([]);
   const prevLayersImages = usePrevious<LayerRasterRecordModelType[]>(layersImages);
 
   const buildLayerProperties = (layer: LayerRasterRecordModelType): IRasterLayerProperties => {
+    let capability;
     let options: Record<string, unknown> = {};
-    let layerLink = layer.links?.find((link: LinkModelType)=> ['WMTS_tile','WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+    let layerLink = findLayerLink(layer);
     if (layerLink === undefined) {
-      layerLink = get(layer,'links[0]') as LinkModelType;
+      layerLink = get(layer, 'links[0]') as LinkModelType;
     } else {
+      capability = store.discreteLayersStore.capabilities?.find(item => layerLink?.name === item.id);
       options = {
-        url: layerLink.url,
-        layer: `${layer.productId as string}-${layer.productVersion as string}`,
-        style: 'default',
-        format: 'image/jpeg',
-        tileMatrixSetID: 'newGrids',
-        tilingScheme: new CesiumGeographicTilingScheme(),
+        ...getWMTSOptions(layer, layerLink.url as string, capability),
         rectangle: generateLayerRectangle(layer),
      };
     }
@@ -69,19 +66,17 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   };
 
   useLayoutEffect(() => {
-    if(!isEmpty(bestStore.layersList)){
-      const sortedLayers = [...(bestStore.layersList ?? [])].sort(
+    if (!isEmpty(store.bestStore.layersList)) {
+      const sortedLayers = [...(store.bestStore.layersList ?? [])].sort(
         // @ts-ignore
         (layer1, layer2) => layer1.order - layer2.order
       );
-  
       setlayersImages(sortedLayers);
-
     } else {
       mapViewer.layersManager?.removeNotBaseMapLayers();
       setlayersImages([]);
     }
-  }, [bestStore.layersList, mapViewer]);
+  }, [store.bestStore.layersList, mapViewer]);
 
   useLayoutEffect(() => {
     if (isEmpty(prevLayersImages)) {
@@ -99,27 +94,27 @@ export const BestLayersPresentor: React.FC = observer((props) => {
   }, [layersImages, mapViewer, prevLayersImages]);
 
   useLayoutEffect(() => {
-    if (bestStore.movedLayer) {
-      if (bestStore.movedLayer.from > bestStore.movedLayer.to) {
-        mapViewer.layersManager?.raise(bestStore.movedLayer.id, bestStore.movedLayer.from - bestStore.movedLayer.to);
+    if (store.bestStore.movedLayer) {
+      if (store.bestStore.movedLayer.from > store.bestStore.movedLayer.to) {
+        mapViewer.layersManager?.raise(store.bestStore.movedLayer.id, store.bestStore.movedLayer.from - store.bestStore.movedLayer.to);
       } else {
-        mapViewer.layersManager?.lower(bestStore.movedLayer.id, bestStore.movedLayer.to - bestStore.movedLayer.from);
+        mapViewer.layersManager?.lower(store.bestStore.movedLayer.id, store.bestStore.movedLayer.to - store.bestStore.movedLayer.from);
       }
     }
-  }, [bestStore.movedLayer, mapViewer]);
+  }, [store.bestStore.movedLayer, mapViewer]);
 
   useLayoutEffect(() => {
-    if (bestStore.deletedLayer) {
-      mapViewer.layersManager?.removeLayer(bestStore.deletedLayer.id);
+    if (store.bestStore.deletedLayer) {
+      mapViewer.layersManager?.removeLayer(store.bestStore.deletedLayer.id);
     }
-  }, [bestStore.deletedLayer, mapViewer]);
+  }, [store.bestStore.deletedLayer, mapViewer]);
 
   useLayoutEffect(() => {
-    if (bestStore.importedLayers) {
-      addLayersToMap(bestStore.importedLayers);
+    if (store.bestStore.importedLayers) {
+      addLayersToMap(store.bestStore.importedLayers);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bestStore.importedLayers]);
+  }, [store.bestStore.importedLayers]);
   
   return (
     <></>

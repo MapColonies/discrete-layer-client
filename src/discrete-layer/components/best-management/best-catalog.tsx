@@ -5,11 +5,11 @@ import React, {useEffect, useState, useRef, forwardRef, useImperativeHandle} fro
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { Error } from '../../../common/components/tree/statuses/Error';
-import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
@@ -100,21 +100,18 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
   };
 
   useEffect(() => {
-    if (data && data.search) {
-      const arr: ILayerImage[] = [];
-      data.search
-      .filter((item) => !discretesIds?.includes(item.id) && isDiscrete(item))
-      .forEach((item) => arr.push({...item}));
 
-      store.discreteLayersStore.setLayersImagesData(
-        [
-          ...arr
-        ]
-      );
+    const layersList = get(data, 'search') as ILayerImage[];
+
+    if (!isEmpty(layersList)) {
+      const arr: ILayerImage[] = cloneDeep(layersList.filter((item) => !discretesIds?.includes(item.id) && isDiscrete(item)));
+
+      store.discreteLayersStore.setLayersImagesData([...arr]);
       
+      // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {
         // @ts-ignore
-        const itemObjectBag =  item as Record<string,unknown>;
+        const itemObjectBag = item as Record<string,unknown>;
         return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
       });
       const parentUnlinked = buildParentTreeNode(
@@ -137,15 +134,16 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
         ]
       );
     }
-  },[data]);
+  }, [data]);
 
-  if (error) return <Error>{error.message}</Error>
+  if (error) return (<Error className="errorMessage">{error.message}</Error>);
   if (data) {
     return (
       <>
         <Box id="bestCatalogContainer" className="bestCatalogContainer">
-          {loading && <Loading/>}
-
+          {
+            loading && <Loading/>
+          }
           {
             !loading && <TreeComponent
               treeData={treeRawData}

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
-
 import { useQuery, useStore } from '../../../models/RootStore';
 import { EntityDescriptorModelType } from '../../../models';
 
@@ -59,7 +58,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
     }`));
   
   useEffect(() => {
-    if(!descriptorsQuery.loading){
+    if (!descriptorsQuery.loading) {
       const descriptors = descriptorsQuery.data?.entityDescriptors as EntityDescriptorModelType[];
       store.discreteLayersStore.setEntityDescriptors([...descriptors]);
     }

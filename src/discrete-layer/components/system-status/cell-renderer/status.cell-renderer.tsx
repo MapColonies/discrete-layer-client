@@ -1,13 +1,13 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
+import { FINAL_STATUSES } from '../job.types';
 
 import './status.cell-renderer.css';
-import { FINAL_STATUSES } from '../job.types';
-import { get } from 'lodash';
 
 const NO_DATA = 0;
 const NO_WIDTH = 0;
@@ -97,7 +97,7 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
     const expiredWidth = calcStatusWidth(expiredTasks);
 
     return (
-      <Box className={'progressSectionsContainer'}>
+      <Box className="progressSectionsContainer">
         {getSectionComponent(Status.Completed, completedWidth)}
         {getSectionComponent(Status.Failed, failedWidth)}
         {getSectionComponent(Status.Expired, expiredWidth)}
@@ -107,13 +107,13 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   };
 
   return (
-    <Box className={'statusBarContainer'}>
+    <Box className="statusBarContainer">
       <Box className="statusText">
       <Typography style={{ fontSize: '12px' }} tag="div" />
         {getProgressComponent()}
       </Box>
       <Box
-        className={'statusBar'}
+        className="statusBar"
         style={{
           width: `${STATUS_BAR_WIDTH}px`,
           height: `${STATUS_BAR_HEIGHT}px`,

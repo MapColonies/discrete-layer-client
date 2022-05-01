@@ -36,11 +36,11 @@ export const ExternalServices: React.FC<ExternalServicesProps> = ({
             {(services ?? []).map(({ url, display }) => {
               return (
                 <Box className="externalService">
-                  <Typography className={'displayName'} tag={'p'}>
+                  <Typography className="displayName" tag="p">
                     <FormattedMessage id={display} />
                   </Typography>
 
-                  <Typography className={'urlText'} tag={'p'}>
+                  <Typography className="urlText" tag="p">
                     {`${url as string}`}
                   </Typography>
 

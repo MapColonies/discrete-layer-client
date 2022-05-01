@@ -139,9 +139,8 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
 
     useEffect(() => {
       if (typeof queryDirectory.error !== 'undefined') {
-        setGraphQLError(queryDirectory.error)
+        setGraphQLError(queryDirectory.error);
       }
-
     }, [queryDirectory.error]);
 
     useEffect(() => {
