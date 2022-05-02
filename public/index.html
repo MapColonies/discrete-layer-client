@@ -73,9 +73,12 @@
       })();
     </script>
   </head>
-  <body>
+  <body style='background-color: black;'><!-- TODO: proper themeable background color -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id='root'>
+      <!-- TODO: use designed loader -->
+      <img alt='' src='%PUBLIC_URL%/loading.gif' width='45%' style='display: table; margin: 10% auto;' role='presentation'/>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
