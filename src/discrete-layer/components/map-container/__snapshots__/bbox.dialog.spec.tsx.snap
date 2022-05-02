@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DialogBBox component renders correctly 1`] = `
-<Component
+exports[`BBoxDialog component renders correctly 1`] = `
+<McBox
   id="bboxDialog"
 >
   <Function
@@ -20,31 +20,19 @@ exports[`DialogBBox component renders correctly 1`] = `
     </Function>
     <Function>
       <form
-        className="dialogBboxForm"
+        className="bboxForm"
         noValidate={true}
         onSubmit={[Function]}
       >
-        <Component
-          className="dialogBboxRow"
+        <McBox
+          className="bboxRow"
         >
-          <Component
-            className="dialogBboxField"
-          >
-            <FieldLabelComponent
-              isRequired={true}
-              showTooltip={false}
-              value="custom-bbox.dialog-field.topRightLat.label"
-            />
-            <Function
-              name="topRightLat"
-              onChange={[Function]}
-              required={true}
-              type="number"
-              value={0}
-            />
-          </Component>
-          <Component
-            className="dialogBboxField"
+          <BBoxCorner
+            className="bboxField"
+            corner="TOP_RIGHT"
+          />
+          <McBox
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -58,33 +46,33 @@ exports[`DialogBBox component renders correctly 1`] = `
               type="number"
               value={0}
             />
-          </Component>
-          <BBoxCorner
-            className="dialogBboxField"
-            corner="TOP_RIGHT"
-          />
-        </Component>
-        <Component
-          className="dialogBboxRow"
-        >
-          <Component
-            className="dialogBboxField"
+          </McBox>
+          <McBox
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
               showTooltip={false}
-              value="custom-bbox.dialog-field.bottomLeftLat.label"
+              value="custom-bbox.dialog-field.topRightLat.label"
             />
             <Function
-              name="bottomLeftLat"
+              name="topRightLat"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
-          </Component>
-          <Component
-            className="dialogBboxField"
+          </McBox>
+        </McBox>
+        <McBox
+          className="bboxRow"
+        >
+          <BBoxCorner
+            className="bboxField"
+            corner="BOTTOM_LEFT"
+          />
+          <McBox
+            className="bboxField"
           >
             <FieldLabelComponent
               isRequired={true}
@@ -98,19 +86,31 @@ exports[`DialogBBox component renders correctly 1`] = `
               type="number"
               value={0}
             />
-          </Component>
-          <BBoxCorner
-            className="dialogBboxField"
-            corner="BOTTOM_LEFT"
-          />
-        </Component>
-        <Component
+          </McBox>
+          <McBox
+            className="bboxField"
+          >
+            <FieldLabelComponent
+              isRequired={true}
+              showTooltip={false}
+              value="custom-bbox.dialog-field.bottomLeftLat.label"
+            />
+            <Function
+              name="bottomLeftLat"
+              onChange={[Function]}
+              required={true}
+              type="number"
+              value={0}
+            />
+          </McBox>
+        </McBox>
+        <McBox
           className="footer"
         >
-          <Component
+          <McBox
             className="messages"
           />
-          <Component
+          <McBox
             className="buttons"
           >
             <withRipple(Function)
@@ -130,10 +130,10 @@ exports[`DialogBBox component renders correctly 1`] = `
                 id="general.cancel-btn.text"
               />
             </withRipple(Function)>
-          </Component>
-        </Component>
+          </McBox>
+        </McBox>
       </form>
     </Function>
   </Function>
-</Component>
+</McBox>
 `;

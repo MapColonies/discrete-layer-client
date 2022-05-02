@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { 
@@ -25,9 +26,10 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
-
-import './jobs-dialog.css';
 import { JOB_ENTITY } from './job.types';
+
+import './jobs.dialog.css';
+import moment from 'moment';
 
 const pagination = true;
 const pageSize = 10;
@@ -36,20 +38,22 @@ const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILISECONDS_IN_SEC = 1000;
 
-
-interface SystemJobsComponentProps {
+interface JobsDialogProps {
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
 }
 
-export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer((props: SystemJobsComponentProps) => {
+export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialogProps) => {
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
-  const [retryErr, setRetryErr] = useState(false);
+  const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
+  const [tillDate, setTillDate] = useState<Date>(new Date());
+
+  // const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
@@ -73,14 +77,18 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   }, []);
 
   // eslint-disable-next-line
-  const { loading, error, data, query } = useQuery((store) =>
+  const { setQuery, loading, error, data, query } = useQuery((store) =>
     store.queryJobs({
-      params: {}
+      params: {
+        fromDate,
+        tillDate
+      }
     }),
     {
       fetchPolicy: 'no-cache'
     }
   );
+
   const mutationQuery = useQuery();
 
   const store = useStore();
@@ -111,6 +119,18 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
   }, []);
 
   useEffect(() => {
+    setQuery(
+      (store) =>
+        store.queryJobs({
+          params: {
+            fromDate,
+            tillDate,
+          },
+        })
+    );
+  }, [fromDate, tillDate, setQuery]);
+
+  useEffect(() => {
     setGridRowData(data ? cloneDeep(data.jobs) : []);
   }, [data]);
 
@@ -125,7 +145,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     if (updateTaskPayload.id !== undefined) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,()=>{}));
+      mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTaskPayload, store]);
@@ -330,7 +350,7 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
     paginationPageSize: pageSize,
     columnDefs: colDef,
     getRowNodeId: (data: JobModelType): string => {
-      return data.id as string;
+      return data.id;
     },
     detailsRowCellRenderer: 'detailsRenderer',
     detailsRowHeight: 230,
@@ -377,17 +397,39 @@ export const SystemJobsComponent: React.FC<SystemJobsComponentProps> = observer(
               {`${(timeLeft as number)/MILISECONDS_IN_SEC}`}
             </Box>
           </Box>
+
+        
+
           <IconButton
             className="closeIcon mc-icon-Close"
             onClick={ (): void => { closeDialog(); } }
           />
         </DialogTitle>
         <DialogContent className="jobsBody">
+        <Box className="jobsTimeRangePicker">
+            <DateTimeRangePicker 
+              controlsLayout='row'
+              onChange={(dateRange): void => {
+                if(typeof dateRange.from !== 'undefined' && typeof dateRange.to !== 'undefined'){
+                  setFromDate(dateRange.from)
+                  setTillDate(dateRange.to)
+                }
+              }}
+              from={fromDate}
+              to={tillDate}
+              local={{
+                setText: intl.formatMessage({ id: 'filters.date-picker.set-btn.text' }),
+                startPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.start-time.label' }),
+                endPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.end-time.label' }),
+                calendarLocale: SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]
+              }}
+            />
+          </Box>
           <GridComponent
             gridOptions={gridOptions}
             rowData={gridRowData}
             style={{
-              height: 'calc(100% - 64px)',
+              height: 'calc(100% - 120px)',
               padding: '12px'
             }}
           />

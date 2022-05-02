@@ -1,7 +1,9 @@
-import { get, omit } from 'lodash';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { get, isEmpty, omit } from 'lodash';
 import { $enum } from 'ts-enum-util';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
-import { BestRecordModel,
+import {
+  BestRecordModel,
   CategoryConfigModelType,
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -10,14 +12,20 @@ import { BestRecordModel,
   LayerMetadataMixedUnion,
   LayerRasterRecordModel,
   LinkModel,
+  LinkModelType,
   ProductType,
+  RecordType,
   ValidationConfigModelType
 } from '../../models';
-import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-info';
-
-
-import {BestRecordModelArray, LayerRasterRecordModelArray, Layer3DRecordModelArray, LayerDemRecordModelArray, VectorBestRecordModelArray} from './entity-types-keys'
 import { ILayerImage } from '../../models/layerImage';
+import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-info';
+import {
+  BestRecordModelArray,
+  LayerRasterRecordModelArray,
+  Layer3DRecordModelArray,
+  LayerDemRecordModelArray,
+  VectorBestRecordModelArray
+} from './entity-types-keys';
 
 export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entityDescriptors: EntityDescriptorModelType[]): IRecordCategoryFieldsInfo[] => {
   let entityDesc;
@@ -38,7 +46,7 @@ export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entit
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
       break;
   }
-  return get(entityDesc, 'categories') as IRecordCategoryFieldsInfo[];
+  return (get(entityDesc, 'categories') ?? []) as IRecordCategoryFieldsInfo[];
 };
 
 export const getFlatEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entityDescriptors: EntityDescriptorModelType[]): FieldConfigModelType[] => {
@@ -80,8 +88,8 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string): string
     else if (fieldNameStr.toLowerCase().includes('links')) {
       return 'links';
     }
-    else if (fieldNameStr.toLowerCase().includes('sensortype') || fieldNameStr.toLowerCase().includes('sensors')) {
-      return 'SensorType';
+    else if (fieldNameStr.toLowerCase().includes('sensors')) {
+      return 'sensors';
     }
     else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
@@ -108,9 +116,8 @@ export const getInfoMsgValidationType = (msgCode: string): ValidationTypeName =>
 
 export const cleanUpEntity = (
   data: Record<string,unknown>,
-  entityKeys: BestRecordModelArray | LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | VectorBestRecordModelArray):
-   Record<string,unknown> => 
-{
+  entityKeys: BestRecordModelArray | LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | VectorBestRecordModelArray
+): Record<string,unknown> => {
   const keysNotInModel = Object.keys(data).filter(key => {
     // @ts-ignore
     return !entityKeys.includes(key);
@@ -119,19 +126,62 @@ export const cleanUpEntity = (
 };
 
 const checkIsBest = (entity: ILayerImage): boolean => {
-
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST  } = ProductType;
+  const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST } = ProductType;
 
-  const bestProductTypes:ProductType[] = [ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST];
+  const bestProductTypes: ProductType[] = [ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST];
 
   return bestProductTypes.includes(entity.productType as ProductType);
-}
+};
 
 export const isDiscrete = (entity: ILayerImage): boolean => {
   return !checkIsBest(entity)
-}
+};
 
 export const isBest = (entity: ILayerImage): boolean => {
   return checkIsBest(entity)
-}
+};
+
+export const isMultiSelection = (recordType: RecordType): boolean => {
+  return recordType !== RecordType.RECORD_3D;
+};
+
+const removeObjFields = (
+  obj: Record<string, unknown>,
+  cbFn: (curVal: unknown) => boolean
+): Record<string, unknown> => {
+  // if cbFn returns true it means the field *should be omitted*.
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, val]) => {
+      const shouldOmitField = cbFn(val);
+
+      return !shouldOmitField;
+    })
+  );
+};
+
+export const removeEmptyObjFields = (
+  obj: Record<string, unknown>
+): Record<string, unknown> => {
+  return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
+};
+
+export const transformFormFieldsToEntity = (
+  fields: Record<string, unknown>,
+  layerRecord: LayerMetadataMixedUnion | LinkModelType
+): Record<string, unknown> => {
+  const transformedFields = {...fields};
+
+  for (const fieldName of Object.keys(fields)) {
+    const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+
+    if (basicType === 'string[]') {
+      /* eslint-disable */
+      // @ts-ignore
+      transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
+      /* eslint-enable */
+    }
+  }
+
+  return transformedFields;
+};

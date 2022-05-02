@@ -1,0 +1,41 @@
+#filePickerDialog .dialogBody {
+  display: flex;
+  align-items: center;
+  height: 400px;
+}
+
+#filePickerDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #filePickerDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#filePickerDialog .MuiPopover-root {
+  left: -100% !important;
+}
+
+body[dir='rtl'] #filePickerDialog .MuiPopover-root {
+  left: -120% !important;
+}
+
+#filePickerDialog .mdc-dialog__surface {
+  overflow-y: hidden;
+}
+
+#filePickerDialog .messages {
+  height: 40px;
+  width: 430px;
+  overflow-y: auto;
+}
+
+#filePickerDialog .buttons {
+ display: flex;
+ align-self: flex-start; 
+}
+
+#filePickerDialog .mdc-dialog__actions {
+  justify-content: space-between;
+}

@@ -8,6 +8,7 @@ import {
   ThemeProvider as RMWCThemeProvider,
   RMWCProvider,
   Themes,
+  SnackbarQueue,
 } from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
@@ -27,12 +28,14 @@ import '@map-colonies/react-core/dist/drawer/styles';
 import '@map-colonies/react-core/dist/checkbox/styles';
 import '@map-colonies/react-core/dist/fab/styles';
 import '@map-colonies/react-core/dist/avatar/styles';
+import '@map-colonies/react-core/dist/tabs/styles';
 import 'react-sortable-tree/style.css';
 import './App.css';
 import './App.dark-theme.css';
 import './App.light-theme.css';
 
-import { SnackContainer } from './discrete-layer/components/snack-container/snack-container';
+import { queue } from './discrete-layer/components/snackbar/notification-queue';
+import { SnackContainer } from './discrete-layer/components/snackbar/snack-container';
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import { StaticDataFetcher } from './discrete-layer/views/components/data-fetchers/static-data-fetcher.component';
 import MESSAGES from './common/i18n';
@@ -85,6 +88,7 @@ const App: React.FC = () => {
           <StaticDataFetcher />
           <DiscreteLayerView />
           <SnackContainer />
+          <SnackbarQueue messages={queue.messages} leading timeout={-1} />
         </RMWCThemeProvider>
       </RMWCProvider>
     </IntlProvider>

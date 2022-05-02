@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect } from 'react';
-import { find, get } from 'lodash';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
@@ -37,9 +38,9 @@ import { PolygonSelectionUi } from '../components/map-container/polygon-selectio
 import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
-import { EntityDialogComponent } from '../components/layer-details/entity-dialog';
+import { EntityDialog } from '../components/layer-details/entity.dialog';
 import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
-import { SystemJobsComponent } from '../components/system-status/jobs-dialog';
+import { JobsDialog } from '../components/system-status/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import { BestRecordModel, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
@@ -50,6 +51,10 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { BBoxCorners } from '../components/map-container/bbox.dialog';
+import { IPOI } from '../components/map-container/poi.dialog';
+import { PoiEntity } from '../components/map-container/poi-entity';
+import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -63,6 +68,7 @@ import './discrete-layer-view.css';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
+const DELTA = 0.00001;
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
@@ -89,7 +95,7 @@ const tileOptions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
-  const { loading, error, data, query, setQuery } = useQuery();
+  const { loading: searchLoading, error: searchError, data, query, setQuery } = useQuery();
   const store = useStore();
   const theme = useTheme();
   const intl = useIntl();
@@ -100,6 +106,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isNewDemEntityDialogOpen, setNewDemEntityDialogOpen] = useState<boolean>(false);
   const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
+  const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
@@ -108,6 +115,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
+  const [poi, setPoi] = useState<IPOI | undefined>(undefined);
+  const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -118,33 +127,31 @@ const DiscreteLayerView: React.FC = observer(() => {
   ]);
   const memoizedLayers =  useMemo(() => {
     return(
-    <>
-      <SelectedLayersContainer/>
-      <HighlightedLayer/>
-      <LayersFootprints/>
-      <BestLayersPresentor/>
-    </>
-  );
+      <>
+        <SelectedLayersContainer/>
+        <HighlightedLayer/>
+        <LayersFootprints/>
+        <BestLayersPresentor/>
+      </>
+    );
   }, []);
 
-
   useEffect(() => {
-    const layers = get(data,'search', []) as ILayerImage[];
-
+    const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
-    if(activeTabView !== targetViewIdx){
+    if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);
       store.discreteLayersStore.restoreTabviewData(targetViewIdx);
   
-      if(activeTabView === TabViews.CREATE_BEST){
+      if (activeTabView === TabViews.CREATE_BEST) {
         store.bestStore.preserveData();
         store.bestStore.resetData();
       }
   
-      if(targetViewIdx === TabViews.CREATE_BEST){
+      if (targetViewIdx === TabViews.CREATE_BEST) {
         store.bestStore.restoreData();
       }
   
@@ -174,7 +181,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
     void store.discreteLayersStore.clearLayersImages();
-    // void store.discreteLayersStore.getLayersImages();
 
     // TODO: build query params: FILTERS and SORTS
     const filters = buildFilters();
@@ -192,8 +198,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       store.discreteLayersStore.searchParams.resetLocation();
       store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.selectLayer(undefined);
-  
       setDrawEntities([]);
+      setPoi(undefined);
+      setCorners(undefined);
     }
   };
 
@@ -245,6 +252,10 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handleSystemsJobsDialogClick = (): void => {
     setSystemsJobsDialogOpen(!isSystemsJobsDialogOpen);
   };
+  
+  const handleSystemsCoreInfoDialogClick = (): void => {
+    setSystemCoreInfoDialogOpen(!isSystemCoreInfoDialogOpen);
+  };
 
   const handleFilter = (): void => {
     setIsFilter(!isFilter);
@@ -279,6 +290,39 @@ const DiscreteLayerView: React.FC = observer(() => {
     setDrawPrimitive(createDrawPrimitive(drawType));
   };
 
+  const onPoiSelection = (lon: number, lat: number): void => {
+    onPolygonSelection({
+      primitive: undefined,
+      type: DrawType.BOX,
+      geojson: {
+        type : 'FeatureCollection',
+        features: [
+          { 
+            type : 'Feature',
+            properties : {  
+              type : BboxCorner.TOP_RIGHT,
+            }, 
+            geometry : { 
+              type : 'Point',
+              coordinates : [ lon + DELTA, lat + DELTA ] 
+            }
+          },
+          { 
+            type : 'Feature',
+            properties : {  
+              type : BboxCorner.BOTTOM_LEFT
+            }, 
+            geometry : { 
+              type : 'Point',
+              coordinates : [ lon - DELTA, lat - DELTA ]  
+            }
+          }
+        ]
+      }
+    });
+    setPoi({lon, lat});
+  };
+
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
     const timeStamp = getTimeStamp();
     const bottomLeftPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
@@ -287,6 +331,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     const rightTopPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
       return feat.properties?.type === BboxCorner.TOP_RIGHT;
     }) as Feature<Point>;
+    setCorners({
+      topRightLat: rightTopPoint.geometry.coordinates[1],
+      topRightLon: rightTopPoint.geometry.coordinates[0],
+      bottomLeftLat: bottomLeftPoint.geometry.coordinates[1],
+      bottomLeftLon: bottomLeftPoint.geometry.coordinates[0],
+    });
     const line = lineString([
       [
         bottomLeftPoint.geometry.coordinates[0],
@@ -345,7 +395,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
-    const tabView = find(tabViews, (tab)=>{
+    const tabView = find(tabViews, (tab) => {
       return tab.idx === tabIdx;
     });
 
@@ -379,7 +429,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }
             {
               (tabIdx === TabViews.CATALOG) && 
-              (permissions.isLayerRasterRecordIngestAllowed || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
+              (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
                   {
@@ -436,16 +486,16 @@ const DiscreteLayerView: React.FC = observer(() => {
               </MenuSurfaceAnchor>
             }
             { 
-            (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
+              (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
               <>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
                   <IconButton
                     className="operationIcon mc-icon-Edit"
                     label="EDIT"
-                    onClick={ (): void => {
+                    onClick={(): void => {
                       store.discreteLayersStore.selectLayer(undefined);
                       setEditEntityDialogOpen(!isEditEntityDialogOpen);
-                    } }
+                    }}
                   />
                 </Tooltip>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
@@ -501,7 +551,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             activeTabView = {activeTabView}
           />
         </Box>
-
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
@@ -509,15 +558,18 @@ const DiscreteLayerView: React.FC = observer(() => {
             onStartDraw={setDrawType}
             isSelectionEnabled={isDrawing}
             onPolygonUpdate={onPolygonSelection}
+            onPoiUpdate={onPoiSelection}
+            poi={poi}
+            corners={corners}
           />
         </Box>
-
         <Box className="headerSystemAreaContainer">
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
           {
-            permissions.isSystemsJobsAllowed && <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
+            permissions.isSystemsJobsAllowed as boolean &&
+            <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
                 className="operationIcon mc-icon-System-Missions"
                 label="SYSTEM JOBS"
@@ -526,10 +578,25 @@ const DiscreteLayerView: React.FC = observer(() => {
             </Tooltip>
           }
           {
-            isSystemsJobsDialogOpen && <SystemJobsComponent
+            isSystemsJobsDialogOpen &&
+            <JobsDialog
               isOpen={isSystemsJobsDialogOpen}
-              onSetOpen={setSystemsJobsDialogOpen}>
-            </SystemJobsComponent>
+              onSetOpen={setSystemsJobsDialogOpen}
+            />
+          }
+          <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
+            <IconButton
+              className="operationIcon mc-icon-System-Missions glow-missing-icon"
+              label="SYSTEM CORE INFO"
+              onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
+            />
+          </Tooltip>
+          {
+            isSystemCoreInfoDialogOpen &&
+            <SystemCoreInfoDialog
+              isOpen={isSystemCoreInfoDialogOpen}
+              onSetOpen={setSystemCoreInfoDialogOpen}
+            />
           }
         </Box>
       </Box>
@@ -550,39 +617,40 @@ const DiscreteLayerView: React.FC = observer(() => {
                 <CatalogTreeComponent refresh={catalogRefresh}/>
               </Box>
             </Box>
-
-            {activeTabView === TabViews.SEARCH_RESULTS && <Box className="tabContentContainer">
-              {
-                getActiveTabHeader(activeTabView)
-              }
-              <LayersResultsComponent 
-                style={{
-                  height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)'
-                }}
-              />
-            </Box>
-            }
-
-            {activeTabView === TabViews.CREATE_BEST && <Box className="tabContentContainer">
-              {
-                getActiveTabHeader(activeTabView)
-              }
-              <Box 
-                style={{
-                  height: 'calc(100% - 50px)',
-                  width: 'calc(100% - 8px)',
-                  position: 'relative'
-                }}
-              >
-                <BestEditComponent 
-                  openImport={openImportFromCatalog} 
-                  handleCloseImport={setOpenImportFromCatalog}/>
+            {
+              activeTabView === TabViews.SEARCH_RESULTS &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <LayersResultsComponent 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)'
+                  }}
+                />
               </Box>
-            </Box>
+            }
+            {
+              activeTabView === TabViews.CREATE_BEST &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <Box 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)',
+                    position: 'relative'
+                  }}
+                >
+                  <BestEditComponent 
+                    openImport={openImportFromCatalog} 
+                    handleCloseImport={setOpenImportFromCatalog}/>
+                </Box>
+              </Box>
             }
           </Box>
-          
           <Box className="sidePanelContainer sideDetailsPanel" style={{
             backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
             height: detailsPanelExpanded ? '50%' : '25%',
@@ -596,59 +664,60 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>
         </Box>
         <Box className="mapAppContainer">
-          {
-            <CesiumMap 
-              projection={CONFIG.MAP.PROJECTION}  
-              center={center}
-              zoom={CONFIG.MAP.ZOOM}
-              sceneMode={CesiumSceneMode.SCENE2D}
-              imageryProvider={false}
-              baseMaps={BASE_MAPS}
-              // @ts-ignore
-              imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
-              imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
-              >
-                {memoizedLayers}
-                <CesiumDrawingsDataSource
-                  drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
-                  drawingMaterial={DRAWING_MATERIAL_COLOR}
-                  drawState={{
-                    drawing: isDrawing,
-                    type: drawPrimitive.type,
-                    handler: drawPrimitive.handler,
-                  }}
-                  hollow={true}
-                  outlineWidth={2}
-                  material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
-                />
-            </CesiumMap>
-          }
+          <CesiumMap 
+            projection={CONFIG.MAP.PROJECTION}  
+            center={center}
+            zoom={CONFIG.MAP.ZOOM}
+            sceneMode={CesiumSceneMode.SCENE2D}
+            imageryProvider={false}
+            baseMaps={BASE_MAPS}
+            // @ts-ignore
+            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+            imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
+            >
+              {memoizedLayers}
+              <CesiumDrawingsDataSource
+                drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
+                drawingMaterial={DRAWING_MATERIAL_COLOR}
+                drawState={{
+                  drawing: isDrawing,
+                  type: drawPrimitive.type,
+                  handler: drawPrimitive.handler,
+                }}
+                hollow={true}
+                outlineWidth={2}
+                material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
+              />
+              {
+                poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+              }
+          </CesiumMap>
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
         {
           isNewRasterEntityDialogOpen &&
-          <EntityDialogComponent
+          <EntityDialog
             isOpen={isNewRasterEntityDialogOpen}
             onSetOpen={setNewRasterEntityDialogOpen}
-            recordType={RecordType.RECORD_RASTER}>
-          </EntityDialogComponent>
+            recordType={RecordType.RECORD_RASTER}
+          />
         }
         {
           isNew3DEntityDialogOpen &&
-          <EntityDialogComponent
+          <EntityDialog
             isOpen={isNew3DEntityDialogOpen}
             onSetOpen={setNew3DEntityDialogOpen}
-            recordType={RecordType.RECORD_3D}>
-          </EntityDialogComponent>
+            recordType={RecordType.RECORD_3D}
+          />
         }
         {
           isNewDemEntityDialogOpen &&
-          <EntityDialogComponent
+          <EntityDialog
             isOpen={isNewDemEntityDialogOpen}
             onSetOpen={setNewDemEntityDialogOpen}
-            recordType={RecordType.RECORD_DEM}>
-          </EntityDialogComponent>
+            recordType={RecordType.RECORD_DEM}
+          />
         }
       </Box>
     </>

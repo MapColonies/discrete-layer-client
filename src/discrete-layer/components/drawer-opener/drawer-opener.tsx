@@ -10,18 +10,18 @@ interface DrawerOpenerProps {
 }
 
 export const DrawerOpener: React.FC<DrawerOpenerProps> = (props) => {
-  const {isOpen, onClick} = props;
+  const { isOpen, onClick } = props;
   const theme = useTheme();
   return (
-    <Box 
-      onClick={(): void => onClick(!isOpen)} 
+    <Box
+      onClick={(): void => onClick(!isOpen)}
       style={{
         backgroundColor: theme.primary as string,
         color: theme.onPrimary as string,
-      }} 
+      }}
       className={`drawerOpenerPosition ${isOpen ? 'opened' : ''}`}
     >
-      {isOpen ? '<': '>'}
+      {isOpen ? '<' : '>'}
     </Box>
   );
 };

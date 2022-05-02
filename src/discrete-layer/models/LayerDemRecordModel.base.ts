@@ -6,12 +6,11 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { DataTypeEnumType } from "./DataTypeEnum"
-import { LinkModel, LinkModelType } from "./LinkModel"
-import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
+import { LinkModel } from "./LinkModel"
+import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
 import { NoDataValueEnumType } from "./NoDataValueEnum"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
-import { SensorTypeEnumType } from "./SensorTypeEnum"
 import { UndulationModelEnumType } from "./UndulationModelEnum"
 import { UnitsEnumType } from "./UnitsEnum"
 import { VerticalDatumEnumType } from "./VerticalDatumEnum"
@@ -36,8 +35,8 @@ export const LayerDemRecordModelBase = ModelBase
     updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.frozen()),
-    sensorType: types.union(types.undefined, types.null, types.array(SensorTypeEnumType)),
-    region: types.union(types.undefined, types.null, types.string),
+    sensors: types.union(types.undefined, types.null, types.array(types.string)),
+    region: types.union(types.undefined, types.null, types.array(types.string)),
     productId: types.union(types.undefined, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     footprint: types.union(types.undefined, types.frozen()),
@@ -79,7 +78,7 @@ export class LayerDemRecordModelSelector extends QueryBuilder {
   get updateDate() { return this.__attr(`updateDate`) }
   get sourceDateStart() { return this.__attr(`sourceDateStart`) }
   get sourceDateEnd() { return this.__attr(`sourceDateEnd`) }
-  get sensorType() { return this.__attr(`sensorType`) }
+  get sensors() { return this.__attr(`sensors`) }
   get region() { return this.__attr(`region`) }
   get productId() { return this.__attr(`productId`) }
   get productType() { return this.__attr(`productType`) }
@@ -108,4 +107,4 @@ export function selectFromLayerDemRecord() {
   return new LayerDemRecordModelSelector()
 }
 
-export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensorType.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.verticalDatum.units.geographicArea.undulationModel.dataType.noDataValue.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
+export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensors.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.verticalDatum.units.geographicArea.undulationModel.dataType.noDataValue.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)

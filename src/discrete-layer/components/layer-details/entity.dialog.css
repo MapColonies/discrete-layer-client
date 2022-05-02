@@ -1,0 +1,18 @@
+@media (min-width: 800px) {
+  #entityDialog .mdc-dialog .mdc-dialog__surface {
+    max-width: 730px;
+  }
+}
+
+#entityDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #entityDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#entityDialog .dialogBody {
+  overflow-y: hidden !important;
+}

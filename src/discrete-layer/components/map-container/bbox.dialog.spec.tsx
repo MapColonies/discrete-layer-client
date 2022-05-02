@@ -5,7 +5,7 @@ import 'mutationobserver-shim';
 import { Button, TextField } from '@map-colonies/react-core';
 // eslint-disable-next-line
 import '../../../__mocks__/confEnvShim';
-import { DialogBBox } from './dialog-bbox';
+import { BBoxDialog } from './bbox.dialog';
 
 global.MutationObserver = window.MutationObserver;
 
@@ -66,7 +66,7 @@ const getButtonById = (wrapper: ShallowWrapper, id: string): ShallowWrapper => {
 };
 /* eslint-enable */
 
-describe('DialogBBox component', () => {
+describe('BBoxDialog component', () => {
   afterEach(() => {
     setOpenFn.mockClear();
     polygonUpdate.mockClear();
@@ -74,7 +74,7 @@ describe('DialogBBox component', () => {
 
   it('renders correctly', () => {
     const wrapper = shallow(
-      <DialogBBox
+      <BBoxDialog
         isOpen={false}
         onSetOpen={setOpenFn}
         onPolygonUpdate={polygonUpdate}
@@ -84,7 +84,7 @@ describe('DialogBBox component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('Bbox fields filled successfully', async () => {
+  it('BBox fields filled successfully', async () => {
     const fields = {
       bottomLeftLat: 10,
       bottomLeftLon: 10,
@@ -93,7 +93,7 @@ describe('DialogBBox component', () => {
     };
 
     const wrapper = shallow(
-      <DialogBBox
+      <BBoxDialog
         isOpen={false}
         onSetOpen={setOpenFn}
         onPolygonUpdate={polygonUpdate}
@@ -115,7 +115,7 @@ describe('DialogBBox component', () => {
 
   it('Cancel button triggers dialog closing', () => {
     const wrapper = shallow(
-      <DialogBBox
+      <BBoxDialog
         isOpen={false}
         onSetOpen={setOpenFn}
         onPolygonUpdate={polygonUpdate}
@@ -127,9 +127,9 @@ describe('DialogBBox component', () => {
     expect(setOpenFn).toHaveBeenCalledWith(false);
   });
 
-  it('Submiting the form triggers onPolygonUpdate', async () => {
+  it('Submitting the form triggers onPolygonUpdate', async () => {
     const wrapper = shallow(
-      <DialogBBox
+      <BBoxDialog
         isOpen={false}
         onSetOpen={setOpenFn}
         onPolygonUpdate={polygonUpdate}

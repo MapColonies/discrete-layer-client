@@ -2,14 +2,14 @@
   margin-left: auto;
 }
 
+body[dir='rtl'] #bestInEditDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
 #bestInEditDialog .dialogBody {
   height: 100px;
   width: 360px;
   display: flex;
   align-items: center;
-}
-
-body[dir='rtl'] #bestInEditDialog .closeIcon {
-  margin-left: unset;
-  margin-right: auto;
 }

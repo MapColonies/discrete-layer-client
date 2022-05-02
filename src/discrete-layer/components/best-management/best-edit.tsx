@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FormattedMessage } from 'react-intl';
@@ -8,7 +9,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { BestRecordModelType, EntityDescriptorModelType, LayerMetadataMixedUnion, LayerRasterRecordModelType, useQuery, useStore } from '../../models';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
 import { LayersDetailsComponent } from '../layer-details/layer-details';
-import { CloseWithoutSaveDialogComponent } from '../dialogs/close-without-save-dialog';
+import { CloseWithoutSaveDialog } from '../dialogs/close-without-save.dialog';
 import { BestDiscretesComponent } from './best-discretes';
 import { BestCatalogComponent } from './best-catalog';
 
@@ -59,7 +60,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
   }, [newLayersToAdd]);
 
   useEffect(() => {
-    const layersList = get(data,'searchById') as LayerRasterRecordModelType[];
+    const layersList = get(data, 'searchById') as LayerRasterRecordModelType[];
     if (!isEmpty(layersList) && !isEmpty(discretesOrder)) {
       const layers = cloneDeep(layersList);
 
@@ -157,9 +158,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
 
   return (
     <>
-      <Box
-        className="bestDetails"
-      >
+      <Box className="bestDetails">
         <LayersDetailsComponent entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={best} isBrief={true} mode={Mode.VIEW}/>
       </Box>
 
@@ -183,7 +182,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       </Box>
       {
         isCloseWithoutSaveDialogOpen &&
-        <CloseWithoutSaveDialogComponent
+        <CloseWithoutSaveDialog
           isOpen={isCloseWithoutSaveDialogOpen}
           onSetOpen={setCloseWithoutSaveDialogOpen}/>
       }

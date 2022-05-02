@@ -16,7 +16,8 @@ export const DiscreteOrderModelBase = ModelBase
   .named('DiscreteOrder')
   .props({
     __typename: types.optional(types.literal("DiscreteOrder"), "DiscreteOrder"),
-    id: types.union(types.undefined, types.string),
+    //id: types.union(types.undefined, types.string),
+    id: types.identifier, //Alex change till proper deffs
     zOrder: types.union(types.undefined, types.number),
   })
   .views(self => ({
@@ -33,4 +34,4 @@ export function selectFromDiscreteOrder() {
   return new DiscreteOrderModelSelector()
 }
 
-export const discreteOrderModelPrimitives = selectFromDiscreteOrder().zOrder
+export const discreteOrderModelPrimitives = selectFromDiscreteOrder().zOrder.id

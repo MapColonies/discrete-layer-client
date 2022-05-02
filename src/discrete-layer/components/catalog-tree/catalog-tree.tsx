@@ -5,12 +5,12 @@ import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
 import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { get, isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { Error } from '../../../common/components/tree/statuses/Error';
-import { Loading } from '../../../common/components/tree/statuses/Loading';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
@@ -20,11 +20,14 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
+import { CapabilityModelType } from '../../models';
 import { TabViews } from '../../views/tab-views';
-import { BestInEditDialogComponent } from '../dialogs/best-in-edit.dialog';
+import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
+import { getLayerLink } from '../helpers/layersUtils';
+import { isBest } from '../layer-details/utils';
+import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
-import { isBest } from '../layer-details/utils';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -38,18 +41,34 @@ interface CatalogTreeComponentProps {
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(({refresh}) => {
-  const { loading, error, data, query, setQuery } = useQuery();
-
+  const { loading: loadingSearch, error: errorSearch, data: dataSearch, query: querySearch, setQuery: setQuerySearch } = useQuery();
+  const { loading: loadingCapabilities, error: errorCapabilities, data: dataCapabilities, query: queryCapabilities, setQuery: setQueryCapabilities } = useQuery();
   const store = useStore();
   const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [hoveredNode, setHoveredNode] = useState<TreeItem>();
   const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
 
   useEffect(() => {
-    setQuery(
+    setLoading(loadingSearch || (loadingCapabilities && !errorCapabilities));
+  }, [loadingSearch, loadingCapabilities, errorCapabilities]);
+
+  useEffect(() => {
+    if (errorCapabilities) {
+      const msg = errorCapabilities.message;
+      const start = msg.indexOf('"url":"') + 7;
+      const end = msg.indexOf('","', start) - 1;
+      queue.notify({
+        body: <Error className="errorNotification">An error occured with the following service: {`${msg.slice(start, end)}`}</Error>
+      });
+    }
+  }, [errorCapabilities]);
+
+  useEffect(() => {
+    setQuerySearch(
       store.querySearch({
         opts: {
           filter: [
@@ -62,39 +81,40 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         end: CONFIG.RUNNING_MODE.END_RECORD,
         start: CONFIG.RUNNING_MODE.START_RECORD,
       })
-
-    // store.queryCatalogItems({},`
-    // ... on LayerRasterRecord {
-    //   __typename
-    //   sourceName
-    //   creationDate
-    //   geometry 
-    //   type
-    //   links {
-    //     __typename
-    //     name
-    //     description
-    //     protocol
-    //     url
-    //   }
-    // }
-    // ... on Layer3DRecord {
-    //    __typename
-    //   sourceName
-    //   creationDate
-    //   geometry
-    //   type
-    //   links {
-    //     __typename
-    //     name
-    //     description
-    //     protocol
-    //     url
-    //   }
-    //   accuracyLE90
-    // }
-    // }`)
-    )
+      //#region query params
+      // store.queryCatalogItems({},`
+      // ... on LayerRasterRecord {
+      //   __typename
+      //   sourceName
+      //   creationDate
+      //   geometry 
+      //   type
+      //   links {
+      //     __typename
+      //     name
+      //     description
+      //     protocol
+      //     url
+      //   }
+      // }
+      // ... on Layer3DRecord {
+      //    __typename
+      //   sourceName
+      //   creationDate
+      //   geometry
+      //   type
+      //   links {
+      //     __typename
+      //     name
+      //     description
+      //     protocol
+      //     url
+      //   }
+      //   accuracyLE90
+      // }
+      // }`)
+      //#endregion
+    );
   }, [refresh]);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
@@ -139,26 +159,44 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         }
        });
        entityActions[entityName] = permittedGroupsActions;
-       // entityActions[entityName] = getEntityActionGroups(entityName);
     })
     return entityActions;
   }, []);
 
   useEffect(() => {
-    if(store.actionDispatcherStore.action !== undefined){
+    if (store.actionDispatcherStore.action !== undefined) {
       setIsHoverAllowed(true);
     }
   });
 
   useEffect(() => {
 
-    const layersList = get(data,'search') as ILayerImage[];
+    const layersList = get(dataSearch, 'search') as ILayerImage[];
 
     if (!isEmpty(layersList)) {
-      const arr: ILayerImage[] = [];
-      layersList.forEach((item) => arr.push({...item}));
+      const arr: ILayerImage[] = cloneDeep(layersList);
 
       store.discreteLayersStore.setLayersImages(arr, false);
+
+      //#region getCapabilities()
+
+      // NOTE:
+      // Calling getCapabilities() should happen after querySearch.data
+      // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+      // are subsets of the catalog layers list
+
+      const ids = layersList.map((layer: ILayerImage) => {
+        return getLayerLink(layer).name ?? '';
+      });
+      setQueryCapabilities(
+        store.queryCapabilities({
+          idList: {
+            value: [...ids]
+          }
+        })
+      );
+
+      //#endregion
 
       // get unlinked/new discretes shortcuts
       const arrUnlinked = arr.filter((item) => {
@@ -169,7 +207,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const parentUnlinked = buildParentTreeNode(
         arrUnlinked,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-        {keys: ['region']}
+        {keys: [{ name: 'region', predicate: (val) => val.join(',') }]}
       );
 
       // get BESTs shortcuts
@@ -191,7 +229,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         isGroup: true,
         children: [
           ...draftNode,
-          ...arrBests.map(item=> {
+          ...arrBests.map(item => {
             return {
               ...item,
               title: item['productName'],
@@ -205,7 +243,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const parentCatalog = buildParentTreeNode(
         arr,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
-        {keys: ['region']}
+        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
       );
 
       setTreeRawData(
@@ -217,30 +255,35 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         ]
       );
     }
-  }, [data]);
+  }, [dataSearch]);
+
+  useEffect(() => {
+    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
+    if (!isEmpty(capabilitiesList)) {
+      store.discreteLayersStore.setCapabilities(capabilitiesList);
+    }
+  }, [dataCapabilities]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
-    if(!store.bestStore.isBestLoad()) {
+    if (!store.bestStore.isBestLoad()) {
       store.actionDispatcherStore.dispatchAction(
         {
           action: action.action,
           data: action.data,
         } as IDispatchAction
       );
-    }
-    else {
+    } else {
       setBestInEditDialogOpen(true);
     }
   };
 
-  if (error) return <Error>{error.message}</Error>
-  if (data) {
+  if (errorSearch) return <Error className="errorMessage">{errorSearch.message}</Error>
+  if (dataSearch) {
     return (
       <>
         {
           loading && <Loading/>
         }
-
         <Box id="catalogContainer" className="catalogContainer">
           {
             !loading && <TreeComponent
@@ -259,9 +302,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
               }}
               generateNodeProps={rowInfo => ({
                 onClick: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup){
+                  if (!rowInfo.node.isGroup) {
                     let newTreeData = treeRawData;
-                    if(!evt.ctrlKey){
+                    if (!evt.ctrlKey) {
                       // Remove prev selection
                       const selection = find({
                         treeData: newTreeData,
@@ -300,7 +343,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     });
 
                     // console.log('*** MOUSE ROW CLICK *****', (evt.target as any).className);
-                    if(evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)){
+                    if (evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)) {
                       setHoveredNode(undefined);
                       setIsHoverAllowed(false);
                     }
@@ -310,19 +353,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup && isHoverAllowed){
+                  if (!rowInfo.node.isGroup && isHoverAllowed) {
                     store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
-
                     setHoveredNode(rowInfo.node);
-                  }
-                  else{
+                  } else {
                     setHoveredNode(undefined);
                   }
                 },
                 onMouseOut: (evt: MouseEvent) => {
                   store.discreteLayersStore.highlightLayer(undefined);
                   // console.log('*** MOUSE OUT *****', (evt.target as any).className, nodeOutRegex.test((evt.target as any).className));
-                  if(evt.target !== null && nodeOutRegex.test((evt.target as any).className)){
+                  if (evt.target !== null && nodeOutRegex.test((evt.target as any).className)) {
                     setHoveredNode(undefined);
                   }
                 },
@@ -378,7 +419,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         </Box>
         {
           isBestInEditDialogOpen &&
-          <BestInEditDialogComponent
+          <BestInEditDialog
             isOpen={isBestInEditDialogOpen}
             onSetOpen={setBestInEditDialogOpen}/>
         }

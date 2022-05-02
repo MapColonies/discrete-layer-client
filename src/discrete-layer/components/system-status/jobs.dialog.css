@@ -11,16 +11,23 @@ body[dir=rtl] #jobsDialog .mdc-dialog__surface {
   left:12px;
 }
 
-#jobsDialog .mdc-dialog{
+#jobsDialog .mdc-dialog {
   justify-content: flex-end;
 }
 
-#jobsDialog .jobsBody{
+#jobsDialog .jobsBody .drpContainer {
+  justify-content: center;
+  margin-top: 10px;
+  padding: 0;
+}
+
+#jobsDialog .jobsBody {
   overflow-y: hidden !important;
   height: 750px;
   width: 1420px;
   padding: 8px 8px;
 }
+
 
 #jobsDialog .closeIcon {
   margin-left: auto;
@@ -35,16 +42,16 @@ body[dir=rtl] #jobsDialog .closeIcon {
   margin-right: auto;
 }
 
-#jobsDialog .refreshContainer{
+#jobsDialog .refreshContainer {
   display: flex;
   align-items: center;
 }
 
-#jobsDialog .refreshContainer .refreshIcon{
+#jobsDialog .refreshContainer .refreshIcon {
   font-size: 24px;
 }
 
-#jobsDialog .refreshContainer .refreshSecs{
+#jobsDialog .refreshContainer .refreshSecs {
   position: relative;
   text-align: center;
   font-size: 8px;
@@ -58,7 +65,7 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
   left: 23px;
 }
 
-#jobsDialog .buttons{
+#jobsDialog .buttons {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
@@ -90,7 +97,7 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
 }
 
 /* Hide border of right-cols-container */
-.jobsBody  .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
+.jobsBody .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
   border: none !important;
   overflow: visible;
   border-radius: 50% !important;
@@ -105,7 +112,7 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
   border: none;
 }
 
-#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover{
+#jobsDialog .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   background-color: rgb(44,65,89);
   border-width: 0px !important;
 }
@@ -115,7 +122,7 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
 #jobsDialog .ag-row.ag-row-selected,
 #jobsDialog .ag-row.ag-row-selected .actionsContainer {
   border: none !important;
-  background-color: #455570;
+  background-color: var(--mdc-theme-gc-selection-background);
 }
 
 #jobsDialog .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
@@ -132,16 +139,15 @@ body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
 }
 
 .jobsBody .actionsContainer .mdc-menu-surface--open {
- z-index:2 !important;
+  z-index: 2 !important;
 }
 
+/* Not sure why I did it, it causes some problems with disappearing elements */ 
 
-.jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+/* .jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
   display: none;
-}
+} */
 
-.jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
+/* .jobsBody [aria-hidden="false"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
   display: unset;
-}
-
-
+} */

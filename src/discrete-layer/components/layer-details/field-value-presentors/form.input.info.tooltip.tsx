@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { Icon, Tooltip } from '@map-colonies/react-core';
+import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import { ValidationConfigModelType, ValidationValueType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
@@ -42,7 +44,7 @@ export const FormInputInfoTooltipComponent: React.FC<FormInputInfoTooltipProps> 
         }
       });
     }
-    return intl.formatMessage({ id: msgCode }, { value: `<strong>${infoMsgParamValue}</strong>` });
+    return intl.formatMessage({ id: msgCode }, { value: emphasizeByHTML(`${infoMsgParamValue}`) });
   };
 
   return (
