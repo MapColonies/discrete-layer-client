@@ -74,9 +74,11 @@
       })();
     </script>
   </head>
-  <body>
+  <body style='background-color: black;'>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <img alt='' src='{{ getv "/configuration/public/url" "" }}/loading_app.gif' width='45%' style='display: table; margin: 10% auto;' role='presentation'/>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
