@@ -24,8 +24,16 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Discrete Layers</title>
+   
+  </head>
+  <body style='background-color: black;'><!-- TODO: proper themeable background color -->
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id='root'>
+      <!-- TODO: use designed loader -->
+      <img alt='Loading...' src='%PUBLIC_URL%/loading.gif' width='45%' style='display: table; margin: 10% auto 0 auto;'/>
+    </div>
     <script type="text/javascript">
-      (function(){
+      (function() {
         const getTime = () => new Date().getTime().toString();
         const getVersion = () => '{APP_VERSION_PLACEHOLDER}';
 
@@ -40,15 +48,15 @@
             cacheType: 'version'
           }
         ];
-        if(typeof String.prototype.replaceAll === 'undefined'){
+        if (typeof String.prototype.replaceAll === 'undefined') {
           scripts.push({
             src: '%PUBLIC_URL%/assets/scripts/polyfill.chrome_68.replaceall.js',
             cacheType: 'version'
-          }) 
+          });
         }
         scripts.forEach((script) => {
-            document.write(
-              `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}'><\/script>`);
+          document.write(
+            `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}'><\/script>`);
         });
         
         // Render STYLES/LINKS
@@ -65,20 +73,12 @@
             href: '%PUBLIC_URL%/fonts/material-icons/material-icons.css',
             cacheType: 'version'
           }
-
         ];
         styles.forEach((style) => {
-            document.write(`<link href='${style.href}?${((style.cacheType === 'timestamp') ? getTime() : getVersion())}' rel='stylesheet'>`);
+          document.write(`<link href='${style.href}?${((style.cacheType === 'timestamp') ? getTime() : getVersion())}' rel='stylesheet'>`);
         });
       })();
     </script>
-  </head>
-  <body style='background-color: black;'><!-- TODO: proper themeable background color -->
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id='root'>
-      <!-- TODO: use designed loader -->
-      <img alt='' src='%PUBLIC_URL%/loading.gif' width='45%' style='display: table; margin: 10% auto;' role='presentation'/>
-    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
