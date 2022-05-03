@@ -4,9 +4,7 @@
 export const resolveProperty = (obj: any, property: string): any =>
   property.split('.').reduce((result, prop) => (result ? result[prop] : undefined), obj);
 
-/** Group Interface
- */
- export interface Group {
+export interface Group {
   key: any;
   items: any[];
   sum?: any;
