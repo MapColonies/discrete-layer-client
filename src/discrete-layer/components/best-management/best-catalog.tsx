@@ -85,15 +85,15 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
       isGroup: true,
       children: treeDataUnlinked.map(item => {
         return {
-            title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
-            isGroup: true,
-            children: [...item.items.map(rec => {
-              return {
-                ...rec,
-                title: rec['productName'],
-                isSelected: false
-              };
-            })]
+          title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
+          isGroup: true,
+          children: [...item.items.map(rec => {
+            return {
+              ...rec,
+              title: rec['productName'],
+              isSelected: false
+            };
+          })]
         };
       }) as TreeItem[]
     };

@@ -66,8 +66,8 @@ import { DateGranularityType } from "./DateGranularityTypeEnum"
 import { ServiceType } from "./ServiceTypeEnum"
 import { Status } from "./StatusEnum"
 
-export type StringArray = {
-  value: string[]
+export type CapabilitiesLayersSearchParams = {
+  params?: any
 }
 export type SearchOptions = {
   filter?: FilterField[]
@@ -95,6 +95,9 @@ export type Bbox = {
 export type SortField = {
   field: string
   desc?: boolean
+}
+export type StringArray = {
+  value: string[]
 }
 export type JobsSearchParams = {
   resourceId?: string
@@ -323,8 +326,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     vectorBestRecords: types.optional(types.map(types.late((): any => VectorBestRecordModel)), {})
   })
   .actions(self => ({
-    queryCapabilities(variables: { idList: StringArray }, resultSelector: string | ((qb: CapabilityModelSelector) => CapabilityModelSelector) = capabilityModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ capabilities: CapabilityModelType[]}>(`query capabilities($idList: StringArray!) { capabilities(idList: $idList) {
+    queryCapabilities(variables: { params: CapabilitiesLayersSearchParams }, resultSelector: string | ((qb: CapabilityModelSelector) => CapabilityModelSelector) = capabilityModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ capabilities: CapabilityModelType[]}>(`query capabilities($params: CapabilitiesLayersSearchParams!) { capabilities(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new CapabilityModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

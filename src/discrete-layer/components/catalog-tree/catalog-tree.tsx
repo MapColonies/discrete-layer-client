@@ -20,7 +20,7 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import { CapabilityModelType } from '../../models';
+import { CapabilityModelType, RecordType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLayerLink } from '../helpers/layersUtils';
@@ -124,15 +124,15 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       isGroup: true,
       children: treeDataUnlinked.map(item => {
         return {
-            title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
-            isGroup: true,
-            children: [...item.items.map(rec => {
-              return {
-                ...rec,
-                title: rec['productName'],
-                isSelected: false
-              };
-            })]
+          title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
+          isGroup: true,
+          children: [...item.items.map(rec => {
+            return {
+              ...rec,
+              title: rec['productName'],
+              isSelected: false
+            };
+          })]
         };
       }) as TreeItem[]
     };
@@ -140,7 +140,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord','VectorBestRecord'].forEach( entityName => {
+    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord'].forEach( entityName => {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
@@ -185,15 +185,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
       // are subsets of the catalog layers list
 
-      const ids = layersList.map((layer: ILayerImage) => {
-        return getLayerLink(layer).name ?? '';
-      });
+      const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
+        list.reduce((previous, currentItem) => {
+          const group = getKey(currentItem);
+          if (!previous[group]) previous[group] = [];
+          previous[group].push(setItem(currentItem));
+          return previous;
+        }, {} as Record<K, T[]>);
+      const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
       setQueryCapabilities(
-        store.queryCapabilities({
-          idList: {
-            value: [...ids]
-          }
-        })
+        // @ts-ignore
+        store.queryCapabilities({ params: { ...ids } })
       );
 
       //#endregion
