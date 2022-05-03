@@ -122,9 +122,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     return {
       title: title,
       isGroup: true,
-      children: treeDataUnlinked.map(item=> {
+      children: treeDataUnlinked.map(item => {
         return {
-            title: item.key['region'],
+            title: groupByParams.keys[0].predicate(item.key[groupByParams.keys[0].name]),
             isGroup: true,
             children: [...item.items.map(rec => {
               return {
