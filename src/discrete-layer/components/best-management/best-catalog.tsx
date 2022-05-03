@@ -13,7 +13,7 @@ import { Loading } from '../../../common/components/tree/statuses/loading';
 import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
-import { GroupBy, groupBy } from '../../../common/helpers/group-by';
+import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
@@ -83,9 +83,9 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     return {
       title: title,
       isGroup: true,
-      children: treeDataUnlinked.map(item=> {
+      children: treeDataUnlinked.map(item => {
         return {
-            title: item.key['region'],
+            title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
             isGroup: true,
             children: [...item.items.map(rec => {
               return {

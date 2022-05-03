@@ -15,7 +15,7 @@ import { FootprintRenderer } from '../../../common/components/tree/icon-renderer
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
-import { GroupBy, groupBy } from '../../../common/helpers/group-by';
+import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
@@ -122,9 +122,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     return {
       title: title,
       isGroup: true,
-      children: treeDataUnlinked.map(item=> {
+      children: treeDataUnlinked.map(item => {
         return {
-            title: item.key['region'],
+            title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
             isGroup: true,
             children: [...item.items.map(rec => {
               return {
@@ -207,7 +207,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const parentUnlinked = buildParentTreeNode(
         arrUnlinked,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-        {keys: [{ name: 'region', predicate: (val) => val.join(',') }]}
+        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
       );
 
       // get BESTs shortcuts
