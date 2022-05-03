@@ -207,7 +207,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const parentUnlinked = buildParentTreeNode(
         arrUnlinked,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-        {keys: [{ name: 'region', predicate: (val) => val.join(',') }]}
+        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
       );
 
       // get BESTs shortcuts
