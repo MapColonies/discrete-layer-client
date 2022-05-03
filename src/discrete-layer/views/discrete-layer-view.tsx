@@ -422,13 +422,13 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             {
-              (tabIdx === TabViews.CATALOG) && 
-                <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
-                </Tooltip>
+              tabIdx === TabViews.CATALOG && 
+              <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+                <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+              </Tooltip>
             }
             {
-              (tabIdx === TabViews.CATALOG) && 
+              tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
@@ -577,13 +577,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-          {
-            isSystemsJobsDialogOpen &&
-            <JobsDialog
-              isOpen={isSystemsJobsDialogOpen}
-              onSetOpen={setSystemsJobsDialogOpen}
-            />
-          }
           <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-System-Missions glow-missing-icon"
@@ -591,13 +584,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
             />
           </Tooltip>
-          {
-            isSystemCoreInfoDialogOpen &&
-            <SystemCoreInfoDialog
-              isOpen={isSystemCoreInfoDialogOpen}
-              onSetOpen={setSystemCoreInfoDialogOpen}
-            />
-          }
         </Box>
       </Box>
       <Box className="mainViewContainer">
@@ -717,6 +703,20 @@ const DiscreteLayerView: React.FC = observer(() => {
             isOpen={isNewDemEntityDialogOpen}
             onSetOpen={setNewDemEntityDialogOpen}
             recordType={RecordType.RECORD_DEM}
+          />
+        }
+        {
+          isSystemsJobsDialogOpen &&
+          <JobsDialog
+            isOpen={isSystemsJobsDialogOpen}
+            onSetOpen={setSystemsJobsDialogOpen}
+          />
+        }
+        {
+          isSystemCoreInfoDialogOpen &&
+          <SystemCoreInfoDialog
+            isOpen={isSystemCoreInfoDialogOpen}
+            onSetOpen={setSystemCoreInfoDialogOpen}
           />
         }
       </Box>
