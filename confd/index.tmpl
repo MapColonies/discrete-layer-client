@@ -49,7 +49,7 @@
         }
         scripts.forEach((script) => {
           document.write(
-            `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}'><\/script>`);
+            `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}' async><\/script>`);
         });
         
         // Render STYLES/LINKS
