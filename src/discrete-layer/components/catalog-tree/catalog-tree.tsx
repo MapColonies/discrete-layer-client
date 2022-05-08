@@ -62,7 +62,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
       queue.notify({
-        body: <Error className="errorNotification">An error occured with the following service: {`${msg.slice(start, end)}`}</Error>
+        body: <Error className="errorNotification">An error occured while fetching data from the following service: {`${msg.slice(start, end)}`}</Error>
       });
     }
   }, [errorCapabilities]);
@@ -194,8 +194,11 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         }, {} as Record<K, T[]>);
       const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
       setQueryCapabilities(
-        // @ts-ignore
-        store.queryCapabilities({ params: { ...ids } })
+        store.queryCapabilities({ 
+          recordType: 'RECORD_DEM',
+          // @ts-ignore
+          idList: { value: ids['RECORD_DEM'] }
+        })
       );
 
       //#endregion
