@@ -67,8 +67,11 @@ import { ServiceType } from "./ServiceTypeEnum"
 import { Status } from "./StatusEnum"
 
 export type CapabilitiesLayersSearchParams = {
-  RECORD_RASTER?: string[]
-  RECORD_DEM?: string[]
+  data: CapabilitiesLayersSearchParam[]
+}
+export type CapabilitiesLayersSearchParam = {
+  recordType: RecordType
+  idList: string[]
 }
 export type SearchOptions = {
   filter?: FilterField[]

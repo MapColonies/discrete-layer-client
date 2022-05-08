@@ -62,12 +62,13 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
       queue.notify({
-        body: <Error className="errorNotification">An error occured while fetching data from the following service: {`${msg.slice(start, end)}`}</Error>
+        body: <Error className="errorNotification">{errorCapabilities.response?.errors[0]}</Error>
       });
     }
   }, [errorCapabilities]);
 
   useEffect(() => {
+    queue.clearAll();
     setQuerySearch(
       store.querySearch({
         opts: {
@@ -193,10 +194,19 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           return previous;
         }, {} as Record<K, T[]>);
       const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
+      const idList = [];
+      for (const [key, value] of Object.entries(ids)) {
+        if ([RecordType.RECORD_RASTER, RecordType.RECORD_DEM].includes(key as RecordType)) {
+          idList.push({
+            recordType: key,
+            idList: value
+          });
+        }
+      }
       setQueryCapabilities(
         store.queryCapabilities({
           // @ts-ignore
-          params: { ...ids }
+          params: { data: idList }
         })
       );
 
@@ -281,7 +291,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   };
 
-  if (errorSearch) return <Error className="errorMessage">{errorSearch.message}</Error>
+  if (errorSearch) return <Error className="errorMessage">{errorSearch.response?.errors[0]}</Error>
   if (dataSearch) {
     return (
       <>

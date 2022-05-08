@@ -136,7 +136,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     }
   }, [data]);
 
-  if (error) return (<Error className="errorMessage">{error.message}</Error>);
+  if (error) return (<Error className="errorMessage">{error.response?.errors[0]}</Error>);
   if (data) {
     return (
       <>
