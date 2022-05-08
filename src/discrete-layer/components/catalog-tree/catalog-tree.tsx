@@ -194,10 +194,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         }, {} as Record<K, T[]>);
       const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
       setQueryCapabilities(
-        store.queryCapabilities({ 
-          recordType: 'RECORD_DEM',
+        store.queryCapabilities({
           // @ts-ignore
-          idList: { value: ids['RECORD_DEM'] }
+          params: { ...ids }
         })
       );
 
