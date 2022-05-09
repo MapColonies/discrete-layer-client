@@ -131,7 +131,7 @@ export const LayersFootprints: React.FC = observer(() => {
           if (item.polyline) {
             const color = getColor(get(item,'properties.id'),  { alpha: 1 });
             (item.polyline.width as CesiumConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
-            // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
+            // typings issue in CESIUM for reference https://github.com/CesiumGS/cesium/issues/8898
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             item.polyline.material = color;

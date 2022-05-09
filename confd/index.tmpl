@@ -19,7 +19,6 @@
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
-
       Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
@@ -29,7 +28,7 @@
       (function() {
         const getTime = () => new Date().getTime().toString();
         const getVersion = () => '{{ getv "/configuration/image/tag" "v1.0.0" }}';
-        
+
         // Render SCRIPTS
         const scripts = [
           {
@@ -38,18 +37,20 @@
           },
           {
             src: '{{ getv "/configuration/public/url" "" }}/Cesium/Cesium.js',
-            cacheType: 'version'
+            cacheType: 'version',
+            additionalAttributes: 'async'
           }
         ];
         if (typeof String.prototype.replaceAll === 'undefined') {
           scripts.push({
             src: '{{ getv "/configuration/public/url" "" }}/assets/scripts/polyfill.chrome_68.replaceall.js',
-            cacheType: 'version'
+            cacheType: 'version',
+            additionalAttributes: 'async'
           });
         }
         scripts.forEach((script) => {
           document.write(
-            `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}'><\/script>`);
+            `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}' ${script.additionalAttributes ?? ''}><\/script>`);
         });
         
         // Render STYLES/LINKS
@@ -66,7 +67,6 @@
             href: '{{ getv "/configuration/public/url" "" }}/fonts/material-icons/material-icons.css',
             cacheType: 'version'
           }
-
         ];
         styles.forEach((style) => {
           document.write(`<link href='${style.href}?${((style.cacheType === 'timestamp') ? getTime() : getVersion())}' rel='stylesheet'>`);
@@ -76,17 +76,15 @@
   </head>
   <body style='background-color: black;'><!-- TODO: proper themeable background color -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">
+    <div id='root'>
       <!-- TODO: use designed loader -->
       <img alt='Loading...' src='{{ getv "/configuration/public/url" "" }}/loading.gif' width='500px' style='display: table; margin: 10% auto 0 auto;'/>
     </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
-
       You can add webfonts, meta tags, or analytics to this file.
       The build step will place the bundled scripts into the <body> tag.
-
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->

@@ -20,7 +20,7 @@ import { IActionGroup } from '../../../common/actions/entity.actions';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import { CapabilityModelType } from '../../models';
+import { CapabilityModelType, RecordType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLayerLink } from '../helpers/layersUtils';
@@ -62,12 +62,13 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
       queue.notify({
-        body: <Error className="errorNotification">An error occured with the following service: {`${msg.slice(start, end)}`}</Error>
+        body: <Error className="errorNotification" message={errorCapabilities.response?.errors[0].message} details={errorCapabilities.response?.errors[0].extensions?.exception?.config?.url}/>
       });
     }
   }, [errorCapabilities]);
 
   useEffect(() => {
+    queue.clearAll();
     setQuerySearch(
       store.querySearch({
         opts: {
@@ -124,15 +125,15 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       isGroup: true,
       children: treeDataUnlinked.map(item => {
         return {
-            title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
-            isGroup: true,
-            children: [...item.items.map(rec => {
-              return {
-                ...rec,
-                title: rec['productName'],
-                isSelected: false
-              };
-            })]
+          title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
+          isGroup: true,
+          children: [...item.items.map(rec => {
+            return {
+              ...rec,
+              title: rec['productName'],
+              isSelected: false
+            };
+          })]
         };
       }) as TreeItem[]
     };
@@ -140,7 +141,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord','VectorBestRecord'].forEach( entityName => {
+    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord'].forEach( entityName => {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
@@ -185,14 +186,27 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
       // are subsets of the catalog layers list
 
-      const ids = layersList.map((layer: ILayerImage) => {
-        return getLayerLink(layer).name ?? '';
-      });
+      const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
+        list.reduce((previous, currentItem) => {
+          const group = getKey(currentItem);
+          if (!previous[group]) previous[group] = [];
+          previous[group].push(setItem(currentItem));
+          return previous;
+        }, {} as Record<K, T[]>);
+      const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
+      const idList = [];
+      for (const [key, value] of Object.entries(ids)) {
+        if ([RecordType.RECORD_RASTER, RecordType.RECORD_DEM].includes(key as RecordType)) {
+          idList.push({
+            recordType: key,
+            idList: value
+          });
+        }
+      }
       setQueryCapabilities(
         store.queryCapabilities({
-          idList: {
-            value: [...ids]
-          }
+          // @ts-ignore
+          params: { data: idList }
         })
       );
 
@@ -277,7 +291,15 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   };
 
-  if (errorSearch) return <Error className="errorMessage">{errorSearch.message}</Error>
+  if (errorSearch) {
+    return (
+      <Error 
+        className="errorMessage"
+        message={errorSearch.response?.errors[0].message}
+        details={errorSearch.response?.errors[0].extensions?.exception?.config?.url}
+      />
+    );
+  }
   if (dataSearch) {
     return (
       <>

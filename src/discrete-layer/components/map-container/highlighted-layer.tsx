@@ -31,14 +31,14 @@ export const HighlightedLayer: React.FC = observer(() => {
         geoJsonDataSouce.entities.values.forEach(item => {
           if(item.polyline) {
             (item.polyline.width as CesiumConstantProperty).setValue(FOOTPRINT_BORDER_WIDTH);
-            // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
+            // typings issue in CESIUM for reference https://github.com/CesiumGS/cesium/issues/8898
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             item.polyline.material = FOOTPRINT_BORDER_COLOR;
           }
           if(item.polygon){
             (item.polygon.outlineColor as CesiumConstantProperty).setValue(FOOTPRINT_BORDER_COLOR);
-            // typings issue in CESIUM for refference https://github.com/CesiumGS/cesium/issues/8898
+            // typings issue in CESIUM for reference https://github.com/CesiumGS/cesium/issues/8898
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             item.polygon.material = CesiumColor.fromRandom({alpha: 0.4});
