@@ -9,11 +9,11 @@ import './error.css';
 interface ErrorProps {
   className: string;
   message: string;
-  url?: string;
+  details?: string;
 }
 
 export const Error: React.FC<ErrorProps> = (props) => {
-  const { className, message, url } = props;
+  const { className, message, details } = props;
 
   return (
     <Box className={className + ' alignCenter'}>
@@ -26,9 +26,9 @@ export const Error: React.FC<ErrorProps> = (props) => {
         </Typography>
       </Box>
       {
-        url !== undefined &&
+        details !== undefined &&
         <Box className="errorDescription">
-          <Typography tag="p">{url}</Typography>
+          <Typography tag="p">{details}</Typography>
         </Box>
       }
     </Box>
