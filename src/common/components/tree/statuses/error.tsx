@@ -8,29 +8,29 @@ import './error.css';
 
 interface ErrorProps {
   className: string;
-  message?: string;
+  message: string;
+  url?: string;
 }
 
 export const Error: React.FC<ErrorProps> = (props) => {
-  const { className, message, children } = props;
-  // @ts-ignore
-  // eslint-disable-next-line
-  const errorUrl = (children ? `url: ${children.extensions?.exception?.config?.url}` : '');
-  // @ts-ignore
-  // eslint-disable-next-line
-  const errorMessage = message ?? (children ? children.message : '');
+  const { className, message, url } = props;
 
   return (
     <Box className={className + ' alignCenter'}>
       <Box className="errorTitle"><Typography use="headline6" tag="div"><FormattedMessage id="general.error.text"/></Typography></Box>
       <Box><Typography use="body2" tag="div"><FormattedMessage id="general.error.title"/></Typography></Box>
       <Box className="errorDescription">
-        <Typography use="body2" tag="div">
-          <FormattedMessage id="general.error.description"/>
-          <Typography tag="p">{errorMessage}</Typography>
-          <Typography tag="p">{message === undefined ? errorUrl : ''}</Typography>
+        <Typography tag="div">
+          <Typography tag="span"><FormattedMessage id="general.error.description"/></Typography>
+          <Typography tag="span"> {message}</Typography>
         </Typography>
       </Box>
+      {
+        url !== undefined &&
+        <Box className="errorDescription">
+          <Typography tag="p">{url}</Typography>
+        </Box>
+      }
     </Box>
   );
 };

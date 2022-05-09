@@ -62,7 +62,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       const start = msg.indexOf('"url":"') + 7;
       const end = msg.indexOf('","', start) - 1;
       queue.notify({
-        body: <Error className="errorNotification">{errorCapabilities.response?.errors[0]}</Error>
+        body: <Error className="errorNotification" message={errorCapabilities.response?.errors[0].message} url={errorCapabilities.response?.errors[0].extensions?.exception?.config?.url}/>
       });
     }
   }, [errorCapabilities]);
@@ -291,7 +291,15 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }
   };
 
-  if (errorSearch) return <Error className="errorMessage">{errorSearch.response?.errors[0]}</Error>
+  if (errorSearch) {
+    return (
+      <Error 
+        className="errorMessage"
+        message={errorSearch.response?.errors[0].message}
+        url={errorSearch.response?.errors[0].extensions?.exception?.config?.url}
+      />
+    );
+  }
   if (dataSearch) {
     return (
       <>
