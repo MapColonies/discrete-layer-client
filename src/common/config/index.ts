@@ -16,13 +16,14 @@ const ACTIVE_LAYER_PROPERTIES = (window as any)._env_.ACTIVE_LAYER_PROPERTIES;
 const MAP = (window as any)._env_.MAP;
 const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
+const DEFAULT_TERRAIN_PROVIDER_URL = (window as any)._env_.DEFAULT_TERRAIN_PROVIDER_URL;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
 const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 
-const enreachBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
+const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
     maps: baseMaps.maps.map((baseMap: IBaseMap) => {
       return {
@@ -135,7 +136,8 @@ const APP_CONFIG = {
   DEFAULT_USER: {
     ROLE: DEFAULT_USER.role
   },
-  BASE_MAPS: enreachBaseMaps(BASE_MAPS),
+  DEFAULT_TERRAIN_PROVIDER_URL: DEFAULT_TERRAIN_PROVIDER_URL,
+  BASE_MAPS: enrichBaseMaps(BASE_MAPS),
   RUNNING_MODE: {
     TYPE: RUNNING_MODE.type,
     AUTOCOMPLETE: RUNNING_MODE.autocomplete,
