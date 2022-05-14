@@ -43,6 +43,7 @@ const store = rootStore.create(
     document.body.dir = 'rtl';
   }
 })();
+
 ReactDOM.render(
   <React.StrictMode>
     <StoreProvider value={store}>

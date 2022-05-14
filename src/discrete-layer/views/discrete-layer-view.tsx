@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { CesiumTerrainProvider } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
@@ -51,6 +52,7 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+// import { getTokenResource } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
@@ -77,6 +79,14 @@ const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   dashLength: 5
 });
 const BASE_MAPS = CONFIG.BASE_MAPS;
+
+const DEFAULT_TERRAIN_PROVIDER = 
+  CONFIG.DEFAULT_TERRAIN_PROVIDER_URL !== undefined ?
+  new CesiumTerrainProvider({
+    // url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
+    url: CONFIG.DEFAULT_TERRAIN_PROVIDER_URL as string,
+  }) :
+  undefined;
 
 interface IDrawingObject {
   type: DrawType;
@@ -422,13 +432,13 @@ const DiscreteLayerView: React.FC = observer(() => {
             borderTopColor: theme.custom?.GC_TAB_ACTIVE_BACKGROUND as string
           }}>
             {
-              (tabIdx === TabViews.CATALOG) && 
-                <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
-                </Tooltip>
+              tabIdx === TabViews.CATALOG && 
+              <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+                <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+              </Tooltip>
             }
             {
-              (tabIdx === TabViews.CATALOG) && 
+              tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
@@ -577,13 +587,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-          {
-            isSystemsJobsDialogOpen &&
-            <JobsDialog
-              isOpen={isSystemsJobsDialogOpen}
-              onSetOpen={setSystemsJobsDialogOpen}
-            />
-          }
           <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-System-Missions glow-missing-icon"
@@ -591,13 +594,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
             />
           </Tooltip>
-          {
-            isSystemCoreInfoDialogOpen &&
-            <SystemCoreInfoDialog
-              isOpen={isSystemCoreInfoDialogOpen}
-              onSetOpen={setSystemCoreInfoDialogOpen}
-            />
-          }
         </Box>
       </Box>
       <Box className="mainViewContainer">
@@ -671,6 +667,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
             baseMaps={BASE_MAPS}
+            terrainProvider={DEFAULT_TERRAIN_PROVIDER}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
@@ -717,6 +714,20 @@ const DiscreteLayerView: React.FC = observer(() => {
             isOpen={isNewDemEntityDialogOpen}
             onSetOpen={setNewDemEntityDialogOpen}
             recordType={RecordType.RECORD_DEM}
+          />
+        }
+        {
+          isSystemsJobsDialogOpen &&
+          <JobsDialog
+            isOpen={isSystemsJobsDialogOpen}
+            onSetOpen={setSystemsJobsDialogOpen}
+          />
+        }
+        {
+          isSystemCoreInfoDialogOpen &&
+          <SystemCoreInfoDialog
+            isOpen={isSystemCoreInfoDialogOpen}
+            onSetOpen={setSystemCoreInfoDialogOpen}
           />
         }
       </Box>

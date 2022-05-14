@@ -13,7 +13,7 @@ import { Loading } from '../../../common/components/tree/statuses/loading';
 import { ImportRenderer } from '../../../common/components/tree/icon-renderers/import.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
-import { GroupBy, groupBy } from '../../../common/helpers/group-by';
+import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
@@ -83,17 +83,17 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     return {
       title: title,
       isGroup: true,
-      children: treeDataUnlinked.map(item=> {
+      children: treeDataUnlinked.map(item => {
         return {
-            title: item.key['region'],
-            isGroup: true,
-            children: [...item.items.map(rec => {
-              return {
-                ...rec,
-                title: rec['productName'],
-                isSelected: false
-              };
-            })]
+          title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
+          isGroup: true,
+          children: [...item.items.map(rec => {
+            return {
+              ...rec,
+              title: rec['productName'],
+              isSelected: false
+            };
+          })]
         };
       }) as TreeItem[]
     };
@@ -136,7 +136,15 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
     }
   }, [data]);
 
-  if (error) return (<Error className="errorMessage">{error.message}</Error>);
+  if (error) {
+    return (
+      <Error
+        className="errorMessage"
+        message={error.response?.errors[0].message}
+        details={error.response?.errors[0].extensions?.exception?.config?.url}
+      />
+    );
+  }
   if (data) {
     return (
       <>
