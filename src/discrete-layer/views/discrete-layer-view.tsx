@@ -52,7 +52,7 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
-// import { getTokenResource } from '../components/helpers/layersUtils';
+import { getTokenResource } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
@@ -83,8 +83,7 @@ const BASE_MAPS = CONFIG.BASE_MAPS;
 const DEFAULT_TERRAIN_PROVIDER = 
   CONFIG.DEFAULT_TERRAIN_PROVIDER_URL !== undefined ?
   new CesiumTerrainProvider({
-    // url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
-    url: CONFIG.DEFAULT_TERRAIN_PROVIDER_URL as string,
+    url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
   }) :
   undefined;
 
