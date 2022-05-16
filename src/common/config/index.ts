@@ -153,6 +153,7 @@ const APP_CONFIG = {
   },
   SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
   JOB_MANAGER_END_OF_TIME: 21, // Days
+  MINIMUM_SUPPORTED_BROWSER_VERSION: 200
 };
 
 export default APP_CONFIG;

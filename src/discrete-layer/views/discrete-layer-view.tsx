@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { CesiumTerrainProvider } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
+import uaParser, { UAParserInstance } from 'ua-parser-js';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
@@ -67,6 +68,8 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { queue } from '../components/snackbar/notification-queue';
+import { Error } from '../../common/components/tree/statuses/error';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -87,6 +90,7 @@ const DEFAULT_TERRAIN_PROVIDER =
   }) :
   undefined;
 
+const uaParserObj: UAParserInstance = new uaParser();
 interface IDrawingObject {
   type: DrawType;
   handler: (drawing: IDrawingEvent) => void;
@@ -144,6 +148,29 @@ const DiscreteLayerView: React.FC = observer(() => {
       </>
     );
   }, []);
+
+
+  const checkBrowserCompatibility = useCallback(() => {
+    const FIRST_ELEM = 0;
+    const userAgentRes = uaParserObj.getResult();
+    const CHROMIUM_ENGINE = 'Blink';
+    const browserName = userAgentRes.browser.name;
+    const isEngineChromium = userAgentRes.engine.name === CHROMIUM_ENGINE;
+    const isBrowserVersionSupported = Number(userAgentRes.browser.version?.split('.')[FIRST_ELEM]) >= CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION;
+    
+    const browserNotSupportedErr = intl.formatMessage({ id: 'compatibility-check.browser-not-supported'}, {browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION })
+    const browserTooOldErr = intl.formatMessage({ id: 'compatibility-check.browser-version-not-supported'}, {browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION })
+
+    if(!isEngineChromium || !isBrowserVersionSupported) {
+      queue.notify({
+        body: <Error className="errorNotification" message={isEngineChromium ? browserTooOldErr : browserNotSupportedErr} />
+      });
+    }
+  },[intl]);
+
+  useEffect(() => {
+    checkBrowserCompatibility()
+  },[checkBrowserCompatibility])
 
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];

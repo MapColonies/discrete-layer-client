@@ -415,5 +415,8 @@
 
   "lookups.fieldCategory.main.tooltip": " ",
   "lookups.fieldCategory.general.tooltip": "ראשי",
-  "lookups.fieldCategory.geo_info.tooltip": "מידע גיאוגרפי"
+  "lookups.fieldCategory.geo_info.tooltip": "מידע גיאוגרפי",
+
+  "compatibility-check.browser-not-supported": "מצטערים, הדפדפן '{browserName}' שלך אינו נתמך.\nיש להשתמש בדפדפן מסוג כרומיום בגרסה {minimumVersion} ומעלה.",
+  "compatibility-check.browser-version_not_supported": "מצטערים, גרסת הדפדפן שלך ישנה מדי.\nיש לעדכן את הדפדפן '{browserName}' לגרסה {minimumVersion} ומעלה"
 }

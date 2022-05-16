@@ -415,5 +415,8 @@
 
   "lookups.fieldCategory.main.tooltip": " ",
   "lookups.fieldCategory.general.tooltip": "General",
-  "lookups.fieldCategory.geo_info.tooltip": "Geo Info"
+  "lookups.fieldCategory.geo_info.tooltip": "Geo Info",
+
+  "compatibility-check.browser-not-supported": "Sorry, the browser '{browserName}' is not supported.\nPlease use chromium based browser V.{minimumVersion} or newer.",
+  "compatibility-check.browser-version-not-supported": "Sorry, your browser version is too old.\nPlease update to {browserName} V.{minimumVersion} or newer."
 }
