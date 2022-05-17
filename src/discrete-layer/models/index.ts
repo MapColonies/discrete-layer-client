@@ -3,9 +3,9 @@
 /* tslint:disable */
 
 export * from "./CapabilityModel"
+export * from "./RecordTypeEnum"
 export * from "./LayerMetadataMixedModelSelector"
 export * from "./Layer3DRecordModel"
-export * from "./RecordTypeEnum"
 export * from "./ProductTypeEnum"
 export * from "./LinkModel"
 export * from "./LayerRasterRecordModel"
@@ -18,6 +18,7 @@ export * from "./UndulationModelEnum"
 export * from "./DataTypeEnum"
 export * from "./NoDataValueEnum"
 export * from "./VectorBestRecordModel"
+export * from "./QuantizedMeshBestRecordModel"
 export * from "./StringArrayObjectTypeModel"
 export * from "./EntityDescriptorModel"
 export * from "./CategoryConfigModel"
