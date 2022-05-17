@@ -5,7 +5,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel, LinkModelType } from "./LinkModel"
+import { LinkModel } from "./LinkModel"
 import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
