@@ -81,7 +81,7 @@ const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
 const BASE_MAPS = CONFIG.BASE_MAPS;
 
 const DEFAULT_TERRAIN_PROVIDER = 
-  CONFIG.DEFAULT_TERRAIN_PROVIDER_URL !== undefined ?
+  CONFIG.DEFAULT_TERRAIN_PROVIDER_URL ?
   new CesiumTerrainProvider({
     url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
   }) :
