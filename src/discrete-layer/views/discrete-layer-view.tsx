@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { CesiumTerrainProvider } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import uaParser, { UAParserInstance } from 'ua-parser-js';
+import uaParser from 'ua-parser-js';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
@@ -68,8 +68,6 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
-import { queue } from '../components/snackbar/notification-queue';
-import { Error } from '../../common/components/tree/statuses/error';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
