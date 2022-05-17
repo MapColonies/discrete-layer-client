@@ -90,7 +90,7 @@ const DEFAULT_TERRAIN_PROVIDER =
   }) :
   undefined;
 
-const uaParserObj: UAParserInstance = new uaParser();
+const uaParserObj = new uaParser();
 interface IDrawingObject {
   type: DrawType;
   handler: (drawing: IDrawingEvent) => void;
@@ -154,23 +154,34 @@ const DiscreteLayerView: React.FC = observer(() => {
     const FIRST_ELEM = 0;
     const userAgentRes = uaParserObj.getResult();
     const CHROMIUM_ENGINE = 'Blink';
-    const browserName = userAgentRes.browser.name;
+    const browserName = `'${userAgentRes.browser.name as string}'`;
     const isEngineChromium = userAgentRes.engine.name === CHROMIUM_ENGINE;
-    const isBrowserVersionSupported = Number(userAgentRes.browser.version?.split('.')[FIRST_ELEM]) >= CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION;
-    
-    const browserNotSupportedErr = intl.formatMessage({ id: 'compatibility-check.browser-not-supported'}, {browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION })
-    const browserTooOldErr = intl.formatMessage({ id: 'compatibility-check.browser-version-not-supported'}, {browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION })
+    const isBrowserVersionSupported =
+      Number(userAgentRes.browser.version?.split('.')[FIRST_ELEM]) >=
+      CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION;
 
-    if(!isEngineChromium || !isBrowserVersionSupported) {
-      queue.notify({
-        body: <Error className="errorNotification" message={isEngineChromium ? browserTooOldErr : browserNotSupportedErr} />
-      });
+    const browserNotSupportedErr = intl.formatMessage(
+      { id: 'compatibility-check.browser-not-supported' },
+      { browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION }
+    );
+    const browserTooOldErr = intl.formatMessage(
+      { id: 'compatibility-check.browser-version-not-supported' },
+      { browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION }
+    );
+
+    if (!isEngineChromium || !isBrowserVersionSupported) {
+      return (
+        <Box className="compatibilityError">
+          <Typography tag='h4'>
+            {isEngineChromium ? browserTooOldErr : browserNotSupportedErr}
+          </Typography>
+        </Box>
+      );
     }
-  },[intl]);
 
-  useEffect(() => {
-    checkBrowserCompatibility()
-  },[checkBrowserCompatibility])
+    return null;
+  }, [intl]);
+
 
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
@@ -715,6 +726,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
           </CesiumMap>
+          {checkBrowserCompatibility()}
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
