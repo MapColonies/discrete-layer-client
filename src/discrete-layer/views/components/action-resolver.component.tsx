@@ -31,10 +31,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
       let order: number;
 
       switch (action) {
-        case 'BestRecord.edit':
-          // @ts-ignore
-          store.bestStore.editBest(cleanUpEntity(data, BestRecordModelKeys) as BestRecordModelType);
-          break;
         case 'LayerRasterRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion);
@@ -50,9 +46,18 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
           break;
+        case 'BestRecord.edit':
+          // @ts-ignore
+          store.bestStore.editBest(cleanUpEntity(data, BestRecordModelKeys) as BestRecordModelType);
+          break;
         case 'VectorBestRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
+          props.handleOpenEntityDialog(true);
+          break;
+        case 'QuantizedMeshBestRecord.edit':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, QuantizedMeshBestRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
           break;
         case 'LayerRasterRecord.delete':

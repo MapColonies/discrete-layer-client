@@ -141,7 +141,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord'].forEach( entityName => {
+    [ 'LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord', 'QuantizedMeshBestRecord' ].forEach( entityName => {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
