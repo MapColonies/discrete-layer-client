@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { CesiumTerrainProvider } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import uaParser from 'ua-parser-js';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
@@ -33,6 +32,7 @@ import {
 } from '@map-colonies/react-components';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
+import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/BrowserCompatibilityChecker';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -88,7 +88,6 @@ const DEFAULT_TERRAIN_PROVIDER =
   }) :
   undefined;
 
-const uaParserObj = new uaParser();
 interface IDrawingObject {
   type: DrawType;
   handler: (drawing: IDrawingEvent) => void;
@@ -146,40 +145,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       </>
     );
   }, []);
-
-
-  const checkBrowserCompatibility = useCallback(() => {
-    const FIRST_ELEM = 0;
-    const userAgentRes = uaParserObj.getResult();
-    const CHROMIUM_ENGINE = 'Blink';
-    const browserName = `'${userAgentRes.browser.name as string}'`;
-    const isEngineChromium = userAgentRes.engine.name === CHROMIUM_ENGINE;
-    const isBrowserVersionSupported =
-      Number(userAgentRes.browser.version?.split('.')[FIRST_ELEM]) >=
-      CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION;
-
-    const browserNotSupportedErr = intl.formatMessage(
-      { id: 'compatibility-check.browser-not-supported' },
-      { browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION }
-    );
-    const browserTooOldErr = intl.formatMessage(
-      { id: 'compatibility-check.browser-version-not-supported' },
-      { browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION }
-    );
-
-    if (!isEngineChromium || !isBrowserVersionSupported) {
-      return (
-        <Box className="compatibilityError">
-          <Typography tag='h4'>
-            {isEngineChromium ? browserTooOldErr : browserNotSupportedErr}
-          </Typography>
-        </Box>
-      );
-    }
-
-    return null;
-  }, [intl]);
-
 
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
@@ -724,7 +689,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
           </CesiumMap>
-          {checkBrowserCompatibility()}
+          <BrowserCompatibilityChecker />
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
