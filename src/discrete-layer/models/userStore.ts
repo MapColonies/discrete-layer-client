@@ -19,8 +19,12 @@ export enum UserAction {
   ENTITY_ACTION_BESTRECORD_CREATE = 'entity_action.BestRecord.create',
   ENTITY_ACTION_VECTORBESTRECORD_CREATE = 'entity_action.VectorBestRecord.edit',
   ENTITY_ACTION_LAYERRASTERRECORD_EDIT = 'entity_action.LayerRasterRecord.edit',
+  ENTITY_ACTION_LAYERRASTERRECORD_UPDATE = 'entity_action.LayerRasterRecord.update',
   ENTITY_ACTION_LAYER3DRECORD_EDIT = 'entity_action.Layer3DRecord.edit',
+  // temp for testing!
   ENTITY_ACTION_LAYERDEMRECORD_EDIT = 'entity_action.LayerDemRecord.edit',
+  ENTITY_ACTION_LAYERDEMRECORD_UPDATE = 'entity_action.LayerDemRecord.update',
+  // .......
   ENTITY_ACTION_BESTRECORD_EDIT = 'entity_action.BestRecord.edit',
   ENTITY_ACTION_LAYERRASTERRECORD_DELETE = 'entity_action.LayerRasterRecord.delete',
   ENTITY_ACTION_LAYER3DRECORD_DELETE = 'entity_action.Layer3DRecord.delete',
@@ -65,6 +69,10 @@ const ROLES: IRole[] = [
       'entity_action.LayerDemRecord.edit': false,
       'entity_action.BestRecord.edit': true,
       'entity_action.VectorBestRecord.edit': true,
+      // trmp for testing!
+      'entity_action.LayerDemRecord.update': true,
+      // ....
+      'entity_action.LayerRasterRecord.update': true,
       'entity_action.LayerRasterRecord.delete': true,
       'entity_action.Layer3DRecord.delete': true,
       'entity_action.LayerDemRecord.delete': true,

@@ -50,6 +50,13 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           props.handleOpenEntityDialog(true);
           break;
+          // temp for testing!!
+        case 'LayerDemRecord.update':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(undefined);
+          props.handleOpenEntityDialog(true);
+          break;
+          // ...............
         case 'VectorBestRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);

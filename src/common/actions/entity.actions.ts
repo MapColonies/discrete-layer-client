@@ -185,6 +185,16 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
+          // temp for testing!!
+          {
+            action: 'update',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Edit glow-missing-icon',
+            titleTranslationId: 'Update',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          // ............
           // {
           //   action: 'delete',
           //   frequent: false,
