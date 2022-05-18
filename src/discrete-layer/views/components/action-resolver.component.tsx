@@ -6,6 +6,7 @@ import {
   LayerRasterRecordModelKeys,
   LayerDemRecordModelKeys,
   Layer3DRecordModelKeys,
+  QuantizedMeshBestRecordModelKeys,
   VectorBestRecordModelKeys
 } from '../../components/layer-details/entity-types-keys';
 import { cleanUpEntity } from '../../components/layer-details/utils'
