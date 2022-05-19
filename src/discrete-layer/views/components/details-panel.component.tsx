@@ -11,6 +11,7 @@ import { useStore } from '../../models/RootStore';
 import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
 
 import './details-panel.component.css';
+import { typeNameToRecordTypeMap } from '../../components/helpers/layersUtils';
 
 interface DetailsPanelComponentProps {
   isEditEntityDialogOpen: boolean;
@@ -31,6 +32,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   } = props;
   
   const layerToPresent = store.discreteLayersStore.selectedLayer;
+  const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
   const editingBest = store.bestStore.editingBest;
 
   const handleEditEntityDialogClick = (): void => {
@@ -64,6 +66,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
             isOpen={isEditEntityDialogOpen}
             onSetOpen={setEditEntityDialogOpen}
             layerRecord={layerToPresent ?? editingBest}
+            isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
+            recordType={(typeNameToRecordTypeMap as Record<string, unknown>)[(layerToPresent?.__typename) as string]}
           />
         }
         <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>

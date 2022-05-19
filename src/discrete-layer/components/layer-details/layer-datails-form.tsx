@@ -204,7 +204,7 @@ const InnerForm = (
         noValidate
       >
         {
-          mode === Mode.NEW &&
+          mode === Mode.NEW || mode === Mode.UPDATE&&
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}

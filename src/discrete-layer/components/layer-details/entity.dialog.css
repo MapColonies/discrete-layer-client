@@ -16,3 +16,20 @@ body[dir='rtl'] #entityDialog .closeIcon {
 #entityDialog .dialogBody {
   overflow-y: hidden !important;
 }
+
+#updateLayerHeader {
+  position: relative;
+  display: flex;
+  background-color: var(--mdc-theme-text-primary-on-light);
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 150px;
+  flex: 1;
+}
+
+#updateLayerHeaderContent {
+  margin: 0 auto;
+  width: 100%;
+}

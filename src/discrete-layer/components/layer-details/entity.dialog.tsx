@@ -46,6 +46,7 @@ import suite from './validate';
 import EntityForm from './layer-datails-form';
 
 import './entity.dialog.css';
+import { LayersDetailsComponent } from './layer-details';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
@@ -57,6 +58,7 @@ interface EntityDialogProps {
   onSetOpen: (open: boolean) => void;
   recordType?: RecordType;
   layerRecord?: ILayerImage | null;
+  isSelectedLayerUpdateMode?: boolean;
 }
 
 const buildRecord = (recordType: RecordType): ILayerImage => {
@@ -114,13 +116,22 @@ const getLabel = (recordType: RecordType): string => {
 
 export const EntityDialog: React.FC<EntityDialogProps> = observer(
   (props: EntityDialogProps) => {
-    const { isOpen, onSetOpen, recordType } = props;
+
+    const decideMode = useCallback(()=>{
+      if(props.isSelectedLayerUpdateMode === true && props.layerRecord) {
+        return Mode.UPDATE;
+      }
+
+      return !props.layerRecord ? Mode.NEW : Mode.EDIT;
+    },[])
+
+    const { isOpen, onSetOpen, recordType } = props;   
+    const [mode] = useState<Mode>(decideMode());
     const [layerRecord] = useState<LayerMetadataMixedUnion>(
-      props.layerRecord
+      props.layerRecord && mode !== Mode.UPDATE
         ? cloneDeep(props.layerRecord)
         : buildRecord(recordType as RecordType)
     );
-    const [mode] = useState<Mode>(!props.layerRecord ? Mode.NEW : Mode.EDIT);
     const mutationQuery = useQuery();
     const store = useStore();
     const intl = useIntl();
@@ -343,6 +354,25 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 
+    const UpdateLayerHeader = (): JSX.Element => {
+      return (
+        <Box id="updateLayerHeader">
+          <Box id="updateLayerHeaderContent">
+            <LayersDetailsComponent
+              className="detailsPanelProductView"
+              entityDescriptors={
+                store.discreteLayersStore
+                  .entityDescriptors as EntityDescriptorModelType[]
+              }
+              layerRecord={props.layerRecord}
+              isBrief={true}
+              mode={Mode.VIEW}
+            />
+          </Box>
+        </Box>
+      );
+    };
+
     return (
       <Box id="entityDialog">
         <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -356,6 +386,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               }}
             />
           </DialogTitle>
+          {mode === Mode.UPDATE && <UpdateLayerHeader />}
           <DialogContent className="dialogBody">
             <EntityForm
               mode={mode}

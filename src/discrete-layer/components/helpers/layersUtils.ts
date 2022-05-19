@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import bbox from '@turf/bbox';
 import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
-import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
+import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType, RecordType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
 export const generateLayerRectangle = (
@@ -63,3 +63,15 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     tilingScheme: new CesiumGeographicTilingScheme()
   };
 };
+
+/*eslint-disable*/ 
+export const typeNameToRecordTypeMap = {
+  "Layer3DRecord": RecordType.RECORD_3D,
+  "LayerRasterRecord": RecordType.RECORD_RASTER,
+  "LayerDemRecord": RecordType.RECORD_DEM,
+  "BestRecord": RecordType.RECORD_RASTER,
+  "VectorBestRecord": RecordType.RECORD_RASTER,
+
+
+}
+/*eslint-enable*/
