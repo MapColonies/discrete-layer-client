@@ -101,6 +101,7 @@
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/react-dom": "^16.9.8",
     "@types/react-sortable-tree": "^0.3.13",
+    "@types/ua-parser-js": "^0.7.36",
     "ag-grid-community": "^24.1.0",
     "ag-grid-react": "^24.1.0",
     "axios": "^0.21.1",
@@ -126,6 +127,7 @@
     "react-sortable-tree": "^2.8.0",
     "ts-enum-util": "^4.0.2",
     "typescript": "^3.7.5",
+    "ua-parser-js": "^1.0.2",
     "use-debounce": "^7.0.1",
     "vest": "^3.2.6",
     "yup": "^0.32.11"
