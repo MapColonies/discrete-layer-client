@@ -58,9 +58,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
     if (errorCapabilities) {
-      const msg = errorCapabilities.message;
-      const start = msg.indexOf('"url":"') + 7;
-      const end = msg.indexOf('","', start) - 1;
       queue.notify({
         body: <Error className="errorNotification" message={errorCapabilities.response?.errors[0].message} details={errorCapabilities.response?.errors[0].extensions?.exception?.config?.url}/>
       });
