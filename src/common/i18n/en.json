@@ -415,5 +415,8 @@
 
   "lookups.fieldCategory.main.tooltip": " ",
   "lookups.fieldCategory.general.tooltip": "General",
-  "lookups.fieldCategory.geo_info.tooltip": "Geo Info"
+  "lookups.fieldCategory.geo_info.tooltip": "Geo Info",
+
+  "compatibility-check.browser-not-supported": "The browser {browserName} is not supported, and the app may not work correctly.\nPlease use chromium based browser v{minimumVersion} or newer.",
+  "compatibility-check.browser-version-not-supported": "Your browser is outdated, and the app may not work correctly.\nPlease update to {browserName} v{minimumVersion} or newer for the best experience."
 }
