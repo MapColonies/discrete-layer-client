@@ -15,7 +15,7 @@ import {
   GridApi
 } from '../../../common/components/grid';
 import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
+import { JobProductTypeRenderer } from '../../../common/components/grid/cell-renderer/job-product-type.cell-renderer';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import { useQuery, useStore } from '../../models/RootStore';
@@ -364,7 +364,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       statusRenderer: StatusRenderer,
       actionsRenderer: ActionsRenderer,
       priorityRenderer: PriorityRenderer,
-      productTypeRenderer: ProductTypeRenderer,
+      productTypeRenderer: JobProductTypeRenderer,
       dateCellRenderer: DateCellRenderer,
     },
     tooltipShowDelay: 0,
