@@ -11,10 +11,12 @@ import { LayerDemRecordModelType } from "./LayerDemRecordModel"
 import { LayerDemRecordModelSelector, layerDemRecordModelPrimitives } from "./LayerDemRecordModel.base"
 import { LayerRasterRecordModelType } from "./LayerRasterRecordModel"
 import { LayerRasterRecordModelSelector, layerRasterRecordModelPrimitives } from "./LayerRasterRecordModel.base"
+import { QuantizedMeshBestRecordModelType } from "./QuantizedMeshBestRecordModel"
+import { QuantizedMeshBestRecordModelSelector, quantizedMeshBestRecordModelPrimitives } from "./QuantizedMeshBestRecordModel.base"
 import { VectorBestRecordModelType } from "./VectorBestRecordModel"
 import { VectorBestRecordModelSelector, vectorBestRecordModelPrimitives } from "./VectorBestRecordModel.base"
 
-export type LayerMetadataMixedUnion = Layer3DRecordModelType | LayerRasterRecordModelType | BestRecordModelType | LayerDemRecordModelType | VectorBestRecordModelType
+export type LayerMetadataMixedUnion = Layer3DRecordModelType | LayerRasterRecordModelType | BestRecordModelType | LayerDemRecordModelType | VectorBestRecordModelType | QuantizedMeshBestRecordModelType
 
 export class LayerMetadataMixedModelSelector extends QueryBuilder {
   layer3DRecord(builder?: string | Layer3DRecordModelSelector | ((selector: Layer3DRecordModelSelector) => Layer3DRecordModelSelector)) { return this.__inlineFragment(`Layer3DRecord`, Layer3DRecordModelSelector, builder) }
@@ -22,10 +24,11 @@ export class LayerMetadataMixedModelSelector extends QueryBuilder {
   bestRecord(builder?: string | BestRecordModelSelector | ((selector: BestRecordModelSelector) => BestRecordModelSelector)) { return this.__inlineFragment(`BestRecord`, BestRecordModelSelector, builder) }
   layerDemRecord(builder?: string | LayerDemRecordModelSelector | ((selector: LayerDemRecordModelSelector) => LayerDemRecordModelSelector)) { return this.__inlineFragment(`LayerDemRecord`, LayerDemRecordModelSelector, builder) }
   vectorBestRecord(builder?: string | VectorBestRecordModelSelector | ((selector: VectorBestRecordModelSelector) => VectorBestRecordModelSelector)) { return this.__inlineFragment(`VectorBestRecord`, VectorBestRecordModelSelector, builder) }
+  quantizedMeshBestRecord(builder?: string | QuantizedMeshBestRecordModelSelector | ((selector: QuantizedMeshBestRecordModelSelector) => QuantizedMeshBestRecordModelSelector)) { return this.__inlineFragment(`QuantizedMeshBestRecord`, QuantizedMeshBestRecordModelSelector, builder) }
 }
 export function selectFromLayerMetadataMixed() {
   return new LayerMetadataMixedModelSelector()
 }
 
 // provides all primitive fields of union member types combined together
-export const layerMetadataMixedModelPrimitives = selectFromLayerMetadataMixed().layer3DRecord(layer3DRecordModelPrimitives).layerRasterRecord(layerRasterRecordModelPrimitives).bestRecord(bestRecordModelPrimitives).layerDemRecord(layerDemRecordModelPrimitives).vectorBestRecord(vectorBestRecordModelPrimitives)
+export const layerMetadataMixedModelPrimitives = selectFromLayerMetadataMixed().layer3DRecord(layer3DRecordModelPrimitives).layerRasterRecord(layerRasterRecordModelPrimitives).bestRecord(bestRecordModelPrimitives).layerDemRecord(layerDemRecordModelPrimitives).vectorBestRecord(vectorBestRecordModelPrimitives).quantizedMeshBestRecord(quantizedMeshBestRecordModelPrimitives)

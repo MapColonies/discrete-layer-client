@@ -13,7 +13,7 @@ import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
-import { EntityTypeRenderer } from '../../../common/components/tree/icon-renderers/entity-type.icon-renderer';
+import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
 import { IActionGroup } from '../../../common/actions/entity.actions';
@@ -58,9 +58,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
     if (errorCapabilities) {
-      const msg = errorCapabilities.message;
-      const start = msg.indexOf('"url":"') + 7;
-      const end = msg.indexOf('","', start) - 1;
       queue.notify({
         body: <Error className="errorNotification" message={errorCapabilities.response?.errors[0].message} details={errorCapabilities.response?.errors[0].extensions?.exception?.config?.url}/>
       });
@@ -141,7 +138,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
-    ['LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord'].forEach( entityName => {
+    [ 'LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord', 'QuantizedMeshBestRecord' ].forEach( entityName => {
        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
        const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
@@ -420,7 +417,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <EntityTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
                     ],
                 buttons: [
                   <>
