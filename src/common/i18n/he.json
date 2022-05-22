@@ -12,6 +12,7 @@
   "general.loading.text": "טוען נתונים...",
   "general.title.new": "הוספת מוצר {value}",
   "general.title.edit": "עריכת מידע של מוצר {value}",
+  "general.title.update": "עדכון מוצר {value}",
   "general.title.choose": "בחירת קבצים",
   "general.dialog.exit.title": "בטוח שברצונך להמשיך?",
   "general.dialog.exit.message": "שינויים שלא נשמרו ייאבדו.",

@@ -204,7 +204,7 @@ const InnerForm = (
         noValidate
       >
         {
-          mode === Mode.NEW || mode === Mode.UPDATE&&
+          (mode === Mode.NEW || mode === Mode.UPDATE) &&
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
@@ -214,7 +214,7 @@ const InnerForm = (
           />
         }
         {
-          mode === Mode.NEW && !isSelectedFiles &&
+          (mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles &&
           <Box className="curtain"></Box>
         }
         <Box className={mode === Mode.NEW ? 'content section' : 'content'}>

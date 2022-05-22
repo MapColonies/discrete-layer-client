@@ -63,15 +63,3 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     tilingScheme: new CesiumGeographicTilingScheme()
   };
 };
-
-/*eslint-disable*/ 
-export const typeNameToRecordTypeMap = {
-  "Layer3DRecord": RecordType.RECORD_3D,
-  "LayerRasterRecord": RecordType.RECORD_RASTER,
-  "LayerDemRecord": RecordType.RECORD_DEM,
-  "BestRecord": RecordType.RECORD_RASTER,
-  "VectorBestRecord": RecordType.RECORD_RASTER,
-
-
-}
-/*eslint-enable*/

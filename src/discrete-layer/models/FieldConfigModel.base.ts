@@ -4,15 +4,17 @@
 
 import { IObservableArray } from "mobx"
 import { types } from "mobx-state-tree"
-import { QueryBuilder, withTypedRefs } from "mst-gql"
+import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { AutocompletionModel } from "./AutocompletionModel"
+import { AutocompletionModel, AutocompletionModelType } from "./AutocompletionModel"
 import { autocompletionModelPrimitives, AutocompletionModelSelector } from "./AutocompletionModel.base"
 import { DateGranularityTypeEnumType } from "./DateGranularityTypeEnum"
-import { EnumAspectsModel } from "./EnumAspectsModel"
+import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
 import { EnumAspectsModelSelector } from "./EnumAspectsModel.base"
 import { FieldConfigModel, FieldConfigModelType } from "./FieldConfigModel"
-import { ValidationConfigModel } from "./ValidationConfigModel"
+import { UpdateRulesModel, UpdateRulesModelType } from "./UpdateRulesModel"
+import { UpdateRulesModelBase, UpdateRulesModelSelector } from "./UpdateRulesModel.base"
+import { ValidationConfigModel, ValidationConfigModelType } from "./ValidationConfigModel"
 import { validationConfigModelPrimitives, ValidationConfigModelSelector } from "./ValidationConfigModel.base"
 import { RootStoreType } from "./index"
 
@@ -48,6 +50,7 @@ export const FieldConfigModelBase = withTypedRefs<Refs>()(ModelBase
     // subFields: types.union(types.undefined, types.null, types.array(MSTGQLRef(types.late((): any => FieldConfigModel)))),
     default: types.union(types.undefined, types.null, types.string),
     dateGranularity: types.union(types.undefined, types.null, DateGranularityTypeEnumType),
+    updateRules: types.union(types.undefined, types.null, types.late((): any => UpdateRulesModel)),
   })
   .views(self => ({
     get store() {
@@ -73,6 +76,7 @@ export class FieldConfigModelSelector extends QueryBuilder {
   validation(builder?: string | ValidationConfigModelSelector | ((selector: ValidationConfigModelSelector) => ValidationConfigModelSelector)) { return this.__child(`validation`, ValidationConfigModelSelector, builder) }
   enumValues(builder?: string | EnumAspectsModelSelector | ((selector: EnumAspectsModelSelector) => EnumAspectsModelSelector)) { return this.__child(`enumValues`, EnumAspectsModelSelector, builder) }
   subFields(builder?: string | FieldConfigModelSelector | ((selector: FieldConfigModelSelector) => FieldConfigModelSelector)) { return this.__child(`subFields`, FieldConfigModelSelector, builder) }
+  updateRules(builder?: string | UpdateRulesModelSelector | ((selector: UpdateRulesModelSelector) => UpdateRulesModelSelector)) { return this.__child(`updateRules`, UpdateRulesModelSelector, builder) }
 }
 export function selectFromFieldConfig() {
   return new FieldConfigModelSelector()

@@ -25,6 +25,16 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isCreationEssential
         isCopyable
         dateGranularity
+        updateRules {
+          freeze
+          value {
+            operation {
+              type
+              fraction
+              value
+            }
+          }
+        }
         enumValues {
           dictionary 
         }

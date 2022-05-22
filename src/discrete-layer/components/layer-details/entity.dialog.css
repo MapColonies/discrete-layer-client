@@ -1,6 +1,25 @@
+:root {
+  --update-layer-header-height: 150px;
+  --ingestion-fields-height: 100px; 
+  --footer-height: 60px;
+  --footer-offset: 20px;
+  --modal-content-offset: 20px;
+  --modal-height: calc(100vh - 100px);
+  --dialog-title-height: 40px;
+  --base-content-height: calc(var(--modal-height) - var(--footer-height) - var(--footer-offset) - var(--dialog-title-height) - var(--modal-content-offset));
+  --chonky-modal-height: calc(var(--modal-height) / 2)
+}
+
 @media (min-width: 800px) {
   #entityDialog .mdc-dialog .mdc-dialog__surface {
     max-width: 730px;
+    height: var(--modal-height);
+  }
+  
+  /* Dialog inside of a dialog */
+  #entityDialog .mdc-dialog .mdc-dialog__surface .mdc-dialog .mdc-dialog__surface {
+    max-width: 730px;
+    height: var(--chonky-modal-height);
   }
 }
 
@@ -25,8 +44,7 @@ body[dir='rtl'] #entityDialog .closeIcon {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 150px;
-  flex: 1;
+  height: var(--update-layer-header-height);
 }
 
 #updateLayerHeaderContent {
