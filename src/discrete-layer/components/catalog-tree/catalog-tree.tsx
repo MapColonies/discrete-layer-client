@@ -183,29 +183,32 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
       // are subsets of the catalog layers list
 
-      const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
-        list.reduce((previous, currentItem) => {
-          const group = getKey(currentItem);
-          if (!previous[group]) previous[group] = [];
-          previous[group].push(setItem(currentItem));
-          return previous;
-        }, {} as Record<K, T[]>);
-      const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
-      const idList = [];
-      for (const [key, value] of Object.entries(ids)) {
-        if ([RecordType.RECORD_RASTER, RecordType.RECORD_DEM].includes(key as RecordType)) {
-          idList.push({
-            recordType: key,
-            idList: value
-          });
+      const {RECORD_ALL, RECORD_RASTER, RECORD_DEM} = RecordType;
+      if ([RECORD_ALL, RECORD_RASTER, RECORD_DEM].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
+        const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
+          list.reduce((previous, currentItem) => {
+            const group = getKey(currentItem);
+            if (!previous[group]) previous[group] = [];
+            previous[group].push(setItem(currentItem));
+            return previous;
+          }, {} as Record<K, T[]>);
+        const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
+        const idList = [];
+        for (const [key, value] of Object.entries(ids)) {
+          if ([RECORD_RASTER, RECORD_DEM].includes(key as RecordType)) {
+            idList.push({
+              recordType: key,
+              idList: value
+            });
+          }
         }
+        setQueryCapabilities(
+          store.queryCapabilities({
+            // @ts-ignore
+            params: { data: idList }
+          })
+        );
       }
-      setQueryCapabilities(
-        store.queryCapabilities({
-          // @ts-ignore
-          params: { data: idList }
-        })
-      );
 
       //#endregion
 
@@ -447,4 +450,3 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   }
   return (<><Loading/></>);
 });
-
