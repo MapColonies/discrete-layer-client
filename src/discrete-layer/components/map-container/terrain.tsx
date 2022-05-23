@@ -14,7 +14,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
   const mapViewer = useCesiumMap();
 
   // eslint-disable-next-line
-  const getCesiumTerrainProvider = () => {
+  const setTerrainProvider = () => {
     if (mapViewer.scene.mode === CesiumSceneMode.SCENE3D || mapViewer.scene.mode === CesiumSceneMode.COLUMBUS_VIEW) {
       mapViewer.terrainProvider =
         // eslint-disable-next-line
@@ -29,7 +29,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
   };
 
   useEffect(() => {
-    mapViewer.scene.morphComplete.addEventListener(getCesiumTerrainProvider);
+    mapViewer.scene.morphComplete.addEventListener(setTerrainProvider);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
