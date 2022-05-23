@@ -184,7 +184,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       // are subsets of the catalog layers list
 
       const {RECORD_ALL, RECORD_RASTER, RECORD_DEM} = RecordType;
-      if ([RECORD_ALL, RECORD_RASTER, RECORD_DEM].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
+      const withCapabilities = [RECORD_RASTER, RECORD_DEM];
+      if ([RECORD_ALL, ...withCapabilities].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
         const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
           list.reduce((previous, currentItem) => {
             const group = getKey(currentItem);
@@ -195,7 +196,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
         const idList = [];
         for (const [key, value] of Object.entries(ids)) {
-          if ([RECORD_RASTER, RECORD_DEM].includes(key as RecordType)) {
+          if (withCapabilities.includes(key as RecordType)) {
             idList.push({
               recordType: key,
               idList: value
