@@ -40,10 +40,14 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
         }
       }
     );
+  }, [longitude, latitude]);
+  /* eslint-enable */
+
+  useEffect(() => {
     setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, height));
     mapViewer.camera.flyTo({destination: CesiumCartesian3.fromDegrees(longitude, latitude, height + CAMERA_HEIGHT_OFFSET)}); //TODO: extract to a generic component
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [longitude, latitude, height]);
-  /* eslint-enable */
 
   return (
     <>
