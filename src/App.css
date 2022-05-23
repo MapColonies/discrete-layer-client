@@ -73,3 +73,8 @@ input::placeholder {
     font-size: 14px;
     line-height: 2;
 }
+
+input:disabled {
+  background-color: var(--mdc-theme-text-disabled-on-light);
+  opacity: 0.7;
+}

@@ -36,6 +36,7 @@
   bottom: var(--footer-offset);
   right: 20px;
   height: var(--footer-height);
+  width: 90%;
 }
 
 body[dir='rtl'] #layerDetailsForm .footer {

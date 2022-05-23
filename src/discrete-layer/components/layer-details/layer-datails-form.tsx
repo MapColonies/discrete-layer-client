@@ -27,7 +27,12 @@ import {
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
-import { removeEmptyObjFields, transformFormFieldsToEntity } from './utils';
+import {
+  removeEmptyObjFields,
+  transformFormFieldsToEntity,
+  extractUpdateRelatedFieldNames,
+  getFlatEntityDescriptors,
+} from './utils';
 
 import './layer-details-form.css';
 
@@ -178,11 +183,15 @@ const InnerForm = (
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
 
+    // Check update related fields in metadata obj
+    const updateFields = extractUpdateRelatedFieldNames(metadata.recordModel, getFlatEntityDescriptors(layerRecord, entityDescriptors));
+
     for (const [key, val] of Object.entries(metadata.recordModel)) {
-      if (val === null) {
+      if (val === null || updateFields.includes(key)) {
         delete ((metadata.recordModel as unknown) as Record<string, unknown>)[key];
       }
     }
+
     resetForm();
     setValues({
       ...values,
@@ -201,7 +210,7 @@ const InnerForm = (
         onSubmit={handleSubmit}
         autoComplete={'off'}
         className="form"
-        noValidate
+        // noValidate
       >
         {
           (mode === Mode.NEW || mode === Mode.UPDATE) &&
