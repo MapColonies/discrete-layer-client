@@ -11,8 +11,8 @@ import {
   CesiumLabelStyle,
   CesiumCartesian2,
   CesiumCartesian3,
-  CesiumBoundingSphere,
-  CesiumEllipsoid,
+  // CesiumBoundingSphere,
+  // CesiumEllipsoid,
   CesiumConstantPositionProperty,
   CesiumConstantProperty
 

@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { CesiumTerrainProvider } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
@@ -53,10 +51,10 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
-import { getTokenResource } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
+import { Terrain } from '../components/map-container/terrain';
 import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
@@ -79,14 +77,6 @@ const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
   dashLength: 5
 });
-const BASE_MAPS = CONFIG.BASE_MAPS;
-
-const DEFAULT_TERRAIN_PROVIDER = 
-  CONFIG.DEFAULT_TERRAIN_PROVIDER_URL ?
-  new CesiumTerrainProvider({
-    url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
-  }) :
-  undefined;
 
 interface IDrawingObject {
   type: DrawType;
@@ -101,7 +91,7 @@ const noDrawing: IDrawingObject = {
 
 const getTimeStamp = (): string => new Date().getTime().toString();
 
-const tileOptions = { opacity: 0.5 };
+// const tileOptions = { opacity: 0.5 };
 
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
@@ -109,7 +99,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const store = useStore();
   const theme = useTheme();
   const intl = useIntl();
-  const [center] = useState<[number, number]>(CONFIG.MAP.CENTER as [number, number]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
@@ -662,12 +651,11 @@ const DiscreteLayerView: React.FC = observer(() => {
         <Box className="mapAppContainer">
           <CesiumMap 
             projection={CONFIG.MAP.PROJECTION}  
-            center={center}
+            center={CONFIG.MAP.CENTER}
             zoom={CONFIG.MAP.ZOOM}
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
-            baseMaps={BASE_MAPS}
-            terrainProvider={DEFAULT_TERRAIN_PROVIDER}
+            baseMaps={CONFIG.BASE_MAPS}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
@@ -685,6 +673,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 outlineWidth={2}
                 material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
               />
+              <Terrain/>
               {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
