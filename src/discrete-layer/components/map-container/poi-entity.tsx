@@ -22,14 +22,11 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
   const intl = useIntl();
   const mapViewer = useCesiumMap();
   const [position, setPosition] = useState<CesiumCartesian3 | undefined>();
-  const [height, setHeight] = useState(DEFAULT_HEIGHT);
-  const [title] = useState(intl.formatMessage({ id: 'poi.dialog.description.title' }));
-  const [longitudeStr] = useState(intl.formatMessage({ id: 'poi.dialog.description.longitude' }));
-  const [latitudeStr] = useState(intl.formatMessage({ id: 'poi.dialog.description.latitude' }));
-  const [heightStr] = useState(intl.formatMessage({ id: 'poi.dialog.description.height' }));
+  const [height, setHeight] = useState<number>(DEFAULT_HEIGHT);
 
   /* eslint-disable */
   useEffect(() => {
+    setHeight(DEFAULT_HEIGHT);
     void cesiumSampleTerrainMostDetailed(
       mapViewer.terrainProvider,
       [ CesiumCartographic.fromDegrees(longitude, latitude) ]
@@ -47,14 +44,14 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
     setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, height));
     mapViewer.camera.flyTo({destination: CesiumCartesian3.fromDegrees(longitude, latitude, height + CAMERA_HEIGHT_OFFSET)}); //TODO: extract to a generic component
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [longitude, latitude, height]);
+  }, [height]);
 
   return (
     <>
     {
       position !== undefined &&
       <CesiumEntity
-        name={title}
+        name={intl.formatMessage({ id: 'poi.dialog.description.title' })}
         position={position}
         billboard={{
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
@@ -62,9 +59,9 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
           image: 'assets/img/map-marker.gif',
         }}
         description={`
-          ${longitudeStr}: ${position.x} </br>
-          ${latitudeStr}: ${position.y} </br>
-          ${heightStr}: <span style="font-weight: 500">${position.z}</span>
+          ${intl.formatMessage({ id: 'poi.dialog.description.longitude' }, { value: longitude })}</br>
+          ${intl.formatMessage({ id: 'poi.dialog.description.latitude' }, { value: latitude })}</br>
+          ${intl.formatMessage({ id: 'poi.dialog.description.height' }, { value: height })}
         `}
       />
     }
