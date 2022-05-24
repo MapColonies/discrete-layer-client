@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
@@ -118,6 +118,8 @@ const getLabel = (recordType: RecordType): string => {
 export const EntityDialog: React.FC<EntityDialogProps> = observer(
   (props: EntityDialogProps) => {
 
+    const dialogContainerRef = useRef<HTMLDivElement>(null);
+
     const decideMode = useCallback(()=>{
       if(props.isSelectedLayerUpdateMode === true && props.layerRecord) {
         return Mode.UPDATE;
@@ -155,24 +157,27 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     useLayoutEffect(() => {
       const CONTENT_HEIGHT_VAR_NAME = '--content-height';
-      const baseContentHeight = getComputedStyle(document.documentElement).getPropertyValue('--base-content-height');
-      const currentIngestionFieldsHeight = getComputedStyle(document.documentElement).getPropertyValue('--ingestion-fields-height');
-      const currentUpdateHeaderHeight = getComputedStyle(document.documentElement).getPropertyValue('--update-layer-header-height');
-
-      switch(mode){
-        case Mode.NEW:
-          document.documentElement.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentIngestionFieldsHeight})`);
-          break;
-        case Mode.UPDATE:
-          document.documentElement.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentUpdateHeaderHeight} - ${currentIngestionFieldsHeight})`);        
-          break;
-
-        default:
-          document.documentElement.style.setProperty(CONTENT_HEIGHT_VAR_NAME, baseContentHeight);
-          break;
+      /* eslint-disable */
+      if(dialogContainerRef.current !== null){
+        const baseContentHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--base-content-height');
+        const currentIngestionFieldsHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--ingestion-fields-height');
+        const currentUpdateHeaderHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--update-layer-header-height');
+  
+        switch(mode){
+          case Mode.NEW:
+            dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentIngestionFieldsHeight})`);
+            break;
+          case Mode.UPDATE:
+            dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentUpdateHeaderHeight} - ${currentIngestionFieldsHeight})`);        
+            break;
+  
+          default:
+            dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, baseContentHeight);
+            break;
+        }
       }
       
-    }, [mode])
+    }, [mode, dialogContainerRef.current])
 
     const ingestionFields =
       layerRecord.__typename !== 'BestRecord'
@@ -402,7 +407,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     };
 
     return (
-      <Box id="entityDialog">
+      <div id="entityDialog" ref={dialogContainerRef}>
         <Dialog open={isOpen} preventOutsideDismiss={true}>
           <DialogTitle>
             {dialogTitle}
@@ -448,7 +453,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             />
           </DialogContent>
         </Dialog>
-      </Box>
+      </div>
     );
   }
 );
