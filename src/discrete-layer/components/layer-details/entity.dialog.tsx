@@ -3,7 +3,7 @@ import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
@@ -145,6 +145,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [descriptors, setDescriptors] = useState<any[]>([]);
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
+    const [isAllInfoReady, setIsAllInfoReady] = useState<boolean>(false);
 
     const dialogTitleParam = recordType;
     const dialogTitleParamTranslation = intl.formatMessage({
@@ -154,6 +155,12 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       { id: `general.title.${(mode as string).toLowerCase()}` },
       { value: dialogTitleParamTranslation }
     );
+
+    useEffect(()=>{
+      if(!isEmpty(descriptors) && !isEmpty(layerRecord)) {
+        setIsAllInfoReady(true);
+      }
+    }, [descriptors, layerRecord])
 
     useLayoutEffect(() => {
       const CONTENT_HEIGHT_VAR_NAME = '--content-height';
@@ -420,37 +427,45 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             />
           </DialogTitle>
           <DialogContent className="dialogBody">
-          {mode === Mode.UPDATE && <UpdateLayerHeader />}
-            <EntityForm
-              mode={mode}
-              entityDescriptors={
-                store.discreteLayersStore
-                  .entityDescriptors as EntityDescriptorModelType[]
-              }
-              ingestionFields={ingestionFields}
-              recordType={recordType}
-              layerRecord={ mode === Mode.UPDATE ? getRecordForUpdate(props.layerRecord as LayerMetadataMixedUnion, layerRecord, descriptors) : layerRecord }
-              yupSchema={
-                Yup.object({
+            {mode === Mode.UPDATE && <UpdateLayerHeader />}
+            {isAllInfoReady && (
+              <EntityForm
+                mode={mode}
+                entityDescriptors={
+                  store.discreteLayersStore
+                    .entityDescriptors as EntityDescriptorModelType[]
+                }
+                ingestionFields={ingestionFields}
+                recordType={recordType}
+                layerRecord={
+                  mode === Mode.UPDATE
+                    ? getRecordForUpdate(
+                        props.layerRecord as LayerMetadataMixedUnion,
+                        layerRecord,
+                        descriptors
+                      )
+                    : layerRecord
+                }
+                yupSchema={Yup.object({
                   ...schema,
-                })
-              }
-              onSubmit={(values): void => {
-                setInputValues(values);
+                })}
+                onSubmit={(values): void => {
+                  setInputValues(values);
+                  // eslint-disable-next-line
+                  const vestSuite = suite(
+                    descriptors as FieldConfigModelType[],
+                    values
+                  );
+                  // eslint-disable-next-line
+                  setVestValidationResults(vestSuite.get());
+                }}
+                vestValidationResults={vestValidationResults}
                 // eslint-disable-next-line
-                const vestSuite = suite(
-                  descriptors as FieldConfigModelType[],
-                  values
-                );
-                // eslint-disable-next-line
-                setVestValidationResults(vestSuite.get());
-              }}
-              vestValidationResults={vestValidationResults}
-              // eslint-disable-next-line
-              mutationQueryError={mutationQuery.error}
-              mutationQueryLoading={mutationQuery.loading}
-              closeDialog={closeDialog}
-            />
+                mutationQueryError={mutationQuery.error}
+                mutationQueryLoading={mutationQuery.loading}
+                closeDialog={closeDialog}
+              />
+            )}
           </DialogContent>
         </Dialog>
       </div>
