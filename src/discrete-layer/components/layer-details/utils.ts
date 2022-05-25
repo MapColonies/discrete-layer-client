@@ -172,6 +172,30 @@ export const removeEmptyObjFields = (
   return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
 };
 
+export const transformEntityToFormFields = (
+  layerRecord: LayerMetadataMixedUnion | LinkModelType
+): Record<string, unknown> => {
+  const transformedFields = {...layerRecord};
+
+  for (const fieldName of Object.keys(layerRecord)) {
+    const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+
+    switch(basicType) {
+      case 'string[]':
+      case 'sensors':
+        /* eslint-disable */
+        // @ts-ignore
+        transformedFields[fieldName] = transformedFields[fieldName]?.join(', ');
+        /* eslint-enable */
+      break;
+      default:
+      break;
+    }
+  }
+
+  return transformedFields;
+};
+
 export const transformFormFieldsToEntity = (
   fields: Record<string, unknown>,
   layerRecord: LayerMetadataMixedUnion | LinkModelType

@@ -59,11 +59,7 @@ export const getValuePresentor = (
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
     case 'string[]': {
-      let strVal = value;
-      if(Array.isArray(value)){
-        strVal = value.join(', ');
-      }
-      return <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={strVal as string} formik={formik}></StringValuePresentorComponent>
+      return <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
     }
     case 'json':
       return (
@@ -86,13 +82,8 @@ export const getValuePresentor = (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
     case 'sensors':{
-      const sensors = value as string[];
-      let sensorsVal = '';
-      if(Array.isArray(sensors)) {
-        sensorsVal = sensors.join(',');
-      }
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={sensorsVal} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     }
     case 'DataType':

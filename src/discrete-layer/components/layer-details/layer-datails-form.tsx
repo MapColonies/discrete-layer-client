@@ -32,6 +32,7 @@ import {
   transformFormFieldsToEntity,
   extractUpdateRelatedFieldNames,
   getFlatEntityDescriptors,
+  transformEntityToFormFields,
 } from './utils';
 
 import './layer-details-form.css';
@@ -194,9 +195,11 @@ const InnerForm = (
 
     resetForm();
     setValues({
-      ...values,
+      ...transformEntityToFormFields({
+        ...values,
+        ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
+      }),
       ...ingestionFields,
-      ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
     });
 
     if (metadata.error !== null) {
@@ -303,7 +306,7 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     return {
       directory: '',
       fileNames: '',
-      ...props.layerRecord,
+      ...transformEntityToFormFields(props.layerRecord)
     };
   },
 
