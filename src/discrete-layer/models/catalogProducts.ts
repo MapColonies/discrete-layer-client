@@ -14,7 +14,10 @@ const {
   VECTOR_BEST,
   DTM,
   DSM,
-  QUANTIZED_MESH,
+  QUANTIZED_MESH_DTM,
+  QUANTIZED_MESH_DSM,
+  QUANTIZED_MESH_DTM_BEST,
+  QUANTIZED_MESH_DSM_BEST,
   PHOTO_REALISTIC_3D,
   POINT_CLOUD,
 } = ProductType;
@@ -23,12 +26,17 @@ interface IconsAndTooltips {
   [key: string]: [string, string, string] | undefined;
 }
 
+// A list of all catalog entity types & product types
+// Each entry is described by a triplet of:
+// icon, tooltip, parent
+// (order is important!)
 export const iconsAndTooltips: IconsAndTooltips = {
   'LayerRasterRecord': ['mc-icon-Map-Orthophoto', 'Orthophoto', ''],
   'Layer3DRecord': ['mc-icon-Map-3D', '3D', ''],
   'LayerDemRecord': ['mc-icon-Map-Terrain', 'DEM', ''],
   'BestRecord': ['mc-icon-Bests', 'BEST', ''],
-  'VectorBestRecord': ['mc-icon-Map-Vector', VECTOR_BEST, ''], 
+  'VectorBestRecord': ['mc-icon-Map-Vector', 'Vector Raster BEST', ''],
+  'QuantizedMeshBestRecord': ['mc-icon-Map-Terrain', 'Quantized Mesh BEST', ''],
   [ORTHOPHOTO]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO, 'LayerRasterRecord'],
   [ORTHOPHOTO_HISTORY]: ['mc-icon-Map-Orthophoto', ORTHOPHOTO_HISTORY, 'LayerRasterRecord'],
   [ORTHOPHOTO_BEST]: ['mc-icon-Map-Best-Orthophoto', ORTHOPHOTO_BEST, 'BestRecord'],
@@ -38,10 +46,13 @@ export const iconsAndTooltips: IconsAndTooltips = {
   [RASTER_AID_BEST]: ['mc-icon-Map-Best-Raster', RASTER_AID_BEST, 'BestRecord'],
   [RASTER_VECTOR]: ['mc-icon-Map-Vector', RASTER_VECTOR, 'LayerRasterRecord'],
   [RASTER_VECTOR_BEST]: ['mc-icon-Map-Vector', RASTER_VECTOR_BEST, 'BestRecord'],
-  [VECTOR_BEST]: ['mc-icon-Map-Vector', VECTOR_BEST, 'BestRecord'],
+  [VECTOR_BEST]: ['mc-icon-Map-Vector', VECTOR_BEST, 'VectorBestRecord'],
   [DTM]: ['mc-icon-Map-Terrain', DTM, 'LayerDemRecord'],
   [DSM]: ['mc-icon-Map-Terrain', DSM, 'LayerDemRecord'],
-  [QUANTIZED_MESH]: ['mc-icon-Map-Terrain', QUANTIZED_MESH, 'LayerDemRecord'],
+  [QUANTIZED_MESH_DTM]: ['mc-icon-Map-Terrain', QUANTIZED_MESH_DTM, 'LayerDemRecord'],
+  [QUANTIZED_MESH_DSM]: ['mc-icon-Map-Terrain', QUANTIZED_MESH_DSM, 'LayerDemRecord'],
+  [QUANTIZED_MESH_DTM_BEST]: ['mc-icon-Map-Terrain', QUANTIZED_MESH_DTM_BEST, 'QuantizedMeshBestRecord'],
+  [QUANTIZED_MESH_DSM_BEST]: ['mc-icon-Map-Terrain', QUANTIZED_MESH_DSM_BEST, 'QuantizedMeshBestRecord'],
   [PHOTO_REALISTIC_3D]: ['mc-icon-Map-3D', PHOTO_REALISTIC_3D, 'Layer3DRecord'],
   [POINT_CLOUD]: ['mc-icon-Map-3D', POINT_CLOUD, 'Layer3DRecord'],
 };

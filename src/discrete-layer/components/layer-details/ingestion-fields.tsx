@@ -85,59 +85,63 @@ const IngestionInputs: React.FC<{
 }> = ({ recordType, fields, values, selection, formik }) => {
   return (
     <>
-      {fields.map((field: IRecordFieldInfo, index: number) => {
-        return (
-          <Box className="ingestionField" key={field.fieldName}>
-            <FieldLabelComponent
-              value={field.label}
-              isRequired={true}
-              customClassName={`${field.fieldName as string}Spacer`}
-            />
-            <Box className="detailsFieldValue">
-              {values[index] === '' && (
-                <Typography tag="span" className="disabledText">
-                  {'<'}
-                  <FormattedMessage id="general.empty.text" />
-                  {'>'}
-                </Typography>
-              )}
-              {index === DIRECTORY && values[index] !== '' && (
-                <Box>{values[index]}</Box>
-              )}
-              {index === FILES && values[index] !== '' && (
-                <Box className="filesList">
-                  {selection.files.map((file: FileData, idx: number):
-                    | JSX.Element
-                    | undefined => {
-                    if (
-                      idx < NUM_OF_ROWS - 1 ||
-                      (selection.files.length === NUM_OF_ROWS &&
-                        idx === NUM_OF_ROWS - 1)
-                    ) {
-                      return <FileItem key={file.id} file={file} />;
-                    }
-                    if (
-                      selection.files.length > NUM_OF_ROWS &&
-                      idx === NUM_OF_ROWS - 1
-                    ) {
-                      return <MoreItem key={file.id} files={selection.files} />;
-                    }
-                  })}
-                </Box>
-              )}
-            </Box>
-            <Box className="hiddenField">
-              <StringValuePresentorComponent
-                mode={Mode.NEW}
-                fieldInfo={field}
-                // @ts-ignore
-                value={formik.getFieldProps(field.fieldName).value as string}
-                formik={formik}
+      {
+        fields.map((field: IRecordFieldInfo, index: number) => {
+          return (
+            <Box className="ingestionField" key={field.fieldName}>
+              <FieldLabelComponent
+                value={field.label}
+                isRequired={true}
+                customClassName={`${field.fieldName as string}Spacer`}
               />
+              <Box className="detailsFieldValue">
+                {
+                  values[index] === '' &&
+                  <Typography tag="span" className="disabledText">
+                    {'<'}
+                    <FormattedMessage id="general.empty.text" />
+                    {'>'}
+                  </Typography>
+                }
+                {
+                  index === DIRECTORY && values[index] !== '' &&
+                  <Box>{values[index]}</Box>
+                }
+                {
+                  index === FILES && values[index] !== '' &&
+                  <Box className="filesList">
+                    {
+                      selection.files.map((file: FileData, idx: number): JSX.Element | undefined => {
+                        if (
+                          idx < NUM_OF_ROWS - 1 ||
+                          (selection.files.length === NUM_OF_ROWS && idx === NUM_OF_ROWS - 1)
+                        ) {
+                          return <FileItem key={file.id} file={file} />;
+                        }
+                        if (
+                          selection.files.length > NUM_OF_ROWS &&
+                          idx === NUM_OF_ROWS - 1
+                        ) {
+                          return <MoreItem key={file.id} files={selection.files} />;
+                        }
+                      })
+                    }
+                  </Box>
+                }
+              </Box>
+              <Box className="hiddenField">
+                <StringValuePresentorComponent
+                  mode={Mode.NEW}
+                  fieldInfo={field}
+                  // @ts-ignore
+                  value={formik.getFieldProps(field.fieldName).value as string}
+                  formik={formik}
+                />
+              </Box>
             </Box>
-          </Box>
-        );
-      })}
+          );
+        })
+      }
     </>
   );
 };

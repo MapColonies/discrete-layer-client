@@ -16,11 +16,13 @@ import {
   LinkModelType,
   OperationType,
   ProductType,
+  QuantizedMeshBestRecordModel,
   RecordType,
   UpdateRulesModelType,
   UpdateRulesOperationModelType,
   UpdateRulesValueModelType,
-  ValidationConfigModelType
+  ValidationConfigModelType,
+  VectorBestRecordModel
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-info';
@@ -29,7 +31,8 @@ import {
   LayerRasterRecordModelArray,
   Layer3DRecordModelArray,
   LayerDemRecordModelArray,
-  VectorBestRecordModelArray
+  VectorBestRecordModelArray,
+  QuantizedMeshBestRecordModelArray
 } from './entity-types-keys';
 import moment, { unitOfTime } from 'moment';
 
@@ -39,14 +42,17 @@ export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entit
     case 'LayerDemRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswDemCatalogRecord')
       break;
-      case 'VectorBestRecord':
-        entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswVectorBestCatalogRecord')
-      break;
     case 'Layer3DRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
       break;
     case 'BestRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswBestCatalogRecord')
+      break;
+    case 'VectorBestRecord':
+      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswVectorBestCatalogRecord')
+      break;
+    case 'QuantizedMeshBestRecord':
+      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswQuantizedMeshBestCatalogRecord')
       break;
     default:
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
@@ -77,6 +83,12 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string): string
       break;
     case 'BestRecord':
       recordModel = BestRecordModel;
+      break;
+    case 'VectorBestRecord':
+      recordModel = VectorBestRecordModel;
+      break;
+    case 'QuantizedMeshBestRecord':
+      recordModel = QuantizedMeshBestRecordModel;
       break;
     case 'Link':
       recordModel = LinkModel;
@@ -122,7 +134,7 @@ export const getInfoMsgValidationType = (msgCode: string): ValidationTypeName =>
 
 export const cleanUpEntity = (
   data: Record<string,unknown>,
-  entityKeys: BestRecordModelArray | LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | VectorBestRecordModelArray
+  entityKeys: LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | BestRecordModelArray | VectorBestRecordModelArray | QuantizedMeshBestRecordModelArray
 ): Record<string,unknown> => {
   const keysNotInModel = Object.keys(data).filter(key => {
     // @ts-ignore
@@ -133,9 +145,9 @@ export const cleanUpEntity = (
 
 const checkIsBest = (entity: ILayerImage): boolean => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST } = ProductType;
+  const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST } = ProductType;
 
-  const bestProductTypes: ProductType[] = [ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST];
+  const bestProductTypes: ProductType[] = [ ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST ];
 
   return bestProductTypes.includes(entity.productType as ProductType);
 };

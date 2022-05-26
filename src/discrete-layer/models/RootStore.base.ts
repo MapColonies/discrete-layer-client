@@ -21,6 +21,8 @@ import { LayerDemRecordModel, LayerDemRecordModelType } from "./LayerDemRecordMo
 import { layerDemRecordModelPrimitives, LayerDemRecordModelSelector } from "./LayerDemRecordModel.base"
 import { VectorBestRecordModel, VectorBestRecordModelType } from "./VectorBestRecordModel"
 import { vectorBestRecordModelPrimitives, VectorBestRecordModelSelector } from "./VectorBestRecordModel.base"
+import { QuantizedMeshBestRecordModel, QuantizedMeshBestRecordModelType } from "./QuantizedMeshBestRecordModel"
+import { quantizedMeshBestRecordModelPrimitives, QuantizedMeshBestRecordModelSelector } from "./QuantizedMeshBestRecordModel.base"
 import { StringArrayObjectTypeModel, StringArrayObjectTypeModelType } from "./StringArrayObjectTypeModel"
 import { stringArrayObjectTypeModelPrimitives, StringArrayObjectTypeModelSelector } from "./StringArrayObjectTypeModel.base"
 import { EntityDescriptorModel, EntityDescriptorModelType } from "./EntityDescriptorModel"
@@ -291,7 +293,8 @@ type Refs = {
   layerDemRecords: ObservableMap<string, LayerDemRecordModelType>,
   bestRecords: ObservableMap<string, BestRecordModelType>,
   entityDescriptors: ObservableMap<string, EntityDescriptorModelType>,
-  vectorBestRecords: ObservableMap<string, VectorBestRecordModelType>
+  vectorBestRecords: ObservableMap<string, VectorBestRecordModelType>,
+  quantizedMeshBestRecords: ObservableMap<string, QuantizedMeshBestRecordModelType>
 }
 
 
@@ -328,14 +331,15 @@ mutateJobRetry="mutateJobRetry"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
     layerDemRecords: types.optional(types.map(types.late((): any => LayerDemRecordModel)), {}),
     bestRecords: types.optional(types.map(types.late((): any => BestRecordModel)), {}),
     entityDescriptors: types.optional(types.map(types.late((): any => EntityDescriptorModel)), {}),
-    vectorBestRecords: types.optional(types.map(types.late((): any => VectorBestRecordModel)), {})
+    vectorBestRecords: types.optional(types.map(types.late((): any => VectorBestRecordModel)), {}),
+    quantizedMeshBestRecords: types.optional(types.map(types.late((): any => QuantizedMeshBestRecordModel)), {})
   })
   .actions(self => ({
     queryCapabilities(variables: { params: CapabilitiesLayersSearchParams }, resultSelector: string | ((qb: CapabilityModelSelector) => CapabilityModelSelector) = capabilityModelPrimitives.toString(), options: QueryOptions = {}) {

@@ -6,10 +6,10 @@ interface ILayerImageCellRendererParams {
   data: ILayerImage;
 }
 
-export const EntityTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ data }) => {
+export const ProductTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ data }) => {
 
   return (
-    <TypeIcon typeName={data.__typename}/>
+    <TypeIcon typeName={data.productType as string}/>
   );
   
 };

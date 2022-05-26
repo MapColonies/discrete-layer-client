@@ -18,7 +18,7 @@ import { usePrevious } from '../../../common/hooks/previous.hook';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
-import { EntityTypeRenderer } from '../../../common/components/grid/cell-renderer/entity-type.cell-renderer';
+import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { ILayerImage } from '../../models/layerImage';
@@ -134,7 +134,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerName: '',
       width: 20,
       field: '__typename',
-      cellRenderer: 'entityTypeRenderer',
+      cellRenderer: 'productTypeRenderer',
       cellRendererParams: {
         style: {
           display: 'flex',
@@ -190,7 +190,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerFootprintRenderer: HeaderFootprintRenderer,
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
-      entityTypeRenderer: EntityTypeRenderer,
+      productTypeRenderer: ProductTypeRenderer,
       customTooltip: CustomTooltip,
     },
     tooltipShowDelay: 0,
