@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.11](https://github.com/MapColonies/discrete-layer-client/compare/v1.15.10...v1.15.11) (2022-05-25)
+
+
+### Bug Fixes
+
+* model string array fields treatment ([24b1909](https://github.com/MapColonies/discrete-layer-client/commit/24b1909d165a846669bf5eb16e4e07fb71cbfafc))
+
 ### [1.15.10](https://github.com/MapColonies/discrete-layer-client/compare/v1.15.9...v1.15.10) (2022-05-24)
 
 

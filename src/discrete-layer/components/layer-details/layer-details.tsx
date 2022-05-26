@@ -59,9 +59,9 @@ export const getValuePresentor = (
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
     case 'string[]': {
-      let strVal = fieldValue;
-      if(Array.isArray(fieldValue)){
-        strVal = fieldValue.join(', ');
+      let strVal = value;
+      if(Array.isArray(value)){
+        strVal = value.join(', ');
       }
       return <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={strVal as string} formik={formik}></StringValuePresentorComponent>
     }
