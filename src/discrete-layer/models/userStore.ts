@@ -66,7 +66,7 @@ const ROLES: IRole[] = [
       'entity_action.LayerDemRecord.edit': false,
       'entity_action.BestRecord.edit': true,
       'entity_action.VectorBestRecord.edit': true,
-      'entity_action.LayerRasterRecord.update': true,
+      'entity_action.LayerRasterRecord.update': false,
       'entity_action.LayerRasterRecord.delete': true,
       'entity_action.Layer3DRecord.delete': true,
       'entity_action.LayerDemRecord.delete': true,
