@@ -20,7 +20,6 @@ import {
   RecordType,
   UpdateRulesModelType,
   UpdateRulesOperationModelType,
-  UpdateRulesValueModelType,
   ValidationConfigModelType,
   VectorBestRecordModel
 } from '../../models';

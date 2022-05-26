@@ -5,7 +5,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { UpdateRulesValueModel, UpdateRulesValueModelType } from "./UpdateRulesValueModel"
+import { UpdateRulesValueModel } from "./UpdateRulesValueModel"
 import { UpdateRulesValueModelSelector } from "./UpdateRulesValueModel.base"
 import { RootStoreType } from "./index"
 

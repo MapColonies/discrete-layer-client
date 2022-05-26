@@ -10,6 +10,7 @@ export { selectFromUpdateRulesValue, updateRulesValueModelPrimitives, UpdateRule
 /**
  * UpdateRulesValueModel
  */
+// eslint-disable-next-line
 export const UpdateRulesValueModel = UpdateRulesValueModelBase
   .actions(self => ({
     // This is an auto-generated example action.

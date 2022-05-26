@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import bbox from '@turf/bbox';
 import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
-import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType, RecordType } from '../../models';
+import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
 export const generateLayerRectangle = (
