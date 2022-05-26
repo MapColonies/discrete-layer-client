@@ -27,7 +27,13 @@ import {
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
-import { removeEmptyObjFields, transformFormFieldsToEntity } from './utils';
+import {
+  removeEmptyObjFields,
+  transformFormFieldsToEntity,
+  extractUpdateRelatedFieldNames,
+  getFlatEntityDescriptors,
+  transformEntityToFormFields,
+} from './utils';
 
 import './layer-details-form.css';
 
@@ -177,17 +183,23 @@ const InnerForm = (
     metadata: MetadataFile
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
+    
+    // Check update related fields in metadata obj
+    const updateFields = extractUpdateRelatedFieldNames(metadata.recordModel, getFlatEntityDescriptors(layerRecord, entityDescriptors));
 
     for (const [key, val] of Object.entries(metadata.recordModel)) {
-      if (val === null) {
+      if (val === null || (updateFields.includes(key) && mode === Mode.UPDATE)) {
         delete ((metadata.recordModel as unknown) as Record<string, unknown>)[key];
       }
     }
+
     resetForm();
     setValues({
-      ...values,
+      ...transformEntityToFormFields({
+        ...values,
+        ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
+      }),
       ...ingestionFields,
-      ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
     });
 
     if (metadata.error !== null) {
@@ -201,10 +213,10 @@ const InnerForm = (
         onSubmit={handleSubmit}
         autoComplete={'off'}
         className="form"
-        noValidate
+        // noValidate
       >
         {
-          mode === Mode.NEW &&
+          (mode === Mode.NEW || mode === Mode.UPDATE) &&
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
@@ -213,11 +225,11 @@ const InnerForm = (
             values={values}
           />
         }
-        {
-          mode === Mode.NEW && !isSelectedFiles &&
-          <Box className="curtain"></Box>
-        }
         <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
+          {
+            (mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles &&
+            <Box className="curtain"></Box>
+          }
           <LayersDetailsComponent
             entityDescriptors={entityDescriptors}
             layerRecord={layerRecord}
@@ -294,7 +306,7 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     return {
       directory: '',
       fileNames: '',
-      ...props.layerRecord,
+      ...transformEntityToFormFields(props.layerRecord)
     };
   },
 

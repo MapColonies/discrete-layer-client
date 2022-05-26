@@ -31,6 +31,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   } = props;
   
   const layerToPresent = store.discreteLayersStore.selectedLayer;
+  const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
   const editingBest = store.bestStore.editingBest;
 
   const handleEditEntityDialogClick = (): void => {
@@ -64,6 +65,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
             isOpen={isEditEntityDialogOpen}
             onSetOpen={setEditEntityDialogOpen}
             layerRecord={layerToPresent ?? editingBest}
+            isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         }
         <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>

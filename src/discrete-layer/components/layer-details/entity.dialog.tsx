@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
@@ -26,7 +26,7 @@ import {
   FieldConfigModelType,
   ProductType,
   ValidationValueType,
-  LayerDemRecordModel,
+  LayerDemRecordModel
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import {
@@ -41,11 +41,12 @@ import {
   LayerRasterRecordModelKeys,
 } from './entity-types-keys';
 import { IRecordFieldInfo } from './layer-details.field-info';
-import { getFlatEntityDescriptors, getValidationType } from './utils';
+import { getFlatEntityDescriptors, getRecordForUpdate, getValidationType } from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
 
 import './entity.dialog.css';
+import { LayersDetailsComponent } from './layer-details';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
@@ -57,6 +58,7 @@ interface EntityDialogProps {
   onSetOpen: (open: boolean) => void;
   recordType?: RecordType;
   layerRecord?: ILayerImage | null;
+  isSelectedLayerUpdateMode?: boolean;
 }
 
 const buildRecord = (recordType: RecordType): ILayerImage => {
@@ -105,6 +107,7 @@ const buildFieldInfo = (): IRecordFieldInfo => {
   return recordFieldInfo as IRecordFieldInfo;
 };
 
+
 const getLabel = (recordType: RecordType): string => {
   if (recordType === RecordType.RECORD_3D) {
     return 'field-names.3d.fileNames';
@@ -114,13 +117,25 @@ const getLabel = (recordType: RecordType): string => {
 
 export const EntityDialog: React.FC<EntityDialogProps> = observer(
   (props: EntityDialogProps) => {
-    const { isOpen, onSetOpen, recordType } = props;
+
+    const dialogContainerRef = useRef<HTMLDivElement>(null);
+
+    const decideMode = useCallback(()=>{
+      if(props.isSelectedLayerUpdateMode === true && props.layerRecord) {
+        return Mode.UPDATE;
+      }
+
+      return !props.layerRecord ? Mode.NEW : Mode.EDIT;
+    },[])
+
+    const { isOpen, onSetOpen } = props;   
+    const [recordType] = useState<RecordType>(props.recordType ?? (props.layerRecord?.type as RecordType));
+    const [mode] = useState<Mode>(decideMode());
     const [layerRecord] = useState<LayerMetadataMixedUnion>(
-      props.layerRecord
+      props.layerRecord && mode !== Mode.UPDATE
         ? cloneDeep(props.layerRecord)
-        : buildRecord(recordType as RecordType)
+        : buildRecord(recordType)
     );
-    const [mode] = useState<Mode>(!props.layerRecord ? Mode.NEW : Mode.EDIT);
     const mutationQuery = useQuery();
     const store = useStore();
     const intl = useIntl();
@@ -130,8 +145,9 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [descriptors, setDescriptors] = useState<any[]>([]);
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
+    const [isAllInfoReady, setIsAllInfoReady] = useState<boolean>(false);
 
-    const dialogTitleParam = recordType ?? layerRecord.type;
+    const dialogTitleParam = recordType;
     const dialogTitleParamTranslation = intl.formatMessage({
       id: `record-type.${(dialogTitleParam as string).toLowerCase()}.label`,
     });
@@ -139,6 +155,36 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       { id: `general.title.${(mode as string).toLowerCase()}` },
       { value: dialogTitleParamTranslation }
     );
+
+    useEffect(()=>{
+      if(!isEmpty(descriptors) && !isEmpty(layerRecord)) {
+        setIsAllInfoReady(true);
+      }
+    }, [descriptors, layerRecord])
+
+    useLayoutEffect(() => {
+      const CONTENT_HEIGHT_VAR_NAME = '--content-height';
+      /* eslint-disable */
+      if(dialogContainerRef.current !== null){
+        const baseContentHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--base-content-height');
+        const currentIngestionFieldsHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--ingestion-fields-height');
+        const currentUpdateHeaderHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--update-layer-header-height');
+  
+        switch(mode){
+          case Mode.NEW:
+            dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentIngestionFieldsHeight})`);
+            break;
+          case Mode.UPDATE:
+            dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentUpdateHeaderHeight} - ${currentIngestionFieldsHeight})`);        
+            break;
+  
+          default:
+            dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, baseContentHeight);
+            break;
+        }
+      }
+      
+    }, [mode, dialogContainerRef.current])
 
     const ingestionFields =
       layerRecord.__typename !== 'BestRecord'
@@ -154,7 +200,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             {
               ...buildFieldInfo(),
               fieldName: 'fileNames',
-              label: getLabel(recordType as RecordType),
+              label: getLabel(recordType),
               isRequired: true,
               isAutoGenerated: false,
               infoMsgCode: ['info-general-tooltip.required'],
@@ -188,6 +234,11 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         const fieldName: string = field.fieldName as string;
         switch (mode) {
           case Mode.NEW:
+            if ((field.isRequired as boolean) && field.isAutoGenerated !== true) {
+              yupSchema[fieldName] = getYupRequiredFieldConfig(field);
+            }
+            break;
+          case Mode.UPDATE:
             if ((field.isRequired as boolean) && field.isAutoGenerated !== true) {
               yupSchema[fieldName] = getYupRequiredFieldConfig(field);
             }
@@ -343,8 +394,27 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 
+    const UpdateLayerHeader = (): JSX.Element => {
+      return (
+        <Box id="updateLayerHeader">
+          <Box id="updateLayerHeaderContent">
+            <LayersDetailsComponent
+              className="detailsPanelProductView"
+              entityDescriptors={
+                store.discreteLayersStore
+                  .entityDescriptors as EntityDescriptorModelType[]
+              }
+              layerRecord={props.layerRecord}
+              isBrief={true}
+              mode={Mode.VIEW}
+            />
+          </Box>
+        </Box>
+      );
+    };
+
     return (
-      <Box id="entityDialog">
+      <div id="entityDialog" ref={dialogContainerRef}>
         <Dialog open={isOpen} preventOutsideDismiss={true}>
           <DialogTitle>
             {dialogTitle}
@@ -357,39 +427,48 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             />
           </DialogTitle>
           <DialogContent className="dialogBody">
-            <EntityForm
-              mode={mode}
-              entityDescriptors={
-                store.discreteLayersStore
-                  .entityDescriptors as EntityDescriptorModelType[]
-              }
-              ingestionFields={ingestionFields}
-              recordType={recordType as RecordType}
-              layerRecord={layerRecord}
-              yupSchema={
-                Yup.object({
+            {mode === Mode.UPDATE && <UpdateLayerHeader />}
+            {isAllInfoReady && (
+              <EntityForm
+                mode={mode}
+                entityDescriptors={
+                  store.discreteLayersStore
+                    .entityDescriptors as EntityDescriptorModelType[]
+                }
+                ingestionFields={ingestionFields}
+                recordType={recordType}
+                layerRecord={
+                  mode === Mode.UPDATE
+                    ? getRecordForUpdate(
+                        props.layerRecord as LayerMetadataMixedUnion,
+                        layerRecord,
+                        descriptors
+                      )
+                    : layerRecord
+                }
+                yupSchema={Yup.object({
                   ...schema,
-                })
-              }
-              onSubmit={(values): void => {
-                setInputValues(values);
+                })}
+                onSubmit={(values): void => {
+                  setInputValues(values);
+                  // eslint-disable-next-line
+                  const vestSuite = suite(
+                    descriptors as FieldConfigModelType[],
+                    values
+                  );
+                  // eslint-disable-next-line
+                  setVestValidationResults(vestSuite.get());
+                }}
+                vestValidationResults={vestValidationResults}
                 // eslint-disable-next-line
-                const vestSuite = suite(
-                  descriptors as FieldConfigModelType[],
-                  values
-                );
-                // eslint-disable-next-line
-                setVestValidationResults(vestSuite.get());
-              }}
-              vestValidationResults={vestValidationResults}
-              // eslint-disable-next-line
-              mutationQueryError={mutationQuery.error}
-              mutationQueryLoading={mutationQuery.loading}
-              closeDialog={closeDialog}
-            />
+                mutationQueryError={mutationQuery.error}
+                mutationQueryLoading={mutationQuery.loading}
+                closeDialog={closeDialog}
+              />
+            )}
           </DialogContent>
         </Dialog>
-      </Box>
+      </div>
     );
   }
 );

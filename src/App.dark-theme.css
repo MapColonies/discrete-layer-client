@@ -204,6 +204,7 @@ body[dir='rtl'] .dark-theme .datePresentor button.MuiButtonBase-root.MuiIconButt
   color: var(--mdc-theme-text-icon-on-dark);
   font-size: 16px;
   font-weight: 600;
+  height: var(--dialog-title-height);
 }
 
 /* SCROLLBAR CUSTOMIZATIONS */
