@@ -29,7 +29,7 @@ export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = obs
       store.bestStore.editBest(undefined);
       store.bestStore.setLayersList([]);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     [onSetOpen]
   );
   

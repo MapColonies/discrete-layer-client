@@ -19,7 +19,7 @@ interface PriorityOption {
 }
 interface IPriorityCellRendererParams extends ICellRendererParams {
   optionsData: PriorityOption[];
-  onChange: (e: Record<string, any>, jobData: ICellRendererParams) => void;
+  onChange: (e: React.FormEvent<HTMLSelectElement>, jobData: ICellRendererParams) => void;
 }
 
 export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
@@ -52,7 +52,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
     ) as PriorityOption;
 
     return { icon: selectedOption.icon, color: selectedOption.iconColor };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   const [icon, setIcon] = useState(getIconObjForVal(value));

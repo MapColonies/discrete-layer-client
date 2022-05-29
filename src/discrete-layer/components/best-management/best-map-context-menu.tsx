@@ -44,7 +44,7 @@ export const BestMapContextMenu: React.FC<IBestMapContextMenuData> = ({
     else {
       return [];
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   const flatPermittedActions = (entityPermittedActions as IActionGroup[])[0].group;

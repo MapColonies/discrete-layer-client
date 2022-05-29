@@ -90,7 +90,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
         }
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [layersImages, mapViewer, prevLayersImages]);
 
   useLayoutEffect(() => {
@@ -113,7 +113,7 @@ export const BestLayersPresentor: React.FC = observer((props) => {
     if (store.bestStore.importedLayers) {
       addLayersToMap(store.bestStore.importedLayers);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [store.bestStore.importedLayers]);
   
   return (

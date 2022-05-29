@@ -1,5 +1,5 @@
+/* eslint-disable */
 // import { useContext } from 'react';
-// // eslint-disable-next-line
 // import '../../__mocks__/confEnvShim';
 import { useStore } from './RootStore';
 // jest.mock('react', () => {

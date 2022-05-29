@@ -76,7 +76,7 @@ const App: React.FC = () => {
       <RMWCProvider
         typography={{
           body1: 'span',
-          body2: ({ children, ...rest }) => (
+          body2: ({ children, ...rest }): JSX.Element => (
             <span>
               <b>{children}</b>
             </span>

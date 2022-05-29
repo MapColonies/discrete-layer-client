@@ -3,7 +3,7 @@ import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
-import { cloneDeep, isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
@@ -62,7 +62,7 @@ interface EntityDialogProps {
 }
 
 const buildRecord = (recordType: RecordType): ILayerImage => {
-  const record = {} as Record<string, any>;
+  const record = {} as Record<string, unknown>;
   switch (recordType) {
     case RecordType.RECORD_DEM:
       LayerDemRecordModelKeys.forEach((key) => {
@@ -95,7 +95,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
   record.srsName = 'WGS84GEO';
   record.producerName = 'IDFMU';
   record.type = recordType;
-  return record as ILayerImage;
+  return record as unknown as ILayerImage;
 };
 
 const buildFieldInfo = (): IRecordFieldInfo => {
@@ -142,7 +142,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [vestValidationResults, setVestValidationResults] = useState<
       DraftResult
     >({} as DraftResult);
-    const [descriptors, setDescriptors] = useState<any[]>([]);
+    const [descriptors, setDescriptors] = useState<unknown[]>([]);
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
     const [isAllInfoReady, setIsAllInfoReady] = useState<boolean>(false);
@@ -297,7 +297,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         }
       );
       setDescriptors(desc as any[]);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, []);
 
     useEffect(() => {
@@ -378,7 +378,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
           }
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [vestValidationResults]);
 
     const closeDialog = useCallback(() => {
@@ -442,7 +442,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                     ? getRecordForUpdate(
                         props.layerRecord as LayerMetadataMixedUnion,
                         layerRecord,
-                        descriptors
+                        descriptors as FieldConfigModelType[]
                       )
                     : layerRecord
                 }
@@ -457,7 +457,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                     values
                   );
                   // eslint-disable-next-line
-                  setVestValidationResults(vestSuite.get());
+                  setVestValidationResults(get(vestSuite, "get")()) ;
                 }}
                 vestValidationResults={vestValidationResults}
                 // eslint-disable-next-line
