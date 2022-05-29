@@ -14,7 +14,7 @@ export { selectFromCapability, capabilityModelPrimitives, CapabilityModelSelecto
 export const CapabilityModel = CapabilityModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

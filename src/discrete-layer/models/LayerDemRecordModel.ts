@@ -1,6 +1,5 @@
-import { Instance, types } from "mobx-state-tree"
+import { Instance } from "mobx-state-tree"
 import { LayerDemRecordModelBase } from "./LayerDemRecordModel.base"
-import { momentDateType } from "./moment-date.type"
 
 /* The TypeScript type of an instance of LayerDemRecordModel */
 export interface LayerDemRecordModelType extends Instance<typeof LayerDemRecordModel.Type> {}
@@ -15,20 +14,7 @@ export { selectFromLayerDemRecord, layerDemRecordModelPrimitives, LayerDemRecord
 export const LayerDemRecordModel = LayerDemRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))
-  .props({
-    /* eslint-disable */
-    /* tslint:disable */
-    insertDate: types.maybe(momentDateType),
-    updateDate: types.maybe(momentDateType),
-    sourceDateStart: types.maybe(momentDateType),
-    sourceDateEnd: types.maybe(momentDateType),
-    /* tslint:enable */
-    /* eslint-enable */
-    footprintShown: types.union(types.undefined, types.null, types.boolean),
-    order: types.union(types.undefined, types.null, types.number),
-    layerImageShown: types.union(types.undefined, types.null, types.boolean),
-  })

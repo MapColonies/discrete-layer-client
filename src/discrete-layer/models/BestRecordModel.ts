@@ -15,7 +15,7 @@ export { selectFromBestRecord, bestRecordModelPrimitives, BestRecordModelSelecto
 export const BestRecordModel = BestRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

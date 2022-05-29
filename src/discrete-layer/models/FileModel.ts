@@ -14,7 +14,7 @@ export { selectFromFile, fileModelPrimitives, FileModelSelector } from "./FileMo
 export const FileModel = FileModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

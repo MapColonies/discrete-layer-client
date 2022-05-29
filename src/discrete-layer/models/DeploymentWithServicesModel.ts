@@ -14,7 +14,7 @@ export { selectFromDeploymentWithServices, deploymentWithServicesModelPrimitives
 export const DeploymentWithServicesModel = DeploymentWithServicesModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

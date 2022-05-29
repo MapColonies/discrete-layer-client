@@ -14,7 +14,7 @@ export { selectFromLink, linkModelPrimitives, LinkModelSelector } from "./LinkMo
 export const LinkModel = LinkModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

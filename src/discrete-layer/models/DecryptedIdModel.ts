@@ -14,7 +14,7 @@ export { selectFromDecryptedId, decryptedIdModelPrimitives, DecryptedIdModelSele
 export const DecryptedIdModel = DecryptedIdModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

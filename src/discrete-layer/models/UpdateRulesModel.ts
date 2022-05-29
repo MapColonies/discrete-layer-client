@@ -14,7 +14,7 @@ export { selectFromUpdateRules, updateRulesModelPrimitives, UpdateRulesModelSele
 export const UpdateRulesModel = UpdateRulesModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))
