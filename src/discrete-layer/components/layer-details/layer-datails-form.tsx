@@ -213,7 +213,7 @@ const InnerForm = (
         onSubmit={handleSubmit}
         autoComplete={'off'}
         className="form"
-        // noValidate
+        noValidate
       >
         {
           (mode === Mode.NEW || mode === Mode.UPDATE) &&
