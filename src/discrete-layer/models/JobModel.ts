@@ -15,7 +15,7 @@ export { selectFromJob, jobModelPrimitives, JobModelSelector } from "./JobModel.
 export const JobModel = JobModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

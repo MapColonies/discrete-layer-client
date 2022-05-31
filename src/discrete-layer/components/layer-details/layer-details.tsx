@@ -170,7 +170,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
         return renderCategory(category);
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [layerRecord, formik]);
 
   const briefInputs = useMemo(() => {
@@ -184,7 +184,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       })
     );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [layerRecord, formik]);
 
   return (

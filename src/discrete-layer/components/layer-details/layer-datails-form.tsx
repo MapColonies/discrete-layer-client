@@ -52,7 +52,7 @@ interface LayerDetailsFormCustomProps {
   entityDescriptors: EntityDescriptorModelType[];
   layerRecord: LayerMetadataMixedUnion;
   vestValidationResults: DraftResult;
-  mutationQueryError: any;
+  mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
 }
@@ -64,7 +64,7 @@ export interface StatusError {
 }
 
 export interface EntityFormikHandlers extends FormikHandlers {
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  setFieldValue: (field: string, value: unknown, shouldValidate?: boolean) => void;
   setFieldError: (field: string, message: string | undefined) => void;
   setFieldTouched: (field: string, isTouched?: boolean | undefined, shouldValidate?: boolean | undefined) => void;
   setStatus: (status?: StatusError | Record<string, unknown>) => void;
@@ -139,11 +139,11 @@ const InnerForm = (
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
-      handleChange: (e: React.ChangeEvent<any>): void => {
+      handleChange: (e: React.ChangeEvent<unknown>): void => {
         setGraphQLError(undefined);
         handleChange(e);
       },
-      handleBlur: (e: React.FocusEvent<any>): void => {
+      handleBlur: (e: React.FocusEvent<unknown>): void => {
         setGraphQLError(undefined);
         handleBlur(e);
       },
@@ -290,13 +290,13 @@ interface LayerDetailsFormProps {
   entityDescriptors: EntityDescriptorModelType[];
   layerRecord: LayerMetadataMixedUnion;
   yupSchema: OptionalObjectSchema<
-    { [x: string]: Yup.AnySchema<any, any, any> },
+    { [x: string]: Yup.AnySchema<unknown, unknown, unknown> },
     AnyObject,
-    TypeOfShape<{ [x: string]: Yup.AnySchema<any, any, any> }>
+    TypeOfShape<{ [x: string]: Yup.AnySchema<unknown, unknown, unknown> }>
   >;
   onSubmit: (values: Record<string, unknown>) => void;
   vestValidationResults: DraftResult;
-  mutationQueryError: any;
+  mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
 }

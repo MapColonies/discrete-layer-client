@@ -14,7 +14,7 @@ export { selectFromEnumAspects, enumAspectsModelPrimitives, EnumAspectsModelSele
 export const EnumAspectsModel = EnumAspectsModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

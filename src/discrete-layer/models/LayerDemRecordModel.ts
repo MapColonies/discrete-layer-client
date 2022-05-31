@@ -2,6 +2,7 @@ import { Instance, types } from "mobx-state-tree"
 import { LayerDemRecordModelBase } from "./LayerDemRecordModel.base"
 import { momentDateType } from "./moment-date.type"
 
+
 /* The TypeScript type of an instance of LayerDemRecordModel */
 export interface LayerDemRecordModelType extends Instance<typeof LayerDemRecordModel.Type> {}
 
@@ -15,7 +16,7 @@ export { selectFromLayerDemRecord, layerDemRecordModelPrimitives, LayerDemRecord
 export const LayerDemRecordModel = LayerDemRecordModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

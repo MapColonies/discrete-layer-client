@@ -167,7 +167,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (
     onSetOpen(false);
   }, [onSetOpen]);
 
-  const getValidationErrors = (errors: Record<string, any>): Record<string, string[]> => {
+  const getValidationErrors = (errors: Record<string, unknown>): Record<string, string[]> => {
     const validationResults: Record<string, string[]> = {};
     Object.entries(errors).forEach(([key, value]) => {
       validationResults[key] = [ value as string ];
@@ -243,7 +243,7 @@ export const BBoxDialog: React.FC<BBoxDialogProps> = (
                 {
                   isEmpty(formik.errors) &&
                   !isEmpty(formErrors) &&
-                  <ValidationsError errors={getValidationErrors(formErrors)}/>
+                  <ValidationsError errors={getValidationErrors(formErrors as Record<string, unknown>)}/>
                 }
               </Box>
               <Box className="buttons">

@@ -10,11 +10,11 @@ export { selectFromUpdateRulesOperation, updateRulesOperationModelPrimitives, Up
 /**
  * UpdateRulesOperationModel
  */
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const UpdateRulesOperationModel = UpdateRulesOperationModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

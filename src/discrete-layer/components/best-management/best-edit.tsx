@@ -47,7 +47,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setDiscretes(bestDiscretes);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(bestDiscretes as LayerMetadataMixedUnion[]);
       setTimeout(() => {setDiscretes(bestDiscretes);}, IMMEDIATE_EXECUTION);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [newLayersToAdd]);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
       store.discreteLayersStore.setLayersImagesData(layers);
       setDiscretes(layers);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [data, store.bestStore, store.discreteLayersStore]);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     if (!isEmpty(store.bestStore.movedLayer)) {
       setDiscretes(store.bestStore.layersList as LayerRasterRecordModelType[]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [store.bestStore.movedLayer]);
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
     const dirty = !isEqual(current, saved);
     store.bestStore.setIsDirty(dirty);
     return dirty;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [store.bestStore.editingBest]);
 
   const handleImport = (): void => {

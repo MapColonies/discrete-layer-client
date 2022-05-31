@@ -30,7 +30,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
 
   useEffect(() => {
     mapViewer.scene.morphComplete.addEventListener(setTerrainProvider);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   return <></>;

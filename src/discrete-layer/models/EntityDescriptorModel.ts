@@ -14,7 +14,7 @@ export { selectFromEntityDescriptor, entityDescriptorModelPrimitives, EntityDesc
 export const EntityDescriptorModel = EntityDescriptorModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

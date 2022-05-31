@@ -14,7 +14,7 @@ export { selectFromExternalService, externalServiceModelPrimitives, ExternalServ
 export const ExternalServiceModel = ExternalServiceModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))
