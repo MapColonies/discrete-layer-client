@@ -24,9 +24,7 @@ export const LayerDemRecordModel = LayerDemRecordModelBase
     /* eslint-disable */
     /* tslint:disable */
     insertDate: types.maybe(momentDateType),
-    creationDate: types.maybe(momentDateType),
     updateDate: types.maybe(momentDateType),
-    ingestionDate: types.maybe(momentDateType),
     sourceDateStart: types.maybe(momentDateType),
     sourceDateEnd: types.maybe(momentDateType),
     /* tslint:enable */
@@ -34,5 +32,4 @@ export const LayerDemRecordModel = LayerDemRecordModelBase
     footprintShown: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
     layerImageShown: types.union(types.undefined, types.null, types.boolean),
-    isNewlyAddedToBest: types.union(types.undefined, types.null, types.boolean),
   })
