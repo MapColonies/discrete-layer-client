@@ -3,6 +3,7 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep, isEmpty } from 'lodash';
+import moment from 'moment';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
@@ -29,7 +30,6 @@ import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filte
 import { JOB_ENTITY } from './job.types';
 
 import './jobs.dialog.css';
-import moment from 'moment';
 
 const pagination = true;
 const pageSize = 10;

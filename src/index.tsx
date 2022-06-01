@@ -2,13 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // import 'mobx-react-lite/batchingForReactDom';
 import { createHttpClient } from 'mst-gql';
-import './index.css';
 import Axios, { Method } from 'axios';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { StoreProvider, rootStore } from './discrete-layer/models/RootStore';
 import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
+
+import './index.css';
 
 /* eslint-disable */
 const store = rootStore.create(

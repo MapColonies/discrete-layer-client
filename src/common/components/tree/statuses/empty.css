@@ -1,0 +1,6 @@
+.emptyText {
+  color: var(--mdc-theme-text-disabled-on-background);
+  font-weight: 700;
+  font-size: x-large;
+  opacity: 0.5;
+}

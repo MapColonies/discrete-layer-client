@@ -9,6 +9,7 @@ import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { Empty } from '../../../common/components/tree/statuses/empty';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
@@ -171,10 +172,11 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     const layersList = get(dataSearch, 'search') as ILayerImage[];
 
-    if (!isEmpty(layersList)) {
-      const arr: ILayerImage[] = cloneDeep(layersList);
+    const arr: ILayerImage[] = cloneDeep(layersList ?? []);
 
-      store.discreteLayersStore.setLayersImages(arr, false);
+    store.discreteLayersStore.setLayersImages(arr, false);
+
+    if (!isEmpty(layersList)) {
 
       //#region getCapabilities()
 
@@ -269,6 +271,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           // parentDrafts,
         ]
       );
+    } else {
+      setTreeRawData([]);
     }
   }, [dataSearch]);
 
@@ -307,12 +311,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         {
           loading && <Loading/>
         }
+        {
+          !loading && isEmpty(treeRawData) && <Empty/>
+        }
         <Box id="catalogContainer" className="catalogContainer">
           {
-            !loading && <TreeComponent
+            !loading &&
+            !isEmpty(treeRawData) &&
+            <TreeComponent
               treeData={treeRawData}
               onChange={treeData => {
-                console.log('****** UPDATE TREEE DATA *****');
+                console.log('****** UPDATE TREE DATA ******');
                 setTreeRawData(treeData);
               }}
               canDrag={({ node }) => {
