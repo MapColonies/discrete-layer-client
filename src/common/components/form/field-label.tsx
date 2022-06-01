@@ -35,7 +35,7 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
     return (
       <Typography tag="span"><FormattedMessage id={value}/></Typography>
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   return (

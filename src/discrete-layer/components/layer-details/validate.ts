@@ -45,7 +45,7 @@ enforce.extend({
   },
 });
 
-const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): any => {
+const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): unknown => {
 
   const greaterThanOrEquals = (basicType: string, value1: unknown, value2: unknown, validateTime = false): IEnforceRules => {
     switch (basicType) {
@@ -82,7 +82,7 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
     }
   };
 
-  const validate = vest.create((data: Record<string, unknown>): any => {
+  const validate = vest.create((data: Record<string, unknown>): void => {
 
     fieldDescriptor.forEach((field: FieldConfigModelType): void => {
       let value2Compare;

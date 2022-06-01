@@ -14,7 +14,7 @@ export { selectFromAutocompletion, autocompletionModelPrimitives, Autocompletion
 export const AutocompletionModel = AutocompletionModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

@@ -2,7 +2,7 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
@@ -46,7 +46,7 @@ interface JobsDialogProps {
 export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialogProps) => {
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
-  const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,any>>({}); 
+  const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,unknown>>({}); 
   const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
@@ -73,7 +73,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   // eslint-disable-next-line
@@ -115,7 +115,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return {
       [JOB_ENTITY]: actions,
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   useEffect(() => {
@@ -147,17 +147,16 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [updateTaskPayload, store]);
 
   useEffect(() => {
-    if (mutationQuery.error) {
+    if (!isEmpty(mutationQuery.error)) {
       gridApi?.refreshCells({
         suppressFlash: true,
         force: true
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mutationQuery.error]);
 
   useEffect(() => {
@@ -170,7 +169,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return (): void => {
       clearInterval(pollingInterval);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [query, pollingCycle]);
 
   const closeDialog = useCallback(
@@ -209,7 +208,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
            break;
        }
      }
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+   
    }, [store.actionDispatcherStore.action]);
 
 
@@ -219,7 +218,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return (): void => {
       dispatchAction(undefined)
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   const colDef = [
@@ -334,7 +333,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     },
   ];
 
-  const onGridReady = (params: GridReadyEvent) => {
+  const onGridReady = (params: GridReadyEvent): void => {
     setGridApi(params.api);
     const sortModel = [
       {colId: 'updated', sort: 'desc'}
@@ -377,7 +376,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     // suppressRowClickSelection: true,
     suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
     unSortIcon: true, // Used to show un-sorted icon.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }), []);
 
   return (

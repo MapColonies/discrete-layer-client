@@ -42,6 +42,7 @@ export const JobDetailsStatusFilter = forwardRef((props: IFilterParams, ref) => 
   },[intl]);
 
   const getStatusOptions = useMemo((): JSX.Element => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const statuses: Record<string, any> = {};
 
     const showAllStatusesText = intl.formatMessage({

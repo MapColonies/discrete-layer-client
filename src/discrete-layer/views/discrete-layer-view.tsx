@@ -671,7 +671,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 }}
                 hollow={true}
                 outlineWidth={2}
-                material={ (DRAWING_FINAL_MATERIAL as any) as CesiumColor }
+                material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
               />
               <Terrain/>
               {
