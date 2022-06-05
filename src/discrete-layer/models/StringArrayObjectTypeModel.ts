@@ -14,7 +14,7 @@ export { selectFromStringArrayObjectType, stringArrayObjectTypeModelPrimitives, 
 export const StringArrayObjectTypeModel = StringArrayObjectTypeModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

@@ -14,7 +14,7 @@ export { selectFromK8SService, k8SServiceModelPrimitives, K8SServiceModelSelecto
 export const K8SServiceModel = K8SServiceModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

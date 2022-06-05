@@ -58,7 +58,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
     useEffect(() => {
       clusterServicesQuery.setQuery(store.queryGetClusterServices(undefined, INTERNAL_SERVICES_QUERY));
       externalServicesQuery.setQuery(store.queryGetExternalServices());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, []);
 
     useEffect(() => {
@@ -76,7 +76,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
           setClusterServices(internalServices);
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [
       clusterServicesQuery.data,
       clusterServicesQuery.loading,
@@ -112,7 +112,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
           setExternalServices(getCategorizedServices());
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [
       externalServicesQuery.data,
       externalServicesQuery.loading,
@@ -191,7 +191,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
           {activeTabToRender}
         </Box>
       );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, [isLoading, renderExternalServices, renderClusterServices, activeTab, closeDialog]);
 
     return (

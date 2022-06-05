@@ -47,7 +47,7 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
     } else {
       handleTabViewChange(TabViews.CATALOG);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [editingBest]);
   
   return (

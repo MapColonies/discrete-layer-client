@@ -43,6 +43,7 @@ export const discreteLayersStore = ModelBase
     layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
     highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
     selectedLayer: types.maybe(types.frozen<ILayerImage>()),
+    selectedLayerIsUpdateMode: types.maybe(types.frozen<boolean>()),
     tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
@@ -158,8 +159,9 @@ export const discreteLayersStore = ModelBase
       self.highlightedLayer =  layer ? {...layer} : undefined;
     }
 
-    function selectLayer(layer: ILayerImage | undefined): void {
+    function selectLayer(layer: ILayerImage | undefined, isUpdateMode: boolean | undefined = undefined): void {
       self.selectedLayer =  layer ? {...layer} : undefined;
+      self.selectedLayerIsUpdateMode = isUpdateMode;
     }
 
     function selectLayerByID(layerID: string): void {

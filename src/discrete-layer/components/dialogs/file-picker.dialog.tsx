@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
 import {
@@ -95,7 +95,7 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
           error: null,
         },
       } as Selection);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, [pathSuffix]);
 
     useEffect(() => {
@@ -134,7 +134,7 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
             }
           }
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, [queryDirectory.data]);
 
     useEffect(() => {
@@ -157,34 +157,32 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
     }, [queryMetadata.data]);
 
     useEffect(() => {
-      if (queryMetadata.error) {
+      /* eslint-disable */
+      if (!isEmpty(get(queryMetadata, "error"))) {
         const metadataError = [
           {
             message: intl.formatMessage({
               id: 'ingestion.error.invalid-metadata',
             }),
           },
-          // eslint-disable-next-line
           ...queryMetadata.error.response.errors,
         ];
 
-        // eslint-disable-next-line
         const queryError = { ...queryMetadata.error };
 
-        // eslint-disable-next-line
         queryError.response.errors = metadataError;
 
         const prevSelection = filePickerRef.current?.getFileSelection();
+        
         setSelection({
           ...prevSelection,
           metadata: {
             recordModel: {} as LayerMetadataMixedUnion,
-            // eslint-disable-next-line
             error: queryError,
           },
         } as Selection);
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-enable */
     }, [queryMetadata.error]);
 
     const closeDialog = useCallback(() => {

@@ -151,6 +151,7 @@ describe('BBoxDialog component', () => {
   //// When component uses useFormik() hook internal formik state not updated when triggered onChange event.
   //// Probably formik should be used in component way rather than hook.
   //// Also preferable to test such functionality on the levevl of E2E tests.
+  /* eslint-disable */
   // it('Bbox stays opened and shows ERROR when Y(km) limit is exceeded', async () => {
   //   const fields = {
   //     bottomLeftLat: 31,
@@ -164,4 +165,6 @@ describe('BBoxDialog component', () => {
   //   console.log('ERROR --->', wrapper.find('#errorContainer').length);
   //   expect(wrapper.find('#errorContainer')).toBeDefined();
   // });
+  /* eslint-enable */
+
 });

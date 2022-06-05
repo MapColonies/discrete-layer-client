@@ -13,6 +13,7 @@ import { ValidationConfigModelType, ValidationValueType } from '../../../models'
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import { UpdateRulesModelType } from '../../../models'
 
 interface FormInputTextFieldProps {
   mode: Mode;
@@ -44,7 +45,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
         {innerValue}
       </Box>
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [innerValue]);
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
@@ -100,6 +101,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             onChange={handleOnChange}
             // eslint-disable-next-line
             onBlur={formik?.handleBlur}
+            disabled={mode === Mode.UPDATE && ((fieldInfo.updateRules as UpdateRulesModelType | undefined | null)?.freeze) as boolean}
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
             {...validationProps}

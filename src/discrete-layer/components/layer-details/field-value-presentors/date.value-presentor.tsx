@@ -61,13 +61,14 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
             (dateVal, val): void => {
               const momentVal = moment(dateVal);
               handleOnChange({
-                // eslint-disable-next-line
+                /* eslint-disable */
                 persist: () => {},
                 // @ts-ignore
                 currentTarget: {
                   value: momentVal,
                   name: fieldInfo.fieldName,
                 } as GCHTMLInputElement
+                /* eslint-enable */
               });
             }
           

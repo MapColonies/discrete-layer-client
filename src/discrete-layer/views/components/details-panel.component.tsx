@@ -4,7 +4,6 @@ import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Mode } from '../../../common/models/mode.enum';
-import { hasOwnProperty } from '../../../common/helpers/object';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
 import { useStore } from '../../models/RootStore';
@@ -31,10 +30,11 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   } = props;
   
   const layerToPresent = store.discreteLayersStore.selectedLayer;
+  const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
   const editingBest = store.bestStore.editingBest;
 
   const handleEditEntityDialogClick = (): void => {
-    if (hasOwnProperty(layerToPresent as any,'isDraft')) {
+    if (typeof layerToPresent !== 'undefined' && 'isDraft' in layerToPresent) {
       store.bestStore.editBest(layerToPresent as BestRecordModelType);
     } else {
       setEditEntityDialogOpen(!isEditEntityDialogOpen);
@@ -64,6 +64,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
             isOpen={isEditEntityDialogOpen}
             onSetOpen={setEditEntityDialogOpen}
             layerRecord={layerToPresent ?? editingBest}
+            isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         }
         <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>

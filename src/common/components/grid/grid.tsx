@@ -162,7 +162,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       result.push(...(props.rowData as []));
     }
     setRowData(result);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [props.rowData, props.gridOptions]);
 
   const agGridThemeOverrides = GridThemes.getTheme(theme);

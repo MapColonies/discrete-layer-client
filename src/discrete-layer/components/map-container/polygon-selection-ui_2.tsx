@@ -61,7 +61,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         value: RecordType[value]
       };
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   return (

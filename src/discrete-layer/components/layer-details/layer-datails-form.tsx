@@ -27,7 +27,13 @@ import {
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
-import { removeEmptyObjFields, transformFormFieldsToEntity } from './utils';
+import {
+  removeEmptyObjFields,
+  transformFormFieldsToEntity,
+  extractUpdateRelatedFieldNames,
+  getFlatEntityDescriptors,
+  transformEntityToFormFields,
+} from './utils';
 
 import './layer-details-form.css';
 
@@ -46,7 +52,7 @@ interface LayerDetailsFormCustomProps {
   entityDescriptors: EntityDescriptorModelType[];
   layerRecord: LayerMetadataMixedUnion;
   vestValidationResults: DraftResult;
-  mutationQueryError: any;
+  mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
 }
@@ -58,7 +64,7 @@ export interface StatusError {
 }
 
 export interface EntityFormikHandlers extends FormikHandlers {
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  setFieldValue: (field: string, value: unknown, shouldValidate?: boolean) => void;
   setFieldError: (field: string, message: string | undefined) => void;
   setFieldTouched: (field: string, isTouched?: boolean | undefined, shouldValidate?: boolean | undefined) => void;
   setStatus: (status?: StatusError | Record<string, unknown>) => void;
@@ -133,11 +139,11 @@ const InnerForm = (
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
-      handleChange: (e: React.ChangeEvent<any>): void => {
+      handleChange: (e: React.ChangeEvent<unknown>): void => {
         setGraphQLError(undefined);
         handleChange(e);
       },
-      handleBlur: (e: React.FocusEvent<any>): void => {
+      handleBlur: (e: React.FocusEvent<unknown>): void => {
         setGraphQLError(undefined);
         handleBlur(e);
       },
@@ -177,17 +183,23 @@ const InnerForm = (
     metadata: MetadataFile
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
+    
+    // Check update related fields in metadata obj
+    const updateFields = extractUpdateRelatedFieldNames(metadata.recordModel, getFlatEntityDescriptors(layerRecord, entityDescriptors));
 
     for (const [key, val] of Object.entries(metadata.recordModel)) {
-      if (val === null) {
+      if (val === null || (updateFields.includes(key) && mode === Mode.UPDATE)) {
         delete ((metadata.recordModel as unknown) as Record<string, unknown>)[key];
       }
     }
+
     resetForm();
     setValues({
-      ...values,
+      ...transformEntityToFormFields({
+        ...values,
+        ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
+      }),
       ...ingestionFields,
-      ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
     });
 
     if (metadata.error !== null) {
@@ -204,7 +216,7 @@ const InnerForm = (
         noValidate
       >
         {
-          mode === Mode.NEW &&
+          (mode === Mode.NEW || mode === Mode.UPDATE) &&
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
@@ -213,11 +225,11 @@ const InnerForm = (
             values={values}
           />
         }
-        {
-          mode === Mode.NEW && !isSelectedFiles &&
-          <Box className="curtain"></Box>
-        }
         <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
+          {
+            (mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles &&
+            <Box className="curtain"></Box>
+          }
           <LayersDetailsComponent
             entityDescriptors={entityDescriptors}
             layerRecord={layerRecord}
@@ -278,13 +290,13 @@ interface LayerDetailsFormProps {
   entityDescriptors: EntityDescriptorModelType[];
   layerRecord: LayerMetadataMixedUnion;
   yupSchema: OptionalObjectSchema<
-    { [x: string]: Yup.AnySchema<any, any, any> },
+    { [x: string]: Yup.AnySchema<unknown, unknown, unknown> },
     AnyObject,
-    TypeOfShape<{ [x: string]: Yup.AnySchema<any, any, any> }>
+    TypeOfShape<{ [x: string]: Yup.AnySchema<unknown, unknown, unknown> }>
   >;
   onSubmit: (values: Record<string, unknown>) => void;
   vestValidationResults: DraftResult;
-  mutationQueryError: any;
+  mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
 }
@@ -294,7 +306,7 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     return {
       directory: '',
       fileNames: '',
-      ...props.layerRecord,
+      ...transformEntityToFormFields(props.layerRecord)
     };
   },
 

@@ -14,7 +14,7 @@ export { selectFromFieldConfig, fieldConfigModelPrimitives, FieldConfigModelSele
 export const FieldConfigModel = FieldConfigModelBase
   .actions(self => ({
     // This is an auto-generated example action.
-    log() {
+    log(): void {
       console.log(JSON.stringify(self))
     }
   }))

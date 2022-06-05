@@ -1,10 +1,11 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
+import { UAParser } from 'ua-parser-js';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import CONFIG from '../../../common/config';
-import { UAParser } from 'ua-parser-js';
-import { useIntl } from 'react-intl';
-import './browserCompatibilityCheckerStyle.css'
+import CONFIG from '../../config';
+
+import './browser-compatibility-checker.css'
 
 const uaParserObj = new UAParser();
 const FIRST_ELEM = 0;
@@ -31,15 +32,16 @@ export const BrowserCompatibilityChecker: React.FC = () => {
     { browserName, minimumVersion: CONFIG.MINIMUM_SUPPORTED_BROWSER_VERSION }
   );
 
-  if (!isEngineChromium || !isBrowserVersionSupported) {
-    return (
-      <Box className="compatibilityError">
-        <Typography tag='h4'>
-          {isEngineChromium ? browserTooOldErr : browserNotSupportedErr}
-        </Typography>
-      </Box>
-    );
-  }
-
-  return null;
+  return (
+    <>
+      {
+        (!isEngineChromium || !isBrowserVersionSupported) &&
+        <Box className="compatibilityError">
+          <Typography tag='h4'>
+            {isEngineChromium ? browserTooOldErr : browserNotSupportedErr}
+          </Typography>
+        </Box>
+      }
+    </>
+  );
 };
