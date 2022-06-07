@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-dev-utils/webpackHotDevClient.js b/node_modules/react-dev-utils/webpackHotDevClient.js
+index 1054ce4..6eaa45b 100644
+--- a/node_modules/react-dev-utils/webpackHotDevClient.js
++++ b/node_modules/react-dev-utils/webpackHotDevClient.js
+@@ -127,6 +127,7 @@ function handleWarnings(warnings) {
+     });
+ 
+     if (typeof console !== 'undefined' && typeof console.warn === 'function') {
++      formatted.warnings = formatted.warnings.filter(warn => !warn.includes('react-hooks/exhaustive-deps'));
+       for (var i = 0; i < formatted.warnings.length; i++) {
+         if (i === 5) {
+           console.warn(

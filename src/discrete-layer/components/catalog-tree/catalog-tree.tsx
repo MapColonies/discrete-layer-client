@@ -171,18 +171,19 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     const layersList = get(dataSearch, 'search') as ILayerImage[];
 
+    const arr: ILayerImage[] = cloneDeep(layersList ?? []);
+
+    store.discreteLayersStore.setLayersImages(arr, false);
+
+    
+    //#region getCapabilities()
+    
+    // NOTE:
+    // Calling getCapabilities() should happen after querySearch.data
+    // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+    // are subsets of the catalog layers list
+    
     if (!isEmpty(layersList)) {
-      const arr: ILayerImage[] = cloneDeep(layersList);
-
-      store.discreteLayersStore.setLayersImages(arr, false);
-
-      //#region getCapabilities()
-
-      // NOTE:
-      // Calling getCapabilities() should happen after querySearch.data
-      // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
-      // are subsets of the catalog layers list
-
       const {RECORD_ALL, RECORD_RASTER, RECORD_DEM} = RecordType;
       const withCapabilities = [RECORD_RASTER, RECORD_DEM];
       if ([RECORD_ALL, ...withCapabilities].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
@@ -210,66 +211,65 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           })
         );
       }
+    }
 
-      //#endregion
+    //#endregion
 
-      // get unlinked/new discretes shortcuts
-      const arrUnlinked = arr.filter((item) => {
-        // @ts-ignore
-        const itemObjectBag =  item as Record<string,unknown>;
-        return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-      });
-      const parentUnlinked = buildParentTreeNode(
-        arrUnlinked,
-        intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-      );
+    // get unlinked/new discretes shortcuts
+    const arrUnlinked = arr.filter((item) => {
+      // @ts-ignore
+      const itemObjectBag =  item as Record<string,unknown>;
+      return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
+    });
+    const parentUnlinked = buildParentTreeNode(
+      arrUnlinked,
+      intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
+      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+    );
 
-      // get BESTs shortcuts
-      const arrBests = arr.filter(isBest);
-      const drafts = store.bestStore.getDrafts();
-      const draftNode = (drafts.length > 0) ? [{
-        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
-        isGroup: true,
-        children: [...store.bestStore.getDrafts().map(draft => {
+    // get BESTs shortcuts
+    const arrBests = arr.filter(isBest);
+    const drafts = store.bestStore.getDrafts();
+    const draftNode = (drafts.length > 0) ? [{
+      title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+      isGroup: true,
+      children: [...store.bestStore.getDrafts().map(draft => {
+        return {
+          ...draft,
+          title: draft['productName'],
+          isSelected: false
+        };
+      })],
+    }] : [];
+    const parentBests = {
+      title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+      isGroup: true,
+      children: [
+        ...draftNode,
+        ...arrBests.map(item => {
           return {
-            ...draft,
-            title: draft['productName'],
+            ...item,
+            title: item['productName'],
             isSelected: false
           };
-        })],
-      }] : [];
-      const parentBests = {
-        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-        isGroup: true,
-        children: [
-          ...draftNode,
-          ...arrBests.map(item => {
-            return {
-              ...item,
-              title: item['productName'],
-              isSelected: false
-            };
-          })
-        ]
-      }
-
-      // whole catalog as is
-      const parentCatalog = buildParentTreeNode(
-        arr,
-        intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
-        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-      );
-
-      setTreeRawData(
-        [
-          parentUnlinked,
-          parentCatalog,
-          parentBests,
-          // parentDrafts,
-        ]
-      );
+        })
+      ]
     }
+
+    // whole catalog as is
+    const parentCatalog = buildParentTreeNode(
+      arr,
+      intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
+      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+    );
+
+    setTreeRawData(
+      [
+        parentUnlinked,
+        parentCatalog,
+        parentBests,
+      ]
+    );
   }, [dataSearch]);
 
   useEffect(() => {
@@ -309,10 +309,11 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         }
         <Box id="catalogContainer" className="catalogContainer">
           {
-            !loading && <TreeComponent
+            !loading &&
+            <TreeComponent
               treeData={treeRawData}
               onChange={treeData => {
-                console.log('****** UPDATE TREEE DATA *****');
+                console.log('****** UPDATE TREE DATA ******');
                 setTreeRawData(treeData);
               }}
               canDrag={({ node }) => {
