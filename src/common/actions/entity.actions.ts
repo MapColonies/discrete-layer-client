@@ -79,20 +79,20 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           {
+            action: 'update',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Edit glow-missing-icon',
+            titleTranslationId: 'action.update.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          {
             action: 'delete',
             frequent: true,
             icon: '',
             class: 'mc-icon-Delete',
             titleTranslationId: 'action.delete.tooltip',
             views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
-          },
-          {
-            action: 'update',
-            frequent: false,
-            icon: '',
-            class: 'mc-icon-Edit glow-missing-icon',
-            titleTranslationId: 'Update',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
         ],
       },

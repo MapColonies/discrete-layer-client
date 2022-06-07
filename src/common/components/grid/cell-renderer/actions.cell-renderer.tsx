@@ -3,11 +3,11 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
 import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { FINAL_NEGATIVE_STATUSES, JOB_ENTITY } from '../../../../discrete-layer/components/system-status/job.types';
+import { JobModelType, Status } from '../../../../discrete-layer/models';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
-import { FINAL_NEGATIVE_STATUSES, JOB_ENTITY } from '../../../../discrete-layer/components/system-status/job.types';
-import { JobModelType, Status } from '../../../../discrete-layer/models';
 
 const FIRST = 0;
 

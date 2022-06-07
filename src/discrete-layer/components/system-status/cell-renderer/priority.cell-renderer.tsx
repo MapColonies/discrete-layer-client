@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useCallback, useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Box } from '@map-colonies/react-components';
 import { get } from 'lodash';
 import {
   CircularProgress,
   FormattedOption,
   Select,
 } from '@map-colonies/react-core';
-import './priority.cell-renderer.css';
+import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
 import { FINAL_STATUSES } from '../job.types'
+
+import './priority.cell-renderer.css';
+
 interface PriorityOption {
   label: string;
   value: string;

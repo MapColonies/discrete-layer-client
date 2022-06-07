@@ -44,9 +44,9 @@ import { IRecordFieldInfo } from './layer-details.field-info';
 import { getFlatEntityDescriptors, getRecordForUpdate, getValidationType } from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
+import { LayersDetailsComponent } from './layer-details';
 
 import './entity.dialog.css';
-import { LayersDetailsComponent } from './layer-details';
 
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
