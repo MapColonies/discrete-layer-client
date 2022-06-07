@@ -9,7 +9,6 @@ import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { Empty } from '../../../common/components/tree/statuses/empty';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
@@ -176,15 +175,15 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     store.discreteLayersStore.setLayersImages(arr, false);
 
+    
+    //#region getCapabilities()
+    
+    // NOTE:
+    // Calling getCapabilities() should happen after querySearch.data
+    // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+    // are subsets of the catalog layers list
+    
     if (!isEmpty(layersList)) {
-
-      //#region getCapabilities()
-
-      // NOTE:
-      // Calling getCapabilities() should happen after querySearch.data
-      // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
-      // are subsets of the catalog layers list
-
       const {RECORD_ALL, RECORD_RASTER, RECORD_DEM} = RecordType;
       const withCapabilities = [RECORD_RASTER, RECORD_DEM];
       if ([RECORD_ALL, ...withCapabilities].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
@@ -212,68 +211,65 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           })
         );
       }
+    }
 
-      //#endregion
+    //#endregion
 
-      // get unlinked/new discretes shortcuts
-      const arrUnlinked = arr.filter((item) => {
-        // @ts-ignore
-        const itemObjectBag =  item as Record<string,unknown>;
-        return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-      });
-      const parentUnlinked = buildParentTreeNode(
-        arrUnlinked,
-        intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-      );
+    // get unlinked/new discretes shortcuts
+    const arrUnlinked = arr.filter((item) => {
+      // @ts-ignore
+      const itemObjectBag =  item as Record<string,unknown>;
+      return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
+    });
+    const parentUnlinked = buildParentTreeNode(
+      arrUnlinked,
+      intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
+      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+    );
 
-      // get BESTs shortcuts
-      const arrBests = arr.filter(isBest);
-      const drafts = store.bestStore.getDrafts();
-      const draftNode = (drafts.length > 0) ? [{
-        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
-        isGroup: true,
-        children: [...store.bestStore.getDrafts().map(draft => {
+    // get BESTs shortcuts
+    const arrBests = arr.filter(isBest);
+    const drafts = store.bestStore.getDrafts();
+    const draftNode = (drafts.length > 0) ? [{
+      title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+      isGroup: true,
+      children: [...store.bestStore.getDrafts().map(draft => {
+        return {
+          ...draft,
+          title: draft['productName'],
+          isSelected: false
+        };
+      })],
+    }] : [];
+    const parentBests = {
+      title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+      isGroup: true,
+      children: [
+        ...draftNode,
+        ...arrBests.map(item => {
           return {
-            ...draft,
-            title: draft['productName'],
+            ...item,
+            title: item['productName'],
             isSelected: false
           };
-        })],
-      }] : [];
-      const parentBests = {
-        title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-        isGroup: true,
-        children: [
-          ...draftNode,
-          ...arrBests.map(item => {
-            return {
-              ...item,
-              title: item['productName'],
-              isSelected: false
-            };
-          })
-        ]
-      }
-
-      // whole catalog as is
-      const parentCatalog = buildParentTreeNode(
-        arr,
-        intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
-        {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-      );
-
-      setTreeRawData(
-        [
-          parentUnlinked,
-          parentCatalog,
-          parentBests,
-          // parentDrafts,
-        ]
-      );
-    } else {
-      setTreeRawData([]);
+        })
+      ]
     }
+
+    // whole catalog as is
+    const parentCatalog = buildParentTreeNode(
+      arr,
+      intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
+      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+    );
+
+    setTreeRawData(
+      [
+        parentUnlinked,
+        parentCatalog,
+        parentBests,
+      ]
+    );
   }, [dataSearch]);
 
   useEffect(() => {
@@ -311,13 +307,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         {
           loading && <Loading/>
         }
-        {
-          !loading && isEmpty(treeRawData) && <Empty/>
-        }
         <Box id="catalogContainer" className="catalogContainer">
           {
             !loading &&
-            !isEmpty(treeRawData) &&
             <TreeComponent
               treeData={treeRawData}
               onChange={treeData => {
