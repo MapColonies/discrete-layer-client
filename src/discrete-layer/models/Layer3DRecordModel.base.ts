@@ -23,6 +23,7 @@ export const Layer3DRecordModelBase = ModelBase
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
     productId: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
+    // ASSAF: MUST REMAIN STRING
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     description: types.union(types.undefined, types.null, types.string),
