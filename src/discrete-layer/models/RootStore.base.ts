@@ -198,6 +198,7 @@ export type Layer3DRecordInput = {
   type?: RecordType
   productId?: string
   productName: string
+  // ASSAF: MUST REMAIN STRING
   productVersion?: string
   productType: ProductType
   description?: string
