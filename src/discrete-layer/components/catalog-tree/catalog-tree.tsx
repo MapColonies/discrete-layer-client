@@ -218,7 +218,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     // get unlinked/new discretes shortcuts
     const arrUnlinked = arr.filter((item) => {
       // @ts-ignore
-      const itemObjectBag =  item as Record<string,unknown>;
+      const itemObjectBag = item as Record<string,unknown>;
       return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
     });
     const parentUnlinked = buildParentTreeNode(

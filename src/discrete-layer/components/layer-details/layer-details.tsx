@@ -109,7 +109,6 @@ export const getValuePresentor = (
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
   const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
 
-
   const renderCategory = (category: IRecordCategoryFieldsInfo): JSX.Element =>
   (
     <Box
@@ -170,28 +169,33 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
         return renderCategory(category);
       })
     );
-    
   }, [layerRecord, formik]);
 
   const briefInputs = useMemo(() => {
     const briefArr = layerRecord &&
     getEntityDescriptors(layerRecord, entityDescriptors)
-    .filter((item: unknown) =>(item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
+    .filter((item: unknown) => (item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
 
     return (
       briefArr?.map((category) => {
         return renderCategory(category);
       })
     );
-
-    
   }, [layerRecord, formik]);
 
   return (
     <>
-      {!(isBrief ?? false) ? fullInputs: briefInputs}
-    
-      {!layerRecord && (
+      {!(isBrief ?? false) ? fullInputs : briefInputs}
+      {
+        layerRecord &&
+        <img
+          className="detailsThumbnail"
+          src="http://nginx-raster-int-nginx-s3-gateway-route-libot-integration.apps.v0h0bdx6.eastus.aroapp.io/bluemarble/Thumbnails/bluemarble-thumbnail-lg.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicmVzb3VyY2VUeXBlcyI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJkIjpbInJhc3RlciIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTUxNjIzOTAyMn0.eGlm2er5oJUCOqNWA8bgi1QXoTSvtXD8lvRxcnN0BKY"
+          alt="Thumbnail"
+        />
+      }
+      {
+        !layerRecord && (
         <Box>
           <Typography use="headline2" tag="div" className="noSelection">
             <FormattedMessage id="details-panel.no-selection" />

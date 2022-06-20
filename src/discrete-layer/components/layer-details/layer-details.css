@@ -99,3 +99,8 @@ body[dir='rtl'] .textFieldInfoIcon {
   right: unset;
   left: 2px;
 }
+
+.detailsThumbnail {
+  width: 100%;
+  margin-top: 16px;
+}
