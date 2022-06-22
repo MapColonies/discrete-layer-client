@@ -4,7 +4,6 @@ import { get, isEmpty } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import CONFIG from '../../../common/config';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { 
@@ -15,6 +14,7 @@ import {
   LinkModelType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
@@ -30,6 +30,8 @@ import { getBasicType, getEntityDescriptors } from './utils';
 import { EntityFormikHandlers } from './layer-datails-form';
 
 import './layer-details.css';
+
+const THUMBNAIL = 'THUMBNAIL_L';
 
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
@@ -184,25 +186,14 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
     );
   }, [layerRecord, formik]);
 
-  const getThumbnailUrl = (): string => {
-    const thumbnailUrl = (layerRecord?.links?.find((link: LinkModelType) => link.protocol === 'THUMBNAIL_L') as LinkModelType | undefined)?.url;
-    let token = '';
-    // eslint-disable-next-line
-    const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};    
-    if (thumbnailUrl !== undefined && INJECTION_TYPE.toLowerCase() === 'queryparam') {
-      token = `?${ATTRIBUTE_NAME}=${TOKEN_VALUE}`;
-    }
-    return `${thumbnailUrl ?? ''}${token}`;
-  };
-
   return (
     <>
       {!(isBrief ?? false) ? fullInputs : briefInputs}
       {
-        layerRecord && (layerRecord.links?.find((link: LinkModelType) => link.protocol === 'THUMBNAIL_L') as LinkModelType | undefined)?.url !== undefined &&
+        layerRecord?.links && getLinkUrl(layerRecord.links, THUMBNAIL) !== undefined &&
         <img
           className="detailsThumbnail"
-          src={getThumbnailUrl()}
+          src={getLinkUrlWithToken(layerRecord.links, THUMBNAIL)}
           alt="Thumbnail"
         />
       }

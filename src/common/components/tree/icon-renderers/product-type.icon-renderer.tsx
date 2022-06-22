@@ -4,12 +4,13 @@ import { TypeIcon } from '../../general/type-icon';
 
 interface ILayerImageCellRendererParams {
   data: ILayerImage;
+  preview?: string;
 }
 
-export const ProductTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ data }) => {
+export const ProductTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ data, preview }) => {
 
   return (
-    <TypeIcon typeName={data.productType as string}/>
+    <TypeIcon typeName={data.productType as string} preview={preview}/>
   );
   
 };

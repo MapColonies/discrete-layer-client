@@ -19,9 +19,12 @@ import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { getLinkUrlWithToken } from '../helpers/layersUtils';
 import { isDiscrete } from '../layer-details/utils';
 
 import './best-catalog.css';
+
+const THUMBNAIL = 'THUMBNAIL_S';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -257,7 +260,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} preview={getLinkUrlWithToken(rowInfo.node.links, THUMBNAIL)}/>
                     ],
                 buttons: [],
               })}

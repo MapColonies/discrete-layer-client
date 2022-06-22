@@ -1,5 +1,5 @@
 import { Rectangle, Resource } from 'cesium';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
 import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
@@ -24,13 +24,30 @@ export const getLayerLink = (layer: ILayerImage): LinkModelType => {
   return layerLink;
 };
 
+export const getTokenParam = (): string => {
+  // eslint-disable-next-line
+  const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};    
+  if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
+    return `?${ATTRIBUTE_NAME}=${TOKEN_VALUE}`;
+  }
+  return '';
+};
+
+export const getLinkUrl = (links: LinkModelType[], protocol: string): string | undefined => {
+  return links.find((link: LinkModelType) => link.protocol === protocol)?.url;
+};
+
+export const getLinkUrlWithToken = (links: LinkModelType[], protocol: string): string | undefined => {
+  const linkUrl = getLinkUrl(links, protocol);
+  const urlWithToken = `${linkUrl ?? ''}${linkUrl !== undefined ? getTokenParam() : ''}`;
+  return !isEmpty(urlWithToken) ? urlWithToken : undefined;
+};
+
 export const getTokenResource = (url: string): Resource => {
   const tokenProps: Record<string, unknown> = { url };
   
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};
+  // eslint-disable-next-line
+  const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};
   
   if (INJECTION_TYPE.toLowerCase() === 'header') {
     tokenProps.headers = {

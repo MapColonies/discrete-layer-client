@@ -23,11 +23,13 @@ import { ILayerImage } from '../../models/layerImage';
 import { CapabilityModelType, RecordType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
-import { getLayerLink } from '../helpers/layersUtils';
+import { getLayerLink, getLinkUrlWithToken } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
 import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
+
+const THUMBNAIL = 'THUMBNAIL_S';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -422,7 +424,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} preview={getLinkUrlWithToken(rowInfo.node.links, THUMBNAIL)}/>
                     ],
                 buttons: [
                   <>
