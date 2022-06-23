@@ -120,13 +120,12 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     const dialogContainerRef = useRef<HTMLDivElement>(null);
 
-    const decideMode = useCallback(()=>{
-      if(props.isSelectedLayerUpdateMode === true && props.layerRecord) {
+    const decideMode = useCallback(() => {
+      if (props.isSelectedLayerUpdateMode === true && props.layerRecord) {
         return Mode.UPDATE;
       }
-
       return !props.layerRecord ? Mode.NEW : Mode.EDIT;
-    },[])
+    }, []);
 
     const { isOpen, onSetOpen } = props;   
     const [recordType] = useState<RecordType>(props.recordType ?? (props.layerRecord?.type as RecordType));
@@ -156,11 +155,11 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       { value: dialogTitleParamTranslation }
     );
 
-    useEffect(()=>{
+    useEffect(() => {
       if(!isEmpty(descriptors) && !isEmpty(layerRecord)) {
         setIsAllInfoReady(true);
       }
-    }, [descriptors, layerRecord])
+    }, [descriptors, layerRecord]);
 
     useLayoutEffect(() => {
       const CONTENT_HEIGHT_VAR_NAME = '--content-height';
@@ -183,8 +182,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             break;
         }
       }
-      
-    }, [mode, dialogContainerRef.current])
+    }, [mode, dialogContainerRef.current]);
 
     const ingestionFields =
       layerRecord.__typename !== 'BestRecord'
@@ -297,7 +295,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         }
       );
       setDescriptors(desc as any[]);
-      
     }, []);
 
     useEffect(() => {
@@ -378,7 +375,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
           }
         }
       }
-      
     }, [vestValidationResults]);
 
     const closeDialog = useCallback(() => {
