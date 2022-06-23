@@ -464,7 +464,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                       />
                     </Tooltip>
                   }
-                  {
+                  {/*
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
                     permissions.isBestRecordCreateAllowed &&
                     <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
@@ -477,7 +477,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                         } }
                       />
                     </Tooltip>
-                  }
+                  */}
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
                   <IconButton className="operationIcon mc-icon-Property-1Add" onClick={(evt): void => setOpenNew(!openNew)}/>
