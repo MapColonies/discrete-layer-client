@@ -4,6 +4,8 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
+import { isObject, get } from 'lodash';
+import { Feature, FeatureCollection } from 'geojson';
 import { 
   CesiumGeojsonLayer, 
   CesiumColor,
@@ -17,8 +19,6 @@ import {
   CesiumConstantProperty
 
 } from '@map-colonies/react-components';
-import { Feature, FeatureCollection } from 'geojson';
-import { isObject, get } from 'lodash';
 import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models/RootStore';
@@ -28,22 +28,22 @@ const FOOTPRINT_BORDER_WIDTH = 2.0;
 
 function upperLeft(points: CesiumCartesian3[]): CesiumCartesian3 {
   let top = points[0];
-  for(let i = 1; i < points.length; i++) {
-      const temp = points[i];
-      if(temp.y < top.y || (temp.y === top.y && temp.x < top.x)) {
-          top = temp;
-      }
+  for (let i = 1; i < points.length; i++) {
+    const temp = points[i];
+    if (temp.y < top.y || (temp.y === top.y && temp.x < top.x)) {
+      top = temp;
+    }
   }
   return top;
 }
 
 function upperRight(points: CesiumCartesian3[]): CesiumCartesian3 {
   let top = points[0];
-  for(let i = 1; i < points.length; i++) {
-      const temp = points[i];
-      if(temp.x < top.x || (temp.x === top.x && temp.y < top.y)) {
-          top = temp;
-      }
+  for (let i = 1; i < points.length; i++) {
+    const temp = points[i];
+    if (temp.x < top.x || (temp.x === top.x && temp.y < top.y)) {
+      top = temp;
+    }
   }
   return top;
 }
@@ -55,7 +55,6 @@ function getLabelPosition(points: CesiumCartesian3[]): CesiumConstantPositionPro
   // const center = CesiumBoundingSphere.fromPoints(points).center;
   // CesiumEllipsoid.WGS84.scaleToGeodeticSurface(center, center);
   return new CesiumConstantPositionProperty(center);
-
 }
 
 export const LayersFootprints: React.FC = observer(() => {
@@ -148,8 +147,6 @@ export const LayersFootprints: React.FC = observer(() => {
             bckColor = color;
           }
 
-          
-          console.log('positions', positions);
           item.position = getLabelPosition(positions);
           
           const label = {

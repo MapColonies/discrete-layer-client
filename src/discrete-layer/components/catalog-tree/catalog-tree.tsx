@@ -424,7 +424,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} preview={getLinkUrlWithToken(rowInfo.node.links, THUMBNAIL)}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, THUMBNAIL)}/>
                     ],
                 buttons: [
                   <>

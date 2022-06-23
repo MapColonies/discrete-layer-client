@@ -15,7 +15,11 @@ export const ProductTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (pro
   const data = props.data as ILayerImage;
 
   return (
-    <TypeIcon typeName={data.productType as string} preview={data.links ? getLinkUrlWithToken(data.links, THUMBNAIL) : undefined} style={props.style}/>
+    <TypeIcon
+      typeName={data.productType as string}
+      thumbnailUrl={data.links ? getLinkUrlWithToken(data.links, THUMBNAIL) : undefined}
+      style={props.style}
+    />
   );
   
 };

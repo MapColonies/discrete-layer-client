@@ -194,7 +194,6 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
         <img
           className="detailsThumbnail"
           src={getLinkUrlWithToken(layerRecord.links, THUMBNAIL)}
-          alt="Thumbnail"
         />
       }
       {

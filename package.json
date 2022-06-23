@@ -70,7 +70,8 @@
       "@map-colonies/eslint-config/ts-base"
     ],
     "rules": {
-      "react-hooks/exhaustive-deps": "off"
+      "react-hooks/exhaustive-deps": "off",
+      "jsx-a11y/alt-text": "off"
     },
     "parserOptions": {
       "project": "./tsconfig.json"
