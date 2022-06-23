@@ -49,7 +49,7 @@ const App: React.FC = () => {
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
   const customThemeProps: Record<string,string> = {};
-  for(const prop in CustomTheme.darkTheme){
+  for (const prop in CustomTheme.darkTheme) {
     customThemeProps[camelize(prop)] = (CustomTheme.darkTheme as Record<string, string>)[prop];
   }
   const theme = {
@@ -69,7 +69,7 @@ const App: React.FC = () => {
   
   useEffect(() => {
     Moment.locale(lang);
-  }, [lang])
+  }, [lang]);
 
   return (
     <IntlProvider locale={lang} messages={MESSAGES[lang]}>

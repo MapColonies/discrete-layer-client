@@ -21,9 +21,9 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
 
   const isJobEntity = entity === JOB_ENTITY;
 
-  const isJobFinalNegativeStatus = useMemo(()=>{
+  const isJobFinalNegativeStatus = useMemo(() => {
     return isJobEntity && FINAL_NEGATIVE_STATUSES.includes((props.data as JobModelType).status as Status);
-  },[props.data, isJobEntity])
+  }, [props.data, isJobEntity]);
 
   const actions = props.actions[entity];
   let frequentActions: IAction[] = [];
@@ -50,11 +50,11 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
       action: `${entity}.${action.action}`,
       data: data,
     });
-  }
+  };
   
-  // We only want to show job actions picker on negative-final job statuses.
-  if(isJobEntity && !isJobFinalNegativeStatus){
-    return null
+  // We only want to show job actions picker on negative-final job statuses
+  if (isJobEntity && !isJobFinalNegativeStatus) {
+    return null;
   }
 
   return (

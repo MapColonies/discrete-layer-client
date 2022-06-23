@@ -223,7 +223,8 @@ class FileThemeNodeContentRenderer extends Component {
                     </div>
                   </Tooltip>
 
-                  {!node.children && (
+                  {
+                    !node.children && 
                     <div className={styles.rowToolbar}>
                       {buttons.map((btn, index) => (
                         <div
@@ -233,16 +234,15 @@ class FileThemeNodeContentRenderer extends Component {
                           {btn}
                         </div>
                       ))}
-                    </div>)
+                    </div>
                   }
 
-                  {node.children && (
-                    <div 
-                      className="descendantCount"
-                    >
+                  {
+                    node.children &&
+                    <div className="descendantCount">
                       ( {getDescendantCount({node, ignoreCollapsed: false }) - (parentNode !== null ? 0 : (getDepth(node) > 1) ? node.children.length : 0)} )
                     </div>
-                  )}
+                  }
 
                 </div>
               </div>
