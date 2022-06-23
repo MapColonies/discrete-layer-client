@@ -190,7 +190,9 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
     <>
       {!(isBrief ?? false) ? fullInputs : briefInputs}
       {
-        layerRecord?.links && getLinkUrl(layerRecord.links, THUMBNAIL) !== undefined &&
+        layerRecord?.links &&
+        getLinkUrl(layerRecord.links, THUMBNAIL) !== undefined &&
+        mode !== Mode.UPDATE &&
         <img
           className="detailsThumbnail"
           src={getLinkUrlWithToken(layerRecord.links, THUMBNAIL)}

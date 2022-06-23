@@ -406,7 +406,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               }
               layerRecord={props.layerRecord}
               isBrief={true}
-              mode={Mode.VIEW}
+              mode={Mode.UPDATE}
             />
           </Box>
         </Box>
