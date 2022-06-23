@@ -216,7 +216,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     //#endregion
 
     // get unlinked/new discretes shortcuts
-    const arrUnlinked = arr.filter((item) => {
+    /*const arrUnlinked = arr.filter((item) => {
       // @ts-ignore
       const itemObjectBag =  item as Record<string,unknown>;
       return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
@@ -225,7 +225,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       arrUnlinked,
       intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
       {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-    );
+    );*/
 
     // get BESTs shortcuts
     const arrBests = arr.filter(isBest);
@@ -265,7 +265,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     setTreeRawData(
       [
-        parentUnlinked,
+        // parentUnlinked,
         parentCatalog,
         parentBests,
       ]
