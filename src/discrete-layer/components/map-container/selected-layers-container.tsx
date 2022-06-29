@@ -9,6 +9,7 @@ import {
 import { observer } from 'mobx-react-lite';
 import { isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { Protocol } from '../../../common/models/protocol.enum';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models';
@@ -52,7 +53,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     const layerLink = getLayerLink(layer);
 
     switch (layerLink.protocol) {
-      case 'XYZ_LAYER':
+      case Protocol.XYZ_LAYER:
         return (
           <CesiumXYZLayer
             rectangle={generateLayerRectangle(
@@ -62,16 +63,16 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             options={{ url: getTokenResource(layerLink.url as string) }}
           />
         );
-      case '3DTiles':
-      case '3D_LAYER':
+      case Protocol.THREE_D_TILES:
+      case Protocol.THREE_D_LAYER:
         return (
           <Cesium3DTileset
             key={layer.id}
             url={getTokenResource(layerLink.url as string)}
           />
         );
-      case 'WMTS_tile':
-      case 'WMTS_LAYER':
+      case Protocol.WMTS_TILE:
+      case Protocol.WMTS_LAYER:
         capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
         optionsWMTS = {
           ...getWMTSOptions(layer as LayerRasterRecordModelType, layerLink.url as string, capability)
@@ -87,7 +88,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       default:
         return undefined;
     }
-  }
+  };
   
   const getLayer = (layer: ILayerImage): JSX.Element | null | undefined  => {
     const cache = cacheRef.current;

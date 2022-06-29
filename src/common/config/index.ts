@@ -1,6 +1,7 @@
 import { CesiumGeographicTilingScheme, Proj } from '@map-colonies/react-components';
 import { IRasterLayer } from '@map-colonies/react-components/dist/cesium-map/layers-manager';
 import { IBaseMaps, IBaseMap } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
+import { Protocol } from '../models/protocol.enum';
 
 /*eslint-disable */
 const LANGUAGE = (window as any)._env_.LANGUAGE as string;
@@ -34,7 +35,7 @@ const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
             ...rasterLayer,
             options: {
               ...rasterLayer.options,
-              tilingScheme: (rasterLayer.type === 'WMTS_LAYER') ? new CesiumGeographicTilingScheme() : undefined
+              tilingScheme: (rasterLayer.type === Protocol.WMTS_LAYER) ? new CesiumGeographicTilingScheme() : undefined
             }
           };
         })
