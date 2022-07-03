@@ -14,7 +14,7 @@ import { ImportRenderer } from '../../../common/components/tree/icon-renderers/i
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
-import { Protocol } from '../../../common/models/protocol.enum';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
@@ -259,7 +259,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, Protocol.THUMBNAIL_S)}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>
                     ],
                 buttons: [],
               })}

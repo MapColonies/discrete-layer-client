@@ -9,7 +9,7 @@ import {
 import { observer } from 'mobx-react-lite';
 import { isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { Protocol } from '../../../common/models/protocol.enum';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models';
@@ -53,7 +53,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
     const layerLink = getLayerLink(layer);
 
     switch (layerLink.protocol) {
-      case Protocol.XYZ_LAYER:
+      case LinkType.XYZ_LAYER:
         return (
           <CesiumXYZLayer
             rectangle={generateLayerRectangle(
@@ -63,16 +63,16 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             options={{ url: getTokenResource(layerLink.url as string) }}
           />
         );
-      case Protocol.THREE_D_TILES:
-      case Protocol.THREE_D_LAYER:
+      case LinkType.THREE_D_TILES:
+      case LinkType.THREE_D_LAYER:
         return (
           <Cesium3DTileset
             key={layer.id}
             url={getTokenResource(layerLink.url as string)}
           />
         );
-      case Protocol.WMTS_TILE:
-      case Protocol.WMTS_LAYER:
+      case LinkType.WMTS_TILE:
+      case LinkType.WMTS_LAYER:
         capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
         optionsWMTS = {
           ...getWMTSOptions(layer as LayerRasterRecordModelType, layerLink.url as string, capability)

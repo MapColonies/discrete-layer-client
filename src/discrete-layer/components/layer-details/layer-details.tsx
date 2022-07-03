@@ -6,7 +6,7 @@ import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
-import { Protocol } from '../../../common/models/protocol.enum';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { 
   AutocompletionModelType,
   EntityDescriptorModelType,
@@ -190,11 +190,11 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       {!(isBrief ?? false) ? fullInputs : briefInputs}
       {
         layerRecord?.links &&
-        getLinkUrl(layerRecord.links, Protocol.THUMBNAIL_L) !== undefined &&
+        getLinkUrl(layerRecord.links, LinkType.THUMBNAIL_L) !== undefined &&
         mode !== Mode.UPDATE &&
         <img
           className="detailsThumbnail"
-          src={getLinkUrlWithToken(layerRecord.links, Protocol.THUMBNAIL_L)}
+          src={getLinkUrlWithToken(layerRecord.links, LinkType.THUMBNAIL_L)}
         />
       }
       {

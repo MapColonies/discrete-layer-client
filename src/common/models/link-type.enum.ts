@@ -1,4 +1,4 @@
-export enum Protocol {
+export enum LinkType {
   WMTS_LAYER = 'WMTS_LAYER',
   WMTS_TILE = 'WMTS_tile',
   XYZ_LAYER = 'XYZ_LAYER',

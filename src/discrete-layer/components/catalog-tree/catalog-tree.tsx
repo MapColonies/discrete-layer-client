@@ -17,7 +17,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
-import { Protocol } from '../../../common/models/protocol.enum';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -423,7 +423,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, Protocol.THUMBNAIL_S)}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>
                     ],
                 buttons: [
                   <>
