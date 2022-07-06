@@ -23,11 +23,13 @@ import { ILayerImage } from '../../models/layerImage';
 import { CapabilityModelType, RecordType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
-import { getLayerLink } from '../helpers/layersUtils';
+import { getLayerLink, getLinkUrlWithToken } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
 import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
+
+const THUMBNAIL = 'THUMBNAIL_S';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -216,16 +218,16 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     //#endregion
 
     // get unlinked/new discretes shortcuts
-    const arrUnlinked = arr.filter((item) => {
+    /*const arrUnlinked = arr.filter((item) => {
       // @ts-ignore
-      const itemObjectBag =  item as Record<string,unknown>;
+      const itemObjectBag = item as Record<string,unknown>;
       return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
     });
     const parentUnlinked = buildParentTreeNode(
       arrUnlinked,
       intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
       {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-    );
+    );*/
 
     // get BESTs shortcuts
     const arrBests = arr.filter(isBest);
@@ -265,7 +267,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     setTreeRawData(
       [
-        parentUnlinked,
+        // parentUnlinked,
         parentCatalog,
         parentBests,
       ]
@@ -422,7 +424,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, THUMBNAIL)}/>
                     ],
                 buttons: [
                   <>

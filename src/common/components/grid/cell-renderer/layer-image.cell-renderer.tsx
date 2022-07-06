@@ -7,7 +7,7 @@ import { GridRowNode } from '..';
 import './layer-image.cell-renderer.css';
 
 interface ILayerImageCellRendererParams extends ICellRendererParams {
-  onClick:  (id: string, value: boolean, node: GridRowNode) => void;
+  onClick: (id: string, value: boolean, node: GridRowNode) => void;
 }
 
 export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (props) => {

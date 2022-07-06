@@ -16,21 +16,21 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylin
       geometry: null
     };
 
-  if(isBbox){
+  if (isBbox) {
     let geometry: Geometry = layer.footprint as Geometry;
-    switch(geometry.type){
+    switch (geometry.type) {
       // case 'Polygon':
       //   geometry = (polygonToLine(geometry) as Feature).geometry;
       //   break;
       case 'MultiPolygon':
-        //get bbox of feture, then convert it to polygon and finally get linestring of polygon
+        //get bbox of feature, then convert it to polygon and finally get linestring of polygon
         geometry = (bboxPolygon(bbox(geometry)) as Feature).geometry;
         break;
       default:
         break;
     }
 
-    if(isPolylined){
+    if (isPolylined) {
       geometry = (polygonToLine(geometry as Polygon) as Feature).geometry;
     }
     
