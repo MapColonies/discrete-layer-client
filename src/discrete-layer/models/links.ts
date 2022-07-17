@@ -49,7 +49,7 @@ export const links: Partial<Record<LinkType, ILink>> = {
     editable: true,
     validation: [
       {
-        errorMsgCode: '',
+        errorMsgCode: 'validation-field.links.fileSize',
         fileSize: 128
       }
     ],
@@ -60,7 +60,7 @@ export const links: Partial<Record<LinkType, ILink>> = {
     editable: true,
     validation: [
       {
-        errorMsgCode: '',
+        errorMsgCode: 'validation-field.links.fileSize',
         fileSize: 400
       }
     ],
@@ -71,7 +71,7 @@ export const links: Partial<Record<LinkType, ILink>> = {
     editable: true,
     validation: [
       {
-        errorMsgCode: '',
+        errorMsgCode: 'validation-field.links.fileSize',
         fileSize: 600
       }
     ],

@@ -405,6 +405,7 @@
   "validation-field.scale.max": "{fieldName} גדול מהמקסימום: {value}",
   "validation-field.footprint.json": "{fieldName} לא GEOJSON",
   "validation-field.layerPolygonParts.json": "{fieldName} לא GEOJSON",
+  "validation-field.links.fileSize": "{fieldName} צריך להיות בגודל: {value}",
 
   "system-status.title": "משימות מערכת",
   "system-status.close-btn.text": "סגור",
