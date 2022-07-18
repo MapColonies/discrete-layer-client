@@ -405,7 +405,7 @@
   "validation-field.scale.max": "{fieldName} is greater than maximum: {value}",
   "validation-field.footprint.json": "{fieldName} is not geoJSON",
   "validation-field.layerPolygonParts.json": "{fieldName} is not geoJSON",
-  "validation-field.links.fileSize": "{fieldName} has to be of size: {value}",
+  "validation-field.links.fileSize": "{fieldName} has to be of size: {value}x{value}",
 
   "system-status.title": "System Jobs",
   "system-status.close-btn.text": "Close",
