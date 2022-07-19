@@ -101,7 +101,7 @@
   "tab-views.catalog": "קטלוג",
   "tab-views.create-best": "עריכת טיוטת BEST",
 
-  "tab-views.catalog.top-categories.unlinked": "לא משוייכים",
+  "tab-views.catalog.top-categories.unpublished": "לא מפובלשים",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",
   "tab-views.catalog.top-categories.drafts": "טיוטות",

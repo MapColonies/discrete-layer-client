@@ -101,7 +101,7 @@
   "tab-views.catalog": "Catalog",
   "tab-views.create-best": "BEST edit",
 
-  "tab-views.catalog.top-categories.unlinked": "Unlinked",
+  "tab-views.catalog.top-categories.unpublished": "Unpublished",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "Catalog",
   "tab-views.catalog.top-categories.drafts": "Drafts",
