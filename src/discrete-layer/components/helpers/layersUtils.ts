@@ -3,6 +3,7 @@ import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
 import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
@@ -13,7 +14,7 @@ export const generateLayerRectangle = (
 };
 
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
-  return layer.links?.find((link: LinkModelType) => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+  return layer.links?.find((link: LinkModelType) => [LinkType.WMTS_TILE as string, LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;
 };
 
 export const getLayerLink = (layer: ILayerImage): LinkModelType => {
