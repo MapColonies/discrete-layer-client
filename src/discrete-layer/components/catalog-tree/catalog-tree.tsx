@@ -8,6 +8,7 @@ import { useIntl } from 'react-intl';
 import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
@@ -16,7 +17,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
-import { IActionGroup } from '../../../common/actions/entity.actions';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -28,8 +29,6 @@ import { isBest } from '../layer-details/utils';
 import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
-
-const THUMBNAIL = 'THUMBNAIL_S';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -424,7 +423,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, THUMBNAIL)}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>
                     ],
                 buttons: [
                   <>
