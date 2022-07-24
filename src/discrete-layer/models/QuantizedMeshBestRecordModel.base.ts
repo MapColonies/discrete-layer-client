@@ -5,8 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel } from "./LinkModel"
-import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
+import { LinkModel, LinkModelType } from "./LinkModel"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
@@ -32,7 +32,7 @@ export const QuantizedMeshBestRecordModelBase = ModelBase
     sourceDateEnd: types.union(types.undefined, types.frozen()),
     minResolutionMeter: types.union(types.undefined, types.null, types.number),
     maxResolutionMeter: types.union(types.undefined, types.null, types.number),
-    maxAccuracyCE90: types.union(types.undefined, types.null, types.number),
+    maxAccuracyCE90: types.union(types.undefined, types.number),
     sensors: types.union(types.undefined, types.null, types.array(types.string)),
     footprint: types.union(types.undefined, types.frozen()),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
@@ -41,8 +41,8 @@ export const QuantizedMeshBestRecordModelBase = ModelBase
     srsName: types.union(types.undefined, types.string),
     region: types.union(types.undefined, types.null, types.array(types.string)),
     classification: types.union(types.undefined, types.string),
-    productionSystem: types.union(types.undefined, types.null, types.string),
-    productionSystemVer: types.union(types.undefined, types.null, types.string),
+    productionSystem: types.union(types.undefined, types.string),
+    productionSystemVer: types.union(types.undefined, types.string),
     producerName: types.union(types.undefined, types.null, types.string),
     productionMethod: types.union(types.undefined, types.null, types.string),
     geographicArea: types.union(types.undefined, types.null, types.string),
@@ -98,4 +98,4 @@ export function selectFromQuantizedMeshBestRecord() {
   return new QuantizedMeshBestRecordModelSelector()
 }
 
-export const quantizedMeshBestRecordModelPrimitives = selectFromQuantizedMeshBestRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.maxAccuracyCE90.sensors.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords
+export const quantizedMeshBestRecordModelPrimitives = selectFromQuantizedMeshBestRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.maxAccuracyCE90.sensors.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
