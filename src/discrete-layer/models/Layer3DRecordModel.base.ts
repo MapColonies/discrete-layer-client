@@ -39,7 +39,7 @@ export const Layer3DRecordModelBase = ModelBase
     accuracySE90: types.union(types.undefined, types.null, types.number),
     relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
     visualAccuracy: types.union(types.undefined, types.null, types.number),
-    sensors: types.union(types.undefined, types.array(types.string)),
+    sensors: types.union(types.undefined, types.null, types.array(types.string)),
     footprint: types.union(types.undefined, types.frozen()),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
     heightRangeTo: types.union(types.undefined, types.null, types.number),
