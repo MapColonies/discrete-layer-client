@@ -21,7 +21,7 @@ export const Layer3DRecordModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Layer3DRecord"), "Layer3DRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
-    productId: types.union(types.undefined, types.null, types.string),
+    productId: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
     // ASSAF: MUST REMAIN STRING
     productVersion: types.union(types.undefined, types.null, types.string),
