@@ -46,7 +46,7 @@ export const Layer3DRecordModelBase = ModelBase
     srsId: types.union(types.undefined, types.string),
     srsName: types.union(types.undefined, types.string),
     srsOrigin: types.union(types.undefined, types.null, types.string),
-    region: types.union(types.undefined, types.array(types.string)),
+    region: types.union(types.undefined, types.null, types.array(types.string)),
     classification: types.union(types.undefined, types.string),
     productionSystem: types.union(types.undefined, types.string),
     productionSystemVer: types.union(types.undefined, types.string),
