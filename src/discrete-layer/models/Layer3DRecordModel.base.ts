@@ -50,7 +50,7 @@ export const Layer3DRecordModelBase = ModelBase
     classification: types.union(types.undefined, types.string),
     productionSystem: types.union(types.undefined, types.string),
     productionSystemVer: types.union(types.undefined, types.string),
-    producerName: types.union(types.undefined, types.string),
+    producerName: types.union(types.undefined, types.null, types.string),
     productionMethod: types.union(types.undefined, types.null, types.string),
     minFlightAlt: types.union(types.undefined, types.null, types.number),
     maxFlightAlt: types.union(types.undefined, types.null, types.number),
