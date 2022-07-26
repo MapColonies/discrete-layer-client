@@ -4,11 +4,13 @@ import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
+import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
+import CONFIG from '../../common/config';
 import { TabViews } from '../views/tab-views';
 import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
@@ -16,7 +18,6 @@ import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { CapabilityModelType } from './CapabilityModel';
-
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -48,6 +49,7 @@ export const discreteLayersStore = ModelBase
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>([])),
+    baseMaps: types.maybe(types.frozen<IBaseMaps>(CONFIG.BASE_MAPS)) 
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -210,6 +212,11 @@ export const discreteLayersStore = ModelBase
       self.capabilities = cloneDeep(data);
     }
 
+    function setBaseMaps(baseMaps: IBaseMaps): void {
+      console.log("baseMaps!!!!!", baseMaps)
+      self.baseMaps = cloneDeep(baseMaps);
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -229,6 +236,7 @@ export const discreteLayersStore = ModelBase
       removePreviewedLayer,
       isPreviewedLayer,
       setCapabilities,
+      setBaseMaps,
     };
   });
 

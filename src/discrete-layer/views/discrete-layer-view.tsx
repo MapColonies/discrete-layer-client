@@ -655,11 +655,31 @@ const DiscreteLayerView: React.FC = observer(() => {
             zoom={CONFIG.MAP.ZOOM}
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
-            baseMaps={CONFIG.BASE_MAPS}
+            baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
-            >
+            
+            // TODO: Tie legends to the current basemap. 
+            legends={{
+              legendsList: [
+                {
+                  layer: 'bluemarble',
+                  legendImg:
+                    'https://c8.alamy.com/comp/F5HF5D/map-icon-legend-symbol-sign-toolkit-element-F5HF5D.jpg',
+                  legendDoc: 'http://www.africau.edu/images/default/sample.pdf',
+                },
+                {
+                  layer: 'bluemarble2',
+                  legendImg:
+                    'https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg',
+                  legendDoc: 'http://www.africau.edu/images/default/sample.pdf',
+                },
+              ],
+              title: 'Map Legends',
+              emptyText: 'No legends for this basemap',
+            }}
+           >
               {memoizedLayers}
               <CesiumDrawingsDataSource
                 drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
