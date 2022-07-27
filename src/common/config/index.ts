@@ -1,6 +1,7 @@
 import { CesiumGeographicTilingScheme, Proj } from '@map-colonies/react-components';
 import { IRasterLayer } from '@map-colonies/react-components/dist/cesium-map/layers-manager';
 import { IBaseMaps, IBaseMap } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
+import { LinkType } from '../models/link-type.enum';
 
 /*eslint-disable */
 const LANGUAGE = (window as any)._env_.LANGUAGE as string;
@@ -28,19 +29,20 @@ const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
     maps: baseMaps.maps.map((baseMap: IBaseMap) => {
       return {
         ...baseMap,
-        baseRasteLayers: (baseMap.baseRasteLayers as IRasterLayer[]).map((rasterLayer)=>{
+        thumbnail: baseMap.thumbnail && ACCESS_TOKEN.injectionType.toLowerCase() === 'queryparam' ? `${baseMap.thumbnail}?${ACCESS_TOKEN.attributeName}=${ACCESS_TOKEN.tokenValue}` : baseMap.thumbnail,
+        baseRasteLayers: (baseMap.baseRasteLayers as IRasterLayer[]).map((rasterLayer) => {
           return {
             ...rasterLayer,
             options: {
               ...rasterLayer.options,
-              tilingScheme: (rasterLayer.type === 'WMTS_LAYER') ? new CesiumGeographicTilingScheme() : undefined
+              tilingScheme: (rasterLayer.type === LinkType.WMTS_LAYER) ? new CesiumGeographicTilingScheme() : undefined
             }
           };
         })
       }
     })
   }
-}
+};
 
 const systemJobsPriorityOptions =
   // Priority is an integer, normal / default value is 1000.

@@ -1,8 +1,9 @@
 import { Rectangle, Resource } from 'cesium';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
 import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
@@ -13,7 +14,7 @@ export const generateLayerRectangle = (
 };
 
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
-  return layer.links?.find((link: LinkModelType) => ['WMTS_tile', 'WMTS_LAYER'].includes(link.protocol as string)) as LinkModelType | undefined;
+  return layer.links?.find((link: LinkModelType) => [LinkType.WMTS_TILE as string, LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;
 };
 
 export const getLayerLink = (layer: ILayerImage): LinkModelType => {
@@ -24,13 +25,30 @@ export const getLayerLink = (layer: ILayerImage): LinkModelType => {
   return layerLink;
 };
 
+export const getTokenParam = (): string => {
+  // eslint-disable-next-line
+  const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};    
+  if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
+    return `?${ATTRIBUTE_NAME}=${TOKEN_VALUE}`;
+  }
+  return '';
+};
+
+export const getLinkUrl = (links: LinkModelType[], protocol: string): string | undefined => {
+  return links.find((link: LinkModelType) => link.protocol === protocol)?.url;
+};
+
+export const getLinkUrlWithToken = (links: LinkModelType[], protocol: string): string | undefined => {
+  const linkUrl = getLinkUrl(links, protocol);
+  const urlWithToken = `${linkUrl ?? ''}${linkUrl !== undefined ? getTokenParam() : ''}`;
+  return !isEmpty(urlWithToken) ? urlWithToken : undefined;
+};
+
 export const getTokenResource = (url: string): Resource => {
   const tokenProps: Record<string, unknown> = { url };
   
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};
+  // eslint-disable-next-line
+  const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};
   
   if (INJECTION_TYPE.toLowerCase() === 'header') {
     tokenProps.headers = {

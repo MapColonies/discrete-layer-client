@@ -8,6 +8,7 @@ import { useIntl } from 'react-intl';
 import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
+import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
@@ -16,14 +17,14 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
-import { IActionGroup } from '../../../common/actions/entity.actions';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { CapabilityModelType, RecordType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
-import { getLayerLink } from '../helpers/layersUtils';
+import { getLayerLink, getLinkUrlWithToken } from '../helpers/layersUtils';
 import { isBest } from '../layer-details/utils';
 import { queue } from '../snackbar/notification-queue';
 
@@ -216,16 +217,16 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     //#endregion
 
     // get unlinked/new discretes shortcuts
-    const arrUnlinked = arr.filter((item) => {
+    /*const arrUnlinked = arr.filter((item) => {
       // @ts-ignore
-      const itemObjectBag =  item as Record<string,unknown>;
+      const itemObjectBag = item as Record<string,unknown>;
       return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
     });
     const parentUnlinked = buildParentTreeNode(
       arrUnlinked,
       intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
       {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-    );
+    );*/
 
     // get BESTs shortcuts
     const arrBests = arr.filter(isBest);
@@ -265,7 +266,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     setTreeRawData(
       [
-        parentUnlinked,
+        // parentUnlinked,
         parentCatalog,
         parentBests,
       ]
@@ -422,7 +423,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>
                     ],
                 buttons: [
                   <>
