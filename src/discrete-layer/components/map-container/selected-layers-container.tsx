@@ -12,12 +12,13 @@ import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
-import { LayerRasterRecordModelType } from '../../models';
+import { LayerRasterRecordModelType, LinkModelType } from '../../models';
 import {
   getLayerLink,
   generateLayerRectangle,
   getTokenResource,
-  getWMTSOptions
+  getWMTSOptions,
+  getLinksArrWithTokens
 } from '../helpers/layersUtils';
 
 interface CacheMap {
@@ -56,6 +57,12 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.XYZ_LAYER:
         return (
           <CesiumXYZLayer
+            meta={{
+              layerRecord: {
+                ...layer,
+                links: getLinksArrWithTokens(layer.links as LinkModelType[])
+              } as ILayerImage
+            }}
             rectangle={generateLayerRectangle(
               layer as LayerRasterRecordModelType
             )}
@@ -79,6 +86,12 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         };
         return (
           <CesiumWMTSLayer
+          meta={{
+            layerRecord: {
+              ...layer,
+              links: getLinksArrWithTokens(layer.links as LinkModelType[])
+            } as ILayerImage
+          }}
             rectangle={generateLayerRectangle(
               layer as LayerRasterRecordModelType
             )}

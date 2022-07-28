@@ -38,11 +38,29 @@ export const getLinkUrl = (links: LinkModelType[], protocol: string): string | u
   return links.find((link: LinkModelType) => link.protocol === protocol)?.url;
 };
 
-export const getLinkUrlWithToken = (links: LinkModelType[], protocol: string): string | undefined => {
-  const linkUrl = getLinkUrl(links, protocol);
+export const getLinkUrlWithToken = (links: LinkModelType[], protocol?: string): string | undefined => {
+  // supporting single links.
+  let linkUrl = links[0].url;
+
+  // if single link theres no need to find link by protocol.
+  if(typeof protocol !== 'undefined') {
+     linkUrl = getLinkUrl(links, protocol);
+  }
+
   const urlWithToken = `${linkUrl ?? ''}${linkUrl !== undefined ? getTokenParam() : ''}`;
   return !isEmpty(urlWithToken) ? urlWithToken : undefined;
 };
+
+export const getLinksArrWithTokens = (links: LinkModelType[]): LinkModelType[] => {
+  const linksWithTokens = links.map(link => {
+    return ({
+      ...link,
+      url: getLinkUrlWithToken([link])
+    })
+  })
+
+  return linksWithTokens;
+}
 
 export const getTokenResource = (url: string): Resource => {
   const tokenProps: Record<string, unknown> = { url };
