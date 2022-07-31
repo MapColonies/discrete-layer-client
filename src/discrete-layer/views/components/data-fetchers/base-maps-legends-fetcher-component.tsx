@@ -6,6 +6,7 @@ import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settin
 import { ILayerImage } from '../../../models/layerImage';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../../__mocks-data__/search-results.mock';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import { LinkType } from '../../../../common/models/link-type.enum';
 
 export const BaseMapsLegendsFetcher: React.FC = observer(() => {
   const store = useStore();
@@ -19,11 +20,11 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
         'GOOGLE_TERRAIN',
         [
           {
-            protocol: 'Legend_PDF',
+            protocol: LinkType.LEGEND_DOC,
             url: 'http://www.africau.edu/images/default/sample.pdf',
           },
           {
-            protocol: 'Legend_IMG',
+            protocol: LinkType.LEGEND_IMG,
             url:
               'https://c8.alamy.com/comp/F5HF5D/map-icon-legend-symbol-sign-toolkit-element-F5HF5D.jpg',
           },
@@ -33,11 +34,11 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
         'INFRARED_RASTER',
         [
           {
-            protocol: 'Legend_PDF',
+            protocol: LinkType.LEGEND_DOC,
             url: 'http://www.africau.edu/images/default/sample.pdf',
           },
           {
-            protocol: 'Legend_IMG',
+            protocol: LinkType.LEGEND_IMG,
             url:
               'https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg',
           },
@@ -49,11 +50,11 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
         'VECTOR_TILES',
         [
           {
-            protocol: 'Legend_PDF',
+            protocol: LinkType.LEGEND_DOC,
             url: 'http://www.africau.edu/images/default/sample.pdf',
           },
           {
-            protocol: 'Legend_IMG',
+            protocol: LinkType.LEGEND_IMG,
             url:
               'https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg',
           },
@@ -64,11 +65,11 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
         'AZURE_RASTER_WMTS_FULL_IL',
         [
           {
-            protocol: 'Legend_PDF',
+            protocol: LinkType.LEGEND_DOC,
             url: 'http://www.africau.edu/images/default/sample.pdf',
           },
           {
-            protocol: 'Legend_IMG',
+            protocol: LinkType.LEGEND_IMG,
             url:
               'https://c8.alamy.com/comp/F5HF5D/map-icon-legend-symbol-sign-toolkit-element-F5HF5D.jpg',
           },
@@ -91,8 +92,8 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
 
   const getLegendsWithBasemaps = useCallback(
     async (baseMaps: IBaseMaps): Promise<IBaseMaps> => {
-      const LEGEND_PDF_PROTOCOL = 'Legend_PDF';
-      const LEGEND_IMG_PROTOCOL = 'Legend_IMG';
+      const LEGEND_PDF_PROTOCOL = LinkType.LEGEND_DOC;
+      const LEGEND_IMG_PROTOCOL = LinkType.LEGEND_IMG;
 
       const baseMapsWithLegends = await Promise.all(
         baseMaps.maps.map(async (baseMap) => {
@@ -105,7 +106,7 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
                   rasterLayer.id
                 );
                 const legendsLinks = ((layerFromCatalog.links as unknown) as LinkModelType[]).filter(
-                  (link) => link.protocol?.startsWith('Legend')
+                  (link) => [LEGEND_PDF_PROTOCOL, LEGEND_IMG_PROTOCOL].includes(link.protocol as LinkType)
                 );
 
                 return {

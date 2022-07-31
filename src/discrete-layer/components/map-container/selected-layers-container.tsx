@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState, useRef } from 'react';
+import { ImageryLayer } from 'cesium';
 import {
   Cesium3DTileset,
   CesiumWMTSLayer, CesiumXYZLayer,
@@ -20,10 +21,13 @@ import {
   getWMTSOptions,
   getLinksArrWithTokens
 } from '../helpers/layersUtils';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined;
 }
+
+type SearchLayerPredicate = (layer: ImageryLayer, idx: number) => boolean
 
 export const SelectedLayersContainer: React.FC = observer(() => {
   const store = useStore();
@@ -58,6 +62,36 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         return (
           <CesiumXYZLayer
             meta={{
+              legendsListExtractor: (layers: (ImageryLayer & { meta: any })[]): IMapLegend[] => {
+                const legendDocProtocol = LinkType.LEGEND_DOC;
+                const legendImgProtocol = LinkType.LEGEND_IMG;
+                const legendObjProtocol = LinkType.LEGEND;
+
+                return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
+
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                  const layerLegendLinks = ((cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).links as LinkModelType[])
+                  .reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
+                    if([legendDocProtocol, legendImgProtocol, legendObjProtocol ].includes(link.protocol as LinkType)) {
+                        return { ...legendsByProtocol, [link.protocol as LinkType]: link };
+                    }
+                    return legendsByProtocol;
+                  }, {} as Record<LinkType, LinkModelType>)
+
+                  return [...legendsList, {
+                    layer: (cesiumLayer.meta as LayerRasterRecordModelType).productId,
+                    legend: layerLegendLinks.LEGEND as unknown as Record<string, unknown>[],
+                    legendDoc: layerLegendLinks.LEGEND_DOC.url,
+                    legendImg: layerLegendLinks.LEGEND_IMG.url,
+                  }]
+                  
+                },[] as IMapLegend[]);
+              },
+              searchLayerPredicate: ((cesiumLayer, idx) => {
+                const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                return correctLinkByProtocol?.url === (cesiumLayer as any)._imageryProvider._resource._url
+              }) as SearchLayerPredicate,
               layerRecord: {
                 ...layer,
                 links: getLinksArrWithTokens(layer.links as LinkModelType[])
@@ -87,6 +121,36 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         return (
           <CesiumWMTSLayer
           meta={{
+            legendsListExtractor: (layers: (ImageryLayer & { meta: any })[]): IMapLegend[] => {
+              const legendDocProtocol = LinkType.LEGEND_DOC;
+              const legendImgProtocol = LinkType.LEGEND_IMG;
+              const legendObjProtocol = LinkType.LEGEND;
+
+              return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
+
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                const layerLegendLinks = ((cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).links as LinkModelType[])
+                .reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
+                  if([legendDocProtocol, legendImgProtocol, legendObjProtocol ].includes(link.protocol as LinkType)) {
+                      return { ...legendsByProtocol, [link.protocol as LinkType]: link };
+                  }
+                  return legendsByProtocol;
+                }, {} as Record<LinkType, LinkModelType>)
+
+                return [...legendsList, {
+                  layer: (cesiumLayer.meta as LayerRasterRecordModelType).productId,
+                  legend: layerLegendLinks.LEGEND as unknown as Record<string, unknown>[],
+                  legendDoc: layerLegendLinks.LEGEND_DOC.url,
+                  legendImg: layerLegendLinks.LEGEND_IMG.url,
+                }]
+                
+              },[] as IMapLegend[]);
+            },
+            searchLayerPredicate: ((cesiumLayer, idx) => {
+              const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              return correctLinkByProtocol?.url === (cesiumLayer as any)._imageryProvider._resource._url
+            }) as SearchLayerPredicate,
             layerRecord: {
               ...layer,
               links: getLinksArrWithTokens(layer.links as LinkModelType[])
