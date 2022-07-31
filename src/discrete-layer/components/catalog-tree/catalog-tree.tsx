@@ -228,6 +228,18 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
     );*/
 
+    // get unpublished/new discretes
+    const arrUnpublished = arr.filter((item) => {
+      // @ts-ignore
+      const itemObjectBag = item as Record<string,unknown>;
+      return ('status' in itemObjectBag) && itemObjectBag.status === 'UNPUBLISHED';
+    });
+    const parentUnpublished = buildParentTreeNode(
+      arrUnpublished,
+      intl.formatMessage({ id: 'tab-views.catalog.top-categories.unpublished' }),
+      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+    );
+
     // get BESTs shortcuts
     const arrBests = arr.filter(isBest);
     const drafts = store.bestStore.getDrafts();
@@ -255,7 +267,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           };
         })
       ]
-    }
+    };
 
     // whole catalog as is
     const parentCatalog = buildParentTreeNode(
@@ -266,9 +278,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     setTreeRawData(
       [
-        // parentUnlinked,
         parentCatalog,
         parentBests,
+        parentUnpublished,
       ]
     );
   }, [dataSearch]);
