@@ -191,16 +191,16 @@ export const transformEntityToFormFields = (
   for (const fieldName of Object.keys(layerRecord)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
 
-    switch(basicType) {
+    switch (basicType) {
       case 'string[]':
       case 'sensors':
         /* eslint-disable */
         // @ts-ignore
         transformedFields[fieldName] = transformedFields[fieldName]?.join(', ');
         /* eslint-enable */
-      break;
+        break;
       default:
-      break;
+        break;
     }
   }
 
@@ -216,11 +216,16 @@ export const transformFormFieldsToEntity = (
   for (const fieldName of Object.keys(fields)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
 
-    if (basicType === 'string[]') {
-      /* eslint-disable */
-      // @ts-ignore
-      transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
-      /* eslint-enable */
+    switch (basicType) {
+      case 'string[]':
+      case 'sensors':
+        /* eslint-disable */
+        // @ts-ignore
+        transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
+        /* eslint-enable */
+        break;
+      default:
+        break;
     }
   }
 
