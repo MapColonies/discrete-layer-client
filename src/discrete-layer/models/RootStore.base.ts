@@ -155,16 +155,16 @@ export type LayerRasterRecordInput = {
   productName: string
   description?: string
   srsId: string
-  producerName?: string
+  producerName: string
   creationDate?: any
   ingestionDate?: any
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
   minHorizontalAccuracyCE90?: number
-  sensors?: string[]
-  region?: string[]
-  productId: string
+  sensors: string[]
+  region: string[]
+  productId?: string
   productVersion?: string
   productType: ProductType
   productSubType?: string
@@ -209,23 +209,23 @@ export type Layer3DRecordInput = {
   minResolutionMeter?: number
   maxResolutionMeter?: number
   nominalResolution?: number
-  maxAccuracyCE90?: number
+  maxAccuracyCE90: number
   absoluteAccuracyLEP90: number
   accuracySE90?: number
   relativeAccuracyLEP90?: number
   visualAccuracy?: number
-  sensors?: string[]
+  sensors: string[]
   footprint: any
   heightRangeFrom?: number
   heightRangeTo?: number
   srsId: string
   srsName: string
   srsOrigin?: string
-  region?: string[]
+  region: string[]
   classification: string
-  productionSystem?: string
-  productionSystemVer?: string
-  producerName?: string
+  productionSystem: string
+  productionSystemVer: string
+  producerName: string
   productionMethod?: string
   minFlightAlt?: number
   maxFlightAlt?: number
@@ -250,13 +250,13 @@ export type LayerDemRecordInput = {
   description?: string
   srsId: string
   srsName: string
-  producerName?: string
+  producerName: string
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
-  sensors?: string[]
-  region?: string[]
-  productId: string
+  sensors: string[]
+  region: string[]
+  productId?: string
   productType: ProductType
   footprint: any
   absoluteAccuracyLEP90: number
