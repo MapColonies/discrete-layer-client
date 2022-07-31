@@ -6,8 +6,8 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { DataTypeEnumType } from "./DataTypeEnum"
-import { LinkModel } from "./LinkModel"
-import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
+import { LinkModel, LinkModelType } from "./LinkModel"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { NoDataValueEnumType } from "./NoDataValueEnum"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
@@ -31,13 +31,13 @@ export const LayerDemRecordModelBase = ModelBase
     description: types.union(types.undefined, types.null, types.string),
     srsId: types.union(types.undefined, types.string),
     srsName: types.union(types.undefined, types.string),
-    producerName: types.union(types.undefined, types.null, types.string),
+    producerName: types.union(types.undefined, types.string),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.frozen()),
-    sensors: types.union(types.undefined, types.null, types.array(types.string)),
-    region: types.union(types.undefined, types.null, types.array(types.string)),
-    productId: types.union(types.undefined, types.string),
+    sensors: types.union(types.undefined, types.array(types.string)),
+    region: types.union(types.undefined, types.array(types.string)),
+    productId: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     footprint: types.union(types.undefined, types.frozen()),
     absoluteAccuracyLEP90: types.union(types.undefined, types.number),
