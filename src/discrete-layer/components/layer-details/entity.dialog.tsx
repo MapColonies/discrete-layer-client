@@ -41,13 +41,19 @@ import {
   LayerRasterRecordModelKeys,
 } from './entity-types-keys';
 import { IRecordFieldInfo } from './layer-details.field-info';
-import { getFlatEntityDescriptors, getRecordForUpdate, getValidationType } from './utils';
+import {
+  getFlatEntityDescriptors,
+  getPartialRecord,
+  getRecordForUpdate,
+  getValidationType
+} from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
 import { LayersDetailsComponent } from './layer-details';
 
 import './entity.dialog.css';
 
+const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
@@ -301,21 +307,12 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (vestValidationResults.errorCount === NONE) {
         if (mode === Mode.EDIT) {
           if (inputValues.__typename !== 'BestRecord') {
-            const editableFields = descriptors
-              .filter(item => (item as FieldConfigModelType).isManuallyEditable === true)
-              .map(item => (item as FieldConfigModelType).fieldName);
-            const input = Object.keys(inputValues)
-              .filter(key => editableFields.includes(key))
-              .reduce((obj: Record<string, unknown>, key: string) => {
-                obj[key] = inputValues[key];
-                return obj;
-              }, {});
             mutationQuery.setQuery(
               store.mutateUpdateMetadata({
                 data: {
                   id: inputValues.id as string,
                   type: inputValues.type as RecordType,
-                  input,
+                  partialRecordData: getPartialRecord(inputValues as Record<string, unknown> as Partial<ILayerImage>, descriptors as unknown[] as FieldConfigModelType[], IS_EDITABLE),
                 },
               })
             );
@@ -390,7 +387,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
         closeDialog();
         store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
-        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id);
+        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id as string);
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 

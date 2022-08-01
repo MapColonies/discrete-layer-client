@@ -171,7 +171,6 @@ const removeObjFields = (
   return Object.fromEntries(
     Object.entries(obj).filter(([_, val]) => {
       const shouldOmitField = cbFn(val);
-
       return !shouldOmitField;
     })
   );
@@ -187,10 +186,8 @@ export const transformEntityToFormFields = (
   layerRecord: LayerMetadataMixedUnion | LinkModelType
 ): Record<string, unknown> => {
   const transformedFields = {...layerRecord};
-
   for (const fieldName of Object.keys(layerRecord)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
-
     switch (basicType) {
       case 'string[]':
       case 'sensors':
@@ -203,7 +200,6 @@ export const transformEntityToFormFields = (
         break;
     }
   }
-
   return transformedFields;
 };
 
@@ -212,10 +208,8 @@ export const transformFormFieldsToEntity = (
   layerRecord: LayerMetadataMixedUnion | LinkModelType
 ): Record<string, unknown> => {
   const transformedFields = {...fields};
-
   for (const fieldName of Object.keys(fields)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
-
     switch (basicType) {
       case 'string[]':
       case 'sensors':
@@ -228,132 +222,141 @@ export const transformFormFieldsToEntity = (
         break;
     }
   }
-
   return transformedFields;
+};
+
+export const getPartialRecord = (inputValues: Partial<ILayerImage>, descriptors: FieldConfigModelType[], attr: string): Partial<ILayerImage> => {
+  const editableFields = descriptors
+    .filter(item => get(item, attr) === true)
+    .map(item => item.fieldName);
+  const partialRecordData = Object.keys(inputValues)
+    .filter(key => editableFields.includes(key))
+    .reduce((obj: Record<string, unknown>, key: string) => {
+      obj[key] = get(inputValues, key) as unknown;
+      return obj;
+    }, {});
+  return partialRecordData;
 };
 
 export const extractUpdateRelatedFieldNames = (record: ILayerImage, descriptors: FieldConfigModelType[]): string[] => {
   const updateRulesFields = descriptors.filter((descriptor) => descriptor.updateRules !== null);
-
   return updateRulesFields.map(field => field.fieldName) as string[];
-}
+};
 
 export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerImage, descriptors: FieldConfigModelType[]): ILayerImage => {
-  
-  // ------------ HELPERS -----------
   const VERSION_DELIMITER = '.';
-  const handleExplicitOperation = (field: FieldConfigModelType, fieldOperation: UpdateRulesOperationModelType, recordForUpdate: Record<string, unknown>): Record<string, unknown> => {
-    const recordCpy = { ...recordForUpdate };
-    const selectedLayerFieldValue = get(recordForUpdate,`[${field.fieldName as string}]`);
+
+  // ---------- HELPERS ----------
   
-    if(fieldOperation.value === null || typeof fieldOperation.value === 'undefined') return recordCpy;
+  const handleExplicitOperation = (
+    field: FieldConfigModelType,
+    fieldOperation: UpdateRulesOperationModelType,
+    recordForUpdate: Record<string, unknown>
+  ): Record<string, unknown> => {
+    const recordCopy = { ...recordForUpdate };
+    const selectedLayerFieldValue = get(recordForUpdate, `[${field.fieldName as string}]`);
+  
+    if (fieldOperation.value === null || typeof fieldOperation.value === 'undefined') return recordCopy;
   
     const fraction = fieldOperation.fraction;
   
     // Handling regular number fields
-    if(fraction === null || typeof fraction === 'undefined'){
-      recordCpy[field.fieldName as string] = fieldOperation.value;
-      return recordCpy;
+    if (fraction === null || typeof fraction === 'undefined'){
+      recordCopy[field.fieldName as string] = fieldOperation.value;
+      return recordCopy;
     }
     
     // Handling Moment fields
-    if(moment.isMoment(selectedLayerFieldValue)) {
+    if (moment.isMoment(selectedLayerFieldValue)) {
       const dateFractions: Record<string, unitOfTime.Base> = {
         [FractionType.DAYS]: 'date' as unitOfTime.Base, 
         [FractionType.MONTHS]: 'month' as unitOfTime.Base,
         [FractionType.YEARS]: 'year' as unitOfTime.Base,
       };
       selectedLayerFieldValue.set(dateFractions[fraction], fieldOperation.value);
-      recordCpy[field.fieldName as string] = selectedLayerFieldValue;
+      recordCopy[field.fieldName as string] = selectedLayerFieldValue;
   
-      return recordCpy;
+      return recordCopy;
     }
-  
-  
+
     // Handling version fields
     const versionFractions: Record<string, number> = {[FractionType.MAJOR]: 0, [FractionType.MINOR]: 1, [FractionType.PATCH]: 2 };
     
-    if(fraction in versionFractions) {
-      const currentVersionSplit = (recordCpy[field.fieldName as string] as string).split(VERSION_DELIMITER);
+    if (fraction in versionFractions) {
+      const currentVersionSplit = (recordCopy[field.fieldName as string] as string).split(VERSION_DELIMITER);
       currentVersionSplit[versionFractions[fraction]] = `${fieldOperation.value}`;
-  
-      recordCpy[field.fieldName as string] = currentVersionSplit.join(VERSION_DELIMITER);
-      return recordCpy;
+      recordCopy[field.fieldName as string] = currentVersionSplit.join(VERSION_DELIMITER);
+      return recordCopy;
     }
     
-    return recordCpy;
-  }
+    return recordCopy;
+  };
   
-  const handleIncrementOperation = (field: FieldConfigModelType, fieldOperation: UpdateRulesOperationModelType, recordForUpdate: Record<string, unknown>): Record<string, unknown> => {
+  const handleIncrementOperation = (
+    field: FieldConfigModelType,
+    fieldOperation: UpdateRulesOperationModelType,
+    recordForUpdate: Record<string, unknown>
+  ): Record<string, unknown> => {
     const recordCpy = { ...recordForUpdate };
     const selectedLayerFieldValue = get(recordForUpdate,`[${field.fieldName as string}]`);
-  
-    if(fieldOperation.value === null || typeof fieldOperation.value === 'undefined') return recordCpy;
-  
+
+    if (fieldOperation.value === null || typeof fieldOperation.value === 'undefined') return recordCpy;
+
     const fraction = fieldOperation.fraction;
-  
+
     // Handling regular number fields
-    if(fraction === null || typeof fraction === 'undefined'){
+    if (fraction === null || typeof fraction === 'undefined'){
       recordCpy[field.fieldName as string] = recordCpy[field.fieldName as string] as number + fieldOperation.value;
-  
       return recordCpy;
     }
     
     // Handling Moment fields
-    if(moment.isMoment(selectedLayerFieldValue)) {
+    if (moment.isMoment(selectedLayerFieldValue)) {
       const dateFractions: Record<string, string> = {[FractionType.DAYS]: 'days', [FractionType.MONTHS]: 'months', [FractionType.YEARS]: 'years' };
       selectedLayerFieldValue.add(fieldOperation.value, dateFractions[fraction] as unitOfTime.DurationConstructor);
       recordCpy[field.fieldName as string] = selectedLayerFieldValue;
-  
       return recordCpy;
     }
-  
-  
+
     // Handling version fields
     const versionFractions: Record<string, number> = {[FractionType.MAJOR]: 0, [FractionType.MINOR]: 1, [FractionType.PATCH]: 2 };
     
-    if(fraction in versionFractions) {
+    if (fraction in versionFractions) {
       const currentVersionSplit = (recordCpy[field.fieldName as string] as string).split(VERSION_DELIMITER);
       const fractionVersionValue = currentVersionSplit[versionFractions[fraction]];
-      
       currentVersionSplit[versionFractions[fraction]] = `${+fractionVersionValue + fieldOperation.value}`;
       recordCpy[field.fieldName as string] = currentVersionSplit.join(VERSION_DELIMITER);
-  
       return recordCpy;
     }
     
     return recordCpy;
-  }
+  };
   
-  // --------------------------------
+  // -----------------------------
 
   let recordForUpdate: Record<string,unknown> = { ...record };
   const updateRulesFields = descriptors.filter((descriptor) => descriptor.updateRules !== null);
   
-  for(const field of updateRulesFields) {
+  for (const field of updateRulesFields) {
     const updateRules = field.updateRules as UpdateRulesModelType | undefined;
     const fieldOperation = get(updateRules,'value.operation') as UpdateRulesOperationModelType | undefined;
     const selectedLayerFieldValue = (selectedLayer as unknown as Record<string,unknown>)[field.fieldName as string];
 
     // Copy all relevant fields
-      recordForUpdate[field.fieldName as string] = selectedLayerFieldValue;
+    recordForUpdate[field.fieldName as string] = selectedLayerFieldValue;
 
-    if(fieldOperation?.type !== null && fieldOperation?.type !== OperationType.COPY) {
-      switch(fieldOperation?.type) {
+    if (fieldOperation?.type !== null && fieldOperation?.type !== OperationType.COPY) {
+      switch (fieldOperation?.type) {
         case OperationType.EXPLICIT: 
           recordForUpdate = {...handleExplicitOperation(field, fieldOperation, recordForUpdate)};
-
-        break;
-
+          break;
         case OperationType.INCREMENT:  
           recordForUpdate = {...handleIncrementOperation(field, fieldOperation, recordForUpdate)};
-
-        break;
-
+          break;
         default:
       }
     }
   }
 
   return recordForUpdate as unknown as ILayerImage;
-}
+};
