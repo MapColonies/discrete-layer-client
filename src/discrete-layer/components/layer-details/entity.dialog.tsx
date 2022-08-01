@@ -304,7 +304,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             const editableFields = descriptors
               .filter(item => (item as FieldConfigModelType).isManuallyEditable === true)
               .map(item => (item as FieldConfigModelType).fieldName);
-            const editData = Object.keys(inputValues)
+            const input = Object.keys(inputValues)
               .filter(key => editableFields.includes(key))
               .reduce((obj: Record<string, unknown>, key: string) => {
                 obj[key] = inputValues[key];
@@ -315,7 +315,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                 data: {
                   id: inputValues.id as string,
                   type: inputValues.type as RecordType,
-                  ...editData,
+                  input,
                 },
               })
             );
