@@ -301,17 +301,21 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (vestValidationResults.errorCount === NONE) {
         if (mode === Mode.EDIT) {
           if (inputValues.__typename !== 'BestRecord') {
+            const editableFields = descriptors
+              .filter(item => (item as FieldConfigModelType).isManuallyEditable === true)
+              .map(item => (item as FieldConfigModelType).fieldName);
+            const editData = Object.keys(inputValues)
+              .filter(key => editableFields.includes(key))
+              .reduce((obj: Record<string, unknown>, key: string) => {
+                obj[key] = inputValues[key];
+                return obj;
+              }, {});
             mutationQuery.setQuery(
               store.mutateUpdateMetadata({
                 data: {
                   id: inputValues.id as string,
                   type: inputValues.type as RecordType,
-                  productName: inputValues.productName as string,
-                  description: inputValues.description as string,
-                  productSubType: inputValues.productSubType as string,
-                  producerName: inputValues.producerName as string,
-                  classification: inputValues.classification as string,
-                  keywords: inputValues.keywords as string,
+                  ...editData,
                 },
               })
             );
