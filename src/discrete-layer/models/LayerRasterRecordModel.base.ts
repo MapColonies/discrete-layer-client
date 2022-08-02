@@ -5,8 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel } from "./LinkModel"
-import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
+import { LinkModel, LinkModelType } from "./LinkModel"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
@@ -25,16 +25,16 @@ export const LayerRasterRecordModelBase = ModelBase
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
     srsId: types.union(types.undefined, types.string),
-    producerName: types.union(types.undefined, types.null, types.string),
+    producerName: types.union(types.undefined, types.string),
     creationDate: types.union(types.undefined, types.null, types.frozen()),
     ingestionDate: types.union(types.undefined, types.null, types.frozen()),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.frozen()),
     minHorizontalAccuracyCE90: types.union(types.undefined, types.null, types.number),
-    sensors: types.union(types.undefined, types.null, types.array(types.string)),
-    region: types.union(types.undefined, types.null, types.array(types.string)),
-    productId: types.union(types.undefined, types.string),
+    sensors: types.union(types.undefined, types.array(types.string)),
+    region: types.union(types.undefined, types.array(types.string)),
+    productId: types.union(types.undefined, types.null, types.string),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     productSubType: types.union(types.undefined, types.null, types.string),
