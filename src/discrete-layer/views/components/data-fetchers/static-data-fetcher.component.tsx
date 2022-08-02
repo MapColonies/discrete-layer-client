@@ -7,7 +7,7 @@ export const StaticDataFetcher: React.FC = () => {
   return (
     <>
       <EntityDescriptorsFetcher />
-      <BaseMapsLegendsFetcher />
+      {/* <BaseMapsLegendsFetcher /> */}
     </>
   );
 };

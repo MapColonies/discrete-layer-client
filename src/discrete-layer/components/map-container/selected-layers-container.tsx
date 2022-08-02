@@ -62,31 +62,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         return (
           <CesiumXYZLayer
             meta={{
-              legendsListExtractor: (layers: (ImageryLayer & { meta: any })[]): IMapLegend[] => {
-                const legendDocProtocol = LinkType.LEGEND_DOC;
-                const legendImgProtocol = LinkType.LEGEND_IMG;
-                const legendObjProtocol = LinkType.LEGEND;
-
-                return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
-
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  const layerLegendLinks = ((cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).links as LinkModelType[])
-                  .reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
-                    if([legendDocProtocol, legendImgProtocol, legendObjProtocol ].includes(link.protocol as LinkType)) {
-                        return { ...legendsByProtocol, [link.protocol as LinkType]: link };
-                    }
-                    return legendsByProtocol;
-                  }, {} as Record<LinkType, LinkModelType>)
-
-                  return [...legendsList, {
-                    layer: (cesiumLayer.meta as LayerRasterRecordModelType).productId,
-                    legend: layerLegendLinks.LEGEND as unknown as Record<string, unknown>[],
-                    legendDoc: layerLegendLinks.LEGEND_DOC.url,
-                    legendImg: layerLegendLinks.LEGEND_IMG.url,
-                  }]
-                  
-                },[] as IMapLegend[]);
-              },
               searchLayerPredicate: ((cesiumLayer, idx) => {
                 const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -94,7 +69,17 @@ export const SelectedLayersContainer: React.FC = observer(() => {
               }) as SearchLayerPredicate,
               layerRecord: {
                 ...layer,
-                links: getLinksArrWithTokens(layer.links as LinkModelType[])
+                links: getLinksArrWithTokens(
+                  [...layer.links as LinkModelType[],{
+                    name: "MAS_6_ORT_247557-Orthophoto",
+                    protocol: LinkType.LEGEND_DOC,
+                    url: "http://www.africau.edu/images/default/sample.pdf"
+                  } as LinkModelType,
+                  {
+                    name: "MAS_6_ORT_247557-Orthophoto",
+                    protocol: LinkType.LEGEND_IMG,
+                    url: "https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg"
+                  } as LinkModelType])
               } as ILayerImage
             }}
             rectangle={generateLayerRectangle(
@@ -121,39 +106,25 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         return (
           <CesiumWMTSLayer
           meta={{
-            legendsListExtractor: (layers: (ImageryLayer & { meta: any })[]): IMapLegend[] => {
-              const legendDocProtocol = LinkType.LEGEND_DOC;
-              const legendImgProtocol = LinkType.LEGEND_IMG;
-              const legendObjProtocol = LinkType.LEGEND;
-
-              return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
-
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const layerLegendLinks = ((cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).links as LinkModelType[])
-                .reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
-                  if([legendDocProtocol, legendImgProtocol, legendObjProtocol ].includes(link.protocol as LinkType)) {
-                      return { ...legendsByProtocol, [link.protocol as LinkType]: link };
-                  }
-                  return legendsByProtocol;
-                }, {} as Record<LinkType, LinkModelType>)
-
-                return [...legendsList, {
-                  layer: (cesiumLayer.meta as LayerRasterRecordModelType).productId,
-                  legend: layerLegendLinks.LEGEND as unknown as Record<string, unknown>[],
-                  legendDoc: layerLegendLinks.LEGEND_DOC.url,
-                  legendImg: layerLegendLinks.LEGEND_IMG.url,
-                }]
-                
-              },[] as IMapLegend[]);
-            },
             searchLayerPredicate: ((cesiumLayer, idx) => {
               const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              return correctLinkByProtocol?.url === (cesiumLayer as any)._imageryProvider._resource._url
+              const ret = (correctLinkByProtocol?.url?.split('?')[0] === (cesiumLayer as any)._imageryProvider._resource._url.split('?')[0]);
+              return ret;
             }) as SearchLayerPredicate,
             layerRecord: {
               ...layer,
-              links: getLinksArrWithTokens(layer.links as LinkModelType[])
+              links: getLinksArrWithTokens(
+                [...layer.links as LinkModelType[],{
+                  name: "MAS_6_ORT_247557-Orthophoto",
+                  protocol: LinkType.LEGEND_DOC,
+                  url: "http://www.africau.edu/images/default/sample.pdf"
+                } as LinkModelType,
+                {
+                  name: "MAS_6_ORT_247557-Orthophoto",
+                  protocol: LinkType.LEGEND_IMG,
+                  url: "https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg"
+                } as LinkModelType])
             } as ILayerImage
           }}
             rectangle={generateLayerRectangle(

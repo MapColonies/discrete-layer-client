@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
@@ -43,7 +43,7 @@ import { BestRecordModelKeys } from '../components/layer-details/entity-types-ke
 import { JobsDialog } from '../components/system-status/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
+import { BestRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModelType, LinkModelType, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';
@@ -66,6 +66,8 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { LinkType } from '../../common/models/link-type.enum';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -531,6 +533,40 @@ const DiscreteLayerView: React.FC = observer(() => {
       </div>
     );
   };
+
+  const mapLegendsExtractor = useCallback((layers: (ILayerImage & { meta: any })[]): IMapLegend[] => {
+    const legendDocProtocol = LinkType.LEGEND_DOC;
+    const legendImgProtocol = LinkType.LEGEND_IMG;
+    const legendObjProtocol = LinkType.LEGEND;
+    const legendsProtocols = [legendDocProtocol, legendImgProtocol, legendObjProtocol];
+
+    return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
+      if(typeof get(cesiumLayer.meta, "layerRecord.links") !== 'undefined') {
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const layerLegendLinks = ((cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).links as LinkModelType[])
+        .reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
+          if(legendsProtocols.includes(link.protocol as LinkType)) {
+              return { ...legendsByProtocol, [link.protocol as LinkType]: link };
+          }
+          return legendsByProtocol;
+        }, {} as Record<LinkType, LinkModelType>)
+        
+        
+        return [...legendsList, {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          layer: (cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).productId,
+          legend: layerLegendLinks.LEGEND as unknown as Record<string, unknown>[],
+          legendDoc: layerLegendLinks.LEGEND_DOC.url,
+          legendImg: layerLegendLinks.LEGEND_IMG.url,
+        }];
+      }
+
+      return legendsList;
+
+      
+    },[] as IMapLegend[]);
+  }, []);
  
   return (
     <>
@@ -662,20 +698,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             
             // TODO: Tie legends to the current basemap. 
             legends={{
-              legendsList: [
-                {
-                  layer: 'bluemarble',
-                  legendImg:
-                    'https://c8.alamy.com/comp/F5HF5D/map-icon-legend-symbol-sign-toolkit-element-F5HF5D.jpg',
-                  legendDoc: 'http://www.africau.edu/images/default/sample.pdf',
-                },
-                {
-                  layer: 'bluemarble2',
-                  legendImg:
-                    'https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg',
-                  legendDoc: 'http://www.africau.edu/images/default/sample.pdf',
-                },
-              ],
+              mapLegendsExtractor,
               title: 'Map Legends',
               emptyText: 'No legends for this basemap',
             }}
