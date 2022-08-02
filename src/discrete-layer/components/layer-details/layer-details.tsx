@@ -15,6 +15,7 @@ import {
   LinkModelType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
 import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
@@ -77,7 +78,7 @@ export const getValuePresentor = (
       );
     case 'url':
       return (
-        <UrlValuePresentorComponent value={value as string}></UrlValuePresentorComponent>
+        <UrlValuePresentorComponent value={value as string} linkInfo={links[(layerRecord as LinkModelType).protocol as LinkType]}></UrlValuePresentorComponent>
       );
     case 'momentDateType':
       return (
