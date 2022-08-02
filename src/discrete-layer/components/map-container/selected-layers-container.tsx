@@ -8,7 +8,7 @@ import {
   useCesiumMap
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { useStore } from '../../models/RootStore';
@@ -70,7 +70,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
               layerRecord: {
                 ...layer,
                 links: getLinksArrWithTokens(
-                  [...layer.links as LinkModelType[],{
+                  [...layer.links as LinkModelType[], {
                     name: "MAS_6_ORT_247557-Orthophoto",
                     protocol: LinkType.LEGEND_DOC,
                     url: "http://www.africau.edu/images/default/sample.pdf"
@@ -105,12 +105,15 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         };
         return (
           <CesiumWMTSLayer
+          key={layer.id}
           meta={{
             searchLayerPredicate: ((cesiumLayer, idx) => {
               const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              const ret = (correctLinkByProtocol?.url?.split('?')[0] === (cesiumLayer as any)._imageryProvider._resource._url.split('?')[0]);
-              return ret;
+              const linkUrl = get(correctLinkByProtocol, 'url') as string;
+              const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
+
+              const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
+              return isLayerFound;
             }) as SearchLayerPredicate,
             layerRecord: {
               ...layer,

@@ -534,7 +534,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   };
 
-  const mapLegendsExtractor = useCallback((layers: (ILayerImage & { meta: any })[]): IMapLegend[] => {
+  const mapLegendsExtractor = useCallback((layers: (ILayerImage & { meta: unknown })[]): IMapLegend[] => {
     const legendDocProtocol = LinkType.LEGEND_DOC;
     const legendImgProtocol = LinkType.LEGEND_IMG;
     const legendObjProtocol = LinkType.LEGEND;
@@ -542,30 +542,31 @@ const DiscreteLayerView: React.FC = observer(() => {
 
     return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
       if(typeof get(cesiumLayer.meta, "layerRecord.links") !== 'undefined') {
+        const cesiumLayerLinks = get(cesiumLayer,'meta.layerRecord.links') as LinkModelType[];
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const layerLegendLinks = ((cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).links as LinkModelType[])
-        .reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
-          if(legendsProtocols.includes(link.protocol as LinkType)) {
+        const layerLegendLinks = cesiumLayerLinks.reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
+          const isLegendLink = legendsProtocols.includes(link.protocol as LinkType);
+
+          if(isLegendLink) {
               return { ...legendsByProtocol, [link.protocol as LinkType]: link };
           }
           return legendsByProtocol;
         }, {} as Record<LinkType, LinkModelType>)
         
-        
-        return [...legendsList, {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          layer: (cesiumLayer.meta?.layerRecord as LayerRasterRecordModelType).productId,
-          legend: layerLegendLinks.LEGEND as unknown as Record<string, unknown>[],
+        const layerLegend: IMapLegend = {
+          layer: get(cesiumLayer, 'meta.layerRecord.productId') as string,
+          legend: get(cesiumLayer, 'layerLegendsLinks.LEGEND') as Record<string, unknown>[],
           legendDoc: layerLegendLinks.LEGEND_DOC.url,
           legendImg: layerLegendLinks.LEGEND_IMG.url,
-        }];
+        }
+        
+        return [...legendsList, layerLegend];
       }
 
       return legendsList;
-
-      
+    
     },[] as IMapLegend[]);
+
   }, []);
  
   return (
