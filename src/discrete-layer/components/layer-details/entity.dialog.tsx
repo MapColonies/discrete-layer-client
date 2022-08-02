@@ -41,13 +41,19 @@ import {
   LayerRasterRecordModelKeys,
 } from './entity-types-keys';
 import { IRecordFieldInfo } from './layer-details.field-info';
-import { getFlatEntityDescriptors, getRecordForUpdate, getValidationType } from './utils';
+import {
+  getFlatEntityDescriptors,
+  getPartialRecord,
+  getRecordForUpdate,
+  getValidationType
+} from './utils';
 import suite from './validate';
 import EntityForm from './layer-datails-form';
 import { LayersDetailsComponent } from './layer-details';
 
 import './entity.dialog.css';
 
+const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
@@ -306,12 +312,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                 data: {
                   id: inputValues.id as string,
                   type: inputValues.type as RecordType,
-                  productName: inputValues.productName as string,
-                  description: inputValues.description as string,
-                  productSubType: inputValues.productSubType as string,
-                  producerName: inputValues.producerName as string,
-                  classification: inputValues.classification as string,
-                  keywords: inputValues.keywords as string,
+                  partialRecordData: getPartialRecord(inputValues as Record<string, unknown> as Partial<ILayerImage>, descriptors as unknown[] as FieldConfigModelType[], IS_EDITABLE),
                 },
               })
             );
@@ -386,7 +387,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
         closeDialog();
         store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
-        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id);
+        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id as string);
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 
