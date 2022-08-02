@@ -79,6 +79,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         };
         return (
           <CesiumWMTSLayer
+            key={layer.id}
             rectangle={generateLayerRectangle(
               layer as LayerRasterRecordModelType
             )}
