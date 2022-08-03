@@ -9,3 +9,7 @@
 .detailsUrlFieldUrlCopy {
   margin: 0 16px;
 }
+
+.url {
+  color: var(--mdc-theme-primary);
+}

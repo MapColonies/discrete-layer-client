@@ -24,7 +24,7 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
       <Tooltip content={value}>
         <Box className="detailsFieldValue detailsUrlFieldValue">
           <>
-            {linkInfo?.linkAction === LINK && <a href={value} target="_blank" rel="noreferrer">{value}</a>}
+            {linkInfo?.linkAction === LINK && <a href={value} target="_blank" rel="noreferrer" className='url'>{value}</a>}
             {linkInfo?.linkAction === COPY && <span>{value}</span>}
           </>
         </Box>
