@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
-import { IconButton, Tooltip } from '@map-colonies/react-core';
+import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
 import { ILink } from '../../../models/links';
 import { getTokenParam } from '../../helpers/layersUtils';
 
@@ -24,8 +25,8 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
     <>
       <Tooltip content={value}>
         <Box className="detailsFieldValue detailsUrlFieldValue">
-            {linkInfo?.linkAction === LINK && <a href={`${value}${getTokenParam()}`} target="_blank" rel="noreferrer" className='url'>{value}</a>}
-            {linkInfo?.linkAction !== LINK && <span>{value}</span>}
+            {linkInfo?.linkAction === LINK && <Hyperlink url={value} token={getTokenParam()}/>}
+            {linkInfo?.linkAction !== LINK && <Typography tag="span">{value}</Typography>}
         </Box>
       </Tooltip>
       <Box className="detailsUrlFieldUrlCopy">
