@@ -23,22 +23,20 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
     <>
       <Tooltip content={value}>
         <Box className="detailsFieldValue detailsUrlFieldValue">
-          <>
             {linkInfo?.linkAction === LINK && <a href={value} target="_blank" rel="noreferrer" className='url'>{value}</a>}
-            {linkInfo?.linkAction === COPY && <span>{value}</span>}
-          </>
+            {linkInfo?.linkAction !== LINK && <span>{value}</span>}
         </Box>
       </Tooltip>
-      {
-        linkInfo?.linkAction === COPY &&
-        <Box className="detailsUrlFieldUrlCopy">
-          <Tooltip content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}>
-            <CopyToClipboard text={value} onCopy={(): void => setCopied(true)}>
-              <IconButton className="mc-icon-Copy"/>
-            </CopyToClipboard>
-          </Tooltip>
-        </Box>
-      }
+      <Box className="detailsUrlFieldUrlCopy">
+        <Tooltip content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}>
+          <CopyToClipboard text={value} onCopy={(): void => setCopied(true)}>
+            <>
+              {linkInfo?.linkAction === COPY && <IconButton className="mc-icon-Copy"/>}
+              {linkInfo?.linkAction !== COPY && <Box></Box>}
+            </>
+          </CopyToClipboard>
+        </Tooltip>
+      </Box>
     </>
   );
 }
