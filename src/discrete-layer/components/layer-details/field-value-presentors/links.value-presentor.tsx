@@ -20,23 +20,23 @@ export const LinksValuePresentorComponent: React.FC<LinksValuePresentorProps> = 
       <Box className="linksFieldsContainer">
       {
         value?.map((link, index) => {
-          return(
+          return (
             <>
               {
                 fieldInfo?.subFields.map((subFieldInfo: IRecordFieldInfo) => {
                   return (
-                    isString(get(link,subFieldInfo.fieldName as string)) &&
+                    isString(get(link, subFieldInfo.fieldName as string)) &&
                     <Box key={`${subFieldInfo.fieldName as string}_${link.url as string}`} className={(subFieldInfo.fullWidth === true) ? 'categoryFullWidthField' : 'categoryField'}>
                       <FieldLabelComponent value={subFieldInfo.label} isRequired={false}></FieldLabelComponent>
                       {
-                        getValuePresentor(link, subFieldInfo, get(link,subFieldInfo.fieldName as string), Mode.VIEW)
+                        getValuePresentor(link, subFieldInfo, get(link, subFieldInfo.fieldName as string), Mode.VIEW)
                       }
                     </Box>
                   )
                 })
               }
               {
-                index < (value.length-1) && <Box className="linkFieldsSeparator"></Box>
+                index < (value.length-1) && <Box key={`separator_${link.url as string}`} className="linkFieldsSeparator"></Box>
               }
             </>
             )
