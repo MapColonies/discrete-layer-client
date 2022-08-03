@@ -69,17 +69,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
               }) as SearchLayerPredicate,
               layerRecord: {
                 ...layer,
-                links: getLinksArrWithTokens(
-                  [...layer.links as LinkModelType[], {
-                    name: "MAS_6_ORT_247557-Orthophoto",
-                    protocol: LinkType.LEGEND_DOC,
-                    url: "http://www.africau.edu/images/default/sample.pdf"
-                  } as LinkModelType,
-                  {
-                    name: "MAS_6_ORT_247557-Orthophoto",
-                    protocol: LinkType.LEGEND_IMG,
-                    url: "https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg"
-                  } as LinkModelType])
+                links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
               } as ILayerImage
             }}
             rectangle={generateLayerRectangle(
@@ -117,17 +107,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             }) as SearchLayerPredicate,
             layerRecord: {
               ...layer,
-              links: getLinksArrWithTokens(
-                [...layer.links as LinkModelType[],{
-                  name: "MAS_6_ORT_247557-Orthophoto",
-                  protocol: LinkType.LEGEND_DOC,
-                  url: "http://www.africau.edu/images/default/sample.pdf"
-                } as LinkModelType,
-                {
-                  name: "MAS_6_ORT_247557-Orthophoto",
-                  protocol: LinkType.LEGEND_IMG,
-                  url: "https://i.pinimg.com/564x/55/cf/a1/55cfa147dfef99d231ec95ab8cd3652d--outdoor-code-cub-scouts-brownie-hiking-badge.jpg"
-                } as LinkModelType])
+              links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
             } as ILayerImage
           }}
             rectangle={generateLayerRectangle(

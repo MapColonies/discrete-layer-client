@@ -544,7 +544,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       if(typeof get(cesiumLayer.meta, "layerRecord.links") !== 'undefined') {
         const cesiumLayerLinks = get(cesiumLayer,'meta.layerRecord.links') as LinkModelType[];
 
-        const layerLegendLinks = cesiumLayerLinks.reduce((legendsByProtocol, link): Record<LinkType, LinkModelType> => {
+        const layerLegendLinks = cesiumLayerLinks.reduce((legendsByProtocol, link) => {
           const isLegendLink = legendsProtocols.includes(link.protocol as LinkType);
 
           if(isLegendLink) {
@@ -556,10 +556,18 @@ const DiscreteLayerView: React.FC = observer(() => {
         const layerLegend: IMapLegend = {
           layer: get(cesiumLayer, 'meta.layerRecord.productId') as string,
           legend: get(cesiumLayer, 'layerLegendsLinks.LEGEND') as Record<string, unknown>[],
-          legendDoc: layerLegendLinks.LEGEND_DOC.url,
-          legendImg: layerLegendLinks.LEGEND_IMG.url,
+          legendDoc: get(layerLegendLinks,'LEGEND_DOC.url') as string,
+          legendImg: get(layerLegendLinks,'LEGEND_IMG.url') as string,
         }
         
+        const {legendDoc, legendImg} = layerLegend;
+
+        const shouldAddLegend = typeof legendDoc !== 'undefined' || typeof legendImg !== 'undefined';
+
+        if(!shouldAddLegend) {
+          return legendsList;
+        }
+
         return [...legendsList, layerLegend];
       }
 
