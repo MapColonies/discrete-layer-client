@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { LinkType } from '../../common/models/link-type.enum';
 
 const {
@@ -26,7 +24,7 @@ interface IValidation {
   fileSize?: number;
 }
 
-interface ILink {
+export interface ILink {
   linkAction: 'copy' | 'link';
   editable?: boolean;
   validation?: IValidation[];

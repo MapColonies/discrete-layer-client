@@ -221,7 +221,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   };
 
-  const handleCreateBestDraft = (): void => {
+  /*const handleCreateBestDraft = (): void => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const record = {} as Record<string, any>;
     BestRecordModelKeys.forEach(key => {
@@ -248,7 +248,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     // @ts-ignore
     store.discreteLayersStore.selectLayer(record as LayerMetadataMixedUnion);
     setEditEntityDialogOpen(!isEditEntityDialogOpen);
-  };
+  };*/
 
   const handleSystemsJobsDialogClick = (): void => {
     setSystemsJobsDialogOpen(!isSystemsJobsDialogOpen);

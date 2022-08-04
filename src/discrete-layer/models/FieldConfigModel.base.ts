@@ -4,18 +4,18 @@
 
 import { IObservableArray } from "mobx"
 import { types } from "mobx-state-tree"
-import { QueryBuilder, withTypedRefs } from "mst-gql"
+import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { AutocompletionModel } from "./AutocompletionModel"
-import { autocompletionModelPrimitives, AutocompletionModelSelector } from "./AutocompletionModel.base"
+import { AutocompletionModel, AutocompletionModelType } from "./AutocompletionModel"
+import { AutocompletionModelSelector, autocompletionModelPrimitives } from "./AutocompletionModel.base"
 import { DateGranularityTypeEnumType } from "./DateGranularityTypeEnum"
-import { EnumAspectsModel } from "./EnumAspectsModel"
+import { EnumAspectsModel, EnumAspectsModelType } from "./EnumAspectsModel"
 import { EnumAspectsModelSelector } from "./EnumAspectsModel.base"
 import { FieldConfigModel, FieldConfigModelType } from "./FieldConfigModel"
-import { UpdateRulesModel } from "./UpdateRulesModel"
+import { UpdateRulesModel, UpdateRulesModelType } from "./UpdateRulesModel"
 import { UpdateRulesModelSelector } from "./UpdateRulesModel.base"
-import { ValidationConfigModel } from "./ValidationConfigModel"
-import { validationConfigModelPrimitives, ValidationConfigModelSelector } from "./ValidationConfigModel.base"
+import { ValidationConfigModel, ValidationConfigModelType } from "./ValidationConfigModel"
+import { ValidationConfigModelSelector, validationConfigModelPrimitives } from "./ValidationConfigModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -46,8 +46,8 @@ export const FieldConfigModelBase = withTypedRefs<Refs>()(ModelBase
     infoMsgCode: types.union(types.undefined, types.null, types.array(types.string)),
     validation: types.union(types.undefined, types.null, types.array(types.late((): any => ValidationConfigModel))),
     enumValues: types.union(types.undefined, types.null, types.late((): any => EnumAspectsModel)),
+    //subFields: types.union(types.undefined, types.null, types.array(MSTGQLRef(types.late((): any => FieldConfigModel)))),
     subFields: types.union(types.undefined, types.null, types.array(types.late((): any => FieldConfigModel))),
-    // subFields: types.union(types.undefined, types.null, types.array(MSTGQLRef(types.late((): any => FieldConfigModel)))),
     default: types.union(types.undefined, types.null, types.string),
     dateGranularity: types.union(types.undefined, types.null, DateGranularityTypeEnumType),
     updateRules: types.union(types.undefined, types.null, types.late((): any => UpdateRulesModel)),

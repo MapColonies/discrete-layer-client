@@ -5,8 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel } from "./LinkModel"
-import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
+import { LinkModel, LinkModelType } from "./LinkModel"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
@@ -21,7 +21,7 @@ export const Layer3DRecordModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Layer3DRecord"), "Layer3DRecord"),
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
-    productId: types.union(types.undefined, types.string),
+    productId: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.string),
     // ASSAF: MUST REMAIN STRING
     productVersion: types.union(types.undefined, types.null, types.string),
@@ -34,23 +34,23 @@ export const Layer3DRecordModelBase = ModelBase
     minResolutionMeter: types.union(types.undefined, types.null, types.number),
     maxResolutionMeter: types.union(types.undefined, types.null, types.number),
     nominalResolution: types.union(types.undefined, types.null, types.number),
-    maxAccuracyCE90: types.union(types.undefined, types.null, types.number),
+    maxAccuracyCE90: types.union(types.undefined, types.number),
     absoluteAccuracyLEP90: types.union(types.undefined, types.number),
     accuracySE90: types.union(types.undefined, types.null, types.number),
     relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
     visualAccuracy: types.union(types.undefined, types.null, types.number),
-    sensors: types.union(types.undefined, types.null, types.array(types.string)),
+    sensors: types.union(types.undefined, types.array(types.string)),
     footprint: types.union(types.undefined, types.frozen()),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
     heightRangeTo: types.union(types.undefined, types.null, types.number),
     srsId: types.union(types.undefined, types.string),
     srsName: types.union(types.undefined, types.string),
     srsOrigin: types.union(types.undefined, types.null, types.string),
-    region: types.union(types.undefined, types.null, types.array(types.string)),
+    region: types.union(types.undefined, types.array(types.string)),
     classification: types.union(types.undefined, types.string),
-    productionSystem: types.union(types.undefined, types.null, types.string),
-    productionSystemVer: types.union(types.undefined, types.null, types.string),
-    producerName: types.union(types.undefined, types.null, types.string),
+    productionSystem: types.union(types.undefined, types.string),
+    productionSystemVer: types.union(types.undefined, types.string),
+    producerName: types.union(types.undefined, types.string),
     productionMethod: types.union(types.undefined, types.null, types.string),
     minFlightAlt: types.union(types.undefined, types.null, types.number),
     maxFlightAlt: types.union(types.undefined, types.null, types.number),
