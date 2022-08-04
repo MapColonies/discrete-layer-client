@@ -21,7 +21,6 @@ import {
   getWMTSOptions,
   getLinksArrWithTokens
 } from '../helpers/layersUtils';
-import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined;

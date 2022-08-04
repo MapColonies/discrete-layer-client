@@ -43,7 +43,7 @@ import { BestRecordModelKeys } from '../components/layer-details/entity-types-ke
 import { JobsDialog } from '../components/system-status/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, LayerMetadataMixedUnion, LayerRasterRecordModelType, LinkModelType, ProductType, RecordType } from '../models';
+import { BestRecordModel, LayerMetadataMixedUnion, LinkModelType, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';

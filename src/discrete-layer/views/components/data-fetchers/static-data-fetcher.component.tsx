@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseMapsLegendsFetcher } from './base-maps-legends-fetcher-component';
+// import { BaseMapsLegendsFetcher } from './base-maps-legends-fetcher-component';
 import { EntityDescriptorsFetcher } from './entity-descriptors-fetcher.component';
 
 
