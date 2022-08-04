@@ -213,7 +213,6 @@ export const discreteLayersStore = ModelBase
     }
 
     function setBaseMaps(baseMaps: IBaseMaps): void {
-      console.log("baseMaps!!!!!", baseMaps)
       self.baseMaps = cloneDeep(baseMaps);
     }
 
