@@ -704,12 +704,14 @@ const DiscreteLayerView: React.FC = observer(() => {
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
-            
-            // TODO: Tie legends to the current basemap. 
             legends={{
               mapLegendsExtractor,
-              title: 'Map Legends',
-              emptyText: 'No legends for this basemap',
+              title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
+              emptyText: intl.formatMessage({ id: 'map-legends.empty-text' }),
+              actionsTexts: {
+                docText: intl.formatMessage({ id: 'map-legends.actions.doc' }),
+                imgText: intl.formatMessage({ id: 'map-legends.actions.img' }),
+              }
             }}
            >
               {memoizedLayers}
