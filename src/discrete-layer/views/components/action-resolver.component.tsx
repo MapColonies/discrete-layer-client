@@ -83,7 +83,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           if (order !== numOfLayers) {
             store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order - 1 } as MovedLayer);
           }
-          break
+          break;
         case 'LayerRasterRecord.moveDown':
           numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
           order = store.bestStore.getLayerOrder(data.id as string);

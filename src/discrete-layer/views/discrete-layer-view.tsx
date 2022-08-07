@@ -39,13 +39,19 @@ import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialog } from '../components/layer-details/entity.dialog';
-import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
+// import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
 import { JobsDialog } from '../components/system-status/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, LayerMetadataMixedUnion, LinkModelType, ProductType, RecordType } from '../models';
-import { BestRecordModelType } from '../models/BestRecordModel';
-import { DiscreteOrder } from '../models/DiscreteOrder';
+import {
+  // BestRecordModel,
+  // LayerMetadataMixedUnion,
+  LinkModelType,
+  // ProductType,
+  RecordType
+} from '../models';
+// import { BestRecordModelType } from '../models/BestRecordModel';
+// import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';

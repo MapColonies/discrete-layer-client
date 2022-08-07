@@ -100,10 +100,10 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
     };
   };
   
-  const setDrawType = (drawType: DrawType): void =>{
+  const setDrawType = (drawType: DrawType): void => {
     setIsDrawing(true);
     setDrawPrimitive(createDrawPrimitive(drawType));
-  }
+  };
  
   const onPolygonSelection = (polygon: IDrawingEvent): void => {
     const timeStamp = getTimeStamp();
