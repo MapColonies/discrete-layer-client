@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
@@ -43,7 +43,7 @@ import { BestRecordModelKeys } from '../components/layer-details/entity-types-ke
 import { JobsDialog } from '../components/system-status/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, LayerMetadataMixedUnion, ProductType, RecordType } from '../models';
+import { BestRecordModel, LayerMetadataMixedUnion, LinkModelType, ProductType, RecordType } from '../models';
 import { BestRecordModelType } from '../models/BestRecordModel';
 import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';
@@ -66,6 +66,8 @@ import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
+import { LinkType } from '../../common/models/link-type.enum';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -531,6 +533,49 @@ const DiscreteLayerView: React.FC = observer(() => {
       </div>
     );
   };
+
+  const mapLegendsExtractor = useCallback((layers: (ILayerImage & { meta: unknown })[]): IMapLegend[] => {
+    const legendDocProtocol = LinkType.LEGEND_DOC;
+    const legendImgProtocol = LinkType.LEGEND_IMG;
+    const legendObjProtocol = LinkType.LEGEND;
+    const legendsProtocols = [legendDocProtocol, legendImgProtocol, legendObjProtocol];
+
+    return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
+      if(typeof get(cesiumLayer.meta, "layerRecord.links") !== 'undefined') {
+        const cesiumLayerLinks = get(cesiumLayer,'meta.layerRecord.links') as LinkModelType[];
+
+        const layerLegendLinks = cesiumLayerLinks.reduce((legendsByProtocol, link) => {
+          const isLegendLink = legendsProtocols.includes(link.protocol as LinkType);
+
+          if(isLegendLink) {
+              return { ...legendsByProtocol, [link.protocol as LinkType]: link };
+          }
+          return legendsByProtocol;
+        }, {} as Record<LinkType, LinkModelType>)
+        
+        const layerLegend: IMapLegend = {
+          layer: get(cesiumLayer, 'meta.layerRecord.productId') as string,
+          legend: get(cesiumLayer, 'layerLegendsLinks.LEGEND') as Record<string, unknown>[],
+          legendDoc: get(layerLegendLinks,'LEGEND_DOC.url') as string,
+          legendImg: get(layerLegendLinks,'LEGEND_IMG.url') as string,
+        }
+        
+        const {legendDoc, legendImg} = layerLegend;
+
+        const shouldAddLegend = typeof legendDoc !== 'undefined' || typeof legendImg !== 'undefined';
+
+        if(!shouldAddLegend) {
+          return legendsList;
+        }
+
+        return [...legendsList, layerLegend];
+      }
+
+      return legendsList;
+    
+    },[] as IMapLegend[]);
+
+  }, []);
  
   return (
     <>
@@ -655,11 +700,20 @@ const DiscreteLayerView: React.FC = observer(() => {
             zoom={CONFIG.MAP.ZOOM}
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
-            baseMaps={CONFIG.BASE_MAPS}
+            baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
-            >
+            legends={{
+              mapLegendsExtractor,
+              title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
+              emptyText: intl.formatMessage({ id: 'map-legends.empty-text' }),
+              actionsTexts: {
+                docText: intl.formatMessage({ id: 'map-legends.actions.doc' }),
+                imgText: intl.formatMessage({ id: 'map-legends.actions.img' }),
+              }
+            }}
+           >
               {memoizedLayers}
               <CesiumDrawingsDataSource
                 drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
