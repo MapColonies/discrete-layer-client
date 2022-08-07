@@ -28,9 +28,12 @@ import {
   Box,
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
+import { LinkType } from '../../common/models/link-type.enum';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -71,9 +74,8 @@ import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
+
 import './discrete-layer-view.css';
-import { LinkType } from '../../common/models/link-type.enum';
-import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -706,7 +708,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             zoom={CONFIG.MAP.ZOOM}
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
-            baseMaps={store.discreteLayersStore.baseMaps}
+            baseMaps={store.discreteLayersStore.baseMaps as IBaseMaps}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}

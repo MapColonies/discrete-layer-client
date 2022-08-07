@@ -14,14 +14,11 @@ import './details-panel.component.css';
 interface DetailsPanelComponentProps {
   isEditEntityDialogOpen: boolean;
   setEditEntityDialogOpen: (open: boolean) => void;
-
   detailsPanelExpanded: boolean;
   setDetailsPanelExpanded: (isExpanded: boolean) => void;
 }
 
 export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((props) => {
-  const store = useStore();
-  const intl = useIntl();
   const {
     isEditEntityDialogOpen,
     setEditEntityDialogOpen,
@@ -29,6 +26,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
     setDetailsPanelExpanded 
   } = props;
   
+  const store = useStore();
+  const intl = useIntl();
   const layerToPresent = store.discreteLayersStore.selectedLayer;
   const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
   const editingBest = store.bestStore.editingBest;
@@ -47,6 +46,17 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
         <Typography use="headline6" tag="div" className="detailsTitle">
           {layerToPresent?.productName}
         </Typography>
+        {
+          layerToPresent && 
+          store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.flyTo`) &&
+          <Tooltip content={intl.formatMessage({ id: 'action.flyTo.tooltip' })}>
+            <IconButton
+              className="operationIcon mc-icon-Coordinates glow-missing-icon"
+              label="FLY TO"
+              onClick={ (): void => { alert('Fly To implementation'); } }
+            />
+          </Tooltip>
+        }
         {
           layerToPresent && 
           store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`) &&
