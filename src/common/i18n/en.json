@@ -446,8 +446,8 @@
   "system-core-info.title": "System Info",
   "system-core-info.innerServicesTitle": "Internal Services",
   "system-core-info.externalServicesTitle": "External Services",
-  "system-core-info.versionText" :"Version",
-  "system-core-info.servicesText":"Services",
+  "system-core-info.versionText": "Version",
+  "system-core-info.servicesText": "Services",
   "pycsw.raster.url": "Raster",
   "pycsw.3d.url": "3D",
   "pycsw.dem.url": "DEM",
@@ -473,5 +473,10 @@
   "lookups.fieldCategory.geo_info.tooltip": "Geo Info",
 
   "compatibility-check.browser-not-supported": "The browser {browserName} is not supported, and the app may not work correctly.\nPlease use chromium based browser v{minimumVersion} or newer.",
-  "compatibility-check.browser-version-not-supported": "Your browser is outdated, and the app may not work correctly.\nPlease update to {browserName} v{minimumVersion} or newer for the best experience."
+  "compatibility-check.browser-version-not-supported": "Your browser is outdated, and the app may not work correctly.\nPlease update to {browserName} v{minimumVersion} or newer for the best experience.",
+
+  "map-legends.sidebar-title": "Map Legends",
+  "map-legends.empty-text": "No legends found for the active layers",
+  "map-legends.actions.doc": "Open Document",
+  "map-legends.actions.img": "Open Image"
 }
