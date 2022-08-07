@@ -39,13 +39,19 @@ import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialog } from '../components/layer-details/entity.dialog';
-import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
+// import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
 import { JobsDialog } from '../components/system-status/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
-import { BestRecordModel, LayerMetadataMixedUnion, LinkModelType, ProductType, RecordType } from '../models';
-import { BestRecordModelType } from '../models/BestRecordModel';
-import { DiscreteOrder } from '../models/DiscreteOrder';
+import {
+  // BestRecordModel,
+  // LayerMetadataMixedUnion,
+  LinkModelType,
+  // ProductType,
+  RecordType
+} from '../models';
+// import { BestRecordModelType } from '../models/BestRecordModel';
+// import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
@@ -541,14 +547,14 @@ const DiscreteLayerView: React.FC = observer(() => {
     const legendsProtocols = [legendDocProtocol, legendImgProtocol, legendObjProtocol];
 
     return layers.reduce((legendsList, cesiumLayer): IMapLegend[] => {
-      if(typeof get(cesiumLayer.meta, "layerRecord.links") !== 'undefined') {
+      if (typeof get(cesiumLayer.meta, 'layerRecord.links') !== 'undefined') {
         const cesiumLayerLinks = get(cesiumLayer,'meta.layerRecord.links') as LinkModelType[];
 
         const layerLegendLinks = cesiumLayerLinks.reduce((legendsByProtocol, link) => {
           const isLegendLink = legendsProtocols.includes(link.protocol as LinkType);
 
-          if(isLegendLink) {
-              return { ...legendsByProtocol, [link.protocol as LinkType]: link };
+          if (isLegendLink) {
+            return { ...legendsByProtocol, [link.protocol as LinkType]: link };
           }
           return legendsByProtocol;
         }, {} as Record<LinkType, LinkModelType>)
@@ -558,13 +564,13 @@ const DiscreteLayerView: React.FC = observer(() => {
           legend: get(cesiumLayer, 'layerLegendsLinks.LEGEND') as Record<string, unknown>[],
           legendDoc: get(layerLegendLinks,'LEGEND_DOC.url') as string,
           legendImg: get(layerLegendLinks,'LEGEND_IMG.url') as string,
-        }
+        };
         
         const {legendDoc, legendImg} = layerLegend;
 
         const shouldAddLegend = typeof legendDoc !== 'undefined' || typeof legendImg !== 'undefined';
 
-        if(!shouldAddLegend) {
+        if (!shouldAddLegend) {
           return legendsList;
         }
 
@@ -573,7 +579,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
       return legendsList;
     
-    },[] as IMapLegend[]);
+    }, [] as IMapLegend[]);
 
   }, []);
  

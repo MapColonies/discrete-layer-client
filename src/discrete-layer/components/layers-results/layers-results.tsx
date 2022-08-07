@@ -75,7 +75,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       selectedLayersRef.current = INITIAL_ORDER;
       return cacheRef.current;
     }
-  }
+  };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
   

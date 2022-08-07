@@ -41,7 +41,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
     const shouldBeDisabled = loading || FINAL_STATUSES.includes(jobData.status as Status)
     setDisabled(shouldBeDisabled)
 
-  }, [loading, jobData.status])
+  }, [loading, jobData.status]);
 
   interface IconObj {
     icon: string;
