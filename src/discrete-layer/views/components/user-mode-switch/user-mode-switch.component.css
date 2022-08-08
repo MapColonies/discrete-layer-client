@@ -1,0 +1,75 @@
+.switch_container {
+  --invalid_msg_height: 50px;
+}
+
+.switch_container {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 20px;
+}
+
+body[dir='rtl'] .switch_container {
+  flex-direction: row-reverse;
+}
+
+.user_mode_switch_dialog_content {
+  min-width: 400px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user_mode_switch_dialog .switch_btn {
+  margin: 20px;
+}
+
+.user_mode_switch_dialog_content .password_input {
+  width: 200px;
+  height: max-content;
+}
+
+.user_mode_switch_dialog_content .password_input_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--invalid_msg_height);
+}
+
+
+.switch_container .MuiSwitch-track {
+  background-color: var(--mdc-theme-gc-selection-background);
+}
+
+.switch_container .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+  background-color: var(--mdc-theme-gc-selection-background);
+  filter: brightness(2);
+}
+
+.switch_container .MuiSwitch-colorSecondary.Mui-checked {
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.switch_container .MuiSwitch-switchBase {
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.dialog_content_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.dialog_content_container .password_error {
+  height: var(--invalid_msg_height);
+}
+
+.password_input_container
+  .mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-floating-label {
+  color: var(--mdc-theme-text-icon-on-background);
+}

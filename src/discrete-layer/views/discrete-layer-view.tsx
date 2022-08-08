@@ -28,6 +28,7 @@ import {
   Box,
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
@@ -73,7 +74,6 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { LinkType } from '../../common/models/link-type.enum';
-import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
@@ -125,7 +125,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
-  const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role);
+  const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role ?? CONFIG.DEFAULT_USER.ROLE);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -394,13 +394,14 @@ const DiscreteLayerView: React.FC = observer(() => {
   const permissions = useMemo(() => {
     return {
       isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
+      isSystemsCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEM_CORE_INFO),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
       isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
-  }, [store.userStore]);
+  }, [store.userStore.user]);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -586,7 +587,9 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, []);
 
   useEffect(() => {
-    setUserRole(store.userStore.user?.role);
+    if(typeof store.userStore.user?.role !== 'undefined') {
+      setUserRole(store.userStore.user.role);
+    }
   }, [store.userStore.user])
  
   return (
@@ -595,9 +598,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         handleOpenEntityDialog = {setEditEntityDialogOpen}
       />
       <Box className="headerContainer">
-        <Box className="headerUserModeSwitchContainer">
-          <UserModeSwitch userRole={userRole}/>
-        </Box>
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
             <Typography use="body2">Catalog App</Typography>
@@ -626,6 +626,9 @@ const DiscreteLayerView: React.FC = observer(() => {
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
+          <Box className="headerUserModeSwitchContainer">
+            <UserModeSwitch userRole={userRole} setUserRole={store.userStore.changeUserRole}/>
+          </Box>
           {
             permissions.isSystemsJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
@@ -636,13 +639,18 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-          <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
-            <IconButton
-              className="operationIcon mc-icon-System-Missions glow-missing-icon"
-              label="SYSTEM CORE INFO"
-              onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
-            />
-          </Tooltip>
+          
+          {
+            permissions.isSystemsCoreInfoAllowed as boolean &&
+            <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
+              <IconButton
+                className="operationIcon mc-icon-System-Missions glow-missing-icon"
+                label="SYSTEM CORE INFO"
+                onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
+              />
+            </Tooltip>
+          }
+
         </Box>
       </Box>
       <Box className="mainViewContainer">
