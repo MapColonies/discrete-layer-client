@@ -5,7 +5,7 @@ import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
-enum UserRole {
+export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN'
 }
@@ -128,7 +128,12 @@ export const userStore = ModelBase
       return role ? role.permissions[action as UserAction] as boolean : false;
     }
 
+    function changeUserRole(role: UserRole): void {
+      self.user = {...self.user, role} as IUser;
+    }
+
     return {
       isActionAllowed,
+      changeUserRole,
     };
   });

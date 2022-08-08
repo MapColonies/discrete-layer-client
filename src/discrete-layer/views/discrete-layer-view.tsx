@@ -55,7 +55,7 @@ import {
 import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
-import { UserAction } from '../models/userStore';
+import { UserAction, UserRole } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
@@ -74,6 +74,7 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { LinkType } from '../../common/models/link-type.enum';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -124,6 +125,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
+  const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -582,6 +584,10 @@ const DiscreteLayerView: React.FC = observer(() => {
     }, [] as IMapLegend[]);
 
   }, []);
+
+  useEffect(() => {
+    setUserRole(store.userStore.user?.role);
+  }, [store.userStore.user])
  
   return (
     <>
@@ -589,6 +595,9 @@ const DiscreteLayerView: React.FC = observer(() => {
         handleOpenEntityDialog = {setEditEntityDialogOpen}
       />
       <Box className="headerContainer">
+        <Box className="headerUserModeSwitchContainer">
+          <UserModeSwitch userRole={userRole}/>
+        </Box>
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
             <Typography use="body2">Catalog App</Typography>
