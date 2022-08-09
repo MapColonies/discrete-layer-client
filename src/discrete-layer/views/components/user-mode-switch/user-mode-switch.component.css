@@ -1,8 +1,8 @@
-.switch_container {
+.switchContainer {
   --invalid_msg_height: 50px;
 }
 
-.switch_container {
+.switchContainer {
   display: flex;
   flex-direction: row;
   width: max-content;
@@ -11,52 +11,59 @@
   padding-inline: 20px;
 }
 
-body[dir='rtl'] .switch_container {
+body[dir='rtl'] .switchContainer {
   flex-direction: row-reverse;
 }
 
-.user_mode_switch_dialog_content {
+.userModeSwitchDialogContent {
   min-width: 400px;
   min-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.user_mode_switch_dialog .switch_btn {
+.userModeSwitchDialog .switchBtn {
   margin: 20px;
 }
 
-.user_mode_switch_dialog_content .password_input {
+.userModeSwitchDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] .userModeSwitchDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+.userModeSwitchDialogContent .passwordInput {
   width: 200px;
   height: max-content;
 }
 
-.user_mode_switch_dialog_content .password_input_container {
+.userModeSwitchDialogContent .passwordInputContainer {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: var(--invalid_msg_height);
 }
 
-
-.switch_container .MuiSwitch-track {
+.switchContainer .MuiSwitch-track {
   background-color: var(--mdc-theme-gc-selection-background);
 }
 
-.switch_container .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+.switchContainer .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
   background-color: var(--mdc-theme-gc-selection-background);
   filter: brightness(2);
 }
 
-.switch_container .MuiSwitch-colorSecondary.Mui-checked {
+.switchContainer .MuiSwitch-colorSecondary.Mui-checked {
   color: var(--mdc-theme-text-icon-on-dark);
 }
 
-.switch_container .MuiSwitch-switchBase {
+.switchContainer .MuiSwitch-switchBase {
   color: var(--mdc-theme-text-icon-on-dark);
 }
 
-.dialog_content_container {
+.dialogContentContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,12 +71,18 @@ body[dir='rtl'] .switch_container {
   align-self: center;
 }
 
-.dialog_content_container .password_error {
+.dialogContentContainer .passwordError {
   height: var(--invalid_msg_height);
 }
 
-.password_input_container
+.passwordInputContainer
   .mdc-text-field:not(.mdc-text-field--disabled)
   .mdc-floating-label {
   color: var(--mdc-theme-text-icon-on-background);
+}
+
+.dialogTitle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

@@ -63,7 +63,7 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
 
   const renderInputErrorMsg = useCallback((): JSX.Element => {
     return (
-      <Box className="password_error">
+      <Box className="passwordError">
         {!isPasswordValid && (
           <Typography tag="p" style={{ color: 'red' }}>
             <FormattedMessage id="user-role.dialog.wrong-password-error.text" />
@@ -75,11 +75,11 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
 
   const renderDialogContent = (): JSX.Element => {
     return (
-      <Box className="dialog_content_container">
-        <Box className="password_input_container">
+      <Box className="dialogContentContainer">
+        <Box className="passwordInputContainer">
           <TextField
             invalid={!isPasswordValid}
-            className="password_input"
+            className="passwordInput"
             label={intl.formatMessage({
               id: 'user-role.dialog.password.input.placeholder',
             })}
@@ -102,7 +102,7 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
   };
 
   return (
-    <Box className="switch_container">
+    <Box className="switchContainer">
       <Typography tag="p">
         <FormattedMessage id="user-role.switch.user.text" />
       </Typography>
@@ -114,7 +114,7 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
       </Typography>
 
       <Dialog
-        className="user_mode_switch_dialog"
+        className="userModeSwitchDialog"
         open={isDialogOpen}
         preventOutsideDismiss={true}
       >
@@ -127,12 +127,12 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
           />
         </DialogTitle>
 
-        <DialogContent className="user_mode_switch_dialog_content">
+        <DialogContent className="userModeSwitchDialogContent">
           {renderDialogContent()}
         </DialogContent>
         <Button
           raised
-          className="switch_btn"
+          className="switchBtn"
           type="button"
           disabled={!password}
           onClick={validatePassword}

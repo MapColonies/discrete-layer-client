@@ -36,5 +36,6 @@ keys = [
   "/configuration/access/token/attribute/name",
   "/configuration/access/token/injection/type",
   "/configuration/access/token/token/value",
-  "/configuration/served/entity/types"
+  "/configuration/served/entity/types",
+  "/configuration/admin/password"
 ]
