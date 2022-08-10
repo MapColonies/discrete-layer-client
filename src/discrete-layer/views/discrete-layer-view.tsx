@@ -607,8 +607,8 @@ const DiscreteLayerView: React.FC = observer(() => {
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
-            <Typography use="body2">Catalog App</Typography>
-            <Tooltip content={`${intl.formatMessage({ id: 'general.version.text' })} ${version}`}>
+            <Typography use="body2">{intl.formatMessage({ id: 'general.logo.text' })}</Typography>
+            <Tooltip content={`${intl.formatMessage({ id: 'general.version.tooltip' })} ${version}`}>
               <Box className="version">{version}</Box>
             </Tooltip>
           </Box>

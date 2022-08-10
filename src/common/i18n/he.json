@@ -1,5 +1,6 @@
 {
-  "general.version.text": "אפליקצית קטלוג גרסה",
+  "general.logo.text": "אפליקצית קטלוג",
+  "general.version.tooltip": "אפליקצית קטלוג גרסה",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
   "general.continue-btn.text": "המשך",
@@ -487,5 +488,4 @@
   "user-role.dialog.switch-to-admin.btn.text": "החלף למצב מנהל",
   "user-role.dialog.password.input.placeholder": "סיסמא",
   "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה"
-
 }
