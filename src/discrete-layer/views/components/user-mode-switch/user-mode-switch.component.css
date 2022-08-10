@@ -1,0 +1,88 @@
+.switchContainer {
+  --invalid_msg_height: 50px;
+}
+
+.switchContainer {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 20px;
+}
+
+body[dir='rtl'] .switchContainer {
+  flex-direction: row-reverse;
+}
+
+.userModeSwitchDialogContent {
+  min-width: 400px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.userModeSwitchDialog .switchBtn {
+  margin: 20px;
+}
+
+.userModeSwitchDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] .userModeSwitchDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+.userModeSwitchDialogContent .passwordInput {
+  width: 200px;
+  height: max-content;
+}
+
+.userModeSwitchDialogContent .passwordInputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--invalid_msg_height);
+}
+
+.switchContainer .MuiSwitch-track {
+  background-color: var(--mdc-theme-gc-selection-background);
+}
+
+.switchContainer .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+  background-color: var(--mdc-theme-gc-selection-background);
+  filter: brightness(2);
+}
+
+.switchContainer .MuiSwitch-colorSecondary.Mui-checked {
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.switchContainer .MuiSwitch-switchBase {
+  color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.dialogContentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.dialogContentContainer .passwordError {
+  height: var(--invalid_msg_height);
+}
+
+.passwordInputContainer
+  .mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-floating-label {
+  color: var(--mdc-theme-text-icon-on-background);
+}
+
+.dialogTitle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

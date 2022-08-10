@@ -23,6 +23,7 @@ const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
 const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
+const ADMIN_PASSWORD = (window as any)._env_.ADMIN_PASSWORD;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -155,7 +156,8 @@ const APP_CONFIG = {
   },
   SERVED_ENTITY_TYPES : (SERVED_ENTITY_TYPES as string).split(','),
   JOB_MANAGER_END_OF_TIME: 21, // Days
-  MINIMUM_SUPPORTED_BROWSER_VERSION: 84
+  MINIMUM_SUPPORTED_BROWSER_VERSION: 84,
+  ADMIN_PASSWORD: ADMIN_PASSWORD,
 };
 
 export default APP_CONFIG;

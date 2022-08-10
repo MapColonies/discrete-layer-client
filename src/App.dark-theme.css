@@ -268,3 +268,25 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 .dark-theme .mdc-drawer * {
   color: var(--mdc-theme-text-icon-on-dark);
 }
+
+
+/* Switch */
+
+.dark-theme .mdc-switch {
+  margin-inline: 10px;
+}
+
+.dark-theme .mdc-switch.mdc-switch--checked .mdc-switch__track {
+  background-color: var(--mdc-theme-gc-selection-background);
+  filter: brightness(2);
+}
+
+.dark-theme .mdc-switch.mdc-switch--checked .mdc-switch__thumb,
+.dark-theme .mdc-switch:not(.mdc-switch--checked) .mdc-switch__thumb {
+  background-color: var(--mdc-theme-text-icon-on-dark);
+  border: none;
+}
+
+.dark-theme .mdc-switch:not(.mdc-switch--checked) .mdc-switch__track {
+  background-color: var(--mdc-theme-gc-selection-background);
+}
