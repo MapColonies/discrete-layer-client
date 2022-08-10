@@ -29,7 +29,6 @@ import {
   CesiumPolylineDashMaterialProperty,
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
-import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
@@ -58,7 +57,7 @@ import {
 import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
-import { UserAction } from '../models/userStore';
+import { UserAction, UserRole } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { IPOI } from '../components/map-container/poi.dialog';
@@ -69,6 +68,7 @@ import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
 import { TabViews } from './tab-views';
+import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -126,6 +126,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
+  const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role ?? CONFIG.DEFAULT_USER.ROLE);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
     {
       coordinates: [],
@@ -394,13 +395,14 @@ const DiscreteLayerView: React.FC = observer(() => {
   const permissions = useMemo(() => {
     return {
       isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
+      isSystemsCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEM_CORE_INFO),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
       isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
       isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
-  }, [store.userStore]);
+  }, [store.userStore.user]);
 
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
@@ -584,6 +586,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     }, [] as IMapLegend[]);
 
   }, []);
+
+  useEffect(() => {
+    if(typeof store.userStore.user?.role !== 'undefined') {
+      setUserRole(store.userStore.user.role);
+    }
+  }, [store.userStore.user])
  
   return (
     <>
@@ -619,6 +627,9 @@ const DiscreteLayerView: React.FC = observer(() => {
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
+          <Box className="headerUserModeSwitchContainer">
+            <UserModeSwitch userRole={userRole} setUserRole={store.userStore.changeUserRole}/>
+          </Box>
           {
             permissions.isSystemsJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
@@ -629,13 +640,18 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-          <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
-            <IconButton
-              className="operationIcon mc-icon-System-Missions glow-missing-icon"
-              label="SYSTEM CORE INFO"
-              onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
-            />
-          </Tooltip>
+          
+          {
+            permissions.isSystemsCoreInfoAllowed as boolean &&
+            <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
+              <IconButton
+                className="operationIcon mc-icon-System-Missions glow-missing-icon"
+                label="SYSTEM CORE INFO"
+                onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
+              />
+            </Tooltip>
+          }
+
         </Box>
       </Box>
       <Box className="mainViewContainer">
@@ -708,7 +724,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             zoom={CONFIG.MAP.ZOOM}
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
-            baseMaps={store.discreteLayersStore.baseMaps as IBaseMaps}
+            baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}

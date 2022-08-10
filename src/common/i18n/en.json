@@ -479,5 +479,13 @@
   "map-legends.sidebar-title": "Map Legends",
   "map-legends.empty-text": "No legends found for the active layers",
   "map-legends.actions.doc": "Open Document",
-  "map-legends.actions.img": "Open Image"
+  "map-legends.actions.img": "Open Image",
+
+  "user-role.switch.user.text": "User",
+  "user-role.switch.admin.text": "Admin",
+  "user-role.dialog.title.text": "Change User Role",
+  "user-role.dialog.switch-to-admin.btn.text": "Activate admin mode",
+  "user-role.dialog.password.input.placeholder": "Password",
+  "user-role.dialog.wrong-password-error.text": "Password is incorrect."
+
 }
