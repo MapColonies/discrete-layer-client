@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { Rectangle } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
@@ -47,7 +48,7 @@ import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import {
   // BestRecordModel,
-  // LayerMetadataMixedUnion,
+  LayerMetadataMixedUnion,
   LinkModelType,
   // ProductType,
   RecordType
@@ -59,7 +60,9 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { generateLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
+import { FlyTo } from '../components/map-container/fly-to';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
 import { Terrain } from '../components/map-container/terrain';
@@ -101,8 +104,6 @@ const noDrawing: IDrawingObject = {
 
 const getTimeStamp = (): string => new Date().getTime().toString();
 
-// const tileOptions = { opacity: 0.5 };
-
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
   const { loading: searchLoading, error: searchError, data, query, setQuery } = useQuery();
@@ -124,17 +125,17 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
+  const [rect, setRect] = useState<Rectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
   const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role ?? CONFIG.DEFAULT_USER.ROLE);
-  const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
-    {
-      coordinates: [],
-      name: '',
-      id: '',
-      type: DrawType.UNKNOWN,
-    },
-  ]);
+  const [drawEntities, setDrawEntities] = useState<IDrawing[]>([{
+    coordinates: [],
+    name: '',
+    id: '',
+    type: DrawType.UNKNOWN,
+  }]);
+
   const memoizedLayers =  useMemo(() => {
     return(
       <>
@@ -374,9 +375,9 @@ const DiscreteLayerView: React.FC = observer(() => {
     handleTabViewChange(TabViews.SEARCH_RESULTS);
   };
 
-  const onFlyTo = (): void => {
-    alert('FlyTo');
-  };
+  const onFlyTo = useCallback((): void => {
+    setRect(generateLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
+  }, []);
 
   const tabViews = [
     {
@@ -522,12 +523,12 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
               </>
             }
-            {/* <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
+            {/*<Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Delete"
                 label="DELETE"
               />
-            </Tooltip> */}
+            </Tooltip>*/}
             <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Filter"
@@ -758,6 +759,9 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Terrain/>
               {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+              }
+              {
+                rect && <FlyTo rect={rect} setRect={setRect}/>
               }
           </CesiumMap>
           <BrowserCompatibilityChecker />
