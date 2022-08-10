@@ -22,6 +22,7 @@ body[dir='rtl'] .switchContainer {
   align-items: center;
   justify-content: center;
 }
+
 .userModeSwitchDialog .switchBtn {
   margin: 20px;
 }

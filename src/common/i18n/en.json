@@ -486,6 +486,6 @@
   "user-role.dialog.title.text": "Change User Role",
   "user-role.dialog.switch-to-admin.btn.text": "Activate admin mode",
   "user-role.dialog.password.input.placeholder": "Password",
-  "user-role.dialog.wrong-password-error.text": "Password is incorrect."
+  "user-role.dialog.wrong-password-error.text": "Password is incorrect"
 
 }

@@ -1,20 +1,21 @@
-// import { Switch } from '@map-colonies/react-core'; // Doesn't work for some reason.
-import { Box } from '@map-colonies/react-components';
+import React, { useState, useCallback } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Switch } from '@material-ui/core';
 import {
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
+  // Switch, // Doesn't work for some reason
   TextField,
   Typography,
 } from '@map-colonies/react-core';
-import { Switch } from '@material-ui/core';
-import React, { useState, useCallback } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { UserRole } from '../../../models/userStore';
-import './user-mode-switch.component.css';
+import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config'
+import { UserRole } from '../../../models/userStore';
+
+import './user-mode-switch.component.css';
 
 const ADMIN_PASSWORD = CONFIG.ADMIN_PASSWORD as string;
 interface UserModeSwitchProps {
@@ -23,24 +24,24 @@ interface UserModeSwitchProps {
 }
 
 const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }) => {
+  const intl = useIntl();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const intl = useIntl();
 
   const resetDialogState = useCallback((): void => {
     setPassword('');
     setIsPasswordValid(true);
-  }, [])
+  }, []);
 
   const getIsChecked = (): boolean => {
     return userRole === UserRole.ADMIN;
   };
 
   const handleSwitchClick = (): void => {
-    if(userRole === UserRole.USER){
+    if (userRole === UserRole.USER){
       setIsDialogOpen(!isDialogOpen);
-    }else {
+    } else {
       setUserRole(UserRole.USER);
     }
   };
@@ -53,8 +54,7 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
   const validatePassword = useCallback((): void => {
     const isValid = password === ADMIN_PASSWORD;
     setIsPasswordValid(isValid);
-
-    if(isValid) {
+    if (isValid) {
       setUserRole(UserRole.ADMIN);
       closeDialog();
     }

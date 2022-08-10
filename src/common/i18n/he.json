@@ -477,7 +477,7 @@
   "compatibility-check.browser-version-not-supported": "גרסת הדפדפן שלך ישנה מדי, האפליקציה עלולה לא לעבוד כראוי.\nיש לעדכן את הדפדפן {browserName} לגרסה {minimumVersion} ומעלה לחוויה הטובה ביותר.",
 
   "map-legends.sidebar-title": "מקראי מפות",
-  "map-legends.empty-text": "אין מקראים לשכבות הפעילות.",
+  "map-legends.empty-text": "אין מקראים לשכבות הפעילות",
   "map-legends.actions.doc": "פתח קובץ",
   "map-legends.actions.img": "פתח תמונה",
 
@@ -486,6 +486,6 @@
   "user-role.dialog.title.text": "שינוי הרשאות משתמש",
   "user-role.dialog.switch-to-admin.btn.text": "החלף למצב מנהל",
   "user-role.dialog.password.input.placeholder": "סיסמא",
-  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה."
+  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה"
 
 }

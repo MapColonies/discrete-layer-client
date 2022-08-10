@@ -11,8 +11,8 @@ export enum UserRole {
 }
 
 export enum UserAction {
-  ACTION_SYSTEMJOBS = 'action_systemJobs',
-  ACTION_SYSTEM_CORE_INFO = 'action_systemCoreInfo',
+  SYSTEM_ACTION_JOBS = 'system_action_jobs',
+  SYSTEM_ACTION_COREINFO = 'system_action_coreInfo',
 
   ENTITY_ACTION_LAYERRASTERRECORD_CREATE = 'entity_action.LayerRasterRecord.create',
   ENTITY_ACTION_LAYER3DRECORD_CREATE = 'entity_action.Layer3DRecord.create',
@@ -60,8 +60,8 @@ const ROLES: IRole[] = [
   {
     role: UserRole.ADMIN,
     permissions: {
-      [UserAction.ACTION_SYSTEMJOBS]: true,
-      [UserAction.ACTION_SYSTEM_CORE_INFO]: true,
+      [UserAction.SYSTEM_ACTION_JOBS]: true,
+      [UserAction.SYSTEM_ACTION_COREINFO]: true,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: true,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: true,
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
@@ -72,8 +72,8 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: true,
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: true,
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO] = true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO] = true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: true,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: true,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: true,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: true,
@@ -88,8 +88,8 @@ const ROLES: IRole[] = [
   {
     role: UserRole.USER,
     permissions: {
-      [UserAction.ACTION_SYSTEMJOBS]: false,
-      [UserAction.ACTION_SYSTEM_CORE_INFO]: false,
+      [UserAction.SYSTEM_ACTION_JOBS]: false,
+      [UserAction.SYSTEM_ACTION_COREINFO]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: false,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: false,
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
@@ -100,8 +100,8 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: false,
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: false,
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO] = false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO] = false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: false,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: false,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: false,

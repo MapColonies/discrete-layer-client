@@ -16,6 +16,7 @@ interface DetailsPanelComponentProps {
   setEditEntityDialogOpen: (open: boolean) => void;
   detailsPanelExpanded: boolean;
   setDetailsPanelExpanded: (isExpanded: boolean) => void;
+  handleFlyTo: () => void;
 }
 
 export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((props) => {
@@ -23,7 +24,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
     isEditEntityDialogOpen,
     setEditEntityDialogOpen,
     detailsPanelExpanded,
-    setDetailsPanelExpanded 
+    setDetailsPanelExpanded ,
+    handleFlyTo
   } = props;
   
   const store = useStore();
@@ -53,7 +55,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
             <IconButton
               className="operationIcon mc-icon-Coordinates glow-missing-icon"
               label="FLY TO"
-              onClick={ (): void => { alert('Fly To implementation'); } }
+              onClick={ (): void => { handleFlyTo(); } }
             />
           </Tooltip>
         }

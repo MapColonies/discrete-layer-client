@@ -374,6 +374,10 @@ const DiscreteLayerView: React.FC = observer(() => {
     handleTabViewChange(TabViews.SEARCH_RESULTS);
   };
 
+  const onFlyTo = (): void => {
+    alert('FlyTo');
+  };
+
   const tabViews = [
     {
       idx: TabViews.CATALOG,
@@ -394,8 +398,8 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const permissions = useMemo(() => {
     return {
-      isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
-      isSystemsCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEM_CORE_INFO),
+      isSystemJobsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_JOBS),
+      isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
@@ -588,15 +592,16 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, []);
 
   useEffect(() => {
-    if(typeof store.userStore.user?.role !== 'undefined') {
+    if (typeof store.userStore.user?.role !== 'undefined') {
       setUserRole(store.userStore.user.role);
     }
-  }, [store.userStore.user])
+  }, [store.userStore.user]);
  
   return (
     <>
       <ActionResolver
         handleOpenEntityDialog = {setEditEntityDialogOpen}
+        handleFlyTo = {onFlyTo}
       />
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
@@ -631,7 +636,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <UserModeSwitch userRole={userRole} setUserRole={store.userStore.changeUserRole}/>
           </Box>
           {
-            permissions.isSystemsJobsAllowed as boolean &&
+            permissions.isSystemJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
                 className="operationIcon mc-icon-System-Missions"
@@ -640,9 +645,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-          
           {
-            permissions.isSystemsCoreInfoAllowed as boolean &&
+            permissions.isSystemCoreInfoAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
               <IconButton
                 className="operationIcon mc-icon-System-Missions glow-missing-icon"
@@ -651,7 +655,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-
         </Box>
       </Box>
       <Box className="mainViewContainer">
@@ -714,6 +717,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
               setDetailsPanelExpanded = {setDetailsPanelExpanded} 
+              handleFlyTo = {onFlyTo}
             />
           </Box>
         </Box>
