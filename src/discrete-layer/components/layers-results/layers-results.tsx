@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { isObject } from 'lodash';
-import CONFIG from '../../../common/config';
 import { 
   GridComponent,
   GridComponentOptions,
@@ -14,15 +13,19 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { usePrevious } from '../../../common/hooks/previous.hook';
-import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
+import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
+import { usePrevious } from '../../../common/hooks/previous.hook';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
+import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
 
@@ -37,33 +40,31 @@ interface LayersResultsComponentProps {
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
-  const { discreteLayersStore } = useStore();
+  const store = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(true);
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
 
-  useEffect(()=>{
-    if (discreteLayersStore.layersImages) {
-      setlayersImages(discreteLayersStore.layersImages);
+  useEffect(() => {
+    if (store.discreteLayersStore.layersImages) {
+      setlayersImages(store.discreteLayersStore.layersImages);
     }
-  }, [discreteLayersStore.layersImages]);
+  }, [store.discreteLayersStore.layersImages]);
 
   const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
     let res = false;
-    if (source && target &&
-        source.length === target.length) {
-          let matchesRes = true;
-          source.forEach((srcFeat: ILayerImage) => {
-            const match = target.find((targetFeat: ILayerImage) => {
-              return targetFeat.id === srcFeat.id;
-            });
-            matchesRes = matchesRes && isObject(match);
-          });
-          res = matchesRes;
+    if (source && target && source.length === target.length) {
+      let matchesRes = true;
+      source.forEach((srcFeat: ILayerImage) => {
+        const match = target.find((targetFeat: ILayerImage) => {
+          return targetFeat.id === srcFeat.id;
+        });
+        matchesRes = matchesRes && isObject(match);
+      });
+      res = matchesRes;
     }
-    
     return res;
   };
 
@@ -78,6 +79,46 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+
+  const entityPermittedActions = useMemo(() => {
+    const entityActions: Record<string, unknown> = {};
+    [ 'LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord', 'QuantizedMeshBestRecord' ].forEach( entityName => {
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
+        return {
+          titleTranslationId: actionGroup.titleTranslationId,
+          group: 
+            actionGroup.group.filter(action => {
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                    action.views.includes(TabViews.SEARCH_RESULTS);
+            })
+            .map((action) => {
+              return {
+                ...action,
+                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+              };
+            }),
+        }
+       });
+       entityActions[entityName] = permittedGroupsActions;
+    })
+    return entityActions;
+  }, []);
+
+  const dispatchAction = (action: Record<string,unknown>): void => {
+    store.actionDispatcherStore.dispatchAction({
+      action: action.action,
+      data: action.data
+    } as IDispatchAction);
+  };
+
+  // Reset action value on store when unmounting
+  // useEffect(() => {
+  //   return (): void => {
+  //     dispatchAction(undefined)
+  //   };
+  // }, []);
   
   const colDef = [
     {
@@ -86,7 +127,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          discreteLayersStore.showFootprint(id, value);
+          store.discreteLayersStore.showFootprint(id, value);
           const checkboxValues = layersImages.map(item => item.footprintShown);
           const checkAllValue = checkboxValues.reduce((accumulated, current) => (accumulated as boolean) && current, value);
           setIsChecked(checkAllValue as boolean);
@@ -98,7 +139,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         onClick: (value: boolean, gridApi: GridApi): void => {
           gridApi.forEachNode((item: GridRowNode) => {
             setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION);
-            discreteLayersStore.showFootprint(item.id, value);
+            store.discreteLayersStore.showFootprint(item.id, value);
           });
           setIsChecked(value);
         }  
@@ -126,7 +167,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
           }
           const order = value ? selectedLayersRef.current : null;
           // setTimeout(() => node.setDataValue('order', order), immediateExecution) ;
-          discreteLayersStore.showLayer(id, value, order);
+          store.discreteLayersStore.showLayer(id, value, order);
         }
       }
     },
@@ -170,6 +211,16 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       width: 50,
       field: 'order',
       hide: true
+    },
+    {
+      pinned: 'right',
+      headerName: '',
+      width: 0,
+      cellRenderer: 'actionsRenderer',
+      cellRendererParams: {
+        actions: entityPermittedActions['LayerRasterRecord'],
+        actionHandler: dispatchAction,
+      },
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -192,6 +243,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       rowLayerImageRenderer: LayerImageRenderer,
       productTypeRenderer: ProductTypeRenderer,
       customTooltip: CustomTooltip,
+      actionsRenderer: ActionsRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
@@ -199,17 +251,17 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     suppressCellSelection: true,
     // suppressRowClickSelection: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
-      discreteLayersStore.highlightLayer(event.data as ILayerImage);
+      store.discreteLayersStore.highlightLayer(event.data as ILayerImage);
     },
     onCellMouseOut(event: GridCellMouseOutEvent) {
-      discreteLayersStore.highlightLayer(undefined);
+      store.discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
+      store.discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
     },
     onGridReady(params: GridReadyEvent) {
       params.api.forEachNode( (node) => {
-        if ((node.data as ILayerImage).id === discreteLayersStore.selectedLayer?.id) {
+        if ((node.data as ILayerImage).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
         }
       });
