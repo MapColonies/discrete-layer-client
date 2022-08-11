@@ -755,7 +755,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
           </CesiumMap>
-          <BrowserCompatibilityChecker />
+          {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
