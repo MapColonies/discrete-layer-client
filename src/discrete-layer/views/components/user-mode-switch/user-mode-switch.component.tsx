@@ -18,6 +18,7 @@ import { UserRole } from '../../../models/userStore';
 import './user-mode-switch.component.css';
 
 const ADMIN_PASSWORD = CONFIG.ADMIN_PASSWORD as string;
+
 interface UserModeSwitchProps {
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;

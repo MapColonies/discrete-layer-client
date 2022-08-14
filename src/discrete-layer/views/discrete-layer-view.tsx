@@ -135,7 +135,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     id: '',
     type: DrawType.UNKNOWN,
   }]);
-
+  
   const memoizedLayers =  useMemo(() => {
     return(
       <>
