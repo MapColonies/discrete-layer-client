@@ -30,7 +30,6 @@ export const Terrain: React.FC<TerrainProps> = () => {
 
   useEffect(() => {
     mapViewer.scene.morphComplete.addEventListener(setTerrainProvider);
-  
   }, []);
 
   return <></>;

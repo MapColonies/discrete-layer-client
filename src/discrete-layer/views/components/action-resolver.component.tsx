@@ -19,9 +19,12 @@ const FIRST = 0;
 
 interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
+  handleFlyTo: () => void;
 }
 
 export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((props) => {
+  const { handleOpenEntityDialog, handleFlyTo } = props;
+
   const store = useStore();
   
   useEffect(() => {
@@ -35,22 +38,17 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerRasterRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion);
-          props.handleOpenEntityDialog(true);
-          break;
-        case 'LayerRasterRecord.update':
-          // @ts-ignore
-          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
-          props.handleOpenEntityDialog(true);
+          handleOpenEntityDialog(true);
           break;
         case 'Layer3DRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
-          props.handleOpenEntityDialog(true);
+          handleOpenEntityDialog(true);
           break;
         case 'LayerDemRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
-          props.handleOpenEntityDialog(true);
+          handleOpenEntityDialog(true);
           break;
         case 'BestRecord.edit':
           // @ts-ignore
@@ -59,12 +57,27 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'VectorBestRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
-          props.handleOpenEntityDialog(true);
+          handleOpenEntityDialog(true);
           break;
         case 'QuantizedMeshBestRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, QuantizedMeshBestRecordModelKeys) as LayerMetadataMixedUnion);
-          props.handleOpenEntityDialog(true);
+          handleOpenEntityDialog(true);
+          break;
+        case 'LayerRasterRecord.flyTo':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion);
+          handleFlyTo();
+          break;
+        case 'Layer3DRecord.flyTo':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
+          handleFlyTo();
+          break;
+        case 'LayerRasterRecord.update':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
+          handleOpenEntityDialog(true);
           break;
         case 'LayerRasterRecord.delete':
           // @ts-ignore

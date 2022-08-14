@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { Rectangle } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
@@ -32,6 +33,7 @@ import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-l
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
+import { LinkType } from '../../common/models/link-type.enum';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -46,7 +48,7 @@ import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import {
   // BestRecordModel,
-  // LayerMetadataMixedUnion,
+  LayerMetadataMixedUnion,
   LinkModelType,
   // ProductType,
   RecordType
@@ -58,7 +60,9 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { generateLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
+import { FlyTo } from '../components/map-container/fly-to';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
 import { Terrain } from '../components/map-container/terrain';
@@ -67,14 +71,14 @@ import { ActionResolver } from './components/action-resolver.component';
 import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
 import { TabViews } from './tab-views';
+import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
 import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
+
 import './discrete-layer-view.css';
-import { LinkType } from '../../common/models/link-type.enum';
-import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -100,8 +104,6 @@ const noDrawing: IDrawingObject = {
 
 const getTimeStamp = (): string => new Date().getTime().toString();
 
-// const tileOptions = { opacity: 0.5 };
-
 const DiscreteLayerView: React.FC = observer(() => {
   // eslint-disable-next-line
   const { loading: searchLoading, error: searchError, data, query, setQuery } = useQuery();
@@ -123,17 +125,17 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
+  const [rect, setRect] = useState<Rectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
   const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role ?? CONFIG.DEFAULT_USER.ROLE);
-  const [drawEntities, setDrawEntities] = useState<IDrawing[]>([
-    {
-      coordinates: [],
-      name: '',
-      id: '',
-      type: DrawType.UNKNOWN,
-    },
-  ]);
+  const [drawEntities, setDrawEntities] = useState<IDrawing[]>([{
+    coordinates: [],
+    name: '',
+    id: '',
+    type: DrawType.UNKNOWN,
+  }]);
+  
   const memoizedLayers =  useMemo(() => {
     return(
       <>
@@ -373,6 +375,10 @@ const DiscreteLayerView: React.FC = observer(() => {
     handleTabViewChange(TabViews.SEARCH_RESULTS);
   };
 
+  const onFlyTo = useCallback((): void => {
+    setRect(generateLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
+  }, []);
+
   const tabViews = [
     {
       idx: TabViews.CATALOG,
@@ -393,8 +399,8 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const permissions = useMemo(() => {
     return {
-      isSystemsJobsAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEMJOBS),
-      isSystemsCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.ACTION_SYSTEM_CORE_INFO),
+      isSystemJobsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_JOBS),
+      isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
@@ -517,12 +523,12 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
               </>
             }
-            {/* <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
+            {/*<Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Delete"
                 label="DELETE"
               />
-            </Tooltip> */}
+            </Tooltip>*/}
             <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Filter"
@@ -587,21 +593,22 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, []);
 
   useEffect(() => {
-    if(typeof store.userStore.user?.role !== 'undefined') {
+    if (typeof store.userStore.user?.role !== 'undefined') {
       setUserRole(store.userStore.user.role);
     }
-  }, [store.userStore.user])
+  }, [store.userStore.user]);
  
   return (
     <>
       <ActionResolver
         handleOpenEntityDialog = {setEditEntityDialogOpen}
+        handleFlyTo = {onFlyTo}
       />
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
-            <Typography use="body2">Catalog App</Typography>
-            <Tooltip content={`${intl.formatMessage({ id: 'general.version.text' })} ${version}`}>
+            <Typography use="body2">{intl.formatMessage({ id: 'general.logo.text' })}</Typography>
+            <Tooltip content={`${intl.formatMessage({ id: 'general.version.tooltip' })} ${version}`}>
               <Box className="version">{version}</Box>
             </Tooltip>
           </Box>
@@ -630,7 +637,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <UserModeSwitch userRole={userRole} setUserRole={store.userStore.changeUserRole}/>
           </Box>
           {
-            permissions.isSystemsJobsAllowed as boolean &&
+            permissions.isSystemJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
                 className="operationIcon mc-icon-System-Missions"
@@ -639,9 +646,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-          
           {
-            permissions.isSystemsCoreInfoAllowed as boolean &&
+            permissions.isSystemCoreInfoAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
               <IconButton
                 className="operationIcon mc-icon-System-Missions glow-missing-icon"
@@ -650,7 +656,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               />
             </Tooltip>
           }
-
         </Box>
       </Box>
       <Box className="mainViewContainer">
@@ -713,6 +718,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
               setDetailsPanelExpanded = {setDetailsPanelExpanded} 
+              handleFlyTo = {onFlyTo}
             />
           </Box>
         </Box>
@@ -753,6 +759,9 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Terrain/>
               {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+              }
+              {
+                rect && <FlyTo rect={rect} setRect={setRect}/>
               }
           </CesiumMap>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}

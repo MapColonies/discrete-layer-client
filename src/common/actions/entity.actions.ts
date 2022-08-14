@@ -79,6 +79,14 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           {
+            action: 'flyTo',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          {
             action: 'update',
             frequent: false,
             icon: '',
@@ -112,6 +120,14 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             icon: '',
             class: 'mc-icon-Edit',
             titleTranslationId: 'action.edit.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          {
+            action: 'flyTo',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           // {
