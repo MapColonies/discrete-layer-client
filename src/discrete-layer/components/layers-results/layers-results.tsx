@@ -188,7 +188,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 200,
+      width: 180,
       field: 'productName',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
@@ -213,12 +213,11 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       hide: true
     },
     {
-      pinned: 'right',
       headerName: '',
-      width: 0,
+      width: 20,
       cellRenderer: 'actionsRenderer',
       cellRendererParams: {
-        actions: entityPermittedActions['LayerRasterRecord'],
+        actions: entityPermittedActions,
         actionHandler: dispatchAction,
       },
     }
