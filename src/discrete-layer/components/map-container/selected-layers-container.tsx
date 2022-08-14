@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState, useRef } from 'react';
-import { ImageryLayer } from 'cesium';
 import {
   Cesium3DTileset,
-  CesiumWMTSLayer, CesiumXYZLayer,
+  CesiumWMTSLayer,
+  CesiumXYZLayer,
+  ICesiumImageryLayer,
   RCesiumWMTSLayerOptions,
   useCesiumMap
 } from '@map-colonies/react-components';
@@ -26,7 +27,7 @@ interface CacheMap {
   [key: string]: JSX.Element | undefined;
 }
 
-type SearchLayerPredicate = (layer: ImageryLayer, idx: number) => boolean;
+type SearchLayerPredicate = (layer: ICesiumImageryLayer, idx: number) => boolean;
 
 export const SelectedLayersContainer: React.FC = observer(() => {
   const store = useStore();
