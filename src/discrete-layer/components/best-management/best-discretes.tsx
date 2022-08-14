@@ -175,10 +175,10 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       suppressMovable: true
     },
     {
+      pinned: 'right',
       headerName: '',
       width: 124,
       cellRenderer: 'actionsRenderer',
-      pinned: 'right',
       cellRendererParams: {
         actions: entityPermittedActions,
         actionHandler: dispatchAction

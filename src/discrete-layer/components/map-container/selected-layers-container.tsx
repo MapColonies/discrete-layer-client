@@ -26,7 +26,7 @@ interface CacheMap {
   [key: string]: JSX.Element | undefined;
 }
 
-type SearchLayerPredicate = (layer: ImageryLayer, idx: number) => boolean
+type SearchLayerPredicate = (layer: ImageryLayer, idx: number) => boolean;
 
 export const SelectedLayersContainer: React.FC = observer(() => {
   const store = useStore();
@@ -60,6 +60,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.XYZ_LAYER:
         return (
           <CesiumXYZLayer
+            key={layer.id}
             meta={{
               searchLayerPredicate: ((cesiumLayer, idx) => {
                 const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
@@ -71,10 +72,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
                 links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
               } as ILayerImage
             }}
-            rectangle={generateLayerRectangle(
-              layer as LayerRasterRecordModelType
-            )}
-            key={layer.id}
+            rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
             options={{ url: getTokenResource(layerLink.url as string) }}
           />
         );
@@ -100,7 +98,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
                 const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
                 const linkUrl = get(correctLinkByProtocol, 'url') as string;
                 const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
-
                 const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
                 return isLayerFound;
               }) as SearchLayerPredicate,
@@ -109,9 +106,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
                 links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
               } as ILayerImage
             }}
-            rectangle={generateLayerRectangle(
-              layer as LayerRasterRecordModelType
-            )}
+            rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
             options={optionsWMTS as RCesiumWMTSLayerOptions}
           />
         );

@@ -1,5 +1,6 @@
 {
-  "general.version.text": "אפליקצית קטלוג גרסה",
+  "general.logo.text": "אפליקצית קטלוג",
+  "general.version.tooltip": "אפליקצית קטלוג גרסה",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
   "general.continue-btn.text": "המשך",
@@ -38,6 +39,7 @@
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.system-core-info.tooltip": "צפייה במידע המערכת",
   "action.edit.tooltip": "עריכה",
+  "action.flyTo.tooltip": "הצג מיקום",
   "action.update.tooltip": "עדכון",
   "action.expand.tooltip": "הרחב תצוגה",
   "action.collapse.tooltip": "צמצם תצוגה",
@@ -476,7 +478,7 @@
   "compatibility-check.browser-version-not-supported": "גרסת הדפדפן שלך ישנה מדי, האפליקציה עלולה לא לעבוד כראוי.\nיש לעדכן את הדפדפן {browserName} לגרסה {minimumVersion} ומעלה לחוויה הטובה ביותר.",
 
   "map-legends.sidebar-title": "מקראי מפות",
-  "map-legends.empty-text": "אין מקראים לשכבות הפעילות.",
+  "map-legends.empty-text": "אין מקראים לשכבות הפעילות",
   "map-legends.actions.doc": "פתח קובץ",
   "map-legends.actions.img": "פתח תמונה",
 
@@ -485,6 +487,5 @@
   "user-role.dialog.title.text": "שינוי הרשאות משתמש",
   "user-role.dialog.switch-to-admin.btn.text": "החלף למצב מנהל",
   "user-role.dialog.password.input.placeholder": "סיסמא",
-  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה."
-
+  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה"
 }

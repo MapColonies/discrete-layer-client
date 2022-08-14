@@ -4,12 +4,15 @@ import bbox from '@turf/bbox';
 import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { LinkType } from '../../../common/models/link-type.enum';
-import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
+import {
+  CapabilityModelType,
+  LayerMetadataMixedUnion,
+  LayerRasterRecordModelType,
+  LinkModelType
+} from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
-export const generateLayerRectangle = (
-  layer: LayerRasterRecordModelType
-): Rectangle => {
+export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): Rectangle => {
   return Rectangle.fromDegrees(...bbox(layer.footprint));
 };
 
@@ -40,7 +43,7 @@ export const getLinkUrl = (links: LinkModelType[], protocol: string): string | u
 
 export const getLinkUrlWithToken = (links: LinkModelType[], protocol?: string): string | undefined => {
   if (typeof links !== 'undefined') {
-    // supporting single links
+    // supporting a single link
     let linkUrl = links[0]?.url;
     // in case of a single link there is no need to find link by protocol
     if (typeof protocol !== 'undefined') {

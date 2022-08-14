@@ -1,5 +1,6 @@
 {
-  "general.version.text": "Catalog App version",
+  "general.logo.text": "Catalog App",
+  "general.version.tooltip": "Catalog App version",
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
   "general.continue-btn.text": "Continue",
@@ -38,6 +39,7 @@
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
   "action.edit.tooltip": "Edit",
+  "action.flyTo.tooltip": "Fly To",
   "action.update.tooltip": "Update",
   "action.expand.tooltip": "Expand",
   "action.collapse.tooltip": "Collapse",
@@ -485,6 +487,5 @@
   "user-role.dialog.title.text": "Change User Role",
   "user-role.dialog.switch-to-admin.btn.text": "Activate admin mode",
   "user-role.dialog.password.input.placeholder": "Password",
-  "user-role.dialog.wrong-password-error.text": "Password is incorrect."
-
+  "user-role.dialog.wrong-password-error.text": "Password is incorrect"
 }
