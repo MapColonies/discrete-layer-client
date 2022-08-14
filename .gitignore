@@ -12,6 +12,7 @@ public/fonts
 !public/assets/
 public/assets/*
 !public/assets/scripts/
+!public/assets/pages/
 
 public/mock
 public/cookbook/*

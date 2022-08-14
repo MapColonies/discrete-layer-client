@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Not Supported!</title>
+  </head>
+
+
+  <body>
+    <h1 id="errorMsg"></h1>
+
+    <script>
+        const errorMsgElement = document.querySelector('#errorMsg');
+        const parameters = new URLSearchParams(window.location.search);
+        const errorCode = parameters.get('error');
+  
+        const ERRORS = {
+          BROWSER_NOT_SUPPORTED : `Sorry, this app currently doesn't support your browser.\nUse Chromium based browser instead.`,
+          BROWSER_VERSION_TOO_OLD: `Sorry, your browser's version is too old to run this app.\nPlease update your browser.`
+        }
+  
+        errorMsgElement.innerText = ERRORS[errorCode];  
+    </script>
+</body>
+
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style>
+</html>
