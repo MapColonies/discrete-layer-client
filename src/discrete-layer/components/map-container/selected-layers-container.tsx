@@ -2,27 +2,32 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   Cesium3DTileset,
-  CesiumWMTSLayer, CesiumXYZLayer,
+  CesiumWMTSLayer,
+  CesiumXYZLayer,
+  ICesiumImageryLayer,
   RCesiumWMTSLayerOptions,
   useCesiumMap
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import { isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
-import { LayerRasterRecordModelType } from '../../models';
+import { LayerRasterRecordModelType, LinkModelType } from '../../models';
 import {
   getLayerLink,
   generateLayerRectangle,
   getTokenResource,
-  getWMTSOptions
+  getWMTSOptions,
+  getLinksArrWithTokens
 } from '../helpers/layersUtils';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined;
 }
+
+type SearchLayerPredicate = (layer: ICesiumImageryLayer, idx: number) => boolean;
 
 export const SelectedLayersContainer: React.FC = observer(() => {
   const store = useStore();
@@ -56,10 +61,19 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.XYZ_LAYER:
         return (
           <CesiumXYZLayer
-            rectangle={generateLayerRectangle(
-              layer as LayerRasterRecordModelType
-            )}
             key={layer.id}
+            meta={{
+              searchLayerPredicate: ((cesiumLayer, idx) => {
+                const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                return correctLinkByProtocol?.url === (cesiumLayer as any)._imageryProvider._resource._url
+              }) as SearchLayerPredicate,
+              layerRecord: {
+                ...layer,
+                links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
+              } as ILayerImage
+            }}
+            rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
             options={{ url: getTokenResource(layerLink.url as string) }}
           />
         );
@@ -79,9 +93,21 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         };
         return (
           <CesiumWMTSLayer
-            rectangle={generateLayerRectangle(
-              layer as LayerRasterRecordModelType
-            )}
+            key={layer.id}
+            meta={{
+              searchLayerPredicate: ((cesiumLayer, idx) => {
+                const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
+                const linkUrl = get(correctLinkByProtocol, 'url') as string;
+                const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
+                const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
+                return isLayerFound;
+              }) as SearchLayerPredicate,
+              layerRecord: {
+                ...layer,
+                links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
+              } as ILayerImage
+            }}
+            rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
             options={optionsWMTS as RCesiumWMTSLayerOptions}
           />
         );

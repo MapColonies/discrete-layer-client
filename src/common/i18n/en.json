@@ -1,5 +1,6 @@
 {
-  "general.version.text": "Catalog App version",
+  "general.logo.text": "Catalog App",
+  "general.version.tooltip": "Catalog App version",
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
   "general.continue-btn.text": "Continue",
@@ -38,6 +39,7 @@
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
   "action.edit.tooltip": "Edit",
+  "action.flyTo.tooltip": "Fly To",
   "action.update.tooltip": "Update",
   "action.expand.tooltip": "Expand",
   "action.collapse.tooltip": "Collapse",
@@ -446,8 +448,8 @@
   "system-core-info.title": "System Info",
   "system-core-info.innerServicesTitle": "Internal Services",
   "system-core-info.externalServicesTitle": "External Services",
-  "system-core-info.versionText" :"Version",
-  "system-core-info.servicesText":"Services",
+  "system-core-info.versionText": "Version",
+  "system-core-info.servicesText": "Services",
   "pycsw.raster.url": "Raster",
   "pycsw.3d.url": "3D",
   "pycsw.dem.url": "DEM",
@@ -473,5 +475,17 @@
   "lookups.fieldCategory.geo_info.tooltip": "Geo Info",
 
   "compatibility-check.browser-not-supported": "The browser {browserName} is not supported, and the app may not work correctly.\nPlease use chromium based browser v{minimumVersion} or newer.",
-  "compatibility-check.browser-version-not-supported": "Your browser is outdated, and the app may not work correctly.\nPlease update to {browserName} v{minimumVersion} or newer for the best experience."
+  "compatibility-check.browser-version-not-supported": "Your browser is outdated, and the app may not work correctly.\nPlease update to {browserName} v{minimumVersion} or newer for the best experience.",
+
+  "map-legends.sidebar-title": "Map Legends",
+  "map-legends.empty-text": "No legends found for the active layers",
+  "map-legends.actions.doc": "Open Document",
+  "map-legends.actions.img": "Open Image",
+
+  "user-role.switch.user.text": "User",
+  "user-role.switch.admin.text": "Admin",
+  "user-role.dialog.title.text": "Change User Role",
+  "user-role.dialog.switch-to-admin.btn.text": "Activate admin mode",
+  "user-role.dialog.password.input.placeholder": "Password",
+  "user-role.dialog.wrong-password-error.text": "Password is incorrect"
 }

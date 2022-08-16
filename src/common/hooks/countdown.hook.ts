@@ -28,7 +28,7 @@ const useCountDown = (timeToCount = 60 * 1000, interval = 1000) => {
       timer.current = {};
       setTimeLeft(0);
     }
-  }
+  };
 
   const start = React.useCallback(
     (ttc) => {

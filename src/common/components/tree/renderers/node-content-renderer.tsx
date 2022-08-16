@@ -75,9 +75,7 @@ class FileThemeNodeContentRenderer extends Component {
       rowTitle: 'rowTitle',
       collapseButton: 'collapseButton',
       expandButton: 'expandButton',
-
-
-    }
+    };
 
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
@@ -86,7 +84,7 @@ class FileThemeNodeContentRenderer extends Component {
     // Construct the scaffold representing the structure of the tree
     const scaffold = [];
     lowerSiblingCounts.forEach((lowerSiblingCount, i) => {
-      if(!isSecondLevelLeaf){
+      if (!isSecondLevelLeaf) {
         scaffold.push(
           <div
             key={`pre_${1 + i}`}

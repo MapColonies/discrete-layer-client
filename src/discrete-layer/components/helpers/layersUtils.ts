@@ -1,16 +1,24 @@
-import { Rectangle, Resource } from 'cesium';
 import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
-import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
+import {
+  CesiumGeographicTilingScheme,
+  CesiumRectangle,
+  CesiumResource,
+  RCesiumWMTSLayerOptions
+} from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { LinkType } from '../../../common/models/link-type.enum';
-import { CapabilityModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
+import {
+  CapabilityModelType,
+  LayerMetadataMixedUnion,
+  LayerRasterRecordModelType,
+  LinkModelType
+} from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
-export const generateLayerRectangle = (
-  layer: LayerRasterRecordModelType
-): Rectangle => {
-  return Rectangle.fromDegrees(...bbox(layer.footprint));
+export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): CesiumRectangle => {
+  // eslint-disable-next-line
+  return CesiumRectangle.fromDegrees(...bbox(layer.footprint));
 };
 
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
@@ -38,13 +46,30 @@ export const getLinkUrl = (links: LinkModelType[], protocol: string): string | u
   return links.find((link: LinkModelType) => link.protocol === protocol)?.url;
 };
 
-export const getLinkUrlWithToken = (links: LinkModelType[], protocol: string): string | undefined => {
-  const linkUrl = getLinkUrl(links, protocol);
-  const urlWithToken = `${linkUrl ?? ''}${linkUrl !== undefined ? getTokenParam() : ''}`;
-  return !isEmpty(urlWithToken) ? urlWithToken : undefined;
+export const getLinkUrlWithToken = (links: LinkModelType[], protocol?: string): string | undefined => {
+  if (typeof links !== 'undefined') {
+    // supporting a single link
+    let linkUrl = links[0]?.url;
+    // in case of a single link there is no need to find link by protocol
+    if (typeof protocol !== 'undefined') {
+      linkUrl = getLinkUrl(links, protocol);
+    }
+    const urlWithToken = `${linkUrl ?? ''}${linkUrl !== undefined ? getTokenParam() : ''}`;
+    return !isEmpty(urlWithToken) ? urlWithToken : undefined;
+  }
 };
 
-export const getTokenResource = (url: string): Resource => {
+export const getLinksArrWithTokens = (links: LinkModelType[]): LinkModelType[] => {
+  const linksWithTokens = links.map(link => {
+    return {
+      ...link,
+      url: getLinkUrlWithToken([link])
+    };
+  });
+  return linksWithTokens;
+};
+
+export const getTokenResource = (url: string): CesiumResource => {
   const tokenProps: Record<string, unknown> = { url };
   
   // eslint-disable-next-line
@@ -60,7 +85,7 @@ export const getTokenResource = (url: string): Resource => {
     } as Record<string, unknown>;
   }
 
-  return new Resource({...tokenProps as unknown as Resource});
+  return new CesiumResource({...tokenProps as unknown as CesiumResource});
 };
 
 export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, capability: CapabilityModelType | undefined): RCesiumWMTSLayerOptions => {

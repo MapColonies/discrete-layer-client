@@ -47,7 +47,6 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
     } else {
       handleTabViewChange(TabViews.CATALOG);
     }
-  
   }, [editingBest]);
   
   return (

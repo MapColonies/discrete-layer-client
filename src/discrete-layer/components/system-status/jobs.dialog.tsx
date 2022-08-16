@@ -73,7 +73,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
-  
   }, []);
 
   // eslint-disable-next-line
@@ -92,7 +91,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const mutationQuery = useQuery();
 
   const store = useStore();
-
 
   const getJobActions = useMemo(() => {
     let actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
@@ -115,7 +113,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return {
       [JOB_ENTITY]: actions,
     };
-  
   }, []);
 
   useEffect(() => {
@@ -147,7 +144,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
-  
   }, [updateTaskPayload, store]);
 
   useEffect(() => {
@@ -169,32 +165,24 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return (): void => {
       clearInterval(pollingInterval);
     };
-  
   }, [query, pollingCycle]);
 
-  const closeDialog = useCallback(
-    () => {
-      onSetOpen(false);
-    },
-    [onSetOpen]
-  );
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
 
   const dispatchAction = (action: Record<string,unknown> | undefined): void => {
-
     const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction;
     store.actionDispatcherStore.dispatchAction(
       actionToDispatch
     );
-
   };
 
    // Job actions handler
 
    useEffect(() => {
      if (typeof store.actionDispatcherStore.action !== 'undefined') {
-       const { action, data } = store.actionDispatcherStore
-         .action as IDispatchAction;
-
+       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
        switch (action) {
          case 'Job.retry':
            mutationQuery.setQuery(
@@ -203,22 +191,19 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
              })
            );
            break;
-
          default:
            break;
        }
      }
-   
    }, [store.actionDispatcherStore.action]);
 
 
-  // Reset action value on store when unmounting.
+  // Reset action value on store when unmounting
 
   useEffect(() => {
     return (): void => {
       dispatchAction(undefined)
     };
-  
   }, []);
 
   const colDef = [
@@ -330,7 +315,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
         actions: getJobActions,
         actionHandler: dispatchAction,
       },
-    },
+    }
   ];
 
   const onGridReady = (params: GridReadyEvent): void => {

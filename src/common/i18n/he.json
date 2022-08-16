@@ -1,5 +1,6 @@
 {
-  "general.version.text": "אפליקצית קטלוג גרסה",
+  "general.logo.text": "אפליקצית קטלוג",
+  "general.version.tooltip": "אפליקצית קטלוג גרסה",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "בטל",
   "general.continue-btn.text": "המשך",
@@ -38,6 +39,7 @@
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.system-core-info.tooltip": "צפייה במידע המערכת",
   "action.edit.tooltip": "עריכה",
+  "action.flyTo.tooltip": "הצג מיקום",
   "action.update.tooltip": "עדכון",
   "action.expand.tooltip": "הרחב תצוגה",
   "action.collapse.tooltip": "צמצם תצוגה",
@@ -446,8 +448,8 @@
   "system-core-info.title": "מידע המערכת",
   "system-core-info.innerServicesTitle": "שירותים פנימיים",
   "system-core-info.externalServicesTitle": "שירותים חיצוניים",
-  "system-core-info.versionText" :"גרסה",
-  "system-core-info.servicesText":"שירותי",
+  "system-core-info.versionText": "גרסה",
+  "system-core-info.servicesText": "שירותי",
   "pycsw.raster.url": "raster",
   "pycsw.3d.url": "3D",
   "pycsw.dem.url": "DEM",
@@ -473,5 +475,17 @@
   "lookups.fieldCategory.geo_info.tooltip": "מידע גיאוגרפי",
 
   "compatibility-check.browser-not-supported": "הדפדפן {browserName} לא נתמך, האפליקציה עלולה לא לעבוד כראוי.\nיש להשתמש בדפדפן מסוג כרומיום בגרסה {minimumVersion} ומעלה לחוויה הטובה ביותר.",
-  "compatibility-check.browser-version-not-supported": "גרסת הדפדפן שלך ישנה מדי, האפליקציה עלולה לא לעבוד כראוי.\nיש לעדכן את הדפדפן {browserName} לגרסה {minimumVersion} ומעלה לחוויה הטובה ביותר."
+  "compatibility-check.browser-version-not-supported": "גרסת הדפדפן שלך ישנה מדי, האפליקציה עלולה לא לעבוד כראוי.\nיש לעדכן את הדפדפן {browserName} לגרסה {minimumVersion} ומעלה לחוויה הטובה ביותר.",
+
+  "map-legends.sidebar-title": "מקראי מפות",
+  "map-legends.empty-text": "אין מקראים לשכבות הפעילות",
+  "map-legends.actions.doc": "פתח קובץ",
+  "map-legends.actions.img": "פתח תמונה",
+
+  "user-role.switch.user.text": "משתמש",
+  "user-role.switch.admin.text": "מנהל",
+  "user-role.dialog.title.text": "שינוי הרשאות משתמש",
+  "user-role.dialog.switch-to-admin.btn.text": "החלף למצב מנהל",
+  "user-role.dialog.password.input.placeholder": "סיסמא",
+  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה"
 }

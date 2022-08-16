@@ -207,7 +207,7 @@ export const bestStore = ModelBase
 
     function restoreData(): void {
       if (self.storedData && !isEmpty(self.storedData.editingBest?.productName)) {
-        self.layersList = [...self.storedData.layersList??[]];
+        self.layersList = [...self.storedData.layersList ?? []];
         self.editingBest = {...self.storedData.editingBest} as BestRecordModelType;
       }
     }

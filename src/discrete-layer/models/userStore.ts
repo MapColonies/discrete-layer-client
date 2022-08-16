@@ -5,13 +5,14 @@ import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
-enum UserRole {
+export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN'
 }
 
 export enum UserAction {
-  ACTION_SYSTEMJOBS = 'action_systemJobs',
+  SYSTEM_ACTION_JOBS = 'system_action_jobs',
+  SYSTEM_ACTION_COREINFO = 'system_action_coreInfo',
 
   ENTITY_ACTION_LAYERRASTERRECORD_CREATE = 'entity_action.LayerRasterRecord.create',
   ENTITY_ACTION_LAYER3DRECORD_CREATE = 'entity_action.Layer3DRecord.create',
@@ -23,6 +24,8 @@ export enum UserAction {
   ENTITY_ACTION_BESTRECORD_EDIT = 'entity_action.BestRecord.edit',
   ENTITY_ACTION_VECTORBESTRECORD_EDIT = 'entity_action.VectorBestRecord.edit',
   ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT = 'entity_action.QuantizedMeshBestRecord.edit',
+  ENTITY_ACTION_LAYERRASTERRECORD_FLYTO = 'entity_action.LayerRasterRecord.flyTo',
+  ENTITY_ACTION_LAYER3DRECORD_FLYTO = 'entity_action.Layer3DRecord.flyTo',
   ENTITY_ACTION_LAYERRASTERRECORD_UPDATE = 'entity_action.LayerRasterRecord.update',
   ENTITY_ACTION_LAYERRASTERRECORD_DELETE = 'entity_action.LayerRasterRecord.delete',
   ENTITY_ACTION_LAYER3DRECORD_DELETE = 'entity_action.Layer3DRecord.delete',
@@ -57,51 +60,57 @@ const ROLES: IRole[] = [
   {
     role: UserRole.ADMIN,
     permissions: {
-      'action_systemJobs': true,
-      'entity_action.LayerRasterRecord.create': true,
-      'entity_action.Layer3DRecord.create': true,
-      'entity_action.LayerDemRecord.create': false,
-      'entity_action.BestRecord.create': true,
-      'entity_action.LayerRasterRecord.edit': true,
-      'entity_action.Layer3DRecord.edit': true,
-      'entity_action.LayerDemRecord.edit': false,
-      'entity_action.BestRecord.edit': true,
-      'entity_action.VectorBestRecord.edit': true,
-      'entity_action.QuantizedMeshBestRecord.edit': true,
-      'entity_action.LayerRasterRecord.update': false,
-      'entity_action.LayerRasterRecord.delete': true,
-      'entity_action.Layer3DRecord.delete': true,
-      'entity_action.LayerDemRecord.delete': true,
-      'entity_action.BestRecord.delete': true,
-      'entity_action.LayerRasterRecord.moveToTop': true,
-      'entity_action.LayerRasterRecord.moveUp': true,
-      'entity_action.LayerRasterRecord.moveDown': true,
-      'entity_action.LayerRasterRecord.moveToBottom': true,
+      [UserAction.SYSTEM_ACTION_JOBS]: true,
+      [UserAction.SYSTEM_ACTION_COREINFO]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: true,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: true,
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
+      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: true,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: true,
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: true,
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: true,
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: true,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: true,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: true,
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: true,
+      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: true,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: true,
     },
   },
   {
     role: UserRole.USER,
     permissions: {
-      'action_systemJobs': false,
-      'entity_action.LayerRasterRecord.create': false,
-      'entity_action.Layer3DRecord.create': false,
-      'entity_action.LayerDemRecord.create': false,
-      'entity_action.BestRecord.create': false,
-      'entity_action.LayerRasterRecord.edit': false,
-      'entity_action.Layer3DRecord.edit': false,
-      'entity_action.LayerDemRecord.edit': false,
-      'entity_action.BestRecord.edit': false,
-      'entity_action.VectorBestRecord.edit': false,
-      'entity_action.QuantizedMeshBestRecord.edit': false,
-      'entity_action.LayerRasterRecord.update': false,
-      'entity_action.LayerRasterRecord.delete': false,
-      'entity_action.Layer3DRecord.delete': false,
-      'entity_action.LayerDemRecord.delete': false,
-      'entity_action.BestRecord.delete': false,
-      'entity_action.LayerRasterRecord.moveToTop': false,
-      'entity_action.LayerRasterRecord.moveUp': false,
-      'entity_action.LayerRasterRecord.moveDown': false,
-      'entity_action.LayerRasterRecord.moveToBottom': false,
+      [UserAction.SYSTEM_ACTION_JOBS]: false,
+      [UserAction.SYSTEM_ACTION_COREINFO]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: false,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: false,
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
+      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: false,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: false,
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: false,
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: false,
+      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: false,
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: false,
     },
   },
 ];
@@ -128,7 +137,12 @@ export const userStore = ModelBase
       return role ? role.permissions[action as UserAction] as boolean : false;
     }
 
+    function changeUserRole(role: UserRole): void {
+      self.user = {...self.user, role} as IUser;
+    }
+
     return {
       isActionAllowed,
+      changeUserRole,
     };
   });

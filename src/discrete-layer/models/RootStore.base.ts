@@ -134,14 +134,9 @@ export type TasksSearchParams = {
   jobId: string
 }
 export type RecordUpdatePartial = {
-  productName?: string
-  description?: string
-  productSubType?: string
-  producerName?: string
-  classification?: string
-  keywords?: string
   id: string
   type: RecordType
+  partialRecordData: any
 }
 export type IngestionRasterData = {
   directory: string
