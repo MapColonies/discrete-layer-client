@@ -160,7 +160,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
        entityActions[entityName] = permittedGroupsActions;
     })
     return entityActions;
-  }, []);
+  }, [store.userStore.user]);
 
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {

@@ -1,7 +1,11 @@
-import { Rectangle, Resource } from 'cesium';
 import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
-import { CesiumGeographicTilingScheme, RCesiumWMTSLayerOptions } from '@map-colonies/react-components';
+import {
+  CesiumGeographicTilingScheme,
+  CesiumRectangle,
+  CesiumResource,
+  RCesiumWMTSLayerOptions
+} from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { LinkType } from '../../../common/models/link-type.enum';
 import {
@@ -12,8 +16,9 @@ import {
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
-export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): Rectangle => {
-  return Rectangle.fromDegrees(...bbox(layer.footprint));
+export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): CesiumRectangle => {
+  // eslint-disable-next-line
+  return CesiumRectangle.fromDegrees(...bbox(layer.footprint));
 };
 
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
@@ -64,7 +69,7 @@ export const getLinksArrWithTokens = (links: LinkModelType[]): LinkModelType[] =
   return linksWithTokens;
 };
 
-export const getTokenResource = (url: string): Resource => {
+export const getTokenResource = (url: string): CesiumResource => {
   const tokenProps: Record<string, unknown> = { url };
   
   // eslint-disable-next-line
@@ -80,7 +85,7 @@ export const getTokenResource = (url: string): Resource => {
     } as Record<string, unknown>;
   }
 
-  return new Resource({...tokenProps as unknown as Resource});
+  return new CesiumResource({...tokenProps as unknown as CesiumResource});
 };
 
 export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, capability: CapabilityModelType | undefined): RCesiumWMTSLayerOptions => {

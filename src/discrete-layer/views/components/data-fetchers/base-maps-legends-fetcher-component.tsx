@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
+import { LinkType } from '../../../../common/models/link-type.enum';
+import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../../__mocks-data__/search-results.mock';
 import { useStore } from '../../../models/RootStore';
 import { LinkModelType } from '../../../models';
-import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { ILayerImage } from '../../../models/layerImage';
-import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../../__mocks-data__/search-results.mock';
-import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
-import { LinkType } from '../../../../common/models/link-type.enum';
 
 export const BaseMapsLegendsFetcher: React.FC = observer(() => {
   const store = useStore();

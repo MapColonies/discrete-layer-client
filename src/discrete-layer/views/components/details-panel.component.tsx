@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
@@ -34,6 +34,13 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
   const editingBest = store.bestStore.editingBest;
 
+  const permissions = useMemo(() => {
+    return {
+     isFlyToAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.flyTo`),
+     isEditAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`),
+    }
+  }, [store.userStore.user]);
+
   const handleEditEntityDialogClick = (): void => {
     if (typeof layerToPresent !== 'undefined' && 'isDraft' in layerToPresent) {
       store.bestStore.editBest(layerToPresent as BestRecordModelType);
@@ -49,8 +56,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           {layerToPresent?.productName}
         </Typography>
         {
-          layerToPresent && 
-          store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.flyTo`) &&
+          permissions.isFlyToAllowed &&
           <Tooltip content={intl.formatMessage({ id: 'action.flyTo.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-Coordinates glow-missing-icon"
@@ -60,8 +66,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           </Tooltip>
         }
         {
-          layerToPresent && 
-          store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`) &&
+          permissions.isEditAllowed &&
           <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-Edit"

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Rectangle } from 'cesium';
 import { find, get } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
@@ -18,16 +17,17 @@ import {
   Avatar
 } from '@map-colonies/react-core';
 import {
-  DrawType,
-  IDrawingEvent,
-  IDrawing,
-  CesiumDrawingsDataSource,
-  CesiumColor,
-  CesiumMap,
-  CesiumSceneMode,
   BboxCorner,
   Box,
+  CesiumColor,
+  CesiumDrawingsDataSource,
+  CesiumMap,
   CesiumPolylineDashMaterialProperty,
+  CesiumRectangle,
+  CesiumSceneMode,
+  DrawType,
+  IDrawing,
+  IDrawingEvent
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import { version } from '../../../package.json';
@@ -125,7 +125,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
-  const [rect, setRect] = useState<Rectangle | undefined>(undefined);
+  const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
   const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role ?? CONFIG.DEFAULT_USER.ROLE);
