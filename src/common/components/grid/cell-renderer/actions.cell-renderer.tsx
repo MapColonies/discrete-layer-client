@@ -10,6 +10,7 @@ import { IActionGroup, IAction } from '../../../actions/entity.actions';
 import './actions.cell-renderer.css';
 
 const FIRST = 0;
+const EMPTY_ACTION_GROUP = 0;
 
 interface IActionsRendererParams extends ICellRendererParams {
   actions: Record<string,IActionGroup[]>;
@@ -83,7 +84,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
             actions.map((actionGroup: IActionGroup, groupIdx: number) => {
               return (
                 <React.Fragment key={`actGroup_${groupIdx}`}>
-                  {groupIdx > FIRST && 
+                  {actionGroup.group.length > EMPTY_ACTION_GROUP && groupIdx > FIRST && 
                     <MenuItem key={`menuItemSeparator_groupId_${groupIdx}`}>
                       <Box className="menuSeparator"></Box>
                     </MenuItem>

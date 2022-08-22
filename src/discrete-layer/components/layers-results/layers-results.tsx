@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { isObject } from 'lodash';
+import { Box } from '@map-colonies/react-components';
 import { 
   GridComponent,
   GridComponentOptions,
@@ -43,15 +44,10 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const store = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(true);
+  const [gridApi, setGridApi] = useState<GridApi>();
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
-
-  useEffect(() => {
-    if (store.discreteLayersStore.layersImages) {
-      setlayersImages(store.discreteLayersStore.layersImages);
-    }
-  }, [store.discreteLayersStore.layersImages]);
 
   const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
     let res = false;
@@ -96,6 +92,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
             .map((action) => {
               return {
                 ...action,
+                frequent: false,
                 titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
               };
             }),
@@ -104,7 +101,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
        entityActions[entityName] = permittedGroupsActions;
     })
     return entityActions;
-  }, []);
+  }, [store.userStore.user]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     store.actionDispatcherStore.dispatchAction({
@@ -199,7 +196,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerName:  intl.formatMessage({
         id: 'results.fields.update-date.label',
       }),
-      width: 120,
+      width: 140,
       field: 'updateDate',
       suppressMovable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
@@ -213,6 +210,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       hide: true
     },
     {
+      pinned: 'right',
       headerName: '',
       width: 20,
       cellRenderer: 'actionsRenderer',
@@ -259,6 +257,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       store.discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
     },
     onGridReady(params: GridReadyEvent) {
+      setGridApi(params.api);
       params.api.forEachNode( (node) => {
         if ((node.data as ILayerImage).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
@@ -267,11 +266,23 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
   };
 
+  useEffect(() => {
+    if (store.discreteLayersStore.layersImages) {
+      setlayersImages(store.discreteLayersStore.layersImages);
+    }
+  }, [store.discreteLayersStore.layersImages]);
+
+  useEffect(() => {
+    gridApi?.setColumnDefs(colDef);
+  },[store.userStore.user]);
+
   return (
-    <GridComponent
-      gridOptions={gridOptions}
-      rowData={getRowData()}
-      style={props.style}
-    />
+    <Box id={'layerRsults'}>
+      <GridComponent
+        gridOptions={gridOptions}
+        rowData={getRowData()}
+        style={props.style}
+      />
+    </Box>
   );
 });

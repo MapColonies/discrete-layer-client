@@ -16,7 +16,6 @@ interface DetailsPanelComponentProps {
   setEditEntityDialogOpen: (open: boolean) => void;
   detailsPanelExpanded: boolean;
   setDetailsPanelExpanded: (isExpanded: boolean) => void;
-  handleFlyTo: () => void;
 }
 
 export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((props) => {
@@ -24,8 +23,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
     isEditEntityDialogOpen,
     setEditEntityDialogOpen,
     detailsPanelExpanded,
-    setDetailsPanelExpanded ,
-    handleFlyTo
+    setDetailsPanelExpanded
   } = props;
   
   const store = useStore();
@@ -36,10 +34,9 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
 
   const permissions = useMemo(() => {
     return {
-     isFlyToAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.flyTo`),
      isEditAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`),
     }
-  }, [store.userStore.user]);
+  }, [store.userStore.user, layerToPresent]);
 
   const handleEditEntityDialogClick = (): void => {
     if (typeof layerToPresent !== 'undefined' && 'isDraft' in layerToPresent) {
@@ -55,16 +52,6 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
         <Typography use="headline6" tag="div" className="detailsTitle">
           {layerToPresent?.productName}
         </Typography>
-        {
-          permissions.isFlyToAllowed &&
-          <Tooltip content={intl.formatMessage({ id: 'action.flyTo.tooltip' })}>
-            <IconButton
-              className="operationIcon mc-icon-Coordinates glow-missing-icon"
-              label="FLY TO"
-              onClick={ (): void => { handleFlyTo(); } }
-            />
-          </Tooltip>
-        }
         {
           permissions.isEditAllowed &&
           <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
