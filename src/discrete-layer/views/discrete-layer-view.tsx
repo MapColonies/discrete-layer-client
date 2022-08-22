@@ -32,7 +32,7 @@ import {
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
-import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
+// import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
 import { LinkType } from '../../common/models/link-type.enum';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
@@ -764,7 +764,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 rect && <FlyTo rect={rect} setRect={setRect}/>
               }
           </CesiumMap>
-          <BrowserCompatibilityChecker />
+          {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
