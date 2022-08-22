@@ -39,6 +39,16 @@
             src: '%PUBLIC_URL%/Cesium/Cesium.js',
             cacheType: 'version',
             additionalAttributes: 'async'
+          },
+          {
+            src: '%PUBLIC_URL%/ua-parser/ua-parser.min.js',
+            cacheType: 'version',
+            additionalAttributes: 'async=false'
+          },
+          {
+            src: '%PUBLIC_URL%/assets/scripts/browserCompatibilityCheck.js',
+            cacheType: 'version',
+            additionalAttributes: 'async=false'
           }
         ];
         if (typeof String.prototype.replaceAll === 'undefined') {
