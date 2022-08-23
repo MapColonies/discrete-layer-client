@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.16.0...v1.17.0) (2022-08-23)
+
+
+### Features
+
+*  root compatibility check ([#331](https://github.com/MapColonies/discrete-layer-client/issues/331)) ([a0e090b](https://github.com/MapColonies/discrete-layer-client/commit/a0e090b0a997a9720cfe7f7baa09136f5c8417bb))
+* style sidebar ([#324](https://github.com/MapColonies/discrete-layer-client/issues/324)) ([48aa87c](https://github.com/MapColonies/discrete-layer-client/commit/48aa87cfe552c1defe4a3a0948a0415ee8d55c34)), closes [#326](https://github.com/MapColonies/discrete-layer-client/issues/326)
+
+
+### Bug Fixes
+
+* cesium abstraction ([#333](https://github.com/MapColonies/discrete-layer-client/issues/333)) ([df9f30d](https://github.com/MapColonies/discrete-layer-client/commit/df9f30d3ccc6f1d072bf44bf89c82453696571b1))
+* fix ([#329](https://github.com/MapColonies/discrete-layer-client/issues/329)) ([9a4d04e](https://github.com/MapColonies/discrete-layer-client/commit/9a4d04eede5c47e4d277eda27a4f941ca7fc9b0d))
+* flyto behavior and entity actions ([#335](https://github.com/MapColonies/discrete-layer-client/issues/335)) ([bbc99e3](https://github.com/MapColonies/discrete-layer-client/commit/bbc99e3b61ac147cfef08b262cb161d79dd8faa9))
+
 ## [1.16.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.15.13...v1.16.0) (2022-08-04)
 
 
