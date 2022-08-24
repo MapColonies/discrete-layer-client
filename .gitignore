@@ -7,10 +7,12 @@ confd/**
 !confd/*.toml
 public/env-config.js
 public/[cC]esium
+public/ua-parser
 public/fonts
 !public/assets/
 public/assets/*
 !public/assets/scripts/
+!public/assets/pages/
 
 public/mock
 public/cookbook/*

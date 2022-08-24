@@ -27,6 +27,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'LayerRasterRecord',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'OperationsOnMap',
         type: 'mapActions',
@@ -79,14 +94,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           {
-            action: 'flyTo',
-            frequent: false,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-          {
             action: 'update',
             frequent: false,
             icon: '',
@@ -110,6 +117,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'Layer3DRecord',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -120,14 +142,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             icon: '',
             class: 'mc-icon-Edit',
             titleTranslationId: 'action.edit.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-          {
-            action: 'flyTo',
-            frequent: false,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           // {

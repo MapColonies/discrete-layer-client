@@ -16,10 +16,23 @@ import {
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
+const DEFAULT_RECTANGLE_FACTOR = 0.2;
+
 export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): CesiumRectangle => {
   // eslint-disable-next-line
-  return CesiumRectangle.fromDegrees(...bbox(layer.footprint));
+  return CesiumRectangle.fromDegrees(...bbox(layer.footprint)) as CesiumRectangle;
 };
+
+export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, factor = DEFAULT_RECTANGLE_FACTOR): CesiumRectangle => {
+  const rectWithBuffers = generateLayerRectangle(layer);
+
+  rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * factor;
+  rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * factor;
+  rectWithBuffers.south = rectWithBuffers.south - rectWithBuffers.height * factor;
+  rectWithBuffers.north = rectWithBuffers.north + rectWithBuffers.height * factor;
+  return rectWithBuffers;
+};
+
 
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
   return layer.links?.find((link: LinkModelType) => [LinkType.WMTS_TILE as string, LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;

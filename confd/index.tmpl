@@ -39,6 +39,16 @@
             src: '{{ getv "/configuration/public/url" "" }}/Cesium/Cesium.js',
             cacheType: 'version',
             additionalAttributes: 'async'
+          },
+          {
+            src: '{{ getv "/configuration/public/url" "" }}/ua-parser/ua-parser.min.js',
+            cacheType: 'version',
+            additionalAttributes: 'async=false'
+          },
+          {
+            src: '{{ getv "/configuration/public/url" "" }}/assets/scripts/browserCompatibilityCheck.js',
+            cacheType: 'version',
+            additionalAttributes: 'async=false'
           }
         ];
         if (typeof String.prototype.replaceAll === 'undefined') {

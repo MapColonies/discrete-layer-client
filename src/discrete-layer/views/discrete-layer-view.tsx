@@ -32,7 +32,7 @@ import {
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
-import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
+// import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
 import { LinkType } from '../../common/models/link-type.enum';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
@@ -60,7 +60,7 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
 import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
-import { generateLayerRectangle } from '../components/helpers/layersUtils';
+import { generateFactoredLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
 import { IPOI } from '../components/map-container/poi.dialog';
@@ -376,7 +376,10 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const onFlyTo = useCallback((): void => {
-    setRect(generateLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
+    setRect(generateFactoredLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
+    if(store.discreteLayersStore.selectedLayer){
+      store.discreteLayersStore.showFootprint(store.discreteLayersStore.selectedLayer.id, true);
+    }
   }, []);
 
   const tabViews = [
@@ -718,7 +721,6 @@ const DiscreteLayerView: React.FC = observer(() => {
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
               setDetailsPanelExpanded = {setDetailsPanelExpanded} 
-              handleFlyTo = {onFlyTo}
             />
           </Box>
         </Box>
@@ -764,7 +766,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 rect && <FlyTo rect={rect} setRect={setRect}/>
               }
           </CesiumMap>
-          <BrowserCompatibilityChecker />
+          {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
