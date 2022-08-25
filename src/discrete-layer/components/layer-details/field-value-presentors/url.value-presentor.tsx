@@ -25,20 +25,24 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
     <>
       <Tooltip content={value}>
         <Box className="detailsFieldValue detailsUrlFieldValue">
-            {linkInfo?.linkAction === LINK && <Hyperlink url={value} token={getTokenParam()}/>}
-            {linkInfo?.linkAction !== LINK && <Typography tag="span">{value}</Typography>}
+          {linkInfo?.linkAction === LINK ? (
+            <Hyperlink url={value} token={getTokenParam()} />
+          ) : (
+            <Typography tag="span">{value}</Typography>
+          )}
         </Box>
       </Tooltip>
-      <Box className="detailsUrlFieldUrlCopy">
-        <Tooltip content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}>
-          <CopyToClipboard text={value} onCopy={(): void => setCopied(true)}>
-            <>
-              {linkInfo?.linkAction === COPY && <IconButton className="mc-icon-Copy"/>}
-              {linkInfo?.linkAction !== COPY && <Box></Box>}
-            </>
-          </CopyToClipboard>
-        </Tooltip>
-      </Box>
+      {linkInfo?.linkAction === COPY && (
+        <Box className="detailsUrlFieldUrlCopy">
+          <Tooltip
+            content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}
+          >
+            <CopyToClipboard text={value} onCopy={(): void => setCopied(true)}>
+              <IconButton type={'button'} className="mc-icon-Copy" />
+            </CopyToClipboard>
+          </Tooltip>
+        </Box>
+      )}
     </>
   );
 }
