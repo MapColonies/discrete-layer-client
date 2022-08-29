@@ -22,5 +22,5 @@ if (!isEngineChromium || !isBrowserVersionSupported) {
   } else {
     err = ERROR_CODES.BROWSER_NOT_SUPPORTED;
   }
-  window.location.replace("/assets/pages/compatibilityError.htm?error=" + err);
+  window.location.replace("/assets/pages/compatibilityError.html?error=" + err);
 }
