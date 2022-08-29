@@ -26,20 +26,10 @@
     <title>Loading&#8230</title>
     <script type="text/javascript">
       (function() {
-        const getTime = () => new Date().getTime().toString();
-        const getVersion = () => '{{ getv "/configuration/image/tag" "v1.0.0" }}';
-
+        function getTime () { return new Date().getTime().toString() };
+        function getVersion () { return '{{ getv "/configuration/image/tag" "v1.0.0" }}' };
         // Render SCRIPTS
-        const scripts = [
-          {
-            src: '{{ getv "/configuration/public/url" "" }}/env-config.js',
-            cacheType: 'timestamp'
-          },
-          {
-            src: '{{ getv "/configuration/public/url" "" }}/Cesium/Cesium.js',
-            cacheType: 'version',
-            additionalAttributes: 'async'
-          },
+        var scripts = [
           {
             src: '{{ getv "/configuration/public/url" "" }}/ua-parser/ua-parser.min.js',
             cacheType: 'version',
@@ -49,20 +39,42 @@
             src: '{{ getv "/configuration/public/url" "" }}/assets/scripts/browserCompatibilityCheck.js',
             cacheType: 'version',
             additionalAttributes: 'async=false'
+          },
+          {
+            src: '{{ getv "/configuration/public/url" "" }}/env-config.js',
+            cacheType: 'timestamp'
+          },
+          {
+            src: '{{ getv "/configuration/public/url" "" }}/Cesium/Cesium.js',
+            cacheType: 'version',
+            additionalAttributes: 'async'
           }
         ];
-        if (typeof String.prototype.replaceAll === 'undefined') {
-          scripts.push({
+        if (typeof String.prototype.replaceAll == 'undefined') {
+          scripts.unshift({
             src: '{{ getv "/configuration/public/url" "" }}/assets/scripts/polyfill.chrome_68.replaceall.js',
             cacheType: 'version',
             additionalAttributes: 'async'
           });
         }
-        scripts.forEach((script) => {
-          document.write(
-            `<script language='text/javascript' type='text/javascript' src='${script.src}?${((script.cacheType === 'timestamp') ? getTime() : getVersion())}' ${script.additionalAttributes ?? ''}><\/script>`);
-        });
-        
+
+        for(var i = 0; i < scripts.length; i++) {
+          var script = scripts[i];
+          var src = script.src;
+          var additionalAttributes = '';
+
+          if(script.cacheType == 'timestamp') {
+            src += "?" + getTime();
+          } else {
+            src += "?" + getVersion();
+          }
+
+          if(typeof script.additionalAttributes !== 'undefined') {
+            additionalAttributes = script.additionalAttributes;
+          }
+
+          document.write("<script language='text/javascript' type='text/javascript' src='" + src + "'" + additionalAttributes + "><\/script>");
+        } 
         // Render STYLES/LINKS
         const styles = [
           {
@@ -78,9 +90,19 @@
             cacheType: 'version'
           }
         ];
-        styles.forEach((style) => {
-          document.write(`<link href='${style.href}?${((style.cacheType === 'timestamp') ? getTime() : getVersion())}' rel='stylesheet'>`);
-        });
+        for(var i = 0; i < styles.length; i++) {
+          var style = styles[i];
+
+          var href = style.href;
+
+          if(style.cacheType == 'timestamp') {
+            href += "?" + getTime();
+          } else {
+            href += "?" + getVersion();
+          }
+
+          document.write("<link href='" + href + "' rel='stylesheet'>");
+        }
       })();
     </script>
   </head>
