@@ -30,7 +30,6 @@ import {
   IDrawingEvent
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
-import { version } from '../../../package.json';
 import CONFIG from '../../common/config';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
 import { LinkType } from '../../common/models/link-type.enum';
@@ -79,6 +78,7 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
+import AppTitle from './components/app-title/app-title.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -610,10 +610,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
           <Box style={{padding: '0 12px 0 12px'}}>
-            <Typography use="body2">{intl.formatMessage({ id: 'general.logo.text' })}</Typography>
-            <Tooltip content={`${intl.formatMessage({ id: 'general.version.tooltip' })} ${version}`}>
-              <Box className="version">{version}</Box>
-            </Tooltip>
+           <AppTitle />
           </Box>
           <TabViewsSwitcher
             handleTabViewChange = {handleTabViewChange}
