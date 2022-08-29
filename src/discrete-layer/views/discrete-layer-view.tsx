@@ -136,6 +136,14 @@ const DiscreteLayerView: React.FC = observer(() => {
     type: DrawType.UNKNOWN,
   }]);
   
+  /* eslint-disable */
+  const mapSettingsLocale = useMemo(() => ({
+    MAP_SETTINGS_DIALOG_TITLE:  intl.formatMessage({ id: 'map-settings.dialog.title' }),
+    MAP_SETTINGS_SCENE_MODE_TITLE: intl.formatMessage({ id: 'map-settings.base-map.scene-mode.title' }),
+    MAP_SETTINGS_BASE_MAP_TITLE: intl.formatMessage({ id: 'map-settings.base-map.title' })
+  }), [intl]);
+  /* eslint-enable */
+
   const memoizedLayers =  useMemo(() => {
     return(
       <>
@@ -728,6 +736,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             zoom={CONFIG.MAP.ZOOM}
             sceneMode={CesiumSceneMode.SCENE2D}
             imageryProvider={false}
+            locale = {mapSettingsLocale}
             baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
             imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}

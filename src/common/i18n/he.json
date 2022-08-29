@@ -482,6 +482,10 @@
   "map-legends.actions.doc": "פתח קובץ",
   "map-legends.actions.img": "פתח תמונה",
 
+  "map-settings.base-map.title": "מפות בסיס",
+  "map-settings.base-map.scene-mode.title": "מצב תצוגה",
+  "map-settings.dialog.title": "הגדרות מפה",
+
   "user-role.switch.user.text": "משתמש",
   "user-role.switch.admin.text": "מנהל",
   "user-role.dialog.title.text": "שינוי הרשאות משתמש",
