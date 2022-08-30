@@ -33,13 +33,9 @@
 
 #layerDetailsForm .footer {
   display: flex;
-  justify-content: flex-start;
-  gap: 20px;
-  position: absolute;
-  bottom: var(--footer-offset);
-  right: 20px;
+  margin-top: var(--footer-offset);
+  width: 100%;
   height: var(--footer-height);
-  width: 90%;
 }
 
 body[dir='rtl'] #layerDetailsForm .footer {
