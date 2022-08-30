@@ -18,6 +18,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         fieldName
         label
         fullWidth
+        rows
         infoMsgCode
         isManuallyEditable
         isRequired
