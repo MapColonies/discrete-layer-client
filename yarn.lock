@@ -3041,7 +3041,7 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.12.3":
+"@map-colonies/react-components@^3.12.3":
   version "3.12.3"
   resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.12.3.tgz#6e1f15e2abb9a6341d764122d50340e95c90e123"
   integrity sha512-QBDRSJCaIkrpgszjTaNBuGE294YMCZn4ZcCFAVEAgrfN8Y9r2K34ls8tRH/hm0zmwkJfgqAe3wn0HgxE20eWew==
