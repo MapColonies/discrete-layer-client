@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.17.3...v1.18.0) (2022-08-30)
+
+
+### Features
+
+* add text area support for string presentors ([2c5bf31](https://github.com/MapColonies/discrete-layer-client/commit/2c5bf317e4a4fce3636b34118c40cdd313492898))
+
+
+### Bug Fixes
+
+* date value presentor tooltip icon misplaced ([8ffd8c6](https://github.com/MapColonies/discrete-layer-client/commit/8ffd8c6ccb8a729f8105601066d3b94b4b68782f))
+
 ### [1.17.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.17.2...v1.17.3) (2022-08-30)
 
 
