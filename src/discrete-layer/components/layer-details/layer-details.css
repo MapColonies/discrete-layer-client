@@ -22,9 +22,10 @@
 
 .categoryField {
   flex: 40%;
-  padding: 2px 0;
+  padding: 4px 0;
   display: flex;
-  overflow: hidden;
+  margin: 0;
+  box-sizing: border-box;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -54,7 +55,12 @@
   text-overflow: ellipsis;
   word-break: break-all;
   position: relative;
+  overflow: hidden;
   flex: 1 1;
+}
+
+.form .detailsFieldValue:not(.detailsUrlFieldValue) {
+  overflow: unset;
 }
 
 .detailFieldCopyable {
