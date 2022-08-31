@@ -34,7 +34,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     if (innerValue && innerValue.length > MAX_VALUE_LENGTH) {
       return (
         <Tooltip content={innerValue}>
-          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
+          <Box dir="auto" className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
             {innerValue}
           </Box>
         </Tooltip>

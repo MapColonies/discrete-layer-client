@@ -31,11 +31,12 @@ body[dir='rtl'] .detailsContent {
 }
 
 .detailsPanelProductView .detailsFieldLabel {
-  flex: 0 0 7.5em;
+  width: calc(var(--field-label-max-length) - 10px);
 }
 
 .detailsPanelProductView .categoryField {
   padding: 0;
+  width: 40%;
 }
 
 .detailsPanelProductView .categoryFieldsTitle{
