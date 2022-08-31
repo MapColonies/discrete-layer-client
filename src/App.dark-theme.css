@@ -195,6 +195,10 @@ body[dir='rtl'] .dark-theme .datePresentor .MuiInputBase-input {
   margin: 0 8px;
 }
 
+.dark-theme .categoryFullWidthField .MuiFormControl-root {
+  width: 100%;
+}
+
 .dark-theme .datePresentor button.MuiButtonBase-root.MuiIconButton-root {
   padding-left: 0px;
 }

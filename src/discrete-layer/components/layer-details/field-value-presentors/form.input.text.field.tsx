@@ -71,6 +71,8 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     let max: string;
     let validationProps = {};
     let placeholder = '';
+    const textAreaProps = fieldInfo.rows ? { textarea: true, rows: fieldInfo.rows } : {};
+    
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
       if (validationItem.valueType === ValidationValueType.VALUE) {
         if (validationItem.min !== null) {
@@ -105,6 +107,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
             {...validationProps}
+            {...textAreaProps}
           />
           {
             !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&

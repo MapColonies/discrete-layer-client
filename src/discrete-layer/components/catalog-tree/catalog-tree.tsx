@@ -117,23 +117,31 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   }, [refresh]);
 
   const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
-    const treeDataUnlinked = groupBy(arr, groupByParams);
+    const topLevelGroupByField = 'region';
+    const innerSortField = 'productName';
+    const regionPredicate = (groupByParams.keys.find(k => k.name === topLevelGroupByField) as KeyPredicate).predicate;
+    const treeData = groupBy(arr, groupByParams);
     return {
       title: title,
       isGroup: true,
-      children: treeDataUnlinked.map(item => {
-        return {
-          title: (groupByParams.keys.find(k => k.name === 'region') as KeyPredicate).predicate(item.key['region']),
-          isGroup: true,
-          children: [...item.items.map(rec => {
-            return {
-              ...rec,
-              title: rec['productName'],
-              isSelected: false
-            };
-          })]
-        };
-      }) as TreeItem[]
+      children: treeData
+        .sort((a,b) => regionPredicate(a.key[topLevelGroupByField]).localeCompare(regionPredicate(b.key[topLevelGroupByField])))
+        .map(item => {
+          return {
+            title: regionPredicate(item.key[topLevelGroupByField]),
+            isGroup: true,
+            children: [...item.items
+              .sort((a,b) => a[innerSortField].localeCompare(b[innerSortField]))
+              .map(rec => {
+                return {
+                  ...rec,
+                  title: rec[innerSortField],
+                  isSelected: false
+                };
+              })
+            ]
+          };
+        }) as TreeItem[]
     };
   };
 
