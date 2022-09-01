@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from 'react';
 import { observer } from 'mobx-react';
 import { Box, Autocomplete } from '@map-colonies/react-components';
-import { TextField, Tooltip } from '@map-colonies/react-core';
+import { TextField } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
 import { RecordType, useQuery } from '../../../models';
