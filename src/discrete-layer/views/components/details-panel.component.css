@@ -31,12 +31,15 @@ body[dir='rtl'] .detailsContent {
 }
 
 .detailsPanelProductView .detailsFieldLabel {
-  width: calc(var(--field-label-max-length) - 10px);
+  width: calc(var(--field-label-max-length) - 2ch);
+}
+
+.detailsPanelProductView .detailsFieldValue {
+  font-weight: bold;
 }
 
 .detailsPanelProductView .categoryField {
   padding: 0;
-  width: 40%;
 }
 
 .detailsPanelProductView .categoryFieldsTitle{

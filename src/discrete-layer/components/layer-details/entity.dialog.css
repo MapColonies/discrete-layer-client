@@ -5,7 +5,7 @@
   --footer-offset: 20px;
   --modal-content-offset: 20px;
   --modal-height: calc(100vh - 100px);
-  --modal-width: 820px;
+  --modal-width: 900px;
   --dialog-title-height: 40px;
   --base-content-height: calc(var(--modal-height) - var(--footer-height) - var(--footer-offset) - var(--dialog-title-height) - var(--modal-content-offset));
   --chonky-modal-height: calc(var(--modal-height) / 2)

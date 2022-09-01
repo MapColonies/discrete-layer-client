@@ -1,10 +1,9 @@
-import React, { useMemo } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Tooltip, Typography } from '@map-colonies/react-core';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
-import CONFIG from '../../../common/config';
 
 import './field-label.css';
+import TooltippedValue from '../../../discrete-layer/components/layer-details/field-value-presentors/tooltipped.value';
 
 interface FieldLabelProps {
   value?: string;
@@ -19,29 +18,13 @@ export const FieldLabelComponent: React.FC<FieldLabelProps> = ({
   customClassName,
   showTooltip,
 }) => {
-  const intl = useIntl();
-
-  const labelRenderer = useMemo(() => {
-    const MAX_LABEL_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
-    const label = intl.formatMessage({ id: value });
-
-    if (showTooltip !== false && label.length > MAX_LABEL_LENGTH) {
-      return (
-        <Tooltip content={label}>
-          <Typography tag="span"><FormattedMessage id={value}/></Typography>
-        </Tooltip>
-      );
-    }
-    return (
-      <Typography tag="span"><FormattedMessage id={value}/></Typography>
-    );
-  
-  }, []);
 
   return (
     <Box className={customClassName !== undefined ? customClassName : 'detailsFieldLabel'}>
-      {labelRenderer}
-      <Box className="requiredAsterisk">{isRequired === true ? '*' : ''}</Box>
+      <TooltippedValue disableTooltip={showTooltip}>
+          <FormattedMessage id={value} />
+      </TooltippedValue>
+      {isRequired === true && <Box className="requiredAsterisk">{'*'}</Box>}
     </Box>
   );
 };

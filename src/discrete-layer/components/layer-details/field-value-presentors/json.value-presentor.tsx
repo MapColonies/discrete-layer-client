@@ -8,6 +8,7 @@ import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import TooltippedValue from './tooltipped.value';
 
 const NONE = 0;
 interface JsonValuePresentorProps {
@@ -30,11 +31,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     const stringifiedValue = JSON.stringify(value);
     return (
-      <Tooltip content={stringifiedValue}>
-        <Box className="detailsFieldValue">
-          {stringifiedValue}
-        </Box>
-      </Tooltip>
+      <TooltippedValue tag="div" className="detailsFieldValue" alwaysTooltip>
+        {stringifiedValue}
+      </TooltippedValue>
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {     

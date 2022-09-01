@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@map-colonies/react-components';
+import TooltippedValue from './tooltipped.value';
 
 interface UnknownValuePresentorProps {
   value?: string;
@@ -7,8 +7,6 @@ interface UnknownValuePresentorProps {
 
 export const UnknownValuePresentorComponent: React.FC<UnknownValuePresentorProps> = ({ value }) => {
   return (
-    <Box className="detailsFieldValue">
-      *UNKNOWN TYPE* {value}
-    </Box>
+    <TooltippedValue className="detailsFieldValue"> *UNKNOWN TYPE* {value}</TooltippedValue>
   );
 }

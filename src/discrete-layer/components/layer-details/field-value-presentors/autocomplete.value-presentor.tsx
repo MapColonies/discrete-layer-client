@@ -11,6 +11,7 @@ import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 
 import './autocomplete.value-presentor.css';
+import TooltippedValue from './tooltipped.value';
 
 interface AutocompleteValuePresentorProps {
   mode: Mode;
@@ -43,11 +44,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <Tooltip content={value}>
-        <Box className="detailsFieldValue">
-          {value}
-        </Box>
-      </Tooltip>
+      <TooltippedValue className="detailsFieldValue">{value}</TooltippedValue>
     );
   } else {
     return(

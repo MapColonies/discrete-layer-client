@@ -9,6 +9,7 @@ import { DateGranularityType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import TooltippedValue from './tooltipped.value';
 
 interface DateValuePresentorProps {
   mode: Mode;
@@ -46,9 +47,9 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <Box className="detailsFieldValue">
-        { dateFormatter(value) }
-      </Box>
+      <TooltippedValue className="detailsFieldValue">
+        {dateFormatter(value)}
+      </TooltippedValue>
     );
   } else {
     return (

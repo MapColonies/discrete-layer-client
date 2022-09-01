@@ -6,6 +6,7 @@ import { Box } from '@map-colonies/react-components';
 import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
 import { ILink } from '../../../models/links';
 import { getTokenParam } from '../../helpers/layersUtils';
+import TooltippedValue from './tooltipped.value';
 
 import './url.value-presentor.css';
 
@@ -23,15 +24,17 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
   const intl = useIntl();
   return (
     <>
-      <Tooltip content={value}>
-        <Box className="detailsFieldValue detailsUrlFieldValue">
-          {linkInfo?.linkAction === LINK ? (
-            <Hyperlink url={value} token={getTokenParam()} />
-          ) : (
-            <Typography tag="span">{value}</Typography>
-          )}
-        </Box>
-      </Tooltip>
+      <TooltippedValue
+        className="detailsFieldValue detailsUrlFieldValue"
+        customTooltipText={value}
+      >
+        {linkInfo?.linkAction === LINK ? (
+          <Hyperlink url={value} token={getTokenParam()} />
+        ) : (
+          <Typography tag="span">{value}</Typography>
+        )}
+      </TooltippedValue>
+
       {linkInfo?.linkAction === COPY && (
         <Box className="detailsUrlFieldUrlCopy">
           <Tooltip

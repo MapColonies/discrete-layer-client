@@ -1,33 +1,16 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React from 'react';
-import { Tooltip } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
-import CONFIG from '../../../../common/config';
+import TooltippedValue from './tooltipped.value';
+
 
 interface TypeValuePresentorProps {
   value?: string;
 }
 
-export const TypeValuePresentorComponent: React.FC<TypeValuePresentorProps> = ({ value }) => {
-
-  const MAX_VALUE_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
-  
+export const TypeValuePresentorComponent: React.FC<TypeValuePresentorProps> = ({
+  value,
+}) => {
   return (
-    <>
-      {
-        value && value.length > MAX_VALUE_LENGTH &&
-        <Tooltip content={value}>
-          <Box className="detailsFieldValue">
-            {value}
-          </Box>
-        </Tooltip>
-      }
-      {
-        !(value && value.length > MAX_VALUE_LENGTH) &&
-        <Box className="detailsFieldValue">
-          {value}
-        </Box>
-      }
-    </>
+    <TooltippedValue className="detailsFieldValue">{value}</TooltippedValue>
   );
-}
+};
