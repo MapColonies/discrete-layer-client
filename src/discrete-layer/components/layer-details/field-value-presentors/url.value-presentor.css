@@ -1,13 +1,4 @@
-.form .detailsFieldValue.detailsUrlFieldValue {
-  flex: 0 0 70%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  direction: ltr;
-}
-
 .detailsFieldValue.detailsUrlFieldValue {
-  flex: 0 0 50%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
