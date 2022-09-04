@@ -10,6 +10,7 @@
   "general.error.text": "Error",
   "general.error.title": "Something went wrong...",
   "general.error.description": "Message:",
+  "general.server.error": "Received Server Error",
   "general.loading.text": "Loading...",
   "general.title.new": "New {value} product",
   "general.title.edit": "Edit {value} product's metadata",
