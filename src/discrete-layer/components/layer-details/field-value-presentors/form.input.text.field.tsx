@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo } from 'react';
+import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { TextField, Tooltip, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { ValidationConfigModelType, ValidationValueType } from '../../../models';
+import { UpdateRulesModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-import { UpdateRulesModelType } from '../../../models'
-
 interface FormInputTextFieldProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
@@ -28,42 +29,24 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   const isCopyable = fieldInfo.isCopyable ?? false;
   const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
-  const valueRenderer = useMemo(() => {
-    const MAX_VALUE_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
-
-    if (innerValue && innerValue.length > MAX_VALUE_LENGTH) {
-      return (
-        <Tooltip content={innerValue}>
-          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
-            {innerValue}
-          </Box>
-        </Tooltip>
-      );
-    }
-    return (
-      <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
-        {innerValue}
-      </Box>
-    );
-  
-  }, [innerValue]);
-
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
-        {
-          valueRenderer
-        }
-        {
-          value && isCopyable &&
+        <TooltippedValue
+          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
+          {innerValue}
+        </TooltippedValue>
+        {!isEmpty(value) && isCopyable && (
           <Box className="detailsFieldCopyIcon">
-            <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
-              <CopyToClipboard text={value}>
-                <IconButton className="mc-icon-Copy"/>
+            <Tooltip
+              content={intl.formatMessage({ id: 'action.copy.tooltip' })}
+            >
+              <CopyToClipboard text={value as string}>
+                <IconButton className="mc-icon-Copy" />
               </CopyToClipboard>
             </Tooltip>
           </Box>
-        }
+        )}
       </>
     );
   } else {
