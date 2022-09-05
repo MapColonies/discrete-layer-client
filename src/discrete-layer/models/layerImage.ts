@@ -8,7 +8,7 @@ import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 
 export type ILayerImage = LayerMetadataMixedUnion;
 
-export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false) : Feature => {
+export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false, isConvexHull = false) : Feature => {
   if(layer.footprint === undefined)
     return {
       type: 'Feature',
@@ -48,13 +48,10 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylin
   }
   else {
     let geometry: Geometry = layer.footprint as Geometry;
-    geometry = isPolylined ? 
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                (polygonToLine(convex(geometry)) as Feature).geometry :
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore                
-                (convex(geometry) as Feature).geometry;
+    if (isConvexHull) {
+      // @ts-ignore
+      geometry = isPolylined ? (polygonToLine(convex(geometry)) as Feature).geometry : (convex(geometry) as Feature).geometry;
+    }
     return {
       type: 'Feature',
       geometry: { 
