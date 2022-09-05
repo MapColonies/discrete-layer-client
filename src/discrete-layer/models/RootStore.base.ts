@@ -203,11 +203,10 @@ export type Layer3DRecordInput = {
   sourceDateEnd: any
   minResolutionMeter?: number
   maxResolutionMeter?: number
-  nominalResolution?: number
   maxAccuracyCE90: number
-  absoluteAccuracyLEP90: number
+  absoluteAccuracyLE90: number
   accuracySE90?: number
-  relativeAccuracyLEP90?: number
+  relativeAccuracySE90?: number
   visualAccuracy?: number
   sensors: string[]
   footprint: any
@@ -215,17 +214,17 @@ export type Layer3DRecordInput = {
   heightRangeTo?: number
   srsId: string
   srsName: string
-  srsOrigin?: string
   region: string[]
   classification: string
   productionSystem: string
   productionSystemVer: string
   producerName: string
-  productionMethod?: string
   minFlightAlt?: number
   maxFlightAlt?: number
   geographicArea?: string
   productBoundingBox?: string
+  productSource?: string
+  productStatus?: string
   id: string
   insertDate?: any
   wktGeometry?: string
