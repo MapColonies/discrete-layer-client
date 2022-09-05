@@ -128,7 +128,6 @@
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 0;
   height: 24px;
-  margin-right: 1px;
   width: 100%;
 }
 
@@ -148,7 +147,6 @@
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 0;
   height: 100px;
-  margin-right: 1px;
 }
 
 .dark-theme .mdc-text-field.mdc-text-field--textarea .mdc-text-field__input {

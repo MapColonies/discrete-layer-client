@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { ILink } from '../../../models/links';
 import { getTokenParam } from '../../helpers/layersUtils';
 
@@ -23,16 +24,18 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
   const intl = useIntl();
   return (
     <>
-      <Tooltip content={value}>
-        <Box className="detailsFieldValue detailsUrlFieldValue">
-          {linkInfo?.linkAction === LINK ? (
-            <Hyperlink url={value} token={getTokenParam()} />
-          ) : (
-            <Typography tag="span">{value}</Typography>
-          )}
-        </Box>
-      </Tooltip>
-      {linkInfo?.linkAction === COPY && (
+      <TooltippedValue
+        className="detailsFieldValue detailsUrlFieldValue"
+        customTooltipText={value}
+      >
+        {linkInfo?.linkAction === LINK ? (
+          <Hyperlink url={value} token={getTokenParam()} />
+        ) : (
+          <Typography tag="span">{value}</Typography>
+        )}
+      </TooltippedValue>
+
+      {linkInfo?.linkAction === COPY ? (
         <Box className="detailsUrlFieldUrlCopy">
           <Tooltip
             content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}
@@ -42,6 +45,8 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
             </CopyToClipboard>
           </Tooltip>
         </Box>
+      ) : (
+        <Box className="detailsUrlFieldUrlCopy"></Box>
       )}
     </>
   );

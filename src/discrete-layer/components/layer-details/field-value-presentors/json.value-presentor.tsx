@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
-import { TextField, Tooltip } from '@map-colonies/react-core';
+import { TextField } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
@@ -30,11 +31,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     const stringifiedValue = JSON.stringify(value);
     return (
-      <Tooltip content={stringifiedValue}>
-        <Box className="detailsFieldValue">
-          {stringifiedValue}
-        </Box>
-      </Tooltip>
+      <TooltippedValue tag="div" className="detailsFieldValue" alwaysTooltip>
+        {stringifiedValue}
+      </TooltippedValue>
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {     
