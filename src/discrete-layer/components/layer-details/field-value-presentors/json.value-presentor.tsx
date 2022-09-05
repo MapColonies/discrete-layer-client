@@ -5,10 +5,10 @@ import { TextField } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-import TooltippedValue from './tooltipped.value';
 
 const NONE = 0;
 interface JsonValuePresentorProps {

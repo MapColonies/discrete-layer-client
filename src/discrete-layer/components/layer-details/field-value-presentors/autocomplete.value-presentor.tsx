@@ -6,12 +6,12 @@ import { Box, Autocomplete } from '@map-colonies/react-components';
 import { TextField } from '@map-colonies/react-core';
 import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { RecordType, useQuery } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 
 import './autocomplete.value-presentor.css';
-import TooltippedValue from './tooltipped.value';
 
 interface AutocompleteValuePresentorProps {
   mode: Mode;

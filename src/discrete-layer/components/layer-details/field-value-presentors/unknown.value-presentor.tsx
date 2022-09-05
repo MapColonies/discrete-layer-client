@@ -1,5 +1,5 @@
 import React from 'react';
-import TooltippedValue from './tooltipped.value';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
 interface UnknownValuePresentorProps {
   value?: string;

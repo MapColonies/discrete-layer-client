@@ -3,19 +3,19 @@
 import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { TextField, Tooltip, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { ValidationConfigModelType, ValidationValueType } from '../../../models';
+import { UpdateRulesModelType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-import { UpdateRulesModelType } from '../../../models'
-import TooltippedValue from './tooltipped.value';
-import { isEmpty } from 'lodash';
 interface FormInputTextFieldProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;

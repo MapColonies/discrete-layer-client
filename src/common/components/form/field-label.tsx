@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
+import TooltippedValue from './tooltipped.value';
 
 import './field-label.css';
-import TooltippedValue from '../../../discrete-layer/components/layer-details/field-value-presentors/tooltipped.value';
 
 interface FieldLabelProps {
   value?: string;

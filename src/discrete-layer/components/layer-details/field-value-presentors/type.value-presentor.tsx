@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React from 'react';
-import TooltippedValue from './tooltipped.value';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
 
 interface TypeValuePresentorProps {

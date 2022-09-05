@@ -4,9 +4,9 @@ import { useIntl } from 'react-intl';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { ILink } from '../../../models/links';
 import { getTokenParam } from '../../helpers/layersUtils';
-import TooltippedValue from './tooltipped.value';
 
 import './url.value-presentor.css';
 
