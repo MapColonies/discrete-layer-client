@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.0...v1.19.1) (2022-09-05)
+
+
+### Bug Fixes
+
+* using variables in media query won't work ([60e0acc](https://github.com/MapColonies/discrete-layer-client/commit/60e0acc6851d3f0cf629a75efea4652413d931b8))
+
 ## [1.19.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.18.0...v1.19.0) (2022-09-05)
 
 
