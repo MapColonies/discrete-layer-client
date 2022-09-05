@@ -35,7 +35,7 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
         )}
       </TooltippedValue>
 
-      {linkInfo?.linkAction === COPY && (
+      {linkInfo?.linkAction === COPY ? (
         <Box className="detailsUrlFieldUrlCopy">
           <Tooltip
             content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}
@@ -45,6 +45,8 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
             </CopyToClipboard>
           </Tooltip>
         </Box>
+      ) : (
+        <Box className="detailsUrlFieldUrlCopy"></Box>
       )}
     </>
   );
