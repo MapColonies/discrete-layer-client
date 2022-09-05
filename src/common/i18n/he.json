@@ -10,6 +10,7 @@
   "general.error.text": "שגיאה",
   "general.error.title": "משהו השתבש...",
   "general.error.description": "מידע נוסף:",
+  "general.server.error": "התקבלה שגיאה מהשרת",
   "general.loading.text": "טוען נתונים...",
   "general.title.new": "הוספת מוצר {value}",
   "general.title.edit": "עריכת מידע של מוצר {value}",
