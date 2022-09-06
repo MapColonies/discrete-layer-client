@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.1...v1.19.2) (2022-09-06)
+
+
+### Bug Fixes
+
+* side panel details overflows on x axis ([#350](https://github.com/MapColonies/discrete-layer-client/issues/350)) ([31fb351](https://github.com/MapColonies/discrete-layer-client/commit/31fb3515c9c66bb1ada5114c07404290cfde1086))
+
 ### [1.19.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.0...v1.19.1) (2022-09-05)
 
 
