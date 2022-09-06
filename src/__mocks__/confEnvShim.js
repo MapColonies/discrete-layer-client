@@ -50,7 +50,7 @@ if (!window._env_) {
         type: 'DEVELOPMENT',
         autocomplete: false,
       },
-      NUMBER_OF_CHARACTERS_LIMIT: 12,
+      NUMBER_OF_CHARACTERS_LIMIT: 18,
       ACCESS_TOKEN: {
         attributeName: 'x-api-key',
         injectionType: 'queryParam',
