@@ -1,7 +1,15 @@
 .categoryFieldsParentContainer {
+  /* This value is default. the real value comes from 'NUMBER_OF_CHARACTERS_LIMIT' in config, */
+  /* and set in layer-details.tsx                                                             */
+  
+  --field-label-max-length: 18ch
+}
+
+.categoryFieldsParentContainer {
   display: flex;
   flex-wrap: wrap;
   margin-top: 16px;
+  padding: 10px;
 }
 
 .categoryFieldsTitle {
@@ -14,14 +22,15 @@
 .categoryFieldsContainer {
   display: flex;
   flex-wrap: wrap;
-  flex: 100%;
-  gap: 12%;
+  flex: 100% 1;
   margin-bottom: 8px;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .categoryField {
-  flex: 40%;
+  width: 45%;
   padding: 4px 0;
   display: flex;
   margin: 0;
@@ -39,7 +48,7 @@
 .detailsFieldLabel {
   display: flex;
   color: var(--mdc-theme-text-icon-on-dark);
-  flex: 0 0 95px;
+  width: var(--field-label-max-length);
   overflow: hidden;
 }
 
@@ -57,10 +66,13 @@
   position: relative;
   overflow: hidden;
   flex: 1 1;
+  padding: 0 1px;
+  margin: 0 2px;
+  text-align: left;
 }
 
-.form .detailsFieldValue:not(.detailsUrlFieldValue) {
-  overflow: unset;
+body[dir='rtl'] .detailsFieldValue {
+  text-align: right;
 }
 
 .detailFieldCopyable {

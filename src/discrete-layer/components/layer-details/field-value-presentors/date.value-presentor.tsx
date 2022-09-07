@@ -5,6 +5,7 @@ import { Mode } from '../../../../common/models/mode.enum';
 import CONFIG from '../../../../common/config';
 import useDebounceField, { GCHTMLInputElement } from '../../../../common/hooks/debounce-field.hook';
 import { dateFormatter, dateSerializer } from '../../../../common/helpers/formatters';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { DateGranularityType } from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
@@ -46,9 +47,9 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <Box className="detailsFieldValue">
-        { dateFormatter(value) }
-      </Box>
+      <TooltippedValue className="detailsFieldValue">
+        {dateFormatter(value)}
+      </TooltippedValue>
     );
   } else {
     return (

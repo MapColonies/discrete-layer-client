@@ -30,6 +30,7 @@ import { AutocompleteValuePresentorComponent } from './field-value-presentors/au
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
 import { getBasicType, getEntityDescriptors } from './utils';
 import { EntityFormikHandlers } from './layer-datails-form';
+import CONFIG from '../../../common/config';
 
 import './layer-details.css';
 
@@ -111,12 +112,18 @@ export const getValuePresentor = (
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
   const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
+  
+  const maxLabelLengthCssVar = '--field-label-max-length';
+  const categoryFieldsParentContainerStyle = (CONFIG.NUMBER_OF_CHARACTERS_LIMIT
+    ? { [maxLabelLengthCssVar]: `${CONFIG.NUMBER_OF_CHARACTERS_LIMIT}ch` }
+    : {}) as React.CSSProperties;
 
   const renderCategory = (category: IRecordCategoryFieldsInfo): JSX.Element =>
   (
     <Box
       key={category.category}
       className={`categoryFieldsParentContainer ${className}`}
+      style={categoryFieldsParentContainerStyle}
     >
       <Typography
         use="headline6"
