@@ -40,6 +40,7 @@
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
   "action.edit.tooltip": "Edit",
+  "action.export-metadata.tooltip": "Export Metadata",
   "action.flyTo.tooltip": "Fly To",
   "action.update.tooltip": "Update",
   "action.expand.tooltip": "Expand",

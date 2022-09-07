@@ -243,6 +243,19 @@ export const extractUpdateRelatedFieldNames = (record: ILayerImage, descriptors:
   return updateRulesFields.map(field => field.fieldName) as string[];
 };
 
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function downloadJSONToClient(jsonObj: Record<any, any>, fileName: string): void {
+  const JSON_INDENTATION = 4;
+
+  const link = document.createElement('a');
+  link.setAttribute('href', `data:text/json;charset=utf-8,${encodeURIComponent(
+    JSON.stringify(jsonObj, null, JSON_INDENTATION)
+  )}`);
+  link.setAttribute('download', fileName);
+  link.click();
+}  
+
 export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerImage, descriptors: FieldConfigModelType[]): ILayerImage => {
   const VERSION_DELIMITER = '.';
 
