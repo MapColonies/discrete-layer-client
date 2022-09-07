@@ -4,12 +4,12 @@ import { useIntl } from 'react-intl';
 import { ILayerImage } from '../../models/layerImage';
 import { downloadJSONToClient } from './utils';
 
-interface ExportMetadataProps {
+interface SaveMetadataProps {
   metadata: ILayerImage;
   className?: string;
 }
 
-export const ExportMetadataButton: React.FC<ExportMetadataProps> = ({
+export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
   metadata,
   className = ''
 }) => {
@@ -25,11 +25,11 @@ export const ExportMetadataButton: React.FC<ExportMetadataProps> = ({
   const metadataExporter = useMemo((): JSX.Element => {
     return (
       <Tooltip
-        content={intl.formatMessage({ id: 'action.export-metadata.tooltip' })}
+        content={intl.formatMessage({ id: 'action.save-metadata.tooltip' })}
       >
         <IconButton
           className={`mc-icon-Status-Downloads glow-missing-icon ${className}`}
-          label="export-metadata"
+          label="save-metadata"
           onClick={(): void =>
             downloadJSONToClient(filteredMetadataToDownload(), 'metadata.json')
           }

@@ -254,6 +254,7 @@ export function downloadJSONToClient(jsonObj: Record<any, any>, fileName: string
   )}`);
   link.setAttribute('download', fileName);
   link.click();
+  link.remove();
 }  
 
 export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerImage, descriptors: FieldConfigModelType[]): ILayerImage => {

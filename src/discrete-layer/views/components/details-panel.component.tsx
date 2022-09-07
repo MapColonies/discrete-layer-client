@@ -8,7 +8,7 @@ import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
 import { useStore } from '../../models/RootStore';
 import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
-import { ExportMetadataButton } from '../../components/layer-details/export-metadata.component';
+import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button.component';
 
 import './details-panel.component.css';
 
@@ -36,7 +36,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   const permissions = useMemo(() => {
     return {
      isEditAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`),
-     isExportMetadataAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.export`),
+     isSaveMetadataAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.save-metadata`),
     }
   }, [store.userStore.user, layerToPresent]);
 
@@ -73,8 +73,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
             isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         )}
-        {permissions.isExportMetadataAllowed && layerToPresent && (
-          <ExportMetadataButton metadata={layerToPresent} className="operationIcon"/>
+        {permissions.isSaveMetadataAllowed && layerToPresent && (
+          <SaveMetadataButton metadata={layerToPresent} className="operationIcon"/>
         )}
         <Tooltip
           content={intl.formatMessage({
