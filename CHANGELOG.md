@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.2...v1.19.3) (2022-09-07)
+
+
+### Bug Fixes
+
+* browser check scripts should be sync ([#352](https://github.com/MapColonies/discrete-layer-client/issues/352)) ([9f7e570](https://github.com/MapColonies/discrete-layer-client/commit/9f7e57099badb1838ac31ad25ac6f5b929c24573))
+
 ### [1.19.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.1...v1.19.2) (2022-09-06)
 
 
