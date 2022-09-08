@@ -8,6 +8,7 @@ import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
+import { RecordStatusEnumType } from "./RecordStatusEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
 
@@ -23,6 +24,7 @@ export const QuantizedMeshBestRecordModelBase = ModelBase
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
     productId: types.union(types.undefined, types.null, types.string),
     productName: types.union(types.undefined, types.string),
+    // ASSAF: MUST REMAIN STRING
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     description: types.union(types.undefined, types.null, types.string),
@@ -44,9 +46,10 @@ export const QuantizedMeshBestRecordModelBase = ModelBase
     productionSystem: types.union(types.undefined, types.string),
     productionSystemVer: types.union(types.undefined, types.string),
     producerName: types.union(types.undefined, types.string),
-    productionMethod: types.union(types.undefined, types.null, types.string),
     geographicArea: types.union(types.undefined, types.null, types.string),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
+    productSource: types.union(types.undefined, types.null, types.string),
+    productStatus: types.union(types.undefined, RecordStatusEnumType),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -85,9 +88,10 @@ export class QuantizedMeshBestRecordModelSelector extends QueryBuilder {
   get productionSystem() { return this.__attr(`productionSystem`) }
   get productionSystemVer() { return this.__attr(`productionSystemVer`) }
   get producerName() { return this.__attr(`producerName`) }
-  get productionMethod() { return this.__attr(`productionMethod`) }
   get geographicArea() { return this.__attr(`geographicArea`) }
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
+  get productSource() { return this.__attr(`productSource`) }
+  get productStatus() { return this.__attr(`productStatus`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get wktGeometry() { return this.__attr(`wktGeometry`) }
@@ -98,4 +102,4 @@ export function selectFromQuantizedMeshBestRecord() {
   return new QuantizedMeshBestRecordModelSelector()
 }
 
-export const quantizedMeshBestRecordModelPrimitives = selectFromQuantizedMeshBestRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.maxAccuracyCE90.sensors.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.region.classification.productionSystem.productionSystemVer.producerName.productionMethod.geographicArea.productBoundingBox.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
+export const quantizedMeshBestRecordModelPrimitives = selectFromQuantizedMeshBestRecord().type.productId.productName.productVersion.productType.description.creationDate.updateDate.sourceDateStart.sourceDateEnd.minResolutionMeter.maxResolutionMeter.maxAccuracyCE90.sensors.footprint.heightRangeFrom.heightRangeTo.srsId.srsName.region.classification.productionSystem.productionSystemVer.producerName.geographicArea.productBoundingBox.productSource.productStatus.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)

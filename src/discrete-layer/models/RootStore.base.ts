@@ -62,6 +62,7 @@ import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , La
 
 import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
+import { RecordStatus } from "./RecordStatusEnum"
 import { VerticalDatum } from "./VerticalDatumEnum"
 import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
@@ -224,7 +225,7 @@ export type Layer3DRecordInput = {
   geographicArea?: string
   productBoundingBox?: string
   productSource?: string
-  productStatus?: string
+  productStatus: RecordStatus
   id: string
   insertDate?: any
   wktGeometry?: string

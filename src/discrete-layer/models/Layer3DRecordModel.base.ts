@@ -8,6 +8,7 @@ import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
+import { RecordStatusEnumType } from "./RecordStatusEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
 
@@ -54,7 +55,7 @@ export const Layer3DRecordModelBase = ModelBase
     geographicArea: types.union(types.undefined, types.null, types.string),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
     productSource: types.union(types.undefined, types.null, types.string),
-    productStatus: types.union(types.undefined, types.null, types.string),
+    productStatus: types.union(types.undefined, RecordStatusEnumType),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
