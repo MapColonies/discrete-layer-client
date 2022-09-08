@@ -9,7 +9,7 @@ import {
   QuantizedMeshBestRecordModelKeys,
   VectorBestRecordModelKeys
 } from '../../components/layer-details/entity-types-keys';
-import { cleanUpEntity } from '../../components/layer-details/utils'
+import { cleanUpEntity, downloadJSONToClient } from '../../components/layer-details/utils'
 import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
@@ -113,6 +113,24 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
+          break;
+        case 'LayerRasterRecord.save-metadata':
+          downloadJSONToClient(data, 'metadata.json');
+          break;
+        case 'Layer3DRecord.save-metadata':
+          downloadJSONToClient(data, 'metadata.json');
+          break;
+        case 'LayerDemRecord.save-metadata':
+          downloadJSONToClient(data, 'metadata.json');
+          break;
+        case 'BestRecord.save-metadata':
+          downloadJSONToClient(data, 'metadata.json');
+          break;
+        case 'VectorBestRecord.save-metadata':
+          downloadJSONToClient(data, 'metadata.json');
+          break;
+        case 'QuantizedMeshBestRecord.save-metadata':
+          downloadJSONToClient(data, 'metadata.json');
           break;
         default:
           break;
