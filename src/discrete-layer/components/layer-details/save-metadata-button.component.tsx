@@ -18,7 +18,7 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
   const intl = useIntl();
   const store = useStore();
 
-  const filteredMetadataToDownload = useCallback(() => {
+  const getfFilteredMetadataToDownload = useCallback(() => {
     // Sorting out non-relevant properties from metadata
 
     const descriptors = getFlatEntityDescriptors(
@@ -40,6 +40,8 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
     return pureMetadata;
   }, [metadata]);
 
+  const filteredMetadataToDownload = useMemo(getfFilteredMetadataToDownload, [metadata]);
+
   const dispatchAction = (action: Record<string, unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
       {
@@ -58,7 +60,7 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
           className={`mc-icon-Status-Downloads glow-missing-icon ${className}`}
           label="save-metadata"
           onClick={(): void =>
-             dispatchAction({ action: `${metadata.__typename}.save-metadata`, data: filteredMetadataToDownload()})
+             dispatchAction({ action: `${metadata.__typename}.save-metadata`, data: filteredMetadataToDownload })
           }
         />
       </Tooltip>
