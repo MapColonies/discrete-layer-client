@@ -3,7 +3,7 @@
 
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import { observer } from 'mobx-react';
-import { changeNodeAtPath, getNodeAtPath, find } from 'react-sortable-tree';
+import { changeNodeAtPath, getNodeAtPath, find, addNodeUnderParent, removeNodeAtPath } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
 import { cloneDeep, get, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
@@ -29,6 +29,7 @@ import { isBest } from '../layer-details/utils';
 import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
+import { IconButton } from '@map-colonies/react-core';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -443,7 +444,33 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>,
+                      <IconButton className='glow-missing-icon mc-icon-Refresh' onClick={() => {
+                        const nodePath = rowInfo.path;
+                        let newTree = treeRawData;
+
+                        newTree = removeNodeAtPath({
+                          treeData: newTree,
+                          path: nodePath,
+                          getNodeKey: keyFromTreeIndex,
+                        })
+
+                        const UNPUBLISHED_PARENT = find({
+                          treeData: newTree,
+                          getNodeKey: keyFromTreeIndex,
+                          searchMethod: (data) => data.node.title === 'Unpublished',
+                        }).matches[0];
+
+                        newTree = addNodeUnderParent({
+                          treeData: newTree,
+                          newNode: rowInfo.node,
+                          getNodeKey: keyFromTreeIndex,
+                          parentKey: UNPUBLISHED_PARENT.path.pop()
+                        }).treeData
+
+                      
+                        setTreeRawData(newTree);
+                      }}/>
                     ],
                 buttons: [
                   <>
