@@ -178,7 +178,6 @@
   "field-names.3d.sourceDateEnd": "Imaging Latest",
   "field-names.3d.minResolutionMeter": "Min Resolution",
   "field-names.3d.maxResolutionMeter": "Max Resolution",
-  "field-names.3d.nominalResolution": "Nominal Resolution",
   "field-names.3d.maxAccuracyCE90": "Max Hor. Accuracy",
   "field-names.3d.absoluteAccuracyLE90": "Abs. Vertical Acc.",
   "field-names.3d.accuracySE90": "Spherical Accuracy",
@@ -190,7 +189,6 @@
   "field-names.3d.heightRangeTo": "Max Height Range",
   "field-names.3d.srsId": "EPSG",
   "field-names.3d.srsName": "Srs Name",
-  "field-names.3d.srsOrigin": "Srs Origin",
   "field-names.3d.region": "Countries",
   "field-names.3d.classification": "Classification",
   "field-names.3d.productionSystem": "Production System",
@@ -214,6 +212,8 @@
   "field-names.3d.insertDate": "Insert Date",
   "field-names.3d.wktGeometry": "WKT Geometry",
   "field-names.3d.keywords": "Keywords",
+  "field-names.3d.productSource": "Product Source",
+  "field-names.3d.productStatus": "Product Status",
 
   "field-names.dem.id": "ID",
   "field-names.dem.productId": "Ext. ID",
@@ -324,6 +324,8 @@
   "field-names.quantized-mesh.insertDate": "Insert Date",
   "field-names.quantized-mesh.wktGeometry": "WKT Geometry",
   "field-names.quantized-mesh.keywords": "Keywords",
+  "field-names.quantized-mesh.productSource": "Product Source",
+  "field-names.quantized-mesh.productStatus": "Product Status",
 
   "info-general-tooltip.required": "Required field",
 

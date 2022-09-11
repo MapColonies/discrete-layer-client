@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
+import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
-import { FormattedMessage } from 'react-intl';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import CONFIG from '../../../common/config';
 import { LinkType } from '../../../common/models/link-type.enum';
+import { Mode } from '../../../common/models/mode.enum';
 import { 
   AutocompletionModelType,
   EntityDescriptorModelType,
@@ -30,7 +31,6 @@ import { AutocompleteValuePresentorComponent } from './field-value-presentors/au
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
 import { getBasicType, getEntityDescriptors } from './utils';
 import { EntityFormikHandlers } from './layer-datails-form';
-import CONFIG from '../../../common/config';
 
 import './layer-details.css';
 
@@ -58,13 +58,15 @@ export const getValuePresentor = (
   switch (basicType) {
     case 'string':
     case 'identifier':
-      return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
+      return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
-    case 'string[]': {
-      return <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
-    }
+      );
+    case 'string[]':
+      return (
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+      );
     case 'json':
       return (
         <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></JsonValuePresentorComponent>
@@ -85,16 +87,16 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'sensors':{
+    case 'sensors':
       return (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
-    }
     case 'DataType':
     case 'NoDataValue':
     case 'VerticalDatum':
     case 'Units':
     case 'UndulationModel':
+    case 'RecordStatus':
       return (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
@@ -206,13 +208,13 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
         />
       }
       {
-        !layerRecord && (
+        !layerRecord &&
         <Box>
           <Typography use="headline2" tag="div" className="noSelection">
             <FormattedMessage id="details-panel.no-selection" />
           </Typography>
         </Box>
-      )}
+      }
     </>
   );
 };
