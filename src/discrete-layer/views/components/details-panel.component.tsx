@@ -7,7 +7,8 @@ import { getStatusStyle, isUnpublished } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
-import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button.component';
+import { PublishButton } from '../../components/layer-details/publish-button';
+import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button';
 import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 
@@ -57,28 +58,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           {layerToPresent?.productName}
         </Typography>
         {
-          permissions.isPublishAllowed === true &&
-          <Tooltip
-            content={intl.formatMessage({
-              id: `${
-                isUnpublished(layerToPresent as any ?? {})
-                  ? 'action.publish.tooltip'
-                  : 'action.unpublish.tooltip'
-              }`,
-            })}
-          >
-            <IconButton
-              className={`operationIcon ${
-                !detailsPanelExpanded
-                  ? 'mc-icon-Expand-Panel'
-                  : 'mc-icon-Collapce-Panel'
-              } glow-missing-icon`}
-              label="DETAILS EXPANDER"
-              onClick={(): void => {
-                setDetailsPanelExpanded(!detailsPanelExpanded);
-              }}
-            />
-          </Tooltip>
+          permissions.isPublishAllowed === true && layerToPresent &&
+          <PublishButton metadata={layerToPresent} className="operationIcon"/>
         }
         {
           permissions.isEditAllowed === true && 
