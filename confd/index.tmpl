@@ -32,13 +32,11 @@
         var scripts = [
           {
             src: '{{ getv "/configuration/public/url" "" }}/ua-parser/ua-parser.min.js',
-            cacheType: 'version',
-            additionalAttributes: 'async=false'
+            cacheType: 'version'
           },
           {
             src: '{{ getv "/configuration/public/url" "" }}/assets/scripts/browserCompatibilityCheck.js',
-            cacheType: 'version',
-            additionalAttributes: 'async=false'
+            cacheType: 'version'
           },
           {
             src: '{{ getv "/configuration/public/url" "" }}/env-config.js',
