@@ -1,6 +1,6 @@
-import { IconButton, Tooltip } from '@map-colonies/react-core';
 import React, { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { EntityDescriptorModelType, useStore } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -18,9 +18,8 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
   const intl = useIntl();
   const store = useStore();
 
+  // Sorting out non-relevant properties from metadata
   const getfFilteredMetadataToDownload = useCallback(() => {
-    // Sorting out non-relevant properties from metadata
-
     const descriptors = getFlatEntityDescriptors(
       metadata,
       store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
@@ -49,7 +48,7 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
         data: action.data,
       } as IDispatchAction
     );
-  }
+  };
 
   const metadataExporter = useMemo((): JSX.Element => {
     return (

@@ -14,7 +14,7 @@ export const ProductTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ d
     <TypeIcon
       typeName={data.productType as string}
       thumbnailUrl={thumbnailUrl}
-      style={isUnpublished(data)}
+      style={isUnpublished(data as any)}
     />
   );
   

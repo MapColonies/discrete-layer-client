@@ -18,7 +18,7 @@ export const ProductTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (pro
     <TypeIcon
       typeName={data.productType as string}
       thumbnailUrl={data.links ? getLinkUrlWithToken(data.links, LinkType.THUMBNAIL_S) : undefined}
-      style={{ ...(props.style ?? {}), ...(isUnpublished(data) ?? {}) }}
+      style={{ ...(props.style ?? {}), ...(isUnpublished(data as any) ?? {}) }}
     />
   );
   
