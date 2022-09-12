@@ -277,7 +277,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   },[store.userStore.user]);
 
   return (
-    <Box id={'layerRsults'}>
+    <Box id='layerResults'>
       <GridComponent
         gridOptions={gridOptions}
         rowData={getRowData()}
