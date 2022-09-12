@@ -46,13 +46,14 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   const { loading: loadingSearch, error: errorSearch, data: dataSearch, query: querySearch, setQuery: setQuerySearch } = useQuery();
   const { loading: loadingCapabilities, error: errorCapabilities, data: dataCapabilities, query: queryCapabilities, setQuery: setQueryCapabilities } = useQuery();
   const store = useStore();
-  const [treeRawData, setTreeRawData] = useState<TreeItem[]>([]);
   const [hoveredNode, setHoveredNode] = useState<TreeItem>();
   const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
   const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
   const selectedLayersRef = useRef(intialOrder);
   const intl = useIntl();
+  const setCatalogTreeData = store.catalogTreeStore.setCatalogTreeData;
+  const treeRawData = store.catalogTreeStore.catalogTreeData as TreeItem[];
 
   useEffect(() => {
     setLoading(loadingSearch || (loadingCapabilities && !errorCapabilities));
@@ -68,83 +69,91 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
   useEffect(() => {
     queue.clearAll();
-    setQuerySearch(
-      store.querySearch({
-        opts: {
-          filter: [
-            {
-              field: 'mc:type',
-              eq: store.discreteLayersStore.searchParams.recordType
-            }
-          ]
-        },
-        end: CONFIG.RUNNING_MODE.END_RECORD,
-        start: CONFIG.RUNNING_MODE.START_RECORD,
-      })
-      //#region query params
-      // store.queryCatalogItems({},`
-      // ... on LayerRasterRecord {
-      //   __typename
-      //   sourceName
-      //   creationDate
-      //   geometry 
-      //   type
-      //   links {
-      //     __typename
-      //     name
-      //     description
-      //     protocol
-      //     url
-      //   }
-      // }
-      // ... on Layer3DRecord {
-      //    __typename
-      //   sourceName
-      //   creationDate
-      //   geometry
-      //   type
-      //   links {
-      //     __typename
-      //     name
-      //     description
-      //     protocol
-      //     url
-      //   }
-      //   accuracyLE90
-      // }
-      // }`)
-      //#endregion
-    );
+    // setQuerySearch(
+    //   store.querySearch({
+    //     opts: {
+    //       filter: [
+    //         {
+    //           field: 'mc:type',
+    //           eq: store.discreteLayersStore.searchParams.recordType
+    //         }
+    //       ]
+    //     },
+    //     end: CONFIG.RUNNING_MODE.END_RECORD,
+    //     start: CONFIG.RUNNING_MODE.START_RECORD,
+    //   })
+    //   //#region query params
+    //   // store.queryCatalogItems({},`
+    //   // ... on LayerRasterRecord {
+    //   //   __typename
+    //   //   sourceName
+    //   //   creationDate
+    //   //   geometry 
+    //   //   type
+    //   //   links {
+    //   //     __typename
+    //   //     name
+    //   //     description
+    //   //     protocol
+    //   //     url
+    //   //   }
+    //   // }
+    //   // ... on Layer3DRecord {
+    //   //    __typename
+    //   //   sourceName
+    //   //   creationDate
+    //   //   geometry
+    //   //   type
+    //   //   links {
+    //   //     __typename
+    //   //     name
+    //   //     description
+    //   //     protocol
+    //   //     url
+    //   //   }
+    //   //   accuracyLE90
+    //   // }
+    //   // }`)
+    //   //#endregion
+    // );
+    // void store.catalogTreeStore.catalogSearch();
+    if(refresh){
+      void store.catalogTreeStore.initTree();
+    }
+
   }, [refresh]);
 
-  const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
-    const topLevelGroupByField = 'region';
-    const innerSortField = 'productName';
-    const regionPredicate = (groupByParams.keys.find(k => k.name === topLevelGroupByField) as KeyPredicate).predicate;
-    const treeData = groupBy(arr, groupByParams);
-    return {
-      title: title,
-      isGroup: true,
-      children: treeData
-        .sort((a,b) => regionPredicate(a.key[topLevelGroupByField]).localeCompare(regionPredicate(b.key[topLevelGroupByField])))
-        .map(item => {
-          return {
-            title: regionPredicate(item.key[topLevelGroupByField]),
-            isGroup: true,
-            children: [...item.items
-              .sort((a,b) => a[innerSortField].localeCompare(b[innerSortField]))
-              .map(rec => {
-                return {
-                  ...rec,
-                  title: rec[innerSortField],
-                  isSelected: false
-                };
-              })
-            ]
-          };
-        }) as TreeItem[]
-    };
-  };
+  useEffect(() => {
+    void store.catalogTreeStore.initTree();
+  }, []);
+  // const buildParentTreeNode = (arr: ILayerImage[], title: string, groupByParams: GroupBy) => {
+  //   const topLevelGroupByField = 'region';
+  //   const innerSortField = 'productName';
+  //   const regionPredicate = (groupByParams.keys.find(k => k.name === topLevelGroupByField) as KeyPredicate).predicate;
+  //   const treeData = groupBy(arr, groupByParams);
+  //   return {
+  //     title: title,
+  //     isGroup: true,
+  //     children: treeData
+  //       .sort((a,b) => regionPredicate(a.key[topLevelGroupByField]).localeCompare(regionPredicate(b.key[topLevelGroupByField])))
+  //       .map(item => {
+  //         return {
+  //           title: regionPredicate(item.key[topLevelGroupByField]),
+  //           isGroup: true,
+  //           children: [...item.items
+  //             .sort((a,b) => a[innerSortField].localeCompare(b[innerSortField]))
+  //             .map(rec => {
+  //               return {
+  //                 ...rec,
+  //                 title: rec[innerSortField],
+  //                 isSelected: false
+  //               };
+  //             })
+  //           ]
+  //         };
+  //       }) as TreeItem[]
+  //   };
+  // };
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
@@ -178,128 +187,132 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
   });
 
   useEffect(() => {
+    console.log("store.catalogTreeStore.catalogTreeData", treeRawData)
+  }, [treeRawData])
 
-    const layersList = get(dataSearch, 'search') as ILayerImage[];
+  // useEffect(() => {
 
-    const arr: ILayerImage[] = cloneDeep(layersList ?? []);
+  //   const layersList = get(dataSearch, 'search') as ILayerImage[];
 
-    store.discreteLayersStore.setLayersImages(arr, false);
+  //   const arr: ILayerImage[] = cloneDeep(layersList ?? []);
+
+  //   store.discreteLayersStore.setLayersImages(arr, false);
 
     
-    //#region getCapabilities()
+  //   //#region getCapabilities()
     
-    // NOTE:
-    // Calling getCapabilities() should happen after querySearch.data
-    // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
-    // are subsets of the catalog layers list
+  //   // NOTE:
+  //   // Calling getCapabilities() should happen after querySearch.data
+  //   // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+  //   // are subsets of the catalog layers list
     
-    if (!isEmpty(layersList)) {
-      const {RECORD_ALL, RECORD_RASTER, RECORD_DEM} = RecordType;
-      const withCapabilities = [RECORD_RASTER, RECORD_DEM];
-      if ([RECORD_ALL, ...withCapabilities].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
-        const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
-          list.reduce((previous, currentItem) => {
-            const group = getKey(currentItem);
-            if (!previous[group]) previous[group] = [];
-            previous[group].push(setItem(currentItem));
-            return previous;
-          }, {} as Record<K, T[]>);
-        const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
-        const idList = [];
-        for (const [key, value] of Object.entries(ids)) {
-          if (withCapabilities.includes(key as RecordType)) {
-            idList.push({
-              recordType: key,
-              idList: value
-            });
-          }
-        }
-        setQueryCapabilities(
-          store.queryCapabilities({
-            // @ts-ignore
-            params: { data: idList }
-          })
-        );
-      }
-    }
+  //   if (!isEmpty(layersList)) {
+  //     const {RECORD_ALL, RECORD_RASTER, RECORD_DEM} = RecordType;
+  //     const withCapabilities = [RECORD_RASTER, RECORD_DEM];
+  //     if ([RECORD_ALL, ...withCapabilities].includes(store.discreteLayersStore.searchParams.recordType as RecordType)) {
+  //       const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K, setItem: (item: T) => any) =>
+  //         list.reduce((previous, currentItem) => {
+  //           const group = getKey(currentItem);
+  //           if (!previous[group]) previous[group] = [];
+  //           previous[group].push(setItem(currentItem));
+  //           return previous;
+  //         }, {} as Record<K, T[]>);
+  //       const ids = groupBy(arr, (l) => l.type as RecordType, (l) => getLayerLink(l).name ?? '');
+  //       const idList = [];
+  //       for (const [key, value] of Object.entries(ids)) {
+  //         if (withCapabilities.includes(key as RecordType)) {
+  //           idList.push({
+  //             recordType: key,
+  //             idList: value
+  //           });
+  //         }
+  //       }
+  //       setQueryCapabilities(
+  //         store.queryCapabilities({
+  //           // @ts-ignore
+  //           params: { data: idList }
+  //         })
+  //       );
+  //     }
+  //   }
 
-    //#endregion
+  //   //#endregion
 
-    // get unlinked/new discretes shortcuts
-    /*const arrUnlinked = arr.filter((item) => {
-      // @ts-ignore
-      const itemObjectBag = item as Record<string,unknown>;
-      return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-    });
-    const parentUnlinked = buildParentTreeNode(
-      arrUnlinked,
-      intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-    );*/
+  //   // get unlinked/new discretes shortcuts
+  //   /*const arrUnlinked = arr.filter((item) => {
+  //     // @ts-ignore
+  //     const itemObjectBag = item as Record<string,unknown>;
+  //     return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
+  //   });
+  //   const parentUnlinked = buildParentTreeNode(
+  //     arrUnlinked,
+  //     intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
+  //     {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+  //   );*/
 
-    // get unpublished/new discretes
-    const arrUnpublished = arr.filter((item) => {
-      // @ts-ignore
-      const itemObjectBag = item as Record<string,unknown>;
-      return ('status' in itemObjectBag) && itemObjectBag.status === 'UNPUBLISHED';
-    });
-    const parentUnpublished = buildParentTreeNode(
-      arrUnpublished,
-      intl.formatMessage({ id: 'tab-views.catalog.top-categories.unpublished' }),
-      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-    );
+  //   // get unpublished/new discretes
+  //   const arrUnpublished = arr.filter((item) => {
+  //     // @ts-ignore
+  //     const itemObjectBag = item as Record<string,unknown>;
+  //     return ('status' in itemObjectBag) && itemObjectBag.status === 'UNPUBLISHED';
+  //   });
+  //   const parentUnpublished = buildParentTreeNode(
+  //     arrUnpublished,
+  //     intl.formatMessage({ id: 'tab-views.catalog.top-categories.unpublished' }),
+  //     {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+  //   );
 
-    // get BESTs shortcuts
-    const arrBests = arr.filter(isBest);
-    const drafts = store.bestStore.getDrafts();
-    const draftNode = (drafts.length > 0) ? [{
-      title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
-      isGroup: true,
-      children: [...store.bestStore.getDrafts().map(draft => {
-        return {
-          ...draft,
-          title: draft['productName'],
-          isSelected: false
-        };
-      })],
-    }] : [];
-    const parentBests = {
-      title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
-      isGroup: true,
-      children: [
-        ...draftNode,
-        ...arrBests.map(item => {
-          return {
-            ...item,
-            title: item['productName'],
-            isSelected: false
-          };
-        })
-      ]
-    };
+  //   // get BESTs shortcuts
+  //   const arrBests = arr.filter(isBest);
+  //   const drafts = store.bestStore.getDrafts();
+  //   const draftNode = (drafts.length > 0) ? [{
+  //     title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.drafts' }),
+  //     isGroup: true,
+  //     children: [...store.bestStore.getDrafts().map(draft => {
+  //       return {
+  //         ...draft,
+  //         title: draft['productName'],
+  //         isSelected: false
+  //       };
+  //     })],
+  //   }] : [];
+  //   const parentBests = {
+  //     title: intl.formatMessage({ id: 'tab-views.catalog.top-categories.bests' }),
+  //     isGroup: true,
+  //     children: [
+  //       ...draftNode,
+  //       ...arrBests.map(item => {
+  //         return {
+  //           ...item,
+  //           title: item['productName'],
+  //           isSelected: false
+  //         };
+  //       })
+  //     ]
+  //   };
 
-    // whole catalog as is
-    const parentCatalog = buildParentTreeNode(
-      arr,
-      intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
-      {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-    );
+  //   // whole catalog as is
+  //   const parentCatalog = buildParentTreeNode(
+  //     arr,
+  //     intl.formatMessage({ id: 'tab-views.catalog.top-categories.catalog' }),
+  //     {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+  //   );
 
-    setTreeRawData(
-      [
-        parentCatalog,
-        parentBests,
-        parentUnpublished,
-      ]
-    );
-  }, [dataSearch]);
+  //   setCatalogTreeData(
+  //     [
+  //       parentCatalog,
+  //       parentBests,
+  //       parentUnpublished,
+  //     ]
+  //   );
+  // }, [dataSearch]);
 
-  useEffect(() => {
-    const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
-    if (!isEmpty(capabilitiesList)) {
-      store.discreteLayersStore.setCapabilities(capabilitiesList);
-    }
-  }, [dataCapabilities]);
+  // useEffect(() => {
+  //   const capabilitiesList = get(dataCapabilities, 'capabilities') as CapabilityModelType[];
+  //   if (!isEmpty(capabilitiesList)) {
+  //     store.discreteLayersStore.setCapabilities(capabilitiesList);
+  //   }
+  // }, [dataCapabilities]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     if (!store.bestStore.isBestLoad()) {
@@ -323,7 +336,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       />
     );
   }
-  if (dataSearch) {
+  if (treeRawData.length) {
     return (
       <>
         {
@@ -336,7 +349,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
               treeData={treeRawData}
               onChange={treeData => {
                 console.log('****** UPDATE TREE DATA ******');
-                setTreeRawData(treeData);
+                setCatalogTreeData(treeData);
               }}
               canDrag={({ node }) => {
                 return false;
@@ -394,14 +407,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       setIsHoverAllowed(false);
                     }
   
-                    setTreeRawData(newTreeData);
+                    setCatalogTreeData(newTreeData);
                     store.discreteLayersStore.selectLayer(rowInfo.node as ILayerImage);
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
                   if (!rowInfo.node.isGroup && isHoverAllowed) {
                     store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
-                    setHoveredNode(rowInfo.node);
+                    setHoveredNode(
+                      {...rowInfo.node,
+                        parentNode: rowInfo.parentNode
+                      });
                   } else {
                     setHoveredNode(undefined);
                   }
@@ -449,33 +465,34 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                         const nodePath = rowInfo.path;
                         let newTree = treeRawData;
 
-                        newTree = removeNodeAtPath({
-                          treeData: newTree,
-                          path: nodePath,
-                          getNodeKey: keyFromTreeIndex,
-                        })
+                        // newTree = removeNodeAtPath({
+                        //   treeData: newTree,
+                        //   path: nodePath,
+                        //   getNodeKey: keyFromTreeIndex,
+                        // })
 
                         const UNPUBLISHED_PARENT = find({
                           treeData: newTree,
                           getNodeKey: keyFromTreeIndex,
-                          searchMethod: (data) => data.node.title === 'Unpublished',
+                          searchMethod: (data) => data.node.title ===  intl.formatMessage({ id: 'tab-views.catalog.top-categories.unpublished' }),
                         }).matches[0];
 
                         newTree = addNodeUnderParent({
                           treeData: newTree,
-                          newNode: rowInfo.node,
+                          newNode: {...rowInfo.node},
                           getNodeKey: keyFromTreeIndex,
                           parentKey: UNPUBLISHED_PARENT.path.pop()
                         }).treeData
 
                       
-                        setTreeRawData(newTree);
+                        setCatalogTreeData(newTree);
                       }}/>
                     ],
                 buttons: [
                   <>
                     {
                       (hoveredNode !== undefined && hoveredNode.id === rowInfo.node.id) && 
+                      (rowInfo.parentNode === hoveredNode.parentNode) &&
                       <ActionsRenderer 
                         node={rowInfo.node} 
                         actions = {entityPermittedActions[rowInfo.node.__typename] as IActionGroup[]}
