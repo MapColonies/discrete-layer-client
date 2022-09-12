@@ -1,6 +1,6 @@
 import React from 'react';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
-import { isUnpublished } from '../../../helpers/style';
+import { getStatusStyle } from '../../../helpers/style';
 import { TypeIcon } from '../../general/type-icon';
 
 interface ILayerImageCellRendererParams {
@@ -14,7 +14,7 @@ export const ProductTypeRenderer: React.FC<ILayerImageCellRendererParams> = ({ d
     <TypeIcon
       typeName={data.productType as string}
       thumbnailUrl={thumbnailUrl}
-      style={isUnpublished(data as any)}
+      style={getStatusStyle(data as any)}
     />
   );
   

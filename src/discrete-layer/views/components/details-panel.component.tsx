@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { isUnpublished } from '../../../common/helpers/style';
+import { getStatusStyle, isUnpublished } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
@@ -37,7 +37,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   const permissions = useMemo(() => {
     return {
      isEditAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`),
-     isSaveMetadataAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.save-metadata`),
+     isPublishAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.publish`),
+     isSaveMetadataAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.saveMetadata`),
     }
   }, [store.userStore.user, layerToPresent]);
 
@@ -52,33 +53,33 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   return (
     <>
       <Box style={{ display: 'flex', paddingTop: '8px' }}>
+        <Typography use="headline6" tag="div" className="detailsTitle" style={getStatusStyle(layerToPresent as any ?? {})}>
+          {layerToPresent?.productName}
+        </Typography>
         {
-          layerToPresent &&
-          <Typography use="headline6" tag="div" className="detailsTitle" style={isUnpublished(layerToPresent as any)}>
-            {layerToPresent.productName}
-          </Typography>
+          permissions.isPublishAllowed === true &&
+          <Tooltip
+            content={intl.formatMessage({
+              id: `${
+                isUnpublished(layerToPresent as any ?? {})
+                  ? 'action.publish.tooltip'
+                  : 'action.unpublish.tooltip'
+              }`,
+            })}
+          >
+            <IconButton
+              className={`operationIcon ${
+                !detailsPanelExpanded
+                  ? 'mc-icon-Expand-Panel'
+                  : 'mc-icon-Collapce-Panel'
+              } glow-missing-icon`}
+              label="DETAILS EXPANDER"
+              onClick={(): void => {
+                setDetailsPanelExpanded(!detailsPanelExpanded);
+              }}
+            />
+          </Tooltip>
         }
-        <Tooltip
-          content={intl.formatMessage({
-            id: `${
-              !detailsPanelExpanded
-                ? 'action.expand.tooltip'
-                : 'action.collapse.tooltip'
-            }`,
-          })}
-        >
-          <IconButton
-            className={`operationIcon ${
-              !detailsPanelExpanded
-                ? 'mc-icon-Expand-Panel'
-                : 'mc-icon-Collapce-Panel'
-            }`}
-            label="DETAILS EXPANDER"
-            onClick={(): void => {
-              setDetailsPanelExpanded(!detailsPanelExpanded);
-            }}
-          />
-        </Tooltip>
         {
           permissions.isEditAllowed === true && 
           <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>

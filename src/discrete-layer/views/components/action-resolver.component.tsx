@@ -114,22 +114,12 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
           break;
-        case 'LayerRasterRecord.save-metadata':
-          downloadJSONToClient(data, 'metadata.json');
-          break;
-        case 'Layer3DRecord.save-metadata':
-          downloadJSONToClient(data, 'metadata.json');
-          break;
-        case 'LayerDemRecord.save-metadata':
-          downloadJSONToClient(data, 'metadata.json');
-          break;
-        case 'BestRecord.save-metadata':
-          downloadJSONToClient(data, 'metadata.json');
-          break;
-        case 'VectorBestRecord.save-metadata':
-          downloadJSONToClient(data, 'metadata.json');
-          break;
-        case 'QuantizedMeshBestRecord.save-metadata':
+        case 'LayerRasterRecord.saveMetadata':
+        case 'Layer3DRecord.saveMetadata':
+        case 'LayerDemRecord.saveMetadata':
+        case 'BestRecord.saveMetadata':
+        case 'VectorBestRecord.saveMetadata':
+        case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
         default:

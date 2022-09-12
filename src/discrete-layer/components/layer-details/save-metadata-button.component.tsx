@@ -53,13 +53,13 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
   const metadataExporter = useMemo((): JSX.Element => {
     return (
       <Tooltip
-        content={intl.formatMessage({ id: 'action.save-metadata.tooltip' })}
+        content={intl.formatMessage({ id: 'action.saveMetadata.tooltip' })}
       >
         <IconButton
           className={`mc-icon-Status-Downloads glow-missing-icon ${className}`}
-          label="save-metadata"
+          label="SAVE METADATA"
           onClick={(): void =>
-             dispatchAction({ action: `${metadata.__typename}.save-metadata`, data: filteredMetadataToDownload })
+             dispatchAction({ action: `${metadata.__typename}.saveMetadata`, data: filteredMetadataToDownload })
           }
         />
       </Tooltip>
