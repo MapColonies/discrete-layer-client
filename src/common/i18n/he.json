@@ -40,6 +40,7 @@
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.system-core-info.tooltip": "צפייה במידע המערכת",
   "action.edit.tooltip": "עריכה",
+  "action.save-metadata.tooltip": "שמור קובץ מטא-דאטה",
   "action.flyTo.tooltip": "הצג מיקום",
   "action.update.tooltip": "עדכון",
   "action.expand.tooltip": "הרחב תצוגה",
