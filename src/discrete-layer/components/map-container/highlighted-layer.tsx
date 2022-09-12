@@ -12,14 +12,19 @@ export const HighlightedLayer: React.FC = observer(() => {
   const { discreteLayersStore } = useStore();
   const [layersFootprints, setlayersFootprints] = useState<FeatureCollection>();
   useEffect(() => {
-    const footprintsCollection: FeatureCollection = {
+    let footprintsCollection: FeatureCollection = {
       type: 'FeatureCollection',
       features: []
     };
     const layer = discreteLayersStore.highlightedLayer;
     if (layer) {
       const footprint = getLayerFootprint(layer, false, true);
-      footprintsCollection.features.push(footprint);
+      if(footprint.type !== 'FeatureCollection'){
+        footprintsCollection.features.push(footprint);
+      }
+      else {
+        footprintsCollection = footprint;
+      }
     }
     setlayersFootprints(footprintsCollection);
   }, [discreteLayersStore.highlightedLayer]);

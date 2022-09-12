@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Feature, Geometry, Polygon } from 'geojson';
+import { Feature, FeatureCollection, Geometry, Polygon } from 'geojson';
 import polygonToLine from '@turf/polygon-to-line';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -8,7 +8,7 @@ import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 
 export type ILayerImage = LayerMetadataMixedUnion;
 
-export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false, isConvexHull = false) : Feature => {
+export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false, isConvexHull = false) : Feature | FeatureCollection => {
   if(layer.footprint === undefined)
     return {
       type: 'Feature',
@@ -51,17 +51,44 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylin
     if (isConvexHull) {
       // @ts-ignore
       geometry = isPolylined ? (polygonToLine(convex(geometry)) as Feature).geometry : (convex(geometry) as Feature).geometry;
+      return {
+        type: 'Feature',
+        geometry: { 
+          ...geometry,
+        },
+        properties: {
+          id: layer.id,
+          name: layer.productName,
+          description: layer.description,
+        },
+      };
     }
-    return {
-      type: 'Feature',
-      geometry: { 
-        ...geometry,
-      },
-      properties: {
-        id: layer.id,
-        name: layer.productName,
-        description: layer.description,
-      },
-    };
+    else {
+      if(isPolylined){
+        return {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          ...polygonToLine(geometry),
+          properties: {
+            id: layer.id,
+            name: layer.productName,
+            description: layer.description,
+          },
+        } as Feature
+      }
+      else {
+        return {
+          type: 'Feature',
+          geometry: { 
+            ...geometry,
+          },
+          properties: {
+            id: layer.id,
+            name: layer.productName,
+            description: layer.description,
+          },
+        };
+      }
+    }
   }
 }
