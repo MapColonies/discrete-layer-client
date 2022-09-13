@@ -59,7 +59,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
         </Typography>
         {
           permissions.isPublishAllowed === true && layerToPresent &&
-          <PublishButton metadata={layerToPresent} className="operationIcon"/>
+          <PublishButton layer={layerToPresent} className="operationIcon"/>
         }
         {
           permissions.isEditAllowed === true && 

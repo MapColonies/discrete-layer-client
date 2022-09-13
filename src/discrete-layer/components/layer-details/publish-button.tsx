@@ -5,24 +5,24 @@ import { isUnpublished } from '../../../common/helpers/style';
 import { ILayerImage } from '../../models/layerImage';
 
 interface PublishButtonProps {
-  metadata: ILayerImage;
+  layer: ILayerImage;
   className?: string;
 }
 
 export const PublishButton: React.FC<PublishButtonProps> = ({
-  metadata,
+  layer,
   className = ''
 }) => {
   const intl = useIntl();
-  const [unpublished, setUnpublished] = useState<boolean>(isUnpublished(metadata as any));
+  const [unpublished, setUnpublished] = useState<boolean>(isUnpublished(layer as any));
 
   return (
     <Tooltip
       content={intl.formatMessage({
         id: `${
           unpublished
-            ? 'action.unpublish.tooltip'
-            : 'action.publish.tooltip'
+            ? 'action.publish.tooltip'
+            : 'action.unpublish.tooltip'
         }`
       })}
     >
