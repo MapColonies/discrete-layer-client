@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { isUnpublished } from '../../../common/helpers/style';
+import { RecordStatus, RecordType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 
 interface PublishButtonProps {
@@ -14,7 +15,21 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
   className = ''
 }) => {
   const intl = useIntl();
+  const store = useStore();
+  const mutationQuery = useQuery();
   const [unpublished, setUnpublished] = useState<boolean>(isUnpublished(layer as any));
+
+  const updateStatus = (productStatus: RecordStatus): void => {
+    mutationQuery.setQuery(
+      store.mutateUpdateStatus({
+        data: {
+          id: layer.id as string,
+          type: layer.type as RecordType,
+          partialRecordData: { productStatus },
+        },
+      })
+    );
+  };
 
   return (
     <Tooltip
@@ -33,9 +48,10 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
             : 'mc-icon-Collapce-Panel'
         } glow-missing-icon`}
         label="PUBLISH AND UNPUBLISH"
-        onClick={(): void =>
-          setUnpublished(!unpublished)
-        }
+        onClick={(): void => {
+          updateStatus(unpublished ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED);
+          setUnpublished(!unpublished);
+        }}
       />
     </Tooltip>
   );

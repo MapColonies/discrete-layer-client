@@ -314,6 +314,7 @@ queryGetDecryptedId="queryGetDecryptedId",
 queryTasks="queryTasks"
 }
 export enum RootStoreBaseMutations {
+mutateUpdateStatus="mutateUpdateStatus",
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
 mutateStart3DIngestion="mutateStart3DIngestion",
@@ -407,6 +408,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       return self.query<{ tasks: TasksGroupModelType[]}>(`query tasks($params: TasksSearchParams) { tasks(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new TasksGroupModelSelector()).toString() : resultSelector}
       } }`, variables, options)
+    },
+    mutateUpdateStatus(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
+      return self.mutate<{ updateStatus: string }>(`mutation updateStatus($data: RecordUpdatePartial!) { updateStatus(data: $data) }`, variables, optimisticUpdate)
     },
     mutateUpdateMetadata(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateMetadata: string }>(`mutation updateMetadata($data: RecordUpdatePartial!) { updateMetadata(data: $data) }`, variables, optimisticUpdate)

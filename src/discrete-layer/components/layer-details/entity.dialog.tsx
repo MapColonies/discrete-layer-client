@@ -113,7 +113,6 @@ const buildFieldInfo = (): IRecordFieldInfo => {
   return recordFieldInfo as IRecordFieldInfo;
 };
 
-
 const getLabel = (recordType: RecordType): string => {
   if (recordType === RecordType.RECORD_3D) {
     return 'field-names.3d.fileNames';
