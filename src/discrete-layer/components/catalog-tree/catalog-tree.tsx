@@ -240,7 +240,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const arrUnpublished = arr.filter((item) => {
       // @ts-ignore
       const itemObjectBag = item as Record<string,unknown>;
-      return ('productStatus' in itemObjectBag) && itemObjectBag.status === RecordStatus.UNPUBLISHED;
+      return ('productStatus' in itemObjectBag) && itemObjectBag.productStatus === RecordStatus.UNPUBLISHED;
     });
     const parentUnpublished = buildParentTreeNode(
       arrUnpublished,
