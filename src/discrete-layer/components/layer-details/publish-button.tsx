@@ -4,6 +4,7 @@ import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { isUnpublished } from '../../../common/helpers/style';
 import { RecordStatus, RecordType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { ContinueDialog } from '../dialogs/continue.dialog';
 
 interface PublishButtonProps {
   layer: ILayerImage;
@@ -20,6 +21,7 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
   const [unpublished, setUnpublished] = useState<boolean>(isUnpublished(layer as any));
   const [icon, setIcon] = useState<string>(unpublished ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel');
   const [tooltip, setTooltip] = useState<string>(unpublished ? 'action.publish.tooltip' : 'action.unpublish.tooltip');
+  const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setUnpublished(isUnpublished(layer as any));
@@ -30,7 +32,8 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
     setTooltip(unpublished ? 'action.publish.tooltip' : 'action.unpublish.tooltip');
   }, [unpublished]);
 
-  const updateStatus = (productStatus: RecordStatus): void => {
+  const updateStatus = (): void => {
+    const productStatus = isUnpublished(layer as any) ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED;
     mutationQuery.setQuery(
       store.mutateUpdateStatus({
         data: {
@@ -43,17 +46,27 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
   };
 
   return (
-    <Tooltip
-      content={intl.formatMessage({ id: tooltip })}
-    >
-      <IconButton
-        className={`${className} ${icon} glow-missing-icon`}
-        label="PUBLISH AND UNPUBLISH"
-        onClick={(): void => {
-          updateStatus(unpublished ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED);
-          setUnpublished(!unpublished);
-        }}
-      />
-    </Tooltip>
+    <>
+      <Tooltip
+        content={intl.formatMessage({ id: tooltip })}
+      >
+        <IconButton
+          className={`${className} ${icon} glow-missing-icon`}
+          label="PUBLISH AND UNPUBLISH"
+          onClick={(): void => {
+            setDialogOpen(true);
+            setUnpublished(!unpublished);
+          }}
+        />
+      </Tooltip>
+      {
+        isDialogOpen &&
+        <ContinueDialog
+          isOpen={isDialogOpen}
+          onSetOpen={setDialogOpen}
+          onContinue={ (): void => updateStatus() }
+        />
+      }
+    </>
   );
 };

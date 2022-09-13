@@ -186,18 +186,18 @@ export const BestEditComponent: React.FC<BestEditComponentProps> = observer((pro
           isOpen={isCloseWithoutSaveDialogOpen}
           onSetOpen={setCloseWithoutSaveDialogOpen}/>
       }
-
       {
         <Box className={props.openImport ? 'bestCatalogImportContainer openedImport' : 'bestCatalogImportContainer'}>
           <Box className={props.openImport ? 'bestCatalogImportWrapper bestCatalogOpened' : 'bestCatalogImportWrapper bestCatalogClosed'}>
             {
-              props.openImport && <BestCatalogComponent
-              // @ts-ignore
-              ref={importListRef}
-              filterOut={discretesOrder}
-              handleImportLayerSelected={setShowImportAddButton}/>
+              props.openImport &&
+              <BestCatalogComponent
+                // @ts-ignore
+                ref={importListRef}
+                filterOut={discretesOrder}
+                handleImportLayerSelected={setShowImportAddButton}
+              />
             }
-
             <Box className={props.openImport ? 'buttons bestCatalogOpened' : 'buttons bestCatalogClosed'}>
               <Button raised type="button" disabled={!showImportAddButton} onClick={(): void => { handleImport(); }}>
                 <FormattedMessage id="best-edit.import.dialog.import-btn.text"/>

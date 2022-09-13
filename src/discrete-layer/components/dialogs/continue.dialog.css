@@ -1,13 +1,13 @@
-#closeWithoutSaveDialog .closeIcon {
+#continueDialog .closeIcon {
   margin-left: auto;
 }
 
-body[dir='rtl'] #closeWithoutSaveDialog .closeIcon {
+body[dir='rtl'] #continueDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
 }
 
-#closeWithoutSaveDialog .dialogBody {
+#continueDialog .dialogBody {
   height: 100px;
   width: 360px;
   display: flex;
