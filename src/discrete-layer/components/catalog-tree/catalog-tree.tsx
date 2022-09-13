@@ -17,6 +17,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
+import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
@@ -240,7 +241,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const arrUnpublished = arr.filter((item) => {
       // @ts-ignore
       const itemObjectBag = item as Record<string,unknown>;
-      return ('productStatus' in itemObjectBag) && itemObjectBag.productStatus === RecordStatus.UNPUBLISHED;
+      return existStatus(itemObjectBag) && isUnpublished(itemObjectBag);
     });
     const parentUnpublished = buildParentTreeNode(
       arrUnpublished,

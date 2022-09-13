@@ -8,8 +8,6 @@ export const existStatus = (data: Record<string, unknown>): boolean => {
 };
 
 export const isUnpublished = (data: Record<string, unknown>): boolean => {
-  console.log('status ->', Object.keys(data).includes(STATUS));
-  console.log('unpublished ->', Object.values(data).includes(RecordStatus.UNPUBLISHED));
   return Object.keys(data).includes(STATUS) && Object.values(data).includes(RecordStatus.UNPUBLISHED);
 };
 
