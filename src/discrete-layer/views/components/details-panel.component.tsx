@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { getStatusStyle } from '../../../common/helpers/style';
+import { existStatus, getStatusStyle } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
@@ -58,7 +58,9 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           {layerToPresent?.productName}
         </Typography>
         {
-          permissions.isPublishAllowed === true && layerToPresent &&
+          permissions.isPublishAllowed === true &&
+          layerToPresent &&
+          existStatus(layerToPresent as any) &&
           <PublishButton layer={layerToPresent} className="operationIcon"/>
         }
         {
