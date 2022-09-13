@@ -23,7 +23,7 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
     mutationQuery.setQuery(
       store.mutateUpdateStatus({
         data: {
-          id: layer.id as string,
+          id: layer.id,
           type: layer.type as RecordType,
           partialRecordData: { productStatus },
         },

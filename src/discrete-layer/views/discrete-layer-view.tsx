@@ -62,15 +62,16 @@ import { BestMapContextMenu } from '../components/best-management/best-map-conte
 import { generateFactoredLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
+import { ActionResolver } from './components/action-resolver.component';
+import { DetailsPanel } from './components/details-panel.component';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
 import { Terrain } from '../components/map-container/terrain';
 import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
-import { ActionResolver } from './components/action-resolver.component';
-import { DetailsPanel } from './components/details-panel.component';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
-import { TabViews } from './tab-views';
+import AppTitle from './components/app-title/app-title.component';
 import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
+import { TabViews } from './tab-views';
 
 import '@material/tab-bar/dist/mdc.tab-bar.css';
 import '@material/tab/dist/mdc.tab.css';
@@ -78,7 +79,6 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
-import AppTitle from './components/app-title/app-title.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
