@@ -388,6 +388,10 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         closeDialog();
         store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
         store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id as string);
+        
+        // Update catalog-tree on mutation success
+        store.catalogTreeStore.updateNodeById((inputValues as ILayerImage).id as string, (inputValues as ILayerImage));
+
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 
