@@ -14,7 +14,7 @@ import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
-import { LayerRasterRecordModelType, LinkModelType } from '../../models';
+import { Layer3DRecordModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
 import {
   getLayerLink,
   generateLayerRectangle,
@@ -82,7 +82,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         return (
           <Cesium3DTileset
             key={layer.id}
-            url={getTokenResource(layerLink.url as string)}
+            url={getTokenResource(layerLink.url as string, (layer as Layer3DRecordModelType).productVersion as string)}
           />
         );
       case LinkType.WMTS_TILE:
