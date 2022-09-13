@@ -21,7 +21,7 @@ import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import { CapabilityModelType, RecordType } from '../../models';
+import { CapabilityModelType, RecordStatus, RecordType } from '../../models';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLayerLink, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -240,7 +240,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const arrUnpublished = arr.filter((item) => {
       // @ts-ignore
       const itemObjectBag = item as Record<string,unknown>;
-      return ('status' in itemObjectBag) && itemObjectBag.status === 'UNPUBLISHED';
+      return ('productStatus' in itemObjectBag) && itemObjectBag.status === RecordStatus.UNPUBLISHED;
     });
     const parentUnpublished = buildParentTreeNode(
       arrUnpublished,
