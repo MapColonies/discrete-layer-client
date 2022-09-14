@@ -47,6 +47,11 @@
   color: var(--mdc-theme-text-primary-on-background);
 }
 
+.dark-theme button[disabled].rmwc-icon.rmwc-icon--ligature {
+  opacity: 0.3;
+  cursor: default;
+}
+
 /* FABS CUSTOMIZATION */
 
 .dark-theme .mdc-theme--on-surface .mdc-fab__icon {
@@ -129,6 +134,10 @@
   border-radius: 0;
   height: 24px;
   width: 100%;
+}
+
+.dark-theme label.mdc-text-field.mdc-text-field--disabled {
+  opacity: 0.3;
 }
 
 .dark-theme .mdc-text-field__input {
