@@ -1,0 +1,34 @@
+#publishDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #publishDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#publishDialog .dialogBody {
+  height: 100px;
+  width: 360px;
+  display: flex;
+  align-items: center;
+}
+
+#publishDialog .errors {
+  margin-top: 16px;
+  height: 52px;
+}
+
+#publishDialog .actions {
+  flex-direction: column;
+}
+
+#publishDialog .buttons {
+  align-self: flex-start;
+}
+
+body[dir='rtl'] #publishDialog .buttons {
+  align-self: flex-end;
+}
+
+

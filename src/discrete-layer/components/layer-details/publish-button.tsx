@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { isUnpublished } from '../../../common/helpers/style';
-import { RecordStatus, RecordType, useQuery, useStore } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
-import { ContinueDialog } from '../dialogs/continue.dialog';
+import { PublishDialog } from '../dialogs/publish.dialog';
 
 interface PublishButtonProps {
   layer: ILayerImage;
@@ -16,8 +15,6 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
   className = ''
 }) => {
   const intl = useIntl();
-  const store = useStore();
-  const mutationQuery = useQuery();
   const [unpublished, setUnpublished] = useState<boolean>(isUnpublished(layer as any));
   const [icon, setIcon] = useState<string>(unpublished ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel');
   const [tooltip, setTooltip] = useState<string>(unpublished ? 'action.publish.tooltip' : 'action.unpublish.tooltip');
@@ -31,19 +28,6 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
     setIcon(unpublished ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel');
     setTooltip(unpublished ? 'action.publish.tooltip' : 'action.unpublish.tooltip');
   }, [unpublished]);
-
-  const updateStatus = (): void => {
-    const productStatus = isUnpublished(layer as any) ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED;
-    mutationQuery.setQuery(
-      store.mutateUpdateStatus({
-        data: {
-          id: layer.id,
-          type: layer.type as RecordType,
-          partialRecordData: { productStatus },
-        },
-      })
-    );
-  };
 
   return (
     <>
@@ -61,10 +45,10 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
       </Tooltip>
       {
         isDialogOpen &&
-        <ContinueDialog
+        <PublishDialog
+          layer={layer}
           isOpen={isDialogOpen}
           onSetOpen={setDialogOpen}
-          onContinue={ (): void => updateStatus() }
         />
       }
     </>
