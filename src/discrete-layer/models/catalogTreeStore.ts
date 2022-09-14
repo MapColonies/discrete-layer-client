@@ -10,6 +10,9 @@ import {
   TreeItem,
   GetNodeKeyFunction,
   NodeData,
+  removeNodeAtPath,
+  FullTree,
+  TreePath,
 } from 'react-sortable-tree';
 import { ResponseState } from '../../common/models/response-state.enum';
 import CONFIG from '../../common/config';
@@ -22,6 +25,8 @@ import { ILayerImage } from './layerImage';
 import { RecordType } from './';
 import { isBest } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
+import { existStatus, isUnpublished } from '../../common/helpers/style';
+import { AnySchema } from 'yup';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
@@ -255,19 +260,25 @@ export const catalogTreeStore = ModelBase.props({
               // @ts-ignore
               const itemObjectBag = item as Record<string, unknown>;
               return (
-                'status' in itemObjectBag &&
-                itemObjectBag.status === 'UNPUBLISHED'
+                existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
               );
             });
-            const parentUnpublished = buildParentTreeNode(
-              arrUnpublished,
-              intl.formatMessage({
+
+            const parentUnpublished = {
+              title: intl.formatMessage({
                 id: 'tab-views.catalog.top-categories.unpublished',
               }),
-              /* eslint-disable */
-              { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
-              /* eslint-enable */
-            );
+              isGroup: true,
+              children: [
+                ...arrUnpublished.map((item) => {
+                  return {
+                    ...item,
+                    title: getLayerTitle(item),
+                    isSelected: false,
+                  };
+                }),
+              ],
+            };
 
             // get BESTs shortcuts
             const arrBests = layersList.filter(isBest);
@@ -333,11 +344,12 @@ export const catalogTreeStore = ModelBase.props({
 
     // Tree manipulations actions
 
-    function findNodeByTitle(title: string): NodeData | null {
+    function findNodeByTitle(title: string, useTranslation = false): NodeData | null {
+      const nodeTitle =  useTranslation ? intl.formatMessage({ id: title }) : title;
       const node = find({
         treeData: self.catalogTreeData as TreeItem[],
         getNodeKey: keyFromTreeIndex,
-        searchMethod: (data) => data.node.title === title,
+        searchMethod: (data) => data.node.title === nodeTitle,
       }).matches[0];
 
       if (typeof node !== 'undefined') {
@@ -346,9 +358,10 @@ export const catalogTreeStore = ModelBase.props({
       return null;
     }
 
-    function addNodeToParent(parentTitle: string, node: TreeItem): void {
+    function addNodeToParent(node: TreeItem, parentTitle: string, useTranslation = false): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
-        const parentNode = findNodeByTitle(parentTitle);
+        const title = useTranslation ? intl.formatMessage({ id: parentTitle }) : parentTitle;
+        const parentNode = findNodeByTitle(title);
 
         const parentKey = parentNode?.path.pop();
 
@@ -396,9 +409,32 @@ export const catalogTreeStore = ModelBase.props({
       return ({ parentNode, path: parentIndex });
     }
 
+    function findNodeById(id: string): NodeData | null {
+      const node = find({
+        treeData: self.catalogTreeData as TreeItem[],
+        getNodeKey: keyFromTreeIndex,
+        searchMethod: (data) => data.node.id === id,
+      }).matches[0];
+
+      if (typeof node !== 'undefined') {
+        return node;
+      }
+      return null;
+    }
+
+    function removeNodeFromTree(path: (string | number)[]): void {
+     const newTree = removeNodeAtPath({
+        treeData: self.catalogTreeData as TreeItem[],
+        getNodeKey: keyFromTreeIndex,
+        path
+      });
+
+     self.catalogTreeData = newTree;
+    }
+
     function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
-        let newTreeData: TreeItem[] | undefined;
+        let newTreeData: TreeItem[] = self.catalogTreeData as TreeItem[];
 
         find({
           treeData: self.catalogTreeData as TreeItem[],
@@ -406,7 +442,7 @@ export const catalogTreeStore = ModelBase.props({
           searchMethod: (data) => data.node.id === id,
         }).matches.forEach((item) => {
           newTreeData = changeNodeAtPath({
-            treeData: self.catalogTreeData as TreeItem[],
+            treeData: newTreeData,
             newNode: {
               ...item.node,
               ...updatedNodeData,
@@ -429,11 +465,19 @@ export const catalogTreeStore = ModelBase.props({
           });
         });
 
-        if(newTreeData) {
-          setCatalogTreeData(newTreeData);
-        }
+        setCatalogTreeData(newTreeData);
+        
       }
     }
+
+    function changeNodeByPath(
+      data: TreePath & {
+          treeData?: FullTree,
+          newNode: any,
+          ignoreCollapsed?: boolean,
+      }): TreeItem[] {
+      return changeNodeAtPath({...data, getNodeKey: keyFromTreeIndex, treeData: self.catalogTreeData as TreeItem[]});
+    };
 
     return {
       catalogSearch,
@@ -443,5 +487,9 @@ export const catalogTreeStore = ModelBase.props({
       resetCatalogTreeData,
       addNodeToParent,
       updateNodeById,
+      findNodeById,
+      removeNodeFromTree,
+      findNodeByTitle,
+      changeNodeByPath
     };
   });

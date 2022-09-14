@@ -46,6 +46,7 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM = 'entity_action.LayerRasterRecord.moveToBottom',
 
   BACKEND_OPERATION_EDIT_ENTITY = 'backend_operation.editEntity',
+  BACKEND_OPERATION_PUBLISH_ENTITY = 'backend_operation.publishEntity',
   
 
 

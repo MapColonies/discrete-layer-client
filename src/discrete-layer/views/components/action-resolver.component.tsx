@@ -16,6 +16,10 @@ import { MovedLayer } from '../../components/best-management/interfaces/MovedLay
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { UserAction } from '../../models/userStore';
 import { ILayerImage } from '../../models/layerImage';
+import { NodeData, removeNodeAtPath, TreeItem } from 'react-sortable-tree';
+import { RecordStatus } from '../../models';
+import { existStatus, isUnpublished } from '../../../common/helpers/style';
+import { get } from 'lodash';
 
 const FIRST = 0;
 
@@ -124,7 +128,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
-        case UserAction.BACKEND_OPERATION_EDIT_ENTITY: {
+        case UserAction.BACKEND_OPERATION_EDIT_ENTITY:{
           const inputValues = data as unknown as ILayerImage;
 
           store.discreteLayersStore.updateLayer(inputValues);
@@ -134,6 +138,40 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
           break;
         }
+        case UserAction.BACKEND_OPERATION_PUBLISH_ENTITY: 
+        {
+          const inputValues = data as unknown as ILayerImage;
+          
+          store.discreteLayersStore.updateLayer(inputValues);
+          store.discreteLayersStore.selectLayerByID(inputValues.id);
+          
+          store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
+          const node = store.catalogTreeStore.findNodeById(inputValues.id);
+
+          if(node) {
+            if(existStatus(inputValues as unknown as Record<string, unknown>) && isUnpublished(inputValues as unknown as Record<string, unknown>)) {
+              store.catalogTreeStore.addNodeToParent(node.node, "tab-views.catalog.top-categories.unpublished", true);
+            } else  {
+              const unpublishedNode = store.catalogTreeStore.findNodeByTitle("tab-views.catalog.top-categories.unpublished", true) as NodeData;
+
+              const filteredChildren = (get(unpublishedNode,'node.children') as TreeItem[]).filter(node => {
+                return node.id !== inputValues.id;
+              });
+
+              const unpublishedNewNode = {...unpublishedNode};
+              unpublishedNewNode.node.children = filteredChildren;
+
+              const newTree = store.catalogTreeStore.changeNodeByPath({
+                path: unpublishedNode.path,
+                newNode: unpublishedNewNode.node,
+
+              });
+              store.catalogTreeStore.setCatalogTreeData(newTree);
+            }
+
+          }
+        }
+        break;
         default:
           break;
       }

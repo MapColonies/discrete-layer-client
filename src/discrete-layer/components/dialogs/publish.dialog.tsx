@@ -10,6 +10,8 @@ import './publish.dialog.css';
 import { ILayerImage } from '../../models/layerImage';
 import { observer } from 'mobx-react';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { UserAction } from '../../models/userStore';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 
 interface ContinueDialogProps {
   layer: ILayerImage;
@@ -25,9 +27,22 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
     onSetOpen(false);
   }, [onSetOpen]);
 
+  const dispatchAction = (action: Record<string, unknown>): void => {
+    store.actionDispatcherStore.dispatchAction(
+      {
+        action: action.action,
+        data: action.data,
+      } as IDispatchAction
+    );
+  };
+
   useEffect(() => {
     if (!mutationQuery.loading && ((mutationQuery.data as {updateStatus: string} | undefined)?.updateStatus === 'ok')) {
       onSetOpen(false);
+      dispatchAction({ 
+        action: UserAction.BACKEND_OPERATION_PUBLISH_ENTITY,
+        data: {...layer, productStatus: isUnpublished(layer as any) ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED} 
+      });
     }
   }, [mutationQuery.data]);
 
