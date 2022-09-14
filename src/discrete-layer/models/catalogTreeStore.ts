@@ -24,9 +24,19 @@ import { isBest } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
 
 const NONE = 0;
+const TOP_LEVEL_GROUP_BY_FIELD = 'region';
+const INNER_SORT_FIELD = 'productName';
 
 const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
 const intl = createIntl({ locale, messages: MESSAGES[locale] });
+
+const getLayerTitle = (product: ILayerImage): string => {
+  const PRODUCT_TITLE_PROPERTY = 'productName';
+
+  return product[PRODUCT_TITLE_PROPERTY] as string;
+};
+
+const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string).localeCompare(b[sortByField] as string);
 
 /* eslint-disable */
 /* tslint:disable */
@@ -39,10 +49,8 @@ const buildParentTreeNode = (
   isGroup: boolean;
   children: TreeItem[];
 } => {
-  const topLevelGroupByField = 'region';
-  const innerSortField = 'productName';
   const regionPredicate = (groupByParams.keys.find(
-    (k) => k.name === topLevelGroupByField
+    (k) => k.name === TOP_LEVEL_GROUP_BY_FIELD
   ) as KeyPredicate).predicate;
   const treeData = groupBy(arr, groupByParams);
   return {
@@ -50,23 +58,21 @@ const buildParentTreeNode = (
     isGroup: true,
     children: treeData
       .sort((a, b) =>
-        regionPredicate(a.key[topLevelGroupByField]).localeCompare(
-          regionPredicate(b.key[topLevelGroupByField])
+        regionPredicate(a.key[TOP_LEVEL_GROUP_BY_FIELD]).localeCompare(
+          regionPredicate(b.key[TOP_LEVEL_GROUP_BY_FIELD])
         )
       )
       .map((item) => {
         return {
-          title: regionPredicate(item.key[topLevelGroupByField]),
+          title: regionPredicate(item.key[TOP_LEVEL_GROUP_BY_FIELD]),
           isGroup: true,
           children: [
             ...item.items
-              .sort((a, b) =>
-                a[innerSortField].localeCompare(b[innerSortField])
-              )
+              .sort(alphabeticalSort())
               .map((rec) => {
                 return {
                   ...rec,
-                  title: rec[innerSortField],
+                  title: getLayerTitle(rec),
                   isSelected: false,
                 };
               }),
@@ -118,7 +124,7 @@ export const catalogTreeStore = ModelBase.props({
     }
 
     function resetCatalogTreeData(): void {
-      self.root.discreteLayersStore.setLayersImages([], false);
+      store.discreteLayersStore.setLayersImages([], false);
       setCatalogTreeData([]);
     }
 
@@ -132,7 +138,7 @@ export const catalogTreeStore = ModelBase.props({
           filter: [
             {
               field: 'mc:type',
-              eq: self.root.discreteLayersStore.searchParams.recordType,
+              eq: store.discreteLayersStore.searchParams.recordType,
             },
           ],
         },
@@ -149,7 +155,7 @@ export const catalogTreeStore = ModelBase.props({
         const layersList = get(dataSearch, 'search') as ILayerImage[];
         const arr: ILayerImage[] = cloneDeep(layersList);
 
-        self.root.discreteLayersStore.setLayersImages(arr, false);
+        store.discreteLayersStore.setLayersImages(arr, false);
         return arr;
       } catch (e) {
         setSearchError(search.error);
@@ -278,7 +284,7 @@ export const catalogTreeStore = ModelBase.props({
                         ...store.bestStore.getDrafts().map((draft) => {
                           return {
                             ...draft,
-                            title: draft['productName'],
+                            title: getLayerTitle(draft),
                             isSelected: false,
                           };
                         }),
@@ -296,7 +302,7 @@ export const catalogTreeStore = ModelBase.props({
                 ...arrBests.map((item) => {
                   return {
                     ...item,
-                    title: item['productName'],
+                    title: getLayerTitle(item),
                     isSelected: false,
                   };
                 }),
@@ -331,90 +337,101 @@ export const catalogTreeStore = ModelBase.props({
       const node = find({
         treeData: self.catalogTreeData as TreeItem[],
         getNodeKey: keyFromTreeIndex,
-        searchMethod: (data) =>
-          data.node.title === title,
+        searchMethod: (data) => data.node.title === title,
       }).matches[0];
-      if(typeof node !== 'undefined') {
+
+      if (typeof node !== 'undefined') {
         return node;
       }
       return null;
     }
 
-    function addNodeToParent(parentTitle: string, node: TreeItem): void{
-      if((self.catalogTreeData as TreeItem[]).length > NONE){
+    function addNodeToParent(parentTitle: string, node: TreeItem): void {
+      if ((self.catalogTreeData as TreeItem[]).length > NONE) {
         const parentNode = findNodeByTitle(parentTitle);
 
         const parentKey = parentNode?.path.pop();
 
-        if(typeof parentKey !== 'undefined') {
+        if (typeof parentKey !== 'undefined') {
           const newTreeData = addNodeUnderParent({
             treeData: self.catalogTreeData as TreeItem[],
             newNode: node, // Its up to you to decide whether to create a copy or not
             getNodeKey: keyFromTreeIndex,
-            parentKey:parentKey
+            parentKey: parentKey,
           }).treeData;
-  
+
           setCatalogTreeData(newTreeData);
         } else {
-          throw new Error("Couldn't find parent by the given title")
+          throw new Error("Couldn't find parent by the given title");
         }
       }
     }
 
     function sortGroupChildrensByFieldValue(
       parentNode: TreeItem,
-      groupByField = 'productName'
+      sortByField = INNER_SORT_FIELD
     ): TreeItem | null {
       const parent = { ...parentNode };
 
-      (parent.children as TreeItem[]).sort((a, b) =>
-        (a[groupByField] as string).localeCompare(b[groupByField] as string)
-      );
+      (parent.children as TreeItem[]).sort(alphabeticalSort(sortByField));
 
       return parent;
     }
 
-    function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
-      if((self.catalogTreeData as TreeItem[]).length > NONE) {
-        const item = find({
-          treeData: self.catalogTreeData as TreeItem[],
-          getNodeKey: keyFromTreeIndex,
-          searchMethod: (data) =>
-            data.node.id === id,
-        }).matches[0];
+    function getParentNode(treeData: TreeItem[], node: NodeData): {parentNode: TreeItem | undefined, path: (string | number)[]} {
+      const FIRST_IDX = 0;
+      const WITHOUT_LAST_IDX = -1;
+      /**
+         In order to get the direct parent we need its path without the last one, 
+          Which represent the node itself.
+      **/
+      const parentIndex = node.path.slice(FIRST_IDX, WITHOUT_LAST_IDX);
 
-        let newTreeData = changeNodeAtPath({
+      const parentNode = getNodeAtPath({
+        treeData,
+        path: parentIndex,
+        getNodeKey: keyFromTreeIndex,
+      })?.node;
+
+      return ({ parentNode, path: parentIndex });
+    }
+
+    function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
+      if ((self.catalogTreeData as TreeItem[]).length > NONE) {
+        let newTreeData: TreeItem[] | undefined;
+
+        find({
           treeData: self.catalogTreeData as TreeItem[],
-          newNode: { ...item.node, ...updatedNodeData, title: updatedNodeData.productName },
           getNodeKey: keyFromTreeIndex,
-          path: item.path
+          searchMethod: (data) => data.node.id === id,
+        }).matches.forEach((item) => {
+          newTreeData = changeNodeAtPath({
+            treeData: self.catalogTreeData as TreeItem[],
+            newNode: {
+              ...item.node,
+              ...updatedNodeData,
+              title: getLayerTitle(updatedNodeData),
+            },
+            getNodeKey: keyFromTreeIndex,
+            path: item.path,
+          });
+
+          const { parentNode, path: parentPath } = getParentNode(newTreeData, item);
+          
+          // Re-sort parent group children after the changes (like if title has changed)
+          const sortedParentNode = sortGroupChildrensByFieldValue(parentNode as TreeItem);
+
+          newTreeData = changeNodeAtPath({
+            getNodeKey: keyFromTreeIndex,
+            newNode: sortedParentNode,
+            path: parentPath,
+            treeData: newTreeData,
+          });
         });
 
-        // Re-sort parent group children after the changes (like if title has changed)
-        const FIRST_IDX = 0;
-        const WITHOUT_LAST_IDX = -1;
-        const parentIndex  = item.path.slice(FIRST_IDX, WITHOUT_LAST_IDX);
-
-        const parentNode = getNodeAtPath({
-          treeData: newTreeData,
-          /**
-             In order to get the direct parent we need its path without the last one, 
-              Which indicates the node itself.
-           **/
-          path: item.path.slice(FIRST_IDX, WITHOUT_LAST_IDX), 
-          getNodeKey: keyFromTreeIndex,
-        })?.node;
-
-        const sortedParentNode = sortGroupChildrensByFieldValue(parentNode as TreeItem);
-
-        newTreeData = changeNodeAtPath({
-          getNodeKey: keyFromTreeIndex,
-          newNode: sortedParentNode,
-          path: parentIndex,
-          treeData: newTreeData,
-        })
-
-        setCatalogTreeData(newTreeData);
+        if(newTreeData) {
+          setCatalogTreeData(newTreeData);
+        }
       }
     }
 
