@@ -14,6 +14,8 @@ import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
+import { UserAction } from '../../models/userStore';
+import { ILayerImage } from '../../models/layerImage';
 
 const FIRST = 0;
 
@@ -122,6 +124,16 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.save-metadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
+        case UserAction.BACKEND_OPERATION_EDIT_ENTITY: {
+          const inputValues = data as unknown as ILayerImage;
+
+          store.discreteLayersStore.updateLayer(inputValues);
+          store.discreteLayersStore.selectLayerByID(inputValues.id);
+        
+          // Update catalog-tree
+          store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
+          break;
+        }
         default:
           break;
       }

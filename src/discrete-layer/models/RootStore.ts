@@ -9,6 +9,7 @@ import { RootStoreBase } from './RootStore.base';
 import { bestStore } from './bestStore';
 import { userStore } from './userStore';
 import { actionDispatcherStore } from './actionDispatcherStore';
+import { catalogTreeStore } from './catalogTreeStore';
 
 type FetchAction = (
   url: string,
@@ -29,6 +30,9 @@ export const baseRootStore = RootStoreBase
       state: ResponseState.IDLE,
     }),
     actionDispatcherStore: types.optional(actionDispatcherStore, {
+      state: ResponseState.IDLE,
+    }),
+    catalogTreeStore: types.optional(catalogTreeStore, {
       state: ResponseState.IDLE,
     }),
   })
