@@ -82,7 +82,7 @@ export const getLinksArrWithTokens = (links: LinkModelType[]): LinkModelType[] =
   return linksWithTokens;
 };
 
-export const getTokenResource = (url: string): CesiumResource => {
+export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResource => {
   const tokenProps: Record<string, unknown> = { url };
   
   // eslint-disable-next-line
@@ -98,6 +98,11 @@ export const getTokenResource = (url: string): CesiumResource => {
     } as Record<string, unknown>;
   }
 
+  tokenProps.queryParameters = {
+    ...(tokenProps.queryParameters as Record<string, unknown>),
+    ver
+  };
+
   return new CesiumResource({...tokenProps as unknown as CesiumResource});
 };
 
@@ -111,7 +116,7 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     tileMatrixSetID = (capability.tileMatrixSet as string[])[0];
   }
   return {
-    url: getTokenResource(url),
+    url: getTokenResource(url, layer.productVersion as string),
     layer: `${layer.productId as string}-${layer.productVersion as string}`,
     style,
     format,
