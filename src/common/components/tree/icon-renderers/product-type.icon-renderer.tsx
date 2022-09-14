@@ -1,6 +1,6 @@
 import React from 'react';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
-import { getStatusStyle } from '../../../helpers/style';
+import { getStatusColoredText } from '../../../helpers/style';
 import { TypeIcon } from '../../general/type-icon';
 
 interface IProductTypeCellRendererParams {
@@ -14,7 +14,7 @@ export const ProductTypeRenderer: React.FC<IProductTypeCellRendererParams> = ({ 
     <TypeIcon
       typeName={data.productType as string}
       thumbnailUrl={thumbnailUrl}
-      style={getStatusStyle(data as any)}
+      style={getStatusColoredText(data as any)}
     />
   );
   
