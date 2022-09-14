@@ -6,11 +6,11 @@ import { getStatusStyle } from '../../../helpers/style';
 import { LinkType } from '../../../models/link-type.enum';
 import { TypeIcon } from '../../general/type-icon';
 
-interface IEntityTypeCellRendererParams extends ICellRendererParams {
+interface IProductTypeCellRendererParams extends ICellRendererParams {
   style?: Record<string, unknown>;
 }
 
-export const ProductTypeRenderer: React.FC<IEntityTypeCellRendererParams> = (props) => {
+export const ProductTypeRenderer: React.FC<IProductTypeCellRendererParams> = (props) => {
 
   const data = props.data as ILayerImage;
 
