@@ -40,6 +40,8 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP = 'entity_action.LayerRasterRecord.moveUp',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN = 'entity_action.LayerRasterRecord.moveDown',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM = 'entity_action.LayerRasterRecord.moveToBottom',
+
+  BACKEND_OPERATION_EDIT_ENTITY = 'backend_operation.edit.entity',
   
 
 

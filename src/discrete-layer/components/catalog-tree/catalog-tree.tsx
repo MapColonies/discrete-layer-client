@@ -6,12 +6,14 @@ import React, {
   useState,
   useRef,
   useMemo,
+  useCallback,
 } from 'react';
 import { observer } from 'mobx-react';
 import {
   changeNodeAtPath,
   getNodeAtPath,
   find,
+  ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
@@ -63,7 +65,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       setIsDataLoading,
       errorSearch,
       errorCapabilities,
-      addNodeToParent,
     } = store.catalogTreeStore;
     const treeRawData = store.catalogTreeStore.catalogTreeData as TreeItem[];
 
@@ -142,6 +143,60 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       }
     });
 
+    const handleRowClick = useCallback((evt: MouseEvent, rowInfo: ExtendedNodeData) => {
+      if (!rowInfo.node.isGroup) {
+        let newTreeData = treeRawData;
+        if (!evt.ctrlKey) {
+          // Remove prev selection
+          const selection = find({
+            treeData: newTreeData,
+            getNodeKey: keyFromTreeIndex,
+            searchMethod: (data) => data.node.isSelected,
+          });
+
+          selection.matches.forEach(match => {
+            const selRowInfo = getNodeAtPath({
+              treeData: newTreeData,
+              path: match.path,
+              getNodeKey: keyFromTreeIndex,
+              // ignoreCollapsed: false,
+            });
+
+            newTreeData = changeNodeAtPath({
+              treeData: newTreeData,
+              path: match.path,
+              newNode: {
+                ...selRowInfo?.node,
+                isSelected: false
+              },
+              getNodeKey: keyFromTreeIndex
+            });
+          });
+        }
+
+        newTreeData = changeNodeAtPath({
+          treeData: newTreeData,
+          path: rowInfo.path,
+          newNode: {
+            ...rowInfo.node,
+            isSelected: !rowInfo.node.isSelected
+          },
+          getNodeKey: keyFromTreeIndex
+        });
+
+        // console.log('*** MOUSE ROW CLICK *****', (evt.target as any).className);
+        if (evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)) {
+          setHoveredNode(undefined);
+          setIsHoverAllowed(false);
+        }
+
+        setCatalogTreeData(newTreeData);
+        store.discreteLayersStore.selectLayer(
+          rowInfo.node as ILayerImage
+        );
+      }
+    }, [treeRawData]);
+
     const dispatchAction = (action: Record<string, unknown>): void => {
       if (!store.bestStore.isBestLoad()) {
         store.actionDispatcherStore.dispatchAction({
@@ -153,7 +208,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       }
     };
 
-  if (errorSearch) {
+    if (errorSearch) {
     return (
         <Error
           className="errorMessage"
@@ -164,6 +219,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         />
       );
     }
+
+
 
     return (
       <>
@@ -185,59 +242,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                 // return !nextParent || nextParent.isDirectory
               }}
               generateNodeProps={rowInfo => ({
-                onClick: (evt: MouseEvent) => {
-                  if (!rowInfo.node.isGroup) {
-                    let newTreeData = treeRawData;
-                    if (!evt.ctrlKey) {
-                      // Remove prev selection
-                      const selection = find({
-                        treeData: newTreeData,
-                        getNodeKey: keyFromTreeIndex,
-                        searchMethod: (data) => data.node.isSelected,
-                      });
-
-                      selection.matches.forEach(match => {
-                        const selRowInfo = getNodeAtPath({
-                          treeData: newTreeData,
-                          path: match.path,
-                          getNodeKey: keyFromTreeIndex,
-                          // ignoreCollapsed: false,
-                        });
-
-                        newTreeData = changeNodeAtPath({
-                          treeData: newTreeData,
-                          path: match.path,
-                          newNode: {
-                            ...selRowInfo?.node,
-                            isSelected: false
-                          },
-                          getNodeKey: keyFromTreeIndex
-                        });
-                      });
-                    }
-
-                    newTreeData = changeNodeAtPath({
-                      treeData: newTreeData,
-                      path: rowInfo.path,
-                      newNode: {
-                        ...rowInfo.node,
-                        isSelected: !rowInfo.node.isSelected
-                      },
-                      getNodeKey: keyFromTreeIndex
-                    });
-
-                    // console.log('*** MOUSE ROW CLICK *****', (evt.target as any).className);
-                    if (evt.target !== null && actionDismissibleRegex.test((evt.target as any).className)) {
-                      setHoveredNode(undefined);
-                      setIsHoverAllowed(false);
-                    }
-  
-                    setCatalogTreeData(newTreeData);
-                    store.discreteLayersStore.selectLayer(
-                      rowInfo.node as ILayerImage
-                    );
-                  }
-                },
+                onClick: (e: MouseEvent) => handleRowClick(e, rowInfo),
                 onMouseOver: (evt: MouseEvent) => {
                   if (!rowInfo.node.isGroup && isHoverAllowed) {
                     store.discreteLayersStore.highlightLayer(
@@ -246,7 +251,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     if (rowInfo.node.id !== hoveredNode?.id) {
                       setHoveredNode({
                         ...rowInfo.node,
-                        parentNode: rowInfo.parentNode,
+                        parentPath: rowInfo.path.slice(0, -1).toString(),
                       });
                     }
                   } else {
@@ -316,25 +321,12 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           LinkType.THUMBNAIL_S
                         )}
                       />,
-                      <IconButton
-                        className="glow-missing-icon mc-icon-Refresh"
-                        onClick={() => {
-                          addNodeToParent(
-                            intl.formatMessage({
-                              id:
-                                'tab-views.catalog.top-categories.unpublished',
-                            }),
-                            { ...rowInfo.node }
-                          );
-                        }}
-                      />,
                     ],
                 buttons: [
                   <>
                     {hoveredNode !== undefined &&
-                      hoveredNode.id === rowInfo.node.id && (
-                        // Problematic.
-                        // rowInfo.parentNode === hoveredNode.parentNode && (
+                      hoveredNode.id === rowInfo.node.id && 
+                      hoveredNode.parentPath === rowInfo.path.slice(0, -1).toString() && (                      
                         <ActionsRenderer
                           node={rowInfo.node}
                           actions={
