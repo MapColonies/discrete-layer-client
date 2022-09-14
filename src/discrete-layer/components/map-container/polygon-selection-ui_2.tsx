@@ -26,6 +26,7 @@ export const Divider: React.FC = () => {
 
 export interface PolygonSelectionUiProps {
   isSelectionEnabled: boolean;
+  isSystemFreeTextSearchEnabled: boolean;
   onStartDraw: (type: DrawType) => void;
   onCancelDraw: () => void;
   onReset: () => void;
@@ -37,6 +38,7 @@ export interface PolygonSelectionUiProps {
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
   const {
+    isSystemFreeTextSearchEnabled,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isSelectionEnabled,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -119,10 +121,10 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         />
       </Box>
       <Box id="searchTerm">
-        <TextField fullwidth style={{padding: '0 6px 0 6px'}}/>
+        <TextField disabled={!isSystemFreeTextSearchEnabled} fullwidth style={{padding: '0 6px 0 6px'}}/>
       </Box>
       <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
-        <IconButton icon="search" label="SEARCH" className="searchIconBtn"/>
+        <IconButton disabled={!isSystemFreeTextSearchEnabled} icon="search" label="SEARCH" className="searchIconBtn"/>
       </Tooltip>
       {
         open &&

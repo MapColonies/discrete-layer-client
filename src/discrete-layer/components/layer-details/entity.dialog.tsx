@@ -53,6 +53,8 @@ import EntityForm from './layer-datails-form';
 import { LayersDetailsComponent } from './layer-details';
 
 import './entity.dialog.css';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
+import { UserAction } from '../../models/userStore';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
@@ -160,6 +162,15 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       { id: `general.title.${(mode as string).toLowerCase()}` },
       { value: dialogTitleParamTranslation }
     );
+
+    const dispatchAction = (action: Record<string,unknown>): void => {
+      store.actionDispatcherStore.dispatchAction(
+        {
+          action: action.action,
+          data: action.data,
+        } as IDispatchAction
+      );
+    };
 
     useEffect(() => {
       if(!isEmpty(descriptors) && !isEmpty(layerRecord)) {
@@ -386,8 +397,11 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       // @ts-ignore
       if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
         closeDialog();
-        store.discreteLayersStore.updateLayer(inputValues as ILayerImage);
-        store.discreteLayersStore.selectLayerByID((inputValues as ILayerImage).id as string);
+        
+        dispatchAction({ 
+          action: UserAction.BACKEND_OPERATION_EDIT_ENTITY,
+          data: inputValues as ILayerImage 
+        });
       }
     }, [mutationQuery.data, mutationQuery.loading, closeDialog, store.discreteLayersStore, inputValues]);
 

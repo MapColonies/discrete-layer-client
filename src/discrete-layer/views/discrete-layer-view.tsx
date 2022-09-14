@@ -412,6 +412,9 @@ const DiscreteLayerView: React.FC = observer(() => {
     return {
       isSystemJobsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_JOBS),
       isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
+      isSystemFilterEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FILTER),
+      isSystemFreeTextSearchEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FREE_TEXT_SEARCH),
+      isSystemSidebarCollapseEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_SIDEBAR_COLLAPSE_EXPAND),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
@@ -543,6 +546,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Filter"
+                disabled={!(permissions.isSystemFilterEnabled as boolean)}
                 label="FILTER"
                 onClick={ (): void => { handleFilter(); } }
               />
@@ -551,6 +555,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               <IconButton 
                 className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
                 label="PANEL EXPANDER"
+                disabled={!(permissions.isSystemSidebarCollapseEnabled as boolean)}
                 onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
               />
             </Tooltip>
@@ -631,6 +636,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
             isSelectionEnabled={isDrawing}
+            isSystemFreeTextSearchEnabled={(permissions.isSystemFreeTextSearchEnabled as boolean)}
             onPolygonUpdate={onPolygonSelection}
             onPoiUpdate={onPoiSelection}
             poi={poi}

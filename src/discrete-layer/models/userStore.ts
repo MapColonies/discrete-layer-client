@@ -13,6 +13,9 @@ export enum UserRole {
 export enum UserAction {
   SYSTEM_ACTION_JOBS = 'system_action_jobs',
   SYSTEM_ACTION_COREINFO = 'system_action_coreInfo',
+  SYSTEM_ACTION_FILTER = 'system_action_filter',
+  SYSTEM_ACTION_FREE_TEXT_SEARCH = 'system_action_free_text_search',
+  SYSTEM_ACTION_SIDEBAR_COLLAPSE_EXPAND = 'system_action_sidebar_collapse_exapnd',
 
   ENTITY_ACTION_LAYERRASTERRECORD_CREATE = 'entity_action.LayerRasterRecord.create',
   ENTITY_ACTION_LAYER3DRECORD_CREATE = 'entity_action.Layer3DRecord.create',
@@ -41,6 +44,8 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP = 'entity_action.LayerRasterRecord.moveUp',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN = 'entity_action.LayerRasterRecord.moveDown',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM = 'entity_action.LayerRasterRecord.moveToBottom',
+
+  BACKEND_OPERATION_EDIT_ENTITY = 'backend_operation.editEntity',
   
 
 
@@ -69,6 +74,9 @@ const ROLES: IRole[] = [
     permissions: {
       [UserAction.SYSTEM_ACTION_JOBS]: true,
       [UserAction.SYSTEM_ACTION_COREINFO]: true,
+      [UserAction.SYSTEM_ACTION_FILTER]: false,
+      [UserAction.SYSTEM_ACTION_FREE_TEXT_SEARCH]: false,
+      [UserAction.SYSTEM_ACTION_SIDEBAR_COLLAPSE_EXPAND]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: true,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: true,
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
@@ -103,6 +111,9 @@ const ROLES: IRole[] = [
     permissions: {
       [UserAction.SYSTEM_ACTION_JOBS]: false,
       [UserAction.SYSTEM_ACTION_COREINFO]: false,
+      [UserAction.SYSTEM_ACTION_FILTER]: false,
+      [UserAction.SYSTEM_ACTION_FREE_TEXT_SEARCH]: false,
+      [UserAction.SYSTEM_ACTION_SIDEBAR_COLLAPSE_EXPAND]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: false,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: false,
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
