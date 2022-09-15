@@ -127,7 +127,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
-        case UserAction.SYSTEM_ACTION_EDIT_ENTITY: {
+        case UserAction.SYSTEM_ACTION_EDITENTITY: {
           const inputValues = data as unknown as ILayerImage;
 
           store.discreteLayersStore.updateLayer(inputValues);
@@ -136,7 +136,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
           break;
         }
-        case UserAction.SYSTEM_ACTION_PUBLISH_ENTITY: {
+        case UserAction.SYSTEM_ACTION_PUBLISHENTITY: {
           const inputValues = data as unknown as ILayerImage;
           
           store.discreteLayersStore.updateLayer(inputValues);

@@ -40,7 +40,7 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
     if (!mutationQuery.loading && ((mutationQuery.data as {updateStatus: string} | undefined)?.updateStatus === 'ok')) {
       onSetOpen(false);
       dispatchAction({ 
-        action: UserAction.SYSTEM_ACTION_PUBLISH_ENTITY,
+        action: UserAction.SYSTEM_ACTION_PUBLISHENTITY,
         data: {...layer, productStatus: isUnpublished(layer as any) ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED} 
       });
     }

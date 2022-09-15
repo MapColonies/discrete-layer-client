@@ -399,7 +399,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         closeDialog();
         
         dispatchAction({ 
-          action: UserAction.SYSTEM_ACTION_EDIT_ENTITY,
+          action: UserAction.SYSTEM_ACTION_EDITENTITY,
           data: inputValues as ILayerImage 
         });
       }
