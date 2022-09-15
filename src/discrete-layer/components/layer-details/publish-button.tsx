@@ -39,7 +39,6 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
           label="PUBLISH AND UNPUBLISH"
           onClick={(): void => {
             setDialogOpen(true);
-            setUnpublished(!unpublished);
           }}
         />
       </Tooltip>
@@ -49,6 +48,9 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
           layer={layer}
           isOpen={isDialogOpen}
           onSetOpen={setDialogOpen}
+          onPublish={(): void => {
+            setUnpublished(!unpublished);
+          }}
         />
       }
     </>

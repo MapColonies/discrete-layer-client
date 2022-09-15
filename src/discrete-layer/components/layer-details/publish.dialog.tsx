@@ -25,9 +25,10 @@ interface ContinueDialogProps {
   layer: ILayerImage;
   isOpen: boolean;
   onSetOpen: (open: boolean) => void;
+  onPublish: () => void;
 }
 
-export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, isOpen, onSetOpen }) => {
+export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, isOpen, onSetOpen, onPublish }) => {
   const store = useStore();
   const mutationQuery = useQuery();
 
@@ -51,6 +52,7 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
         action: UserAction.SYSTEM_ACTION_PUBLISHENTITY,
         data: {...layer, productStatus: isUnpublished(layer as any) ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED} 
       });
+      onPublish();
     }
   }, [mutationQuery.data]);
 
