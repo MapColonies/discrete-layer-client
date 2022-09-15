@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { isUnpublished } from '../../../common/helpers/style';
 import { ILayerImage } from '../../models/layerImage';
-import { PublishDialog } from '../dialogs/publish.dialog';
+import { PublishDialog } from './publish.dialog';
 
 interface PublishButtonProps {
   layer: ILayerImage;
