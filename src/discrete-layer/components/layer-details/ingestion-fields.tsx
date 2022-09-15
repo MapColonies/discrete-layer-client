@@ -23,6 +23,7 @@ import { EntityFormikHandlers, FormValues } from './layer-datails-form';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 
 import './ingestion-fields.css';
+import { ILayerImage } from '../../models/layerImage';
 
 const DIRECTORY = 0;
 const FILES = 1;
@@ -204,6 +205,28 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
           >
             <FormattedMessage id="general.choose-btn.text" />
           </Button>
+        </Box>
+        <Box className="uploadMetadataButton">
+         <input type='file' accept=".json" onChangeCapture={(e: React.ChangeEvent<HTMLInputElement>): void => {
+          if(e.currentTarget.files) {
+            const file = e.currentTarget.files[0];
+            const fileReader = new FileReader();
+            fileReader.readAsText(file);
+
+            fileReader.addEventListener('load' , (e) => {
+              console.log(JSON.parse(e.target?.result as string) as ILayerImage);
+              if(reloadFormMetadata){
+                reloadFormMetadata(
+                  {
+                    directory: '',
+                    fileNames: ''
+                  },
+                  {recordModel: JSON.parse(e.target?.result as string) as ILayerImage } as MetadataFile
+                );
+              }
+            })
+          }
+         }}/>
         </Box>
       </Box>
       {
