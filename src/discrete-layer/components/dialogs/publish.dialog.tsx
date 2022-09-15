@@ -2,7 +2,15 @@ import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { FormattedMessage } from 'react-intl';
 import { DialogContent } from '@material-ui/core';
-import { Button, CircularProgress, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Icon,
+  IconButton
+} from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { isUnpublished } from '../../../common/helpers/style';
@@ -71,7 +79,7 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <IconButton className="icon mc-icon-Status-Warnings" />
+          <Icon className="icon" icon={{ icon: 'info', size: 'xsmall' }}/>
           <FormattedMessage id={ 'general.dialog.publish.message' }/>
         </DialogContent>
         <DialogActions>

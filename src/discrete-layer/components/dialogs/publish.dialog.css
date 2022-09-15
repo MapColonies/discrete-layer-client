@@ -17,6 +17,7 @@ body[dir='rtl'] #publishDialog .closeIcon {
 #publishDialog .icon {
   color: var(--mdc-theme-gc-warning-high);
   font-size: 32px;
+  margin: 12px;
 }
 
 #publishDialog .errors {
