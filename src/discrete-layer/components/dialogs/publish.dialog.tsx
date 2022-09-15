@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect } from 'react';
+import { observer } from 'mobx-react';
 import { FormattedMessage } from 'react-intl';
 import { DialogContent } from '@material-ui/core';
 import { Button, CircularProgress, Dialog, DialogActions, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { isUnpublished } from '../../../common/helpers/style';
 import { RecordStatus, RecordType, useQuery, useStore } from '../../models';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
+import { ILayerImage } from '../../models/layerImage';
+import { UserAction } from '../../models/userStore';
 
 import './publish.dialog.css';
-import { ILayerImage } from '../../models/layerImage';
-import { observer } from 'mobx-react';
-import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
-import { UserAction } from '../../models/userStore';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
 
 interface ContinueDialogProps {
   layer: ILayerImage;
@@ -40,7 +40,7 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
     if (!mutationQuery.loading && ((mutationQuery.data as {updateStatus: string} | undefined)?.updateStatus === 'ok')) {
       onSetOpen(false);
       dispatchAction({ 
-        action: UserAction.BACKEND_OPERATION_PUBLISH_ENTITY,
+        action: UserAction.SYSTEM_ACTION_PUBLISH_ENTITY,
         data: {...layer, productStatus: isUnpublished(layer as any) ? RecordStatus.PUBLISHED : RecordStatus.UNPUBLISHED} 
       });
     }
@@ -75,12 +75,12 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
         </DialogContent>
         <DialogActions className="actions">
           <Box className='buttons'>
-            <Button raised type="button" disabled={mutationQuery.loading} onClick={(): void => {
+            <Button raised type="button" disabled={mutationQuery.loading || mutationQuery.error !== undefined} onClick={(): void => {
               updateStatus();
             }}>
               {
                 mutationQuery.loading ?
-                <CircularProgress/> :
+                <CircularProgress className="loading"/> :
                 <FormattedMessage id="general.confirm-btn.text"/>
               }
             </Button>

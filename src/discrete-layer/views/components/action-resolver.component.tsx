@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect } from 'react';
+import { NodeData, TreeItem } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
+import { get } from 'lodash';
+import { existStatus, isUnpublished } from '../../../common/helpers/style';
+import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
   BestRecordModelKeys,
   LayerRasterRecordModelKeys,
@@ -10,16 +14,11 @@ import {
   VectorBestRecordModelKeys
 } from '../../components/layer-details/entity-types-keys';
 import { cleanUpEntity, downloadJSONToClient } from '../../components/layer-details/utils'
-import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
-import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
-import { UserAction } from '../../models/userStore';
 import { ILayerImage } from '../../models/layerImage';
-import { NodeData, removeNodeAtPath, TreeItem } from 'react-sortable-tree';
-import { RecordStatus } from '../../models';
-import { existStatus, isUnpublished } from '../../../common/helpers/style';
-import { get } from 'lodash';
+import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
+import { useStore } from '../../models/RootStore';
+import { UserAction } from '../../models/userStore';
 
 const FIRST = 0;
 
@@ -128,18 +127,16 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
-        case UserAction.BACKEND_OPERATION_EDIT_ENTITY:{
+        case UserAction.SYSTEM_ACTION_EDIT_ENTITY: {
           const inputValues = data as unknown as ILayerImage;
 
           store.discreteLayersStore.updateLayer(inputValues);
           store.discreteLayersStore.selectLayerByID(inputValues.id);
-        
-          // Update catalog-tree
+
           store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
           break;
         }
-        case UserAction.BACKEND_OPERATION_PUBLISH_ENTITY: 
-        {
+        case UserAction.SYSTEM_ACTION_PUBLISH_ENTITY: {
           const inputValues = data as unknown as ILayerImage;
           
           store.discreteLayersStore.updateLayer(inputValues);
@@ -148,8 +145,8 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
           const node = store.catalogTreeStore.findNodeById(inputValues.id);
 
-          if(node) {
-            if(existStatus(inputValues as unknown as Record<string, unknown>) && isUnpublished(inputValues as unknown as Record<string, unknown>)) {
+          if (node) {
+            if (existStatus(inputValues as unknown as Record<string, unknown>) && isUnpublished(inputValues as unknown as Record<string, unknown>)) {
               store.catalogTreeStore.addNodeToParent(node.node, "tab-views.catalog.top-categories.unpublished", true);
             } else  {
               const unpublishedNode = store.catalogTreeStore.findNodeByTitle("tab-views.catalog.top-categories.unpublished", true) as NodeData;
@@ -164,14 +161,12 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
               const newTree = store.catalogTreeStore.changeNodeByPath({
                 path: unpublishedNode.path,
                 newNode: unpublishedNewNode.node,
-
               });
               store.catalogTreeStore.setCatalogTreeData(newTree);
             }
-
           }
+          break;
         }
-        break;
         default:
           break;
       }

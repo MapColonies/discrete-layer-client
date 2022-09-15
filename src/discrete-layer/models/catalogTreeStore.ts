@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { types, getParent, flow } from 'mobx-state-tree';
-import { cloneDeep, get, isEmpty } from 'lodash';
 import { createIntl } from 'react-intl';
 import {
   changeNodeAtPath,
@@ -14,19 +12,20 @@ import {
   FullTree,
   TreePath,
 } from 'react-sortable-tree';
-import { ResponseState } from '../../common/models/response-state.enum';
+import { types, getParent, flow } from 'mobx-state-tree';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import CONFIG from '../../common/config';
-import { getLayerLink } from '../components/helpers/layersUtils';
 import { GroupBy, groupBy, KeyPredicate } from '../../common/helpers/group-by';
 import MESSAGES from '../../common/i18n';
-import { ModelBase } from './ModelBase';
-import { IRootStore, RootStoreType } from './RootStore';
-import { ILayerImage } from './layerImage';
-import { RecordType } from './';
+import { ResponseState } from '../../common/models/response-state.enum';
+import { getLayerLink } from '../components/helpers/layersUtils';
+import { existStatus, isUnpublished } from '../../common/helpers/style';
 import { isBest } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
-import { existStatus, isUnpublished } from '../../common/helpers/style';
-import { AnySchema } from 'yup';
+import { ILayerImage } from './layerImage';
+import { ModelBase } from './ModelBase';
+import { IRootStore, RootStoreType } from './RootStore';
+import { RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
@@ -423,13 +422,12 @@ export const catalogTreeStore = ModelBase.props({
     }
 
     function removeNodeFromTree(path: (string | number)[]): void {
-     const newTree = removeNodeAtPath({
+      const newTree = removeNodeAtPath({
         treeData: self.catalogTreeData as TreeItem[],
         getNodeKey: keyFromTreeIndex,
         path
       });
-
-     self.catalogTreeData = newTree;
+      self.catalogTreeData = newTree;
     }
 
     function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
@@ -466,7 +464,6 @@ export const catalogTreeStore = ModelBase.props({
         });
 
         setCatalogTreeData(newTreeData);
-        
       }
     }
 

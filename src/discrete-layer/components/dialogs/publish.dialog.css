@@ -14,14 +14,10 @@ body[dir='rtl'] #publishDialog .closeIcon {
   align-items: center;
 }
 
-#publishDialog .errors {
-  margin-top: 16px;
-  height: 52px;
-}
-
 #publishDialog .actions {
   flex-direction: column;
 }
+
 
 #publishDialog .buttons {
   align-self: flex-start;
@@ -31,4 +27,11 @@ body[dir='rtl'] #publishDialog .buttons {
   align-self: flex-end;
 }
 
+#publishDialog .loading {
+  display: flex;
+}
 
+#publishDialog .errors {
+  margin-top: 16px;
+  height: 52px;
+}
