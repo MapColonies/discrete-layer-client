@@ -71,13 +71,21 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
+          <IconButton className="icon mc-icon-Status-Warnings" />
           <FormattedMessage id={ 'general.dialog.publish.message' }/>
         </DialogContent>
-        <DialogActions className="actions">
-          <Box className='buttons'>
-            <Button raised type="button" disabled={mutationQuery.loading || mutationQuery.error !== undefined} onClick={(): void => {
-              updateStatus();
-            }}>
+        <DialogActions>
+          <Box className="errors">
+            {/* eslint-disable-next-line */}
+            <GraphQLError error={mutationQuery.error ?? {}} />
+          </Box>
+          <Box>
+            <Button
+              raised
+              type="button"
+              disabled={mutationQuery.loading || mutationQuery.error !== undefined}
+              onClick={(): void => updateStatus()}
+            >
               {
                 mutationQuery.loading ?
                 <CircularProgress className="loading"/> :
@@ -88,8 +96,6 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
               <FormattedMessage id="general.cancel-btn.text"/>
             </Button>
           </Box>
-            {/* eslint-disable-next-line */}
-            <Box className="errors"><GraphQLError error={mutationQuery.error ?? {}} /></Box>
         </DialogActions>
       </Dialog>
     </Box>

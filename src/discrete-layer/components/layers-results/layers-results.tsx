@@ -272,6 +272,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
       setlayersImages(store.discreteLayersStore.layersImages);
+      gridApi?.redrawRows();
     }
   }, [store.discreteLayersStore.layersImages]);
 

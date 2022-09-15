@@ -14,24 +14,17 @@ body[dir='rtl'] #publishDialog .closeIcon {
   align-items: center;
 }
 
-#publishDialog .actions {
-  flex-direction: column;
+#publishDialog .icon {
+  color: var(--mdc-theme-gc-warning-high);
+  font-size: 32px;
 }
 
-
-#publishDialog .buttons {
-  align-self: flex-start;
-}
-
-body[dir='rtl'] #publishDialog .buttons {
-  align-self: flex-end;
+#publishDialog .errors {
+  margin: 4px;
+  height: 52px;
+  width: 280px;
 }
 
 #publishDialog .loading {
   display: flex;
-}
-
-#publishDialog .errors {
-  margin-top: 16px;
-  height: 52px;
 }

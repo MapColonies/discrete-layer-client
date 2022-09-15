@@ -109,6 +109,13 @@ export const discreteLayersStore = ModelBase
       );
     }
 
+    function refreshLayersImages(): void {
+      self.layersImages = self.layersImages?.map(item => ({
+          ...item,
+        })
+      );
+    }
+
     function updateLayer(data: ILayerImage): void {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
@@ -189,6 +196,23 @@ export const discreteLayersStore = ModelBase
       } 
     }
 
+    function updateTabviewsData(layer: ILayerImage): void {
+      if(self.tabViews) {
+        self.tabViews.forEach((tab) => {
+          if(tab.selectedLayer && tab.selectedLayer.id === layer.id){
+            tab.selectedLayer = {...layer};
+          }
+          if(tab.layersImages){
+            const idx = tab.layersImages.findIndex((item) => item.id === layer.id);
+            if(idx){
+              tab.layersImages[idx] = {...layer};
+            }
+          }
+
+        });
+      } 
+    }
+
     function addPreviewedLayer(id: string): void {
       self.previewedLayers = [
         ...self.previewedLayers ?? [],
@@ -220,6 +244,7 @@ export const discreteLayersStore = ModelBase
       getLayersImages,
       setLayersImages,
       setLayersImagesData,
+      refreshLayersImages,
       clearLayersImages,
       showLayer,
       highlightLayer,
@@ -227,6 +252,7 @@ export const discreteLayersStore = ModelBase
       selectLayerByID,
       setTabviewData,
       restoreTabviewData,
+      updateTabviewsData,
       showFootprint,
       setEntityDescriptors,
       updateLayer,

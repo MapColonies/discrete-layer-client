@@ -142,6 +142,10 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.updateLayer(inputValues);
           store.discreteLayersStore.selectLayerByID(inputValues.id);
           
+          // After updating specific item REFRESH layerImages in order to present performed changes where it is relevant
+          store.discreteLayersStore.refreshLayersImages();
+          // store.discreteLayersStore.updateTabviewsData(inputValues);
+          
           store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
           const node = store.catalogTreeStore.findNodeById(inputValues.id);
 
