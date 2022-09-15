@@ -26,6 +26,7 @@ import {
   ValidationConfigModelType,
   FieldConfigModelType,
   ProductType,
+  RecordStatus,
   ValidationValueType,
   LayerDemRecordModel
 } from '../../models';
@@ -85,6 +86,7 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
         record[key as string] = undefined;
       });
       record.productType = ProductType.PHOTO_REALISTIC_3D;
+      record.productStatus = RecordStatus.UNPUBLISHED;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
     case RecordType.RECORD_RASTER:
@@ -427,7 +429,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     return (
       <div id="entityDialog" ref={dialogContainerRef}>
         <Dialog open={isOpen} preventOutsideDismiss={true}>
-          <DialogTitle style={getStatusColoredBackground(layerRecord as any)}>
+          <DialogTitle style={mode !== Mode.NEW ? getStatusColoredBackground(layerRecord as any) : undefined}>
             {dialogTitle}
             <IconButton
               className="closeIcon mc-icon-Close"

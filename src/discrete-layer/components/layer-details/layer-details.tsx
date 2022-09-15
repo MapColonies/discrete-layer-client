@@ -96,12 +96,12 @@ export const getValuePresentor = (
     case 'VerticalDatum':
     case 'Units':
     case 'UndulationModel':
-    case 'RecordStatus':
       return (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
     case 'ProductType':
+    case 'RecordStatus':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
       );
