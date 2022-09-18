@@ -30,19 +30,23 @@ import {
   ValidationValueType,
   LayerDemRecordModel
 } from '../../models';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import {
   Layer3DRecordInput,
   LayerDemRecordInput,
   LayerRasterRecordInput,
 } from '../../models/RootStore.base';
+import { UserAction } from '../../models/userStore';
 import {
   FieldConfigModelKeys,
   Layer3DRecordModelKeys,
   LayerDemRecordModelKeys,
   LayerRasterRecordModelKeys,
 } from './entity-types-keys';
+import { LayersDetailsComponent } from './layer-details';
 import { IRecordFieldInfo } from './layer-details.field-info';
+import EntityForm from './layer-datails-form';
 import {
   getFlatEntityDescriptors,
   getPartialRecord,
@@ -50,12 +54,8 @@ import {
   getValidationType
 } from './utils';
 import suite from './validate';
-import EntityForm from './layer-datails-form';
-import { LayersDetailsComponent } from './layer-details';
 
 import './entity.dialog.css';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { UserAction } from '../../models/userStore';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
