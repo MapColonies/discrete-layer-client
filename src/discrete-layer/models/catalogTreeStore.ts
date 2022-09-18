@@ -42,6 +42,11 @@ const getLayerTitle = (product: ILayerImage): string => {
 
 const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string).localeCompare(b[sortByField] as string);
 
+interface IGetParentNode {
+  parentNode: NodeData | undefined;
+  path: (string | number)[];
+}
+
 /* eslint-disable */
 /* tslint:disable */
 const buildParentTreeNode = (
@@ -132,6 +137,9 @@ export const catalogTreeStore = ModelBase.props({
       setCatalogTreeData([]);
     }
 
+    /**
+     * A helper function used to fetch new catalog data.
+     */
     const catalogSearch = flow(function* catalogSearchGen(): Generator<
       Promise<{ search: ILayerImage[] }>,
       ILayerImage[],
@@ -170,6 +178,9 @@ export const catalogTreeStore = ModelBase.props({
       }
     });
 
+    /**
+     * Used to set initial tree data, fetches new entries from server.
+     */
     const initTree = flow(function* initTree(): Generator<
       Promise<ILayerImage[]> | Promise<{ capabilities: CapabilityModelType[] }>,
       void,
@@ -343,6 +354,24 @@ export const catalogTreeStore = ModelBase.props({
 
     // Tree manipulations actions
 
+    /**
+     * Same as changeNodeAtPath from react-sortable-tree, defaults to our tree in store and our geNodeKey function
+     */
+    function changeNodeByPath(
+      data: TreePath & {
+          treeData?: TreeItem[] | FullTree,
+          newNode: any,
+          ignoreCollapsed?: boolean,
+      }): TreeItem[] {
+      return changeNodeAtPath({...data, getNodeKey: keyFromTreeIndex, treeData: self.catalogTreeData as TreeItem[]});
+    };
+
+    /**
+     * 
+     * @param title Title to search for
+     * @param useTranslation Should translate provided title using intl's provider or not. (defaults to false)
+     * @returns The first NodeData it finds that matches the provided title.
+     */
     function findNodeByTitle(title: string, useTranslation = false): NodeData | null {
       const nodeTitle =  useTranslation ? intl.formatMessage({ id: title }) : title;
       const node = find({
@@ -357,10 +386,17 @@ export const catalogTreeStore = ModelBase.props({
       return null;
     }
 
+    /**
+     * 
+     * @param node
+     * @param parentTitle 
+     * @param useTranslation Should translate provided title using intl's provider or not. (defaults to false)
+     * @returns Void. The method mutates the tree in store.
+     */
+    
     function addNodeToParent(node: TreeItem, parentTitle: string, useTranslation = false): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
-        const title = useTranslation ? intl.formatMessage({ id: parentTitle }) : parentTitle;
-        const parentNode = findNodeByTitle(title);
+        const parentNode = findNodeByTitle(parentTitle, useTranslation);
 
         const parentKey = parentNode?.path.pop();
 
@@ -379,7 +415,7 @@ export const catalogTreeStore = ModelBase.props({
       }
     }
 
-    function sortGroupChildrensByFieldValue(
+    function sortGroupChildrenByFieldValue(
       parentNode: TreeItem,
       sortByField = INNER_SORT_FIELD
     ): TreeItem | null {
@@ -390,7 +426,13 @@ export const catalogTreeStore = ModelBase.props({
       return parent;
     }
 
-    function getParentNode(treeData: TreeItem[], node: NodeData): {parentNode: TreeItem | undefined, path: (string | number)[]} {
+    /**
+    * 
+    * @param node The node to find it's parent.
+    * @param treeData Defaults to store tree.
+    * @returns An object with the parentNode and its path
+    */
+    function getParentNode(node: NodeData, treeData = self.catalogTreeData as TreeItem[]): IGetParentNode {
       const FIRST_IDX = 0;
       const WITHOUT_LAST_IDX = -1;
       /**
@@ -403,10 +445,16 @@ export const catalogTreeStore = ModelBase.props({
         treeData,
         path: parentIndex,
         getNodeKey: keyFromTreeIndex,
-      })?.node;
+      }) as NodeData;
 
       return ({ parentNode, path: parentIndex });
     }
+
+    /**
+     * 
+     * @param id 
+     * @returns The first node from tree that it's metadata matches the provided id. 
+     */
 
     function findNodeById(id: string): NodeData | null {
       const node = find({
@@ -421,15 +469,14 @@ export const catalogTreeStore = ModelBase.props({
       return null;
     }
 
-    function removeNodeFromTree(path: (string | number)[]): void {
-      const newTree = removeNodeAtPath({
-        treeData: self.catalogTreeData as TreeItem[],
-        getNodeKey: keyFromTreeIndex,
-        path
-      });
-      self.catalogTreeData = newTree;
-    }
-
+    /**
+     * 
+     * @param id Id find the nodes from the current tree in store.
+     * @param updatedNodeData Updated node data to override the current data.
+     * @returns void - The method mutates the tree in store with the updated nodes.
+     * 
+     * Affects ALL NODES that matches the same id.
+     */
     function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
         let newTreeData: TreeItem[] = self.catalogTreeData as TreeItem[];
@@ -439,24 +486,22 @@ export const catalogTreeStore = ModelBase.props({
           getNodeKey: keyFromTreeIndex,
           searchMethod: (data) => data.node.id === id,
         }).matches.forEach((item) => {
-          newTreeData = changeNodeAtPath({
+          newTreeData = changeNodeByPath({
             treeData: newTreeData,
             newNode: {
               ...item.node,
               ...updatedNodeData,
               title: getLayerTitle(updatedNodeData),
             },
-            getNodeKey: keyFromTreeIndex,
             path: item.path,
           });
 
-          const { parentNode, path: parentPath } = getParentNode(newTreeData, item);
+          const { parentNode, path: parentPath } = getParentNode(item, newTreeData);
           
           // Re-sort parent group children after the changes (like if title has changed)
-          const sortedParentNode = sortGroupChildrensByFieldValue(parentNode as TreeItem);
+          const sortedParentNode = sortGroupChildrenByFieldValue(parentNode as TreeItem);
 
-          newTreeData = changeNodeAtPath({
-            getNodeKey: keyFromTreeIndex,
+          newTreeData = changeNodeByPath({
             newNode: sortedParentNode,
             path: parentPath,
             treeData: newTreeData,
@@ -467,14 +512,42 @@ export const catalogTreeStore = ModelBase.props({
       }
     }
 
-    function changeNodeByPath(
-      data: TreePath & {
-          treeData?: FullTree,
-          newNode: any,
-          ignoreCollapsed?: boolean,
-      }): TreeItem[] {
-      return changeNodeAtPath({...data, getNodeKey: keyFromTreeIndex, treeData: self.catalogTreeData as TreeItem[]});
-    };
+    /**
+     * 
+     * @param path Node path to remove
+     * @returns void - remove the node from tree in store.
+     */
+    function removeNodeFromTree(path: (string | number)[]): void {
+      const newTree = removeNodeAtPath({
+         treeData: self.catalogTreeData as TreeItem[],
+         getNodeKey: keyFromTreeIndex,
+         path
+       });
+ 
+      self.catalogTreeData = newTree;
+     }
+
+     /**
+      * 
+      * @param parentTitle - Title used to target the parent, if not provided the direct parent of the node will be used. (optional)
+      * @param useTranslation Should translate provided title using intl's provider or not. (optional)
+      * @param nodeToRemove Node to remove from parent.
+      * @returns void - Remove the child from tree in store.
+      */
+     function removeChildFromParent(nodeToRemove: NodeData, useTranslation?: boolean, parentTitle?: string): void {
+      const parentNode = typeof parentTitle !== 'undefined' ? findNodeByTitle(parentTitle, useTranslation) as NodeData : getParentNode(nodeToRemove).parentNode as NodeData;
+
+      const filteredChildren = ((parentNode.node.children) as TreeItem[]).filter(node => node.id !== nodeToRemove.node.id);
+      parentNode.node.children = filteredChildren;
+
+      const newTreeWithoutChild = changeNodeByPath({
+        path: parentNode.path,
+        newNode: parentNode.node
+      })
+
+      setCatalogTreeData(newTreeWithoutChild);
+  
+     }
 
     return {
       catalogSearch,
@@ -486,7 +559,7 @@ export const catalogTreeStore = ModelBase.props({
       updateNodeById,
       findNodeById,
       removeNodeFromTree,
-      findNodeByTitle,
-      changeNodeByPath
+      removeChildFromParent,
+      changeNodeByPath,
     };
   });
