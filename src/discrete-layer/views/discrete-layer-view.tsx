@@ -79,6 +79,7 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
+import { IDispatchAction } from '../models/actionDispatcherStore';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -135,6 +136,15 @@ const DiscreteLayerView: React.FC = observer(() => {
     id: '',
     type: DrawType.UNKNOWN,
   }]);
+
+  const dispatchAction = (action: Record<string,unknown>): void => {
+    store.actionDispatcherStore.dispatchAction(
+      {
+        action: action.action,
+        data: action.data,
+      } as IDispatchAction
+    );
+  };
   
   /* eslint-disable */
   const mapSettingsLocale = useMemo(() => ({
@@ -385,9 +395,10 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const onFlyTo = useCallback((): void => {
     setRect(generateFactoredLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
-    if(store.discreteLayersStore.selectedLayer){
-      store.discreteLayersStore.showFootprint(store.discreteLayersStore.selectedLayer.id, true);
-    }
+    dispatchAction({
+      action: UserAction.SYSTEM_CALLBACK_FLYTO,
+      data: { selectedLayer: store.discreteLayersStore.selectedLayer }
+    })
   }, []);
 
   const tabViews = [

@@ -359,11 +359,11 @@ export const catalogTreeStore = ModelBase.props({
      */
     function changeNodeByPath(
       data: TreePath & {
-          treeData?: TreeItem[] | FullTree,
+          treeData?: TreeItem[],
           newNode: any,
           ignoreCollapsed?: boolean,
       }): TreeItem[] {
-      return changeNodeAtPath({...data, getNodeKey: keyFromTreeIndex, treeData: self.catalogTreeData as TreeItem[]});
+      return changeNodeAtPath({ ...data, getNodeKey: keyFromTreeIndex, treeData: data.treeData ?? self.catalogTreeData as TreeItem[]});
     };
 
     /**
@@ -479,7 +479,7 @@ export const catalogTreeStore = ModelBase.props({
      */
     function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
-        let newTreeData: TreeItem[] = self.catalogTreeData as TreeItem[];
+        let newTreeData: TreeItem[] = [...self.catalogTreeData as TreeItem[]] ;
 
         find({
           treeData: self.catalogTreeData as TreeItem[],
@@ -499,7 +499,7 @@ export const catalogTreeStore = ModelBase.props({
           const { parentNode, path: parentPath } = getParentNode(item, newTreeData);
           
           // Re-sort parent group children after the changes (like if title has changed)
-          const sortedParentNode = sortGroupChildrenByFieldValue(parentNode as TreeItem);
+          const sortedParentNode = sortGroupChildrenByFieldValue(parentNode?.node as TreeItem);
 
           newTreeData = changeNodeByPath({
             newNode: sortedParentNode,
@@ -558,6 +558,7 @@ export const catalogTreeStore = ModelBase.props({
       addNodeToParent,
       updateNodeById,
       findNodeById,
+      findNodeByTitle,
       removeNodeFromTree,
       removeChildFromParent,
       changeNodeByPath,

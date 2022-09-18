@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { NodeData, TreeItem } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
@@ -31,6 +31,41 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   const { handleOpenEntityDialog, handleFlyTo } = props;
 
   const store = useStore();
+
+  const baseUpdateEntity = useCallback(
+    (updatedValue: ILayerImage) => {
+      store.discreteLayersStore.updateLayer(updatedValue);
+      store.discreteLayersStore.selectLayerByID(updatedValue.id);
+
+      store.catalogTreeStore.updateNodeById(updatedValue.id, updatedValue);
+
+      // After updating specific item REFRESH layerImages in order to present performed changes where it is relevant
+      store.discreteLayersStore.updateTabviewsData(updatedValue);
+      store.discreteLayersStore.refreshLayersImages();
+    },
+    [
+      store.discreteLayersStore.updateLayer,
+      store.discreteLayersStore.selectLayerByID,
+      store.catalogTreeStore.updateNodeById,
+      store.discreteLayersStore.updateTabviewsData,
+    ]
+  );
+
+  const baseFootprintShow = useCallback(
+    (isShown: boolean, selectedLayer: ILayerImage) => {
+      if (!isEmpty(selectedLayer)) {
+        store.discreteLayersStore.showFootprint(selectedLayer.id, isShown);
+        store.catalogTreeStore.updateNodeById(selectedLayer.id, {
+          ...selectedLayer,
+          footprintShown: isShown,
+        });
+      }
+    },
+    [
+      store.discreteLayersStore.showFootprint,
+      store.catalogTreeStore.updateNodeById,
+    ]
+  );
   
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {
@@ -127,26 +162,16 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
-        case UserAction.SYSTEM_ACTION_EDITENTITY: {
+        case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;
-
-          store.discreteLayersStore.updateLayer(inputValues);
-          store.discreteLayersStore.selectLayerByID(inputValues.id);
-
-          store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
+          baseUpdateEntity(inputValues);
           break;
         }
-        case UserAction.SYSTEM_ACTION_PUBLISHENTITY: {
+        case UserAction.SYSTEM_CALLBACK_PUBLISH: {
           const inputValues = data as unknown as ILayerImage;
           
-          store.discreteLayersStore.updateLayer(inputValues);
-          store.discreteLayersStore.selectLayerByID(inputValues.id);
+          baseUpdateEntity(inputValues);
           
-          // After updating specific item REFRESH layerImages in order to present performed changes where it is relevant
-          store.discreteLayersStore.refreshLayersImages();
-          // store.discreteLayersStore.updateTabviewsData(inputValues);
-          
-          store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
           const node = store.catalogTreeStore.findNodeById(inputValues.id);
 
           if (node) {
@@ -169,6 +194,16 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
               store.catalogTreeStore.setCatalogTreeData(newTree);
             }
           }
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_FLYTO: {
+          const selectedLayer = data.selectedLayer as ILayerImage;
+          baseFootprintShow(true, selectedLayer);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT: {
+          const selectedLayer = data.selectedLayer as ILayerImage;
+          baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
           break;
         }
         default:

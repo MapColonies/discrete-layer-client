@@ -16,8 +16,6 @@ export enum UserAction {
   SYSTEM_ACTION_FILTER = 'system_action.filter',
   SYSTEM_ACTION_FREETEXTSEARCH = 'system_action.freeTextSearch',
   SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND = 'system_action.sidebarCollapseExapnd',
-  SYSTEM_ACTION_EDITENTITY = 'system_action.editEntity',
-  SYSTEM_ACTION_PUBLISHENTITY = 'system_action.publishEntity',
 
   ENTITY_ACTION_LAYERRASTERRECORD_CREATE = 'entity_action.LayerRasterRecord.create',
   ENTITY_ACTION_LAYER3DRECORD_CREATE = 'entity_action.Layer3DRecord.create',
@@ -47,6 +45,11 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN = 'entity_action.LayerRasterRecord.moveDown',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM = 'entity_action.LayerRasterRecord.moveToBottom',
 
+    
+  SYSTEM_CALLBACK_EDIT = 'system_callback.editEntity',
+  SYSTEM_CALLBACK_PUBLISH = 'system_callback.publishEntity',
+  SYSTEM_CALLBACK_FLYTO = 'system_callback.flyToEntity',
+  SYSTEM_CALLBACK_SHOWFOOTPRINT = 'system_callback.showFootprint',
   /***  FOR FUTURE USE, ENTITY FIELD PERMISSION PATTERN EXAMPLE ***/
   // ENTITY_FIELD_ACTION_BESTRECORD_PRODUCTNAME_VIEW = 'entity_action.BestRecord.productName.view',
 }

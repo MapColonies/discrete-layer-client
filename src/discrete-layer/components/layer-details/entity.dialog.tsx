@@ -71,7 +71,7 @@ interface EntityDialogProps {
   isSelectedLayerUpdateMode?: boolean;
 }
 
-const buildRecord = (recordType: RecordType): ILayerImage => {
+export const buildRecord = (recordType: RecordType): ILayerImage => {
   const record = {} as Record<string, unknown>;
   switch (recordType) {
     case RecordType.RECORD_DEM:
@@ -401,7 +401,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         closeDialog();
         
         dispatchAction({ 
-          action: UserAction.SYSTEM_ACTION_EDITENTITY,
+          action: UserAction.SYSTEM_CALLBACK_EDIT,
           data: inputValues as ILayerImage 
         });
       }
