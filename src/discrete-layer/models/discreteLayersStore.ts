@@ -203,10 +203,12 @@ export const discreteLayersStore = ModelBase
             tab.selectedLayer = {...layer};
           }
           if(tab.layersImages){
-            const idx = tab.layersImages.findIndex((item) => item.id === layer.id);
-            if(idx){
-              tab.layersImages[idx] = {...layer};
-            }
+            tab.layersImages = tab.layersImages.map((item) => {
+              if(item.id === layer.id) {
+                return {...layer};
+              }
+              return item;
+            })
           }
 
         });

@@ -37,6 +37,7 @@ import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
 import { IconButton } from '@map-colonies/react-core';
+import { UserAction } from '../../models/userStore';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -276,11 +277,10 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       <FootprintRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          store.discreteLayersStore.showFootprint(
-                            data.id,
-                            value
-                          );
-                          data.footprintShown = value;
+                          dispatchAction({
+                            action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
+                            data: { selectedLayer: {...data, footprintShown: value } }
+                          })
                         }}
                       />,
                       <LayerImageRenderer
