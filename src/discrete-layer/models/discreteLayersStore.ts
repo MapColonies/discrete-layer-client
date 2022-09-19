@@ -208,7 +208,7 @@ export const discreteLayersStore = ModelBase
                 return {...layer};
               }
               return item;
-            })
+            });
           }
 
         });
