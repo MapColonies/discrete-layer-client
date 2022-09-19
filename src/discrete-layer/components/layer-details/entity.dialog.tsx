@@ -82,7 +82,7 @@ const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDe
   );
 };
 
-const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
+export const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
   const record = {} as Record<string, unknown>;
   switch (recordType) {
     case RecordType.RECORD_DEM:

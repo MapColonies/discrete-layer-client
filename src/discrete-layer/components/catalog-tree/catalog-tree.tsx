@@ -19,30 +19,28 @@ import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
-import { Error } from '../../../common/components/tree/statuses/error';
-import { Loading } from '../../../common/components/tree/statuses/loading';
+import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
-import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import { existStatus, getStatusColoredText, isUnpublished } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
-import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
+import { useStore } from '../../models/RootStore';
+import { UserAction } from '../../models/userStore';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLinkUrlWithToken } from '../helpers/layersUtils';
 import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
-import { IconButton } from '@map-colonies/react-core';
-import { UserAction } from '../../models/userStore';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
-const getMax = (valuesArr: number[]): number =>
-  valuesArr.reduce((prev, current) => (prev > current ? prev : current));
+const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current ? prev : current));
 const intialOrder = 0;
 const actionDismissibleRegex = new RegExp('actionDismissible');
 const nodeOutRegex = new RegExp('toolbarButton|rowContents');
@@ -211,7 +209,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     };
 
     if (errorSearch) {
-    return (
+      return (
         <Error
           className="errorMessage"
           message={errorSearch.response?.errors[0].message}
@@ -221,8 +219,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         />
       );
     }
-
-
 
     return (
       <>
@@ -346,12 +342,13 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
             />
           )}
         </Box>
-        {isBestInEditDialogOpen && (
+        {
+          isBestInEditDialogOpen &&
           <BestInEditDialog
             isOpen={isBestInEditDialogOpen}
             onSetOpen={setBestInEditDialogOpen}
           />
-        )}
+        }
       </>
     );
   }
