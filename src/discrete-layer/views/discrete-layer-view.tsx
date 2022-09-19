@@ -398,7 +398,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     dispatchAction({
       action: UserAction.SYSTEM_CALLBACK_FLYTO,
       data: { selectedLayer: store.discreteLayersStore.selectedLayer }
-    })
+    });
   }, []);
 
   const tabViews = [

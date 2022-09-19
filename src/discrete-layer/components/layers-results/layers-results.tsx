@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { ChangeDetectionStrategyType } from 'ag-grid-react';
 import { observer } from 'mobx-react-lite';
 import { isObject } from 'lodash';
 import { Box } from '@map-colonies/react-components';
@@ -31,7 +32,6 @@ import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
-import { ChangeDetectionStrategyType } from 'ag-grid-react';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
