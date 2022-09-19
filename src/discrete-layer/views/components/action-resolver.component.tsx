@@ -179,19 +179,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
               store.catalogTreeStore.addNodeToParent(node.node, "tab-views.catalog.top-categories.unpublished", true);
             } else  {
               const unpublishedNode = store.catalogTreeStore.findNodeByTitle("tab-views.catalog.top-categories.unpublished", true) as NodeData;
-
-              const filteredChildren = (get(unpublishedNode,'node.children') as TreeItem[]).filter(node => {
-                return node.id !== inputValues.id;
-              });
-
-              const unpublishedNewNode = {...unpublishedNode};
-              unpublishedNewNode.node.children = filteredChildren;
-
-              const newTree = store.catalogTreeStore.changeNodeByPath({
-                path: unpublishedNode.path,
-                newNode: unpublishedNewNode.node,
-              });
-              store.catalogTreeStore.setCatalogTreeData(newTree);
+              store.catalogTreeStore.removeChildFromParent(inputValues.id, unpublishedNode);
             }
           }
           break;
