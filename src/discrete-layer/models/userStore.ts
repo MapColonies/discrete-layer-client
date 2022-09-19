@@ -45,9 +45,8 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN = 'entity_action.LayerRasterRecord.moveDown',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM = 'entity_action.LayerRasterRecord.moveToBottom',
 
-    
   SYSTEM_CALLBACK_EDIT = 'system_callback.editEntity',
-  SYSTEM_CALLBACK_PUBLISH = 'system_callback.publishEntity',
+  SYSTEM_CALLBACK_PUBLISH = 'system_callback.publish',
   SYSTEM_CALLBACK_FLYTO = 'system_callback.flyToEntity',
   SYSTEM_CALLBACK_SHOWFOOTPRINT = 'system_callback.showFootprint',
   /***  FOR FUTURE USE, ENTITY FIELD PERMISSION PATTERN EXAMPLE ***/
