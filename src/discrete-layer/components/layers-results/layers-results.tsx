@@ -24,12 +24,14 @@ import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { isUnpublished } from '../../../common/helpers/style';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
+import { ChangeDetectionStrategyType } from 'ag-grid-react';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -56,7 +58,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       let matchesRes = true;
       source.forEach((srcFeat: ILayerImage) => {
         const match = target.find((targetFeat: ILayerImage) => {
-          return targetFeat.id === srcFeat.id;
+          return targetFeat.id === srcFeat.id && isUnpublished(targetFeat as any) === isUnpublished(srcFeat as any);
         });
         matchesRes = matchesRes && isObject(match);
       });
@@ -245,6 +247,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       customTooltip: CustomTooltip,
       actionsRenderer: ActionsRenderer,
     },
+    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
     rowSelection: 'single',
