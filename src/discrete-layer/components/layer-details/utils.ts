@@ -35,9 +35,12 @@ import {
 } from './entity-types-keys';
 import moment, { unitOfTime } from 'moment';
 
-export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entityDescriptors: EntityDescriptorModelType[]): IRecordCategoryFieldsInfo[] => {
+export const getEntityDescriptors = (
+  layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+  entityDescriptors: EntityDescriptorModelType[]
+): IRecordCategoryFieldsInfo[] => {
   let entityDesc;
-  switch (layerRecord.__typename) {
+  switch (layerRecordTypename) {
     case 'LayerDemRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswDemCatalogRecord')
       break;
@@ -60,8 +63,11 @@ export const getEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entit
   return (get(entityDesc, 'categories') ?? []) as IRecordCategoryFieldsInfo[];
 };
 
-export const getFlatEntityDescriptors = (layerRecord: LayerMetadataMixedUnion, entityDescriptors: EntityDescriptorModelType[]): FieldConfigModelType[] => {
-  const descriptors = getEntityDescriptors(layerRecord, entityDescriptors);
+export const getFlatEntityDescriptors = (
+  layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+  entityDescriptors: EntityDescriptorModelType[]
+): FieldConfigModelType[] => {
+  const descriptors = getEntityDescriptors(layerRecordTypename, entityDescriptors);
   const flat: FieldConfigModelType[] = [];
   descriptors.forEach((category: CategoryConfigModelType) => {
     category.fields?.forEach((field: FieldConfigModelType) => {
@@ -275,7 +281,7 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
     const fraction = fieldOperation.fraction;
   
     // Handling regular number fields
-    if (fraction === null || typeof fraction === 'undefined'){
+    if (fraction === null || typeof fraction === 'undefined') {
       recordCopy[field.fieldName as string] = fieldOperation.value;
       return recordCopy;
     }
@@ -319,7 +325,7 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
     const fraction = fieldOperation.fraction;
 
     // Handling regular number fields
-    if (fraction === null || typeof fraction === 'undefined'){
+    if (fraction === null || typeof fraction === 'undefined') {
       recordCpy[field.fieldName as string] = recordCpy[field.fieldName as string] as number + fieldOperation.value;
       return recordCpy;
     }

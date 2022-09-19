@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { types, getParent, flow } from 'mobx-state-tree';
-import { cloneDeep, get, isEmpty } from 'lodash';
 import { createIntl } from 'react-intl';
 import {
   changeNodeAtPath,
@@ -11,20 +9,23 @@ import {
   GetNodeKeyFunction,
   NodeData,
   removeNodeAtPath,
-  TreePath,
   FullTree,
+  TreePath,
 } from 'react-sortable-tree';
-import { ResponseState } from '../../common/models/response-state.enum';
+import { types, getParent, flow } from 'mobx-state-tree';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import CONFIG from '../../common/config';
-import { getLayerLink } from '../components/helpers/layersUtils';
 import { GroupBy, groupBy, KeyPredicate } from '../../common/helpers/group-by';
 import MESSAGES from '../../common/i18n';
-import { ModelBase } from './ModelBase';
-import { IRootStore, RootStoreType } from './RootStore';
-import { ILayerImage } from './layerImage';
-import { RecordType } from './';
+import { ResponseState } from '../../common/models/response-state.enum';
+import { getLayerLink } from '../components/helpers/layersUtils';
+import { existStatus, isUnpublished } from '../../common/helpers/style';
 import { isBest } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
+import { ILayerImage } from './layerImage';
+import { ModelBase } from './ModelBase';
+import { IRootStore, RootStoreType } from './RootStore';
+import { RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
@@ -269,19 +270,25 @@ export const catalogTreeStore = ModelBase.props({
               // @ts-ignore
               const itemObjectBag = item as Record<string, unknown>;
               return (
-                'status' in itemObjectBag &&
-                itemObjectBag.status === 'UNPUBLISHED'
+                existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
               );
             });
-            const parentUnpublished = buildParentTreeNode(
-              arrUnpublished,
-              intl.formatMessage({
+
+            const parentUnpublished = {
+              title: intl.formatMessage({
                 id: 'tab-views.catalog.top-categories.unpublished',
               }),
-              /* eslint-disable */
-              { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
-              /* eslint-enable */
-            );
+              isGroup: true,
+              children: [
+                ...arrUnpublished.map((item) => {
+                  return {
+                    ...item,
+                    title: getLayerTitle(item),
+                    isSelected: false,
+                  };
+                }),
+              ],
+            };
 
             // get BESTs shortcuts
             const arrBests = layersList.filter(isBest);
@@ -352,11 +359,11 @@ export const catalogTreeStore = ModelBase.props({
      */
     function changeNodeByPath(
       data: TreePath & {
-          treeData?: TreeItem[] | FullTree,
+          treeData?: TreeItem[],
           newNode: any,
           ignoreCollapsed?: boolean,
       }): TreeItem[] {
-      return changeNodeAtPath({...data, getNodeKey: keyFromTreeIndex, treeData: self.catalogTreeData as TreeItem[]});
+      return changeNodeAtPath({ ...data, getNodeKey: keyFromTreeIndex, treeData: data.treeData ?? self.catalogTreeData as TreeItem[]});
     };
 
     /**
@@ -472,7 +479,7 @@ export const catalogTreeStore = ModelBase.props({
      */
     function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
-        let newTreeData: TreeItem[] = self.catalogTreeData as TreeItem[];
+        let newTreeData: TreeItem[] = [...self.catalogTreeData as TreeItem[]] ;
 
         find({
           treeData: self.catalogTreeData as TreeItem[],
@@ -492,7 +499,7 @@ export const catalogTreeStore = ModelBase.props({
           const { parentNode, path: parentPath } = getParentNode(item, newTreeData);
           
           // Re-sort parent group children after the changes (like if title has changed)
-          const sortedParentNode = sortGroupChildrenByFieldValue(parentNode as TreeItem);
+          const sortedParentNode = sortGroupChildrenByFieldValue(parentNode?.node as TreeItem);
 
           newTreeData = changeNodeByPath({
             newNode: sortedParentNode,
@@ -551,6 +558,7 @@ export const catalogTreeStore = ModelBase.props({
       addNodeToParent,
       updateNodeById,
       findNodeById,
+      findNodeByTitle,
       removeNodeFromTree,
       removeChildFromParent,
       changeNodeByPath,

@@ -1,0 +1,31 @@
+#publishDialog .closeIcon {
+  margin-left: auto;
+}
+
+body[dir='rtl'] #publishDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+#publishDialog .dialogBody {
+  height: 100px;
+  width: 360px;
+  display: flex;
+  align-items: center;
+}
+
+#publishDialog .icon {
+  color: var(--mdc-theme-gc-warning-high);
+  font-size: 32px;
+  margin: 12px;
+}
+
+#publishDialog .errors {
+  margin: 4px;
+  height: 52px;
+  width: 280px;
+}
+
+#publishDialog .loading {
+  display: flex;
+}

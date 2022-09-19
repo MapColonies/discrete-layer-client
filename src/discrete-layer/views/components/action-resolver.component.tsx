@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { NodeData, TreeItem } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
+import { get, isEmpty } from 'lodash';
+import { existStatus, isUnpublished } from '../../../common/helpers/style';
+import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
   BestRecordModelKeys,
   LayerRasterRecordModelKeys,
@@ -10,12 +14,11 @@ import {
   VectorBestRecordModelKeys
 } from '../../components/layer-details/entity-types-keys';
 import { cleanUpEntity, downloadJSONToClient } from '../../components/layer-details/utils'
-import { useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
-import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
-import { UserAction } from '../../models/userStore';
 import { ILayerImage } from '../../models/layerImage';
+import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
+import { useStore } from '../../models/RootStore';
+import { UserAction } from '../../models/userStore';
 
 const FIRST = 0;
 
@@ -28,6 +31,41 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   const { handleOpenEntityDialog, handleFlyTo } = props;
 
   const store = useStore();
+
+  const baseUpdateEntity = useCallback(
+    (updatedValue: ILayerImage) => {
+      store.discreteLayersStore.updateLayer(updatedValue);
+      store.discreteLayersStore.selectLayerByID(updatedValue.id);
+
+      store.catalogTreeStore.updateNodeById(updatedValue.id, updatedValue);
+
+      // After updating specific item REFRESH layerImages in order to present performed changes where it is relevant
+      store.discreteLayersStore.updateTabviewsData(updatedValue);
+      store.discreteLayersStore.refreshLayersImages();
+    },
+    [
+      store.discreteLayersStore.updateLayer,
+      store.discreteLayersStore.selectLayerByID,
+      store.catalogTreeStore.updateNodeById,
+      store.discreteLayersStore.updateTabviewsData,
+    ]
+  );
+
+  const baseFootprintShow = useCallback(
+    (isShown: boolean, selectedLayer: ILayerImage) => {
+      if (!isEmpty(selectedLayer)) {
+        store.discreteLayersStore.showFootprint(selectedLayer.id, isShown);
+        store.catalogTreeStore.updateNodeById(selectedLayer.id, {
+          ...selectedLayer,
+          footprintShown: isShown,
+        });
+      }
+    },
+    [
+      store.discreteLayersStore.showFootprint,
+      store.catalogTreeStore.updateNodeById,
+    ]
+  );
   
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {
@@ -116,22 +154,56 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
           break;
-        case 'LayerRasterRecord.save-metadata':
-        case 'Layer3DRecord.save-metadata':
-        case 'LayerDemRecord.save-metadata':
-        case 'BestRecord.save-metadata':
-        case 'VectorBestRecord.save-metadata':
-        case 'QuantizedMeshBestRecord.save-metadata':
+        case 'LayerRasterRecord.saveMetadata':
+        case 'Layer3DRecord.saveMetadata':
+        case 'LayerDemRecord.saveMetadata':
+        case 'BestRecord.saveMetadata':
+        case 'VectorBestRecord.saveMetadata':
+        case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
-        case UserAction.BACKEND_OPERATION_EDIT_ENTITY: {
+        case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;
+          baseUpdateEntity(inputValues);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_PUBLISH: {
+          const inputValues = data as unknown as ILayerImage;
+          
+          baseUpdateEntity(inputValues);
+          
+          const node = store.catalogTreeStore.findNodeById(inputValues.id);
 
-          store.discreteLayersStore.updateLayer(inputValues);
-          store.discreteLayersStore.selectLayerByID(inputValues.id);
-        
-          // Update catalog-tree
-          store.catalogTreeStore.updateNodeById(inputValues.id, inputValues);
+          if (node) {
+            if (existStatus(inputValues as unknown as Record<string, unknown>) && isUnpublished(inputValues as unknown as Record<string, unknown>)) {
+              store.catalogTreeStore.addNodeToParent(node.node, "tab-views.catalog.top-categories.unpublished", true);
+            } else  {
+              const unpublishedNode = store.catalogTreeStore.findNodeByTitle("tab-views.catalog.top-categories.unpublished", true) as NodeData;
+
+              const filteredChildren = (get(unpublishedNode,'node.children') as TreeItem[]).filter(node => {
+                return node.id !== inputValues.id;
+              });
+
+              const unpublishedNewNode = {...unpublishedNode};
+              unpublishedNewNode.node.children = filteredChildren;
+
+              const newTree = store.catalogTreeStore.changeNodeByPath({
+                path: unpublishedNode.path,
+                newNode: unpublishedNewNode.node,
+              });
+              store.catalogTreeStore.setCatalogTreeData(newTree);
+            }
+          }
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_FLYTO: {
+          const selectedLayer = data.selectedLayer as ILayerImage;
+          baseFootprintShow(true, selectedLayer);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT: {
+          const selectedLayer = data.selectedLayer as ILayerImage;
+          baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
           break;
         }
         default:

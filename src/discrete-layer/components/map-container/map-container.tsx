@@ -93,7 +93,7 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
           },
         ]);
 
-        if(!resultsOpen){
+        if (!resultsOpen) {
           setResultsOpen(true);
         }
       },

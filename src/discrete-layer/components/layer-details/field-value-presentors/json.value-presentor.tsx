@@ -55,7 +55,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
       };
 
       try {
-        if(jsonValue === '{}' && fieldInfo.isRequired as boolean){
+        if (jsonValue === '{}' && fieldInfo.isRequired as boolean) {
           throw new Error('Required field');
         }
 

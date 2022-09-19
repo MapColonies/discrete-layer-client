@@ -23,7 +23,7 @@ export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, sty
   return (
     <Box style={style}>
       <Tooltip content={thumbnailUrl !== undefined ? img(thumbnailUrl) : tooltip}>
-        <IconButton className={icon}/>
+        <IconButton className={icon} style={'color' in (style ?? {}) ? { color: style?.color as string } : undefined}/>
       </Tooltip>
     </Box>
   );

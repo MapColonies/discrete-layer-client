@@ -2,7 +2,6 @@
 import React from 'react';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
-
 interface TypeValuePresentorProps {
   value?: string;
 }

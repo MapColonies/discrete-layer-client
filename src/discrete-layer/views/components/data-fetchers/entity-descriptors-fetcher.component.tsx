@@ -64,6 +64,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           required
           json
         }
+        default
       }
       __typename
     }`));

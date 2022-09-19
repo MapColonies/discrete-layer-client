@@ -40,7 +40,7 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
   };
 
   const handleSwitchClick = (): void => {
-    if (userRole === UserRole.USER){
+    if (userRole === UserRole.USER) {
       setIsDialogOpen(!isDialogOpen);
     } else {
       setUserRole(UserRole.USER);
