@@ -3,7 +3,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { Typography } from '@map-colonies/react-core';
 import { getStatusColoredText } from '../../../helpers/style';
 
-export const StatusStyledRenderer: React.FC<ICellRendererParams> = (props) => {
+export const StyledByDataRenderer: React.FC<ICellRendererParams> = (props) => {
 
   return (
     <Typography tag='span' style={getStatusColoredText(props.data)}>

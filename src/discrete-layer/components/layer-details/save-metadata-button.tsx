@@ -21,7 +21,7 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
   // Sorting out non-relevant properties from metadata
   const getfFilteredMetadataToDownload = useCallback(() => {
     const descriptors = getFlatEntityDescriptors(
-      metadata,
+      metadata.__typename,
       store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
     );
 

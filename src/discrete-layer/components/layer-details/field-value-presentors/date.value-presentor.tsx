@@ -32,18 +32,18 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
   const shouldShowTime = useMemo(() => fieldInfo.dateGranularity === DateGranularityType.DATE_AND_TIME, [fieldInfo]);
 
   const inputValue = (): string | undefined => {
-    if(innerValue === null || !moment(innerValue).isValid()){
+    if (innerValue === null || !moment(innerValue).isValid()) {
       return undefined;
     } 
     return dateFormatter(innerValue);
   }
 
   const getDate = (): Date | null => {
-    if(innerValue !== null){
+    if (innerValue !== null) {
       return new Date(dateSerializer(innerValue))
     }
     return null;
-  }
+  };
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (

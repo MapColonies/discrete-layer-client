@@ -18,19 +18,20 @@ import {
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
-import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
-import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
-import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentor';
-import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentor';
-import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentor';
-import { TypeValuePresentorComponent } from  './field-value-presentors/type.value-presentor';
-import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentor';
-import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
 import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
+import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
+import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
-import { getBasicType, getEntityDescriptors } from './utils';
+import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentor';
+import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentor';
+import { StatusValuePresentorComponent } from './field-value-presentors/status.value-presentor';
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import { TypeValuePresentorComponent } from  './field-value-presentors/type.value-presentor';
+import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentor';
+import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentor';
+import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 import { EntityFormikHandlers } from './layer-datails-form';
+import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
 
@@ -101,9 +102,12 @@ export const getValuePresentor = (
       );
     case 'RecordType':
     case 'ProductType':
-    case 'RecordStatus':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
+      );
+    case 'RecordStatus':
+      return (
+        <StatusValuePresentorComponent value={value as string}></StatusValuePresentorComponent>
       );
     default:
       return (
@@ -177,7 +181,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
   );
 
   const fullInputs = useMemo(() => {
-    const fullArray = layerRecord && getEntityDescriptors(layerRecord, entityDescriptors);
+    const fullArray = layerRecord && getEntityDescriptors(layerRecord.__typename, entityDescriptors);
     return (
       fullArray?.map((category) => {
         return renderCategory(category);
@@ -187,7 +191,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
 
   const briefInputs = useMemo(() => {
     const briefArr = layerRecord &&
-      getEntityDescriptors(layerRecord, entityDescriptors)
+      getEntityDescriptors(layerRecord.__typename, entityDescriptors)
       .filter((item: unknown) => (item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
     return (
       briefArr?.map((category) => {

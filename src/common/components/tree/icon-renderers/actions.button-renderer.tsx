@@ -17,7 +17,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
   
-  if(typeof actions !== 'undefined'){
+  if (typeof actions !== 'undefined') {
     actions.forEach(actionGroup => {
       frequentActions = [
         ...frequentActions,

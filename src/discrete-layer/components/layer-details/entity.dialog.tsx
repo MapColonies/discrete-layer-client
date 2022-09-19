@@ -30,19 +30,23 @@ import {
   ValidationValueType,
   LayerDemRecordModel
 } from '../../models';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import {
   Layer3DRecordInput,
   LayerDemRecordInput,
   LayerRasterRecordInput,
 } from '../../models/RootStore.base';
+import { UserAction } from '../../models/userStore';
 import {
   FieldConfigModelKeys,
   Layer3DRecordModelKeys,
   LayerDemRecordModelKeys,
   LayerRasterRecordModelKeys,
 } from './entity-types-keys';
+import { LayersDetailsComponent } from './layer-details';
 import { IRecordFieldInfo } from './layer-details.field-info';
+import EntityForm from './layer-datails-form';
 import {
   getFlatEntityDescriptors,
   getPartialRecord,
@@ -50,12 +54,8 @@ import {
   getValidationType
 } from './utils';
 import suite from './validate';
-import EntityForm from './layer-datails-form';
-import { LayersDetailsComponent } from './layer-details';
 
 import './entity.dialog.css';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { UserAction } from '../../models/userStore';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
@@ -71,7 +71,18 @@ interface EntityDialogProps {
   isSelectedLayerUpdateMode?: boolean;
 }
 
-export const buildRecord = (recordType: RecordType): ILayerImage => {
+const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDescriptorModelType[]): void => {
+  getFlatEntityDescriptors(
+    record['__typename'] as "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+    descriptors
+  ).filter(
+    field => field.default
+  ).forEach(
+    descriptor => record[descriptor.fieldName as string] = descriptor.default
+  );
+};
+
+const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
   const record = {} as Record<string, unknown>;
   switch (recordType) {
     case RecordType.RECORD_DEM:
@@ -101,11 +112,12 @@ export const buildRecord = (recordType: RecordType): ILayerImage => {
     default:
       break;
   }
+
+  setDefaultValues(record, descriptors);
+
   record.id = DEFAULT_ID;
-  record.srsId = '4326';
-  record.srsName = 'WGS84GEO';
-  record.producerName = 'IDFMU';
   record.type = recordType;
+
   return record as unknown as ILayerImage;
 };
 
@@ -128,6 +140,10 @@ const getLabel = (recordType: RecordType): string => {
 export const EntityDialog: React.FC<EntityDialogProps> = observer(
   (props: EntityDialogProps) => {
 
+    const store = useStore();
+    const intl = useIntl();
+    const mutationQuery = useQuery();
+
     const dialogContainerRef = useRef<HTMLDivElement>(null);
 
     const decideMode = useCallback(() => {
@@ -143,11 +159,8 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [layerRecord] = useState<LayerMetadataMixedUnion>(
       props.layerRecord && mode !== Mode.UPDATE
         ? cloneDeep(props.layerRecord)
-        : buildRecord(recordType)
+        : buildRecord(recordType, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[])
     );
-    const mutationQuery = useQuery();
-    const store = useStore();
-    const intl = useIntl();
     const [vestValidationResults, setVestValidationResults] = useState<
       DraftResult
     >({} as DraftResult);
@@ -175,7 +188,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     };
 
     useEffect(() => {
-      if(!isEmpty(descriptors) && !isEmpty(layerRecord)) {
+      if (!isEmpty(descriptors) && !isEmpty(layerRecord)) {
         setIsAllInfoReady(true);
       }
     }, [descriptors, layerRecord]);
@@ -183,19 +196,18 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     useLayoutEffect(() => {
       const CONTENT_HEIGHT_VAR_NAME = '--content-height';
       /* eslint-disable */
-      if(dialogContainerRef.current !== null){
+      if (dialogContainerRef.current !== null) {
         const baseContentHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--base-content-height');
         const currentIngestionFieldsHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--ingestion-fields-height');
         const currentUpdateHeaderHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--update-layer-header-height');
   
-        switch(mode){
+        switch(mode) {
           case Mode.NEW:
             dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentIngestionFieldsHeight})`);
             break;
           case Mode.UPDATE:
             dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentUpdateHeaderHeight} - ${currentIngestionFieldsHeight})`);        
             break;
-  
           default:
             dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, baseContentHeight);
             break;
@@ -227,7 +239,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     useEffect(() => {
       const descriptors = getFlatEntityDescriptors(
-        layerRecord,
+        layerRecord.__typename,
         store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
       );
 

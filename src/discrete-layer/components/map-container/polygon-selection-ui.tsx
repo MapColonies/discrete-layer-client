@@ -48,7 +48,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
     setMenuOpen(!menuOpen);
-    if(handleOtherDrawers) handleOtherDrawers();
+    if (handleOtherDrawers) handleOtherDrawers();
   };
 
   const handleClose = (): void => {
