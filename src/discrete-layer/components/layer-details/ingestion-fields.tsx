@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues } from 'formik';
 import { Button, Icon, Tooltip, Typography } from '@map-colonies/react-core';
@@ -24,6 +24,7 @@ import { StringValuePresentorComponent } from './field-value-presentors/string.v
 
 import './ingestion-fields.css';
 import { ILayerImage } from '../../models/layerImage';
+import { importJSONFileFromClient } from './utils';
 
 const DIRECTORY = 0;
 const FILES = 1;
@@ -155,11 +156,16 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
   formik,
 }) => {
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
+  const [isImportDisabled, setIsImportDisabled] = useState(true);
   const [selection, setSelection] = useState<Selection>({
     files: [],
     folderChain: [],
     metadata: { recordModel: {} as LayerMetadataMixedUnion, error: null },
   });
+
+  useEffect(() => {
+    setIsImportDisabled(!selection.files.length);
+  }, [selection])
 
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
@@ -195,38 +201,40 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
             formik={formik as EntityFormikHandlers}
           />
         </Box>
-        <Box className="ingestionButton">
-          <Button
-            raised
-            type="button"
-            onClick={(): void => {
-              setFilePickerDialogOpen(true);
-            }}
-          >
-            <FormattedMessage id="general.choose-btn.text" />
-          </Button>
-        </Box>
-        <Box className="uploadMetadataButton">
-         <input type='file' accept=".json" onChangeCapture={(e: React.ChangeEvent<HTMLInputElement>): void => {
-          if(e.currentTarget.files) {
-            const file = e.currentTarget.files[0];
-            const fileReader = new FileReader();
-            fileReader.readAsText(file);
-
-            fileReader.addEventListener('load' , (e) => {
-              console.log(JSON.parse(e.target?.result as string) as ILayerImage);
-              if(reloadFormMetadata){
-                reloadFormMetadata(
-                  {
-                    directory: '',
-                    fileNames: ''
-                  },
-                  {recordModel: JSON.parse(e.target?.result as string) as ILayerImage } as MetadataFile
-                );
-              }
-            })
-          }
-         }}/>
+        <Box className='ingestionButtonsContainer'>
+          <Box className="ingestionButton">
+            <Button
+              raised
+              type="button"
+              onClick={(): void => {
+                setFilePickerDialogOpen(true);
+              }}
+            >
+              <FormattedMessage id="general.choose-btn.text" />
+            </Button>
+          </Box>
+          <Box className="uploadMetadataButton">
+            <Button
+              outlined
+              type="button"
+              disabled={isImportDisabled}
+              onClick={(): void => {
+                importJSONFileFromClient((e) => {
+                  if(reloadFormMetadata){
+                    reloadFormMetadata(
+                      {
+                        directory: values.directory as string,
+                        fileNames: values.fileNames as string
+                      },
+                      { recordModel: JSON.parse(e.target?.result as string) as ILayerImage } as MetadataFile
+                    );
+                  }
+                })
+              }}
+            >
+              <FormattedMessage id="ingestion.button.import-metadata" />
+            </Button>
+          </Box>
         </Box>
       </Box>
       {

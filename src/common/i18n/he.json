@@ -135,6 +135,7 @@
   "field-names.ingestion.directory": "נתיב מלא",
   "field-names.ingestion.fileNames": "שמות הקבצים",
   "ingestion.error.invalid-metadata": "קובץ מטא-דאטה בפורמט לא תקין",
+  "ingestion.button.import-metadata": "בחר מטא-דאטה",
 
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
