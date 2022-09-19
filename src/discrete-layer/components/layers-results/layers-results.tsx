@@ -18,7 +18,7 @@ import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/a
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
-import { StatusStyledRenderer } from '../../../common/components/grid/cell-renderer/status-styled.cell-renderer';
+import { StyledByDataRenderer } from '../../../common/components/grid/cell-renderer/styled-by-data.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import CONFIG from '../../../common/config';
@@ -188,7 +188,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       }),
       width: 180,
       field: 'productName',
-      cellRenderer: 'statusStyledRenderer',
+      cellRenderer: 'styledByDataRenderer',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
@@ -241,7 +241,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
       productTypeRenderer: ProductTypeRenderer,
-      statusStyledRenderer: StatusStyledRenderer,
+      styledByDataRenderer: StyledByDataRenderer,
       customTooltip: CustomTooltip,
       actionsRenderer: ActionsRenderer,
     },
