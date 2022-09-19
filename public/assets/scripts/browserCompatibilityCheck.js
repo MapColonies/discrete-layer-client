@@ -17,7 +17,7 @@ var ERROR_CODES = {
 
 if (!isEngineChromium || !isBrowserVersionSupported) {
   var err = '';
-  if(isEngineChromium) {
+  if (isEngineChromium) {
     err = ERROR_CODES.BROWSER_VERSION_TOO_OLD;
   } else {
     err = ERROR_CODES.BROWSER_NOT_SUPPORTED;

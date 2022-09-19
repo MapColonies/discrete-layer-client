@@ -9,12 +9,13 @@ import { LayerMetadataMixedUnion } from './LayerMetadataMixedModelSelector';
 export type ILayerImage = LayerMetadataMixedUnion;
 
 export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylined = false, isConvexHull = false) : Feature | FeatureCollection => {
-  if(layer.footprint === undefined)
+  if (layer.footprint === undefined) {
     return {
       type: 'Feature',
       // @ts-ignore
       geometry: null
     };
+  }
 
   if (isBbox) {
     let geometry: Geometry = layer.footprint as Geometry;
@@ -45,8 +46,7 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylin
         description: layer.description,
       }
     };
-  }
-  else {
+  } else {
     let geometry: Geometry = layer.footprint as Geometry;
     if (isConvexHull) {
       // @ts-ignore
@@ -62,9 +62,8 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylin
           description: layer.description,
         },
       };
-    }
-    else {
-      if(isPolylined){
+    } else {
+      if (isPolylined) {
         return {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -75,8 +74,7 @@ export const getLayerFootprint = (layer: ILayerImage, isBbox: boolean, isPolylin
             description: layer.description,
           },
         } as Feature
-      }
-      else {
+      } else {
         return {
           type: 'Feature',
           geometry: { 

@@ -188,7 +188,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     };
 
     useEffect(() => {
-      if(!isEmpty(descriptors) && !isEmpty(layerRecord)) {
+      if (!isEmpty(descriptors) && !isEmpty(layerRecord)) {
         setIsAllInfoReady(true);
       }
     }, [descriptors, layerRecord]);
@@ -196,12 +196,12 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     useLayoutEffect(() => {
       const CONTENT_HEIGHT_VAR_NAME = '--content-height';
       /* eslint-disable */
-      if(dialogContainerRef.current !== null){
+      if (dialogContainerRef.current !== null) {
         const baseContentHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--base-content-height');
         const currentIngestionFieldsHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--ingestion-fields-height');
         const currentUpdateHeaderHeight = getComputedStyle(dialogContainerRef.current).getPropertyValue('--update-layer-header-height');
   
-        switch(mode){
+        switch(mode) {
           case Mode.NEW:
             dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentIngestionFieldsHeight})`);
             break;

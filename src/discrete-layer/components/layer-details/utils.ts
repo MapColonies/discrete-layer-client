@@ -281,7 +281,7 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
     const fraction = fieldOperation.fraction;
   
     // Handling regular number fields
-    if (fraction === null || typeof fraction === 'undefined'){
+    if (fraction === null || typeof fraction === 'undefined') {
       recordCopy[field.fieldName as string] = fieldOperation.value;
       return recordCopy;
     }
@@ -325,7 +325,7 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
     const fraction = fieldOperation.fraction;
 
     // Handling regular number fields
-    if (fraction === null || typeof fraction === 'undefined'){
+    if (fraction === null || typeof fraction === 'undefined') {
       recordCpy[field.fieldName as string] = recordCpy[field.fieldName as string] as number + fieldOperation.value;
       return recordCpy;
     }

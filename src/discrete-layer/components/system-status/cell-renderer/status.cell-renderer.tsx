@@ -56,7 +56,7 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   const calcStatusWidth = (statusCount: StatusCountType): number => {
     const { taskCount } = jobData;
 
-    if(taskCount === NO_DATA) return NO_WIDTH;
+    if (taskCount === NO_DATA) return NO_WIDTH;
 
     return ((statusCount as number) / (taskCount as number)) * STATUS_BAR_WIDTH;
   };
@@ -86,7 +86,7 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
     const jobStatusFinal = FINAL_STATUSES.find(finalStatus => finalStatus === status);
 
     // If job status is a final status - we should return a full bar with its color.
-    if(typeof jobStatusFinal !== 'undefined'){
+    if (typeof jobStatusFinal !== 'undefined') {
       return getSectionComponent(jobStatusFinal, STATUS_BAR_WIDTH);
     }
 
