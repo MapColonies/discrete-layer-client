@@ -71,7 +71,18 @@ interface EntityDialogProps {
   isSelectedLayerUpdateMode?: boolean;
 }
 
-const buildRecord = (recordType: RecordType): ILayerImage => {
+const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDescriptorModelType[]): void => {
+  getFlatEntityDescriptors(
+    record['__typename'] as "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+    descriptors
+  ).filter(
+    field => field.default
+  ).forEach(
+    descriptor => record[descriptor.fieldName as string] = descriptor.default
+  );
+};
+
+const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
   const record = {} as Record<string, unknown>;
   switch (recordType) {
     case RecordType.RECORD_DEM:
@@ -101,11 +112,12 @@ const buildRecord = (recordType: RecordType): ILayerImage => {
     default:
       break;
   }
+
+  setDefaultValues(record, descriptors);
+
   record.id = DEFAULT_ID;
-  record.srsId = '4326';
-  record.srsName = 'WGS84GEO';
-  record.producerName = 'IDFMU';
   record.type = recordType;
+
   return record as unknown as ILayerImage;
 };
 
@@ -128,6 +140,10 @@ const getLabel = (recordType: RecordType): string => {
 export const EntityDialog: React.FC<EntityDialogProps> = observer(
   (props: EntityDialogProps) => {
 
+    const store = useStore();
+    const intl = useIntl();
+    const mutationQuery = useQuery();
+
     const dialogContainerRef = useRef<HTMLDivElement>(null);
 
     const decideMode = useCallback(() => {
@@ -143,11 +159,8 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [layerRecord] = useState<LayerMetadataMixedUnion>(
       props.layerRecord && mode !== Mode.UPDATE
         ? cloneDeep(props.layerRecord)
-        : buildRecord(recordType)
+        : buildRecord(recordType, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[])
     );
-    const mutationQuery = useQuery();
-    const store = useStore();
-    const intl = useIntl();
     const [vestValidationResults, setVestValidationResults] = useState<
       DraftResult
     >({} as DraftResult);
@@ -195,7 +208,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
           case Mode.UPDATE:
             dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, `calc(${baseContentHeight} - ${currentUpdateHeaderHeight} - ${currentIngestionFieldsHeight})`);        
             break;
-  
           default:
             dialogContainerRef.current.style.setProperty(CONTENT_HEIGHT_VAR_NAME, baseContentHeight);
             break;
@@ -227,7 +239,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     useEffect(() => {
       const descriptors = getFlatEntityDescriptors(
-        layerRecord,
+        layerRecord.__typename,
         store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
       );
 

@@ -177,7 +177,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
   );
 
   const fullInputs = useMemo(() => {
-    const fullArray = layerRecord && getEntityDescriptors(layerRecord, entityDescriptors);
+    const fullArray = layerRecord && getEntityDescriptors(layerRecord.__typename, entityDescriptors);
     return (
       fullArray?.map((category) => {
         return renderCategory(category);
@@ -187,7 +187,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
 
   const briefInputs = useMemo(() => {
     const briefArr = layerRecord &&
-      getEntityDescriptors(layerRecord, entityDescriptors)
+      getEntityDescriptors(layerRecord.__typename, entityDescriptors)
       .filter((item: unknown) => (item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
     return (
       briefArr?.map((category) => {
