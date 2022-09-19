@@ -1,6 +1,6 @@
-import { IconButton, Tooltip } from '@map-colonies/react-core';
 import React, { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { EntityDescriptorModelType, useStore } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -18,11 +18,10 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
   const intl = useIntl();
   const store = useStore();
 
+  // Sorting out non-relevant properties from metadata
   const getfFilteredMetadataToDownload = useCallback(() => {
-    // Sorting out non-relevant properties from metadata
-
     const descriptors = getFlatEntityDescriptors(
-      metadata,
+      metadata.__typename,
       store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
     );
 
@@ -49,18 +48,18 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
         data: action.data,
       } as IDispatchAction
     );
-  }
+  };
 
   const metadataExporter = useMemo((): JSX.Element => {
     return (
       <Tooltip
-        content={intl.formatMessage({ id: 'action.save-metadata.tooltip' })}
+        content={intl.formatMessage({ id: 'action.saveMetadata.tooltip' })}
       >
         <IconButton
           className={`mc-icon-Status-Downloads glow-missing-icon ${className}`}
-          label="save-metadata"
+          label="SAVE METADATA"
           onClick={(): void =>
-             dispatchAction({ action: `${metadata.__typename}.save-metadata`, data: filteredMetadataToDownload })
+             dispatchAction({ action: `${metadata.__typename}.saveMetadata`, data: filteredMetadataToDownload })
           }
         />
       </Tooltip>

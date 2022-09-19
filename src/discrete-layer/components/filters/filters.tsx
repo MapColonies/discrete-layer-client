@@ -86,7 +86,7 @@ export const Filters: React.FC<FiltersProps> = (
             initialValues={filterValues}
             enableReinitialize={true}
             innerRef={instance=>{
-              if (instance){
+              if (instance) {
                 formikRef.current=instance;
               }
             }}

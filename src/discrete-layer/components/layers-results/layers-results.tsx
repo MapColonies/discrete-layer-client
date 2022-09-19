@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { ChangeDetectionStrategyType } from 'ag-grid-react';
 import { observer } from 'mobx-react-lite';
 import { isObject } from 'lodash';
 import { Box } from '@map-colonies/react-components';
@@ -18,11 +19,13 @@ import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/a
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
+import { StyledByDataRenderer } from '../../../common/components/grid/cell-renderer/styled-by-data.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { isUnpublished } from '../../../common/helpers/style';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
@@ -55,7 +58,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       let matchesRes = true;
       source.forEach((srcFeat: ILayerImage) => {
         const match = target.find((targetFeat: ILayerImage) => {
-          return targetFeat.id === srcFeat.id;
+          return targetFeat.id === srcFeat.id && isUnpublished(targetFeat as any) === isUnpublished(srcFeat as any);
         });
         matchesRes = matchesRes && isObject(match);
       });
@@ -187,13 +190,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       }),
       width: 180,
       field: 'productName',
+      cellRenderer: 'styledByDataRenderer',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
       tooltipComponentParams: { color: '#ececec' }
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'results.fields.update-date.label',
       }),
       width: 140,
@@ -239,9 +243,11 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
       productTypeRenderer: ProductTypeRenderer,
+      styledByDataRenderer: StyledByDataRenderer,
       customTooltip: CustomTooltip,
       actionsRenderer: ActionsRenderer,
     },
+    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
     rowSelection: 'single',
@@ -269,6 +275,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
       setlayersImages(store.discreteLayersStore.layersImages);
+      gridApi?.redrawRows();
     }
   }, [store.discreteLayersStore.layersImages]);
 
@@ -277,7 +284,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   },[store.userStore.user]);
 
   return (
-    <Box id={'layerRsults'}>
+    <Box id='layerResults'>
       <GridComponent
         gridOptions={gridOptions}
         rowData={getRowData()}

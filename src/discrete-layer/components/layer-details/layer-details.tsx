@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
+import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
-import { FormattedMessage } from 'react-intl';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { Mode } from '../../../common/models/mode.enum';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import CONFIG from '../../../common/config';
 import { LinkType } from '../../../common/models/link-type.enum';
+import { Mode } from '../../../common/models/mode.enum';
 import { 
   AutocompletionModelType,
   EntityDescriptorModelType,
@@ -17,20 +18,20 @@ import {
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
-import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
-import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
-import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentor';
-import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentor';
-import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentor';
-import { TypeValuePresentorComponent } from  './field-value-presentors/type.value-presentor';
-import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentor';
-import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
 import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
+import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
+import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
-import { getBasicType, getEntityDescriptors } from './utils';
+import { LinksValuePresentorComponent } from './field-value-presentors/links.value-presentor';
+import { NumberValuePresentorComponent } from './field-value-presentors/number.value-presentor';
+import { StatusValuePresentorComponent } from './field-value-presentors/status.value-presentor';
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import { TypeValuePresentorComponent } from  './field-value-presentors/type.value-presentor';
+import { UnknownValuePresentorComponent } from './field-value-presentors/unknown.value-presentor';
+import { UrlValuePresentorComponent } from './field-value-presentors/url.value-presentor';
+import { IRecordFieldInfo, IRecordCategoryFieldsInfo, FieldInfoName } from './layer-details.field-info';
 import { EntityFormikHandlers } from './layer-datails-form';
-import CONFIG from '../../../common/config';
+import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
 
@@ -58,13 +59,15 @@ export const getValuePresentor = (
   switch (basicType) {
     case 'string':
     case 'identifier':
-      return (!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
+      return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
-    case 'string[]': {
-      return <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
-    }
+      );
+    case 'string[]':
+      return (
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+      );
     case 'json':
       return (
         <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></JsonValuePresentorComponent>
@@ -85,11 +88,10 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'sensors':{
+    case 'sensors':
       return (
         <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
-    }
     case 'DataType':
     case 'NoDataValue':
     case 'VerticalDatum':
@@ -102,6 +104,10 @@ export const getValuePresentor = (
     case 'ProductType':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
+      );
+    case 'RecordStatus':
+      return (
+        <StatusValuePresentorComponent value={value as string}></StatusValuePresentorComponent>
       );
     default:
       return (
@@ -175,7 +181,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
   );
 
   const fullInputs = useMemo(() => {
-    const fullArray = layerRecord && getEntityDescriptors(layerRecord, entityDescriptors);
+    const fullArray = layerRecord && getEntityDescriptors(layerRecord.__typename, entityDescriptors);
     return (
       fullArray?.map((category) => {
         return renderCategory(category);
@@ -185,7 +191,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
 
   const briefInputs = useMemo(() => {
     const briefArr = layerRecord &&
-      getEntityDescriptors(layerRecord, entityDescriptors)
+      getEntityDescriptors(layerRecord.__typename, entityDescriptors)
       .filter((item: unknown) => (item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
     return (
       briefArr?.map((category) => {
@@ -207,13 +213,13 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
         />
       }
       {
-        !layerRecord && (
+        !layerRecord &&
         <Box>
           <Typography use="headline2" tag="div" className="noSelection">
             <FormattedMessage id="details-panel.no-selection" />
           </Typography>
         </Box>
-      )}
+      }
     </>
   );
 };

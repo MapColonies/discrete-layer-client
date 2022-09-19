@@ -109,10 +109,17 @@ export const discreteLayersStore = ModelBase
       );
     }
 
+    function refreshLayersImages(): void {
+      self.layersImages = self.layersImages?.map(item => ({
+          ...item,
+        })
+      );
+    }
+
     function updateLayer(data: ILayerImage): void {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
       const layerForUpdate = self.layersImages?.find(layer => layer.id === data.id);
-      for (const key in layerForUpdate){
+      for (const key in layerForUpdate) {
         set(layerForUpdate, key, get(data,key));
       }
     }
@@ -181,11 +188,30 @@ export const discreteLayersStore = ModelBase
     }
 
     function restoreTabviewData(tabView: TabViews): void {
-      if(self.tabViews) {
+      if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
         self.selectedLayer = self.tabViews[idxTabViewToUpdate].selectedLayer;
         self.layersImages = self.tabViews[idxTabViewToUpdate].layersImages??[];
+      } 
+    }
+
+    function updateTabviewsData(layer: ILayerImage): void {
+      if (self.tabViews) {
+        self.tabViews.forEach((tab) => {
+          if (tab.selectedLayer && tab.selectedLayer.id === layer.id) {
+            tab.selectedLayer = {...layer};
+          }
+          if (tab.layersImages) {
+            tab.layersImages = tab.layersImages.map((item) => {
+              if (item.id === layer.id) {
+                return {...layer};
+              }
+              return item;
+            });
+          }
+
+        });
       } 
     }
 
@@ -220,6 +246,7 @@ export const discreteLayersStore = ModelBase
       getLayersImages,
       setLayersImages,
       setLayersImagesData,
+      refreshLayersImages,
       clearLayersImages,
       showLayer,
       highlightLayer,
@@ -227,6 +254,7 @@ export const discreteLayersStore = ModelBase
       selectLayerByID,
       setTabviewData,
       restoreTabviewData,
+      updateTabviewsData,
       showFootprint,
       setEntityDescriptors,
       updateLayer,

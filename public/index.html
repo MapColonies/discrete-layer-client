@@ -58,18 +58,18 @@
           });
         }
 
-        for(var i = 0; i < scripts.length; i++) {
+        for (var i = 0; i < scripts.length; i++) {
           var script = scripts[i];
           var src = script.src;
           var additionalAttributes = '';
 
-          if(script.cacheType == 'timestamp') {
+          if (script.cacheType == 'timestamp') {
             src += "?" + getTime();
           } else {
             src += "?" + getVersion();
           }
 
-          if(typeof script.additionalAttributes !== 'undefined') {
+          if (typeof script.additionalAttributes !== 'undefined') {
             additionalAttributes = script.additionalAttributes;
           }
 
@@ -91,12 +91,12 @@
             cacheType: 'version'
           }
         ];
-        for(var i = 0; i < styles.length; i++) {
+        for (var i = 0; i < styles.length; i++) {
           var style = styles[i];
 
           var href = style.href;
 
-          if(style.cacheType == 'timestamp') {
+          if (style.cacheType == 'timestamp') {
             href += "?" + getTime();
           } else {
             href += "?" + getVersion();

@@ -42,7 +42,7 @@ export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = obs
         </DialogContent>
         <DialogActions>
           <Button raised type="button" onClick={(): void => { closeWithoutSaving(); }}>
-            <FormattedMessage id="general.continue-btn.text"/>
+            <FormattedMessage id="general.confirm-btn.text"/>
           </Button>
           <Button type="button" onClick={(): void => { closeDialog(); }}>
             <FormattedMessage id="general.cancel-btn.text"/>

@@ -8,43 +8,43 @@ body[dir='rtl'] .ag-theme-alpine-dark .ag-header-cell[col-id="footprintShown"]{
   padding-left: 18px;
 }
 
-#layerRsults {
+#layerResults {
   height: calc(100% - 50px);
   width: calc(100% - 8px);
 }
 
-#layerRsults .ag-body-viewport.ag-layout-normal.ag-row-no-animation {
+#layerResults .ag-body-viewport.ag-layout-normal.ag-row-no-animation {
   overflow-y: overlay !important;
 }
 
 /* Hide right header and spacer */
-#layerRsults .ag-pinned-right-header,
-#layerRsults .ag-horizontal-right-spacer {
+#layerResults .ag-pinned-right-header,
+#layerResults .ag-horizontal-right-spacer {
   width: 0 !important;
   min-width: 0 !important;
 }
 
 /* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
-#layerRsults .ag-pinned-right-cols-container {
+#layerResults .ag-pinned-right-cols-container {
   position: absolute !important;
   right: 45px;
   pointer-events: none;
   padding-left: 20px;
 }
 
-body[dir=rtl] #layerRsults .ag-pinned-right-cols-container {
+body[dir=rtl] #layerResults .ag-pinned-right-cols-container {
   right: unset;
   left: 45px;
   padding-left: unset;
   padding-right: 20px;
 }
 /* Reset pointer-events so that click can happen on action buttons */
-#layerRsults .ag-pinned-right-cols-container * {
+#layerResults .ag-pinned-right-cols-container * {
   pointer-events: initial;
 }
 
 /* Hide border of right-cols-container */
-#layerRsults .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
+#layerResults .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
   border: none !important;
   overflow: visible;
   border-radius: 50% !important;
@@ -52,32 +52,32 @@ body[dir=rtl] #layerRsults .ag-pinned-right-cols-container {
 
 
 /* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
-#layerRsults .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover),
-#layerRsults .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover) .ag-cell {
+#layerResults .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover),
+#layerResults .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover) .ag-cell {
   width: 0 !important;
   padding: 0 !important;
   border: none;
 }
 
-#layerRsults .ag-pinned-right-cols-container .ag-row.ag-row-hover {
+#layerResults .ag-pinned-right-cols-container .ag-row.ag-row-hover {
   background-color: rgb(44,65,89);
   border-width: 0px !important;
 }
 
-#layerRsults .ag-pinned-right-cols-container .ag-row.ag-row-selected,
-#layerRsults .ag-pinned-right-cols-container .ag-row.ag-row-selected .ag-cell,
-#layerRsults .ag-row.ag-row-selected,
-#layerRsults .ag-row.ag-row-selected .actionsContainer {
+#layerResults .ag-pinned-right-cols-container .ag-row.ag-row-selected,
+#layerResults .ag-pinned-right-cols-container .ag-row.ag-row-selected .ag-cell,
+#layerResults .ag-row.ag-row-selected,
+#layerResults .ag-row.ag-row-selected .actionsContainer {
   border: none !important;
   background-color: var(--mdc-theme-gc-selection-background);
 }
 
-#layerRsults .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
+#layerResults .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
   background: unset;
   overflow: visible;
 }
 
-#layerRsults .actionsContainer {
+#layerResults .actionsContainer {
   right:0 !important;
   position:relative;
   overflow: visible !important;
@@ -85,6 +85,6 @@ body[dir=rtl] #layerRsults .ag-pinned-right-cols-container {
   height: 0px !important;
 }
 
-#layerRsults .actionsContainer .mdc-menu-surface--open {
+#layerResults .actionsContainer .mdc-menu-surface--open {
   z-index: 2 !important;
 }

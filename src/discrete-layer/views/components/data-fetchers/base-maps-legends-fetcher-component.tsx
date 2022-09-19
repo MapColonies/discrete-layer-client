@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';

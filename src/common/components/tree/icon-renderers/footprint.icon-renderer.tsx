@@ -22,6 +22,10 @@ export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = observe
     }
   }, [store.actionDispatcherStore.action]);
 
+  useEffect(() => {
+    setChecked(props.data.footprintShown as boolean)
+  }, [props.data.footprintShown])
+
   return (
     <Checkbox
       className="footprintIcon"

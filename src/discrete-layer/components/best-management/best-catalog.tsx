@@ -216,7 +216,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup){
+                  if (!rowInfo.node.isGroup) {
                     store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
                   }
                 },
