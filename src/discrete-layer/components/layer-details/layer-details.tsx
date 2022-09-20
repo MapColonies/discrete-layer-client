@@ -1,3 +1,5 @@
+/* eslint-disable no-fallthrough */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
@@ -10,10 +12,17 @@ import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import { 
   AutocompletionModelType,
+  DataType,
   EntityDescriptorModelType,
   FieldCategory,
   LayerMetadataMixedUnion,
-  LinkModelType
+  LinkModelType,
+  NoDataValue,
+  ProductType,
+  RecordStatus,
+  UndulationModel,
+  Units,
+  VerticalDatum
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
@@ -55,10 +64,12 @@ export const getValuePresentor = (
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
   const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
+  let options: string[] = [];
   
   switch (basicType) {
     case 'string':
     case 'identifier':
+    case 'sensors':
       return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
@@ -88,27 +99,45 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'sensors':
-      return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
-      );
     case 'DataType':
+      if (basicType === 'DataType') {
+        options = Object.values(DataType);
+      }
     case 'NoDataValue':
+      if (basicType === 'NoDataValue') {
+        options = Object.values(NoDataValue);
+      }
     case 'VerticalDatum':
+      if (basicType === 'VerticalDatum') {
+        options = Object.values(VerticalDatum);
+      }
     case 'Units':
+      if (basicType === 'Units') {
+        options = Object.values(Units);
+      }
     case 'UndulationModel':
+      if (basicType === 'UndulationModel') {
+        options = Object.values(UndulationModel);
+      }
+    case 'ProductType':
+      if (basicType === 'ProductType') {
+        options = Object.values(ProductType);
+      }
+    case 'RecordStatus':
+      if (basicType === 'RecordStatus') {
+        options = Object.values(RecordStatus);
+      }
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     case 'RecordType':
-    case 'ProductType':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
       );
-    case 'RecordStatus':
-      return (
-        <StatusValuePresentorComponent value={value as string}></StatusValuePresentorComponent>
-      );
+    // case 'RecordStatus':
+    //   return (
+    //     <StatusValuePresentorComponent value={value as string}></StatusValuePresentorComponent>
+    //   );
     default:
       return (
         <UnknownValuePresentorComponent value={basicType}></UnknownValuePresentorComponent>

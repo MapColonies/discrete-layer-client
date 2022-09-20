@@ -1,7 +1,8 @@
-.priority_options.mdc-select:not(.mdc-select--disabled) .mdc-select__anchor {
+.priorityOptions.mdc-select:not(.mdc-select--disabled) .mdc-select__anchor {
   border-radius: 0;
 }
-.priority_options {
+
+.priorityOptions {
   width: 150px;
 }
 
@@ -17,12 +18,12 @@
    so that the options list will not be hidden.
 */
 .priorityCellContainer
-  .priority_options.mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--focused.mdc-select--activated {
+  .priorityOptions.mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--focused.mdc-select--activated {
   z-index: 2;
 }
 
 /* Priority is binded to status field... */
-.ag-cell-value[col-id="status"]{
+.ag-cell-value[col-id="status"] {
   overflow: visible;
 }
 

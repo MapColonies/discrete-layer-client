@@ -1,0 +1,4 @@
+.enumOptions .mdc-select__anchor {
+  border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
+  border-radius: 4px !important;
+}
