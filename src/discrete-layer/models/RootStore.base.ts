@@ -225,7 +225,7 @@ export type Layer3DRecordInput = {
   geographicArea?: string
   productBoundingBox?: string
   productSource?: string
-  productStatus: RecordStatus
+  productStatus?: RecordStatus
   id: string
   insertDate?: any
   wktGeometry?: string
