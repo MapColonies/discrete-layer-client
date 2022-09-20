@@ -243,15 +243,17 @@ export const discreteLayersStore = ModelBase
       self.baseMaps = cloneDeep(baseMaps);
     }
 
-    function getOnlyEditableLayersImage(layerImage: ILayerImage): ILayerImage {
+    function getEditablePartialObject(layerImage: ILayerImage): Record<string, unknown> {
       const flatDescriptors = getFlatEntityDescriptors(layerImage.__typename, self.entityDescriptors as EntityDescriptorModelType[]);
       const filteredLayer: Record<string, unknown> = {};
       
       flatDescriptors.forEach(fieldConfig => {
-        filteredLayer[fieldConfig.fieldName as string] = (layerImage as unknown as Record<string, unknown>)[fieldConfig.fieldName as string];
+        if(fieldConfig.isManuallyEditable === true) {
+          filteredLayer[fieldConfig.fieldName as string] = (layerImage as unknown as Record<string, unknown>)[fieldConfig.fieldName as string];
+        }
       });
 
-      return filteredLayer as unknown as ILayerImage;
+      return filteredLayer;
     }
 
     return {
@@ -276,7 +278,7 @@ export const discreteLayersStore = ModelBase
       isPreviewedLayer,
       setCapabilities,
       setBaseMaps,
-      getOnlyEditableLayersImage,
+      getEditablePartialObject,
     };
   });
 

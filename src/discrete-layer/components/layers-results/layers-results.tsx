@@ -58,8 +58,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       let matchesRes = true;
       source.forEach((srcFeat: ILayerImage) => { 
         const match = target.find((targetFeat: ILayerImage) => {
-          const srcOnlyEditables = store.discreteLayersStore.getOnlyEditableLayersImage(srcFeat);
-          const targetOnlyEditables = store.discreteLayersStore.getOnlyEditableLayersImage(targetFeat);
+          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat);
+          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat);
 
           return JSON.stringify(srcOnlyEditables) === JSON.stringify(targetOnlyEditables);
         });
