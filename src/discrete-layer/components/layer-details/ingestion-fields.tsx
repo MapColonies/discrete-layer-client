@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues } from 'formik';
 import { Button, Icon, Tooltip, Typography } from '@map-colonies/react-core';
@@ -21,6 +21,11 @@ import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import {
+  Layer3DRecordModelKeys,
+  LayerDemRecordModelKeys,
+  LayerRasterRecordModelKeys,
+} from './entity-types-keys';
 
 import './ingestion-fields.css';
 import { ILayerImage } from '../../models/layerImage';
@@ -189,6 +194,29 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
     }
   };
 
+  const checkIsValidMetadata = useCallback((record: Record<string, unknown>): boolean => {
+    let recordKeys: string[] = [];
+    switch(recordType) {
+      case RecordType.RECORD_RASTER:
+       recordKeys = LayerRasterRecordModelKeys as string[];
+      break;
+      case RecordType.RECORD_3D:
+       recordKeys = Layer3DRecordModelKeys as string[];
+      break;
+      case RecordType.RECORD_DEM:
+       recordKeys = LayerDemRecordModelKeys as string[];
+      break;
+
+      default:
+        break;
+    }
+
+    return Object.keys(record).every(key => {
+        return recordKeys.includes(key)
+    });
+
+  }, [recordType])
+
   return (
     <>
       <Box className="header section">
@@ -220,7 +248,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
               disabled={isImportDisabled}
               onClick={(): void => {
                 importJSONFileFromClient((e) => {
-                  if(reloadFormMetadata){
+                  const resultFromFile = JSON.parse(e.target?.result as string) as Record<string, unknown>;
+
+                  if(reloadFormMetadata && checkIsValidMetadata(resultFromFile)){
                     reloadFormMetadata(
                       {
                         directory: values.directory as string,
@@ -228,6 +258,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
                       },
                       { recordModel: JSON.parse(e.target?.result as string) as ILayerImage } as MetadataFile
                     );
+                  }else {
+                    alert('The chosen file is not a valid metadata');
                   }
                 })
               }}

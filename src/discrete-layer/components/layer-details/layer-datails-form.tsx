@@ -195,10 +195,8 @@ const InnerForm = (
 
     resetForm();
     setValues({
-      ...transformEntityToFormFields({
-        ...values,
-        ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
-      }),
+      ...values,
+      ...transformEntityToFormFields((isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel)),
       ...ingestionFields,
     });
 
