@@ -131,6 +131,10 @@ export type ExplorerGetById = {
   id: string
   type: RecordType
 }
+export type ExplorerResolveMetadataAsModel = {
+  metadata: string
+  type: RecordType
+}
 export type TasksSearchParams = {
   jobId: string
 }
@@ -194,7 +198,6 @@ export type Layer3DRecordInput = {
   type?: RecordType
   productId?: string
   productName: string
-  // ASSAF: MUST REMAIN STRING
   productVersion?: string
   productType: ProductType
   description?: string
@@ -309,6 +312,7 @@ queryGetClusterServices="queryGetClusterServices",
 queryGetDirectory="queryGetDirectory",
 queryGetDirectoryById="queryGetDirectoryById",
 queryGetFile="queryGetFile",
+queryResolveMetadataAsModel="queryResolveMetadataAsModel",
 queryGetFileById="queryGetFileById",
 queryGetDecryptedId="queryGetDecryptedId",
 queryTasks="queryTasks"
@@ -391,6 +395,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     queryGetFile(variables: { data: ExplorerGetByPathSuffix }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getFile: LayerMetadataMixedUnion}>(`query getFile($data: ExplorerGetByPathSuffix!) { getFile(data: $data) {
+        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryResolveMetadataAsModel(variables: { data: ExplorerResolveMetadataAsModel }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>(`query resolveMetadataAsModel($data: ExplorerResolveMetadataAsModel!) { resolveMetadataAsModel(data: $data) {
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

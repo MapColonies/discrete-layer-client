@@ -16,7 +16,7 @@ import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
-import { RecordType, LayerMetadataMixedUnion } from '../../models';
+import { RecordType, LayerMetadataMixedUnion, useQuery, useStore } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
@@ -28,8 +28,9 @@ import {
 } from './entity-types-keys';
 
 import './ingestion-fields.css';
-import { ILayerImage } from '../../models/layerImage';
 import { importJSONFileFromClient } from './utils';
+import { observer } from 'mobx-react';
+import { cloneDeep } from 'lodash';
 
 const DIRECTORY = 0;
 const FILES = 1;
@@ -153,13 +154,14 @@ const IngestionInputs: React.FC<{
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({
+export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   recordType,
   fields,
   values,
   reloadFormMetadata,
   formik,
 }) => {
+  const store = useStore();
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
   const [isImportDisabled, setIsImportDisabled] = useState(true);
   const [selection, setSelection] = useState<Selection>({
@@ -167,6 +169,40 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
     folderChain: [],
     metadata: { recordModel: {} as LayerMetadataMixedUnion, error: null },
   });
+  const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
+
+  const queryResolveMetadataAsModel = useCallback(() => useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>(), [])();
+
+  useEffect(() => {
+    if(chosenMetadataFile !== null) {
+      queryResolveMetadataAsModel.setQuery(
+        store.queryResolveMetadataAsModel(
+          {
+            data: {
+              metadata: chosenMetadataFile,
+              type: recordType
+            }
+          }
+        )
+      )
+    }
+  }, [chosenMetadataFile]);
+
+  useEffect(() => {
+    if (queryResolveMetadataAsModel.data) {
+      const metadataAsModel = cloneDeep(queryResolveMetadataAsModel.data.resolveMetadataAsModel);
+
+      if (reloadFormMetadata) {
+        reloadFormMetadata(
+          {
+            directory: values.directory as string,
+            fileNames: values.fileNames as string,
+          },
+          { recordModel: metadataAsModel} as MetadataFile
+        );
+      }
+    }
+  }, [queryResolveMetadataAsModel.data]);
 
   useEffect(() => {
     setIsImportDisabled(!selection.files.length);
@@ -250,14 +286,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
                 importJSONFileFromClient((e) => {
                   const resultFromFile = JSON.parse(e.target?.result as string) as Record<string, unknown>;
 
-                  if(reloadFormMetadata && checkIsValidMetadata(resultFromFile)){
-                    reloadFormMetadata(
-                      {
-                        directory: values.directory as string,
-                        fileNames: values.fileNames as string
-                      },
-                      { recordModel: JSON.parse(e.target?.result as string) as ILayerImage } as MetadataFile
-                    );
+                  if(checkIsValidMetadata(resultFromFile)){
+                    setChosenMetadataFile(e.target?.result as string);
                   }else {
                     alert('The chosen file is not a valid metadata');
                   }
@@ -281,4 +311,4 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
       }
     </>
   );
-};
+});
