@@ -1,7 +1,7 @@
 import React from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { JobModelType } from '../../../../discrete-layer/models';
-import { TypeIcon } from '../../general/type-icon';
+import { TypeIcon } from '../../shared/type-icon';
 
 interface IProductTypeCellRendererParams extends ICellRendererParams {
   style?: Record<string, unknown>;

@@ -40,19 +40,23 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
               formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
             }}
             onBlur={formik.handleBlur}
-            options={options}
+            // options={options}
             outlined
             enhanced
             className="enumOptions"
-          />
-            {/* {
+          >
+            {
               options.map(
                 (item, index) => {
-                  return (<option key={index} value={item}>{item}</option>);
+                  return (
+                    <option key={index} value={item} className="mc-icon-Map-Orthophoto">
+                      {item}
+                    </option>
+                  );
                 }
               )
             }
-          </Select> */}
+          </Select>
           {
             !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
             <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>

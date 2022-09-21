@@ -1,7 +1,7 @@
 import React from 'react';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { getStatusColoredText } from '../../../helpers/style';
-import { TypeIcon } from '../../general/type-icon';
+import { TypeIcon } from '../../shared/type-icon';
 
 interface IProductTypeCellRendererParams {
   data: ILayerImage;
