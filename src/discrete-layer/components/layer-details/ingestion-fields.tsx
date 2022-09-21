@@ -30,7 +30,7 @@ import {
 import './ingestion-fields.css';
 import { importJSONFileFromClient } from './utils';
 import { observer } from 'mobx-react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 
 const DIRECTORY = 0;
 const FILES = 1;
@@ -203,6 +203,20 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
       }
     }
   }, [queryResolveMetadataAsModel.data]);
+
+  useEffect(() => {
+    if(!isEmpty(queryResolveMetadataAsModel.error)) {
+      if (reloadFormMetadata) {
+        reloadFormMetadata(
+          {
+            directory: values.directory as string,
+            fileNames: values.fileNames as string,
+          },
+          { recordModel: {}, error: queryResolveMetadataAsModel.error as unknown} as MetadataFile
+        );
+      }
+    }
+  }, [queryResolveMetadataAsModel.error])
 
   useEffect(() => {
     setIsImportDisabled(!selection.files.length);

@@ -163,7 +163,7 @@ export type LayerRasterRecordInput = {
   sourceDateStart: any
   sourceDateEnd: any
   minHorizontalAccuracyCE90?: number
-  sensors: string[]
+  sensors?: string[]
   region: string[]
   productId?: string
   productVersion?: string
