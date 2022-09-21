@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { ChangeDetectionStrategyType } from 'ag-grid-react';
 import { observer } from 'mobx-react-lite';
-import { isObject } from 'lodash';
+import { isObject, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { 
   GridComponent,
@@ -25,13 +25,13 @@ import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { isUnpublished } from '../../../common/helpers/style';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
+import { RowDataChangedEvent } from 'ag-grid-community';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -56,9 +56,12 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     let res = false;
     if (source && target && source.length === target.length) {
       let matchesRes = true;
-      source.forEach((srcFeat: ILayerImage) => {
+      source.forEach((srcFeat: ILayerImage) => { 
         const match = target.find((targetFeat: ILayerImage) => {
-          return targetFeat.id === srcFeat.id && isUnpublished(targetFeat as any) === isUnpublished(srcFeat as any);
+          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat);
+          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat);
+
+          return JSON.stringify(srcOnlyEditables) === JSON.stringify(targetOnlyEditables);
         });
         matchesRes = matchesRes && isObject(match);
       });
@@ -248,6 +251,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       actionsRenderer: ActionsRenderer,
     },
     rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    immutableData: true,
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
     rowSelection: 'single',
@@ -270,12 +274,20 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         }
       });
     },
+    onRowDataUpdated(event: RowDataChangedEvent) {
+      const rowToUpdate: GridRowNode | undefined | null = event.api.getRowNode(store.discreteLayersStore.selectedLayer?.id as string);
+        event.api.refreshCells({
+          force: true,
+          suppressFlash: true,
+          columns:['productName', '__typename', 'updateDate'], 
+          rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
+        });
+    },
   };
 
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
-      setlayersImages(store.discreteLayersStore.layersImages);
-      gridApi?.redrawRows();
+      setlayersImages([...store.discreteLayersStore.layersImages.map(item => ({...item}))]);
     }
   }, [store.discreteLayersStore.layersImages]);
 

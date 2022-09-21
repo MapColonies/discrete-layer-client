@@ -9,7 +9,6 @@ import {
   GetNodeKeyFunction,
   NodeData,
   removeNodeAtPath,
-  FullTree,
   TreePath,
 } from 'react-sortable-tree';
 import { types, getParent, flow } from 'mobx-state-tree';
@@ -529,15 +528,12 @@ export const catalogTreeStore = ModelBase.props({
 
      /**
       * 
-      * @param parentTitle - Title used to target the parent, if not provided the direct parent of the node will be used. (optional)
-      * @param useTranslation Should translate provided title using intl's provider or not. (optional)
-      * @param nodeToRemove Node to remove from parent.
+      * @param nodeIdToRemove ID of a node to remove from parentNode.
+      * @param parentNode Node of the parent.
       * @returns void - Remove the child from tree in store.
       */
-     function removeChildFromParent(nodeToRemove: NodeData, useTranslation?: boolean, parentTitle?: string): void {
-      const parentNode = typeof parentTitle !== 'undefined' ? findNodeByTitle(parentTitle, useTranslation) as NodeData : getParentNode(nodeToRemove).parentNode as NodeData;
-
-      const filteredChildren = ((parentNode.node.children) as TreeItem[]).filter(node => node.id !== nodeToRemove.node.id);
+     function removeChildFromParent(nodeIdToRemove: string, parentNode: NodeData): void {
+      const filteredChildren = ((parentNode.node.children) as TreeItem[]).filter(node => node.id !== nodeIdToRemove);
       parentNode.node.children = filteredChildren;
 
       const newTreeWithoutChild = changeNodeByPath({

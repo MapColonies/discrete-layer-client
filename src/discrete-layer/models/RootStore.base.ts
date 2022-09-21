@@ -150,6 +150,7 @@ export type IngestionRasterData = {
   type: RecordType
 }
 export type LayerRasterRecordInput = {
+  id: string
   type?: RecordType
   classification: string
   productName: string
@@ -177,7 +178,6 @@ export type LayerRasterRecordInput = {
   layerPolygonParts?: any
   includedInBests?: string[]
   productBoundingBox?: string
-  id: string
   insertDate?: any
   keywords?: string
   links?: LinkInput[]
