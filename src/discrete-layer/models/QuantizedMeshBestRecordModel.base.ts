@@ -49,7 +49,7 @@ export const QuantizedMeshBestRecordModelBase = ModelBase
     geographicArea: types.union(types.undefined, types.null, types.string),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
     productSource: types.union(types.undefined, types.null, types.string),
-    productStatus: types.union(types.undefined, RecordStatusEnumType),
+    productStatus: types.union(types.undefined, types.null, RecordStatusEnumType),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
