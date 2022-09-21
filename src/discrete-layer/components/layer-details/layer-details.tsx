@@ -18,12 +18,12 @@ import {
   LayerMetadataMixedUnion,
   LinkModelType,
   NoDataValue,
-  ProductType,
   RecordStatus,
   UndulationModel,
   Units,
   VerticalDatum
 } from '../../models';
+import { getCatalogProductsByEntityType } from '../../models/catalogProducts';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -121,7 +121,7 @@ export const getValuePresentor = (
       }
     case 'ProductType':
       if (basicType === 'ProductType') {
-        options = Object.values(ProductType);
+        options = getCatalogProductsByEntityType(layerRecord.__typename);
       }
     case 'RecordStatus':
       if (basicType === 'RecordStatus') {

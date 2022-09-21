@@ -1,4 +1,15 @@
 .enumOptions .mdc-select__anchor {
-  border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
+  border: 1px solid var(--mdc-theme-gc-selection-background);
   border-radius: 4px !important;
+}
+
+.enumOptions .mdc-menu {
+  min-width: unset;
+}
+
+.enumOptions .rmwc-select__native-control {
+  background-color: var(--mdc-theme-surface);
+  color: var(--mdc-theme-text-primary-on-dark);
+  border: 1px solid var(--mdc-theme-surface) !important;
+  border-radius: 4px;
 }

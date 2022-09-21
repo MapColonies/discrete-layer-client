@@ -31,7 +31,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
   } else {
     return (
       <>
-        <Box className="detailsFieldValue">
+        <Box>
           <Select
             value={innerValue}
             id={fieldInfo.fieldName as string}
@@ -45,6 +45,14 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             enhanced
             className="enumOptions"
           />
+            {/* {
+              options.map(
+                (item, index) => {
+                  return (<option key={index} value={item}>{item}</option>);
+                }
+              )
+            }
+          </Select> */}
           {
             !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
             <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>

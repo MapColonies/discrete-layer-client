@@ -105,9 +105,10 @@ export const getCatalogProductsHierarchy = (): CatalogProductItem[] => {
   return Object.values(productsList);
 };
 
-export const getCatalogProductsByEntityType = (entityType: string): unknown => {
-  return Object.values(iconsAndTooltips).filter((item) => {
-    const [,,parent] = item as string[];
-    return parent === entityType;
-  });
+export const getCatalogProductsByEntityType = (entityType: string): string[] => {
+  return Object.keys(iconsAndTooltips)
+    .filter((key) => {
+      const [,,parent] = iconsAndTooltips[key] as string[];
+      return parent === entityType;
+    });
 };
