@@ -2,3 +2,7 @@
   border: 1px solid var(--mdc-theme-gc-selection-background);
   border-radius: 4px !important;
 }
+
+.enumOptions li {
+  gap: 8px;
+}

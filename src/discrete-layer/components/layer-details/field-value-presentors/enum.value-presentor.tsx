@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
-import { Select } from '@map-colonies/react-core';
+import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
@@ -49,9 +49,10 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
               options.map(
                 (item, index) => {
                   return (
-                    <option key={index} value={item} className="mc-icon-Map-Orthophoto">
+                    <MenuItem key={index} value={item}>
+                      <Typography tag="span" className="mc-icon-Map-Orthophoto"></Typography>
                       {item}
-                    </option>
+                    </MenuItem>
                   );
                 }
               )
