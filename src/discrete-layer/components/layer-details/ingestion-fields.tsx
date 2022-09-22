@@ -6,7 +6,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues } from 'formik';
-import { Button, Icon, Tooltip, Typography } from '@map-colonies/react-core';
+import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import {
   Box,
   defaultFormatters,
@@ -170,6 +170,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     metadata: { recordModel: {} as LayerMetadataMixedUnion, error: null },
   });
   const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
+  const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
 
   const queryResolveMetadataAsModel = useCallback(() => useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>(), [])();
 
@@ -205,22 +206,24 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   }, [queryResolveMetadataAsModel.data]);
 
   useEffect(() => {
-    if(!isEmpty(queryResolveMetadataAsModel.error)) {
+    if(!isEmpty(queryResolveMetadataAsModel.error) || !isEmpty(chosenMetadataError)) {
       if (reloadFormMetadata) {
         reloadFormMetadata(
           {
             directory: values.directory as string,
             fileNames: values.fileNames as string,
           },
-          { recordModel: {}, error: queryResolveMetadataAsModel.error as unknown} as MetadataFile
+          { recordModel: {}, error: chosenMetadataError ?? (queryResolveMetadataAsModel.error as unknown)} as MetadataFile
         );
+        
       }
     }
-  }, [queryResolveMetadataAsModel.error])
+  }, [queryResolveMetadataAsModel.error, chosenMetadataError])
 
   useEffect(() => {
-    setIsImportDisabled(!selection.files.length);
-  }, [selection])
+    setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
+  }, [selection, queryResolveMetadataAsModel.loading])
+
 
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
@@ -279,7 +282,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
             formik={formik as EntityFormikHandlers}
           />
         </Box>
-        <Box className='ingestionButtonsContainer'>
+        <Box className="ingestionButtonsContainer">
           <Box className="ingestionButton">
             <Button
               raised
@@ -298,23 +301,37 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
               disabled={isImportDisabled}
               onClick={(): void => {
                 importJSONFileFromClient((e) => {
-                  const resultFromFile = JSON.parse(e.target?.result as string) as Record<string, unknown>;
+                  const resultFromFile = JSON.parse(
+                    e.target?.result as string
+                  ) as Record<string, unknown>;
 
-                  if(checkIsValidMetadata(resultFromFile)){
+                  if (checkIsValidMetadata(resultFromFile)) {
                     setChosenMetadataFile(e.target?.result as string);
-                  }else {
-                    alert('The chosen file is not a valid metadata');
+                    setChosenMetadataError(null);
+                  } else {
+                    setChosenMetadataError({
+                      response: {
+                        errors: [
+                          {
+                            message: `Please choose metadata for product ${recordType}`,
+                          },
+                        ],
+                      },
+                    });
                   }
-                })
+                });
               }}
             >
-              <FormattedMessage id="ingestion.button.import-metadata" />
+              {queryResolveMetadataAsModel.loading ? (
+                <CircularProgress />
+              ) : (
+                <FormattedMessage id="ingestion.button.import-metadata" />
+              )}
             </Button>
           </Box>
         </Box>
       </Box>
-      {
-        isFilePickerDialogOpen &&
+      {isFilePickerDialogOpen && (
         <FilePickerDialog
           recordType={recordType}
           isOpen={isFilePickerDialogOpen}
@@ -322,7 +339,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           onFilesSelection={onFilesSelection}
           selection={selection}
         />
-      }
+      )}
     </>
   );
 });

@@ -200,9 +200,7 @@ const InnerForm = (
       ...ingestionFields,
     });
 
-    if (metadata.error !== null) {
-      setGraphQLError(metadata.error);
-    }
+    setGraphQLError(metadata.error);
   };
 
   return (

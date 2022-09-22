@@ -7,6 +7,7 @@ import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 
 import './error-presentor.css';
+import { isEmpty } from 'lodash';
 
 const SERVER_ERROR_RESPONSE_CODE = 500;
 
@@ -22,7 +23,7 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props)=> {
   return (
     <>
       {
-        props.error.response !== undefined &&
+        !isEmpty(props.error?.response) &&
         <Box className="errorContainer">
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
