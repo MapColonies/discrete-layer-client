@@ -9,7 +9,6 @@ import {
   GetNodeKeyFunction,
   NodeData,
   removeNodeAtPath,
-  FullTree,
   TreePath,
 } from 'react-sortable-tree';
 import { types, getParent, flow } from 'mobx-state-tree';

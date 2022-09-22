@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
+import { isEmpty } from 'lodash';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
+import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
@@ -17,9 +19,10 @@ interface EnumValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  dictionary?: IDictionary;
 }
 
-export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({options, mode, fieldInfo, value, formik}) => {
+export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({options, mode, fieldInfo, value, formik, dictionary}) => {
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
@@ -40,7 +43,6 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
               formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
             }}
             onBlur={formik.handleBlur}
-            // options={options}
             outlined
             enhanced
             className="enumOptions"
@@ -48,9 +50,13 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             {
               options.map(
                 (item, index) => {
+                  let dictionaryValue = dictionary !== undefined ? dictionary[item] : undefined;
+                  if (isEmpty(dictionaryValue)) {
+                    dictionaryValue = {en: '', he: '', icon: 'mc-icon-Map-Orthophoto'};
+                  }
                   return (
                     <MenuItem key={index} value={item}>
-                      <Typography tag="span" className="mc-icon-Map-Orthophoto"></Typography>
+                      <Typography tag="span" className={dictionaryValue?.icon}></Typography>
                       {item}
                     </MenuItem>
                   );

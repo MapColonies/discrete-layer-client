@@ -8,6 +8,9 @@ import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
+import { CountryDictionary } from '../../../common/models/country.dictionary';
+import { IDictionary, IDictionaryValue } from '../../../common/models/dictionary';
+import { Country } from '../../../common/models/country.enum';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import { 
@@ -23,7 +26,7 @@ import {
   Units,
   VerticalDatum
 } from '../../models';
-import { getCatalogProductsByEntityType } from '../../models/catalogProducts';
+import { getCatalogProductsByEntityType, iconsAndTooltips } from '../../models/catalogProducts';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -65,6 +68,7 @@ export const getValuePresentor = (
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
   const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
   let options: string[] = [];
+  let dictionary: IDictionary | undefined = undefined;
   
   switch (basicType) {
     case 'string':
@@ -76,9 +80,17 @@ export const getValuePresentor = (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
       );
     case 'string[]':
-      return (
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
-      );
+      if (fieldName === 'region') {
+        options = Object.values(Country);
+        dictionary = CountryDictionary;
+        return (
+          <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
+        );
+      } else {
+        return (
+          <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+        );
+      }
     case 'json':
       return (
         <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></JsonValuePresentorComponent>
@@ -122,13 +134,18 @@ export const getValuePresentor = (
     case 'ProductType':
       if (basicType === 'ProductType') {
         options = getCatalogProductsByEntityType(layerRecord.__typename);
+        dictionary = {};
+        options.forEach(opt => {
+          // const [ icon, tooltip ] = iconsAndTooltips[opt];
+          // dictionary[opt]: IDictionaryValue = { en: tooltip, he: tooltip, icon };
+        });
       }
     case 'RecordStatus':
       if (basicType === 'RecordStatus') {
         options = Object.values(RecordStatus);
       }
       return (
-        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
       );
     case 'RecordType':
       return (
