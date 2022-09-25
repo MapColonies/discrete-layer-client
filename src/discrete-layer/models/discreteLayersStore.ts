@@ -19,6 +19,7 @@ import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { CapabilityModelType } from './CapabilityModel';
 import { getFlatEntityDescriptors } from '../components/layer-details/utils';
+import { McEnumsModelType } from './McEnumsModel';
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {
@@ -50,7 +51,8 @@ export const discreteLayersStore = ModelBase
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
     previewedLayers: types.maybe(types.frozen<string[]>([])),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>([])),
-    baseMaps: types.maybe(types.frozen<IBaseMaps>(CONFIG.BASE_MAPS)) 
+    baseMaps: types.maybe(types.frozen<IBaseMaps>(CONFIG.BASE_MAPS)),
+    mcEnums: types.maybe(types.frozen<McEnumsModelType>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -256,6 +258,10 @@ export const discreteLayersStore = ModelBase
       return filteredLayer;
     }
 
+    function setMCENums(mcEnums: McEnumsModelType): void {
+      self.mcEnums = mcEnums;
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -279,6 +285,7 @@ export const discreteLayersStore = ModelBase
       setCapabilities,
       setBaseMaps,
       getEditablePartialObject,
+      setMCENums
     };
   });
 

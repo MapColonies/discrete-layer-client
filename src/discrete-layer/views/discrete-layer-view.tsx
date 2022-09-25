@@ -170,6 +170,10 @@ const DiscreteLayerView: React.FC = observer(() => {
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
+  useEffect(() => {
+    console.log('store.discreteLayersStore.mcEnums', store.discreteLayersStore.mcEnums)
+  }, [store.discreteLayersStore.mcEnums])
+
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);
