@@ -18,11 +18,11 @@ interface IEnumsMapContext {
 }
 
 export const DEFAULT_ENUM_DESCRIPTOR: IEnumDescriptor = {
-    enumName: 'MISSING ICON',
+    enumName: '##UNKNOWN_ENUM_TYPE##',
     icon: 'mc-icon-Close glow-missing-icon',
     parent: '',
     properties: {},
-    realValue: 'Missing Value',
+    realValue: '##MISSING_VALUE##',
     translationKey: ''
 }
 
