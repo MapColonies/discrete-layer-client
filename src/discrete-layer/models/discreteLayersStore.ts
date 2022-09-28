@@ -52,7 +52,6 @@ export const discreteLayersStore = ModelBase
     previewedLayers: types.maybe(types.frozen<string[]>([])),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>([])),
     baseMaps: types.maybe(types.frozen<IBaseMaps>(CONFIG.BASE_MAPS)),
-    mcEnums: types.maybe(types.frozen<McEnumsModelType>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -258,10 +257,6 @@ export const discreteLayersStore = ModelBase
       return filteredLayer;
     }
 
-    function setMCENums(mcEnums: McEnumsModelType): void {
-      self.mcEnums = mcEnums;
-    }
-
     return {
       getLayersImages,
       setLayersImages,
@@ -285,7 +280,6 @@ export const discreteLayersStore = ModelBase
       setCapabilities,
       setBaseMaps,
       getEditablePartialObject,
-      setMCENums
     };
   });
 
