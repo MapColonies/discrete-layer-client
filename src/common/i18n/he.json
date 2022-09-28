@@ -60,6 +60,7 @@
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
   "record-type.record_dem.label": "גבהים",
+  "record-type.record_quantized_mesh.label": "פני השטח",
   "record-type.record_all.label": "הכל",
 
   "polygon-selection.draw-btn.tooltip": "צייר אזור ליצוא",
@@ -504,5 +505,24 @@
   "user-role.dialog.title.text": "שינוי הרשאות משתמש",
   "user-role.dialog.switch-to-admin.btn.text": "החלף למצב מנהל",
   "user-role.dialog.password.input.placeholder": "סיסמא",
-  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה"
+  "user-role.dialog.wrong-password-error.text": "הסיסמא שגויה",
+
+  "product-type.orthophoto.label": "אורתופוטו",
+  "product-type.orthophoto_history.label": "הסטוריה של אורתופוטו",
+  "product-type.orthophoto_best.label": "בסט אורתופוטו",
+  "product-type.raster_map.label": "מפה ראסטרית",
+  "product-type.raster_map_best.label": "מפת בסט ראסטרית",
+  "product-type.raster_aid.label": "מפת עזרים",
+  "product-type.raster_aid_best.label": "מפת בסט עזרים",
+  "product-type.raster_vector.label": "וקטור מרוסטר",
+  "product-type.raster_vector_best.label": "בסט וקטורי מרוסטר",
+  "product-type.vector_best.label": "בסט וקטורי",
+  "product-type.dtm.label": "פני השטח",
+  "product-type.dsm.label": "פני המשטח",
+  "product-type.quantized_mesh_dtm.label": "פני השטח על-ידי רשת כמותית",
+  "product-type.quantized_mesh_dsm.label": "פני המשטח על-ידי רשת כמותית",
+  "product-type.quantized_mesh_dtm_best.label": "פני השטח על-ידי רשת כמותית בסט",
+  "product-type.quantized_mesh_dsm_best.label": "פני המשטח על-ידי רשת כמותית בסט",
+  "product-type.photo_realistic_3d.label": "תלת-מימד פוטו-ראליסטי",
+  "product-type.point_cloud.label": "ענן נקודות"
 }

@@ -60,6 +60,7 @@
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
   "record-type.record_dem.label": "DEM",
+  "record-type.record_quantized_mesh.label": "Quantized Mesh BEST",
   "record-type.record_all.label": "All",
 
   "polygon-selection.draw-btn.tooltip": "Draw an Area to export",
@@ -504,5 +505,24 @@
   "user-role.dialog.title.text": "Change User Role",
   "user-role.dialog.switch-to-admin.btn.text": "Activate admin mode",
   "user-role.dialog.password.input.placeholder": "Password",
-  "user-role.dialog.wrong-password-error.text": "Password is incorrect"
+  "user-role.dialog.wrong-password-error.text": "Password is incorrect",
+
+  "product-type.orthophoto.label": "Orthophoto",
+  "product-type.orthophoto_history.label": "OrthophotoHistory",
+  "product-type.orthophoto_best.label": "OrthophotoBest",
+  "product-type.raster_map.label": "RasterMap",
+  "product-type.raster_map_best.label": "RasterMapBest",
+  "product-type.raster_aid.label": "RasterAid",
+  "product-type.raster_aid_best.label": "RasterAidBest",
+  "product-type.raster_vector.label": "RasterVector",
+  "product-type.raster_vector_best.label": "RasterVectorBest",
+  "product-type.vector_best.label": "VectorBest",
+  "product-type.dtm.label": "DTM",
+  "product-type.dsm.label": "DSM",
+  "product-type.quantized_mesh_dtm.label": "QuantizedMeshDTM",
+  "product-type.quantized_mesh_dsm.label": "QuantizedMeshDSM",
+  "product-type.quantized_mesh_dtm_best.label": "QuantizedMeshDTMBest",
+  "product-type.quantized_mesh_dsm_best.label": "QuantizedMeshDSMBest",
+  "product-type.photo_realistic_3d.label": "3DPhotoRealistic",
+  "product-type.point_cloud.label": "PointCloud"
 }
