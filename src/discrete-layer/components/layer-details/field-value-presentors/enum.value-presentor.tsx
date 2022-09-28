@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React from 'react';
-import { isEmpty } from 'lodash';
+import React, { useState } from 'react';
+import { get, isEmpty } from 'lodash';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
+import CONFIG from '../../../../common/config';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
 import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -24,6 +25,7 @@ interface EnumValuePresentorProps {
 
 export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({options, mode, fieldInfo, value, formik, dictionary}) => {
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
+  const [locale] = useState<string>(CONFIG.I18N.DEFAULT_LANGUAGE);
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -56,8 +58,8 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
                   }
                   return (
                     <MenuItem key={index} value={item}>
-                      <Typography tag="span" className={dictionaryValue?.icon}></Typography>
-                      {item}
+                      <Typography tag="span" className={get(dictionaryValue, 'icon')}></Typography>
+                      {get(dictionaryValue, locale)}
                     </MenuItem>
                   );
                 }
