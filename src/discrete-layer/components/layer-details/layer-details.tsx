@@ -82,7 +82,7 @@ export const getValuePresentor = (
       );
     case 'string[]':
       if (fieldName === 'region') {
-        options = Object.values(Country);
+        options = Object.keys(Country);
         dictionary = CountryDictionary;
         return (
           <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
@@ -114,23 +114,23 @@ export const getValuePresentor = (
       );
     case 'DataType':
       if (basicType === 'DataType') {
-        options = Object.values(DataType);
+        options = Object.keys(DataType);
       }
     case 'NoDataValue':
       if (basicType === 'NoDataValue') {
-        options = Object.values(NoDataValue);
+        options = Object.keys(NoDataValue);
       }
     case 'VerticalDatum':
       if (basicType === 'VerticalDatum') {
-        options = Object.values(VerticalDatum);
+        options = Object.keys(VerticalDatum);
       }
     case 'Units':
       if (basicType === 'Units') {
-        options = Object.values(Units);
+        options = Object.keys(Units);
       }
     case 'UndulationModel':
       if (basicType === 'UndulationModel') {
-        options = Object.values(UndulationModel);
+        options = Object.keys(UndulationModel);
       }
     case 'ProductType':
       if (basicType === 'ProductType') {
@@ -144,7 +144,7 @@ export const getValuePresentor = (
       }
     case 'RecordStatus':
       if (basicType === 'RecordStatus') {
-        options = Object.values(RecordStatus);
+        options = Object.keys(RecordStatus);
       }
       return (
         <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>

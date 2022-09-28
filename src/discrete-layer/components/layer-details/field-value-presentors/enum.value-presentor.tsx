@@ -54,7 +54,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
                 (item, index) => {
                   let dictionaryValue = dictionary !== undefined ? dictionary[item] : undefined;
                   if (isEmpty(dictionaryValue)) {
-                    dictionaryValue = {en: '', he: '', icon: 'mc-icon-Map-Orthophoto'};
+                    dictionaryValue = {en: item, he: item, icon: ''};
                   }
                   return (
                     <MenuItem key={index} value={item}>
