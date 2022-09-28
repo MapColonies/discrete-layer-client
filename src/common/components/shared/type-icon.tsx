@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { iconsAndTooltips } from '../../../discrete-layer/models/catalogProducts';
+import { mcEnums } from '../../../discrete-layer/models/catalogProducts';
 
 const SIZE = 128;
 
@@ -13,12 +14,16 @@ interface ITypeIconProps {
 }
 
 export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, style }) => {
+
+  const intl = useIntl();
   
-  const [icon, tooltip] = iconsAndTooltips[typeName] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+  const { icon, translationKey } = mcEnums[typeName];
 
   const img = (url: string): JSX.Element => {
     return (<img width={SIZE} height={SIZE} src={url}/>);
   };
+
+  const tooltip = intl.formatMessage({ id: translationKey });
 
   return (
     <Box style={style}>

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
@@ -16,18 +16,13 @@ import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import { 
   AutocompletionModelType,
-  DataType,
   EntityDescriptorModelType,
   FieldCategory,
   LayerMetadataMixedUnion,
   LinkModelType,
-  NoDataValue,
-  RecordStatus,
-  UndulationModel,
-  Units,
-  VerticalDatum
+  RecordStatus
 } from '../../models';
-import { getCatalogProductsByEntityType, iconsAndTooltips } from '../../models/catalogProducts';
+import { getCatalogProductsByEntityType, mcEnums } from '../../models/catalogProducts';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -113,34 +108,22 @@ export const getValuePresentor = (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
     case 'DataType':
-      if (basicType === 'DataType') {
-        options = Object.keys(DataType);
-      }
     case 'NoDataValue':
-      if (basicType === 'NoDataValue') {
-        options = Object.keys(NoDataValue);
-      }
     case 'VerticalDatum':
-      if (basicType === 'VerticalDatum') {
-        options = Object.keys(VerticalDatum);
-      }
     case 'Units':
-      if (basicType === 'Units') {
-        options = Object.keys(Units);
-      }
     case 'UndulationModel':
-      if (basicType === 'UndulationModel') {
-        options = Object.keys(UndulationModel);
-      }
     case 'ProductType':
       if (basicType === 'ProductType') {
         options = getCatalogProductsByEntityType(layerRecord.__typename);
         dictionary = {};
         options.forEach(opt => {
-          const [ icon, tooltip ] = iconsAndTooltips[opt] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+          const { icon, translationKey } = mcEnums[opt] ?? { icon: 'mc-icon-Close glow-missing-icon', translationKey: 'MISSING ICON' };
           // @ts-ignore
-          dictionary[opt] = { en: tooltip, he: tooltip, icon };
+          dictionary[opt] = { en: translationKey, he: translationKey, icon };
         });
+      } else {
+        // eslint-disable-next-line no-eval
+        options = Object.keys(eval(basicType)); // for a generic code treatment
       }
     case 'RecordStatus':
       if (basicType === 'RecordStatus') {
