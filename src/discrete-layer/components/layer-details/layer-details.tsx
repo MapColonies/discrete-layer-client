@@ -1,5 +1,6 @@
 /* eslint-disable no-fallthrough */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
@@ -9,7 +10,7 @@ import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
 import { CountryDictionary } from '../../../common/models/country.dictionary';
-import { IDictionary, IDictionaryValue } from '../../../common/models/dictionary';
+import { IDictionary } from '../../../common/models/dictionary';
 import { Country } from '../../../common/models/country.enum';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
@@ -136,8 +137,9 @@ export const getValuePresentor = (
         options = getCatalogProductsByEntityType(layerRecord.__typename);
         dictionary = {};
         options.forEach(opt => {
-          // const [ icon, tooltip ] = iconsAndTooltips[opt];
-          // dictionary[opt]: IDictionaryValue = { en: tooltip, he: tooltip, icon };
+          const [ icon, tooltip ] = iconsAndTooltips[opt] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+          // @ts-ignore
+          dictionary[opt] = { en: tooltip, he: tooltip, icon };
         });
       }
     case 'RecordStatus':
