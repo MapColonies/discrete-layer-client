@@ -56,6 +56,7 @@
   "action.layer.move-down.tooltip": "הזז למטה",
   "action.layer.move-to-bottom.tooltip": "הורד לתחתית",
   "action.job.retry": "נסה שוב",
+  "action.job.abort": "בטל",
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
@@ -439,6 +440,7 @@
   "system-status.job.status_translation.Completed": "הושלם",
   "system-status.job.status_translation.Failed": "נכשל",
   "system-status.job.status_translation.Expired": "פג תוקף",
+  "system-status.job.status_translation.Aborted": "בוטל",
 
   "system-status.job.filter.status.all": "הכל",
 

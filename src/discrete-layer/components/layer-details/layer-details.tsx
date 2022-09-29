@@ -1,7 +1,7 @@
 /* eslint-disable no-fallthrough */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
@@ -9,6 +9,7 @@ import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
+import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { CountryDictionary } from '../../../common/models/country.dictionary';
 import { IDictionary } from '../../../common/models/dictionary';
 import { Country } from '../../../common/models/country.enum';
@@ -57,6 +58,7 @@ export const getValuePresentor = (
   fieldInfo: IRecordFieldInfo,
   fieldValue: unknown,
   mode: Mode,
+  enumsMap?: IEnumsMapType | null,
   formik?: EntityFormikHandlers,
 ): JSX.Element => {
 
@@ -149,6 +151,7 @@ export const getValuePresentor = (
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
   const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
+  const { enumsMap } = useContext(EnumsMapContext);
   
   const maxLabelLengthCssVar = '--field-label-max-length';
   const categoryFieldsParentContainerStyle = (CONFIG.NUMBER_OF_CHARACTERS_LIMIT
@@ -200,6 +203,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                     fieldInfo,
                     get(layerRecord, fieldInfo.fieldName as string),
                     mode,
+                    enumsMap,
                     formik
                   )
                 }
