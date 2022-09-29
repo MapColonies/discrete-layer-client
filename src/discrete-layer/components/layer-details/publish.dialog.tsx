@@ -82,7 +82,11 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
         </DialogTitle>
         <DialogContent className="dialogBody">
           <Icon className="icon" icon={{ icon: 'info', size: 'xsmall' }}/>
-          <FormattedMessage id={ 'general.dialog.publish.message' }/>
+          {
+            isUnpublished(layer as any) ?
+            <FormattedMessage id="general.dialog.publish.message"/> :
+            <FormattedMessage id="general.dialog.unpublish.message"/>
+          }
         </DialogContent>
         <DialogActions>
           <Box className="errors">

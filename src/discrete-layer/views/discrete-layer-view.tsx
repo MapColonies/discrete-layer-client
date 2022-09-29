@@ -756,7 +756,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             locale = {mapSettingsLocale}
             baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
-            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName='BestRecord' /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
             legends={{
               mapLegendsExtractor,
