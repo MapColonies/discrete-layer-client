@@ -28,10 +28,6 @@ export const relativeDateFormatter: FormatterFunc = (date): string => {
 };
 
 export const dateSerializer: FormatterFunc = (date): string => {
-  if (typeof date !== 'undefined') {
-    return (date as Date | moment.Moment).toISOString();
-  }
-
   if (typeof date === 'string') {
     try {
       return new Date(date).toISOString();
@@ -39,6 +35,11 @@ export const dateSerializer: FormatterFunc = (date): string => {
       return '-';
     }
   }
+  
+  if (typeof date !== 'undefined') {
+    return (date).toISOString();
+  }
+
 
   return '-';
 };
