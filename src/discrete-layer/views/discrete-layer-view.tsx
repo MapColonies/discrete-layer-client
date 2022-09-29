@@ -169,8 +169,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
-
-
+  
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);

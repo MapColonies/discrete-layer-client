@@ -25,6 +25,7 @@
   "general.login-user.tooltip": "מחובר כמשתמש {user}",
   "general.empty.text": "ריק",
   "general.more.text": "עוד...",
+  "general.missing.translation": "##MISSING_TRANSLATION##",
 
   "action.tab-views.catalog.tooltip": "טאב קטלוג",
   "action.tab-views.search-results.tooltip": "טאב תוצאות חיפוש",

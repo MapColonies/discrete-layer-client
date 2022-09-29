@@ -119,7 +119,8 @@ export const getValuePresentor = (
         options = getCatalogProductsByEntityType(layerRecord.__typename);
         dictionary = {};
         options.forEach(opt => {
-          const { icon, translationKey } = mcEnums[opt] ?? { icon: 'mc-icon-Close glow-missing-icon', translationKey: 'MISSING ICON' };
+          // const { icon, translationKey } = mcEnums[opt] ?? { icon: 'mc-icon-Close glow-missing-icon', translationKey: 'general.missing.translation' };
+          const { icon, translationKey } = enumsMap?.[opt] ?? DEFAULT_ENUM_DESCRIPTOR;
           // @ts-ignore
           dictionary[opt] = { en: translationKey, he: translationKey, icon };
         });

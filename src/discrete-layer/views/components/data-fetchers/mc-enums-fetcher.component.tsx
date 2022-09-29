@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { useQuery, useStore } from '../../../models/RootStore';
-import { McEnumsModelType } from '../../../models';
 import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import { McEnumsModelType } from '../../../models';
+import { useQuery, useStore } from '../../../models/RootStore';
 
 export const MCEnumsFetcher: React.FC = observer(() => {
   const store = useStore();
