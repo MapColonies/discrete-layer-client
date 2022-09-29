@@ -172,7 +172,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
 
-  const queryResolveMetadataAsModel = useCallback(() => useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>(), [])();
+  const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
 
   useEffect(() => {
     if(chosenMetadataFile !== null) {
@@ -304,10 +304,11 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
                   const resultFromFile = JSON.parse(
                     e.target?.result as string
                   ) as Record<string, unknown>;
+                  setChosenMetadataFile(null);
+                  setChosenMetadataError(null);
 
                   if (checkIsValidMetadata(resultFromFile)) {
                     setChosenMetadataFile(e.target?.result as string);
-                    setChosenMetadataError(null);
                   } else {
                     setChosenMetadataError({
                       response: {

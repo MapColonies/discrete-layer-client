@@ -259,7 +259,8 @@ const InnerForm = (
                 mutationQueryLoading ||
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
-                (Object.keys(getStatusErrors()).length > NONE)
+                (Object.keys(getStatusErrors()).length > NONE) ||
+                !isEmpty(graphQLError)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />
