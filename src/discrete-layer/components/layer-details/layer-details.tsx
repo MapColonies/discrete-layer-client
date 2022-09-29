@@ -21,9 +21,8 @@ import {
   FieldCategory,
   LayerMetadataMixedUnion,
   LinkModelType,
-  RecordStatus
 } from '../../models';
-import { getCatalogProductsByEntityType } from '../../components/layer-details/utils';
+import { getEnumKeys } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -68,6 +67,16 @@ export const getValuePresentor = (
   const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
   let options: string[] = [];
   let dictionary: IDictionary | undefined = undefined;
+
+  const getDictionary = (keys: string[]): IDictionary => {
+    const dictionary = {};
+    keys.forEach(key => {
+      const { icon, translationKey } = enumsMap?.[key] ?? DEFAULT_ENUM_DESCRIPTOR;
+      // @ts-ignore
+      dictionary[key] = { en: formatMessage(translationKey), he: formatMessage(translationKey), icon };
+    });
+    return dictionary;
+  };
   
   switch (basicType) {
     case 'string':
@@ -115,26 +124,26 @@ export const getValuePresentor = (
     case 'VerticalDatum':
     case 'Units':
     case 'UndulationModel':
-    case 'ProductType':
+    case 'ProductType': {
+      const enums = enumsMap as IEnumsMapType;
       if (basicType === 'ProductType') {
-        options = getCatalogProductsByEntityType(layerRecord.__typename, enumsMap as IEnumsMapType);
-        dictionary = {};
-        options.forEach(opt => {
-          const { icon, translationKey } = enumsMap?.[opt] ?? DEFAULT_ENUM_DESCRIPTOR;
-          // @ts-ignore
-          dictionary[opt] = { en: formatMessage(translationKey), he: formatMessage(translationKey), icon };
-        });
+        options = getEnumKeys(enums, basicType, layerRecord.__typename);
       } else {
-        // eslint-disable-next-line no-eval
-        options = Object.keys(eval(basicType)); // for a generic code treatment
+        options = getEnumKeys(enums, basicType);
       }
-    case 'RecordStatus':
-      if (basicType === 'RecordStatus') {
-        options = Object.keys(RecordStatus);
-      }
+      dictionary = getDictionary(options);
       return (
         <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
       );
+    }
+    case 'RecordStatus': {
+      const enums = enumsMap as IEnumsMapType;
+      options = getEnumKeys(enums, basicType);
+      dictionary = getDictionary(options);
+      return (
+        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
+      );
+    }
     case 'RecordType':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>

@@ -382,60 +382,12 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
   return recordForUpdate as unknown as ILayerImage;
 };
 
-interface CatalogProductItem {
-  label: string;
-  value: string;
-  icon: string;
-  children?: CatalogProductItem[];
-}
-
-interface CatalogProductTree {
-  [key: string]: CatalogProductItem;
-}
-
-export const getCatalogProductsHierarchy = (mcEnums: IEnumsMapType): CatalogProductItem[] => {
-  const productsList: CatalogProductTree = {};
-  Object.keys(mcEnums).forEach((key: string) => {
-    const value = mcEnums[key];
-    const {realValue, icon, /*translationKey, */parent} = value;
-    if (parent === '') {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (productsList[key] === undefined) {
-        productsList[key] = {
-          label: realValue, // intl.formatMessage({id: translationKey}),
-          value: realValue,
-          icon: icon,
-          children: []
-        };
-      } else {
-        productsList[key].label = realValue;
-        productsList[key].value = realValue;
-        productsList[key].icon = icon;
-      }
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (productsList[parent] === undefined) {
-        productsList[parent] = {
-          label: '',
-          value: '',
-          icon: '',
-          children: []
-        };
-      }
-      productsList[parent].children?.push({
-        label: realValue,
-        value: realValue,
-        icon: icon
-      });
-    }
-  });
-  return Object.values(productsList);
-};
-
-export const getCatalogProductsByEntityType = (entityType: string, mcEnums: IEnumsMapType): string[] => {
-  return Object.keys(mcEnums)
+export const getEnumKeys = (enumsMap: IEnumsMapType, enumName: string, parent?: string): string[] => {
+  return Object.keys(enumsMap)
     .filter((key) => {
-      const { enumName, parent } = mcEnums[key];
-      return enumName === 'ProductType' && parent === entityType;
+      if (!isEmpty(parent)) {
+        return enumsMap[key].enumName === enumName && enumsMap[key].parent === parent;
+      }
+      return enumsMap[key].enumName === enumName;
     });
 };
