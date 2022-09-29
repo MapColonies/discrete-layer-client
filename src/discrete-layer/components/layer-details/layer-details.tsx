@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useMemo } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
-import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
+import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { CountryDictionary } from '../../../common/models/country.dictionary';
 import { IDictionary } from '../../../common/models/dictionary';
 import { Country } from '../../../common/models/country.enum';
@@ -23,7 +23,7 @@ import {
   LinkModelType,
   RecordStatus
 } from '../../models';
-import { getCatalogProductsByEntityType, mcEnums } from '../../models/catalogProducts';
+import { getCatalogProductsByEntityType } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -116,10 +116,9 @@ export const getValuePresentor = (
     case 'UndulationModel':
     case 'ProductType':
       if (basicType === 'ProductType') {
-        options = getCatalogProductsByEntityType(layerRecord.__typename);
+        options = getCatalogProductsByEntityType(layerRecord.__typename, enumsMap as IEnumsMapType);
         dictionary = {};
         options.forEach(opt => {
-          // const { icon, translationKey } = mcEnums[opt] ?? { icon: 'mc-icon-Close glow-missing-icon', translationKey: 'general.missing.translation' };
           const { icon, translationKey } = enumsMap?.[opt] ?? DEFAULT_ENUM_DESCRIPTOR;
           // @ts-ignore
           dictionary[opt] = { en: translationKey, he: translationKey, icon };

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, isEmpty, omit } from 'lodash';
+import moment, { unitOfTime } from 'moment';
 import { $enum } from 'ts-enum-util';
+import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import {
   BestRecordModel,
@@ -33,7 +35,6 @@ import {
   VectorBestRecordModelArray,
   QuantizedMeshBestRecordModelArray
 } from './entity-types-keys';
-import moment, { unitOfTime } from 'moment';
 
 export const getEntityDescriptors = (
   layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
@@ -379,4 +380,62 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
   }
 
   return recordForUpdate as unknown as ILayerImage;
+};
+
+interface CatalogProductItem {
+  label: string;
+  value: string;
+  icon: string;
+  children?: CatalogProductItem[];
+}
+
+interface CatalogProductTree {
+  [key: string]: CatalogProductItem;
+}
+
+export const getCatalogProductsHierarchy = (mcEnums: IEnumsMapType): CatalogProductItem[] => {
+  const productsList: CatalogProductTree = {};
+  Object.keys(mcEnums).forEach((key: string) => {
+    const value = mcEnums[key];
+    const {realValue, icon, /*translationKey, */parent} = value;
+    if (parent === '') {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (productsList[key] === undefined) {
+        productsList[key] = {
+          label: realValue, // intl.formatMessage({id: translationKey}),
+          value: realValue,
+          icon: icon,
+          children: []
+        };
+      } else {
+        productsList[key].label = realValue;
+        productsList[key].value = realValue;
+        productsList[key].icon = icon;
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (productsList[parent] === undefined) {
+        productsList[parent] = {
+          label: '',
+          value: '',
+          icon: '',
+          children: []
+        };
+      }
+      productsList[parent].children?.push({
+        label: realValue,
+        value: realValue,
+        icon: icon
+      });
+    }
+  });
+  return Object.values(productsList);
+};
+
+export const getCatalogProductsByEntityType = (entityType: string, mcEnums: IEnumsMapType): string[] => {
+  return Object.keys(mcEnums)
+    .filter((key) => {
+      const { enumName, parent } = mcEnums[key];
+      return enumName === 'ProductType' && parent === entityType;
+    });
 };
