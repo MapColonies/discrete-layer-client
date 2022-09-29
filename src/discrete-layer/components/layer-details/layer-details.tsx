@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
@@ -60,6 +60,7 @@ export const getValuePresentor = (
   mode: Mode,
   enumsMap?: IEnumsMapType | null,
   formik?: EntityFormikHandlers,
+  formatMessage?: (id: string) => string
 ): JSX.Element => {
 
   const fieldName = fieldInfo.fieldName;
@@ -121,7 +122,7 @@ export const getValuePresentor = (
         options.forEach(opt => {
           const { icon, translationKey } = enumsMap?.[opt] ?? DEFAULT_ENUM_DESCRIPTOR;
           // @ts-ignore
-          dictionary[opt] = { en: translationKey, he: translationKey, icon };
+          dictionary[opt] = { en: formatMessage(translationKey), he: formatMessage(translationKey), icon };
         });
       } else {
         // eslint-disable-next-line no-eval
@@ -152,6 +153,7 @@ export const getValuePresentor = (
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
   const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
   const { enumsMap } = useContext(EnumsMapContext);
+  const intl = useIntl();
   
   const maxLabelLengthCssVar = '--field-label-max-length';
   const categoryFieldsParentContainerStyle = (CONFIG.NUMBER_OF_CHARACTERS_LIMIT
@@ -204,7 +206,8 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                     get(layerRecord, fieldInfo.fieldName as string),
                     mode,
                     enumsMap,
-                    formik
+                    formik,
+                    ( id: string) => intl.formatMessage({ id })
                   )
                 }
               </Box>

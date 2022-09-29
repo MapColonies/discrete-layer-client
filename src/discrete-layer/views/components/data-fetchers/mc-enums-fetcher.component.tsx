@@ -2,7 +2,7 @@
 import React, { useContext, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
-import { ProductType } from '../../../models';
+import { ProductType, RecordStatus } from '../../../models';
 import { useQuery, useStore } from '../../../models/RootStore';
 
 export const MCEnumsFetcher: React.FC = observer(() => {
@@ -13,6 +13,11 @@ export const MCEnumsFetcher: React.FC = observer(() => {
   useEffect(() => {
     if (!mcEnumsQuery.loading && mcEnumsQuery.data) {
       const enums = { ...(mcEnumsQuery.data.getMcEnums).enums as IEnumsMapType };
+
+      const { PUBLISHED, UNPUBLISHED } = RecordStatus;
+
+      enums[PUBLISHED] = { ...enums[PUBLISHED], translationKey: `${enums[PUBLISHED].enumName}.${PUBLISHED.toLowerCase()}` };
+      enums[UNPUBLISHED] = { ...enums[UNPUBLISHED], translationKey: `${enums[UNPUBLISHED].enumName}.${UNPUBLISHED.toLowerCase()}` };
       
       const {
         ORTHOPHOTO,
