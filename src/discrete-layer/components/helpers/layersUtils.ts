@@ -49,7 +49,7 @@ export const getLayerLink = (layer: ILayerImage): LinkModelType => {
 export const getTokenParam = (): string => {
   // eslint-disable-next-line
   const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};    
-  if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
+  if (INJECTION_TYPE && INJECTION_TYPE.toLowerCase() === 'queryparam') {
     return `?${ATTRIBUTE_NAME}=${TOKEN_VALUE}`;
   }
   return '';
@@ -88,11 +88,11 @@ export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResour
   // eslint-disable-next-line
   const {INJECTION_TYPE, ATTRIBUTE_NAME, TOKEN_VALUE} = CONFIG.ACCESS_TOKEN as {INJECTION_TYPE: string, ATTRIBUTE_NAME: string, TOKEN_VALUE: string};
   
-  if (INJECTION_TYPE.toLowerCase() === 'header') {
+  if (INJECTION_TYPE && INJECTION_TYPE.toLowerCase() === 'header') {
     tokenProps.headers = {
       [ATTRIBUTE_NAME]: TOKEN_VALUE
     } as Record<string, unknown>;
-  } else if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
+  } else if (INJECTION_TYPE && INJECTION_TYPE.toLowerCase() === 'queryparam') {
     tokenProps.queryParameters = {
       [ATTRIBUTE_NAME]: TOKEN_VALUE
     } as Record<string, unknown>;
