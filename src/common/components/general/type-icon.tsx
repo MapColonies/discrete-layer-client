@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
+import React, { useContext } from 'react';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { iconsAndTooltips } from '../../../discrete-layer/models/catalogProducts';
+import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR } from '../../contexts/enumsMap.context';
 
 const SIZE = 128;
 
@@ -13,8 +13,9 @@ interface ITypeIconProps {
 }
 
 export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, style }) => {
+  const { enumsMap } = useContext(EnumsMapContext);
   
-  const [icon, tooltip] = iconsAndTooltips[typeName] ?? ['mc-icon-Close glow-missing-icon', 'MISSING ICON'];
+  const { icon, translationKey: tooltip } = enumsMap?.[typeName] ?? DEFAULT_ENUM_DESCRIPTOR;
 
   const img = (url: string): JSX.Element => {
     return (<img width={SIZE} height={SIZE} src={url}/>);

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
@@ -34,6 +34,7 @@ import { EntityFormikHandlers } from './layer-datails-form';
 import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
+import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
@@ -49,6 +50,7 @@ export const getValuePresentor = (
   fieldInfo: IRecordFieldInfo,
   fieldValue: unknown,
   mode: Mode,
+  enumsMap?: IEnumsMapType | null,
   formik?: EntityFormikHandlers,
 ): JSX.Element => {
 
@@ -118,6 +120,7 @@ export const getValuePresentor = (
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
   const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
+  const { enumsMap } = useContext(EnumsMapContext);
   
   const maxLabelLengthCssVar = '--field-label-max-length';
   const categoryFieldsParentContainerStyle = (CONFIG.NUMBER_OF_CHARACTERS_LIMIT
@@ -169,6 +172,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                     fieldInfo,
                     get(layerRecord, fieldInfo.fieldName as string),
                     mode,
+                    enumsMap,
                     formik
                   )
                 }

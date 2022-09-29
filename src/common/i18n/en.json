@@ -56,6 +56,7 @@
   "action.layer.move-down.tooltip": "Move down",
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
   "action.job.retry": "Try again",
+  "action.job.abort": "Abort",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -439,6 +440,7 @@
   "system-status.job.status_translation.Completed": "Completed",
   "system-status.job.status_translation.Failed": "Failed",
   "system-status.job.status_translation.Expired": "Expired",
+  "system-status.job.status_translation.Aborted": "Aborted",
 
   "system-status.job.filter.status.all": "All",
 

@@ -182,17 +182,24 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
 
    useEffect(() => {
      if (typeof store.actionDispatcherStore.action !== 'undefined') {
-       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
-       switch (action) {
-         case 'Job.retry':
-           mutationQuery.setQuery(
-             store.mutateJobRetry({
-               id: data.id as string,
-             })
-           );
-           break;
-         default:
-           break;
+      const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
+      switch (action) {
+        case 'Job.retry':
+          mutationQuery.setQuery(
+            store.mutateJobRetry({
+              id: data.id as string,
+            })
+          );
+          break;
+        case 'Job.abort':
+          mutationQuery.setQuery(
+            store.mutateJobAbort({
+              id: data.id as string,
+            })
+          );
+          break;
+        default:
+          break;
        }
      }
    }, [store.actionDispatcherStore.action]);
