@@ -2,16 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useMemo } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { get, isEmpty } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
-import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType } from '../../../common/contexts/enumsMap.context';
+import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { CountryDictionary } from '../../../common/models/country.dictionary';
-import { IDictionary } from '../../../common/models/dictionary';
 import { Country } from '../../../common/models/country.enum';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
@@ -57,26 +56,13 @@ export const getValuePresentor = (
   fieldInfo: IRecordFieldInfo,
   fieldValue: unknown,
   mode: Mode,
-  enumsMap?: IEnumsMapType | null,
   formik?: EntityFormikHandlers,
-  formatMessage?: (id: string) => string
+  enumsMap?: IEnumsMapType | null
 ): JSX.Element => {
 
   const fieldName = fieldInfo.fieldName;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
   const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
-  let options: string[] = [];
-  let dictionary: IDictionary | undefined = undefined;
-
-  const getDictionary = (keys: string[]): IDictionary => {
-    const dictionary = {};
-    keys.forEach(key => {
-      const { icon, translationKey } = enumsMap?.[key] ?? DEFAULT_ENUM_DESCRIPTOR;
-      // @ts-ignore
-      dictionary[key] = { en: formatMessage(translationKey), he: formatMessage(translationKey), icon };
-    });
-    return dictionary;
-  };
   
   switch (basicType) {
     case 'string':
@@ -89,10 +75,8 @@ export const getValuePresentor = (
       );
     case 'string[]':
       if (fieldName === 'region') {
-        options = Object.keys(Country);
-        dictionary = CountryDictionary;
         return (
-          <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
+          <EnumValuePresentorComponent options={Object.keys(Country)} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={CountryDictionary}></EnumValuePresentorComponent>
         );
       } else {
         return (
@@ -125,23 +109,19 @@ export const getValuePresentor = (
     case 'Units':
     case 'UndulationModel':
     case 'ProductType': {
-      const enums = enumsMap as IEnumsMapType;
+      let options: string[] = [];
       if (basicType === 'ProductType') {
-        options = getEnumKeys(enums, basicType, layerRecord.__typename);
+        options = getEnumKeys(enumsMap as IEnumsMapType, basicType, layerRecord.__typename);
       } else {
-        options = getEnumKeys(enums, basicType);
+        options = getEnumKeys(enumsMap as IEnumsMapType, basicType);
       }
-      dictionary = getDictionary(options);
       return (
-        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     }
     case 'RecordStatus': {
-      const enums = enumsMap as IEnumsMapType;
-      options = getEnumKeys(enums, basicType);
-      dictionary = getDictionary(options);
       return (
-        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={dictionary}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent options={getEnumKeys(enumsMap as IEnumsMapType, basicType)} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     }
     case 'RecordType':
@@ -162,7 +142,6 @@ export const getValuePresentor = (
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
   const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
   const { enumsMap } = useContext(EnumsMapContext);
-  const intl = useIntl();
   
   const maxLabelLengthCssVar = '--field-label-max-length';
   const categoryFieldsParentContainerStyle = (CONFIG.NUMBER_OF_CHARACTERS_LIMIT
@@ -214,9 +193,8 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                     fieldInfo,
                     get(layerRecord, fieldInfo.fieldName as string),
                     mode,
-                    enumsMap,
                     formik,
-                    ( id: string) => intl.formatMessage({ id })
+                    enumsMap
                   )
                 }
               </Box>

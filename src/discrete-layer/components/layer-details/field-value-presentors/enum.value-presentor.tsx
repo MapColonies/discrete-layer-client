@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useState } from 'react';
-import { get, isEmpty } from 'lodash';
+import React, { useContext, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import CONFIG from '../../../../common/config';
+import EnumsMapContext, {DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType} from '../../../../common/contexts/enumsMap.context';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
 import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -26,6 +28,9 @@ interface EnumValuePresentorProps {
 export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({options, mode, fieldInfo, value, formik, dictionary}) => {
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
   const [locale] = useState<string>(CONFIG.I18N.DEFAULT_LANGUAGE);
+  const intl = useIntl();
+  const { enumsMap } = useContext(EnumsMapContext);
+  const enums = enumsMap as IEnumsMapType;
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -52,14 +57,19 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             {
               options.map(
                 (item, index) => {
-                  let dictionaryValue = dictionary !== undefined ? dictionary[item] : undefined;
-                  if (isEmpty(dictionaryValue)) {
-                    dictionaryValue = {en: item, he: item, icon: ''};
+                  let { realValue, icon, translationKey } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
+                  let translation: string;
+                  if (dictionary !== undefined) {
+                    realValue = dictionary[item].en;
+                    icon = dictionary[item].icon;
+                    translation = get(dictionary[item], locale);
+                  } else {
+                    translation = intl.formatMessage({ id: translationKey });
                   }
                   return (
-                    <MenuItem key={index} value={item}>
-                      <Typography tag="span" className={get(dictionaryValue, 'icon')}></Typography>
-                      {get(dictionaryValue, locale)}
+                    <MenuItem key={index} value={realValue}>
+                      <Typography tag="span" className={icon}></Typography>
+                      {translation}
                     </MenuItem>
                   );
                 }
