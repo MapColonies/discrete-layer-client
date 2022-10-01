@@ -7,6 +7,7 @@
   "general.save-btn.text": "Save",
   "general.choose-btn.text": "Choose",
   "general.close-btn.text": "Close",
+  "general.warning.text": "Warning",
   "general.error.text": "Error",
   "general.error.title": "Something went wrong...",
   "general.error.description": "Message:",
@@ -18,8 +19,6 @@
   "general.title.choose": "Choose files",
   "general.dialog.exit.title": "Are you sure?",
   "general.dialog.exit.message": "You'll lose any unsaved changes",
-  "general.dialog.publish.message": "This action will lead to the publication of the product and its exposure to all users",
-  "general.dialog.unpublish.message": "This action will lead to canceling the publication of the product and hiding it and may affect systems that consume this product",
   "general.dialog.best-in-edit.title": "You are editing the BEST",
   "general.dialog.best-in-edit.message": "Please finish your work, before edit other product.",
   "general.best-draft.new.tooltip": "New",
@@ -103,6 +102,11 @@
   "results.fields.order.label": "Order",
   "results.fields.resolution.label": "Resolution",
   "results.nodata": "No results to show",
+
+  "publish-unpublish.dialog.publish.message": "This action will lead to the {action} of the product and its exposure to all users",
+  "publish-unpublish.dialog.publish.action": "publication",
+  "publish-unpublish.dialog.unpublish.message": "This action will lead to {action} of the product and hiding it and may affect systems that consume this product",
+  "publish-unpublish.dialog.unpublish.action": "canceling the publication",
 
   "snack.message.success": "Export SUCCEEDED",
   "snack.message.failed": "Export FAILED",

@@ -7,6 +7,7 @@
   "general.save-btn.text": "שמירה",
   "general.choose-btn.text": "בחירה",
   "general.close-btn.text": "סגירה",
+  "general.warning.text": "אזהרה",
   "general.error.text": "שגיאה",
   "general.error.title": "משהו השתבש...",
   "general.error.description": "מידע נוסף:",
@@ -18,8 +19,6 @@
   "general.title.choose": "בחירת קבצים",
   "general.dialog.exit.title": "בטוח שברצונך להמשיך?",
   "general.dialog.exit.message": "שינויים שלא נשמרו ייאבדו",
-  "general.dialog.publish.message": "הפעולה תוביל לפרסום המוצר ולחשיפתו לכלל המשתמשים",
-  "general.dialog.unpublish.message": "הפעולה תוביל לביטול פרסום המוצר ולהסתרתו ועלולה להשפיע על מערכות הצורכות את המוצר",
   "general.dialog.best-in-edit.title": "אתה עורך BEST",
   "general.dialog.best-in-edit.message": "נא סיים עבודתך לפני עריכת מוצר אחר.",
   "general.best-draft.new.tooltip": "חדש",
@@ -103,6 +102,11 @@
   "results.fields.order.label": "סדר",
   "results.fields.resolution.label": "רזולוציה",
   "results.nodata": "אין תוצאות",
+
+  "publish-unpublish.dialog.publish.message": "הפעולה תוביל ל{action} המוצר ולחשיפתו לכלל המשתמשים",
+  "publish-unpublish.dialog.publish.action": "פרסום",
+  "publish-unpublish.dialog.unpublish.message": "הפעולה תוביל ל{action} המוצר ולהסתרתו <br/>ועלולה להשפיע על מערכות הצורכות את המוצר",
+  "publish-unpublish.dialog.unpublish.action": "ביטול פרסום",
 
   "snack.message.success": "יצוא התחיל בהצלחה",
   "snack.message.failed": "יצוא נכשל",

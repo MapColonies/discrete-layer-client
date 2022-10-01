@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
-import { FormattedMessage } from 'react-intl';
 import { DialogContent } from '@material-ui/core';
 import {
   Button,
@@ -9,10 +9,13 @@ import {
   DialogActions,
   DialogTitle,
   Icon,
-  IconButton
+  IconButton,
+  Tooltip,
+  Typography
 } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import { isUnpublished } from '../../../common/helpers/style';
 import { RecordStatus, RecordType, useQuery, useStore } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
@@ -31,10 +34,21 @@ interface ContinueDialogProps {
 export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, isOpen, onSetOpen, onPublish }) => {
   const store = useStore();
   const mutationQuery = useQuery();
+  const intl = useIntl();
 
   const closeDialog = useCallback(() => {
     onSetOpen(false);
   }, [onSetOpen]);
+
+  const publishMessage = intl.formatMessage(
+    { id: 'publish-unpublish.dialog.publish.message' },
+    { action: emphasizeByHTML(`${intl.formatMessage({ id: 'publish-unpublish.dialog.publish.action' })}`) }
+  );
+
+  const unpublishMessage = intl.formatMessage(
+    { id: 'publish-unpublish.dialog.unpublish.message' },
+    { action: emphasizeByHTML(`${intl.formatMessage({ id: 'publish-unpublish.dialog.unpublish.action' })}`) }
+  );
 
   const dispatchAction = (action: Record<string, unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
@@ -81,12 +95,10 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
           />
         </DialogTitle>
         <DialogContent className="dialogBody">
-          <Icon className="icon" icon={{ icon: 'info', size: 'xsmall' }}/>
-          {
-            isUnpublished(layer as any) ?
-            <FormattedMessage id="general.dialog.publish.message"/> :
-            <FormattedMessage id="general.dialog.unpublish.message"/>
-          }
+          <Tooltip content={intl.formatMessage({ id: 'general.warning.text' })}>
+            <Icon className="icon" icon={{ icon: 'info', size: 'xsmall' }}/>
+          </Tooltip>
+          <Typography tag='div' dangerouslySetInnerHTML={{__html: isUnpublished(layer as any) ? publishMessage : unpublishMessage}}></Typography>
         </DialogContent>
         <DialogActions>
           <Box className="errors">
