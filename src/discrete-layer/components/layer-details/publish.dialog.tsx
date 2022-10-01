@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { DialogContent } from '@material-ui/core';
@@ -40,15 +40,17 @@ export const PublishDialog: React.FC<ContinueDialogProps> = observer(({ layer, i
     onSetOpen(false);
   }, [onSetOpen]);
 
-  const publishMessage = intl.formatMessage(
+  const publishMessage = useMemo((): string => {
+    return intl.formatMessage(
     { id: 'publish-unpublish.dialog.publish.message' },
-    { action: emphasizeByHTML(`${intl.formatMessage({ id: 'publish-unpublish.dialog.publish.action' })}`) }
-  );
+    { action: emphasizeByHTML(`${intl.formatMessage({ id: 'publish-unpublish.dialog.publish.action' })}`) });
+  }, []);
 
-  const unpublishMessage = intl.formatMessage(
+  const unpublishMessage = useMemo((): string => {
+    return intl.formatMessage(
     { id: 'publish-unpublish.dialog.unpublish.message' },
-    { action: emphasizeByHTML(`${intl.formatMessage({ id: 'publish-unpublish.dialog.unpublish.action' })}`) }
-  );
+    { action: emphasizeByHTML(`${intl.formatMessage({ id: 'publish-unpublish.dialog.unpublish.action' })}`) });
+  }, []);
 
   const dispatchAction = (action: Record<string, unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
