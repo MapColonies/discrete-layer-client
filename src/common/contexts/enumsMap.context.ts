@@ -6,6 +6,7 @@ export interface IEnumDescriptor {
   icon: string;
   translationKey: string;
   parent: string;
+  internal: boolean;
   properties: Record<string, unknown>;
 }
 
@@ -24,6 +25,7 @@ export const DEFAULT_ENUM_DESCRIPTOR: IEnumDescriptor = {
   icon: 'mc-icon-Close glow-missing-icon',
   translationKey: 'general.missing.translation',
   parent: '',
+  internal: false,
   properties: {}
 };
 

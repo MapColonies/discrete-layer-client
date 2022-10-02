@@ -515,6 +515,37 @@
   "user-role.dialog.password.input.placeholder": "Password",
   "user-role.dialog.wrong-password-error.text": "Password is incorrect",
 
+  "DataType.float64": "FLOAT64",
+  "DataType.float32": "FLOAT32",
+  "DataType.float16": "FLOAT16",
+  "DataType.int64": "INT64",
+  "DataType.int32": "INT32",
+  "DataType.int16": "INT16",
+  "DataType.int8": "INT8",
+
+  "NoDataValue.no_data_32768": "NO_DATA_32768",
+  "NoDataValue.no_data_326767": "NO_DATA_326767",
+  "NoDataValue.no_data_999": "NO_DATA_999",
+
+  "VerticalDatum.wgs_1984": "WGS_1984",
+  "VerticalDatum.wgs_1972": "WGS_1972",
+  "VerticalDatum.pulkovo_1942": "PULKOVO_1942",
+  "VerticalDatum.palestine_1923": "PALESTINE_1923",
+  "VerticalDatum.msl_height": "MSL_HEIGHT",
+  "VerticalDatum.israel": "ISRAEL",
+  "VerticalDatum.ed_1950_idf": "ED_1950_IDF",
+
+  "Units.meter": "METER",
+  "Units.dd": "DD",
+  "Units.dms": "DMS",
+  "Units.arc_seconds": "ARC_SECONDS",
+  "Units.unknown": "UNKNOWN",
+  
+  "UndulationModel.msl_egm96": "MSL_EGM96",
+  "UndulationModel.msl_egm2008": "MSL_EGM2008",
+  "UndulationModel.msl_dma10": "MSL_DMA10",
+  "UndulationModel.ilum": "ILUM",
+
   "ProductType.orthophoto": "Orthophoto",
   "ProductType.orthophoto_history": "OrthophotoHistory",
   "ProductType.orthophoto_best": "OrthophotoBest",

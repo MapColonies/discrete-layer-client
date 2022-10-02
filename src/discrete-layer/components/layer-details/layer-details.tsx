@@ -10,8 +10,6 @@ import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
 import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
-import { CountryDictionary } from '../../../common/models/country.dictionary';
-import { Country } from '../../../common/models/country.enum';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import { 
