@@ -41,7 +41,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
   } else {
     return (
       <>
-        <Box>
+        <Box className="detailsFieldValue selectBoxContainer">
           <Select
             value={innerValue}
             id={fieldInfo.fieldName as string}

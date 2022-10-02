@@ -74,15 +74,9 @@ export const getValuePresentor = (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
       );
     case 'string[]':
-      if (fieldName === 'region') {
-        return (
-          <EnumValuePresentorComponent options={Object.keys(Country)} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} dictionary={CountryDictionary}></EnumValuePresentorComponent>
-        );
-      } else {
-        return (
-          <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
-        );
-      }
+      return (
+        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+      );
     case 'json':
       return (
         <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></JsonValuePresentorComponent>
@@ -119,19 +113,14 @@ export const getValuePresentor = (
         <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     }
-    case 'RecordStatus': {
-      return (
-        <EnumValuePresentorComponent options={getEnumKeys(enumsMap as IEnumsMapType, basicType)} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
-      );
-    }
     case 'RecordType':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
       );
-    // case 'RecordStatus':
-    //   return (
-    //     <StatusValuePresentorComponent value={value as string}></StatusValuePresentorComponent>
-    //   );
+    case 'RecordStatus':
+      return (
+        <StatusValuePresentorComponent value={value as string}></StatusValuePresentorComponent>
+      );
     default:
       return (
         <UnknownValuePresentorComponent value={basicType}></UnknownValuePresentorComponent>

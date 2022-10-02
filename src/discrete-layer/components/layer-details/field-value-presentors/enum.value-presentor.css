@@ -7,14 +7,8 @@
   gap: 8px;
 }
 
-.enumOptions + i {
-  position: relative;
-  top: -19px;
-  right: -208px;
-}
-
-body[dir='rtl'] .enumOptions + i {
-  right: 208px;
+.detailsFieldValue.selectBoxContainer {
+  overflow: unset;
 }
 
 /* .enumOptions .mdc-select--focused .mdc-select__dropdown-icon */
