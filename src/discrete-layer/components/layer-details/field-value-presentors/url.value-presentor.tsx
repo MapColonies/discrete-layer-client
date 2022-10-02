@@ -35,19 +35,21 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
         )}
       </TooltippedValue>
 
-      {linkInfo?.linkAction === COPY ? (
-        <Box className="detailsUrlFieldUrlCopy">
-          <Tooltip
-            content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}
-          >
-            <CopyToClipboard text={value} onCopy={(): void => setCopied(true)}>
-              <IconButton type={'button'} className="mc-icon-Copy" />
-            </CopyToClipboard>
-          </Tooltip>
-        </Box>
-      ) : (
-        <Box className="detailsUrlFieldUrlCopy"></Box>
-      )}
+      {
+        linkInfo?.linkAction === COPY ? (
+          <Box className="detailsUrlFieldUrlCopy">
+            <Tooltip
+              content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}
+            >
+              <CopyToClipboard text={value} onCopy={(): void => setCopied(true)}>
+                <IconButton type="button" className="mc-icon-Copy" />
+              </CopyToClipboard>
+            </Tooltip>
+          </Box>
+        ) : (
+          <Box className="detailsUrlFieldUrlCopy"></Box>
+        )
+      }
     </>
   );
 }

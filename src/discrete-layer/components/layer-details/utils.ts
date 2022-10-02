@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, isEmpty, omit } from 'lodash';
+import moment, { unitOfTime } from 'moment';
 import { $enum } from 'ts-enum-util';
+import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import {
   BestRecordModel,
@@ -33,7 +35,6 @@ import {
   VectorBestRecordModelArray,
   QuantizedMeshBestRecordModelArray
 } from './entity-types-keys';
-import moment, { unitOfTime } from 'moment';
 
 export const getEntityDescriptors = (
   layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
@@ -401,4 +402,14 @@ export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerIma
   }
 
   return recordForUpdate as unknown as ILayerImage;
+};
+
+export const getEnumKeys = (enumsMap: IEnumsMapType, enumName: string, parent?: string): string[] => {
+  return Object.keys(enumsMap)
+    .filter((key) => {
+      if (!isEmpty(parent)) {
+        return enumsMap[key].enumName === enumName && enumsMap[key].parent === parent;
+      }
+      return enumsMap[key].enumName === enumName;
+    });
 };

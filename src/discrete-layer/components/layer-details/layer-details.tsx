@@ -1,3 +1,6 @@
+/* eslint-disable no-fallthrough */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
@@ -6,6 +9,7 @@ import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import CONFIG from '../../../common/config';
+import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import { 
@@ -13,8 +17,9 @@ import {
   EntityDescriptorModelType,
   FieldCategory,
   LayerMetadataMixedUnion,
-  LinkModelType
+  LinkModelType,
 } from '../../models';
+import { getEnumKeys } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -34,7 +39,6 @@ import { EntityFormikHandlers } from './layer-datails-form';
 import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
-import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
@@ -50,8 +54,8 @@ export const getValuePresentor = (
   fieldInfo: IRecordFieldInfo,
   fieldValue: unknown,
   mode: Mode,
-  enumsMap?: IEnumsMapType | null,
   formik?: EntityFormikHandlers,
+  enumsMap?: IEnumsMapType | null
 ): JSX.Element => {
 
   const fieldName = fieldInfo.fieldName;
@@ -61,6 +65,7 @@ export const getValuePresentor = (
   switch (basicType) {
     case 'string':
     case 'identifier':
+    case 'sensors':
       return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
         // eslint-disable-next-line
         <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
@@ -90,20 +95,23 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'sensors':
-      return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
-      );
     case 'DataType':
     case 'NoDataValue':
     case 'VerticalDatum':
     case 'Units':
     case 'UndulationModel':
+    case 'ProductType': {
+      let options: string[] = [];
+      if (basicType === 'ProductType') {
+        options = getEnumKeys(enumsMap as IEnumsMapType, basicType, layerRecord.__typename);
+      } else {
+        options = getEnumKeys(enumsMap as IEnumsMapType, basicType);
+      }
       return (
-        <EnumValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
+    }
     case 'RecordType':
-    case 'ProductType':
       return (
         <TypeValuePresentorComponent value={value as string}></TypeValuePresentorComponent>
       );
@@ -172,8 +180,8 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                     fieldInfo,
                     get(layerRecord, fieldInfo.fieldName as string),
                     mode,
-                    enumsMap,
-                    formik
+                    formik,
+                    enumsMap
                   )
                 }
               </Box>

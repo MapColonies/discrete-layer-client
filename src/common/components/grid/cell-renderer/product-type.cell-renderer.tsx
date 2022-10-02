@@ -4,7 +4,7 @@ import { getLinkUrlWithToken } from '../../../../discrete-layer/components/helpe
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { getStatusColoredText } from '../../../helpers/style';
 import { LinkType } from '../../../models/link-type.enum';
-import { TypeIcon } from '../../general/type-icon';
+import { TypeIcon } from '../../shared/type-icon';
 
 interface IProductTypeCellRendererParams extends ICellRendererParams {
   style?: Record<string, unknown>;

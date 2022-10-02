@@ -95,7 +95,7 @@
   border-radius: 20px;
 }
 
-/* AG-GRID CUSTOMIZATIONS */
+/* AG-GRID CUSTOMIZATION */
 
 .dark-theme .ag-theme-alpine-dark {
   color: var(--ag-foreground-color, #fff);
@@ -126,7 +126,7 @@
   background: none;
 }
 
-/* INPUT CUSTOMIZATIONS */
+/* INPUT CUSTOMIZATION */
 
 .dark-theme .mdc-text-field {
   background-color: transparent;
@@ -149,7 +149,7 @@
   opacity: 0.5;
 }
 
-/* TEXTAREA CUSTOMIZATIONS */
+/* TEXTAREA CUSTOMIZATION */
 
 .dark-theme .mdc-text-field.mdc-text-field--textarea {
   background-color: transparent;
@@ -171,7 +171,7 @@
   opacity: 0.5;
 }
 
-/* DATE_TIME_PICKER CUSTOMIZATION */
+/* DATE-TIME-PICKER CUSTOMIZATION */
 
 .dark-theme .datePresentor .MuiInputBase-input {
   padding: 2px 0px 2px 16px;
@@ -228,7 +228,7 @@ body[dir='rtl']
   display: none;
 }
 
-/* DIALOG CUSTOMIZATIONS */
+/* DIALOG CUSTOMIZATION */
 
 .dark-theme .mdc-dialog .mdc-dialog__surface {
   background-color: var(--mdc-theme-alternative-surface, #fff);
@@ -252,7 +252,7 @@ body[dir='rtl']
   height: var(--dialog-title-height);
 }
 
-/* SCROLLBAR CUSTOMIZATIONS */
+/* SCROLLBAR CUSTOMIZATION */
 
 body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
   direction: rtl !important;
@@ -280,8 +280,7 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
   color: var(--mdc-theme-text-icon-on-dark);
 }
 
-
-/* Switch */
+/* SWITCH CUSTOMIZATION */
 
 .dark-theme .mdc-switch {
   margin-inline: 10px;

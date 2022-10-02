@@ -36,7 +36,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
       return undefined;
     } 
     return dateFormatter(innerValue);
-  }
+  };
 
   const getDate = (): Date | null => {
     if (innerValue !== null) {

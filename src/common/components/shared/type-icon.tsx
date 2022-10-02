@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext } from 'react';
+import { useIntl } from 'react-intl';
 import { IconButton, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR } from '../../contexts/enumsMap.context';
@@ -13,10 +14,12 @@ interface ITypeIconProps {
 }
 
 export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, style }) => {
-  const { enumsMap } = useContext(EnumsMapContext);
-  
-  const { icon, translationKey: tooltip } = enumsMap?.[typeName] ?? DEFAULT_ENUM_DESCRIPTOR;
 
+  const intl = useIntl();
+  const { enumsMap } = useContext(EnumsMapContext);
+  const { icon, translationKey } = enumsMap?.[typeName] ?? DEFAULT_ENUM_DESCRIPTOR;
+  const tooltip = intl.formatMessage({ id: translationKey });
+  
   const img = (url: string): JSX.Element => {
     return (<img width={SIZE} height={SIZE} src={url}/>);
   };
