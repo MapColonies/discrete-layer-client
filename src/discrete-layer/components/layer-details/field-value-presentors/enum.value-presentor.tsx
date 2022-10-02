@@ -37,8 +37,6 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
     return (
       <TooltippedValue className="detailsFieldValue">
         {
-          !isEmpty(innerValue) ?
-          intl.formatMessage({ id: enums[innerValue].translationKey }):
           innerValue
         }
       </TooltippedValue>
@@ -48,7 +46,9 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
       <>
         <Box className="detailsFieldValue selectBoxContainer">
           <Select
-            value={innerValue}
+            value={
+              innerValue
+            }
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
@@ -62,21 +62,21 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             {
               options.map(
                 (item, index) => {
-                  let { realValue, icon } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
+                  let icon: string;
                   let translation: string;
                   if (dictionary !== undefined) {
-                    realValue = dictionary[item].en;
                     icon = dictionary[item].icon;
                     translation = get(dictionary[item], locale) as string;
                   } else {
                     const { translationKey, internal } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
+                    icon = enums[item].icon;
                     translation = intl.formatMessage({ id: translationKey });
                     if (internal) {
                       return null;
                     }
                   }
                   return (
-                    <MenuItem key={index} value={realValue}>
+                    <MenuItem key={index} value={item}>
                       <Typography tag="span" className={icon}></Typography>
                       {translation}
                     </MenuItem>
