@@ -19,3 +19,7 @@ body[dir='rtl'] .enumOptions .mdc-select__dropdown-icon {
   right: unset;
   left: 16px;
 }
+
+.enumOptions .mdc-menu.mdc-select__menu.mdc-menu-surface.mdc-menu-surface--open {
+  max-height: 250px !important;
+}
