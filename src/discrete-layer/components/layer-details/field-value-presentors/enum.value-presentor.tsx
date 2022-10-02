@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -6,7 +7,7 @@ import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import CONFIG from '../../../../common/config';
-import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
 import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -61,18 +62,18 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             {
               options.map(
                 (item, index) => {
-                  const { translationKey, internal } = enums[item];
-                  let { realValue, icon } = enums[item];
+                  let { realValue, icon } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
                   let translation: string;
                   if (dictionary !== undefined) {
                     realValue = dictionary[item].en;
                     icon = dictionary[item].icon;
                     translation = get(dictionary[item], locale) as string;
                   } else {
+                    const { translationKey, internal } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
                     translation = intl.formatMessage({ id: translationKey });
-                  }
-                  if (internal) {
-                    return null;
+                    if (internal) {
+                      return null;
+                    }
                   }
                   return (
                     <MenuItem key={index} value={realValue}>

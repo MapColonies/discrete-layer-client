@@ -80,7 +80,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-body[dir=rtl] .rowLabel {
+body[dir='rtl'] .rowLabel {
   padding-left: 20px;
   padding-right: 8px;
 }
