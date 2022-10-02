@@ -23,9 +23,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
   const intl = useIntl();
 
-  useEffect(()=>{
-      setJsonValue(JSON.stringify(value ?? {}));
-  },[value])
+  useEffect(() => {
+    setJsonValue(JSON.stringify(value ?? {}));
+  }, [value])
 
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
@@ -62,8 +62,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         formikValue = JSON.parse(jsonValue) as unknown;
         formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
 
-          removeStatusErrors();
-
+        removeStatusErrors();
       } catch(err) {
         const error = {id: `validation-field.${fieldInfo.fieldName as string}.json`};
         const isFieldRequired = fieldInfo.isRequired as boolean
@@ -83,8 +82,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
                 [fieldInfo.fieldName as string]: [errorMsg]
               }
           })
-        }
-        else {
+        } else {
           removeStatusErrors();
         }
       }
