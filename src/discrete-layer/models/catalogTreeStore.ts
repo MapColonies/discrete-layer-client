@@ -165,9 +165,8 @@ export const catalogTreeStore = ModelBase.props({
 
         const layersList = get(dataSearch, 'search') as ILayerImage[];
         const arr: ILayerImage[] = cloneDeep(layersList);
-
-        store.discreteLayersStore.setLayersImages(arr, false);
-        return arr;
+        
+        return store.discreteLayersStore.setLayersImages(arr, false);
       } catch (e) {
         setSearchError(search.error);
         resetCatalogTreeData();
@@ -340,7 +339,13 @@ export const catalogTreeStore = ModelBase.props({
               /* eslint-enable */
             );
 
-            setCatalogTreeData([parentCatalog, parentBests, parentUnpublished]);
+            const isUserAdmin = store.userStore.isUserAdmin();
+
+            setCatalogTreeData([
+              parentCatalog, 
+              parentBests, 
+              ...(isUserAdmin ? [parentUnpublished] : [])
+            ]);
             setIsDataLoading(false);
           }
         }
