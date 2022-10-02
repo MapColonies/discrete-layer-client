@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { get, isEmpty } from 'lodash';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
@@ -33,12 +33,22 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
   const { enumsMap } = useContext(EnumsMapContext);
   const enums = enumsMap as IEnumsMapType;
 
+  const getDisplayValue = useCallback((): string => {
+    if (isEmpty(innerValue)) {
+      return innerValue;
+    } else if (Array.isArray(innerValue)) {
+      return innerValue.join(',');
+    } else if (dictionary !== undefined) {
+      return get(dictionary[innerValue], locale) as string;
+    } else {
+      return intl.formatMessage({ id: enums[innerValue].translationKey });
+    }
+  }, [innerValue]);
+
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <TooltippedValue className="detailsFieldValue">
-        {
-          innerValue
-        }
+        {getDisplayValue()}
       </TooltippedValue>
     );
   } else {
@@ -46,9 +56,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
       <>
         <Box className="detailsFieldValue selectBoxContainer">
           <Select
-            value={
-              innerValue
-            }
+            value={innerValue}
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
             onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
