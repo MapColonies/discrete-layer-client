@@ -195,16 +195,12 @@ const InnerForm = (
 
     resetForm();
     setValues({
-      ...transformEntityToFormFields({
-        ...values,
-        ...(isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel),
-      }),
+      ...values,
+      ...transformEntityToFormFields((isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel)),
       ...ingestionFields,
     });
 
-    if (metadata.error !== null) {
-      setGraphQLError(metadata.error);
-    }
+    setGraphQLError(metadata.error);
   };
 
   return (
@@ -263,7 +259,8 @@ const InnerForm = (
                 mutationQueryLoading ||
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
-                (Object.keys(getStatusErrors()).length > NONE)
+                (Object.keys(getStatusErrors()).length > NONE) ||
+                !isEmpty(graphQLError)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

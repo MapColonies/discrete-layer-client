@@ -27,6 +27,24 @@ body[dir='rtl'] .header {
   display: flex;
   align-items: center;
 }
+.ingestionButton .mdc-button {
+  padding: 20px;
+}
+
+.uploadMetadataButton .mdc-button--outlined:not(:disabled){
+   border-color: currentColor;
+  /* color: var(--mdc-theme-text-icon-on-dark); */
+  padding: 20px;
+}
+
+.ingestionButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: min-content;
+  gap: 10px;
+}
 
 .directorySpacer {
   display: flex;

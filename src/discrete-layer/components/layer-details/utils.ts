@@ -262,6 +262,28 @@ export function downloadJSONToClient(jsonObj: Record<any, any>, fileName: string
   link.setAttribute('download', fileName);
   link.click();
   link.remove();
+}
+
+export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>) => void): void {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.setAttribute('accept', '.json');
+  input.addEventListener('change',(e): void => {
+    const target = (e.currentTarget  as HTMLInputElement);
+    if(target.files) {
+      const file = target.files[0];
+      const fileReader = new FileReader();
+      fileReader.readAsText(file);
+
+      fileReader.addEventListener('load' , (e) => {
+        fileLoadCB(e);
+        input.remove();
+      });
+    }
+   })
+
+  input.click();
+  
 }  
 
 export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerImage, descriptors: FieldConfigModelType[]): ILayerImage => {
