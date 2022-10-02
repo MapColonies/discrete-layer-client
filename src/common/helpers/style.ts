@@ -11,6 +11,10 @@ export const isUnpublished = (data: Record<string, unknown>): boolean => {
   return Object.keys(data).includes(STATUS) && Object.values(data).includes(RecordStatus.UNPUBLISHED);
 };
 
+export const isUnpublishedValue = (value: string): boolean => {
+  return value === RecordStatus.UNPUBLISHED;
+};
+
 export const getStatusColoredText = (data: Record<string, unknown>): Record<string, unknown> | undefined => {
   return existStatus(data) && isUnpublished(data) ? { color: UNPUBLISHED_COLOR } : undefined;
 };
