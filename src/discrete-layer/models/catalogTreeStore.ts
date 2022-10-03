@@ -197,7 +197,7 @@ export const catalogTreeStore = ModelBase.props({
         // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
         // are subsets of the catalog layers list
 
-        if (!isEmpty(layersList)) {
+        if (typeof layersList !== 'undefined' && (layersList as ILayerImage[] | null) !== null) {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           const { RECORD_ALL, RECORD_RASTER, RECORD_DEM } = RecordType;
           const withCapabilities = [RECORD_RASTER, RECORD_DEM];
@@ -248,6 +248,7 @@ export const catalogTreeStore = ModelBase.props({
             if (!isEmpty(capabilitiesList)) {
               store.discreteLayersStore.setCapabilities(capabilitiesList);
             }
+          }
 
             //#endregion
 
@@ -347,7 +348,7 @@ export const catalogTreeStore = ModelBase.props({
               ...(isUserAdmin ? [parentUnpublished] : [])
             ]);
             setIsDataLoading(false);
-          }
+          
         }
       } catch (e) {
         setIsDataLoading(false);
