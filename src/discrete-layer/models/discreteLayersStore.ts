@@ -286,9 +286,9 @@ export const discreteLayersStore = ModelBase
     }
 
     function resetAppState(withoutFields: string[] = []): void {
-      Object.entries(INITIAL_STATE).forEach(([statekey, initalVal]) => {
+      Object.entries(INITIAL_STATE).forEach(([statekey, initialVal]) => {
         if(!withoutFields.includes(statekey)) {
-         set(self,statekey,initalVal);
+         set(self, statekey, initialVal);
         }
       })
     }
