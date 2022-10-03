@@ -278,7 +278,7 @@ export const discreteLayersStore = ModelBase
         const isFieldMutable = fieldConfig.isManuallyEditable === true || fieldConfig.isLifecycleEnvolved === true;
 
         if(isFieldMutable) {
-          filteredLayer[fieldConfig.fieldName as string] = (layerImage as unknown as Record<string, unknown>)[fieldConfig.fieldName as string];
+          set(filteredLayer, fieldConfig.fieldName as string, get(layerImage, fieldConfig.fieldName as string));
         }
       });
 
