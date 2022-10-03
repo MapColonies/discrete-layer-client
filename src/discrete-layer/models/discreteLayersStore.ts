@@ -274,7 +274,7 @@ export const discreteLayersStore = ModelBase
       const filteredLayer: Record<string, unknown> = {};
       
       flatDescriptors.forEach(fieldConfig => {
-        // Field is considered mutable if it can be manually editable via form, or during automatic process.
+        // Field is considered mutable if it is manually editable via form, or during automatic process.
         const isFieldMutable = fieldConfig.isManuallyEditable === true || fieldConfig.isLifecycleEnvolved === true;
 
         if(isFieldMutable) {
