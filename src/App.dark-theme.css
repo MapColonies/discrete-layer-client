@@ -304,7 +304,7 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 /* BUTTON CUSTOMIZATION */
 
 .dark-theme .mdc-button:disabled {
-  background-color: rgba(69, 85, 112, 0.5);
-  color: #AFBFDA;
+  background-color: var(--mdc-theme-gc-button-disabled-background);
+  color: var(--mdc-theme-text-disabled-on-background);
   opacity: 0.3;
 }
