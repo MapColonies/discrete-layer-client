@@ -199,7 +199,7 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
       <Box id="filePickerDialog">
         <Dialog open={isOpen} preventOutsideDismiss={true}>
           <DialogTitle>
-            <FormattedMessage id={'general.title.choose'} />
+            <FormattedMessage id="general.title.choose" />
             <IconButton
               className="closeIcon mc-icon-Close"
               label="CLOSE"

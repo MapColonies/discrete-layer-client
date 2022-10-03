@@ -30,7 +30,7 @@ const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
     maps: baseMaps.maps.map((baseMap: IBaseMap) => {
       return {
         ...baseMap,
-        thumbnail: baseMap.thumbnail && ACCESS_TOKEN.injectionType.toLowerCase() === 'queryparam' ? `${baseMap.thumbnail}?${ACCESS_TOKEN.attributeName}=${ACCESS_TOKEN.tokenValue}` : baseMap.thumbnail,
+        thumbnail: baseMap.thumbnail && ACCESS_TOKEN.injectionType?.toLowerCase() === 'queryparam' ? `${baseMap.thumbnail}?${ACCESS_TOKEN.attributeName}=${ACCESS_TOKEN.tokenValue}` : baseMap.thumbnail,
         baseRasteLayers: (baseMap.baseRasteLayers as IRasterLayer[]).map((rasterLayer) => {
           return {
             ...rasterLayer,

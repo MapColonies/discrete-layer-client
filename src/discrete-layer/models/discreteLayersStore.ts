@@ -20,6 +20,7 @@ import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { CapabilityModelType } from './CapabilityModel';
 import { getFlatEntityDescriptors } from '../components/layer-details/utils';
 import { isUnpublished } from '../../common/helpers/style';
+
 export type LayersImagesResponse = ILayerImage[];
 
 export interface SearchResult {

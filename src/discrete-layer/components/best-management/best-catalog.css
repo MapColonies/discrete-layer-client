@@ -3,7 +3,7 @@
   margin: 12px 12px 0 12px;
 }
 
-body[dir=rtl] .bestCatalogContainer .ReactVirtualized__Grid__innerScrollContainer{
+body[dir='rtl'] .bestCatalogContainer .ReactVirtualized__Grid__innerScrollContainer {
   margin-right: -12px;
 }
 

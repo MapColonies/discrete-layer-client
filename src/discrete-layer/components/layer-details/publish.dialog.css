@@ -9,7 +9,6 @@ body[dir='rtl'] #publishDialog .closeIcon {
 
 #publishDialog .dialogBody {
   height: 100px;
-  width: 360px;
   display: flex;
   align-items: center;
 }

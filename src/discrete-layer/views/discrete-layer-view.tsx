@@ -169,8 +169,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
-
-
+  
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);
@@ -757,7 +756,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             locale = {mapSettingsLocale}
             baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
-            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName={'BestRecord'} /> : undefined}
+            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName='BestRecord' /> : undefined}
             imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
             legends={{
               mapLegendsExtractor,
