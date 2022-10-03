@@ -19,6 +19,7 @@ import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { CapabilityModelType } from './CapabilityModel';
 import { getFlatEntityDescriptors } from '../components/layer-details/utils';
+import { isUnpublished } from '../../common/helpers/style';
 
 export type LayersImagesResponse = ILayerImage[];
 
@@ -36,22 +37,37 @@ export interface ITabViewData {
   filters?: unknown;
 }
 
+const INITIAL_STATE = {
+  searchParams: {},
+  layersImages: [],
+  highlightedLayer: null,
+  selectedLayer: null,
+  selectedLayerIsUpdateMode: false,
+  tabViews: [{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}],
+  entityDescriptors: [],
+  previewedLayers: [],
+  capabilities: [],
+  baseMaps: CONFIG.BASE_MAPS,
+}
+
 export const discreteLayersStore = ModelBase
   .props({
     state: types.enumeration<ResponseState>(
       'State',
       Object.values(ResponseState)
     ),
-    searchParams: types.optional(searchParams, {}),
-    layersImages: types.maybe(types.frozen<LayersImagesResponse>([])),
-    highlightedLayer: types.maybe(types.frozen<ILayerImage>()),
-    selectedLayer: types.maybe(types.frozen<ILayerImage>()),
-    selectedLayerIsUpdateMode: types.maybe(types.frozen<boolean>()),
-    tabViews: types.maybe(types.frozen<ITabViewData[]>([{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}])),
-    entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>([])),
-    previewedLayers: types.maybe(types.frozen<string[]>([])),
-    capabilities: types.maybe(types.frozen<CapabilityModelType[]>([])),
-    baseMaps: types.maybe(types.frozen<IBaseMaps>(CONFIG.BASE_MAPS))
+    searchParams: types.optional(searchParams, INITIAL_STATE.searchParams),
+    layersImages: types.maybe(types.frozen<LayersImagesResponse>(INITIAL_STATE.layersImages)),
+    highlightedLayer: types.maybe(types.frozen<ILayerImage>(INITIAL_STATE.highlightedLayer as unknown as ILayerImage)),
+    selectedLayer: types.maybe(types.frozen<ILayerImage>(INITIAL_STATE.selectedLayer as unknown as ILayerImage)),
+    selectedLayerIsUpdateMode: types.maybe(types.frozen<boolean>(INITIAL_STATE.selectedLayerIsUpdateMode)),
+    tabViews: types.maybe(types.frozen<ITabViewData[]>(INITIAL_STATE.tabViews)),
+    entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>(INITIAL_STATE.entityDescriptors)),
+    previewedLayers: types.maybe(types.frozen<string[]>(INITIAL_STATE.previewedLayers)),
+    capabilities: types.maybe(types.frozen<CapabilityModelType[]>(INITIAL_STATE.capabilities)),
+    baseMaps: types.maybe(types.frozen<IBaseMaps>(INITIAL_STATE.baseMaps)),
+    
+    // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -62,6 +78,8 @@ export const discreteLayersStore = ModelBase
     },
   }))
   .actions((self) => {
+    const store = self.root;
+
     const getLayersImages: () => Promise<void> = flow(
       function* getLayersImages(): Generator<
         Promise<LayersImagesResponse>, //SearchResponse
@@ -91,15 +109,22 @@ export const discreteLayersStore = ModelBase
       self.entityDescriptors = cloneDeep(data);
     }
 
-    function setLayersImages(data: ILayerImage[], showFootprint = true): void {
+    function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
-      self.layersImages = data.map(item => ({
+
+      // Filter out Unpublished entries on User premissions.
+      const isUserAdmin = store.userStore.isUserAdmin();
+      const filteredLayersImages = data.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
+      
+      self.layersImages = filteredLayersImages.map(item => ({
           ...item,
           footprintShown: showFootprint,
           layerImageShown: false,
           order: null
         })
       );
+
+      return self.layersImages ;
     }
 
     function setLayersImagesData(data: ILayerImage[]): void {
@@ -257,6 +282,14 @@ export const discreteLayersStore = ModelBase
       return filteredLayer;
     }
 
+    function resetAppState(withoutFields: string[] = []): void {
+      Object.entries(INITIAL_STATE).forEach(([statekey, initalVal]) => {
+        if(!withoutFields.includes(statekey)) {
+         set(self,statekey,initalVal);
+        }
+      })
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -280,6 +313,7 @@ export const discreteLayersStore = ModelBase
       setCapabilities,
       setBaseMaps,
       getEditablePartialObject,
+      resetAppState
     };
   });
 

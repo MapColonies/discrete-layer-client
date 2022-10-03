@@ -233,6 +233,13 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   };
 
+  useEffect(() => {
+    if(activeTabView !== TabViews.CATALOG) {
+      handlePolygonReset();
+      setActiveTabView(TabViews.CATALOG);
+    }
+  }, [userRole])
+
   const handleNewEntityDialogClick = (recordType: RecordType): void => {
     switch (recordType) {
       case RecordType.RECORD_RASTER:

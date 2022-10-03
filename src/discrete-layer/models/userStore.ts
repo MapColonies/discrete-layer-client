@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { types, getParent } from 'mobx-state-tree';
 import { ResponseState } from '../../common/models/response-state.enum';
-import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
@@ -151,7 +150,7 @@ export const userStore = ModelBase
       'State',
       Object.values(ResponseState)
     ),
-    user: types.maybe(types.frozen<IUser>({userName: 'user', role: CONFIG.DEFAULT_USER.ROLE as UserRole})), /*UserRole.ADMIN*/
+    user: types.maybe(types.frozen<IUser>({userName: 'user', role: UserRole.ADMIN})), /*UserRole.ADMIN*/
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -162,6 +161,8 @@ export const userStore = ModelBase
     },
   }))
   .actions((self) => {
+    const store = self.root;
+
     function isActionAllowed(action: UserAction | string): boolean | undefined {
       const role = ROLES.find(item => item.role === self.user?.role);
       return role ? role.permissions[action as UserAction] as boolean : false;
@@ -169,10 +170,19 @@ export const userStore = ModelBase
 
     function changeUserRole(role: UserRole): void {
       self.user = {...self.user, role} as IUser;
+
+      const PRESERVE_STATE_FOR_FIELDS = ['baseMaps', 'entityDescriptors', 'searchParams'];
+      store.discreteLayersStore.resetAppState(PRESERVE_STATE_FOR_FIELDS);
+      void store.catalogTreeStore.initTree();
+    }
+
+    function isUserAdmin(): boolean {
+      return self.user?.role === UserRole.ADMIN
     }
 
     return {
       isActionAllowed,
       changeUserRole,
+      isUserAdmin,
     };
   });
