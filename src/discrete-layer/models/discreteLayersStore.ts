@@ -274,7 +274,10 @@ export const discreteLayersStore = ModelBase
       const filteredLayer: Record<string, unknown> = {};
       
       flatDescriptors.forEach(fieldConfig => {
-        if(fieldConfig.isManuallyEditable === true) {
+        // Field is considered mutable if it can be manually editable via form, or during automatic process.
+        const isFieldMutable = fieldConfig.isManuallyEditable === true || fieldConfig.isLifecycleEnvolved === true;
+
+        if(isFieldMutable) {
           filteredLayer[fieldConfig.fieldName as string] = (layerImage as unknown as Record<string, unknown>)[fieldConfig.fieldName as string];
         }
       });
