@@ -300,3 +300,11 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 .dark-theme .mdc-switch:not(.mdc-switch--checked) .mdc-switch__track {
   background-color: var(--mdc-theme-gc-selection-background);
 }
+
+/* BUTTON CUSTOMIZATION */
+
+.dark-theme .mdc-button:disabled {
+  background-color: var(--mdc-theme-gc-button-disabled-background);
+  color: var(--mdc-theme-text-disabled-on-background);
+  opacity: 0.3;
+}

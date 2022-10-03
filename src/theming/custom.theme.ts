@@ -3,6 +3,8 @@
 export const CustomTheme = {
   lightTheme: { },
   darkTheme: {
+    GC_BUTTON_DISABLED_BACKGROUND: '#45557080',
+
     GC_TAB_ACTIVE_BACKGROUND: '#455570',
     GC_ALTERNATIVE_SURFACE: '#2D3748',
 
