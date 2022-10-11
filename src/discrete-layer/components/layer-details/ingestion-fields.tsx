@@ -5,7 +5,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
+import { cloneDeep, isEmpty } from 'lodash';
 import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import {
   Box,
@@ -18,19 +20,17 @@ import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
-import { IRecordFieldInfo } from './layer-details.field-info';
-import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import {
   Layer3DRecordModelKeys,
   LayerDemRecordModelKeys,
   LayerRasterRecordModelKeys,
 } from './entity-types-keys';
+import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import { IRecordFieldInfo } from './layer-details.field-info';
+import { EntityFormikHandlers, FormValues } from './layer-datails-form';
+import { importJSONFileFromClient } from './utils';
 
 import './ingestion-fields.css';
-import { importJSONFileFromClient } from './utils';
-import { observer } from 'mobx-react';
-import { cloneDeep, isEmpty } from 'lodash';
 
 const DIRECTORY = 0;
 const FILES = 1;
@@ -113,7 +113,7 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Box>{values[index]}</Box>
+                  <Box dir="auto">{values[index]}</Box>
                 }
                 {
                   index === FILES && values[index] !== '' &&
@@ -206,7 +206,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   }, [queryResolveMetadataAsModel.data]);
 
   useEffect(() => {
-    if(!isEmpty(queryResolveMetadataAsModel.error) || !isEmpty(chosenMetadataError)) {
+    if (!isEmpty(queryResolveMetadataAsModel.error) || !isEmpty(chosenMetadataError)) {
       if (reloadFormMetadata) {
         reloadFormMetadata(
           {
@@ -215,21 +215,18 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           },
           { recordModel: {}, error: chosenMetadataError ?? (queryResolveMetadataAsModel.error as unknown)} as MetadataFile
         );
-        
       }
     }
-  }, [queryResolveMetadataAsModel.error, chosenMetadataError])
+  }, [queryResolveMetadataAsModel.error, chosenMetadataError]);
 
   useEffect(() => {
     setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
-  }, [selection, queryResolveMetadataAsModel.loading])
-
+  }, [selection, queryResolveMetadataAsModel.loading]);
 
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
       setSelection({ ...selected });
     }
-
     if (reloadFormMetadata) {
       reloadFormMetadata(
         {
@@ -251,24 +248,23 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     let recordKeys: string[] = [];
     switch(recordType) {
       case RecordType.RECORD_RASTER:
-       recordKeys = LayerRasterRecordModelKeys as string[];
-      break;
+        recordKeys = LayerRasterRecordModelKeys as string[];
+        break;
       case RecordType.RECORD_3D:
-       recordKeys = Layer3DRecordModelKeys as string[];
-      break;
+        recordKeys = Layer3DRecordModelKeys as string[];
+        break;
       case RecordType.RECORD_DEM:
-       recordKeys = LayerDemRecordModelKeys as string[];
-      break;
-
+        recordKeys = LayerDemRecordModelKeys as string[];
+        break;
       default:
         break;
     }
 
     return Object.keys(record).every(key => {
-        return recordKeys.includes(key)
+      return recordKeys.includes(key)
     });
 
-  }, [recordType])
+  }, [recordType]);
 
   return (
     <>
@@ -332,7 +328,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           </Box>
         </Box>
       </Box>
-      {isFilePickerDialogOpen && (
+      {
+        isFilePickerDialogOpen &&
         <FilePickerDialog
           recordType={recordType}
           isOpen={isFilePickerDialogOpen}
@@ -340,7 +337,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           onFilesSelection={onFilesSelection}
           selection={selection}
         />
-      )}
+      }
     </>
   );
 });
