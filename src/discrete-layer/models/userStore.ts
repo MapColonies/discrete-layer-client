@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { types, getParent } from 'mobx-state-tree';
 import { ResponseState } from '../../common/models/response-state.enum';
+import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
@@ -150,7 +151,7 @@ export const userStore = ModelBase
       'State',
       Object.values(ResponseState)
     ),
-    user: types.maybe(types.frozen<IUser>({userName: 'user', role: UserRole.ADMIN})), /*UserRole.ADMIN*/
+    user: types.maybe(types.frozen<IUser>({userName: 'user', role: CONFIG.DEFAULT_USER.ROLE as UserRole })), /*UserRole.ADMIN*/
   })
   .views((self) => ({
     get store(): IRootStore {
