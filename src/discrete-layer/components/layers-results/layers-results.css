@@ -7,3 +7,84 @@ body[dir='rtl'] .ag-theme-alpine-dark .ag-header-cell[col-id="footprintShown"]{
   padding-right: 0px;
   padding-left: 18px;
 }
+
+#layerResults {
+  height: calc(100% - 50px);
+  width: calc(100% - 8px);
+}
+
+#layerResults .ag-body-viewport.ag-layout-normal.ag-row-no-animation {
+  overflow-y: overlay !important;
+}
+
+/* Hide right header and spacer */
+#layerResults .ag-pinned-right-header,
+#layerResults .ag-horizontal-right-spacer {
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+/* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
+#layerResults .ag-pinned-right-cols-container {
+  position: absolute !important;
+  right: 45px;
+  pointer-events: none;
+  padding-left: 20px;
+}
+
+body[dir='rtl'] #layerResults .ag-pinned-right-cols-container {
+  right: unset;
+  left: 45px;
+  padding-left: unset;
+  padding-right: 20px;
+}
+/* Reset pointer-events so that click can happen on action buttons */
+#layerResults .ag-pinned-right-cols-container * {
+  pointer-events: initial;
+}
+
+/* Hide border of right-cols-container */
+#layerResults .ag-pinned-right-cols-container .ag-row-hover .ag-cell {
+  border: none !important;
+  overflow: visible;
+  border-radius: 50% !important;
+}
+
+
+/* Show action buttons only for row that is being hovered. For rows which are not being hovered, hide them by setting their width and padding to 0.*/
+#layerResults .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover),
+#layerResults .ag-pinned-right-cols-container .ag-row:not(.ag-row-hover) .ag-cell {
+  width: 0 !important;
+  padding: 0 !important;
+  border: none;
+}
+
+#layerResults .ag-pinned-right-cols-container .ag-row.ag-row-hover {
+  background-color: rgb(44,65,89);
+  border-width: 0px !important;
+}
+
+#layerResults .ag-pinned-right-cols-container .ag-row.ag-row-selected,
+#layerResults .ag-pinned-right-cols-container .ag-row.ag-row-selected .ag-cell,
+#layerResults .ag-row.ag-row-selected,
+#layerResults .ag-row.ag-row-selected .actionsContainer {
+  border: none !important;
+  background-color: var(--mdc-theme-gc-selection-background);
+}
+
+#layerResults .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
+  background: unset;
+  overflow: visible;
+}
+
+#layerResults .actionsContainer {
+  right:0 !important;
+  position:relative;
+  overflow: visible !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+#layerResults .actionsContainer .mdc-menu-surface--open {
+  z-index: 2 !important;
+}

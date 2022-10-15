@@ -3,6 +3,7 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep, isEmpty } from 'lodash';
+import moment from 'moment';
 import { DialogContent } from '@material-ui/core';
 import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
@@ -29,7 +30,6 @@ import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filte
 import { JOB_ENTITY } from './job.types';
 
 import './jobs.dialog.css';
-import moment from 'moment';
 
 const pagination = true;
 const pageSize = 10;
@@ -73,7 +73,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
-  
   }, []);
 
   // eslint-disable-next-line
@@ -92,7 +91,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const mutationQuery = useQuery();
 
   const store = useStore();
-
 
   const getJobActions = useMemo(() => {
     let actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
@@ -115,7 +113,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return {
       [JOB_ENTITY]: actions,
     };
-  
   }, []);
 
   useEffect(() => {
@@ -147,7 +144,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
-  
   }, [updateTaskPayload, store]);
 
   useEffect(() => {
@@ -169,56 +165,52 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     return (): void => {
       clearInterval(pollingInterval);
     };
-  
   }, [query, pollingCycle]);
 
-  const closeDialog = useCallback(
-    () => {
-      onSetOpen(false);
-    },
-    [onSetOpen]
-  );
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
 
   const dispatchAction = (action: Record<string,unknown> | undefined): void => {
-
     const actionToDispatch = (action ? {action: action.action, data: action.data} : action) as IDispatchAction;
     store.actionDispatcherStore.dispatchAction(
       actionToDispatch
     );
-
   };
 
    // Job actions handler
 
    useEffect(() => {
      if (typeof store.actionDispatcherStore.action !== 'undefined') {
-       const { action, data } = store.actionDispatcherStore
-         .action as IDispatchAction;
-
-       switch (action) {
-         case 'Job.retry':
-           mutationQuery.setQuery(
-             store.mutateJobRetry({
-               id: data.id as string,
-             })
-           );
-           break;
-
-         default:
-           break;
+      const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
+      switch (action) {
+        case 'Job.retry':
+          mutationQuery.setQuery(
+            store.mutateJobRetry({
+              id: data.id as string,
+            })
+          );
+          break;
+        case 'Job.abort':
+          mutationQuery.setQuery(
+            store.mutateJobAbort({
+              id: data.id as string,
+            })
+          );
+          break;
+        default:
+          break;
        }
      }
-   
    }, [store.actionDispatcherStore.action]);
 
 
-  // Reset action value on store when unmounting.
+  // Reset action value on store when unmounting
 
   useEffect(() => {
     return (): void => {
       dispatchAction(undefined)
     };
-  
   }, []);
 
   const colDef = [
@@ -330,7 +322,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
         actions: getJobActions,
         actionHandler: dispatchAction,
       },
-    },
+    }
   ];
 
   const onGridReady = (params: GridReadyEvent): void => {
@@ -409,7 +401,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             <DateTimeRangePicker 
               controlsLayout='row'
               onChange={(dateRange): void => {
-                if(typeof dateRange.from !== 'undefined' && typeof dateRange.to !== 'undefined'){
+                if (typeof dateRange.from !== 'undefined' && typeof dateRange.to !== 'undefined') {
                   setFromDate(dateRange.from)
                   setTillDate(dateRange.to)
                 }

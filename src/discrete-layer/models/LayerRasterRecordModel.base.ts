@@ -5,8 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { LinkModel } from "./LinkModel"
-import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
+import { LinkModel, LinkModelType } from "./LinkModel"
+import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { RootStoreType } from "./index"
@@ -20,21 +20,23 @@ export const LayerRasterRecordModelBase = ModelBase
   .named('LayerRasterRecord')
   .props({
     __typename: types.optional(types.literal("LayerRasterRecord"), "LayerRasterRecord"),
+    //id: types.union(types.undefined, types.string),
+    id: types.identifier, //Alex change till proper deffs
     type: types.union(types.undefined, types.null, RecordTypeEnumType),
     classification: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
     srsId: types.union(types.undefined, types.string),
-    producerName: types.union(types.undefined, types.null, types.string),
+    producerName: types.union(types.undefined, types.string),
     creationDate: types.union(types.undefined, types.null, types.frozen()),
     ingestionDate: types.union(types.undefined, types.null, types.frozen()),
     updateDate: types.union(types.undefined, types.null, types.frozen()),
     sourceDateStart: types.union(types.undefined, types.frozen()),
     sourceDateEnd: types.union(types.undefined, types.frozen()),
     minHorizontalAccuracyCE90: types.union(types.undefined, types.null, types.number),
-    sensors: types.union(types.undefined, types.null, types.array(types.string)),
-    region: types.union(types.undefined, types.null, types.array(types.string)),
-    productId: types.union(types.undefined, types.string),
+    sensors: types.union(types.undefined, types.array(types.string)),
+    region: types.union(types.undefined, types.array(types.string)),
+    productId: types.union(types.undefined, types.null, types.string),
     productVersion: types.union(types.undefined, types.null, types.string),
     productType: types.union(types.undefined, ProductTypeEnumType),
     productSubType: types.union(types.undefined, types.null, types.string),
@@ -47,8 +49,6 @@ export const LayerRasterRecordModelBase = ModelBase
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     includedInBests: types.union(types.undefined, types.null, types.array(types.string)),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
-    //id: types.union(types.undefined, types.string),
-    id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
     keywords: types.union(types.undefined, types.null, types.string),
     links: types.union(types.undefined, types.null, types.array(types.late((): any => LinkModel))),
@@ -60,6 +60,7 @@ export const LayerRasterRecordModelBase = ModelBase
   }))
 
 export class LayerRasterRecordModelSelector extends QueryBuilder {
+  get id() { return this.__attr(`id`) }
   get type() { return this.__attr(`type`) }
   get classification() { return this.__attr(`classification`) }
   get productName() { return this.__attr(`productName`) }
@@ -87,7 +88,6 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
   get includedInBests() { return this.__attr(`includedInBests`) }
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
-  get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get keywords() { return this.__attr(`keywords`) }
   links(builder?: string | LinkModelSelector | ((selector: LinkModelSelector) => LinkModelSelector)) { return this.__child(`links`, LinkModelSelector, builder) }

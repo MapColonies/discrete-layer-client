@@ -29,6 +29,7 @@ import '@map-colonies/react-core/dist/checkbox/styles';
 import '@map-colonies/react-core/dist/fab/styles';
 import '@map-colonies/react-core/dist/avatar/styles';
 import '@map-colonies/react-core/dist/tabs/styles';
+import '@map-colonies/react-core/dist/switch/styles';
 import 'react-sortable-tree/style.css';
 import './App.css';
 import './App.dark-theme.css';
@@ -42,14 +43,17 @@ import MESSAGES from './common/i18n';
 import CONFIG from './common/config';
 import { camelize } from './common/helpers/string';
 import { CustomTheme } from './theming/custom.theme';
+import EnumsMapContext, { IEnumsMapType } from './common/contexts/enumsMap.context';
 
 const App: React.FC = () => {
   /*const prefersDarkMode = */useMediaQuery('(prefers-color-scheme: dark)');
   // eslint-disable-next-line
   const [lang, setLang] = useState(CONFIG.I18N.DEFAULT_LANGUAGE);
+  const [enumsMap, setEnumsMap] = useState<IEnumsMapType | null>(null);
+
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
   const customThemeProps: Record<string,string> = {};
-  for(const prop in CustomTheme.darkTheme){
+  for (const prop in CustomTheme.darkTheme) {
     customThemeProps[camelize(prop)] = (CustomTheme.darkTheme as Record<string, string>)[prop];
   }
   const theme = {
@@ -69,7 +73,7 @@ const App: React.FC = () => {
   
   useEffect(() => {
     Moment.locale(lang);
-  }, [lang])
+  }, [lang]);
 
   return (
     <IntlProvider locale={lang} messages={MESSAGES[lang]}>
@@ -85,8 +89,10 @@ const App: React.FC = () => {
       >
         <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme}>
           <CssBaseline />
-          <StaticDataFetcher />
-          <DiscreteLayerView />
+          <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>
+            <StaticDataFetcher />
+            <DiscreteLayerView />
+          </EnumsMapContext.Provider>
           <SnackContainer />
           <SnackbarQueue messages={queue.messages} leading timeout={-1} />
         </RMWCThemeProvider>

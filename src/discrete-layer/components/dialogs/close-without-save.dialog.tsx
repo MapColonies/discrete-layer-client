@@ -16,22 +16,15 @@ interface CloseWithoutSaveDialogProps {
 export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = observer(({ isOpen, onSetOpen }) => {
   const store = useStore();
   
-  const closeDialog = useCallback(
-    () => {
-      onSetOpen(false);
-    },
-    [onSetOpen]
-  );
+  const closeDialog = useCallback(() => {
+    onSetOpen(false);
+  }, [onSetOpen]);
 
-  const closeWithoutSaving = useCallback(
-    () => {
-      onSetOpen(false);
-      store.bestStore.editBest(undefined);
-      store.bestStore.setLayersList([]);
-    },
-    
-    [onSetOpen]
-  );
+  const closeWithoutSaving = useCallback(() => {
+    onSetOpen(false);
+    store.bestStore.editBest(undefined);
+    store.bestStore.setLayersList([]);
+  }, [onSetOpen]);
   
   return (
     <Box id="closeWithoutSaveDialog">
@@ -49,7 +42,7 @@ export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = obs
         </DialogContent>
         <DialogActions>
           <Button raised type="button" onClick={(): void => { closeWithoutSaving(); }}>
-            <FormattedMessage id="general.continue-btn.text"/>
+            <FormattedMessage id="general.confirm-btn.text"/>
           </Button>
           <Button type="button" onClick={(): void => { closeDialog(); }}>
             <FormattedMessage id="general.cancel-btn.text"/>

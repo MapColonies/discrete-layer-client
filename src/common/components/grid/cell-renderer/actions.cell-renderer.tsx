@@ -3,13 +3,14 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
 import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { FINAL_NEGATIVE_STATUSES, JOB_ENTITY } from '../../../../discrete-layer/components/system-status/job.types';
+import { JobModelType, Status } from '../../../../discrete-layer/models';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
-import { FINAL_NEGATIVE_STATUSES, JOB_ENTITY } from '../../../../discrete-layer/components/system-status/job.types';
-import { JobModelType, Status } from '../../../../discrete-layer/models';
 
 const FIRST = 0;
+const EMPTY_ACTION_GROUP = 0;
 
 interface IActionsRendererParams extends ICellRendererParams {
   actions: Record<string,IActionGroup[]>;
@@ -21,9 +22,9 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
 
   const isJobEntity = entity === JOB_ENTITY;
 
-  const isJobFinalNegativeStatus = useMemo(()=>{
+  const isJobFinalNegativeStatus = useMemo(() => {
     return isJobEntity && FINAL_NEGATIVE_STATUSES.includes((props.data as JobModelType).status as Status);
-  },[props.data, isJobEntity])
+  }, [props.data, isJobEntity]);
 
   const actions = props.actions[entity];
   let frequentActions: IAction[] = [];
@@ -50,11 +51,11 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
       action: `${entity}.${action.action}`,
       data: data,
     });
-  }
+  };
   
-  // We only want to show job actions picker on negative-final job statuses.
-  if(isJobEntity && !isJobFinalNegativeStatus){
-    return null
+  // We only want to show job actions picker on negative-final job statuses
+  if (isJobEntity && !isJobFinalNegativeStatus) {
+    return null;
   }
 
   return (
@@ -83,7 +84,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
             actions.map((actionGroup: IActionGroup, groupIdx: number) => {
               return (
                 <React.Fragment key={`actGroup_${groupIdx}`}>
-                  {groupIdx > FIRST && 
+                  {actionGroup.group.length > EMPTY_ACTION_GROUP && groupIdx > FIRST && 
                     <MenuItem key={`menuItemSeparator_groupId_${groupIdx}`}>
                       <Box className="menuSeparator"></Box>
                     </MenuItem>

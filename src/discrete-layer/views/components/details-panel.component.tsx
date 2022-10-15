@@ -1,37 +1,47 @@
-import React from 'react';
-import { observer } from 'mobx-react-lite';
+import React, { useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { Box } from '@map-colonies/react-components';
+import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
+import { Box } from '@map-colonies/react-components';
+import { existStatus, getStatusColoredText } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
-import { useStore } from '../../models/RootStore';
+import { PublishButton } from '../../components/layer-details/publish-button';
+import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button';
 import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
+import { useStore } from '../../models/RootStore';
 
 import './details-panel.component.css';
 
 interface DetailsPanelComponentProps {
   isEditEntityDialogOpen: boolean;
   setEditEntityDialogOpen: (open: boolean) => void;
-
   detailsPanelExpanded: boolean;
   setDetailsPanelExpanded: (isExpanded: boolean) => void;
 }
 
 export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((props) => {
-  const store = useStore();
-  const intl = useIntl();
   const {
     isEditEntityDialogOpen,
     setEditEntityDialogOpen,
     detailsPanelExpanded,
-    setDetailsPanelExpanded 
+    setDetailsPanelExpanded
   } = props;
   
+  const store = useStore();
+  const intl = useIntl();
   const layerToPresent = store.discreteLayersStore.selectedLayer;
   const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
   const editingBest = store.bestStore.editingBest;
+
+  const permissions = useMemo(() => {
+    return {
+     isEditAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`),
+     isPublishAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.publish`),
+     isSaveMetadataAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.saveMetadata`),
+    }
+  }, [store.userStore.user, layerToPresent]);
 
   const handleEditEntityDialogClick = (): void => {
     if (typeof layerToPresent !== 'undefined' && 'isDraft' in layerToPresent) {
@@ -43,18 +53,25 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
 
   return (
     <>
-      <Box style={{display: 'flex', paddingTop: '8px'}}>
-        <Typography use="headline6" tag="div" className="detailsTitle">
+      <Box style={{ display: 'flex', paddingTop: '8px' }}>
+        <Typography use="headline6" tag="div" className="detailsTitle" style={getStatusColoredText(layerToPresent as any ?? {})}>
           {layerToPresent?.productName}
         </Typography>
         {
-          layerToPresent && 
-          store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`) &&
+          permissions.isPublishAllowed === true &&
+          layerToPresent &&
+          existStatus(layerToPresent as any) &&
+          <PublishButton layer={layerToPresent} className="operationIcon"/>
+        }
+        {
+          permissions.isEditAllowed === true && 
           <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
             <IconButton
               className="operationIcon mc-icon-Edit"
               label="EDIT"
-              onClick={ (): void => { handleEditEntityDialogClick(); } }
+              onClick={(): void => {
+                handleEditEntityDialogClick();
+              }}
             />
           </Tooltip>
         }
@@ -67,16 +84,40 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
             isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         }
-        <Tooltip content={intl.formatMessage({ id: `${!detailsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
-          <IconButton 
-            className={`operationIcon ${!detailsPanelExpanded ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel'}`}
+        {
+          permissions.isSaveMetadataAllowed === true && layerToPresent &&
+          <SaveMetadataButton metadata={layerToPresent} className="operationIcon"/>
+        }
+        <Tooltip
+          content={intl.formatMessage({
+            id: `${
+              !detailsPanelExpanded
+                ? 'action.expand.tooltip'
+                : 'action.collapse.tooltip'
+            }`,
+          })}
+        >
+          <IconButton
+            className={`operationIcon ${
+              !detailsPanelExpanded
+                ? 'mc-icon-Expand-Panel'
+                : 'mc-icon-Collapce-Panel'
+            }`}
             label="DETAILS EXPANDER"
-            onClick={ (): void => {setDetailsPanelExpanded(!detailsPanelExpanded);}}
+            onClick={(): void => {
+              setDetailsPanelExpanded(!detailsPanelExpanded);
+            }}
           />
         </Tooltip>
       </Box>
       <Box className="detailsContent panelContent">
-        <LayersDetailsComponent className="detailsPanelProductView" entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]} layerRecord={layerToPresent} isBrief={!detailsPanelExpanded} mode={Mode.VIEW}/>
+        <LayersDetailsComponent
+          className="detailsPanelProductView"
+          entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]}
+          layerRecord={layerToPresent}
+          isBrief={!detailsPanelExpanded}
+          mode={Mode.VIEW}
+        />
       </Box>
     </>
   );

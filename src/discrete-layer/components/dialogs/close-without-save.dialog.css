@@ -2,14 +2,14 @@
   margin-left: auto;
 }
 
+body[dir='rtl'] #closeWithoutSaveDialog .closeIcon {
+  margin-left: unset;
+  margin-right: auto;
+}
+
 #closeWithoutSaveDialog .dialogBody {
   height: 100px;
   width: 360px;
   display: flex;
   align-items: center;
-}
-
-body[dir='rtl'] #closeWithoutSaveDialog .closeIcon {
-  margin-left: unset;
-  margin-right: auto;
 }

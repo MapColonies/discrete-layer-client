@@ -3041,14 +3041,14 @@
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jest "^23.20.0"
 
-"@map-colonies/react-components@3.11.0":
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.11.0.tgz#afdbeb4df7b74096368395cbd93c1a7e31965c9f"
-  integrity sha512-Ow5WM29bMIW0+NZZFW+O6Jo1rs5al/xc9COcpsdJ1aS4Pz2S9ny9970xjzTOT2oLXtSbO8zEXXfmk7jNnoKZoQ==
+"@map-colonies/react-components@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-3.12.3.tgz#6e1f15e2abb9a6341d764122d50340e95c90e123"
+  integrity sha512-QBDRSJCaIkrpgszjTaNBuGE294YMCZn4ZcCFAVEAgrfN8Y9r2K34ls8tRH/hm0zmwkJfgqAe3wn0HgxE20eWew==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
     "@here/quantized-mesh-decoder" "^1.2.8"
-    "@map-colonies/react-core" "^3.3.2"
+    "@map-colonies/react-core" "^3.3.4"
     "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/pickers" "^3.2.10"
@@ -3086,10 +3086,10 @@
     textarea-caret "^3.1.0"
     typescript "4.2.2"
 
-"@map-colonies/react-core@3.3.2", "@map-colonies/react-core@^3.3.2":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-3.3.2.tgz#d3aa1adf5866f9a6f86864408dabbff311ec6ff9"
-  integrity sha512-ARIJ+HOiwSj/UToxalnSc37QWGkVPYDO4yaGFCUU1wUs4PM9D9qF9+a3XXAzRs1q7tE0atrxCzx4WNeQcqeEWA==
+"@map-colonies/react-core@3.3.4", "@map-colonies/react-core@^3.3.4":
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-3.3.4.tgz#a552f9569e9ebb7f22dfae94236ed4bae9ac3ad7"
+  integrity sha512-WEQYgC7T+vkH3oIhbd4uCaWssSmVVq/jPeI+4WLla1R5HsmYaZhOviXgCOwBwdi47hjv6pq4PF0eCd4t74xxqg==
   dependencies:
     "@testing-library/jest-dom" "^4.2.4"
     "@testing-library/react" "^9.3.2"
@@ -3112,7 +3112,7 @@
     react-router-dom "^5.2.0"
     react-scripts "3.4.1"
     rimraf "3.0.2"
-    typescript "~3.7.2"
+    typescript "3.7.2"
 
 "@map-colonies/static-assets@^0.2.0":
   version "0.2.0"
@@ -21288,6 +21288,11 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
+typescript@3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
+  integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==
+
 typescript@4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.2.tgz#1450f020618f872db0ea17317d16d8da8ddb8c4c"
@@ -21297,11 +21302,6 @@ typescript@^3.7.5:
   version "3.9.7"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
   integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
-
-typescript@~3.7.2:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
-  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
 
 ua-parser-js@^1.0.2:
   version "1.0.2"

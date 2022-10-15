@@ -80,7 +80,7 @@ const StatusPresentor: React.FC<StatusPresentorParams> = ({ task, reactKey = '' 
               color: ERROR_ICON_COLOR,
             }}
             className="mc-icon-Warning"
-            label="failReasonIcon"
+            label="FAIL REASON ICON"
           />
         </Tooltip>
         <CopyButton text={task.reason as string} />

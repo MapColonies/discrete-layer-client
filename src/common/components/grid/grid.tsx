@@ -116,7 +116,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
    },
    localeText: GRID_MESSAGES[CONFIG.I18N.DEFAULT_LANGUAGE],
    onGridReady(params: GridReadyEvent) {
-    if(typeof(restGridOptions.onGridReady) === 'function'){
+    if (typeof(restGridOptions.onGridReady) === 'function') {
       restGridOptions.onGridReady(params);
     } 
 
@@ -139,9 +139,9 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   }
 
 
-  useEffect(()=>{
+  useEffect(() => {
     const result: any[] = [];
-    if(props.gridOptions?.detailsRowCellRenderer !== undefined){
+    if (props.gridOptions?.detailsRowCellRenderer !== undefined) {
       props.rowData?.forEach((element,idx) => {
         const rowElement: Record<string, unknown> = element as Record<string, unknown>;
 

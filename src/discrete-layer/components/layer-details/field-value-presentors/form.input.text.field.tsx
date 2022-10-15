@@ -1,19 +1,25 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useMemo } from 'react';
+import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { TextField, Tooltip, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import CONFIG from '../../../../common/config';
-import { Mode } from '../../../../common/models/mode.enum';
 import { convertExponentialToDecimal } from '../../../../common/helpers/number';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
-import { ValidationConfigModelType, ValidationValueType } from '../../../models';
+import { Mode } from '../../../../common/models/mode.enum';
+import {
+  UpdateRulesModelType,
+  ValidationConfigModelType,
+  ValidationValueType
+} from '../../../models';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-import { UpdateRulesModelType } from '../../../models'
+
+const NONE = 0;
 
 interface FormInputTextFieldProps {
   mode: Mode;
@@ -28,38 +34,19 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   const isCopyable = fieldInfo.isCopyable ?? false;
   const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
-  const valueRenderer = useMemo(() => {
-    const MAX_VALUE_LENGTH = CONFIG.NUMBER_OF_CHARACTERS_LIMIT;
-
-    if (innerValue && innerValue.length > MAX_VALUE_LENGTH) {
-      return (
-        <Tooltip content={innerValue}>
-          <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
-            {innerValue}
-          </Box>
-        </Tooltip>
-      );
-    }
-    return (
-      <Box className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
-        {innerValue}
-      </Box>
-    );
-  
-  }, [innerValue]);
-
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
+        <TooltippedValue
+          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
+          {innerValue}
+        </TooltippedValue>
         {
-          valueRenderer
-        }
-        {
-          isCopyable &&
+          !isEmpty(value) && isCopyable &&
           <Box className="detailsFieldCopyIcon">
             <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
               <CopyToClipboard text={value as string}>
-                <IconButton className="mc-icon-Copy"/>
+                <IconButton className="mc-icon-Copy" />
               </CopyToClipboard>
             </Tooltip>
           </Box>
@@ -71,6 +58,8 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
     let max: string;
     let validationProps = {};
     let placeholder = '';
+    const textAreaProps = (fieldInfo.rows ?? NONE) > NONE ? { textarea: true, rows: fieldInfo.rows } : {};
+    
     fieldInfo.validation?.forEach((validationItem: ValidationConfigModelType) => {
       if (validationItem.valueType === ValidationValueType.VALUE) {
         if (validationItem.min !== null) {
@@ -105,6 +94,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
             {...validationProps}
+            {...textAreaProps}
           />
           {
             !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&

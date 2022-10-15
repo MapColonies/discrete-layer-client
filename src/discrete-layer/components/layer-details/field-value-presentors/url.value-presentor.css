@@ -1,5 +1,4 @@
-.detailsUrlFieldValue {
-  flex: 0 0 50%;
+.detailsFieldValue.detailsUrlFieldValue {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -8,4 +7,5 @@
 
 .detailsUrlFieldUrlCopy {
   margin: 0 16px;
+  min-width: 35px;
 }

@@ -14,11 +14,13 @@ import { ImportRenderer } from '../../../common/components/tree/icon-renderers/i
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { GroupBy, groupBy, KeyPredicate } from '../../../common/helpers/group-by';
+import { LinkType } from '../../../common/models/link-type.enum';
 import { useQuery, useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { RecordType } from '../../models/RecordTypeEnum';
 import { DiscreteOrder } from '../../models/DiscreteOrder';
+import { getLinkUrlWithToken } from '../helpers/layersUtils';
 import { isDiscrete } from '../layer-details/utils';
 
 import './best-catalog.css';
@@ -109,7 +111,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
       store.discreteLayersStore.setLayersImagesData([...arr]);
       
       // get unlinked/new discretes shortcuts
-      const arrUnlinked = arr.filter((item) => {
+      /*const arrUnlinked = arr.filter((item) => {
         // @ts-ignore
         const itemObjectBag = item as Record<string,unknown>;
         return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
@@ -118,7 +120,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
         arrUnlinked,
         intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
         {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-      );
+      );*/
 
       // whole catalog as is
       const parentCatalog = buildParentTreeNode(
@@ -129,7 +131,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
 
       setTreeRawData(
         [
-          parentUnlinked,
+          // parentUnlinked,
           parentCatalog,
         ]
       );
@@ -214,7 +216,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                   }
                 },
                 onMouseOver: (evt: MouseEvent) => {
-                  if(!rowInfo.node.isGroup){
+                  if (!rowInfo.node.isGroup) {
                     store.discreteLayersStore.highlightLayer(rowInfo.node as ILayerImage);
                   }
                 },
@@ -257,7 +259,7 @@ export const BestCatalogComponent: React.FC<BestCatalogComponentProps> = observe
                           data.layerImageShown = value;
                         }}
                       />,
-                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage}/>
+                      <ProductTypeRenderer data={(rowInfo.node as any) as ILayerImage} thumbnailUrl={getLinkUrlWithToken(rowInfo.node.links, LinkType.THUMBNAIL_S)}/>
                     ],
                 buttons: [],
               })}

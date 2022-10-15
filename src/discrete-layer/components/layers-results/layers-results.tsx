@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { ChangeDetectionStrategyType } from 'ag-grid-react';
 import { observer } from 'mobx-react-lite';
-import { isObject } from 'lodash';
-import CONFIG from '../../../common/config';
+import { isObject, isEmpty } from 'lodash';
+import { Box } from '@map-colonies/react-components';
 import { 
   GridComponent,
   GridComponentOptions,
@@ -14,17 +15,23 @@ import {
   GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { usePrevious } from '../../../common/hooks/previous.hook';
-import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
+import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
 import { FootprintRenderer } from '../../../common/components/grid/cell-renderer/footprint.cell-renderer';
 import { LayerImageRenderer } from '../../../common/components/grid/cell-renderer/layer-image.cell-renderer';
 import { ProductTypeRenderer } from '../../../common/components/grid/cell-renderer/product-type.cell-renderer';
+import { StyledByDataRenderer } from '../../../common/components/grid/cell-renderer/styled-by-data.cell-renderer';
+import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
+import { usePrevious } from '../../../common/hooks/previous.hook';
+import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
+import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
+import { RowDataChangedEvent } from 'ag-grid-community';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -37,33 +44,29 @@ interface LayersResultsComponentProps {
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
   const intl = useIntl();
-  const { discreteLayersStore } = useStore();
+  const store = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(true);
+  const [gridApi, setGridApi] = useState<GridApi>();
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
 
-  useEffect(()=>{
-    if (discreteLayersStore.layersImages) {
-      setlayersImages(discreteLayersStore.layersImages);
-    }
-  }, [discreteLayersStore.layersImages]);
-
   const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
     let res = false;
-    if (source && target &&
-        source.length === target.length) {
-          let matchesRes = true;
-          source.forEach((srcFeat: ILayerImage) => {
-            const match = target.find((targetFeat: ILayerImage) => {
-              return targetFeat.id === srcFeat.id;
-            });
-            matchesRes = matchesRes && isObject(match);
-          });
-          res = matchesRes;
+    if (source && target && source.length === target.length) {
+      let matchesRes = true;
+      source.forEach((srcFeat: ILayerImage) => { 
+        const match = target.find((targetFeat: ILayerImage) => {
+          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat);
+          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat);
+
+          return JSON.stringify(srcOnlyEditables) === JSON.stringify(targetOnlyEditables);
+        });
+        matchesRes = matchesRes && isObject(match);
+      });
+      res = matchesRes;
     }
-    
     return res;
   };
 
@@ -75,9 +78,50 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       selectedLayersRef.current = INITIAL_ORDER;
       return cacheRef.current;
     }
-  }
+  };
 
   const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
+
+  const entityPermittedActions = useMemo(() => {
+    const entityActions: Record<string, unknown> = {};
+    [ 'LayerRasterRecord', 'Layer3DRecord', 'BestRecord', 'LayerDemRecord', 'VectorBestRecord', 'QuantizedMeshBestRecord' ].forEach( entityName => {
+       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
+        return {
+          titleTranslationId: actionGroup.titleTranslationId,
+          group: 
+            actionGroup.group.filter(action => {
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
+                    action.views.includes(TabViews.SEARCH_RESULTS);
+            })
+            .map((action) => {
+              return {
+                ...action,
+                frequent: false,
+                titleTranslationId: intl.formatMessage({ id: action.titleTranslationId }),
+              };
+            }),
+        }
+       });
+       entityActions[entityName] = permittedGroupsActions;
+    })
+    return entityActions;
+  }, [store.userStore.user]);
+
+  const dispatchAction = (action: Record<string,unknown>): void => {
+    store.actionDispatcherStore.dispatchAction({
+      action: action.action,
+      data: action.data
+    } as IDispatchAction);
+  };
+
+  // Reset action value on store when unmounting
+  // useEffect(() => {
+  //   return (): void => {
+  //     dispatchAction(undefined)
+  //   };
+  // }, []);
   
   const colDef = [
     {
@@ -86,7 +130,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       cellRenderer: 'rowFootprintRenderer',
       cellRendererParams: {
         onClick: (id: string, value: boolean, node: GridRowNode): void => {
-          discreteLayersStore.showFootprint(id, value);
+          store.discreteLayersStore.showFootprint(id, value);
           const checkboxValues = layersImages.map(item => item.footprintShown);
           const checkAllValue = checkboxValues.reduce((accumulated, current) => (accumulated as boolean) && current, value);
           setIsChecked(checkAllValue as boolean);
@@ -98,7 +142,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         onClick: (value: boolean, gridApi: GridApi): void => {
           gridApi.forEachNode((item: GridRowNode) => {
             setTimeout(()=> item.setDataValue('footprintShown', value), IMMEDIATE_EXECUTION);
-            discreteLayersStore.showFootprint(item.id, value);
+            store.discreteLayersStore.showFootprint(item.id, value);
           });
           setIsChecked(value);
         }  
@@ -126,7 +170,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
           }
           const order = value ? selectedLayersRef.current : null;
           // setTimeout(() => node.setDataValue('order', order), immediateExecution) ;
-          discreteLayersStore.showLayer(id, value, order);
+          store.discreteLayersStore.showLayer(id, value, order);
         }
       }
     },
@@ -147,18 +191,19 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 200,
+      width: 180,
       field: 'productName',
+      cellRenderer: 'styledByDataRenderer',
       suppressMovable: true,
       tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
       tooltipComponentParams: { color: '#ececec' }
     },
     {
-      headerName:  intl.formatMessage({
+      headerName: intl.formatMessage({
         id: 'results.fields.update-date.label',
       }),
-      width: 120,
+      width: 140,
       field: 'updateDate',
       suppressMovable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
@@ -170,6 +215,16 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       width: 50,
       field: 'order',
       hide: true
+    },
+    {
+      pinned: 'right',
+      headerName: '',
+      width: 20,
+      cellRenderer: 'actionsRenderer',
+      cellRendererParams: {
+        actions: entityPermittedActions,
+        actionHandler: dispatchAction,
+      },
     }
   ];
   const gridOptions: GridComponentOptions = {
@@ -191,36 +246,62 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       rowFootprintRenderer: FootprintRenderer,
       rowLayerImageRenderer: LayerImageRenderer,
       productTypeRenderer: ProductTypeRenderer,
+      styledByDataRenderer: StyledByDataRenderer,
       customTooltip: CustomTooltip,
+      actionsRenderer: ActionsRenderer,
     },
+    rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
+    immutableData: true,
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
     rowSelection: 'single',
     suppressCellSelection: true,
     // suppressRowClickSelection: true,
     onCellMouseOver(event: GridCellMouseOverEvent) {
-      discreteLayersStore.highlightLayer(event.data as ILayerImage);
+      store.discreteLayersStore.highlightLayer(event.data as ILayerImage);
     },
     onCellMouseOut(event: GridCellMouseOutEvent) {
-      discreteLayersStore.highlightLayer(undefined);
+      store.discreteLayersStore.highlightLayer(undefined);
     },
     onRowClicked(event: GridRowSelectedEvent) {
-      discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
+      store.discreteLayersStore.selectLayerByID((event.data as ILayerImage).id);
     },
     onGridReady(params: GridReadyEvent) {
+      setGridApi(params.api);
       params.api.forEachNode( (node) => {
-        if ((node.data as ILayerImage).id === discreteLayersStore.selectedLayer?.id) {
+        if ((node.data as ILayerImage).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
         }
       });
     },
+    onRowDataUpdated(event: RowDataChangedEvent) {
+      const rowToUpdate: GridRowNode | undefined | null = event.api.getRowNode(store.discreteLayersStore.selectedLayer?.id as string);
+        event.api.refreshCells({
+          force: true,
+          suppressFlash: true,
+          columns:['productName', '__typename', 'updateDate'], 
+          rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
+        });
+    },
   };
 
+  useEffect(() => {
+    if (store.discreteLayersStore.layersImages) {
+      setlayersImages([...store.discreteLayersStore.layersImages.map(item => ({...item}))]);
+    }
+  }, [store.discreteLayersStore.layersImages]);
+
+  useEffect(() => {
+    gridApi?.setColumnDefs(colDef);
+  },[store.userStore.user]);
+
   return (
-    <GridComponent
-      gridOptions={gridOptions}
-      rowData={getRowData()}
-      style={props.style}
-    />
+    <Box id='layerResults'>
+      <GridComponent
+        gridOptions={gridOptions}
+        rowData={getRowData()}
+        style={props.style}
+      />
+    </Box>
   );
 });

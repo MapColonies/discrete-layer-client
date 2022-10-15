@@ -79,17 +79,17 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
     if (entityName !== undefined) {
-       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
-       const permittedGroupsActions = allGroupsActions
+      const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+      const permittedGroupsActions = allGroupsActions
         .sort((actionGroup1, actionGroup2) => actionGroup1.id - actionGroup2.id)
         .map((actionGroup) => {
           return {
             titleTranslationId: actionGroup.titleTranslationId,
-            group: 
+            group:
               actionGroup.group.filter(action => {
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                      action.views.includes(TabViews.CREATE_BEST);
+                       action.views.includes(TabViews.CREATE_BEST);
               })
               .map((action) => {
                 return {
@@ -102,7 +102,6 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       entityActions[entityName] = permittedGroupsActions;
     }
     return entityActions;
-  
   }, []);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
@@ -113,7 +112,7 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       } as IDispatchAction
     );
   };
-
+  
   const colDef = [
     {
       width: 10,
@@ -176,10 +175,10 @@ export const BestDiscretesComponent = observer(forwardRef((props: BestDiscretesC
       suppressMovable: true
     },
     {
+      pinned: 'right',
       headerName: '',
       width: 124,
       cellRenderer: 'actionsRenderer',
-      pinned: 'right',
       cellRendererParams: {
         actions: entityPermittedActions,
         actionHandler: dispatchAction

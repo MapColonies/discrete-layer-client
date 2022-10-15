@@ -95,46 +95,42 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
           error: null,
         },
       } as Selection);
-    
     }, [pathSuffix]);
 
     useEffect(() => {
       if (queryDirectory.data) {
-          const dirContent = cloneDeep(
-            queryDirectory.data.getDirectory
-          ) as FileData[];
-          
-          const shouldAutoSelectMountDir =
-            AUTO_SELECT_SINGLE_MOUNT as boolean &&
-            pathSuffix === BASE_PATH_SUFFIX &&
-            dirContent.length === 1 &&
-            (dirContent[0].isDir as boolean);
+        const dirContent = cloneDeep(queryDirectory.data.getDirectory) as FileData[];
+        
+        const shouldAutoSelectMountDir =
+          AUTO_SELECT_SINGLE_MOUNT as boolean &&
+          pathSuffix === BASE_PATH_SUFFIX &&
+          dirContent.length === 1 &&
+          (dirContent[0].isDir as boolean);
 
-          if (shouldAutoSelectMountDir) {
-           void filePickerRef.current?.requestFileAction(
-              FilePickerActions.OpenFiles,
-              {targetFile: dirContent[0], files:[dirContent[0]]}
-           );
-          } else {
-            setFiles(dirContent);
-            if (dirContent.length) {
-              const hasMetadata = dirContent.some(
-                (file) => file.name === 'metadata.json'
+        if (shouldAutoSelectMountDir) {
+          void filePickerRef.current?.requestFileAction(
+            FilePickerActions.OpenFiles,
+            {targetFile: dirContent[0], files:[dirContent[0]]}
+          );
+        } else {
+          setFiles(dirContent);
+          if (dirContent.length) {
+            const hasMetadata = dirContent.some(
+              (file) => file.name === 'metadata.json'
+            );
+            if (hasMetadata) {
+              queryMetadata.setQuery(
+                store.queryGetFile({
+                  data: {
+                    pathSuffix: pathSuffix + '/metadata.json',
+                    type: recordType,
+                  },
+                })
               );
-              if (hasMetadata) {
-                queryMetadata.setQuery(
-                  store.queryGetFile({
-                    data: {
-                      pathSuffix: pathSuffix + '/metadata.json',
-                      type: recordType,
-                    },
-                  })
-                );
-              }
             }
           }
+        }
       }
-    
     }, [queryDirectory.data]);
 
     useEffect(() => {
@@ -203,7 +199,7 @@ export const FilePickerDialog: React.FC<FilePickerDialogProps> = observer(
       <Box id="filePickerDialog">
         <Dialog open={isOpen} preventOutsideDismiss={true}>
           <DialogTitle>
-            <FormattedMessage id={'general.title.choose'} />
+            <FormattedMessage id="general.title.choose" />
             <IconButton
               className="closeIcon mc-icon-Close"
               label="CLOSE"

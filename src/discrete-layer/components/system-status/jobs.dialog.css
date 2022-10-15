@@ -6,7 +6,7 @@
   top:20px;
 }
 
-body[dir=rtl] #jobsDialog .mdc-dialog__surface {
+body[dir='rtl'] #jobsDialog .mdc-dialog__surface {
   right: unset;
   left:12px;
 }
@@ -28,7 +28,6 @@ body[dir=rtl] #jobsDialog .mdc-dialog__surface {
   padding: 8px 8px;
 }
 
-
 #jobsDialog .closeIcon {
   margin-left: auto;
 }
@@ -37,7 +36,7 @@ body[dir=rtl] #jobsDialog .mdc-dialog__surface {
   overflow-y: overlay !important;
 }
 
-body[dir=rtl] #jobsDialog .closeIcon {
+body[dir='rtl'] #jobsDialog .closeIcon {
   margin-left: unset;
   margin-right: auto;
 }
@@ -60,7 +59,7 @@ body[dir=rtl] #jobsDialog .closeIcon {
   right: 23px;
 }
 
-body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
+body[dir='rtl'] #jobsDialog .refreshContainer .refreshSecs {
   right: unset;
   left: 23px;
 }
@@ -87,7 +86,7 @@ body[dir=rtl] #jobsDialog .refreshContainer .refreshSecs {
   pointer-events: none;
 }
 
-body[dir=rtl] .jobsBody .ag-pinned-right-cols-container {
+body[dir='rtl'] .jobsBody .ag-pinned-right-cols-container {
   right: unset;
   left: 45px;
 }

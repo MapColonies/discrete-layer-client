@@ -3,10 +3,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormikValues } from 'formik';
-import { Button, Icon, Tooltip, Typography } from '@map-colonies/react-core';
+import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import {
   Box,
   defaultFormatters,
@@ -16,13 +16,21 @@ import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
-import { RecordType, LayerMetadataMixedUnion } from '../../models';
+import { RecordType, LayerMetadataMixedUnion, useQuery, useStore } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
+import {
+  Layer3DRecordModelKeys,
+  LayerDemRecordModelKeys,
+  LayerRasterRecordModelKeys,
+} from './entity-types-keys';
 
 import './ingestion-fields.css';
+import { importJSONFileFromClient } from './utils';
+import { observer } from 'mobx-react';
+import { cloneDeep, isEmpty } from 'lodash';
 
 const DIRECTORY = 0;
 const FILES = 1;
@@ -146,19 +154,76 @@ const IngestionInputs: React.FC<{
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = ({
+export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   recordType,
   fields,
   values,
   reloadFormMetadata,
   formik,
 }) => {
+  const store = useStore();
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
+  const [isImportDisabled, setIsImportDisabled] = useState(true);
   const [selection, setSelection] = useState<Selection>({
     files: [],
     folderChain: [],
     metadata: { recordModel: {} as LayerMetadataMixedUnion, error: null },
   });
+  const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
+  const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
+
+  const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
+
+  useEffect(() => {
+    if(chosenMetadataFile !== null) {
+      queryResolveMetadataAsModel.setQuery(
+        store.queryResolveMetadataAsModel(
+          {
+            data: {
+              metadata: chosenMetadataFile,
+              type: recordType
+            }
+          }
+        )
+      )
+    }
+  }, [chosenMetadataFile]);
+
+  useEffect(() => {
+    if (queryResolveMetadataAsModel.data) {
+      const metadataAsModel = cloneDeep(queryResolveMetadataAsModel.data.resolveMetadataAsModel);
+
+      if (reloadFormMetadata) {
+        reloadFormMetadata(
+          {
+            directory: values.directory as string,
+            fileNames: values.fileNames as string,
+          },
+          { recordModel: metadataAsModel} as MetadataFile
+        );
+      }
+    }
+  }, [queryResolveMetadataAsModel.data]);
+
+  useEffect(() => {
+    if(!isEmpty(queryResolveMetadataAsModel.error) || !isEmpty(chosenMetadataError)) {
+      if (reloadFormMetadata) {
+        reloadFormMetadata(
+          {
+            directory: values.directory as string,
+            fileNames: values.fileNames as string,
+          },
+          { recordModel: {}, error: chosenMetadataError ?? (queryResolveMetadataAsModel.error as unknown)} as MetadataFile
+        );
+        
+      }
+    }
+  }, [queryResolveMetadataAsModel.error, chosenMetadataError])
+
+  useEffect(() => {
+    setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
+  }, [selection, queryResolveMetadataAsModel.loading])
+
 
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
@@ -182,6 +247,29 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
     }
   };
 
+  const checkIsValidMetadata = useCallback((record: Record<string, unknown>): boolean => {
+    let recordKeys: string[] = [];
+    switch(recordType) {
+      case RecordType.RECORD_RASTER:
+       recordKeys = LayerRasterRecordModelKeys as string[];
+      break;
+      case RecordType.RECORD_3D:
+       recordKeys = Layer3DRecordModelKeys as string[];
+      break;
+      case RecordType.RECORD_DEM:
+       recordKeys = LayerDemRecordModelKeys as string[];
+      break;
+
+      default:
+        break;
+    }
+
+    return Object.keys(record).every(key => {
+        return recordKeys.includes(key)
+    });
+
+  }, [recordType])
+
   return (
     <>
       <Box className="header section">
@@ -194,20 +282,57 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
             formik={formik as EntityFormikHandlers}
           />
         </Box>
-        <Box className="ingestionButton">
-          <Button
-            raised
-            type="button"
-            onClick={(): void => {
-              setFilePickerDialogOpen(true);
-            }}
-          >
-            <FormattedMessage id="general.choose-btn.text" />
-          </Button>
+        <Box className="ingestionButtonsContainer">
+          <Box className="ingestionButton">
+            <Button
+              raised
+              type="button"
+              onClick={(): void => {
+                setFilePickerDialogOpen(true);
+              }}
+            >
+              <FormattedMessage id="general.choose-btn.text" />
+            </Button>
+          </Box>
+          <Box className="uploadMetadataButton">
+            <Button
+              outlined
+              type="button"
+              disabled={isImportDisabled}
+              onClick={(): void => {
+                importJSONFileFromClient((e) => {
+                  const resultFromFile = JSON.parse(
+                    e.target?.result as string
+                  ) as Record<string, unknown>;
+                  setChosenMetadataFile(null);
+                  setChosenMetadataError(null);
+
+                  if (checkIsValidMetadata(resultFromFile)) {
+                    setChosenMetadataFile(e.target?.result as string);
+                  } else {
+                    setChosenMetadataError({
+                      response: {
+                        errors: [
+                          {
+                            message: `Please choose metadata for product ${recordType}`,
+                          },
+                        ],
+                      },
+                    });
+                  }
+                });
+              }}
+            >
+              {queryResolveMetadataAsModel.loading ? (
+                <CircularProgress />
+              ) : (
+                <FormattedMessage id="ingestion.button.import-metadata" />
+              )}
+            </Button>
+          </Box>
         </Box>
       </Box>
-      {
-        isFilePickerDialogOpen &&
+      {isFilePickerDialogOpen && (
         <FilePickerDialog
           recordType={recordType}
           isOpen={isFilePickerDialogOpen}
@@ -215,7 +340,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = ({
           onFilesSelection={onFilesSelection}
           selection={selection}
         />
-      }
+      )}
     </>
   );
-};
+});

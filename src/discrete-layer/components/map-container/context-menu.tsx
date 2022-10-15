@@ -70,7 +70,8 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
 
   return (
     <>
-      {numOfSelectedLayers > NONE && (
+      {
+        numOfSelectedLayers > NONE &&
         <div 
           ref={imageryContextMenuRef}
           style={{...emptyStyle, ...style}}
@@ -91,27 +92,30 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
               open={true}
               className="imageryMenu"
             >
-              {actions.map((action: IAction) => {
-                return (
-                  <MenuItem key={`imageryMenuItemAction_${action.action}`}>
-                    <Box
-                      onClick={(evt): void => {
-                        dispatchAction(`LayerRasterRecord.${action.action}`, layer);
-                        handleClose();
-                      }}
-                    >
-                      <Icon
-                        className="imageryMenuIcon glow-missing-icon"
-                        icon={{ icon: action.icon, size: 'small' }}
-                      />
-                      {action.titleTranslationId}
-                    </Box>
-                  </MenuItem>
-                );
-              })}
+              {
+                actions.map((action: IAction) => {
+                  return (
+                    <MenuItem key={`imageryMenuItemAction_${action.action}`}>
+                      <Box
+                        onClick={(evt): void => {
+                          dispatchAction(`LayerRasterRecord.${action.action}`, layer);
+                          handleClose();
+                        }}
+                      >
+                        <Icon
+                          className="imageryMenuIcon glow-missing-icon"
+                          icon={{ icon: action.icon, size: 'small' }}
+                        />
+                        {action.titleTranslationId}
+                      </Box>
+                    </MenuItem>
+                  );
+                })
+              }
             </Menu>
           </MenuSurfaceAnchor>
-          {numOfSelectedLayers > 1 && (
+          {
+            numOfSelectedLayers > 1 &&
             <Box>
               <Box className="imageryContextMenuSubTitle">
                 {`${numOfSelectedLayers} ${subTitle}`}
@@ -126,29 +130,33 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
                   }}
                 />
               </Box>
-              {expanded && <Box className="imageryContextMenuTableContainer">
-                <table className="imageryContextMenuTable">
-                  {data.map((item: Record<string, unknown>, index: number) => {
-                    const meta = item.meta as Record<string, unknown>;
-                    const details = meta.details as Record<string, unknown>;
-                    return (
-                      <tr className={index === FIRST ? 'imageryContextMenuTableSelectedRow' : ''}>
-                        <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
-                        <td>
-                          <Tooltip content={details.name as string}>
-                            <Box className="imageryContextMenuTableField">{details.name as string}</Box>
-                          </Tooltip>
-                        </td>
-                        
-                      </tr>
-                    );
-                  })}
-                </table>
-              </Box>}
+              {
+                expanded &&
+                <Box className="imageryContextMenuTableContainer">
+                  <table className="imageryContextMenuTable">
+                    {
+                      data.map((item: Record<string, unknown>, index: number) => {
+                        const meta = item.meta as Record<string, unknown>;
+                        const details = meta.details as Record<string, unknown>;
+                        return (
+                          <tr className={index === FIRST ? 'imageryContextMenuTableSelectedRow' : ''}>
+                            <td className="imageryContextMenuTableOrder">{meta.zIndex as number}</td>
+                            <td>
+                              <Tooltip content={details.name as string}>
+                                <Box className="imageryContextMenuTableField">{details.name as string}</Box>
+                              </Tooltip>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    }
+                  </table>
+                </Box>
+              }
             </Box>
-          )}
+          }
         </div>
-      )}
+      }
       {numOfSelectedLayers === NONE && <Box style={emptyStyle} className="imageryContextMenuEmpty"></Box>}
     </>
   );

@@ -24,7 +24,7 @@
     margin-right: unset;
   }
   
-  body[dir=rtl] #systemCoreInfoDialog .closeIcon {
+  body[dir='rtl'] #systemCoreInfoDialog .closeIcon {
     margin-left: unset;
     margin-right: auto;
   }

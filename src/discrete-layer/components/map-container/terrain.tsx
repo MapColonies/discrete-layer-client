@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { CesiumTerrainProvider, EllipsoidTerrainProvider } from 'cesium';
 import {
+  CesiumCesiumTerrainProvider,
+  CesiumEllipsoidTerrainProvider,
   CesiumSceneMode,
   useCesiumMap
 } from '@map-colonies/react-components';
@@ -19,18 +20,17 @@ export const Terrain: React.FC<TerrainProps> = () => {
       mapViewer.terrainProvider =
         // eslint-disable-next-line
         CONFIG.DEFAULT_TERRAIN_PROVIDER_URL ?
-          new CesiumTerrainProvider({
+          new CesiumCesiumTerrainProvider({
             url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
           }) :
-          new EllipsoidTerrainProvider({});
+          new CesiumEllipsoidTerrainProvider({});
     } else {
-      mapViewer.terrainProvider = new EllipsoidTerrainProvider({});
+      mapViewer.terrainProvider = new CesiumEllipsoidTerrainProvider({});
     }
   };
 
   useEffect(() => {
     mapViewer.scene.morphComplete.addEventListener(setTerrainProvider);
-  
   }, []);
 
   return <></>;

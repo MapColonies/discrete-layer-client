@@ -1,22 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useCallback, useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Box } from '@map-colonies/react-components';
 import { get } from 'lodash';
 import {
   CircularProgress,
   FormattedOption,
   Select,
 } from '@map-colonies/react-core';
-import './priority.cell-renderer.css';
+import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
 import { FINAL_STATUSES } from '../job.types'
+
+import './priority.cell-renderer.css';
+
 interface PriorityOption {
   label: string;
   value: string;
   icon: string;
   iconColor: string;
 }
+
 interface IPriorityCellRendererParams extends ICellRendererParams {
   optionsData: PriorityOption[];
   onChange: (e: React.FormEvent<HTMLSelectElement>, jobData: ICellRendererParams) => void;
@@ -27,19 +30,14 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
 ) => {
   const jobData: JobModelType = props.data as JobModelType;
   const { optionsData } = props;
-  const [value, setValue] = useState(
-    (get(jobData, 'priority') as number).toString()
-  );
-
+  const [value, setValue] = useState((get(jobData, 'priority') as number).toString());
   const [loading, setLoading] = useState(false);
-
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     const shouldBeDisabled = loading || FINAL_STATUSES.includes(jobData.status as Status)
     setDisabled(shouldBeDisabled)
-
-  }, [loading, jobData.status])
+  }, [loading, jobData.status]);
 
   interface IconObj {
     icon: string;
@@ -52,7 +50,6 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
     ) as PriorityOption;
 
     return { icon: selectedOption.icon, color: selectedOption.iconColor };
-  
   }, []);
 
   const [icon, setIcon] = useState(getIconObjForVal(value));
@@ -63,16 +60,17 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
 
   return (
     <Box className="priorityCellContainer">
-      {loading && (
+      {
+        loading &&
         <Box className="loadingContainer">
           <CircularProgress />
         </Box>
-      )}
+      }
       <Select
         disabled={disabled}
         enhanced
         outlined
-        className="priority_options"
+        className="priorityOptions"
         value={value}
         options={optionsData as FormattedOption[]}
         icon={{
@@ -89,7 +87,6 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
           props.onChange(e, props.data);
         }}
       />
-      
     </Box>
   );
 };

@@ -43,6 +43,8 @@ import { UpdateRulesValueModel, UpdateRulesValueModelType } from "./UpdateRulesV
 import { updateRulesValueModelPrimitives, UpdateRulesValueModelSelector } from "./UpdateRulesValueModel.base"
 import { UpdateRulesOperationModel, UpdateRulesOperationModelType } from "./UpdateRulesOperationModel"
 import { updateRulesOperationModelPrimitives, UpdateRulesOperationModelSelector } from "./UpdateRulesOperationModel.base"
+import { McEnumsModel, McEnumsModelType } from "./McEnumsModel"
+import { mcEnumsModelPrimitives, McEnumsModelSelector } from "./McEnumsModel.base"
 import { ExternalServiceModel, ExternalServiceModelType } from "./ExternalServiceModel"
 import { externalServiceModelPrimitives, ExternalServiceModelSelector } from "./ExternalServiceModel.base"
 import { JobModel, JobModelType } from "./JobModel"
@@ -62,6 +64,7 @@ import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , La
 
 import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
+import { RecordStatus } from "./RecordStatusEnum"
 import { VerticalDatum } from "./VerticalDatumEnum"
 import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
@@ -130,18 +133,17 @@ export type ExplorerGetById = {
   id: string
   type: RecordType
 }
+export type ExplorerResolveMetadataAsModel = {
+  metadata: string
+  type: RecordType
+}
 export type TasksSearchParams = {
   jobId: string
 }
 export type RecordUpdatePartial = {
-  productName?: string
-  description?: string
-  productSubType?: string
-  producerName?: string
-  classification?: string
-  keywords?: string
   id: string
   type: RecordType
+  partialRecordData: any
 }
 export type IngestionRasterData = {
   directory: string
@@ -150,21 +152,22 @@ export type IngestionRasterData = {
   type: RecordType
 }
 export type LayerRasterRecordInput = {
+  id: string
   type?: RecordType
   classification: string
   productName: string
   description?: string
   srsId: string
-  producerName?: string
+  producerName: string
   creationDate?: any
   ingestionDate?: any
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
   minHorizontalAccuracyCE90?: number
-  sensors?: string[]
-  region?: string[]
-  productId: string
+  sensors: string[]
+  region: string[]
+  productId?: string
   productVersion?: string
   productType: ProductType
   productSubType?: string
@@ -177,7 +180,6 @@ export type LayerRasterRecordInput = {
   layerPolygonParts?: any
   includedInBests?: string[]
   productBoundingBox?: string
-  id: string
   insertDate?: any
   keywords?: string
   links?: LinkInput[]
@@ -207,29 +209,28 @@ export type Layer3DRecordInput = {
   sourceDateEnd: any
   minResolutionMeter?: number
   maxResolutionMeter?: number
-  nominalResolution?: number
-  maxAccuracyCE90?: number
-  absoluteAccuracyLEP90: number
+  maxAccuracyCE90: number
+  absoluteAccuracyLE90: number
   accuracySE90?: number
-  relativeAccuracyLEP90?: number
+  relativeAccuracySE90?: number
   visualAccuracy?: number
-  sensors?: string[]
+  sensors: string[]
   footprint: any
   heightRangeFrom?: number
   heightRangeTo?: number
   srsId: string
   srsName: string
-  srsOrigin?: string
-  region?: string[]
+  region: string[]
   classification: string
-  productionSystem?: string
-  productionSystemVer?: string
-  producerName?: string
-  productionMethod?: string
+  productionSystem: string
+  productionSystemVer: string
+  producerName: string
   minFlightAlt?: number
   maxFlightAlt?: number
   geographicArea?: string
   productBoundingBox?: string
+  productSource?: string
+  productStatus?: RecordStatus
   id: string
   insertDate?: any
   wktGeometry?: string
@@ -249,13 +250,13 @@ export type LayerDemRecordInput = {
   description?: string
   srsId: string
   srsName: string
-  producerName?: string
+  producerName: string
   updateDate?: any
   sourceDateStart: any
   sourceDateEnd: any
-  sensors?: string[]
-  region?: string[]
-  productId: string
+  sensors: string[]
+  region: string[]
+  productId?: string
   productType: ProductType
   footprint: any
   absoluteAccuracyLEP90: number
@@ -307,23 +308,27 @@ querySearch="querySearch",
 querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
 queryEntityDescriptors="queryEntityDescriptors",
+queryGetMcEnums="queryGetMcEnums",
 queryGetExternalServices="queryGetExternalServices",
 queryJobs="queryJobs",
 queryGetClusterServices="queryGetClusterServices",
 queryGetDirectory="queryGetDirectory",
 queryGetDirectoryById="queryGetDirectoryById",
 queryGetFile="queryGetFile",
+queryResolveMetadataAsModel="queryResolveMetadataAsModel",
 queryGetFileById="queryGetFileById",
 queryGetDecryptedId="queryGetDecryptedId",
 queryTasks="queryTasks"
 }
 export enum RootStoreBaseMutations {
+mutateUpdateStatus="mutateUpdateStatus",
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
 mutateStart3DIngestion="mutateStart3DIngestion",
 mutateStartDemIngestion="mutateStartDemIngestion",
 mutateUpdateJob="mutateUpdateJob",
-mutateJobRetry="mutateJobRetry"
+mutateJobRetry="mutateJobRetry",
+mutateJobAbort="mutateJobAbort"
 }
 
 /**
@@ -331,7 +336,7 @@ mutateJobRetry="mutateJobRetry"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -367,6 +372,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new EntityDescriptorModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
+    queryGetMcEnums(variables?: {  }, resultSelector: string | ((qb: McEnumsModelSelector) => McEnumsModelSelector) = mcEnumsModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getMcEnums: McEnumsModelType}>(`query getMcEnums { getMcEnums {
+        ${typeof resultSelector === "function" ? resultSelector(new McEnumsModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
     queryGetExternalServices(variables?: {  }, resultSelector: string | ((qb: ExternalServiceModelSelector) => ExternalServiceModelSelector) = externalServiceModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getExternalServices: ExternalServiceModelType[]}>(`query getExternalServices { getExternalServices {
         ${typeof resultSelector === "function" ? resultSelector(new ExternalServiceModelSelector()).toString() : resultSelector}
@@ -397,6 +407,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
+    queryResolveMetadataAsModel(variables: { data: ExplorerResolveMetadataAsModel }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>(`query resolveMetadataAsModel($data: ExplorerResolveMetadataAsModel!) { resolveMetadataAsModel(data: $data) {
+        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
     queryGetFileById(variables: { data: ExplorerGetById }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getFileById: LayerMetadataMixedUnion}>(`query getFileById($data: ExplorerGetById!) { getFileById(data: $data) {
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
@@ -411,6 +426,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       return self.query<{ tasks: TasksGroupModelType[]}>(`query tasks($params: TasksSearchParams) { tasks(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new TasksGroupModelSelector()).toString() : resultSelector}
       } }`, variables, options)
+    },
+    mutateUpdateStatus(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
+      return self.mutate<{ updateStatus: string }>(`mutation updateStatus($data: RecordUpdatePartial!) { updateStatus(data: $data) }`, variables, optimisticUpdate)
     },
     mutateUpdateMetadata(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateMetadata: string }>(`mutation updateMetadata($data: RecordUpdatePartial!) { updateMetadata(data: $data) }`, variables, optimisticUpdate)
@@ -429,5 +447,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     mutateJobRetry(variables: { id: string }, optimisticUpdate?: () => void) {
       return self.mutate<{ jobRetry: string }>(`mutation jobRetry($id: String!) { jobRetry(id: $id) }`, variables, optimisticUpdate)
+    },
+    mutateJobAbort(variables: { id: string }, optimisticUpdate?: () => void) {
+      return self.mutate<{ jobAbort: string }>(`mutation jobAbort($id: String!) { jobAbort(id: $id) }`, variables, optimisticUpdate)
     },
   })))

@@ -27,6 +27,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'LayerRasterRecord',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'OperationsOnMap',
         type: 'mapActions',
@@ -79,20 +94,20 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           {
+            action: 'update',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Edit glow-missing-icon',
+            titleTranslationId: 'action.update.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+          {
             action: 'delete',
             frequent: true,
             icon: '',
             class: 'mc-icon-Delete',
             titleTranslationId: 'action.delete.tooltip',
             views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
-          },
-          {
-            action: 'update',
-            frequent: false,
-            icon: '',
-            class: 'mc-icon-Edit glow-missing-icon',
-            titleTranslationId: 'Update',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
         ],
       },
@@ -101,6 +116,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'Layer3DRecord',
     actions: [
+      {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
       {
         id: 1,
         titleTranslationId: 'CRUD',
@@ -231,14 +261,22 @@ const ACTIONS_CONFIG: IEntityActions[] = [
         titleTranslationId: 'OperationsOnJobs',
         type: 'jobActions',
         group: [
-          {
-            action: 'retry',
-            frequent: false,
-            icon: '',
-            class: 'mc-icon-Refresh',
-            titleTranslationId: 'action.job.retry',
-            views: []
-          }
+          // {
+          //   action: 'retry',
+          //   frequent: false,
+          //   icon: '',
+          //   class: 'mc-icon-Refresh',
+          //   titleTranslationId: 'action.job.retry',
+          //   views: []
+          // },
+          // {
+          //   action: 'abort',
+          //   frequent: false,
+          //   icon: '',
+          //   class: 'mc-icon-Delete glow-missing-icon',
+          //   titleTranslationId: 'action.job.abort',
+          //   views: []
+          // }
         ],
       }
     ]
