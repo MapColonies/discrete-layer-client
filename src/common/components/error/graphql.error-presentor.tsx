@@ -22,9 +22,9 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
   const intl = useIntl();
 
   const formatMessage = (message: string): string => {
-    if (message.includes(Number(BAD_REQUEST_ERROR_CODE).toString())) {
+    if (message.includes(BAD_REQUEST_ERROR_CODE.toString())) {
       return intl.formatMessage({ id: 'general.bad-request.error' });
-    } else if (message.includes(Number(CONFLICT_ERROR_CODE).toString())) {
+    } else if (message.includes(CONFLICT_ERROR_CODE.toString())) {
       return intl.formatMessage({ id: 'general.duplicate.error' });
     } else {
       return message.substring(+message.indexOf('; ') + 1);
