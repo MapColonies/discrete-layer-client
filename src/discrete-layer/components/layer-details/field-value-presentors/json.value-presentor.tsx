@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
-import { TextField } from '@map-colonies/react-core';
+import shp from 'shpjs';
+import { Button, TextField } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -9,7 +10,7 @@ import TooltippedValue from '../../../../common/components/form/tooltipped.value
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
-
+import { importShapeFileFromClient } from '../utils';
 const NONE = 0;
 interface JsonValuePresentorProps {
   mode: Mode;
@@ -107,6 +108,15 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
               <FormInputInfoTooltipComponent fieldInfo={fieldInfo}/>
             }
+            <Button onClick={(): void => {
+              importShapeFileFromClient((ev) => {
+                const shpFile = ev.target?.result as unknown as ArrayBuffer;
+                const jsP = shp(shpFile).then(ans => {
+                  console.log(ans)
+                });
+                
+              })
+            }}>Click Me!</Button>
         </Box>
       </>
     );
