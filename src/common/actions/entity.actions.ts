@@ -161,6 +161,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     childEntity: 'LayerRasterRecord',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -189,6 +204,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'VectorBestRecord',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -209,6 +239,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'QuantizedMeshBestRecord',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -228,6 +273,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'LayerDemRecord',
     actions: [
+      {
+        id: 0,
+        titleTranslationId: 'layerCatalogToMap',
+        type: 'catalogToMapOperations',
+        group: [
+          {
+            action: 'flyTo',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates glow-missing-icon',
+            titleTranslationId: 'action.flyTo.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
       {
         id: 1,
         titleTranslationId: 'CRUD',
