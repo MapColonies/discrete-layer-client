@@ -390,6 +390,8 @@
   "info-field-tooltip.scale.min": "גדול מ: {value}",
   "info-field-tooltip.scale.max": "קטן מ: {value}",
 
+  "button-field-text.footprint.load-from-shapeFile": "טען מקובץ Shape",
+
   "validation-general.required": "{fieldName} הוא שדה חובה",
   "validation-general.number": "{fieldName} הוא שדה חובה ומספרי",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
@@ -429,6 +431,8 @@
   "validation-field.scale.min": "{fieldName} קטן מהמינימום: {value}",
   "validation-field.scale.max": "{fieldName} גדול מהמקסימום: {value}",
   "validation-field.footprint.json": "{fieldName} לא GEOJSON",
+  "validation-field.footprint.shapeFile.multiple-features": "{fieldName} קובץ ה-Shape שטענת מכיל יותר מפוליגון אחד",
+  "validation-field.footprint.shapeFile.generic": "{fieldName} יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
   "validation-field.layerPolygonParts.json": "{fieldName} לא GEOJSON",
   "validation-field.links.fileSize": "{fieldName} צריך להיות בגודל: {value}x{value}",
 

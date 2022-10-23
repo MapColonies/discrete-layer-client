@@ -390,6 +390,8 @@
   "info-field-tooltip.scale.min": "Greater than {value}",
   "info-field-tooltip.scale.max": "Less than {value}",
 
+  "button-field-text.footprint.load-from-shapeFile": "Load from shape file",
+
   "validation-general.required": "{fieldName} is required",
   "validation-general.number": "{fieldName} is required and numeric",
   "validation-field.sourceDateEnd.min": "{fieldName} should be later than {value}",
@@ -429,6 +431,8 @@
   "validation-field.scale.min": "{fieldName} is less than minimum: {value}",
   "validation-field.scale.max": "{fieldName} is greater than maximum: {value}",
   "validation-field.footprint.json": "{fieldName} is not geoJSON",
+  "validation-field.footprint.shapeFile.multiple-features": "{fieldName} The shape file you chose contains more then a single polygon",
+  "validation-field.footprint.shapeFile.generic": "{fieldName} Please select zip file with only shape or related files, or a single shape file",
   "validation-field.layerPolygonParts.json": "{fieldName} is not geoJSON",
   "validation-field.links.fileSize": "{fieldName} has to be of size: {value}x{value}",
 
