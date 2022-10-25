@@ -31,7 +31,7 @@ import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
-import { RowDataChangedEvent } from 'ag-grid-community';
+import { ColDef, RowDataChangedEvent } from 'ag-grid-community';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -276,10 +276,14 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     onRowDataUpdated(event: RowDataChangedEvent) {
       const rowToUpdate: GridRowNode | undefined | null = event.api.getRowNode(store.discreteLayersStore.selectedLayer?.id as string);
+      
+      // Find the pinned column to update as well.
+      const pinnedColId = (event.api.getColumnDefs().find(colDef => (colDef as ColDef).pinned) as ColDef).colId as string;
+
         event.api.refreshCells({
           force: true,
           suppressFlash: true,
-          columns:['productName', '__typename', 'updateDate'], 
+          columns:['productName', '__typename', 'updateDate', pinnedColId], 
           rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
         });
     },
