@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.3...v1.22.0) (2022-10-12)
+
+
+### Features
+
+* 3D profile 2.0 ([#349](https://github.com/MapColonies/discrete-layer-client/issues/349)) ([908956e](https://github.com/MapColonies/discrete-layer-client/commit/908956ec72ebdf758cd17b62e11096d3edb068ba))
+* added reset app state action ([#367](https://github.com/MapColonies/discrete-layer-client/issues/367)) ([fc48da2](https://github.com/MapColonies/discrete-layer-client/commit/fc48da2b5b4ade10d3075a5730019573b83cf90a))
+* fetch raw enums from bff basic concept ([#365](https://github.com/MapColonies/discrete-layer-client/issues/365)) ([af8a607](https://github.com/MapColonies/discrete-layer-client/commit/af8a607bbd9b18f983876edfdfb9ac58b9807fcd))
+* metadata exporter basic concept ([#351](https://github.com/MapColonies/discrete-layer-client/issues/351)) ([b857643](https://github.com/MapColonies/discrete-layer-client/commit/b857643f2b2e470e35f007410bbfd73a4b3435e3))
+* new helper actions, fixes for current actions and documentation added ([#358](https://github.com/MapColonies/discrete-layer-client/issues/358)) ([476be60](https://github.com/MapColonies/discrete-layer-client/commit/476be6001d0650d39d7f715128a074bd03f1479c))
+
+
+### Bug Fixes
+
+* abort job synch + remark job actions ([#366](https://github.com/MapColonies/discrete-layer-client/issues/366)) ([cefadc4](https://github.com/MapColonies/discrete-layer-client/commit/cefadc4267a5adaf750995a76f66d53a826ae569))
+* ag grid update rows when data changes ([#363](https://github.com/MapColonies/discrete-layer-client/issues/363)) ([1f196ed](https://github.com/MapColonies/discrete-layer-client/commit/1f196edb559f508271e0ddc0f9427c88306b4408))
+* catalog tree capabilities bug + empty list bug ([#371](https://github.com/MapColonies/discrete-layer-client/issues/371)) ([cdf4f6a](https://github.com/MapColonies/discrete-layer-client/commit/cdf4f6afb96fdcc16205dbe637b5fdfe3bc40ac7))
+* clean up unpublish logic ([#359](https://github.com/MapColonies/discrete-layer-client/issues/359)) ([c6a2c09](https://github.com/MapColonies/discrete-layer-client/commit/c6a2c095a1ac2aaefbb877034b385779b881fea4))
+* disable feature by role ([#357](https://github.com/MapColonies/discrete-layer-client/issues/357)) ([a37bd5f](https://github.com/MapColonies/discrete-layer-client/commit/a37bd5f013023945eda2ebd8f77b4bfcab554fa9))
+* disabled buttons color ([#370](https://github.com/MapColonies/discrete-layer-client/issues/370)) ([d378180](https://github.com/MapColonies/discrete-layer-client/commit/d378180823c74d337ff041f2ef755d26527a6900))
+* fix ([#373](https://github.com/MapColonies/discrete-layer-client/issues/373)) ([55b69cd](https://github.com/MapColonies/discrete-layer-client/commit/55b69cdd3d83900cc1bae78b00cfc30c636c1a7f))
+* footprint with optional convexhull ([#354](https://github.com/MapColonies/discrete-layer-client/issues/354)) ([d4a5b51](https://github.com/MapColonies/discrete-layer-client/commit/d4a5b515753827b39bc300ddf250272d3d97a518))
+* getEditablePartialObject should consider lifecycle mutable fields ([9e9f020](https://github.com/MapColonies/discrete-layer-client/commit/9e9f0205e2890f84422af33cfefd732191db7b93))
+* getEditablePartialObject should consider lifecycle mutable fields ([#372](https://github.com/MapColonies/discrete-layer-client/issues/372)) ([d4e4621](https://github.com/MapColonies/discrete-layer-client/commit/d4e462148af76bc024eaddf25ec1601b86469118))
+* mc models version ([#364](https://github.com/MapColonies/discrete-layer-client/issues/364)) ([d8c1867](https://github.com/MapColonies/discrete-layer-client/commit/d8c1867264a9c992b000f4f2ffb21bfc46c24880))
+* missing fields from layer details MAPCO-2523 ([#353](https://github.com/MapColonies/discrete-layer-client/issues/353)) ([1a4689d](https://github.com/MapColonies/discrete-layer-client/commit/1a4689dd2fe6dafbf6eb87910d513a8c1f640838))
+* product status ([#360](https://github.com/MapColonies/discrete-layer-client/issues/360)) ([ddec8b9](https://github.com/MapColonies/discrete-layer-client/commit/ddec8b9d5f35d6b951fad8002703621877a39f8e))
+* tiles uri with version ([#356](https://github.com/MapColonies/discrete-layer-client/issues/356)) ([f097904](https://github.com/MapColonies/discrete-layer-client/commit/f097904ba88c7d980b8cbda4b027cf4dd0d5f937))
+* typo ([333590c](https://github.com/MapColonies/discrete-layer-client/commit/333590c16f19cdb1d5b971d1930a99fb35f7611b))
+* unpublished value presentor ([#369](https://github.com/MapColonies/discrete-layer-client/issues/369)) ([2a0bfe6](https://github.com/MapColonies/discrete-layer-client/commit/2a0bfe6f688a590fe72ab6399a8b0e6e2a8908bb))
+* user role hard coded defaults to admin ([#380](https://github.com/MapColonies/discrete-layer-client/issues/380)) ([e54649a](https://github.com/MapColonies/discrete-layer-client/commit/e54649aac8117605ec182fc7a423ffa7fe605dbf))
+
 ## [1.21.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.3...v1.21.0) (2022-10-03)
 
 
