@@ -104,7 +104,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
           onClick={(): void => {setOpen(true);}}/>
       </Tooltip>
       <Divider/>
-      <Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
+      <Tooltip content={intl.formatMessage({ id: 'action.clear.tooltip' })}>
         <IconButton className="mc-icon-Delete" label="CLEAR" onClick={onReset}/>
       </Tooltip>
       <Divider/>
