@@ -11,8 +11,8 @@ interface TooltippedValueProps {
 }
 
 const TooltippedValue: React.FC<TooltippedValueProps> = ({
-  className = '',
   tag = 'span',
+  className = '',
   disableTooltip = false,
   alwaysTooltip = false,
   customTooltipText = '',
