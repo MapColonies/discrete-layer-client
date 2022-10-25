@@ -22,25 +22,27 @@ export interface IEntityActions {
   actions: IActionGroup[];
 }
 
+const GENERAL_ACTIONS_GROUP: IActionGroup = {
+  id: 0,
+  titleTranslationId: 'layerCatalogToMap',
+  type: 'catalogToMapOperations',
+  group: [
+    {
+      action: 'flyTo',
+      frequent: true,
+      icon: '',
+      class: 'mc-icon-Coordinates glow-missing-icon',
+      titleTranslationId: 'action.flyTo.tooltip',
+      views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+    },
+  ],
+};
+
 const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'LayerRasterRecord',
     actions: [
-      {
-        id: 0,
-        titleTranslationId: 'layerCatalogToMap',
-        type: 'catalogToMapOperations',
-        group: [
-          {
-            action: 'flyTo',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-        ],
-      },
+      GENERAL_ACTIONS_GROUP,
       {
         id: 1,
         titleTranslationId: 'OperationsOnMap',
@@ -116,21 +118,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'Layer3DRecord',
     actions: [
-      {
-        id: 0,
-        titleTranslationId: 'layerCatalogToMap',
-        type: 'catalogToMapOperations',
-        group: [
-          {
-            action: 'flyTo',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-        ],
-      },
+      GENERAL_ACTIONS_GROUP,
       {
         id: 1,
         titleTranslationId: 'CRUD',
@@ -160,6 +148,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'BestRecord',
     childEntity: 'LayerRasterRecord',
     actions: [
+      GENERAL_ACTIONS_GROUP,
       {
         id: 0,
         titleTranslationId: 'layerCatalogToMap',
@@ -203,6 +192,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'VectorBestRecord',
     actions: [
+      GENERAL_ACTIONS_GROUP,
       {
         id: 0,
         titleTranslationId: 'layerCatalogToMap',
@@ -238,6 +228,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'QuantizedMeshBestRecord',
     actions: [
+      GENERAL_ACTIONS_GROUP,
       {
         id: 0,
         titleTranslationId: 'layerCatalogToMap',
@@ -273,6 +264,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
   {
     entity: 'LayerDemRecord',
     actions: [
+      GENERAL_ACTIONS_GROUP,
       {
         id: 0,
         titleTranslationId: 'layerCatalogToMap',
@@ -342,6 +334,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     ]
     
   }
-]
+];
 
 export default ACTIONS_CONFIG;
