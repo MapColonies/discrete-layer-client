@@ -108,6 +108,7 @@ const InnerForm = (
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
+  const [showCurtain, setShowCurtain] = useState<boolean>(true);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -125,6 +126,10 @@ const InnerForm = (
     },
     [errors, getFieldMeta],
   );
+
+  useEffect(() => {
+    setShowCurtain((mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles);
+  }, [mode, isSelectedFiles])
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -221,11 +226,9 @@ const InnerForm = (
             values={values}
           />
         }
-        <Box className={mode === Mode.NEW ? 'content section' : 'content'}>
-          {
-            (mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles &&
-            <Box className="curtain"></Box>
-          }
+        <Box className={mode === Mode.NEW ? 'content section' : 'content'} 
+             style={showCurtain ? {overflow: 'hidden'} : {}}>
+          { showCurtain && <Box className="curtain"></Box> }
           <LayersDetailsComponent
             entityDescriptors={entityDescriptors}
             layerRecord={layerRecord}
