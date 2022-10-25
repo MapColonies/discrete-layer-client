@@ -12,6 +12,8 @@
   "general.error.title": "משהו השתבש...",
   "general.error.description": "מידע נוסף:",
   "general.server.error": "התקבלה שגיאה מהשרת",
+  "general.bad-request.error": "בקשה לא חוקית",
+  "general.duplicate.error": "רשומה כבר קיימת, לא ניתן להכניס אותה שוב",
   "general.loading.text": "טוען נתונים...",
   "general.title.new": "הוספת מוצר {value}",
   "general.title.edit": "עריכת מידע של מוצר {value}",

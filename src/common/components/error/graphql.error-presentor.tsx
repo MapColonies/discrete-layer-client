@@ -2,22 +2,33 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 
 import './error-presentor.css';
-import { isEmpty } from 'lodash';
 
 const SERVER_ERROR_RESPONSE_CODE = 500;
+const BAD_REQUEST_ERROR_CODE = 400;
+const CONFLICT_ERROR_CODE = 409;
 
 interface IGpaphQLError {
   error: any;
 }
 
-export const GraphQLError: React.FC<IGpaphQLError> = (props)=> {
+export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
+
+  const intl = useIntl();
+
   const formatMessage = (message: string): string => {
-    return message.substr(+message.indexOf('; ') + 1, message.length);
+    if (message.includes(BAD_REQUEST_ERROR_CODE.toString())) {
+      return intl.formatMessage({ id: 'general.bad-request.error' });
+    } else if (message.includes(CONFLICT_ERROR_CODE.toString())) {
+      return intl.formatMessage({ id: 'general.duplicate.error' });
+    } else {
+      return message.substring(+message.indexOf('; ') + 1);
+    }
   };
 
   return (
@@ -43,4 +54,5 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props)=> {
       }
     </>
   );
+
 };
