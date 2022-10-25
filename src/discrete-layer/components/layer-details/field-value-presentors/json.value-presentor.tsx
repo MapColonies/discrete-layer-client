@@ -110,8 +110,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               return reject(shapeFileGenericError);
             });
         } else {
+          const DEFAULT_PROJECTION = 'WGS84';
           // Probably is shape file.
-          const geometryArr = parseShp(shapeArrayBuffer);
+          const geometryArr = parseShp(shapeArrayBuffer, DEFAULT_PROJECTION);
           const shapeFileValidation = isShapeFileValid(geometryArr);
               
           if(shapeFileValidation instanceof Error) {
@@ -192,7 +193,6 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
       formik.setFieldTouched(fieldInfo.fieldName as string, true, false);
 
       let formikValue: unknown = undefined;
-
 
       try {
         if (jsonValue === '{}' && (fieldInfo.isRequired as boolean)) {
