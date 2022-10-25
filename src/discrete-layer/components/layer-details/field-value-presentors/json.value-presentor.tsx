@@ -183,7 +183,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   ) {
     const stringifiedValue = JSON.stringify(value);
     return (
-      <TooltippedValue tag="div" className="detailsFieldValue" alwaysTooltip>
+      <TooltippedValue tag="div" className="detailsFieldValue">
         {stringifiedValue}
       </TooltippedValue>
     );
