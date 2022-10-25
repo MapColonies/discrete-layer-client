@@ -31,7 +31,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     const stringifiedValue = JSON.stringify(value);
     return (
-      <TooltippedValue tag="div" className="detailsFieldValue" alwaysTooltip>
+      <TooltippedValue tag="div" className="detailsFieldValue">
         {stringifiedValue}
       </TooltippedValue>
     );
