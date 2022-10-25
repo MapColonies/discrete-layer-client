@@ -1,0 +1,5 @@
+.loadFromShapeBtn .mdc-button--outlined:not(:disabled) {
+    border-color: currentColor;
+    padding: 10px;
+    margin: 10px 0;
+}
