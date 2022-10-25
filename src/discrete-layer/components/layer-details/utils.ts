@@ -283,7 +283,31 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
    })
 
   input.click();
-  
+}  
+
+export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void): void {
+  const input = document.createElement('input');
+  const supportedExtensions = ['.shp', '.zip'];
+
+  input.setAttribute('type', 'file');
+  input.setAttribute('accept', supportedExtensions.join(','));
+
+  input.addEventListener('change',(e): void => {
+    const target = (e.currentTarget  as HTMLInputElement);
+    if(target.files) {
+      const file = target.files[0];
+      const fileType = file.name.split('.').pop();
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+
+      fileReader.addEventListener('load' , (e) => {
+        fileLoadCB(e, fileType as string);
+        input.remove();
+      });
+    }
+   })
+
+  input.click();
 }  
 
 export const getRecordForUpdate = (selectedLayer: ILayerImage ,record: ILayerImage, descriptors: FieldConfigModelType[]): ILayerImage => {
