@@ -41,7 +41,7 @@ interface IngestionFieldsProps {
   fields: IRecordFieldInfo[];
   values: FormikValues;
   reloadFormMetadata?: (
-    ingestionFields: FormValues,
+    ingestionFields: Omit<FormValues, 'productOpacity'>,
     metadata: MetadataFile
   ) => void;
   formik?: EntityFormikHandlers;

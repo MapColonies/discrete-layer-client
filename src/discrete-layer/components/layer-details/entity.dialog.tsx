@@ -57,6 +57,7 @@ import {
 import suite from './validate';
 
 import './entity.dialog.css';
+import { ProductOpacity } from '../../models/ProductOpacityEnum';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
@@ -190,7 +191,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     const handleIngestQueries = useCallback((): void => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { directory, fileNames, __typename, ...metadata } = inputValues;
+      const { directory, fileNames, __typename, productOpacity, ...metadata } = inputValues;
       switch (recordType) {
         case RecordType.RECORD_DEM:
           mutationQuery.setQuery(
@@ -224,6 +225,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
                 fileNames: (fileNames as string).split(','),
                 metadata: metadata as LayerRasterRecordInput,
                 type: RecordType.RECORD_RASTER,
+                productOpacity: productOpacity as ProductOpacity,
               },
             })
           );
@@ -263,7 +265,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     const handleUpdateQueries = useCallback((): void => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { directory, fileNames, __typename, ...metadata } = inputValues;
+      const { directory, fileNames, __typename, productOpacity, ...metadata } = inputValues;
       if(recordType === RecordType.RECORD_RASTER) {
         mutationQuery.setQuery(
           store.mutateStartRasterUpdateGeopkg({
@@ -272,6 +274,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               fileNames: (fileNames as string).split(','),
               metadata: metadata as LayerRasterRecordInput,
               type: RecordType.RECORD_RASTER,
+              productOpacity: productOpacity as ProductOpacity,
             },
           })
         );

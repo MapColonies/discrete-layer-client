@@ -13,7 +13,7 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty } from 'lodash';
-import { Button } from '@map-colonies/react-core';
+import { Button, Checkbox } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
@@ -36,6 +36,7 @@ import {
 } from './utils';
 
 import './layer-details-form.css';
+import { ProductOpacity } from '../../models/ProductOpacityEnum';
 
 const NONE = 0;
 
@@ -43,6 +44,7 @@ const NONE = 0;
 export interface FormValues {
   directory: string;
   fileNames: string;
+  productOpacity: ProductOpacity;
 }
 
 interface LayerDetailsFormCustomProps {
@@ -179,7 +181,7 @@ const InnerForm = (
   );
   
   const reloadFormMetadata = (
-    ingestionFields: FormValues,
+    ingestionFields: Omit<FormValues, 'productOpacity'>,
     metadata: MetadataFile
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
@@ -225,6 +227,14 @@ const InnerForm = (
           {
             (mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles &&
             <Box className="curtain"></Box>
+          }
+          {
+            recordType === RecordType.RECORD_RASTER && <Checkbox 
+              checked={values.productOpacity === ProductOpacity.TRANSPARENT}
+              onClick={(e) => {
+                setFieldValue('productOpacity', e.currentTarget.checked ? ProductOpacity.TRANSPARENT : ProductOpacity.OPAQUE);
+              }}
+            />
           }
           <LayersDetailsComponent
             entityDescriptors={entityDescriptors}
@@ -303,6 +313,7 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     return {
       directory: '',
       fileNames: '',
+      productOpacity: ProductOpacity.OPAQUE,
       ...transformEntityToFormFields(props.layerRecord)
     };
   },

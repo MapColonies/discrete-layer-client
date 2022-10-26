@@ -78,6 +78,7 @@ import { OperationType } from "./OperationTypeEnum"
 import { FractionType } from "./FractionTypeEnum"
 import { ServiceType } from "./ServiceTypeEnum"
 import { Status } from "./StatusEnum"
+import { ProductOpacity } from "./ProductOpacityEnum"
 
 export type CapabilitiesLayersSearchParams = {
   data: CapabilitiesLayersSearchParam[]
@@ -149,6 +150,7 @@ export type IngestionRasterData = {
   directory: string
   fileNames: string[]
   metadata: LayerRasterRecordInput
+  productOpacity: ProductOpacity
   type: RecordType
 }
 export type LayerRasterRecordInput = {
