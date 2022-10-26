@@ -150,21 +150,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     actions: [
       GENERAL_ACTIONS_GROUP,
       {
-        id: 0,
-        titleTranslationId: 'layerCatalogToMap',
-        type: 'catalogToMapOperations',
-        group: [
-          {
-            action: 'flyTo',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-        ],
-      },
-      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -194,21 +179,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     actions: [
       GENERAL_ACTIONS_GROUP,
       {
-        id: 0,
-        titleTranslationId: 'layerCatalogToMap',
-        type: 'catalogToMapOperations',
-        group: [
-          {
-            action: 'flyTo',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-        ],
-      },
-      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -230,21 +200,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     actions: [
       GENERAL_ACTIONS_GROUP,
       {
-        id: 0,
-        titleTranslationId: 'layerCatalogToMap',
-        type: 'catalogToMapOperations',
-        group: [
-          {
-            action: 'flyTo',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-        ],
-      },
-      {
         id: 1,
         titleTranslationId: 'CRUD',
         type: 'CRUD',
@@ -265,21 +220,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'LayerDemRecord',
     actions: [
       GENERAL_ACTIONS_GROUP,
-      {
-        id: 0,
-        titleTranslationId: 'layerCatalogToMap',
-        type: 'catalogToMapOperations',
-        group: [
-          {
-            action: 'flyTo',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates glow-missing-icon',
-            titleTranslationId: 'action.flyTo.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-        ],
-      },
       {
         id: 1,
         titleTranslationId: 'CRUD',
