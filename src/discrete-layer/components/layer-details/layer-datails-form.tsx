@@ -226,9 +226,13 @@ const InnerForm = (
             values={values}
           />
         }
-        <Box className={mode === Mode.NEW ? 'content section' : 'content'} 
-             style={showCurtain ? {overflow: 'hidden'} : {}}>
-          { showCurtain && <Box className="curtain"></Box> }
+        <Box
+          className={[
+            mode === Mode.NEW ? 'content section' : 'content',
+            showCurtain && 'curtainVisible',
+          ].join(' ')}
+        >
+          {showCurtain && <Box className="curtain"></Box>}
           <LayersDetailsComponent
             entityDescriptors={entityDescriptors}
             layerRecord={layerRecord}
