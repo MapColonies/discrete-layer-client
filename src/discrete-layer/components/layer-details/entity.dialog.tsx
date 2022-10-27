@@ -188,7 +188,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       );
     };
 
-    const handleIngestQueries = useCallback((): void => {
+    const handleIngestQueries = (): void => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { directory, fileNames, __typename, ...metadata } = inputValues;
       switch (recordType) {
@@ -231,9 +231,9 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         default:
           break;
       }
-    }, [inputValues]);
+    };
 
-    const handleEditQueries = useCallback((): void => {
+    const handleEditQueries = (): void => {
       if (inputValues.__typename !== 'BestRecord') {
         mutationQuery.setQuery(
           store.mutateUpdateMetadata({
@@ -259,9 +259,9 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         }, IMMEDIATE_EXECUTION);
         closeDialog();
       }
-    }, [inputValues]);
+    };
 
-    const handleUpdateQueries = useCallback((): void => {
+    const handleUpdateQueries = (): void => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { directory, fileNames, __typename, ...metadata } = inputValues;
       if(recordType === RecordType.RECORD_RASTER) {
@@ -276,7 +276,17 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
           })
         );
       }
-    }, [inputValues]);
+    };
+
+    const checkHasQueriesSucceeded = (): boolean => {
+      const SUCCESS_RESPONSE_VAL = 'ok';
+
+      const mutationServices = ['updateMetadata', 'start3DIngestion', 'startRasterIngestion', 'startRasterUpdateGeopkg'];
+      const hasAnyQuerySucceeded = Object.entries(mutationQuery.data ?? {})
+      .some(([key, val]) => mutationServices.includes(key) && val === SUCCESS_RESPONSE_VAL);
+      
+      return hasAnyQuerySucceeded;
+    }
 
     useEffect(() => {
       if (!isEmpty(descriptors) && !isEmpty(layerRecord)) {
@@ -421,7 +431,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     useEffect(() => {
       if (vestValidationResults.errorCount === NONE) {
-        // NEW
         switch(mode) {
           case Mode.NEW:
             handleIngestQueries();
@@ -441,21 +450,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     }, [onSetOpen]);
 
     useEffect(() => {
-      const SUCCESS_RESPONSE_VAL = 'ok';
-
-      const mutationServices = Object.keys(RootStoreBaseMutations)
-      .map(m => {
-        // Converting query names into actual property names of the resolved data.
-        // So it can be matched later with the returned data.
-        const MUTATION_QUERY_PREFIX = 'mutate';
-
-        const actualMutationName = m.replace(MUTATION_QUERY_PREFIX,'');
-        const lowerFirstLetter = actualMutationName.charAt(0).toLowerCase() + actualMutationName.slice(1);
-
-        return lowerFirstLetter;
-    });
-      const hasAnyQuerySucceeded = Object.entries(mutationQuery.data ?? {})
-      .some(([key, val]) => mutationServices.includes(key) && val === SUCCESS_RESPONSE_VAL);
+      const hasAnyQuerySucceeded = checkHasQueriesSucceeded();
 
       if (!mutationQuery.loading && hasAnyQuerySucceeded) {
         closeDialog();
