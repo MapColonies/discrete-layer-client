@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import moment from 'moment'; 
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -23,20 +23,28 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     formik as EntityFormikHandlers ,
     value ?? null
   );
+  const shouldShowTime = useMemo(() => fieldInfo.dateGranularity === DateGranularityType.DATE_AND_TIME, [fieldInfo]);
 
   const local = {
-    placeHolderText: CONFIG.LOCALE.DATE_FORMAT,
+    placeHolderText: shouldShowTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT,
     calendarLocale: CONFIG.I18N.DEFAULT_LANGUAGE as SupportedLocales,
   };
 
-  const shouldShowTime = useMemo(() => fieldInfo.dateGranularity === DateGranularityType.DATE_AND_TIME, [fieldInfo]);
-
+  
+  
   const inputValue = (): string | undefined => {
     if (innerValue === null || !moment(innerValue).isValid()) {
       return undefined;
     } 
-    return dateFormatter(innerValue);
+    return dateFormatter(innerValue, shouldShowTime);
   };
+  
+  useEffect(() => {
+    console.log(innerValue);
+    console.log('inputValue', inputValue());
+
+    console.log('FORMATTER', dateFormatter(innerValue as moment.Moment, shouldShowTime));
+  }, [innerValue])
 
   const getDate = (): Date | null => {
     if (innerValue !== null) {
@@ -48,16 +56,18 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <TooltippedValue className="detailsFieldValue">
-        {dateFormatter(value)}
+        {dateFormatter(value, shouldShowTime)}
       </TooltippedValue>
     );
   } else {
     return (
       <Box className="detailsFieldValue datePresentor">
         <DateTimePicker
+          name={fieldInfo.fieldName}
           showTime={shouldShowTime}
           value={getDate()}
           inputValue={inputValue()}
+          allowKeyboardControl={false}
           onChange={
             (dateVal, val): void => {
               const momentVal = moment(dateVal);
