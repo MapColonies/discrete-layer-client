@@ -22,6 +22,10 @@
   position: relative;
 }
 
+#layerDetailsForm .content.curtainVisible {
+  overflow: hidden;
+}
+
 #layerDetailsForm .section {
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 10px;
