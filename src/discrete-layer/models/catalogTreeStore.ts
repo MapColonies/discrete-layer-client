@@ -200,7 +200,11 @@ export const catalogTreeStore = ModelBase.props({
         if (typeof layersList !== 'undefined' && (layersList as ILayerImage[] | null) !== null) {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           const { RECORD_ALL, RECORD_RASTER, RECORD_DEM } = RecordType;
-          const withCapabilities = [RECORD_RASTER, RECORD_DEM];
+          
+          // Get Capabilities block
+          // If capabilities request failed, show catalog data, and display error message.
+          try {
+            const withCapabilities = [RECORD_RASTER, RECORD_DEM];
           if (
             [RECORD_ALL, ...withCapabilities].includes(
               store.discreteLayersStore.searchParams.recordType as RecordType
@@ -248,6 +252,9 @@ export const catalogTreeStore = ModelBase.props({
             if (!isEmpty(capabilitiesList)) {
               store.discreteLayersStore.setCapabilities(capabilitiesList);
             }
+          }
+          } catch(e) {
+            setErrorCapabilities(capabilitiesQuery?.error);
           }
 
             //#endregion
@@ -353,7 +360,6 @@ export const catalogTreeStore = ModelBase.props({
       } catch (e) {
         setIsDataLoading(false);
         resetCatalogTreeData();
-        setErrorCapabilities(capabilitiesQuery?.error);
       }
     });
 

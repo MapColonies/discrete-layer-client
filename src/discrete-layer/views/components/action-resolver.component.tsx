@@ -114,6 +114,26 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion);
           handleFlyTo();
           break;
+        case 'LayerDemRecord.flyTo':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
+          handleFlyTo();
+          break;
+        case 'BestRecord.flyTo':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, BestRecordModelKeys) as LayerMetadataMixedUnion);
+          handleFlyTo();
+          break;
+        case 'VectorBestRecord.flyTo':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
+          handleFlyTo();
+          break;
+        case 'QuantizedMeshBestRecord.flyTo':
+          // @ts-ignore
+          store.discreteLayersStore.selectLayer(cleanUpEntity(data, QuantizedMeshBestRecordModelKeys) as LayerMetadataMixedUnion);
+          handleFlyTo();
+          break;
         case 'LayerRasterRecord.update':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);

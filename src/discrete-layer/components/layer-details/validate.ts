@@ -43,6 +43,14 @@ enforce.extend({
       return false;
     }
   },
+  extIsNotEmpty: (val) => {
+    if(moment.isMoment(val)) {
+      return moment(val).isValid();
+    }
+
+    const isEmptyVal = typeof val === 'undefined' || val === null || val === '';
+    return !isEmptyVal;
+  }
 });
 
 const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unknown> = {}): unknown => {
@@ -98,7 +106,7 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
             if (validationType !== undefined) {
               switch (validationType) {
                 case ValidationTypeName.required:
-                  enforce(data[fieldName]).isNotEmpty();
+                  enforce(data[fieldName]).extIsNotEmpty();
                   break;
                 case ValidationTypeName.pattern:
                   enforce(data[fieldName]).matches(validation.pattern as string);
