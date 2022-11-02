@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
+import { Geometry } from 'geojson';
 import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
+import { useDebouncedCallback } from 'use-debounce/lib';
 import { Button, TextField } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
@@ -9,10 +11,8 @@ import { Mode } from '../../../../common/models/mode.enum';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
-import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 import { importShapeFileFromClient } from '../utils';
-import { Geometry } from 'geojson';
-import { useDebouncedCallback } from 'use-debounce/lib';
+import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 import './json.value-presentor.css';
 
@@ -27,7 +27,6 @@ interface JsonValuePresentorProps {
   type?: string;
   enableLoadFromShape?: boolean;
 }
-
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   mode,
@@ -51,7 +50,6 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     setJsonValue(JSON.stringify(value ?? {}));
   }, [value]);
 
-
   const removeStatusErrors = (): void => {
     setTimeout(() => {
       if (typeof currentErrors !== 'undefined') {
@@ -70,16 +68,12 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   );
 
   const isShapeFileValid = (featuresArr: unknown[] | undefined): boolean | Error => {
-
-
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }
-
     if (featuresArr.length > 1) {
       return multipleFeaturesError;
     }
-
     return true;
   }
 
@@ -99,7 +93,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               const featuresArr = (data as FeatureCollectionWithFilename).features;
               const shapeFileValidation = isShapeFileValid(featuresArr);
 
-              if(shapeFileValidation instanceof Error) {
+              if (shapeFileValidation instanceof Error) {
                 return reject(shapeFileValidation);
               }
 
@@ -115,7 +109,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           const geometryArr = parseShp(shapeArrayBuffer, DEFAULT_PROJECTION);
           const shapeFileValidation = isShapeFileValid(geometryArr);
               
-          if(shapeFileValidation instanceof Error) {
+          if (shapeFileValidation instanceof Error) {
             return reject(shapeFileValidation);
           }
 
