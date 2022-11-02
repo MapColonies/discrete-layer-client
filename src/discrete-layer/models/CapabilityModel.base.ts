@@ -20,7 +20,8 @@ export const CapabilityModelBase = ModelBase
     id: types.identifier, //Alex change till proper deffs
     style: types.union(types.undefined, types.string),
     format: types.union(types.undefined, types.array(types.string)),
-    tileMatrixSet: types.union(types.undefined, types.array(types.string)),
+    tileMatrixSetID: types.union(types.undefined, types.array(types.string)),
+    url: types.union(types.undefined, types.null, types.array(types.string)),
   })
   .views(self => ({
     get store() {
@@ -32,10 +33,11 @@ export class CapabilityModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get style() { return this.__attr(`style`) }
   get format() { return this.__attr(`format`) }
-  get tileMatrixSet() { return this.__attr(`tileMatrixSet`) }
+  get tileMatrixSetID() { return this.__attr(`tileMatrixSetID`) }
+  get url() { return this.__attr(`url`) }
 }
 export function selectFromCapability() {
   return new CapabilityModelSelector()
 }
 
-export const capabilityModelPrimitives = selectFromCapability().style.format.tileMatrixSet.id
+export const capabilityModelPrimitives = selectFromCapability().style.format.tileMatrixSetID.url.id

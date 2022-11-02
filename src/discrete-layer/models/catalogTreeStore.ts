@@ -137,7 +137,7 @@ export const catalogTreeStore = ModelBase.props({
     }
 
     /**
-     * A helper function used to fetch new catalog data.
+     * Fetch new catalog data
      */
     const catalogSearch = flow(function* catalogSearchGen(): Generator<
       Promise<{ search: ILayerImage[] }>,
@@ -160,24 +160,23 @@ export const catalogTreeStore = ModelBase.props({
       try {
         setSearchError(null);
 
-        // Avoiding the cache with the refetch.
+        // Avoiding the cache with the refetch
         const dataSearch = yield search.refetch();
 
         const layersList = get(dataSearch, 'search') as ILayerImage[];
-        const arr: ILayerImage[] = cloneDeep(layersList);
+        const layersImages: ILayerImage[] = cloneDeep(layersList);
         
-        return store.discreteLayersStore.setLayersImages(arr, false);
+        return store.discreteLayersStore.setLayersImages(layersImages, false);
       } catch (e) {
         setSearchError(search.error);
         resetCatalogTreeData();
         setIsDataLoading(false);
-
         return [];
       }
     });
 
     /**
-     * Used to set initial tree data, fetches new entries from server.
+     * Initial tree data, fetch new entries from server
      */
     const initTree = flow(function* initTree(): Generator<
       Promise<ILayerImage[]> | Promise<{ capabilities: CapabilityModelType[] }>,
@@ -190,172 +189,170 @@ export const catalogTreeStore = ModelBase.props({
         resetCatalogTreeData();
 
         const layersList = yield catalogSearch();
-        //#region getCapabilities()
-
-        // NOTE:
-        // Calling getCapabilities() should happen after querySearch.data
-        // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
-        // are subsets of the catalog layers list
 
         if (typeof layersList !== 'undefined' && (layersList as ILayerImage[] | null) !== null) {
+
+          //#region getCapabilities()
+
+          // NOTE:
+          // Calling getCapabilities() should happen after querySearch.data
+          // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+          // are subsets of the catalog layers list
+
           // eslint-disable-next-line @typescript-eslint/naming-convention
           const { RECORD_ALL, RECORD_RASTER, RECORD_DEM } = RecordType;
-          
-          // Get Capabilities block
-          // If capabilities request failed, show catalog data, and display error message.
           try {
             const withCapabilities = [RECORD_RASTER, RECORD_DEM];
-          if (
-            [RECORD_ALL, ...withCapabilities].includes(
-              store.discreteLayersStore.searchParams.recordType as RecordType
-            )
-          ) {
-            const groupBy = <T, K extends keyof any>(
-              list: T[],
-              getKey: (item: T) => K,
-              setItem: (item: T) => any
-            ): Record<K, T[]> =>
-              list.reduce((previous, currentItem) => {
-                const group = getKey(currentItem);
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                if (!previous[group]) previous[group] = [];
-                previous[group].push(setItem(currentItem));
-                return previous;
-              }, {} as Record<K, T[]>);
+            if (
+              [RECORD_ALL, ...withCapabilities].includes(
+                store.discreteLayersStore.searchParams.recordType as RecordType
+              )
+            ) {
+              const groupBy = <T, K extends keyof any>(
+                list: T[],
+                getKey: (item: T) => K,
+                setItem: (item: T) => any
+              ): Record<K, T[]> =>
+                list.reduce((previous, currentItem) => {
+                  const group = getKey(currentItem);
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  if (!previous[group]) previous[group] = [];
+                  previous[group].push(setItem(currentItem));
+                  return previous;
+                }, {} as Record<K, T[]>);
+              const ids = groupBy(
+                layersList,
+                (l) => l.type as RecordType,
+                (l) => getLayerLink(l).name ?? ''
+              );
+              const idList = [];
+              for (const [key, value] of Object.entries(ids)) {
+                if (withCapabilities.includes(key as RecordType)) {
+                  idList.push({
+                    recordType: key,
+                    idList: value,
+                  });
+                }
+              }
+              capabilitiesQuery = store.queryCapabilities({
+                // @ts-ignore
+                params: { data: idList },
+              });
 
-            const ids = groupBy(
-              layersList,
-              (l) => l.type as RecordType,
-              (l) => getLayerLink(l).name ?? ''
-            );
-            const idList = [];
-            for (const [key, value] of Object.entries(ids)) {
-              if (withCapabilities.includes(key as RecordType)) {
-                idList.push({
-                  recordType: key,
-                  idList: value,
-                });
+              const dataCapabilities = yield capabilitiesQuery.refetch();
+
+              const capabilitiesList = get(
+                dataCapabilities,
+                'capabilities'
+              ) as CapabilityModelType[];
+
+              if (!isEmpty(capabilitiesList)) {
+                store.discreteLayersStore.setCapabilities(capabilitiesList);
               }
             }
-            capabilitiesQuery = store.queryCapabilities({
-              // @ts-ignore
-              params: { data: idList },
-            });
-
-            const dataCapabilities = yield capabilitiesQuery.refetch();
-
-            const capabilitiesList = get(
-              dataCapabilities,
-              'capabilities'
-            ) as CapabilityModelType[];
-
-            if (!isEmpty(capabilitiesList)) {
-              store.discreteLayersStore.setCapabilities(capabilitiesList);
-            }
-          }
           } catch(e) {
+            // If getCapabilities request failed, show catalog tree and display relevant error message
             setErrorCapabilities(capabilitiesQuery?.error);
           }
 
-            //#endregion
+          //#endregion
 
-            // get unlinked/new discretes shortcuts
-            /*const arrUnlinked = arr.filter((item) => {
-             // @ts-ignore
-             const itemObjectBag = item as Record<string,unknown>;
-             return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-             });
-             const parentUnlinked = buildParentTreeNode(
-               arrUnlinked,
-               intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-               {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-             );*/
-
-            // get unpublished/new discretes
-            const arrUnpublished = layersList.filter((item) => {
-              // @ts-ignore
-              const itemObjectBag = item as Record<string, unknown>;
-              return (
-                existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
-              );
+          // get unlinked/new discretes shortcuts
+          /*const arrUnlinked = arr.filter((item) => {
+            // @ts-ignore
+            const itemObjectBag = item as Record<string,unknown>;
+            return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
             });
+            const parentUnlinked = buildParentTreeNode(
+              arrUnlinked,
+              intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
+              {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+            );*/
 
-            const parentUnpublished = {
-              title: intl.formatMessage({
-                id: 'tab-views.catalog.top-categories.unpublished',
-              }),
-              isGroup: true,
-              children: [
-                ...arrUnpublished.map((item) => {
-                  return {
-                    ...item,
-                    title: getLayerTitle(item),
-                    isSelected: false,
-                  };
-                }),
-              ],
-            };
-
-            // get BESTs shortcuts
-            const arrBests = layersList.filter(isBest);
-            const drafts = store.bestStore.getDrafts();
-            const draftNode =
-              drafts.length > NONE
-                ? [
-                    {
-                      title: intl.formatMessage({
-                        id: 'tab-views.catalog.top-categories.drafts',
-                      }),
-                      isGroup: true,
-                      children: [
-                        ...store.bestStore.getDrafts().map((draft) => {
-                          return {
-                            ...draft,
-                            title: getLayerTitle(draft),
-                            isSelected: false,
-                          };
-                        }),
-                      ],
-                    },
-                  ]
-                : [];
-            const parentBests = {
-              title: intl.formatMessage({
-                id: 'tab-views.catalog.top-categories.bests',
-              }),
-              isGroup: true,
-              children: [
-                ...draftNode,
-                ...arrBests.map((item) => {
-                  return {
-                    ...item,
-                    title: getLayerTitle(item),
-                    isSelected: false,
-                  };
-                }),
-              ],
-            };
-
-            // whole catalog as is
-            const parentCatalog = buildParentTreeNode(
-              layersList,
-              intl.formatMessage({
-                id: 'tab-views.catalog.top-categories.catalog',
-              }),
-              /* eslint-disable */
-              { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
-              /* eslint-enable */
+          // get unpublished/new discretes
+          const arrUnpublished = layersList.filter((item) => {
+            // @ts-ignore
+            const itemObjectBag = item as Record<string, unknown>;
+            return (
+              existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
             );
+          });
 
-            const isUserAdmin = store.userStore.isUserAdmin();
+          const parentUnpublished = {
+            title: intl.formatMessage({
+              id: 'tab-views.catalog.top-categories.unpublished',
+            }),
+            isGroup: true,
+            children: [
+              ...arrUnpublished.map((item) => {
+                return {
+                  ...item,
+                  title: getLayerTitle(item),
+                  isSelected: false,
+                };
+              }),
+            ],
+          };
 
-            setCatalogTreeData([
-              parentCatalog, 
-              parentBests, 
-              ...(isUserAdmin ? [parentUnpublished] : [])
-            ]);
-            setIsDataLoading(false);
-          
+          // get BESTs shortcuts
+          const arrBests = layersList.filter(isBest);
+          const drafts = store.bestStore.getDrafts();
+          const draftNode =
+            drafts.length > NONE
+              ? [
+                  {
+                    title: intl.formatMessage({
+                      id: 'tab-views.catalog.top-categories.drafts',
+                    }),
+                    isGroup: true,
+                    children: [
+                      ...store.bestStore.getDrafts().map((draft) => {
+                        return {
+                          ...draft,
+                          title: getLayerTitle(draft),
+                          isSelected: false,
+                        };
+                      }),
+                    ],
+                  },
+                ]
+              : [];
+          const parentBests = {
+            title: intl.formatMessage({
+              id: 'tab-views.catalog.top-categories.bests',
+            }),
+            isGroup: true,
+            children: [
+              ...draftNode,
+              ...arrBests.map((item) => {
+                return {
+                  ...item,
+                  title: getLayerTitle(item),
+                  isSelected: false,
+                };
+              }),
+            ],
+          };
+
+          // whole catalog as is
+          const parentCatalog = buildParentTreeNode(
+            layersList,
+            intl.formatMessage({
+              id: 'tab-views.catalog.top-categories.catalog',
+            }),
+            /* eslint-disable */
+            { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
+            /* eslint-enable */
+          );
+
+          const isUserAdmin = store.userStore.isUserAdmin();
+
+          setCatalogTreeData([
+            parentCatalog, 
+            parentBests, 
+            ...(isUserAdmin ? [parentUnpublished] : [])
+          ]);
+          setIsDataLoading(false);
         }
       } catch (e) {
         setIsDataLoading(false);
@@ -381,7 +378,7 @@ export const catalogTreeStore = ModelBase.props({
      * 
      * @param title Title to search for
      * @param useTranslation Should translate provided title using intl's provider or not. (defaults to false)
-     * @returns The first NodeData it finds that matches the provided title.
+     * @returns The first NodeData it finds that matches the provided title
      */
     function findNodeByTitle(title: string, useTranslation = false): NodeData | null {
       const nodeTitle =  useTranslation ? intl.formatMessage({ id: title }) : title;
@@ -402,7 +399,7 @@ export const catalogTreeStore = ModelBase.props({
      * @param node
      * @param parentTitle 
      * @param useTranslation Should translate provided title using intl's provider or not. (defaults to false)
-     * @returns Void. The method mutates the tree in store.
+     * @returns Void. The method mutates the tree in store
      */
     
     function addNodeToParent(node: TreeItem, parentTitle: string, useTranslation = false): void {
@@ -439,17 +436,14 @@ export const catalogTreeStore = ModelBase.props({
 
     /**
     * 
-    * @param node The node to find it's parent.
-    * @param treeData Defaults to store tree.
+    * @param node The node to find it's parent
+    * @param treeData Defaults to store tree
     * @returns An object with the parentNode and its path
     */
     function getParentNode(node: NodeData, treeData = self.catalogTreeData as TreeItem[]): IGetParentNode {
       const FIRST_IDX = 0;
       const WITHOUT_LAST_IDX = -1;
-      /**
-         In order to get the direct parent we need its path without the last one, 
-          Which represent the node itself.
-      **/
+      // In order to get the direct parent we need its path without the last one (which represent the node itself)
       const parentIndex = node.path.slice(FIRST_IDX, WITHOUT_LAST_IDX);
 
       const parentNode = getNodeAtPath({
@@ -462,11 +456,8 @@ export const catalogTreeStore = ModelBase.props({
     }
 
     /**
-     * 
-     * @param id 
-     * @returns The first node from tree that it's metadata matches the provided id. 
+     * Find the first tree node that its metadata matches the given id 
      */
-
     function findNodeById(id: string): NodeData | null {
       const node = find({
         treeData: self.catalogTreeData as TreeItem[],
@@ -482,11 +473,11 @@ export const catalogTreeStore = ModelBase.props({
 
     /**
      * 
-     * @param id Id find the nodes from the current tree in store.
-     * @param updatedNodeData Updated node data to override the current data.
-     * @returns void - The method mutates the tree in store with the updated nodes.
+     * @param id Id find the nodes from the current tree in store
+     * @param updatedNodeData Updated node data to override the current data
+     * @returns void - The method mutates the tree in store with the updated nodes
      * 
-     * Affects ALL NODES that matches the same id.
+     * Affects ALL NODES that matches the same id
      */
     function updateNodeById(id: string, updatedNodeData: ILayerImage): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
@@ -526,7 +517,7 @@ export const catalogTreeStore = ModelBase.props({
     /**
      * 
      * @param path Node path to remove
-     * @returns void - remove the node from tree in store.
+     * @returns void - remove the node from tree in store
      */
     function removeNodeFromTree(path: (string | number)[]): void {
       const newTree = removeNodeAtPath({
@@ -536,26 +527,25 @@ export const catalogTreeStore = ModelBase.props({
        });
  
       self.catalogTreeData = newTree;
-     }
+    }
 
-     /**
-      * 
-      * @param nodeIdToRemove ID of a node to remove from parentNode.
-      * @param parentNode Node of the parent.
-      * @returns void - Remove the child from tree in store.
-      */
-     function removeChildFromParent(nodeIdToRemove: string, parentNode: NodeData): void {
+    /**
+    * 
+    * @param nodeIdToRemove ID of a node to remove from parentNode
+    * @param parentNode Node of the parent
+    * @returns void - Remove the child from tree in store
+    */
+    function removeChildFromParent(nodeIdToRemove: string, parentNode: NodeData): void {
       const filteredChildren = ((parentNode.node.children) as TreeItem[]).filter(node => node.id !== nodeIdToRemove);
       parentNode.node.children = filteredChildren;
 
       const newTreeWithoutChild = changeNodeByPath({
         path: parentNode.path,
         newNode: parentNode.node
-      })
+      });
 
       setCatalogTreeData(newTreeWithoutChild);
-  
-     }
+    }
 
     return {
       catalogSearch,

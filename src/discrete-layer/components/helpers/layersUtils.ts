@@ -25,7 +25,6 @@ export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): CesiumRe
 
 export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, factor = DEFAULT_RECTANGLE_FACTOR): CesiumRectangle => {
   const rectWithBuffers = generateLayerRectangle(layer);
-
   rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * factor;
   rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * factor;
   rectWithBuffers.south = rectWithBuffers.south - rectWithBuffers.height * factor;
@@ -33,9 +32,13 @@ export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, f
   return rectWithBuffers;
 };
 
-
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
-  return layer.links?.find((link: LinkModelType) => [LinkType.WMTS_TILE as string, LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;
+  let wmtsLayer = layer.links?.find((link: LinkModelType) => [LinkType.WMTS_TILE as string, LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (wmtsLayer === undefined) {
+    wmtsLayer = layer.links?.find((link: LinkModelType) => [LinkType.WMTS as string].includes(link.protocol as string)) as LinkModelType | undefined;
+  }
+  return wmtsLayer;
 };
 
 export const getLayerLink = (layer: ILayerImage): LinkModelType => {
@@ -113,7 +116,8 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
   if (capability) {
     style = capability.style as string;
     format = (capability.format as string[])[0];
-    tileMatrixSetID = (capability.tileMatrixSet as string[])[0];
+    tileMatrixSetID = (capability.tileMatrixSetID as string[])[0];
+    url = (capability.url as string[])[0] ?? url;
   }
   return {
     url: getTokenResource(url, layer.productVersion as string),
