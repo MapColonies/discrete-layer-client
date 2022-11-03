@@ -401,7 +401,6 @@ export const catalogTreeStore = ModelBase.props({
      * @param useTranslation Should translate provided title using intl's provider or not. (defaults to false)
      * @returns Void. The method mutates the tree in store
      */
-    
     function addNodeToParent(node: TreeItem, parentTitle: string, useTranslation = false): void {
       if ((self.catalogTreeData as TreeItem[]).length > NONE) {
         const parentNode = findNodeByTitle(parentTitle, useTranslation);

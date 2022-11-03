@@ -5,7 +5,6 @@ import {
   CesiumWMTSLayer,
   CesiumXYZLayer,
   ICesiumImageryLayer,
-  RCesiumWMTSLayerOptions,
   useCesiumMap
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
@@ -95,7 +94,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             key={layer.id}
             meta={{
               searchLayerPredicate: ((cesiumLayer, idx) => {
-                const linkUrl = optionsWMTS.url as string;
+                const linkUrl = (optionsWMTS.url as Record<string, any>)._url as string;
                 const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
                 const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
                 return isLayerFound;
