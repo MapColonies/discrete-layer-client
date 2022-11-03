@@ -15,6 +15,7 @@ import {
   LinkModelType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { ResourceUrlModelType } from '../../models/ResourceUrlModel';
 
 const DEFAULT_RECTANGLE_FACTOR = 0.2;
 
@@ -85,7 +86,7 @@ export const getLinksArrWithTokens = (links: LinkModelType[]): LinkModelType[] =
   return linksWithTokens;
 };
 
-export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResource => {
+export const getTokenResource = (url: string, ver?: string): CesiumResource => {
   const tokenProps: Record<string, unknown> = { url };
   
   // eslint-disable-next-line
@@ -103,7 +104,7 @@ export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResour
 
   tokenProps.queryParameters = {
     ...(tokenProps.queryParameters as Record<string, unknown>),
-    ver
+    ...(typeof ver !== 'undefined' ? { ver } : {})
   };
 
   return new CesiumResource({...tokenProps as unknown as CesiumResource});
@@ -117,7 +118,7 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     style = capability.style as string;
     format = (capability.format as string[])[0];
     tileMatrixSetID = (capability.tileMatrixSetID as string[])[0];
-    url = (capability.url as string[])[0] ?? url;
+    url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
   }
   return {
     url: getTokenResource(url, layer.productVersion as string),
