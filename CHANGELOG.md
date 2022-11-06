@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.22.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.22.0...v1.22.1) (2022-11-06)
+
+
+### Bug Fixes
+
+* capabilities error should not affect catalog view ([#394](https://github.com/MapColonies/discrete-layer-client/issues/394)) ([1065b37](https://github.com/MapColonies/discrete-layer-client/commit/1065b37aa7bccecfc229b43ee6df5f5878bca107))
+* date granularity should be set to minutes for app's dates (MAPCO-2637) ([#392](https://github.com/MapColonies/discrete-layer-client/issues/392)) ([50f1fc3](https://github.com/MapColonies/discrete-layer-client/commit/50f1fc3ff08897d526b54433b4595f43e22faffc))
+* fix layer results not updating entity ([#379](https://github.com/MapColonies/discrete-layer-client/issues/379)) ([726c5f2](https://github.com/MapColonies/discrete-layer-client/commit/726c5f2f1ac283852deb88fdc88500bceaa1d3f1))
+* flyto should be added in every model ([#385](https://github.com/MapColonies/discrete-layer-client/issues/385)) ([e4f6ba7](https://github.com/MapColonies/discrete-layer-client/commit/e4f6ba774a795a9d7e583e80dde239cb8defe71c))
+* hide missing icons glow to fix layer details scrollbar ([#384](https://github.com/MapColonies/discrete-layer-client/issues/384)) ([43a927f](https://github.com/MapColonies/discrete-layer-client/commit/43a927f8a8b41e9cdc044b2ccd375ffb3cf0a300))
+* irrelevant quote mark ([#377](https://github.com/MapColonies/discrete-layer-client/issues/377)) ([131bc7d](https://github.com/MapColonies/discrete-layer-client/commit/131bc7d6f5c1d804cdb059f1510eb1385ec6dc87))
+* legend title should be the name field MAPCO-2638 ([#393](https://github.com/MapColonies/discrete-layer-client/issues/393)) ([0972e02](https://github.com/MapColonies/discrete-layer-client/commit/0972e028e7d3cef50eb8e8dc0ac614b84e018d77))
+* path direction auto ([#378](https://github.com/MapColonies/discrete-layer-client/issues/378)) ([2f4da1c](https://github.com/MapColonies/discrete-layer-client/commit/2f4da1cd6954d2fac3c09d21160e4f03e2f2952a))
+* remove tooltip from JSON fields ([#382](https://github.com/MapColonies/discrete-layer-client/issues/382)) ([fa4bd73](https://github.com/MapColonies/discrete-layer-client/commit/fa4bd7322e85b7947f3a9ddb347696aed7d2fdef))
+* styles collision with chonky ([#376](https://github.com/MapColonies/discrete-layer-client/issues/376)) ([77f7003](https://github.com/MapColonies/discrete-layer-client/commit/77f7003bd02127bd37c90dc92d1740c1cfc7e9b0))
+* support 4XX status error codes (MAPCO-2574, MAPCO-2575) ([#381](https://github.com/MapColonies/discrete-layer-client/issues/381)) ([3aca35b](https://github.com/MapColonies/discrete-layer-client/commit/3aca35b1b04a67b1c2e364f90927518f5cc273de))
+* tooltips and dialog names ([#383](https://github.com/MapColonies/discrete-layer-client/issues/383)) ([e697a8b](https://github.com/MapColonies/discrete-layer-client/commit/e697a8b18c9759692c37e7bb1306904b8969202e))
+* when curtain shown there shouldn't be scrolling ([#388](https://github.com/MapColonies/discrete-layer-client/issues/388)) ([84bce15](https://github.com/MapColonies/discrete-layer-client/commit/84bce1514cc034ac1dade433bc2184321290b6b6))
+
 ## [1.22.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.19.3...v1.22.0) (2022-10-12)
 
 
