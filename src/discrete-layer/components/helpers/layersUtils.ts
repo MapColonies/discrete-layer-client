@@ -116,8 +116,8 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
   let tileMatrixSetID = 'newGrids';
   if (capability) {
     style = capability.style as string;
-    format = (capability.format as string[])[0];
-    tileMatrixSetID = (capability.tileMatrixSetID as string[])[0];
+    format = (capability.format as string[])[0]; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
+    tileMatrixSetID = (capability.tileMatrixSetID as string[])[0]; // (!IMPORTANT) derived from raster implementation: there is only ONE surved matrix set
     url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
   }
   return {
