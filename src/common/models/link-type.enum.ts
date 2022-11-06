@@ -1,6 +1,5 @@
 export enum LinkType {
   WMTS_LAYER = 'WMTS_LAYER',
-  WMTS_TILE = 'WMTS_tile',
   XYZ_LAYER = 'XYZ_LAYER',
   THREE_D_LAYER = '3D_LAYER',
   THREE_D_TILES = '3DTiles',

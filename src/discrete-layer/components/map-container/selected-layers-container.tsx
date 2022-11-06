@@ -82,7 +82,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             url={getTokenResource(layerLink.url as string, (layer as Layer3DRecordModelType).productVersion as string)}
           />
         );
-      case LinkType.WMTS_TILE:
       case LinkType.WMTS_LAYER:
       case LinkType.WMTS: {
         const capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
