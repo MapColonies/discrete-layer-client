@@ -389,6 +389,14 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   
   }), []);
 
+  const gridTitleRaster = intl.formatMessage({
+    id: `record-type.${RecordType.RECORD_RASTER.toLowerCase()}.label`,
+  });
+
+  const gridTitle3D = intl.formatMessage({
+    id: `record-type.${RecordType.RECORD_3D.toLowerCase()}.label`,
+  });
+
   return (
     <Box id="jobsDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -448,7 +456,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           </Box>
           <Box className="gridsContainer">
             <CollapsibleList
-              handle={<SimpleListItem text={RecordType.RECORD_RASTER} metaIcon="chevron_right" />}
+              handle={<SimpleListItem text={gridTitleRaster} metaIcon="chevron_right" />}
             >
               <GridComponent
                 gridOptions={gridOptions}
@@ -461,7 +469,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             </CollapsibleList>
 
             <CollapsibleList
-              handle={<SimpleListItem text={RecordType.RECORD_3D} metaIcon="chevron_right" />}
+              handle={<SimpleListItem text={gridTitle3D} metaIcon="chevron_right" />}
             >
               <GridComponent
                 gridOptions={gridOptions}
