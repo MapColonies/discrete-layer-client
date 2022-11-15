@@ -442,13 +442,13 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     mutateStartDemIngestion(variables: { data: IngestionDemData }, optimisticUpdate?: () => void) {
       return self.mutate<{ startDemIngestion: string }>(`mutation startDemIngestion($data: IngestionDemData!) { startDemIngestion(data: $data) }`, variables, optimisticUpdate)
     },
-    mutateUpdateJob(variables: { data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
-      return self.mutate<{ updateJob: string }>(`mutation updateJob($data: JobUpdateData!, $id: String!) { updateJob(data: $data, id: $id) }`, variables, optimisticUpdate)
+    mutateUpdateJob(variables: { domain: string, data: JobUpdateData, id: string }, optimisticUpdate?: () => void) {
+      return self.mutate<{ updateJob: string }>(`mutation updateJob($domain: String!, $data: JobUpdateData!, $id: String!) { updateJob(domain: $domain, data: $data, id: $id) }`, variables, optimisticUpdate)
     },
     mutateJobRetry(variables: { id: string }, optimisticUpdate?: () => void) {
       return self.mutate<{ jobRetry: string }>(`mutation jobRetry($id: String!) { jobRetry(id: $id) }`, variables, optimisticUpdate)
     },
-    mutateJobAbort(variables: { id: string }, optimisticUpdate?: () => void) {
-      return self.mutate<{ jobAbort: string }>(`mutation jobAbort($id: String!) { jobAbort(id: $id) }`, variables, optimisticUpdate)
+    mutateJobAbort(variables: { domain: string, id: string }, optimisticUpdate?: () => void) {
+      return self.mutate<{ jobAbort: string }>(`mutation jobAbort($domain: String!, $id: String!) { jobAbort(domain: $domain, id: $id) }`, variables, optimisticUpdate)
     },
   })))

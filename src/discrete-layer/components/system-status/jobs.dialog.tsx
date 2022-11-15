@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState, useMemo, useContext } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import { DialogContent } from '@material-ui/core';
-import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
+import { Button, CollapsibleList, Dialog, DialogTitle, IconButton, SimpleListItem } from '@map-colonies/react-core';
 import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { IActionGroup } from '../../../common/actions/entity.actions';
@@ -19,15 +19,17 @@ import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/a
 import { JobProductTypeRenderer } from '../../../common/components/grid/cell-renderer/job-product-type.cell-renderer';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
+import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { JobModelType } from '../../models';
+import { JobModelType, ProductType, RecordType } from '../../models';
 import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
 import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
 import { JOB_ENTITY } from './job.types';
+
 
 import './jobs.dialog.css';
 
@@ -47,11 +49,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,unknown>>({}); 
-  const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
+  const [gridRowDataRaster, setGridRowDataRaster] = useState<JobModelType[]>([]); 
+  const [gridRowData3D, setGridRowData3D] = useState<JobModelType[]>([]); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
   const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
   const [tillDate, setTillDate] = useState<Date>(new Date());
+  const { enumsMap } = useContext(EnumsMapContext);
 
   // const [retryErr, setRetryErr] = useState(false);
 
@@ -127,8 +131,21 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     );
   }, [fromDate, tillDate, setQuery]);
 
+  const getFilterJobsPredicate = (requestedDomain: RecordType): ((cur: JobModelType) => boolean) => {
+    return (cur: JobModelType): boolean => {
+      const jobDomain = enumsMap?.[cur.productType as string]?.parentDomain;
+      
+      return jobDomain === requestedDomain;
+    }
+  }
+
   useEffect(() => {
-    setGridRowData(data ? cloneDeep(data.jobs) : []);
+    const combinedJobsData = data ? cloneDeep(data.jobs) : [];
+    const jobsRaster = combinedJobsData.filter(getFilterJobsPredicate(RecordType.RECORD_RASTER));
+    const jobs3D = combinedJobsData.filter(getFilterJobsPredicate(RecordType.RECORD_3D));
+    
+    setGridRowDataRaster(jobsRaster);
+    setGridRowData3D(jobs3D);
   }, [data]);
 
   useEffect(() => {
@@ -194,6 +211,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
         case 'Job.abort':
           mutationQuery.setQuery(
             store.mutateJobAbort({
+              domain: enumsMap?.[data.productType as string]?.parentDomain as string,
               id: data.id as string,
             })
           );
@@ -375,62 +393,102 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     <Box id="jobsDialog">
       <Dialog open={isOpen} preventOutsideDismiss={true}>
         <DialogTitle>
-          <FormattedMessage id="system-status.title"/>
-          <Box 
+          <FormattedMessage id="system-status.title" />
+          <Box
             className="refreshContainer"
             onClick={(): void => {
               (actions as IActions).start(POLLING_CYCLE_INTERVAL);
               void query?.refetch();
             }}
           >
-            <IconButton className="refreshIcon mc-icon-Refresh"/>
+            <IconButton className="refreshIcon mc-icon-Refresh" />
             <Box className="refreshSecs">
-              {`${(timeLeft as number)/MILISECONDS_IN_SEC}`}
+              {`${(timeLeft as number) / MILISECONDS_IN_SEC}`}
             </Box>
           </Box>
 
-        
-
           <IconButton
             className="closeIcon mc-icon-Close"
-            onClick={ (): void => { closeDialog(); } }
+            onClick={(): void => {
+              closeDialog();
+            }}
           />
         </DialogTitle>
         <DialogContent className="jobsBody">
-        <Box className="jobsTimeRangePicker">
-            <DateTimeRangePicker 
-              controlsLayout='row'
+          <Box className="jobsTimeRangePicker">
+            <DateTimeRangePicker
+              controlsLayout="row"
               onChange={(dateRange): void => {
-                if (typeof dateRange.from !== 'undefined' && typeof dateRange.to !== 'undefined') {
-                  setFromDate(dateRange.from)
-                  setTillDate(dateRange.to)
+                if (
+                  typeof dateRange.from !== 'undefined' &&
+                  typeof dateRange.to !== 'undefined'
+                ) {
+                  setFromDate(dateRange.from);
+                  setTillDate(dateRange.to);
                 }
               }}
               from={fromDate}
               to={tillDate}
               local={{
-                setText: intl.formatMessage({ id: 'filters.date-picker.set-btn.text' }),
-                startPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.start-time.label' }),
-                endPlaceHolderText: intl.formatMessage({ id: 'filters.date-picker.end-time.label' }),
-                calendarLocale: SupportedLocales[CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales]
+                setText: intl.formatMessage({
+                  id: 'filters.date-picker.set-btn.text',
+                }),
+                startPlaceHolderText: intl.formatMessage({
+                  id: 'filters.date-picker.start-time.label',
+                }),
+                endPlaceHolderText: intl.formatMessage({
+                  id: 'filters.date-picker.end-time.label',
+                }),
+                calendarLocale:
+                  SupportedLocales[
+                    CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales
+                  ],
               }}
             />
           </Box>
-          <GridComponent
-            gridOptions={gridOptions}
-            rowData={gridRowData}
-            style={{
-              height: 'calc(100% - 120px)',
-              padding: '12px'
-            }}
-          />
+          <Box className="gridsContainer">
+            <CollapsibleList
+              handle={<SimpleListItem text={RecordType.RECORD_RASTER} metaIcon="chevron_right" />}
+            >
+              <GridComponent
+                gridOptions={gridOptions}
+                rowData={gridRowDataRaster}
+                style={{
+                  height: '100%',
+                  padding: '12px',
+                }}
+              />
+            </CollapsibleList>
+
+            <CollapsibleList
+              handle={<SimpleListItem text={RecordType.RECORD_3D} metaIcon="chevron_right" />}
+            >
+              <GridComponent
+                gridOptions={gridOptions}
+                rowData={gridRowData3D}
+                style={{
+                  height: '100%',
+                  padding: '12px',
+                }}
+              />
+            </CollapsibleList>
+          </Box>
+
           <Box className="buttons">
             {
-              // eslint-disable-next-line
-              mutationQuery.error !== undefined && <GraphQLError error={mutationQuery.error}/>
+              mutationQuery.error !== undefined && (
+                // eslint-disable-next-line
+                <GraphQLError error={mutationQuery.error} />
+              )
             }
-            <Button raised type="button" onClick={(): void => { closeDialog(); }}>
-              <FormattedMessage id="system-status.close-btn.text"/>
+            <Button
+              raised
+              type="button"
+              onClick={(): void => {
+                closeDialog();
+              }}
+            >
+              <FormattedMessage id="system-status.close-btn.text" />
             </Button>
           </Box>
         </DialogContent>
