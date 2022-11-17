@@ -32,6 +32,7 @@ import { JOB_ENTITY } from './job.types';
 
 
 import './jobs.dialog.css';
+import { getProductDomain } from '../layer-details/utils';
 
 const pagination = true;
 const pageSize = 10;
@@ -161,7 +162,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       mutationQuery.setQuery(store.mutateUpdateJob(updateTaskPayload,() => {}));
     }
-  }, [updateTaskPayload, store]);
+  }, [updateTaskPayload]);
 
   useEffect(() => {
     if (!isEmpty(mutationQuery.error)) {
@@ -208,14 +209,16 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             })
           );
           break;
-        case 'Job.abort':
+        case 'Job.abort': {
+          const abortJobDomain = getProductDomain(data.productType as ProductType, enumsMap ?? undefined);
           mutationQuery.setQuery(
             store.mutateJobAbort({
-              domain: enumsMap?.[data.productType as string]?.parentDomain as string,
+              domain: abortJobDomain,
               id: data.id as string,
             })
           );
           break;
+        }
         default:
           break;
        }
@@ -280,11 +283,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       cellRendererParams: {
         optionsData: getPriorityOptions,
         onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
-          const { id }  = jobData;
+          const { id, productType }  = jobData;
           const chosenPriority: string | number = evt.currentTarget.value;
+          const updateTaskDomain = getProductDomain(productType as ProductType, enumsMap ?? undefined);
 
           setUpdateTaskPayload({
             id: id,
+            domain: updateTaskDomain,
             data: {
               priority: parseInt(chosenPriority)
             }
@@ -389,13 +394,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   
   }), []);
 
-  const gridTitleRaster = intl.formatMessage({
+  const gridTitleRaster = useMemo(() => intl.formatMessage({
     id: `record-type.${RecordType.RECORD_RASTER.toLowerCase()}.label`,
-  });
+  }), []);
 
-  const gridTitle3D = intl.formatMessage({
+  const gridTitle3D = useMemo(() => intl.formatMessage({
     id: `record-type.${RecordType.RECORD_3D.toLowerCase()}.label`,
-  });
+  }), []);
 
   return (
     <Box id="jobsDialog">

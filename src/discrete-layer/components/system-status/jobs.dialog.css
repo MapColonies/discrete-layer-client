@@ -133,6 +133,7 @@ body[dir='rtl'] .jobsBody .ag-pinned-right-cols-container {
 }
 
 #jobsDialog .gridsContainer {
+  margin-top: 10px;
   height: calc(100% - 120px);
   overflow-y: overlay;
 }

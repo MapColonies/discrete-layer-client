@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
@@ -9,12 +9,14 @@ import { Box } from '@map-colonies/react-components';
 import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/formatters';
-import { JobModelType, Status, TasksGroupModelType } from '../../../models';
+import { JobModelType, ProductType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
 import { CopyButton } from '../job-details.copy-button';
 import { JobDetailsHeader } from './job-details.header';
 
 import './job-details.cell-renderer.css';
+import EnumsMapContext from '../../../../common/contexts/enumsMap.context';
+import { getProductDomain } from '../../layer-details/utils';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -124,14 +126,18 @@ const getValuePresentor = (
 
 interface TasksRendererParams {
   jobId: string;
+  productType: ProductType;
 }
 
-const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
+const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId, productType}) => {
   const [tasksData, setTasksData] = useState<TasksGroupModelType[]>([]);
+  const { enumsMap } = useContext(EnumsMapContext);
+  const tasksDomain = getProductDomain(productType, enumsMap ?? undefined);
 
   const { loading, data } = useQuery(
     (store) =>
       store.queryTasks({
+        domain: tasksDomain,
         params: {
           jobId,
         },
@@ -189,7 +195,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
           </Typography>
         ))}
 
-        <TasksRenderer jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
+        <TasksRenderer productType={(props.data as JobModelType).productType as ProductType} jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
       </Box>
     </Box>
   );

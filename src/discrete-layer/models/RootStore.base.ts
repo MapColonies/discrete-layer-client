@@ -422,8 +422,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new DecryptedIdModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryTasks(variables: { params?: TasksSearchParams }, resultSelector: string | ((qb: TasksGroupModelSelector) => TasksGroupModelSelector) = tasksGroupModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ tasks: TasksGroupModelType[]}>(`query tasks($params: TasksSearchParams) { tasks(params: $params) {
+    queryTasks(variables: { domain: string, params?: TasksSearchParams }, resultSelector: string | ((qb: TasksGroupModelSelector) => TasksGroupModelSelector) = tasksGroupModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ tasks: TasksGroupModelType[]}>(`query tasks($domain: String!, $params: TasksSearchParams) { tasks(domain: $domain, params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new TasksGroupModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
