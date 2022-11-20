@@ -80,6 +80,18 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
     );
   };
 
+  const getPercentageView = (): JSX.Element => {
+    const { percentage } = jobData;
+
+    return (
+        <Typography dir="auto" className={'progressPercentage'} tag={'p'}>
+          {typeof percentage !== 'undefined' && percentage !== null
+            ? `${percentage}%`
+            : ''}
+        </Typography>
+    );
+  };
+
   const getProgressbarSections = (): JSX.Element | null => {
     const { completedTasks, inProgressTasks, failedTasks, expiredTasks, status} = jobData;
 
@@ -109,7 +121,6 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   return (
     <Box className="statusBarContainer">
       <Box className="statusText">
-      <Typography style={{ fontSize: '12px' }} tag="div" />
         {getProgressComponent()}
       </Box>
       <Box
@@ -117,8 +128,8 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
         style={{
           width: `${STATUS_BAR_WIDTH}px`,
           height: `${STATUS_BAR_HEIGHT}px`,
-        }}
-      >
+        }}>
+        {getPercentageView()}
         {getProgressbarSections()}
       </Box>
     </Box>

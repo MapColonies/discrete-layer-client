@@ -2,8 +2,8 @@ import React, { useMemo, useRef } from 'react';
 import { Typography, Tooltip } from '@map-colonies/react-core';
 import useIsEllipsisActive from '../../hooks/isEllipsisActive.hook';
 
-interface TooltippedValueProps {
-  tag?: string | React.ComponentType<any>;
+export interface TooltippedValueProps {
+  tag?: string | React.ComponentType<unknown>;
   className?: string;
   disableTooltip?: boolean;
   alwaysTooltip?: boolean;

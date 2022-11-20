@@ -19,7 +19,7 @@ import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/a
 import { JobProductTypeRenderer } from '../../../common/components/grid/cell-renderer/job-product-type.cell-renderer';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType } from '../../../common/contexts/enumsMap.context';
+import EnumsMapContext from '../../../common/contexts/enumsMap.context';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { JobModelType, ProductType, RecordType } from '../../models';
@@ -28,11 +28,12 @@ import { StatusRenderer } from './cell-renderer/status.cell-renderer';
 import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
 import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
 import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
+import { TooltippedCellRenderer } from './cell-renderer/tool-tipped.cell-renderer';
 import { JOB_ENTITY } from './job.types';
+import { getProductDomain } from '../layer-details/utils';
 
 
 import './jobs.dialog.css';
-import { getProductDomain } from '../layer-details/utils';
 
 const pagination = true;
 const pageSize = 10;
@@ -52,7 +53,8 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,unknown>>({}); 
   const [gridRowDataRaster, setGridRowDataRaster] = useState<JobModelType[]>([]); 
   const [gridRowData3D, setGridRowData3D] = useState<JobModelType[]>([]); 
-  const [gridApi, setGridApi] = useState<GridApi>();
+  const [gridApiRaster, setGridApiRaster] = useState<GridApi>();
+  const [gridApi3D, setGridApi3D] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
   const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
   const [tillDate, setTillDate] = useState<Date>(new Date());
@@ -166,7 +168,12 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
 
   useEffect(() => {
     if (!isEmpty(mutationQuery.error)) {
-      gridApi?.refreshCells({
+      gridApiRaster?.refreshCells({
+        suppressFlash: true,
+        force: true
+      });
+
+      gridApi3D?.refreshCells({
         suppressFlash: true,
         force: true
       });
@@ -255,6 +262,10 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       }),
       width: 120,
       field: 'productName',
+      cellRenderer: 'tooltippedCellRenderer',
+      cellRendererParams: {
+        tag: 'p',
+      },
     },
     {
       headerName: intl.formatMessage({
@@ -348,8 +359,8 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     }
   ];
 
-  const onGridReady = (params: GridReadyEvent): void => {
-    setGridApi(params.api);
+  const onGridReadyRaster = (params: GridReadyEvent): void => {
+    setGridApiRaster(params.api);
     const sortModel = [
       {colId: 'updated', sort: 'desc'}
     ];
@@ -357,7 +368,16 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     params.api.sizeColumnsToFit();
   };
 
-  const gridOptions: GridComponentOptions = useMemo(()=>({
+  const onGridReady3D = (params: GridReadyEvent): void => {
+    setGridApi3D(params.api);
+    const sortModel = [
+      {colId: 'updated', sort: 'desc'}
+    ];
+    params.api.setSortModel(sortModel);
+    params.api.sizeColumnsToFit();
+  };
+
+  const baseGridOption: GridComponentOptions = useMemo(()=>({
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     suppressRowTransform: true,
     pagination: pagination,
@@ -380,19 +400,29 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       priorityRenderer: PriorityRenderer,
       productTypeRenderer: JobProductTypeRenderer,
       dateCellRenderer: DateCellRenderer,
+      tooltippedCellRenderer: TooltippedCellRenderer,
     },
     tooltipShowDelay: 0,
     tooltipMouseTrack: false,
     rowSelection: 'single',
     suppressCellSelection: true,
     singleClickEdit: true,
-    onGridReady: onGridReady,
     immutableData: true, //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
     // suppressRowClickSelection: true,
     suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
     unSortIcon: true, // Used to show un-sorted icon.
   
   }), []);
+
+  const gridOptionsRaster: GridComponentOptions = useMemo(()=>({...baseGridOption, onGridReady: onGridReadyRaster}), []);
+
+  const gridOptions3D: GridComponentOptions = useMemo(()=>({...baseGridOption, onGridReady: onGridReady3D}), []);
+
+  useEffect(() => { 
+    gridApiRaster?.applyTransaction({ update: gridRowDataRaster});
+    gridApi3D?.applyTransaction({ update: gridRowData3D});
+
+  }, [gridRowDataRaster, gridRowData3D])
 
   const gridTitleRaster = useMemo(() => intl.formatMessage({
     id: `record-type.${RecordType.RECORD_RASTER.toLowerCase()}.label`,
@@ -401,6 +431,80 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const gridTitle3D = useMemo(() => intl.formatMessage({
     id: `record-type.${RecordType.RECORD_3D.toLowerCase()}.label`,
   }), []);
+
+  const renderGridList = (): JSX.Element => {
+    const commonGridStyle: React.CSSProperties = {
+      height: '100%',
+      padding: '12px',
+    };
+
+    return (
+      <Box className="gridsContainer">
+        <CollapsibleList
+          handle={
+            <SimpleListItem text={gridTitleRaster} metaIcon="chevron_right" />
+          }
+          defaultOpen
+        >
+          <GridComponent
+            gridOptions={gridOptionsRaster}
+            rowData={gridRowDataRaster}
+            style={commonGridStyle}
+          />
+        </CollapsibleList>
+
+        <CollapsibleList
+          handle={
+            <SimpleListItem text={gridTitle3D} metaIcon="chevron_right" />
+          }
+          defaultOpen
+        >
+          <GridComponent
+            gridOptions={gridOptions3D}
+            rowData={gridRowData3D}
+            style={commonGridStyle}
+          />
+        </CollapsibleList>
+      </Box>
+    );
+  };
+
+  const renderDateTimeRangePicker = (): JSX.Element => {
+    return (
+      <Box className="jobsTimeRangePicker">
+        <DateTimeRangePicker
+          controlsLayout="row"
+          onChange={(dateRange): void => {
+            if (
+              typeof dateRange.from !== 'undefined' &&
+              typeof dateRange.to !== 'undefined'
+            ) {
+              setFromDate(dateRange.from);
+              setTillDate(dateRange.to);
+            }
+          }}
+          from={fromDate}
+          to={tillDate}
+          local={{
+            setText: intl.formatMessage({
+              id: 'filters.date-picker.set-btn.text',
+            }),
+            startPlaceHolderText: intl.formatMessage({
+              id: 'filters.date-picker.start-time.label',
+            }),
+            endPlaceHolderText: intl.formatMessage({
+              id: 'filters.date-picker.end-time.label',
+            }),
+            calendarLocale:
+              SupportedLocales[
+                CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales
+              ],
+          }}
+        />
+      </Box>
+    );
+  };
+ 
 
   return (
     <Box id="jobsDialog">
@@ -428,65 +532,8 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           />
         </DialogTitle>
         <DialogContent className="jobsBody">
-          <Box className="jobsTimeRangePicker">
-            <DateTimeRangePicker
-              controlsLayout="row"
-              onChange={(dateRange): void => {
-                if (
-                  typeof dateRange.from !== 'undefined' &&
-                  typeof dateRange.to !== 'undefined'
-                ) {
-                  setFromDate(dateRange.from);
-                  setTillDate(dateRange.to);
-                }
-              }}
-              from={fromDate}
-              to={tillDate}
-              local={{
-                setText: intl.formatMessage({
-                  id: 'filters.date-picker.set-btn.text',
-                }),
-                startPlaceHolderText: intl.formatMessage({
-                  id: 'filters.date-picker.start-time.label',
-                }),
-                endPlaceHolderText: intl.formatMessage({
-                  id: 'filters.date-picker.end-time.label',
-                }),
-                calendarLocale:
-                  SupportedLocales[
-                    CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() as keyof typeof SupportedLocales
-                  ],
-              }}
-            />
-          </Box>
-          <Box className="gridsContainer">
-            <CollapsibleList
-              handle={<SimpleListItem text={gridTitleRaster} metaIcon="chevron_right" />}
-            >
-              <GridComponent
-                gridOptions={gridOptions}
-                rowData={gridRowDataRaster}
-                style={{
-                  height: '100%',
-                  padding: '12px',
-                }}
-              />
-            </CollapsibleList>
-
-            <CollapsibleList
-              handle={<SimpleListItem text={gridTitle3D} metaIcon="chevron_right" />}
-            >
-              <GridComponent
-                gridOptions={gridOptions}
-                rowData={gridRowData3D}
-                style={{
-                  height: '100%',
-                  padding: '12px',
-                }}
-              />
-            </CollapsibleList>
-          </Box>
-
+          {renderDateTimeRangePicker()}
+          {renderGridList()}
           <Box className="buttons">
             {
               mutationQuery.error !== undefined && (
