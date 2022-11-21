@@ -11,7 +11,7 @@ import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/formatters';
 import { JobModelType, ProductType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
-import { CopyButton } from '../job-details.copy-button';
+import { CopyButton } from '../../job-manager/job-details.copy-button';
 import { JobDetailsHeader } from './job-details.header';
 
 import './job-details.cell-renderer.css';

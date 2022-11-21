@@ -9,7 +9,7 @@ import {
 } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
-import { FINAL_STATUSES } from '../job.types'
+import { FINAL_STATUSES } from '../../job-manager/job.types'
 
 import './priority.cell-renderer.css';
 

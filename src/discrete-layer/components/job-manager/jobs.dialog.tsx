@@ -10,33 +10,22 @@ import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-
 import CONFIG from '../../../common/config';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { 
-  GridComponent,
-  GridComponentOptions,
-  GridReadyEvent,
   GridApi
 } from '../../../common/components/grid';
-import { ActionsRenderer } from '../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import { JobProductTypeRenderer } from '../../../common/components/grid/cell-renderer/job-product-type.cell-renderer';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import EnumsMapContext from '../../../common/contexts/enumsMap.context';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { JobModelType, ProductType, RecordType } from '../../models';
-import { JobDetailsRenderer } from './cell-renderer/job-details.cell-renderer';
-import { StatusRenderer } from './cell-renderer/status.cell-renderer';
-import { PriorityRenderer } from './cell-renderer/priority.cell-renderer';
-import { DateCellRenderer } from './cell-renderer/date.cell-renderer';
-import { JobDetailsStatusFilter } from './cell-renderer/job-details.status.filter';
-import { TooltippedCellRenderer } from './cell-renderer/tool-tipped.cell-renderer';
 import { JOB_ENTITY } from './job.types';
 import { getProductDomain } from '../layer-details/utils';
 
 
 import './jobs.dialog.css';
+import JobManagerRasterGrid from './grids/job-manager-raster-grid.component';
+import JobManager3DGrid from './grids/job-manager-3d-grid.component';
 
-const pagination = true;
-const pageSize = 10;
 const START_CYCLE_ITTERACTION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
@@ -64,18 +53,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
 
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
-
-  const getPriorityOptions = useMemo(() => {
-    const priorityList = CONFIG.SYSTEM_JOBS_PRIORITY_OPTIONS;
-
-    return priorityList.map((option) => {
-      const optionCpy = {...option};
-      optionCpy.label = intl.formatMessage({
-        id: option.label,
-      });
-      return optionCpy
-    });
-  }, [intl]);
 
   // start the timer during the first render
   useEffect(() => {
@@ -241,189 +218,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     };
   }, []);
 
-  const colDef = [
-    {
-      headerName: '',
-      width: 40,
-      field: 'productType',
-      cellRenderer: 'productTypeRenderer',
-      cellRendererParams: {
-        style: {
-          height: '40px',
-          width: '40px',
-          display: 'flex',
-          alignItems: 'center',
-        },
-      },
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.resource-id.label',
-      }),
-      width: 120,
-      field: 'productName',
-      cellRenderer: 'tooltippedCellRenderer',
-      cellRendererParams: {
-        tag: 'p',
-      },
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.version.label',
-      }),
-      width: 80,
-      field: 'version',
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.type.label',
-      }),
-      width: 120,
-      field: 'type',
-      filter: true,
-      sortable: true,
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.priority.label',
-      }),
-      width: 150,
-      // Binding status field to priority col, in order to keep it updated when status is changed.
-      field: 'status',
-      cellRenderer: 'priorityRenderer',
-      cellRendererParams: {
-        optionsData: getPriorityOptions,
-        onChange: (evt: React.FormEvent<HTMLInputElement>, jobData: JobModelType): void => {
-          const { id, productType }  = jobData;
-          const chosenPriority: string | number = evt.currentTarget.value;
-          const updateTaskDomain = getProductDomain(productType as ProductType, enumsMap ?? undefined);
-
-          setUpdateTaskPayload({
-            id: id,
-            domain: updateTaskDomain,
-            data: {
-              priority: parseInt(chosenPriority)
-            }
-          });
-        }
-      },
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.created.label',
-      }),
-      width: 172,
-      field: 'created',
-      cellRenderer: 'dateCellRenderer',
-      cellRendererParams: {
-        field: 'created',
-      },
-      sortable: true,
-      // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
-        valueA - valueB,
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.updated.label',
-      }),
-      width: 172,
-      field: 'updated',
-      sortable: true,
-      cellRenderer: 'dateCellRenderer',
-      cellRendererParams: {
-        field: 'updated',
-      },
-      // @ts-ignore
-      comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
-        valueA - valueB,
-    },
-    {
-      headerName: intl.formatMessage({
-        id: 'system-status.job.fields.status.label',
-      }),
-      width: 160,
-      field: 'status',
-      cellRenderer: 'statusRenderer',
-      filter: 'jobDetailsStatusFilter',
-    },
-    {
-      pinned: 'right',
-      headerName: '',
-      width: 0,
-      cellRenderer: 'actionsRenderer',
-      cellRendererParams: {
-        actions: getJobActions,
-        actionHandler: dispatchAction,
-      },
-    }
-  ];
-
-  const onGridReadyRaster = (params: GridReadyEvent): void => {
-    setGridApiRaster(params.api);
-    const sortModel = [
-      {colId: 'updated', sort: 'desc'}
-    ];
-    params.api.setSortModel(sortModel);
-    params.api.sizeColumnsToFit();
-  };
-
-  const onGridReady3D = (params: GridReadyEvent): void => {
-    setGridApi3D(params.api);
-    const sortModel = [
-      {colId: 'updated', sort: 'desc'}
-    ];
-    params.api.setSortModel(sortModel);
-    params.api.sizeColumnsToFit();
-  };
-
-  const baseGridOption: GridComponentOptions = useMemo(()=>({
-    enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
-    suppressRowTransform: true,
-    pagination: pagination,
-    paginationPageSize: pageSize,
-    columnDefs: colDef,
-    getRowNodeId: (data: JobModelType): string => {
-      return data.id;
-    },
-    detailsRowCellRenderer: 'detailsRenderer',
-    detailsRowHeight: 230,
-    detailsRowExapnderPosition: 'start',
-    overlayNoRowsTemplate: intl.formatMessage({
-      id: 'results.nodata',
-    }),
-    frameworkComponents: {
-      jobDetailsStatusFilter: JobDetailsStatusFilter,
-      detailsRenderer: JobDetailsRenderer,
-      statusRenderer: StatusRenderer,
-      actionsRenderer: ActionsRenderer,
-      priorityRenderer: PriorityRenderer,
-      productTypeRenderer: JobProductTypeRenderer,
-      dateCellRenderer: DateCellRenderer,
-      tooltippedCellRenderer: TooltippedCellRenderer,
-    },
-    tooltipShowDelay: 0,
-    tooltipMouseTrack: false,
-    rowSelection: 'single',
-    suppressCellSelection: true,
-    singleClickEdit: true,
-    immutableData: true, //bounded to state/store managed there otherwise getting "unstable_flushDiscreteUpdates in AgGridReact"
-    // suppressRowClickSelection: true,
-    suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
-    unSortIcon: true, // Used to show un-sorted icon.
-  
-  }), []);
-
-  const gridOptionsRaster: GridComponentOptions = useMemo(()=>({...baseGridOption, onGridReady: onGridReadyRaster}), []);
-
-  const gridOptions3D: GridComponentOptions = useMemo(()=>({...baseGridOption, onGridReady: onGridReady3D}), []);
-
-  useEffect(() => { 
-    gridApiRaster?.applyTransaction({ update: gridRowDataRaster});
-    gridApi3D?.applyTransaction({ update: gridRowData3D});
-
-  }, [gridRowDataRaster, gridRowData3D])
-
   const gridTitleRaster = useMemo(() => intl.formatMessage({
     id: `record-type.${RecordType.RECORD_RASTER.toLowerCase()}.label`,
   }), []);
@@ -433,11 +227,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   }), []);
 
   const renderGridList = (): JSX.Element => {
-    const commonGridStyle: React.CSSProperties = {
-      height: '100%',
-      padding: '12px',
-    };
-
     return (
       <Box className="gridsContainer">
         <CollapsibleList
@@ -445,12 +234,20 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             <SimpleListItem text={gridTitleRaster} metaIcon="chevron_right" />
           }
           defaultOpen
-        >
-          <GridComponent
-            gridOptions={gridOptionsRaster}
+        >          
+          <JobManagerRasterGrid 
+            dispatchAction={dispatchAction}
+            getJobActions={getJobActions}
             rowData={gridRowDataRaster}
-            style={commonGridStyle}
+            onGridReadyCB={(params): void => {
+              setGridApiRaster(params.api)
+            }}
+            priorityChangeCB={setUpdateTaskPayload}
+            rowDataChangeCB={(): void => {
+              gridApiRaster?.applyTransaction({ update: gridRowDataRaster});
+            }}
           />
+          
         </CollapsibleList>
 
         <CollapsibleList
@@ -459,11 +256,19 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           }
           defaultOpen
         >
-          <GridComponent
-            gridOptions={gridOptions3D}
+          <JobManager3DGrid 
+            dispatchAction={dispatchAction}
+            getJobActions={getJobActions}
             rowData={gridRowData3D}
-            style={commonGridStyle}
+            onGridReadyCB={(params): void => {
+              setGridApi3D(params.api);
+            }}
+            priorityChangeCB={setUpdateTaskPayload}
+            rowDataChangeCB={(): void => {
+              gridApi3D?.applyTransaction({ update: gridRowData3D});
+            }}
           />
+
         </CollapsibleList>
       </Box>
     );

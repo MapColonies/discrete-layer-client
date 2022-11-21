@@ -1,8 +1,8 @@
 import React from 'react';
+import { Box } from '@map-colonies/react-components';
 import { ICellRendererParams } from 'ag-grid-community';
 import TooltippedValue, { TooltippedValueProps } from '../../../../common/components/form/tooltipped.value';
 import './tool-tipped.cell-renderer.css';
-import { Box } from '@material-ui/core';
 
 export const TooltippedCellRenderer: React.FC<
   ICellRendererParams & TooltippedValueProps

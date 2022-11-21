@@ -5,7 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
-import { FINAL_STATUSES } from '../job.types';
+import { FINAL_STATUSES } from '../../job-manager/job.types';
 
 import './status.cell-renderer.css';
 
@@ -26,8 +26,9 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
     const finalStatusCount = FINAL_STATUSES.reduce(
       (sum: number, finalStatus: Status) => {
         const lowerCasedStatus = finalStatus.toLowerCase();
+        const statusSum = get(jobData, `${lowerCasedStatus}Tasks`) as number;
         const nextSum: number =
-          sum + (get(jobData, `${lowerCasedStatus}Tasks`) as number);
+          sum + (isNaN(statusSum) ? NO_DATA : statusSum);
 
         return nextSum;
       },
