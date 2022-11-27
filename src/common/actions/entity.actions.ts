@@ -7,6 +7,7 @@ export interface IAction {
   class: string;
   titleTranslationId: string;
   views: TabViews[];
+  dependentField?: string;
 };
 
 export interface IActionGroup {
@@ -259,7 +260,8 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             icon: '',
             class: 'mc-icon-Refresh',
             titleTranslationId: 'action.job.retry',
-            views: []
+            views: [],
+            dependentField: 'isResettable'
           },
           {
             action: 'abort',
@@ -267,7 +269,8 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             icon: '',
             class: 'mc-icon-Delete glow-missing-icon',
             titleTranslationId: 'action.job.abort',
-            views: []
+            views: [],
+            dependentField: 'isAbortable'
           },
         ],
       }

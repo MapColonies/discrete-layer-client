@@ -32,7 +32,7 @@ export interface ICommonJobManagerGridProps {
   gridStyleOverride?: React.CSSProperties;
   onGridReadyCB?: (params: GridReadyEvent) => void;
   customColDef?: (ColDef | ColGroupDef)[];
-  omitColDefsByRenderer?: string[]
+  omitColDefsByRenderer?: { renderers: string[], preserveColWidth?: boolean }
 }
 
 const pagination = true;
@@ -69,7 +69,6 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
 
   useEffect(() => {
     rowDataChangeCB();
-    console.log('here?');
   }, [rowData]);
 
   const getPriorityOptions = useMemo(() => {
@@ -216,17 +215,23 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
     let colDef: ColDef[];
 
     if(typeof omitColDefsByRenderer !== 'undefined') {
-      colDef = defaultColDef.map(colDef => {
-        if(omitColDefsByRenderer.includes(colDef.cellRenderer as string)) {
-          return ({
-            ...colDef,
-            cellRenderer: 'placeholderRenderer',
-            headerName: '',
-            pinned: undefined,
-          })
-        }
-        return colDef;
-      });
+      const renderersList = omitColDefsByRenderer.renderers;
+
+      if(!(omitColDefsByRenderer.preserveColWidth ?? false)) {
+        colDef = defaultColDef.filter(colDef => !renderersList.includes(colDef.cellRenderer as string)); 
+      } else {
+        colDef = defaultColDef.map(colDef => {
+          if(renderersList.includes(colDef.cellRenderer as string)) {
+            return ({
+              ...colDef,
+              cellRenderer: 'placeholderRenderer',
+              headerName: '',
+              pinned: undefined,
+            })
+          }
+          return colDef;
+        });
+      }
     } else {
       colDef = defaultColDef;
     }
@@ -248,7 +253,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       },
       detailsRowCellRenderer: 'detailsRenderer',
       detailsRowHeight: 230,
-      detailsRowExapnderPosition: 'start',
+      detailsRowExpanderPosition: 'start',
       overlayNoRowsTemplate: intl.formatMessage({
         id: 'results.nodata',
       }),

@@ -52,7 +52,8 @@
 }
 
 .progressPercentage {
-  color: var(--mdc-theme-text-primary-on-light);
+  color: var(--mdc-theme-text-primary-on-dark);
+  font-weight: bold;
   position: absolute;
   text-align: center;
   top: 50%;

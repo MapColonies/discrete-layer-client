@@ -20,7 +20,11 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   const jobData = props.data as JobModelType;
   const status = jobData.status;
 
-  const getProgress = (): string => {
+  const getProgress = (): string | null => {
+    if(jobData.taskCount as number === NO_DATA) {
+        return null;
+    }
+
     const SUM_INIT = 0;
 
     const finalStatusCount = FINAL_STATUSES.reduce(
@@ -47,7 +51,7 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
 
     return (
       <Box>
-        {`${statusText}  ${getProgress()}`}
+        {`${statusText}  ${getProgress() ?? ''}`}
       </Box>
     );
   };

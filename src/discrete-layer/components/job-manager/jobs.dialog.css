@@ -75,6 +75,18 @@ body[dir='rtl'] #jobsDialog .refreshContainer .refreshSecs {
   align-items: center;
 }
 
+#jobsDialog .errorContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  gap: 10px;
+}
+
+#jobsDialog .errorsList {
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
 /* Hide right header and spacer */
 #jobsDialog .ag-pinned-right-header,
 #jobsDialog .ag-horizontal-right-spacer {

@@ -24,7 +24,7 @@ interface ITaskField {
   label: string;
   valueType: ValueType;
 }
-const taskFileds: ITaskField[] = [
+const taskFields: ITaskField[] = [
   {
     label: 'system-status.task.fields.type.label',
     name: 'type',
@@ -131,13 +131,10 @@ interface TasksRendererParams {
 
 const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId, productType}) => {
   const [tasksData, setTasksData] = useState<TasksGroupModelType[]>([]);
-  const { enumsMap } = useContext(EnumsMapContext);
-  const tasksDomain = getProductDomain(productType, enumsMap ?? undefined);
 
   const { loading, data } = useQuery(
     (store) =>
       store.queryTasks({
-        domain: tasksDomain,
         params: {
           jobId,
         },
@@ -163,7 +160,7 @@ const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId, productT
   return (
     <>
       {tasksData.map((task) => {
-        return taskFileds.map((field, idx) => {
+        return taskFields.map((field, idx) => {
           return getValuePresentor(
             (task as unknown) as Record<string, unknown>,
             field,
@@ -184,7 +181,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
     <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
       <Box className="gridContainer">
-        {taskFileds.map((field) => (
+        {taskFields.map((field) => (
           <Typography
             key={`${keyPrefix}_${field.name}`}
             tag="div"

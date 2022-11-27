@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import { DialogContent } from '@material-ui/core';
-import { Button, CollapsibleList, Dialog, DialogTitle, IconButton, SimpleListItem } from '@map-colonies/react-core';
+import { Button, Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box, DateTimeRangePicker, SupportedLocales } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { IActionGroup } from '../../../common/actions/entity.actions';
@@ -17,19 +17,17 @@ import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import EnumsMapContext from '../../../common/contexts/enumsMap.context';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { JobModelType, ProductType, RecordType } from '../../models';
+import { JobModelType, RecordType } from '../../models';
 import { JOB_ENTITY } from './job.types';
-import { getProductDomain } from '../layer-details/utils';
 
 
 import './jobs.dialog.css';
-import JobManagerRasterGrid from './grids/job-manager-raster-grid.component';
-import JobManager3DGrid from './grids/job-manager-3d-grid.component';
+import JobManagerGrid from './grids/job-manager-grid.common';
 
-const START_CYCLE_ITTERACTION = 0;
+const START_CYCLE_ITERATION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
-const CONTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
-const MILISECONDS_IN_SEC = 1000;
+const COUNTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
+const MILLISECONDS_IN_SEC = 1000;
 
 interface JobsDialogProps {
   isOpen: boolean;
@@ -40,11 +38,9 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,unknown>>({}); 
-  const [gridRowDataRaster, setGridRowDataRaster] = useState<JobModelType[]>([]); 
-  const [gridRowData3D, setGridRowData3D] = useState<JobModelType[]>([]); 
-  const [gridApiRaster, setGridApiRaster] = useState<GridApi>();
-  const [gridApi3D, setGridApi3D] = useState<GridApi>();
-  const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITTERACTION);
+  const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
+  const [gridApi, setGridApi] = useState<GridApi>();
+  const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITERATION);
   const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
   const [tillDate, setTillDate] = useState<Date>(new Date());
   const { enumsMap } = useContext(EnumsMapContext);
@@ -52,7 +48,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore
-  const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, CONTDOWN_REFRESH_RATE);
+  const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, COUNTDOWN_REFRESH_RATE);
 
   // start the timer during the first render
   useEffect(() => {
@@ -120,12 +116,9 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   }
 
   useEffect(() => {
-    const combinedJobsData = data ? cloneDeep(data.jobs) : [];
-    const jobsRaster = combinedJobsData.filter(getFilterJobsPredicate(RecordType.RECORD_RASTER));
-    const jobs3D = combinedJobsData.filter(getFilterJobsPredicate(RecordType.RECORD_3D));
+    const jobsData = data ? cloneDeep(data.jobs) : [];
     
-    setGridRowDataRaster(jobsRaster);
-    setGridRowData3D(jobs3D);
+    setGridRowData(jobsData);
   }, [data]);
 
   useEffect(() => {
@@ -145,12 +138,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
 
   useEffect(() => {
     if (!isEmpty(mutationQuery.error)) {
-      gridApiRaster?.refreshCells({
-        suppressFlash: true,
-        force: true
-      });
-
-      gridApi3D?.refreshCells({
+      gridApi?.refreshCells({
         suppressFlash: true,
         force: true
       });
@@ -194,10 +182,8 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           );
           break;
         case 'Job.abort': {
-          const abortJobDomain = getProductDomain(data.productType as ProductType, enumsMap ?? undefined);
           mutationQuery.setQuery(
             store.mutateJobAbort({
-              domain: abortJobDomain,
               id: data.id as string,
             })
           );
@@ -218,58 +204,22 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     };
   }, []);
 
-  const gridTitleRaster = useMemo(() => intl.formatMessage({
-    id: `record-type.${RecordType.RECORD_RASTER.toLowerCase()}.label`,
-  }), []);
-
-  const gridTitle3D = useMemo(() => intl.formatMessage({
-    id: `record-type.${RecordType.RECORD_3D.toLowerCase()}.label`,
-  }), []);
-
   const renderGridList = (): JSX.Element => {
     return (
-      <Box className="gridsContainer">
-        <CollapsibleList
-          handle={
-            <SimpleListItem text={gridTitleRaster} metaIcon="chevron_right" />
-          }
-          defaultOpen
-        >          
-          <JobManagerRasterGrid 
+      <Box className="gridsContainer">      
+          <JobManagerGrid 
             dispatchAction={dispatchAction}
             getJobActions={getJobActions}
-            rowData={gridRowDataRaster}
+            rowData={gridRowData}
             onGridReadyCB={(params): void => {
-              setGridApiRaster(params.api)
+              setGridApi(params.api)
             }}
             priorityChangeCB={setUpdateTaskPayload}
             rowDataChangeCB={(): void => {
-              gridApiRaster?.applyTransaction({ update: gridRowDataRaster});
+              gridApi?.applyTransaction({ update: gridRowData });
             }}
+            omitColDefsByRenderer={{ renderers: ['priorityRenderer'] }}
           />
-          
-        </CollapsibleList>
-
-        <CollapsibleList
-          handle={
-            <SimpleListItem text={gridTitle3D} metaIcon="chevron_right" />
-          }
-          defaultOpen
-        >
-          <JobManager3DGrid 
-            dispatchAction={dispatchAction}
-            getJobActions={getJobActions}
-            rowData={gridRowData3D}
-            onGridReadyCB={(params): void => {
-              setGridApi3D(params.api);
-            }}
-            priorityChangeCB={setUpdateTaskPayload}
-            rowDataChangeCB={(): void => {
-              gridApi3D?.applyTransaction({ update: gridRowData3D});
-            }}
-          />
-
-        </CollapsibleList>
       </Box>
     );
   };
@@ -325,7 +275,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           >
             <IconButton className="refreshIcon mc-icon-Refresh" />
             <Box className="refreshSecs">
-              {`${(timeLeft as number) / MILISECONDS_IN_SEC}`}
+              {`${(timeLeft as number) / MILLISECONDS_IN_SEC}`}
             </Box>
           </Box>
 
@@ -339,13 +289,14 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
         <DialogContent className="jobsBody">
           {renderDateTimeRangePicker()}
           {renderGridList()}
+          
+          {
+            mutationQuery.error !== undefined && (
+              // eslint-disable-next-line
+              <GraphQLError error={mutationQuery.error} />
+            )
+          }
           <Box className="buttons">
-            {
-              mutationQuery.error !== undefined && (
-                // eslint-disable-next-line
-                <GraphQLError error={mutationQuery.error} />
-              )
-            }
             <Button
               raised
               type="button"

@@ -46,7 +46,7 @@ export interface GridValueFormatterParams extends ValueFormatterParams{};
 export interface GridComponentOptions extends GridOptions {
   detailsRowCellRenderer?: string;
   detailsRowHeight?: number;
-  detailsRowExapnderPosition?: 'start' | 'end';
+  detailsRowExpanderPosition?: 'start' | 'end';
   rowDataChangeDetectionStrategy?: ChangeDetectionStrategyType;
 };
 
@@ -62,7 +62,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
   const theme = useTheme();
   const [gridApi, setGridApi] = useState<GridApi>();
   
-  const {rowDataChangeDetectionStrategy, detailsRowExapnderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
+  const {rowDataChangeDetectionStrategy, detailsRowExpanderPosition, ...restGridOptions} = props.gridOptions as GridComponentOptions;
   const reactGridConfig = {
     rowDataChangeDetectionStrategy: rowDataChangeDetectionStrategy ?? undefined,
   };
@@ -74,7 +74,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
         field: 'isVisible',
         hide: true,
       },
-      (props.gridOptions?.detailsRowExapnderPosition ===  'start' && props.gridOptions.detailsRowCellRenderer !== undefined) ? 
+      (props.gridOptions?.detailsRowExpanderPosition ===  'start' && props.gridOptions.detailsRowCellRenderer !== undefined) ? 
         {
           headerName: '',
           width: EXPANDER_COLUMN_WIDTH,
@@ -85,7 +85,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
           hide: true,
         },
       ...props.gridOptions?.columnDefs as [],
-      (props.gridOptions?.detailsRowExapnderPosition !==  'start' && props.gridOptions?.detailsRowCellRenderer !== undefined) ? 
+      (props.gridOptions?.detailsRowExpanderPosition !==  'start' && props.gridOptions?.detailsRowCellRenderer !== undefined) ? 
         {
           headerName: '',
           width: EXPANDER_COLUMN_WIDTH,
