@@ -5,7 +5,12 @@ import {CollapseButton} from '../../collapse-button/collapse.button';
 
 import './details-expander.cell-renderer.css';
 
-export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (props) => {
+interface DetailsExpanderRendererProps extends ICellRendererParams {
+  detailsRowCellRendererPresencePredicate?: (data: any) => boolean;
+}
+
+export const DetailsExpanderRenderer: React.FC<DetailsExpanderRendererProps> = (props): JSX.Element | null => {
+  const shouldRenderBtn = props.detailsRowCellRendererPresencePredicate?.(props.data) ?? false;
 
   const handleCollapseExpand = (): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -14,7 +19,7 @@ export const DetailsExpanderRenderer: React.FC<ICellRendererParams> = (props) =>
     rowNode.setDataValue('isVisible', !isVisible);
     props.api.onFilterChanged();
   };
+  if(shouldRenderBtn) return  <CollapseButton onClick={handleCollapseExpand} />
 
-  return <CollapseButton onClick={handleCollapseExpand} />
-
+  return null;
 };

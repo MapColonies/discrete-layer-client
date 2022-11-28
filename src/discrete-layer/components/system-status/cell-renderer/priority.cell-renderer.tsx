@@ -5,7 +5,9 @@ import { get } from 'lodash';
 import {
   CircularProgress,
   FormattedOption,
+  Icon,
   Select,
+  Typography,
 } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
@@ -23,6 +25,7 @@ interface PriorityOption {
 interface IPriorityCellRendererParams extends ICellRendererParams {
   optionsData: PriorityOption[];
   onChange: (e: React.FormEvent<HTMLSelectElement>, jobData: ICellRendererParams) => void;
+  readOnly?: (jobData: JobModelType) => boolean;
 }
 
 export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
@@ -42,6 +45,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
   interface IconObj {
     icon: string;
     color: string;
+    label: string;
   }
 
   const getIconObjForVal = useCallback((val: string): IconObj => {
@@ -49,7 +53,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
       (option: PriorityOption) => option.value === val
     ) as PriorityOption;
 
-    return { icon: selectedOption.icon, color: selectedOption.iconColor };
+    return { icon: selectedOption.icon, color: selectedOption.iconColor, label: selectedOption.label };
   }, []);
 
   const [icon, setIcon] = useState(getIconObjForVal(value));
@@ -57,6 +61,49 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
   useEffect(() => {
     setIcon(getIconObjForVal(value));
   }, [value, getIconObjForVal]);
+
+  const renderPriorityPresentor = (): JSX.Element => {
+    const isReadOnlyMode = props.readOnly ? props.readOnly(jobData) : false;
+    const iconObj = {
+      icon: icon.icon,
+      style: { color: icon.color },
+      strategy: 'className',
+      basename: 'icon',
+      prefix: 'glow-missing-icon mc-icon-',
+      size: 'small',
+    };
+
+    if(isReadOnlyMode) {
+      return (
+        <Box className="priorityReadonlyPresentor">
+          <Icon
+            className="priorityIcon"
+            icon={iconObj}
+            label="IMPORT"
+          />
+
+          <Typography className="priorityReadonlyLabel" tag="p">{icon.label}</Typography>
+        </Box>
+      );
+    }
+
+    return (
+      <Select
+        disabled={disabled}
+        enhanced
+        outlined
+        className="priorityOptions"
+        value={value}
+        options={optionsData as FormattedOption[]}
+        icon={iconObj}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>): void => {
+          setLoading(true);
+          setValue(e.currentTarget.value);
+          props.onChange(e, props.data);
+        }}
+      />
+    );
+  }
 
   return (
     <Box className="priorityCellContainer">
@@ -66,27 +113,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
           <CircularProgress />
         </Box>
       }
-      <Select
-        disabled={disabled}
-        enhanced
-        outlined
-        className="priorityOptions"
-        value={value}
-        options={optionsData as FormattedOption[]}
-        icon={{
-          icon: icon.icon,
-          style: { color: icon.color },
-          strategy: 'className',
-          basename: 'icon',
-          prefix: 'glow-missing-icon mc-icon-',
-          size: 'small',
-        }}
-        onChange={(e): void => {
-          setLoading(true);
-          setValue(e.currentTarget.value);
-          props.onChange(e, props.data);
-        }}
-      />
+      {renderPriorityPresentor()}
     </Box>
   );
 };

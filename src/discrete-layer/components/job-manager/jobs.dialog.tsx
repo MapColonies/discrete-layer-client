@@ -107,13 +107,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     );
   }, [fromDate, tillDate, setQuery]);
 
-  const getFilterJobsPredicate = (requestedDomain: RecordType): ((cur: JobModelType) => boolean) => {
-    return (cur: JobModelType): boolean => {
-      const jobDomain = enumsMap?.[cur.productType as string]?.parentDomain;
+  // const getFilterJobsPredicate = (requestedDomain: RecordType): ((cur: JobModelType) => boolean) => {
+  //   return (cur: JobModelType): boolean => {
+  //     const jobDomain = enumsMap?.[cur.productType as string]?.parentDomain;
       
-      return jobDomain === requestedDomain;
-    }
-  }
+  //     return jobDomain === requestedDomain;
+  //   }
+  // }
 
   useEffect(() => {
     const jobsData = data ? cloneDeep(data.jobs) : [];
@@ -218,7 +218,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             rowDataChangeCB={(): void => {
               gridApi?.applyTransaction({ update: gridRowData });
             }}
-            omitColDefsByRenderer={{ renderers: ['priorityRenderer'] }}
           />
       </Box>
     );

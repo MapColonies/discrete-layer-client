@@ -48,6 +48,7 @@ export interface GridComponentOptions extends GridOptions {
   detailsRowHeight?: number;
   detailsRowExpanderPosition?: 'start' | 'end';
   rowDataChangeDetectionStrategy?: ChangeDetectionStrategyType;
+  detailsRowCellRendererPresencePredicate?: (data: any) => boolean;
 };
 
 export interface IGridRowDataDetailsExt {
@@ -80,6 +81,9 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
           width: EXPANDER_COLUMN_WIDTH,
           cellRenderer: 'detailsExpanderRenderer',
           suppressMovable: true,
+          cellRendererParams: {
+            detailsRowCellRendererPresencePredicate: props.gridOptions.detailsRowCellRendererPresencePredicate
+          }
         } : 
         {
           hide: true,
@@ -91,6 +95,9 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
           width: EXPANDER_COLUMN_WIDTH,
           cellRenderer: 'detailsExpanderRenderer',
           suppressMovable: true,
+          cellRendererParams: {
+            detailsRowCellRendererPresencePredicate: props.gridOptions.detailsRowCellRendererPresencePredicate
+          }
         } : 
         {
           hide: true,

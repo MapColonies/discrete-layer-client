@@ -155,6 +155,9 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
               },
             });
           },
+          readOnly: (jobData: JobModelType): boolean => {
+            return jobData.domain !== 'RASTER';
+          } 
         },
       },
       {
@@ -278,6 +281,11 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       suppressMenuHide: true, // Used to show filter icon at all times (not only when hovering the header).
       unSortIcon: true, // Used to show un-sorted icon.
       onGridReady,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      detailsRowCellRendererPresencePredicate: (rowData: any) => {
+        const jobData = rowData as JobModelType;
+        return jobData.domain === 'RASTER';
+      }
     };
 
   const gridOptions = useMemo(() => {

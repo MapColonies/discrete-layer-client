@@ -41,3 +41,14 @@
   justify-content: center;
   z-index: 2;
 }
+
+.priorityCellContainer .priorityReadonlyPresentor {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-inline: 10px;
+}
+
+.priorityCellContainer .priorityReadonlyLabel {
+  font-size: 16px;
+}
