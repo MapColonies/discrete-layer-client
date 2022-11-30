@@ -7,6 +7,8 @@ import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { ResourceUrlModel, ResourceUrlModelType } from "./ResourceUrlModel"
 import { ResourceUrlModelSelector, resourceUrlModelPrimitives } from "./ResourceUrlModel.base"
+import { TileMatrixSetModel, TileMatrixSetModelType } from "./TileMatrixSetModel"
+import { TileMatrixSetModelSelector, tileMatrixSetModelPrimitives } from "./TileMatrixSetModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -22,8 +24,8 @@ export const CapabilityModelBase = ModelBase
     id: types.identifier, //Alex change till proper deffs
     style: types.union(types.undefined, types.string),
     format: types.union(types.undefined, types.array(types.string)),
-    tileMatrixSetID: types.union(types.undefined, types.array(types.string)),
-    url: types.union(types.undefined, types.null, types.array(types.late((): any => ResourceUrlModel))),
+    tileMatrixSet: types.union(types.undefined, types.array(types.late((): any => TileMatrixSetModel))),
+    url: types.union(types.undefined, types.array(types.late((): any => ResourceUrlModel))),
   })
   .views(self => ({
     get store() {
@@ -35,11 +37,11 @@ export class CapabilityModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get style() { return this.__attr(`style`) }
   get format() { return this.__attr(`format`) }
-  get tileMatrixSetID() { return this.__attr(`tileMatrixSetID`) }
+  tileMatrixSet(builder?: string | TileMatrixSetModelSelector | ((selector: TileMatrixSetModelSelector) => TileMatrixSetModelSelector)) { return this.__child(`tileMatrixSet`, TileMatrixSetModelSelector, builder) }
   url(builder?: string | ResourceUrlModelSelector | ((selector: ResourceUrlModelSelector) => ResourceUrlModelSelector)) { return this.__child(`url`, ResourceUrlModelSelector, builder) }
 }
 export function selectFromCapability() {
   return new CapabilityModelSelector()
 }
 
-export const capabilityModelPrimitives = selectFromCapability().style.format.tileMatrixSetID.id.url(resourceUrlModelPrimitives)
+export const capabilityModelPrimitives = selectFromCapability().style.format.id.tileMatrixSet(tileMatrixSetModelPrimitives).url(resourceUrlModelPrimitives)

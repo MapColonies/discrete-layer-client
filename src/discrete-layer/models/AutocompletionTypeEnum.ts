@@ -7,15 +7,15 @@ import { types } from "mobx-state-tree"
  * Typescript enum
  */
 
-export enum AutocomplitionType {
+export enum AutocompletionType {
   DOMAIN="DOMAIN",
 SERVICE="SERVICE"
 }
 
 /**
-* AutocomplitionType
+* AutocompletionType
 */
-export const AutocomplitionTypeEnumType = types.enumeration("AutocomplitionType", [
+export const AutocompletionTypeEnumType = types.enumeration("AutocompletionType", [
         "DOMAIN",
   "SERVICE",
       ])

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
 import {
@@ -12,7 +13,8 @@ import {
   CapabilityModelType,
   LayerMetadataMixedUnion,
   LayerRasterRecordModelType,
-  LinkModelType
+  LinkModelType,
+  TileMatrixSetModelType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { ResourceUrlModelType } from '../../models/ResourceUrlModel';
@@ -113,11 +115,18 @@ export const getTokenResource = (url: string, ver?: string): CesiumResource => {
 export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, capability: CapabilityModelType | undefined): RCesiumWMTSLayerOptions => {
   let style = 'default';
   let format = 'image/jpeg';
-  let tileMatrixSetID = 'newGrids';
+  const tileMatrixSet = { tileMatrixSetID: 'newGrids', tileMatrixLabels: [] };
   if (capability) {
     style = capability.style as string;
-    format = (capability.format as string[])[0]; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
-    tileMatrixSetID = (capability.tileMatrixSetID as string[])[0]; // (!IMPORTANT) derived from raster implementation: there is only ONE surved matrix set
+    format = get(capability, 'format[0]') as string; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
+    const capabilityTileMatrixSet = get(capability, 'tileMatrixSet[0]') as TileMatrixSetModelType; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tile matrix set
+    if (capabilityTileMatrixSet.tileMatrixSetID !== null) {
+      tileMatrixSet.tileMatrixSetID = capabilityTileMatrixSet.tileMatrixSetID as string;
+    }
+    if (capabilityTileMatrixSet.tileMatrixLabels !== null) {
+      // eslint-disable-next-line
+      tileMatrixSet.tileMatrixLabels = capabilityTileMatrixSet.tileMatrixLabels;
+    }
     url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
   }
   return {
@@ -125,7 +134,8 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     layer: `${layer.productId as string}-${layer.productVersion as string}`,
     style,
     format,
-    tileMatrixSetID,
+    tileMatrixSetID: tileMatrixSet.tileMatrixSetID,
+    tileMatrixLabels: tileMatrixSet.tileMatrixLabels,
     tilingScheme: new CesiumGeographicTilingScheme()
   };
 };
