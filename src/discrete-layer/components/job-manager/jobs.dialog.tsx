@@ -14,10 +14,9 @@ import {
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import EnumsMapContext from '../../../common/contexts/enumsMap.context';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { JobModelType, RecordType } from '../../models';
+import { JobModelType } from '../../models';
 import { JOB_ENTITY } from './job.types';
 
 
@@ -43,8 +42,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITERATION);
   const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
   const [tillDate, setTillDate] = useState<Date>(new Date());
-  const { enumsMap } = useContext(EnumsMapContext);
-
   // const [retryErr, setRetryErr] = useState(false);
 
   // @ts-ignore

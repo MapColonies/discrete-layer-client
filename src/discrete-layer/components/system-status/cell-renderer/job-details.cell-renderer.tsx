@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
@@ -15,8 +15,6 @@ import { CopyButton } from '../../job-manager/job-details.copy-button';
 import { JobDetailsHeader } from './job-details.header';
 
 import './job-details.cell-renderer.css';
-import EnumsMapContext from '../../../../common/contexts/enumsMap.context';
-import { getProductDomain } from '../../layer-details/utils';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
