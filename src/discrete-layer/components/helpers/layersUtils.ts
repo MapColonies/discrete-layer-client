@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
 import {
@@ -115,27 +114,30 @@ export const getTokenResource = (url: string, ver?: string): CesiumResource => {
 export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, capability: CapabilityModelType | undefined): RCesiumWMTSLayerOptions => {
   let style = 'default';
   let format = 'image/jpeg';
-  const tileMatrixSet = { tileMatrixSetID: 'newGrids', tileMatrixLabels: [] };
+  let {tileMatrixSetID, tileMatrixLabels} = {
+    tileMatrixSetID: 'newGrids',
+    tileMatrixLabels: [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ]
+  };
   if (capability) {
     style = capability.style as string;
     format = get(capability, 'format[0]') as string; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
-    const capabilityTileMatrixSet = get(capability, 'tileMatrixSet[0]') as TileMatrixSetModelType; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tile matrix set
-    if (capabilityTileMatrixSet.tileMatrixSetID !== null) {
-      tileMatrixSet.tileMatrixSetID = capabilityTileMatrixSet.tileMatrixSetID as string;
+    const tileMatrixSet = get(capability, 'tileMatrixSet[0]') as TileMatrixSetModelType; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tile matrix set
+    if (tileMatrixSet.tileMatrixSetID !== undefined) {
+      tileMatrixSetID = tileMatrixSet.tileMatrixSetID;
     }
-    if (capabilityTileMatrixSet.tileMatrixLabels !== null) {
-      // eslint-disable-next-line
-      tileMatrixSet.tileMatrixLabels = capabilityTileMatrixSet.tileMatrixLabels;
+    if (tileMatrixSet.tileMatrixLabels !== undefined) {
+      tileMatrixLabels = tileMatrixSet.tileMatrixLabels;
     }
     url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
+    url = url.replace('http:', 'https:');
   }
   return {
     url: getTokenResource(url, layer.productVersion as string),
     layer: `${layer.productId as string}-${layer.productVersion as string}`,
     style,
     format,
-    tileMatrixSetID: tileMatrixSet.tileMatrixSetID,
-    tileMatrixLabels: tileMatrixSet.tileMatrixLabels,
+    tileMatrixSetID,
+    tileMatrixLabels,
     tilingScheme: new CesiumGeographicTilingScheme()
   };
 };

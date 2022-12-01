@@ -16,8 +16,8 @@ export const TileMatrixSetModelBase = ModelBase
   .named('TileMatrixSet')
   .props({
     __typename: types.optional(types.literal("TileMatrixSet"), "TileMatrixSet"),
-    tileMatrixSetID: types.union(types.undefined, types.null, types.string),
-    tileMatrixLabels: types.union(types.undefined, types.null, types.frozen()),
+    tileMatrixSetID: types.union(types.undefined, types.string),
+    tileMatrixLabels: types.union(types.undefined, types.array(types.string)),
   })
   .views(self => ({
     get store() {
