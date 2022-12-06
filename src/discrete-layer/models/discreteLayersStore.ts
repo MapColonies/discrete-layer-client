@@ -293,6 +293,27 @@ export const discreteLayersStore = ModelBase
       })
     }
 
+    function resetTabView(tabsToReset?: TabViews[]): void {
+      let tabsIdx: TabViews[] = self.tabViews?.map(tab => tab.idx) ?? [];
+      
+      if(tabsToReset) {
+        tabsIdx = tabsToReset;
+      }
+
+      const resetTabs = self.tabViews?.map(tab => {
+        if(tabsIdx.includes(tab.idx)) {
+          return ({
+            idx: tab.idx
+          });
+        }
+
+        return tab;
+      }) 
+
+      self.tabViews = resetTabs;
+
+    } 
+
     return {
       getLayersImages,
       setLayersImages,
@@ -316,7 +337,8 @@ export const discreteLayersStore = ModelBase
       setCapabilities,
       setBaseMaps,
       getEditablePartialObject,
-      resetAppState
+      resetAppState,
+      resetTabView,
     };
   });
 
