@@ -27,7 +27,7 @@ const TooltippedValue: React.FC<TooltippedValueProps> = ({
   ), [children]);
 
   return alwaysTooltip || (isEllipsisActive && !disableTooltip) ? (
-    <Tooltip content={customTooltipText || children}>{typographyElement}</Tooltip>
+    <Tooltip content={customTooltipText || typographyElement}>{typographyElement}</Tooltip>
   ) : (
     typographyElement
   );
