@@ -10,7 +10,7 @@ interface DetailsExpanderRendererProps extends ICellRendererParams {
 }
 
 export const DetailsExpanderRenderer: React.FC<DetailsExpanderRendererProps> = (props): JSX.Element | null => {
-  const shouldRenderBtn = props.detailsRowCellRendererPresencePredicate?.(props.data) ?? false;
+  const shouldRenderBtn = props.detailsRowCellRendererPresencePredicate?.(props.data) ?? true;
 
   const handleCollapseExpand = (): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
