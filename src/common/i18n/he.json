@@ -159,7 +159,7 @@
   "field-names.raster.ingestion-date": "קליטה בקטלוג",
   "field-names.raster.sourceDateStart": "הצילום הישן",
   "field-names.raster.sourceDateEnd": "הצילום החדש",
-  "field-names.raster.insertDate": "תאריך כניסה לקטלוג",
+  "field-names.raster.insertDate": "קליטה בקטלוג",
   "field-names.raster.type": "סוג הקטלוג",
   "field-names.raster.description": "תיאור",
   "field-names.raster.links": "קישורים",
