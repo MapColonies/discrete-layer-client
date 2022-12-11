@@ -30,6 +30,7 @@
 
 .imageryMenu {
   width: 100%;
+  box-shadow: none;
 }
 
 .imageryMenuIcon {
@@ -84,4 +85,16 @@ body[dir='rtl'] .imageryMenuIcon {
   background: var(--mdc-theme-surface);
   position: absolute;
   border-radius: 4px;
+}
+
+.menuSection{
+  padding: 10px;
+}
+
+.sectionDivider {
+  border-bottom-color: var(--mdc-theme-text-secondary-on-dark);
+}
+
+.menuAnchor {
+  position: unset;
 }
