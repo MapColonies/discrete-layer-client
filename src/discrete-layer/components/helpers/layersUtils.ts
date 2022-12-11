@@ -120,6 +120,7 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
   };
   if (capability) {
     style = capability.style as string;
+    // TODO: format should be taken from layer object from new Transparent/Opaque field if exists in capabilities, otherwise - take first (format[0])
     format = get(capability, 'format[0]') as string; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
     const tileMatrixSet = get(capability, 'tileMatrixSet[0]') as TileMatrixSetModelType; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tile matrix set
     if (tileMatrixSet.tileMatrixSetID !== undefined) {
@@ -129,7 +130,7 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
       tileMatrixLabels = tileMatrixSet.tileMatrixLabels;
     }
     url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
-    url = url.replace('http:', 'https:');
+    url = url.replace('http:', 'https:'); // (!IMPORTANT) relevant ONLY to DEM deployment and probably might be removed
   }
   return {
     url: getTokenResource(url, layer.productVersion as string),
