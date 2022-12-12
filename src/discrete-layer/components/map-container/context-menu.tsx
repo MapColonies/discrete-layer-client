@@ -32,6 +32,7 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
   menuTitle = '',
   menuTitleTooltip = '',
   children,
+  data
 }) => {
   const imageryContextMenuRef = useRef(null);
 
@@ -63,7 +64,7 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
           style={{ ...baseStyle }}
           className="imageryContextMenuTheme imageryContextMenu"
         >
-          <Box>
+          <Box className='titleContainer'>
             {menuTitle && (
               <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
             )}

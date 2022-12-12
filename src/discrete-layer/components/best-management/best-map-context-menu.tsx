@@ -156,13 +156,13 @@ export const BestMapContextMenu: React.FC<IBestMapContextMenuData> = ({
 
   return (
     <>
-      {numOfSelectedLayers > 1 && (
+      {numOfSelectedLayers > NONE && (
         <ContextMenu
           menuTitle={layerName}
           menuTitleTooltip={tooltipInfoPrefixText + layerName}
           menuSections={[actionsSection]}
           // Multi sections example
-          // menuSections={[actionsSection, [<Box>One</Box>, <Box onClick={handleClose}>Two</Box>, <Box onClick={handleClose}>Three</Box>]]}
+          // menuSections={[actionsSection ,[<Box>One</Box>, <Box onClick={handleClose}>Two</Box>, <Box onClick={handleClose}>Three</Box>]]}
           {...restProps}
         >
           {renderOverlappingSection()}

@@ -26,6 +26,7 @@ import {
   CesiumRectangle,
   CesiumSceneMode,
   DrawType,
+  IContextMenuData,
   IDrawing,
   IDrawingEvent
 } from '@map-colonies/react-components';
@@ -80,6 +81,7 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
+import { ActionsContextMenu } from '../components/map-container/actions.context-menu';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -631,6 +633,27 @@ const DiscreteLayerView: React.FC = observer(() => {
       setUserRole(store.userStore.user.role);
     }
   }, [store.userStore.user]);
+
+  const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
+    if (activeTabView === TabViews.CREATE_BEST) {
+      return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
+    }
+    // Should add global flag or find the proper condition to whether show the context menu or not.
+    return <ActionsContextMenu {...props} />;
+  };
+
+  const getContextMenuSizeTab = (): {
+    height: number;
+    width: number;
+    dynamicHeightIncrement?: number | undefined;
+  } => {
+    if (activeTabView === TabViews.CREATE_BEST) {
+      return { height: 212, width: 260, dynamicHeightIncrement: 120 };
+    }
+
+    // Should add global flag or find the proper condition to whether show the context menu or not.
+    return { height: 212, width: 260, dynamicHeightIncrement: 120 };
+  };
  
   return (
     <>
@@ -763,8 +786,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             locale = {mapSettingsLocale}
             baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
-            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName='BestRecord' /> : undefined}
-            imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
+            imageryContextMenu={<ContextMenuByTab />}
+            imageryContextMenuSize={getContextMenuSizeTab()}
             legends={{
               mapLegendsExtractor,
               title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
