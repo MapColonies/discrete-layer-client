@@ -171,6 +171,14 @@ const DiscreteLayerView: React.FC = observer(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
+
+  useEffect(() => {
+    store.mapMenusManagerStore.setMapMenus();
+  }, [])
+  
+  useEffect(() => {
+    console.log(store.mapMenusManagerStore.mapMenus);
+  }, [store.mapMenusManagerStore.mapMenus])
   
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
