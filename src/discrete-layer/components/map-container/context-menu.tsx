@@ -25,6 +25,7 @@ interface IMapContextMenuData extends IContextMenuData {
 // Children prop isn't rendered as a part of the menu, but as a separated bottom section.
 export const ContextMenu: React.FC<IMapContextMenuData> = ({
   position,
+  coordinates,
   style,
   size,
   handleClose,
