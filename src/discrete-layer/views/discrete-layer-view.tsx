@@ -82,6 +82,8 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
 import { ActionsContextMenu } from '../components/map-container/actions.context-menu';
+import useGetMenuProperties from '../../common/hooks/useGetMenuProperties.hook';
+import { MapMenusIds } from '../models/mapMenusManagerStore';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -139,6 +141,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     type: DrawType.UNKNOWN,
   }]);
 
+  const actionsContextMenuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
+
   const dispatchAction = (action: Record<string,unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
       {
@@ -172,13 +176,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
 
-  useEffect(() => {
-    store.mapMenusManagerStore.setMapMenus();
-  }, [])
-  
-  useEffect(() => {
-    console.log(store.mapMenusManagerStore.mapMenus);
-  }, [store.mapMenusManagerStore.mapMenus])
   
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
@@ -647,7 +644,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
     }
     // Should add global flag or find the proper condition to whether show the context menu or not.
-    return <ActionsContextMenu {...props} />;
+    return <ActionsContextMenu {...props} menuItems={actionsContextMenuProperties?.itemsList}/>;
   };
 
   const getContextMenuSizeTab = (): {

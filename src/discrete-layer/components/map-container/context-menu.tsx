@@ -19,7 +19,7 @@ const MARGIN_HEIGHT = 20;
 interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
   menuTitleTooltip?: string;
-  menuSections: JSX.Element[][];
+  menuSections?: JSX.Element[][];
 }
 
 // Children prop isn't rendered as a part of the menu, but as a separated bottom section.
@@ -59,7 +59,7 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
 
   return (
     <>
-      {
+      { menuSections &&
         <div
           ref={imageryContextMenuRef}
           style={{ ...baseStyle }}

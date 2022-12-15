@@ -5,11 +5,14 @@ import { ResponseState } from '../../common/models/response-state.enum';
 import ACTIONS_CONFIG, { IActionGroup, IEntityActions } from '../../common/actions/entity.actions';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
+import CONTEXT_ACTIONS_CONFIG, { IContextActions } from '../../common/actions/context.actions';
 
 export interface IDispatchAction {
   action: string;
   data: Record<string,unknown>;
 };
+
+export type CombinedActionsType = (IEntityActions | IContextActions)[];
 
 export const actionDispatcherStore = ModelBase
   .props({
@@ -17,7 +20,7 @@ export const actionDispatcherStore = ModelBase
       'State',
       Object.values(ResponseState)
     ),
-    actionsConfig: types.maybe(types.frozen<IEntityActions[]>(ACTIONS_CONFIG)),
+    actionsConfig: types.maybe(types.frozen<CombinedActionsType>([...ACTIONS_CONFIG, ...CONTEXT_ACTIONS_CONFIG])),
     action: types.maybe(types.frozen<IDispatchAction | undefined>(undefined)),
   })
   .views((self) => ({
@@ -29,13 +32,19 @@ export const actionDispatcherStore = ModelBase
     },
   }))
   .actions((self) => {
-    
+    const isContextActions = (actionsGroup: IEntityActions | IContextActions): actionsGroup is IContextActions => 'context' in actionsGroup;
+
     function getEntityActionGroups(entity: string): IActionGroup[] {
       const actions = self.actionsConfig?.find(entityActions => entityActions.entity === entity);
       return actions?.actions ?? [];
     };
 
-    function getEntityActionConfiguration(entity: string): IEntityActions | undefined {
+    function getContextActionGroups(context: string): IActionGroup[] {
+      const actions = self.actionsConfig?.find(actions => isContextActions(actions) && actions.context === context);
+      return actions?.actions ?? [];
+    };
+
+    function getEntityActionConfiguration(entity: string): IEntityActions | IContextActions | undefined {
       const actions = self.actionsConfig?.find(entityActions => entityActions.entity === entity);
       return actions ?? undefined;
     };
@@ -47,6 +56,8 @@ export const actionDispatcherStore = ModelBase
     return {
       getEntityActionGroups,
       getEntityActionConfiguration,
+      getContextActionGroups,
       dispatchAction,
+      isContextActions,
     };
   });

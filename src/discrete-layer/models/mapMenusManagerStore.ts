@@ -1,10 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { types, getParent } from 'mobx-state-tree';
+import { ApplicationContexts } from '../../common/actions/context.actions';
+import { IAction } from '../../common/actions/entity.actions';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
-type MenuItemsList = unknown[];
+interface MenuItem {
+  title: string;
+  action: IAction;
+  payloadData?: unknown;
+}
+
+export type MenuItemsList = MenuItem[][];
 
 export interface IMapMenuProperties {
   itemsList: MenuItemsList;
@@ -12,13 +20,13 @@ export interface IMapMenuProperties {
   absoluteHeight?: number;
 };
 
-export enum MapMenusNames {
+export enum MapMenusIds {
     ActionsMenu = 'ActionsMenu',
     // BestsMenu = 'BestsMenu',
 }
 
 export type MapMenus = {
-    [key in MapMenusNames]? : IMapMenuProperties;
+    [key in MapMenusIds]? : IMapMenuProperties;
 }
 
 
@@ -40,32 +48,46 @@ export const mapMenusManagerStore = ModelBase
     },
   }))
   .actions((self) => {
-    // const store = self.root;
+    const store = self.root;
 
     function getActionsMenuProperties(): MapMenus {
-        // Fetch list of actions from another store.
-        const availableActions = ['Buildings', 'Roads', 'Tiles Coordinates'];
-        
-        // Optionally add hard coded actions to the list.
-        const generalActions = ['Get Height'];
+        const WFS_SERVICE_ACTION = 'queryWfsFeature';
+        const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
+
+        const actionsMenuSections = mapContextActions.reduce((actionsSections, actionGroup) => {
+          const flatGroup: MenuItem[] = [];
+          
+          actionGroup.group.forEach(action => {
+            if(action.action === WFS_SERVICE_ACTION) {
+              const wfsAvailableFeatures: MenuItem[] = ['Buildings', 'Roads', 'Tile']
+              .map(feature => ({title: feature, action: {...action}, payloadData: { feature }}));
+
+              flatGroup.push(...wfsAvailableFeatures);
+              return;
+            }
+            flatGroup.push({title: action.titleTranslationId, action: {...action}});            
+          });
+
+          return [...actionsSections, flatGroup];
+        } ,[] as MenuItem[][])
 
         return {
-           ActionsMenu: {
-            itemsList: [...availableActions, ...generalActions],
-           }
-        };
+          ActionsMenu: {
+            itemsList: actionsMenuSections
+          }
+        }
+
     }
 
-    function setMapMenus(): void {
+    function initStore(): void {
+      if(!self.mapMenus){
         self.mapMenus = {
             ...getActionsMenuProperties(),
             // ...getBestMenuProperties(),
         }
-    }
-
-    // setMapMenus();
-   
+      }
+    }   
     return {
-        setMapMenus,
+      initStore,
     }
   });
