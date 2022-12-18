@@ -84,6 +84,7 @@ import { IDispatchAction } from '../models/actionDispatcherStore';
 import { ActionsContextMenu } from '../components/map-container/actions.context-menu';
 import useGetMenuProperties from '../../common/hooks/useGetMenuProperties.hook';
 import { MapMenusIds } from '../models/mapMenusManagerStore';
+import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/useGetMenuDimensions';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -141,7 +142,9 @@ const DiscreteLayerView: React.FC = observer(() => {
     type: DrawType.UNKNOWN,
   }]);
 
+  const actionsMenuDynamicHeight = 30;
   const actionsContextMenuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
+  const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
@@ -647,17 +650,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     return <ActionsContextMenu {...props} menuItems={actionsContextMenuProperties?.itemsList}/>;
   };
 
-  const getContextMenuSizeTab = (): {
-    height: number;
-    width: number;
-    dynamicHeightIncrement?: number | undefined;
-  } => {
+  const getContextMenuSizeTab = (): MenuDimensions => {
     if (activeTabView === TabViews.CREATE_BEST) {
       return { height: 212, width: 260, dynamicHeightIncrement: 120 };
     }
 
-    // Should add global flag or find the proper condition to whether show the context menu or not.
-    return { height: 212, width: 260, dynamicHeightIncrement: 120 };
+    return actionsContextMenuDimensions as MenuDimensions;
   };
  
   return (

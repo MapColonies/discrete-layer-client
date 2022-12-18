@@ -12,9 +12,9 @@ import { Box, IContextMenuData } from '@map-colonies/react-components';
 
 import './context-menu.css';
 
-const TITLE_HEIGHT = 24;
-const SUB_TITLE_HEIGHT = 24;
-const MARGIN_HEIGHT = 20;
+export const TITLE_HEIGHT = 24;
+export const SUB_MENU_MAX_HEIGHT = 120;
+export const MENU_HEIGHT_PADDING = 20;
 
 interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
@@ -52,20 +52,16 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
     document.addEventListener('click', handleClickOutside, false);
   });
 
-  const baseStyle = {
-    left: `${position.x}px`,
-    top: `${position.y}px`,
-  };
 
   return (
     <>
       { menuSections &&
         <div
           ref={imageryContextMenuRef}
-          style={{ ...baseStyle }}
+          style={style}
           className="imageryContextMenuTheme imageryContextMenu"
         >
-          <Box className='titleContainer'>
+          <Box style={{ height: `${TITLE_HEIGHT}px` }} className='titleContainer'>
             {menuTitle && (
               <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
             )}
@@ -79,15 +75,8 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
             )}
           </Box>
 
-          <MenuSurfaceAnchor
-            className='menuAnchor'
-            // style={{
-            //   height: `calc(${
-            //     (size as Record<string, number>).height
-            //   }px - ${TITLE_HEIGHT}px - ${SUB_TITLE_HEIGHT}px - ${MARGIN_HEIGHT}px)`,
-            // }}
-          >
-            <Menu open={true} className="imageryMenu">
+          <MenuSurfaceAnchor className='menuAnchor'>
+            <Menu open={true} className="imageryMenu" style={{ maxHeight: (size?.height ?? MENU_HEIGHT_PADDING) + MENU_HEIGHT_PADDING }}>
               {menuSections.map((section, sectionIdx) => {        
                  const sectionItems = section.map((item, itemIdx) => {
                     // Get click callback from item
@@ -112,7 +101,9 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
                 
             </Menu>
           </MenuSurfaceAnchor>
-          {children}
+          <Box style={{ maxHeight: `${SUB_MENU_MAX_HEIGHT}px` }} className='subMenuContainer'>
+            {children}
+          </Box>
         </div>
       }
     </>
