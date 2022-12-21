@@ -603,7 +603,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         }, {} as Record<LinkType, LinkModelType>)
         
         const layerLegend: IMapLegend = {
-          layer: get(cesiumLayer, 'meta.layerRecord.productId') as string,
+          layer: get(cesiumLayer, 'meta.layerRecord.productName') as string,
           legend: get(cesiumLayer, 'layerLegendsLinks.LEGEND') as Record<string, unknown>[],
           legendDoc: get(layerLegendLinks,'LEGEND_DOC.url') as string,
           legendImg: get(layerLegendLinks,'LEGEND_IMG.url') as string,

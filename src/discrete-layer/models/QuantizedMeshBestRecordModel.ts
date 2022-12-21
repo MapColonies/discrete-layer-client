@@ -24,6 +24,11 @@ export const QuantizedMeshBestRecordModel = QuantizedMeshBestRecordModelBase
     /* tslint:disable */
     insertDate: types.maybe(momentDateType),
     creationDate: types.maybe(momentDateType),
+    updateDate: types.maybe(momentDateType),
+    ingestionDate: types.maybe(momentDateType),
+    sourceDateStart: types.maybe(momentDateType),
+    sourceDateEnd: types.maybe(momentDateType),
+    validationDate: types.maybe(momentDateType),
     /* tslint:enable */
     /* eslint-enable */
 

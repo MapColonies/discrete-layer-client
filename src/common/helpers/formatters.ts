@@ -1,6 +1,8 @@
 import moment from 'moment';
 import CONFIG from '../config';
 
+export const getDateformatType = (withTime = false): string => withTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT;
+
 export interface FormatterFunc {
   (
     source: string | Date | moment.Moment | undefined,
@@ -14,10 +16,9 @@ export const stringFormatter: FormatterFunc = (val): string => {
 };
 
 export const dateFormatter: FormatterFunc = (date, withTime = false): string => {
-  const formatType = withTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT;
   // eslint-disable-next-line
   return date !== undefined && 'toISOString' in (moment(date) as moment.Moment)
-    ? moment(date).format(formatType)
+    ? moment(date).format(getDateformatType(withTime))
     : '-';
 };
 
