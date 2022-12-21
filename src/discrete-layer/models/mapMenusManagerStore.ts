@@ -37,6 +37,7 @@ export const mapMenusManagerStore = ModelBase
       Object.values(ResponseState)
     ),
     mapMenus: types.maybe(types.frozen<MapMenus>()),
+    actionsMenuFeatures: types.maybe(types.frozen<string[]>()),
 
   })
   .views((self) => ({
@@ -53,7 +54,6 @@ export const mapMenusManagerStore = ModelBase
     function getActionsMenuProperties(): MapMenus {
         const WFS_SERVICE_ACTION = 'queryWfsFeature';
         const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
-
         const actionsMenuSections = mapContextActions.reduce((actionsSections, actionGroup) => {
           const flatGroup: MenuItem[] = [];
           
@@ -86,8 +86,13 @@ export const mapMenusManagerStore = ModelBase
             // ...getBestMenuProperties(),
         }
       }
-    }   
+    }
+    
+    function setActionsMenuFeatures(actionsMenuFeatures: string[]): void {
+      self.actionsMenuFeatures = actionsMenuFeatures;
+    }
     return {
+      setActionsMenuFeatures,
       initStore,
     }
   });
