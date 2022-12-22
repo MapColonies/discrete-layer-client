@@ -3,6 +3,7 @@
 /* tslint:disable */
 
 export * from "./CapabilityModel"
+export * from "./StyleModel"
 export * from "./TileMatrixSetModel"
 export * from "./ResourceUrlModel"
 export * from "./RecordTypeEnum"
