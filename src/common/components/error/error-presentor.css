@@ -23,3 +23,7 @@ body[dir='rtl'] .errorsList {
   padding-right: 16px;
   padding-left: 6px;
 }
+
+body[dir='rtl'] .errorContainer {
+flex-direction: row-reverse;
+}

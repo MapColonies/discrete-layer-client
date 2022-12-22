@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { RecordType } from '../../discrete-layer/models';
 
 export interface IEnumDescriptor {
   enumName: string;
@@ -8,6 +9,7 @@ export interface IEnumDescriptor {
   parent: string;
   internal: boolean;
   properties: Record<string, unknown>;
+  parentDomain: string;
 }
 
 export interface IEnumsMapType {
@@ -26,7 +28,8 @@ export const DEFAULT_ENUM_DESCRIPTOR: IEnumDescriptor = {
   translationKey: 'general.missing.translation',
   parent: '',
   internal: false,
-  properties: {}
+  properties: {},
+  parentDomain: RecordType.RECORD_ALL,
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

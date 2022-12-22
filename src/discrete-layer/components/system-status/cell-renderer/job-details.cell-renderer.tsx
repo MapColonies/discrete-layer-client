@@ -9,9 +9,9 @@ import { Box } from '@map-colonies/react-components';
 import { DETAILS_ROW_ID_SUFFIX } from '../../../../common/components/grid';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { relativeDateFormatter, dateFormatter, } from '../../../../common/helpers/formatters';
-import { JobModelType, Status, TasksGroupModelType } from '../../../models';
+import { JobModelType, ProductType, Status, TasksGroupModelType } from '../../../models';
 import { useQuery } from '../../../models/RootStore';
-import { CopyButton } from '../job-details.copy-button';
+import { CopyButton } from '../../job-manager/job-details.copy-button';
 import { JobDetailsHeader } from './job-details.header';
 
 import './job-details.cell-renderer.css';
@@ -22,7 +22,7 @@ interface ITaskField {
   label: string;
   valueType: ValueType;
 }
-const taskFileds: ITaskField[] = [
+const taskFields: ITaskField[] = [
   {
     label: 'system-status.task.fields.type.label',
     name: 'type',
@@ -124,9 +124,10 @@ const getValuePresentor = (
 
 interface TasksRendererParams {
   jobId: string;
+  productType: ProductType;
 }
 
-const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
+const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId, productType}) => {
   const [tasksData, setTasksData] = useState<TasksGroupModelType[]>([]);
 
   const { loading, data } = useQuery(
@@ -157,7 +158,7 @@ const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId }) => {
   return (
     <>
       {tasksData.map((task) => {
-        return taskFileds.map((field, idx) => {
+        return taskFields.map((field, idx) => {
           return getValuePresentor(
             (task as unknown) as Record<string, unknown>,
             field,
@@ -178,7 +179,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
     <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
       <Box className="gridContainer">
-        {taskFileds.map((field) => (
+        {taskFields.map((field) => (
           <Typography
             key={`${keyPrefix}_${field.name}`}
             tag="div"
@@ -189,7 +190,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
           </Typography>
         ))}
 
-        <TasksRenderer jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
+        <TasksRenderer productType={(props.data as JobModelType).productType as ProductType} jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
       </Box>
     </Box>
   );

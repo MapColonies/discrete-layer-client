@@ -7,6 +7,7 @@ export interface IAction {
   class: string;
   titleTranslationId: string;
   views: TabViews[];
+  dependentField?: string;
 };
 
 export interface IActionGroup {
@@ -253,22 +254,24 @@ const ACTIONS_CONFIG: IEntityActions[] = [
         titleTranslationId: 'OperationsOnJobs',
         type: 'jobActions',
         group: [
-          // {
-          //   action: 'retry',
-          //   frequent: false,
-          //   icon: '',
-          //   class: 'mc-icon-Refresh',
-          //   titleTranslationId: 'action.job.retry',
-          //   views: []
-          // },
-          // {
-          //   action: 'abort',
-          //   frequent: false,
-          //   icon: '',
-          //   class: 'mc-icon-Delete glow-missing-icon',
-          //   titleTranslationId: 'action.job.abort',
-          //   views: []
-          // }
+          {
+            action: 'retry',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Refresh',
+            titleTranslationId: 'action.job.retry',
+            views: [],
+            dependentField: 'isResettable'
+          },
+          {
+            action: 'abort',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Delete glow-missing-icon',
+            titleTranslationId: 'action.job.abort',
+            views: [],
+            dependentField: 'isAbortable'
+          },
         ],
       }
     ]

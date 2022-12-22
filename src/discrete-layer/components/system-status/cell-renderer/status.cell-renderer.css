@@ -32,6 +32,7 @@
 .progressSectionsContainer {
   display:flex;
   align-items: flex-start;
+  position: relative;
 }
 .statusBarContainer {
   display: flex;
@@ -48,4 +49,16 @@
 .statusBar {
   border: 1px solid rgba(255, 255, 255, 0.5);
   overflow: hidden;
+}
+
+.progressPercentage {
+  color: var(--mdc-theme-text-primary-on-dark);
+  font-weight: bold;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;  
+  padding-bottom: 8px;
 }

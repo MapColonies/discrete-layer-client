@@ -430,3 +430,7 @@ export const getEnumKeys = (enumsMap: IEnumsMapType, enumName: string, parent?: 
       return enumsMap[key].enumName === enumName;
     });
 };
+
+export const getProductDomain = (productType: ProductType, enumsMap?: IEnumsMapType): string => {
+  return enumsMap?.[productType as string]?.parentDomain as string;
+}
