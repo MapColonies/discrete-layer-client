@@ -65,11 +65,26 @@ body[dir='rtl'] #jobsDialog .refreshContainer .refreshSecs {
 }
 
 #jobsDialog .buttons {
+  position: absolute;
+  bottom: 0;
+  right: 0;
   display: flex;
   justify-content: flex-end;
   gap: 20px;
   margin: 20px;
   align-items: center;
+}
+
+#jobsDialog .errorContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  gap: 10px;
+}
+
+#jobsDialog .errorsList {
+  overflow-x: hidden;
+  overflow-y: overlay;
 }
 
 /* Hide right header and spacer */
@@ -127,6 +142,22 @@ body[dir='rtl'] .jobsBody .ag-pinned-right-cols-container {
 #jobsDialog .ag-row.ag-full-width-row.ag-row-selected[row-id*="details"] {
   background: unset;
   overflow: visible;
+}
+
+#jobsDialog .gridsContainer {
+  margin-top: 10px;
+  height: calc(100% - 120px);
+  overflow-y: overlay;
+}
+
+#jobsDialog .rmwc-collapsible-list__children-inner {
+  height: 500px;
+}
+
+#jobsDialog .rmwc-collapsible-list .rmwc-collapsible-list__handle {
+  width: 80%;
+  margin: 0 auto;
+  border-bottom: 2px solid var(--mdc-theme-gc-selection-background);
 }
 
 .jobsBody .actionsContainer {

@@ -42,7 +42,7 @@ import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialog } from '../components/layer-details/entity.dialog';
 // import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
-import { JobsDialog } from '../components/system-status/jobs.dialog';
+import { JobsDialog } from '../components/job-manager/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import {

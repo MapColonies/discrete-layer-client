@@ -43,6 +43,9 @@ export const JobModelBase = ModelBase
     pendingTasks: types.union(types.undefined, types.null, types.number),
     inProgressTasks: types.union(types.undefined, types.null, types.number),
     isCleaned: types.union(types.undefined, types.null, types.boolean),
+    domain: types.union(types.undefined, types.null, types.string),
+    isResettable: types.union(types.undefined, types.null, types.boolean),
+    isAbortable: types.union(types.undefined, types.null, types.boolean),
   })
   .views(self => ({
     get store() {
@@ -75,9 +78,12 @@ export class JobModelSelector extends QueryBuilder {
   get pendingTasks() { return this.__attr(`pendingTasks`) }
   get inProgressTasks() { return this.__attr(`inProgressTasks`) }
   get isCleaned() { return this.__attr(`isCleaned`) }
+  get domain() { return this.__attr(`domain`) }
+  get isResettable() { return this.__attr(`isResettable`) }
+  get isAbortable() { return this.__attr(`isAbortable`) }
 }
 export function selectFromJob() {
   return new JobModelSelector()
 }
 
-export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.id
+export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.domain.isResettable.isAbortable.id
