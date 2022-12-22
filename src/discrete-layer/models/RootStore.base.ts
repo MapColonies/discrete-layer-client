@@ -324,6 +324,7 @@ export enum RootStoreBaseMutations {
 mutateUpdateStatus="mutateUpdateStatus",
 mutateUpdateMetadata="mutateUpdateMetadata",
 mutateStartRasterIngestion="mutateStartRasterIngestion",
+mutateStartRasterUpdateGeopkg="mutateStartRasterUpdateGeopkg",
 mutateStart3DIngestion="mutateStart3DIngestion",
 mutateStartDemIngestion="mutateStartDemIngestion",
 mutateUpdateJob="mutateUpdateJob",
@@ -435,6 +436,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     mutateStartRasterIngestion(variables: { data: IngestionRasterData }, optimisticUpdate?: () => void) {
       return self.mutate<{ startRasterIngestion: string }>(`mutation startRasterIngestion($data: IngestionRasterData!) { startRasterIngestion(data: $data) }`, variables, optimisticUpdate)
+    },
+    mutateStartRasterUpdateGeopkg(variables: { data: IngestionRasterData }, optimisticUpdate?: () => void) {
+      return self.mutate<{ startRasterUpdateGeopkg: string }>(`mutation startRasterUpdateGeopkg($data: IngestionRasterData!) { startRasterUpdateGeopkg(data: $data) }`, variables, optimisticUpdate)
     },
     mutateStart3DIngestion(variables: { data: Ingestion3DData }, optimisticUpdate?: () => void) {
       return self.mutate<{ start3DIngestion: string }>(`mutation start3DIngestion($data: Ingestion3DData!) { start3DIngestion(data: $data) }`, variables, optimisticUpdate)
