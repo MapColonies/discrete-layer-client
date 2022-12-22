@@ -14,6 +14,12 @@ export const WfsFeaturesFetcher: React.FC = observer(() => {
         store.mapMenusManagerStore.setActionsMenuFeatures(featureTypes);
     }
   }, [wfsGetFeatureTypesQuery.data, wfsGetFeatureTypesQuery.loading])
+
+  useEffect(() => {
+    if(store.mapMenusManagerStore.actionsMenuFeatures) {
+      store.mapMenusManagerStore.initStore();
+    }
+  }, [store.mapMenusManagerStore.actionsMenuFeatures])
   
   return null;
 });

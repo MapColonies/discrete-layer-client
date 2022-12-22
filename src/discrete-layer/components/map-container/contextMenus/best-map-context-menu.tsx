@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
-import { IActionGroup } from '../../../common/actions/entity.actions';
-import { TabViews } from '../../views/tab-views';
-import { useStore } from '../../models/RootStore';
-import { ContextMenu } from '../map-container/context-menu';
+import { IActionGroup } from '../../../../common/actions/entity.actions';
+import { TabViews } from '../../../views/tab-views';
+import { useStore } from '../../../models/RootStore';
+import { ContextMenu } from './context-menu';
 import { get } from 'lodash';
 import { Icon, Tooltip } from '@map-colonies/react-core';
 

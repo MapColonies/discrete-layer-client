@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { types, getParent } from 'mobx-state-tree';
-import { ApplicationContexts } from '../../common/actions/context.actions';
+import { ApplicationContexts, ContextActions } from '../../common/actions/context.actions';
 import { IAction } from '../../common/actions/entity.actions';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
+import {GetFeatureModelType} from './GetFeatureModel';
+import { WfsGetFeatureParams } from './RootStore.base';
 
 interface MenuItem {
   title: string;
   action: IAction;
-  payloadData?: unknown;
+  payloadData?: Record<string, unknown>;
 }
 
 export type MenuItemsList = MenuItem[][];
@@ -29,6 +31,7 @@ export type MapMenus = {
     [key in MapMenusIds]? : IMapMenuProperties;
 }
 
+export type WfsFeatureInfo = GetFeatureModelType & Pick<WfsGetFeatureParams, 'pointCoordinates'>;
 
 export const mapMenusManagerStore = ModelBase
   .props({
@@ -38,7 +41,7 @@ export const mapMenusManagerStore = ModelBase
     ),
     mapMenus: types.maybe(types.frozen<MapMenus>()),
     actionsMenuFeatures: types.maybe(types.frozen<string[]>()),
-
+    currentWfsFeatureInfo: types.maybe(types.frozen<WfsFeatureInfo>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -51,15 +54,18 @@ export const mapMenusManagerStore = ModelBase
   .actions((self) => {
     const store = self.root;
 
-    function getActionsMenuProperties(): MapMenus {
-        const WFS_SERVICE_ACTION = 'queryWfsFeature';
+    function getActionsMenuProperties(featureTypes?: string[]): MapMenus {
         const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
         const actionsMenuSections = mapContextActions.reduce((actionsSections, actionGroup) => {
           const flatGroup: MenuItem[] = [];
           
           actionGroup.group.forEach(action => {
-            if(action.action === WFS_SERVICE_ACTION) {
-              const wfsAvailableFeatures: MenuItem[] = ['Buildings', 'Roads', 'Tile']
+            // Exclude forbidden actions from list.
+            if(!(store.userStore.isActionAllowed(action.action) as boolean)) return;
+
+            if(action.action === ContextActions.QUERY_WFS_FEATURE) {
+              const featureTypesList = (featureTypes ?? self.actionsMenuFeatures) ?? [];
+              const wfsAvailableFeatures: MenuItem[] = featureTypesList
               .map(feature => ({title: feature, action: {...action}, payloadData: { feature }}));
 
               flatGroup.push(...wfsAvailableFeatures);
@@ -68,7 +74,12 @@ export const mapMenusManagerStore = ModelBase
             flatGroup.push({title: action.titleTranslationId, action: {...action}});            
           });
 
-          return [...actionsSections, flatGroup];
+          // Omit empty sections
+          if(flatGroup.length) {
+            return [...actionsSections, flatGroup];
+          }
+
+          return [...actionsSections];
         } ,[] as MenuItem[][])
 
         return {
@@ -80,19 +91,22 @@ export const mapMenusManagerStore = ModelBase
     }
 
     function initStore(): void {
-      if(!self.mapMenus){
         self.mapMenus = {
             ...getActionsMenuProperties(),
             // ...getBestMenuProperties(),
         }
-      }
     }
     
     function setActionsMenuFeatures(actionsMenuFeatures: string[]): void {
       self.actionsMenuFeatures = actionsMenuFeatures;
     }
+
+    function setCurrentWfsFeatureInfo(currentFeatureInfo: WfsFeatureInfo): void {
+      self.currentWfsFeatureInfo = currentFeatureInfo;
+    }
     return {
       setActionsMenuFeatures,
+      setCurrentWfsFeatureInfo,
       initStore,
     }
   });

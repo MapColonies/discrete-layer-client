@@ -1,8 +1,8 @@
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 import React from 'react';
-import { useStore } from '../../models';
-import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { MenuItemsList } from '../../models/mapMenusManagerStore';
+import { useStore } from '../../../models';
+import { IDispatchAction } from '../../../models/actionDispatcherStore';
+import { MenuItemsList } from '../../../models/mapMenusManagerStore';
 import { ContextMenu } from './context-menu';
 
 interface IActionsContextMenuProps extends IContextMenuData {
@@ -13,10 +13,10 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   menuItems,
   ...restProps
 }) => {
-  const { handleClose } = restProps;
+  const { handleClose, coordinates } = restProps;
   const store = useStore();
 
-  const dispatchAction = (action: Record<string, unknown>): void => {
+  const dispatchAction = (action: IDispatchAction): void => {
     store.actionDispatcherStore.dispatchAction({
       action: action.action,
       data: action.data,
@@ -28,7 +28,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
       return section.map((item) => {
         const actionToDispatch = {
           action: item.action.action,
-          data: item.payloadData
+          data: { ...item.payloadData, coordinates }
         };
 
         const onItemClick = (): void => {
@@ -46,7 +46,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   };
 
   return (
-  
+
         <ContextMenu
           menuTitle="Query Services"
           menuSections={getMenuSections()}

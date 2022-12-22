@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useRef } from 'react';
+import React, { MouseEventHandler, useEffect, useMemo, useRef } from 'react';
 import { get } from 'lodash';
 import {
   Icon,
@@ -22,10 +22,12 @@ interface IMapContextMenuData extends IContextMenuData {
   menuSections?: JSX.Element[][];
 }
 
+const NONE = 0;
+
 // Children prop isn't rendered as a part of the menu, but as a separated bottom section.
 export const ContextMenu: React.FC<IMapContextMenuData> = ({
   position,
-  coordinates,
+  // coordinates,
   style,
   size,
   handleClose,
@@ -52,10 +54,11 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
     document.addEventListener('click', handleClickOutside, false);
   });
 
+  const hasSections = useMemo(() => (menuSections?.length ?? NONE) > NONE, [menuSections])
 
   return (
     <>
-      { menuSections &&
+      { menuSections && hasSections &&
         <div
           ref={imageryContextMenuRef}
           style={style}
@@ -90,10 +93,10 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
                       </MenuItem>
                     )
                   });
-
+                  
                   const lastSectionIdx = menuSections.length - 1;
                   if(sectionIdx < lastSectionIdx && section.length) {
-                    sectionItems.push(<ListDivider className='sectionDivider'/>);
+                    sectionItems.push(<ListDivider key={`sectionDivider_${sectionIdx}}`} className='sectionDivider'/>);
                   }
 
                   return sectionItems;

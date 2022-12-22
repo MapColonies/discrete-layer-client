@@ -21,6 +21,7 @@ import {
   Box,
   CesiumColor,
   CesiumDrawingsDataSource,
+  CesiumGeojsonLayer,
   CesiumMap,
   CesiumPolylineDashMaterialProperty,
   CesiumRectangle,
@@ -59,7 +60,7 @@ import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
-import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { BestMapContextMenu } from '../components/map-container/contextMenus/best-map-context-menu';
 import { generateFactoredLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
@@ -81,7 +82,7 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
-import { ActionsContextMenu } from '../components/map-container/actions.context-menu';
+import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
 import useGetMenuProperties from '../../common/hooks/useGetMenuProperties.hook';
 import { MapMenusIds } from '../models/mapMenusManagerStore';
 import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/useGetMenuDimensions';
@@ -173,6 +174,11 @@ const DiscreteLayerView: React.FC = observer(() => {
       </>
     );
   }, []);
+
+
+  useEffect(() => {
+    console.log("store.mapMenusManagerStore.currentWfsFeatureInfo", store.mapMenusManagerStore.currentWfsFeatureInfo);
+  }, [store.mapMenusManagerStore.currentWfsFeatureInfo])
 
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
@@ -815,6 +821,11 @@ const DiscreteLayerView: React.FC = observer(() => {
                 material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
               />
               <Terrain/>
+              {
+                // JUST AN EXAMPLE TEMPORARY!!
+                // eslint-disable-next-line
+                store.mapMenusManagerStore.currentWfsFeatureInfo && <CesiumGeojsonLayer data={store.mapMenusManagerStore.currentWfsFeatureInfo.features?.[0]?.geometry}/>
+              }
               {
                 poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }

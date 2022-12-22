@@ -45,4 +45,4 @@ export function selectFromGetFeature() {
   return new GetFeatureModelSelector()
 }
 
-export const getFeatureModelPrimitives = selectFromGetFeature().type.totalFeatures.numberMatched.numberReturned.timeStamp.crs
+export const getFeatureModelPrimitives = selectFromGetFeature().features(selector => selector.geometry.id.properties.type).type.totalFeatures.numberMatched.numberReturned.timeStamp.crs

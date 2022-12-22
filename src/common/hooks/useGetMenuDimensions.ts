@@ -1,7 +1,7 @@
 import { useTheme } from "@map-colonies/react-core";
 import { get } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import { TITLE_HEIGHT, SUB_MENU_MAX_HEIGHT } from "../../discrete-layer/components/map-container/context-menu";
+import { TITLE_HEIGHT, SUB_MENU_MAX_HEIGHT } from "../../discrete-layer/components/map-container/contextMenus/context-menu";
 import { useStore } from "../../discrete-layer/models";
 import { MapMenusIds, IMapMenuProperties } from "../../discrete-layer/models/mapMenusManagerStore";
 import { IDimensions } from "./useElementDimensions.hook";

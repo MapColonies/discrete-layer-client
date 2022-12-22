@@ -66,10 +66,9 @@ export const StoreProvider = rootStoreContext.Provider;
 export const useStore = (): IRootStore | IBaseRootStore => {
   const store = useContext(rootStoreContext);
 
-  // Used to init stores
-  ((): void => {
-    store.mapMenusManagerStore.initStore();
-  })();
+  // // Used to init stores
+  // ((): void => {
+  // })();
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (store === null) {
