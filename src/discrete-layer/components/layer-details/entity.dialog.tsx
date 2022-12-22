@@ -36,6 +36,7 @@ import {
   Layer3DRecordInput,
   LayerDemRecordInput,
   LayerRasterRecordInput,
+  RootStoreBaseMutations,
 } from '../../models/RootStore.base';
 import { UserAction } from '../../models/userStore';
 import {
@@ -187,6 +188,106 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       );
     };
 
+    const handleIngestQueries = (): void => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { directory, fileNames, __typename, ...metadata } = inputValues;
+      switch (recordType) {
+        case RecordType.RECORD_DEM:
+          mutationQuery.setQuery(
+            store.mutateStartDemIngestion({
+              data: {
+                directory: directory as string,
+                fileNames: (fileNames as string).split(','),
+                metadata: metadata as LayerDemRecordInput,
+                type: RecordType.RECORD_DEM,
+              },
+            })
+          );
+          break;
+        case RecordType.RECORD_3D:
+          mutationQuery.setQuery(
+            store.mutateStart3DIngestion({
+              data: {
+                directory: directory as string,
+                fileNames: [fileNames as string],
+                metadata: metadata as Layer3DRecordInput,
+                type: RecordType.RECORD_3D,
+              },
+            })
+          );
+          break;
+        case RecordType.RECORD_RASTER:
+          mutationQuery.setQuery(
+            store.mutateStartRasterIngestion({
+              data: {
+                directory: directory as string,
+                fileNames: (fileNames as string).split(','),
+                metadata: metadata as LayerRasterRecordInput,
+                type: RecordType.RECORD_RASTER,
+              },
+            })
+          );
+          break;
+        default:
+          break;
+      }
+    };
+
+    const handleEditQueries = (): void => {
+      if (inputValues.__typename !== 'BestRecord') {
+        mutationQuery.setQuery(
+          store.mutateUpdateMetadata({
+            data: {
+              id: inputValues.id as string,
+              type: inputValues.type as RecordType,
+              partialRecordData: getPartialRecord(inputValues as Record<string, unknown> as Partial<ILayerImage>, descriptors as FieldConfigModelType[], IS_EDITABLE),
+            },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          store.bestStore.editBest({
+            ...(inputValues as BestRecordModelType),
+            // @ts-ignore
+            sensors:
+              inputValues.sensors !== undefined
+                ? (JSON.parse(
+                    '[' + (inputValues.sensors as string) + ']'
+                  ) as string[])
+                : [],
+          });
+        }, IMMEDIATE_EXECUTION);
+        closeDialog();
+      }
+    };
+
+    const handleUpdateQueries = (): void => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { directory, fileNames, __typename, ...metadata } = inputValues;
+      if(recordType === RecordType.RECORD_RASTER) {
+        mutationQuery.setQuery(
+          store.mutateStartRasterUpdateGeopkg({
+            data: {
+              directory: directory as string,
+              fileNames: (fileNames as string).split(','),
+              metadata: metadata as LayerRasterRecordInput,
+              type: RecordType.RECORD_RASTER,
+            },
+          })
+        );
+      }
+    };
+
+    const checkHasQueriesSucceeded = (): boolean => {
+      const SUCCESS_RESPONSE_VAL = 'ok';
+
+      const mutationServices = ['updateMetadata', 'start3DIngestion', 'startRasterIngestion', 'startRasterUpdateGeopkg'];
+      const hasAnyQuerySucceeded = Object.entries(mutationQuery.data ?? {})
+      .some(([key, val]) => mutationServices.includes(key) && val === SUCCESS_RESPONSE_VAL);
+      
+      return hasAnyQuerySucceeded;
+    }
+
     useEffect(() => {
       if (!isEmpty(descriptors) && !isEmpty(layerRecord)) {
         setIsAllInfoReady(true);
@@ -330,75 +431,16 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     useEffect(() => {
       if (vestValidationResults.errorCount === NONE) {
-        if (mode === Mode.EDIT) {
-          if (inputValues.__typename !== 'BestRecord') {
-            mutationQuery.setQuery(
-              store.mutateUpdateMetadata({
-                data: {
-                  id: inputValues.id as string,
-                  type: inputValues.type as RecordType,
-                  partialRecordData: getPartialRecord(inputValues as Record<string, unknown> as Partial<ILayerImage>, descriptors as unknown[] as FieldConfigModelType[], IS_EDITABLE),
-                },
-              })
-            );
-          } else {
-            setTimeout(() => {
-              store.bestStore.editBest({
-                ...(inputValues as BestRecordModelType),
-                // @ts-ignore
-                sensors:
-                  inputValues.sensors !== undefined
-                    ? (JSON.parse(
-                        '[' + (inputValues.sensors as string) + ']'
-                      ) as string[])
-                    : [],
-              });
-            }, IMMEDIATE_EXECUTION);
-            closeDialog();
-          }
-        } else {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          const { directory, fileNames, __typename, ...metadata } = inputValues;
-          switch (recordType) {
-            case RecordType.RECORD_DEM:
-              mutationQuery.setQuery(
-                store.mutateStartDemIngestion({
-                  data: {
-                    directory: directory as string,
-                    fileNames: (fileNames as string).split(','),
-                    metadata: metadata as LayerDemRecordInput,
-                    type: RecordType.RECORD_DEM,
-                  },
-                })
-              );
-              break;
-            case RecordType.RECORD_3D:
-              mutationQuery.setQuery(
-                store.mutateStart3DIngestion({
-                  data: {
-                    directory: directory as string,
-                    fileNames: [fileNames as string],
-                    metadata: metadata as Layer3DRecordInput,
-                    type: RecordType.RECORD_3D,
-                  },
-                })
-              );
-              break;
-            case RecordType.RECORD_RASTER:
-              mutationQuery.setQuery(
-                store.mutateStartRasterIngestion({
-                  data: {
-                    directory: directory as string,
-                    fileNames: (fileNames as string).split(','),
-                    metadata: metadata as LayerRasterRecordInput,
-                    type: RecordType.RECORD_RASTER,
-                  },
-                })
-              );
-              break;
-            default:
-              break;
-          }
+        switch(mode) {
+          case Mode.NEW:
+            handleIngestQueries();
+          break;
+          case Mode.EDIT:
+            handleEditQueries();
+          break;
+          case Mode.UPDATE:
+            handleUpdateQueries();
+          break;
         }
       }
     }, [vestValidationResults]);
@@ -408,8 +450,9 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     }, [onSetOpen]);
 
     useEffect(() => {
-      // @ts-ignore
-      if (!mutationQuery.loading && (mutationQuery.data?.updateMetadata === 'ok' || mutationQuery.data?.start3DIngestion === 'ok' || mutationQuery.data?.startRasterIngestion === 'ok')) {
+      const hasAnyQuerySucceeded = checkHasQueriesSucceeded();
+
+      if (!mutationQuery.loading && hasAnyQuerySucceeded) {
         closeDialog();
         
         dispatchAction({ 

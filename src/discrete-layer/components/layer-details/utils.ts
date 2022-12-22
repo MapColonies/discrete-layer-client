@@ -36,6 +36,8 @@ import {
   QuantizedMeshBestRecordModelArray
 } from './entity-types-keys';
 
+const JSON_INDENTATION = 4;
+
 export const getEntityDescriptors = (
   layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
   entityDescriptors: EntityDescriptorModelType[]
@@ -250,11 +252,8 @@ export const extractUpdateRelatedFieldNames = (record: ILayerImage, descriptors:
   return updateRulesFields.map(field => field.fieldName) as string[];
 };
 
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function downloadJSONToClient(jsonObj: Record<any, any>, fileName: string): void {
-  const JSON_INDENTATION = 4;
-
   const link = document.createElement('a');
   link.setAttribute('href', `data:text/json;charset=utf-8,${encodeURIComponent(
     JSON.stringify(jsonObj, null, JSON_INDENTATION)
@@ -268,45 +267,39 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
   const input = document.createElement('input');
   input.setAttribute('type', 'file');
   input.setAttribute('accept', '.json');
-  input.addEventListener('change',(e): void => {
-    const target = (e.currentTarget  as HTMLInputElement);
-    if(target.files) {
+  input.addEventListener('change', (e): void => {
+    const target = (e.currentTarget as HTMLInputElement);
+    if (target.files) {
       const file = target.files[0];
       const fileReader = new FileReader();
       fileReader.readAsText(file);
-
-      fileReader.addEventListener('load' , (e) => {
+      fileReader.addEventListener('load', (e) => {
         fileLoadCB(e);
         input.remove();
       });
     }
-   })
-
+  });
   input.click();
 }  
 
 export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void): void {
   const input = document.createElement('input');
   const supportedExtensions = ['.shp', '.zip'];
-
   input.setAttribute('type', 'file');
   input.setAttribute('accept', supportedExtensions.join(','));
-
   input.addEventListener('change',(e): void => {
-    const target = (e.currentTarget  as HTMLInputElement);
-    if(target.files) {
+    const target = (e.currentTarget as HTMLInputElement);
+    if (target.files) {
       const file = target.files[0];
       const fileType = file.name.split('.').pop();
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
-
-      fileReader.addEventListener('load' , (e) => {
+      fileReader.addEventListener('load', (e) => {
         fileLoadCB(e, fileType as string);
         input.remove();
       });
     }
-   })
-
+  });
   input.click();
 }  
 

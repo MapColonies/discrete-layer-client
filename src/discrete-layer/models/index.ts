@@ -3,6 +3,9 @@
 /* tslint:disable */
 
 export * from "./CapabilityModel"
+export * from "./StyleModel"
+export * from "./TileMatrixSetModel"
+export * from "./ResourceUrlModel"
 export * from "./RecordTypeEnum"
 export * from "./LayerMetadataMixedModelSelector"
 export * from "./Layer3DRecordModel"
@@ -26,7 +29,7 @@ export * from "./CategoryConfigModel"
 export * from "./FieldCategoryEnum"
 export * from "./FieldConfigModel"
 export * from "./AutocompletionModel"
-export * from "./AutocomplitionTypeEnum"
+export * from "./AutocompletionTypeEnum"
 export * from "./ValidationConfigModel"
 export * from "./ValidationValueTypeEnum"
 export * from "./EnumAspectsModel"
