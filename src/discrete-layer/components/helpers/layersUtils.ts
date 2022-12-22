@@ -12,9 +12,12 @@ import {
   CapabilityModelType,
   LayerMetadataMixedUnion,
   LayerRasterRecordModelType,
-  LinkModelType
+  LinkModelType,
+  StyleModelType,
+  TileMatrixSetModelType
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
+import { ResourceUrlModelType } from '../../models/ResourceUrlModel';
 
 const DEFAULT_RECTANGLE_FACTOR = 0.2;
 
@@ -25,7 +28,6 @@ export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): CesiumRe
 
 export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, factor = DEFAULT_RECTANGLE_FACTOR): CesiumRectangle => {
   const rectWithBuffers = generateLayerRectangle(layer);
-
   rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * factor;
   rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * factor;
   rectWithBuffers.south = rectWithBuffers.south - rectWithBuffers.height * factor;
@@ -33,9 +35,13 @@ export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, f
   return rectWithBuffers;
 };
 
-
 export const findLayerLink = (layer: ILayerImage): LinkModelType | undefined => {
-  return layer.links?.find((link: LinkModelType) => [LinkType.WMTS_TILE as string, LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;
+  let wmtsLayer = layer.links?.find((link: LinkModelType) => [LinkType.WMTS_LAYER as string].includes(link.protocol as string)) as LinkModelType | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (wmtsLayer === undefined) {
+    wmtsLayer = layer.links?.find((link: LinkModelType) => [LinkType.WMTS as string].includes(link.protocol as string)) as LinkModelType | undefined;
+  }
+  return wmtsLayer;
 };
 
 export const getLayerLink = (layer: ILayerImage): LinkModelType => {
@@ -82,7 +88,7 @@ export const getLinksArrWithTokens = (links: LinkModelType[]): LinkModelType[] =
   return linksWithTokens;
 };
 
-export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResource => {
+export const getTokenResource = (url: string, ver?: string): CesiumResource => {
   const tokenProps: Record<string, unknown> = { url };
   
   // eslint-disable-next-line
@@ -100,7 +106,7 @@ export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResour
 
   tokenProps.queryParameters = {
     ...(tokenProps.queryParameters as Record<string, unknown>),
-    ver
+    ...(typeof ver !== 'undefined' ? { ver } : {})
   };
 
   return new CesiumResource({...tokenProps as unknown as CesiumResource});
@@ -109,11 +115,24 @@ export const getTokenResource = (url: string, ver = 'not_defined'): CesiumResour
 export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, capability: CapabilityModelType | undefined): RCesiumWMTSLayerOptions => {
   let style = 'default';
   let format = 'image/jpeg';
-  let tileMatrixSetID = 'newGrids';
+  let {tileMatrixSetID, tileMatrixLabels} = {
+    tileMatrixSetID: 'newGrids',
+    tileMatrixLabels: [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ]
+  };
   if (capability) {
-    style = capability.style as string;
-    format = (capability.format as string[])[0];
-    tileMatrixSetID = (capability.tileMatrixSet as string[])[0];
+    const defaultStyle = (capability.style as StyleModelType[]).find((s: StyleModelType) => s.isDefault !== undefined && s.isDefault === 'true')?.value;
+    style = defaultStyle !== undefined ? defaultStyle : (get(capability, style[0]) as StyleModelType).value as string;
+    // TODO: format should be taken from layer object from new Transparent/Opaque field if exists in capabilities, otherwise - take first (format[0])
+    format = get(capability, 'format[0]') as string; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
+    const tileMatrixSet = get(capability, 'tileMatrixSet[0]') as TileMatrixSetModelType; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tile matrix set
+    if (tileMatrixSet.tileMatrixSetID !== undefined) {
+      tileMatrixSetID = tileMatrixSet.tileMatrixSetID;
+    }
+    if (tileMatrixSet.tileMatrixLabels !== undefined) {
+      tileMatrixLabels = tileMatrixSet.tileMatrixLabels;
+    }
+    url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
+    url = url.replace('http:', 'https:'); // (!IMPORTANT) relevant ONLY to DEM deployment and probably might be removed
   }
   return {
     url: getTokenResource(url, layer.productVersion as string),
@@ -121,6 +140,7 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     style,
     format,
     tileMatrixSetID,
+    tileMatrixLabels,
     tilingScheme: new CesiumGeographicTilingScheme()
   };
 };

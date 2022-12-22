@@ -5,7 +5,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { AutocomplitionTypeEnumType } from "./AutocomplitionTypeEnum"
+import { AutocompletionTypeEnumType } from "./AutocompletionTypeEnum"
 import { RootStoreType } from "./index"
 
 
@@ -17,7 +17,7 @@ export const AutocompletionModelBase = ModelBase
   .named('Autocompletion')
   .props({
     __typename: types.optional(types.literal("Autocompletion"), "Autocompletion"),
-    type: types.union(types.undefined, AutocomplitionTypeEnumType),
+    type: types.union(types.undefined, AutocompletionTypeEnumType),
     value: types.union(types.undefined, types.string),
   })
   .views(self => ({
