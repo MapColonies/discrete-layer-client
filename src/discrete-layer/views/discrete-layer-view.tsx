@@ -44,7 +44,7 @@ import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialog } from '../components/layer-details/entity.dialog';
 // import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
-import { JobsDialog } from '../components/system-status/jobs.dialog';
+import { JobsDialog } from '../components/job-manager/jobs.dialog';
 import { BestEditComponent } from '../components/best-management/best-edit';
 import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import {
@@ -146,6 +146,16 @@ const DiscreteLayerView: React.FC = observer(() => {
   const actionsMenuDynamicHeight = 30;
   const actionsContextMenuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
   const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
+  
+  useEffect(() => {
+    store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
+    store.discreteLayersStore.clearLayersImages();
+
+    store.discreteLayersStore.selectLayer(undefined);
+    setDrawEntities([]);
+    setPoi(undefined);
+    setCorners(undefined);
+  }, [store.discreteLayersStore.searchParams.geojson])
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
@@ -241,11 +251,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const handlePolygonReset = (): void => {
     if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
-      store.discreteLayersStore.clearLayersImages();
-      store.discreteLayersStore.selectLayer(undefined);
-      setDrawEntities([]);
-      setPoi(undefined);
-      setCorners(undefined);
     }
   };
 
@@ -318,13 +323,10 @@ const DiscreteLayerView: React.FC = observer(() => {
       type: type,
       handler: (drawing: IDrawingEvent): void => {
         const timeStamp = getTimeStamp();
-        
         handleTabViewChange(TabViews.SEARCH_RESULTS);
-        
+        handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
         setIsDrawing(false);
         
-        handlePolygonSelected((drawing.geojson as Feature).geometry as Polygon);
-
         setDrawEntities([
           {
             coordinates: drawing.primitive,
@@ -400,6 +402,8 @@ const DiscreteLayerView: React.FC = observer(() => {
       ],
     ]);
     const boxPolygon = bboxPolygon(bbox(line));
+    
+    handleTabViewChange(TabViews.SEARCH_RESULTS);
 
     handlePolygonSelected((boxPolygon as Feature).geometry as Polygon); 
 
@@ -413,7 +417,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       },
     ]);
 
-    handleTabViewChange(TabViews.SEARCH_RESULTS);
   };
 
   const onFlyTo = useCallback((): void => {
@@ -827,7 +830,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 store.mapMenusManagerStore.currentWfsFeatureInfo && <CesiumGeojsonLayer data={store.mapMenusManagerStore.currentWfsFeatureInfo.features?.[0]?.geometry}/>
               }
               {
-                poi && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+                poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
               {
                 rect && <FlyTo rect={rect} setRect={setRect}/>

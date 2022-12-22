@@ -41,13 +41,13 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
             {
               props.error.response.errors?.map((error: Record<string, any>, index: number) => {
                 return (
-                  <li key={index}>{formatMessage(error.message)}</li>
+                  <li dir="auto" key={index}>{formatMessage(error.message)}</li>
                 );
               })
             }
             {
               props.error.response.status >= SERVER_ERROR_RESPONSE_CODE &&
-              <li key={props.error.response.status as number}><FormattedMessage id="general.server.error"/></li>
+              <li dir="auto" key={props.error.response.status as number}><FormattedMessage id="general.server.error"/></li>
             }
           </ul>
         </Box>

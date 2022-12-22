@@ -5,6 +5,12 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { ResourceUrlModel, ResourceUrlModelType } from "./ResourceUrlModel"
+import { ResourceUrlModelSelector, resourceUrlModelPrimitives } from "./ResourceUrlModel.base"
+import { StyleModel, StyleModelType } from "./StyleModel"
+import { StyleModelSelector, styleModelPrimitives } from "./StyleModel.base"
+import { TileMatrixSetModel, TileMatrixSetModelType } from "./TileMatrixSetModel"
+import { TileMatrixSetModelSelector, tileMatrixSetModelPrimitives } from "./TileMatrixSetModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -18,9 +24,10 @@ export const CapabilityModelBase = ModelBase
     __typename: types.optional(types.literal("Capability"), "Capability"),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
-    style: types.union(types.undefined, types.string),
+    style: types.union(types.undefined, types.array(types.late((): any => StyleModel))),
     format: types.union(types.undefined, types.array(types.string)),
-    tileMatrixSet: types.union(types.undefined, types.array(types.string)),
+    tileMatrixSet: types.union(types.undefined, types.array(types.late((): any => TileMatrixSetModel))),
+    url: types.union(types.undefined, types.array(types.late((): any => ResourceUrlModel))),
   })
   .views(self => ({
     get store() {
@@ -30,12 +37,13 @@ export const CapabilityModelBase = ModelBase
 
 export class CapabilityModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
-  get style() { return this.__attr(`style`) }
   get format() { return this.__attr(`format`) }
-  get tileMatrixSet() { return this.__attr(`tileMatrixSet`) }
+  style(builder?: string | StyleModelSelector | ((selector: StyleModelSelector) => StyleModelSelector)) { return this.__child(`style`, StyleModelSelector, builder) }
+  tileMatrixSet(builder?: string | TileMatrixSetModelSelector | ((selector: TileMatrixSetModelSelector) => TileMatrixSetModelSelector)) { return this.__child(`tileMatrixSet`, TileMatrixSetModelSelector, builder) }
+  url(builder?: string | ResourceUrlModelSelector | ((selector: ResourceUrlModelSelector) => ResourceUrlModelSelector)) { return this.__child(`url`, ResourceUrlModelSelector, builder) }
 }
 export function selectFromCapability() {
   return new CapabilityModelSelector()
 }
 
-export const capabilityModelPrimitives = selectFromCapability().style.format.tileMatrixSet.id
+export const capabilityModelPrimitives = selectFromCapability().format.id.style(styleModelPrimitives).tileMatrixSet(tileMatrixSetModelPrimitives).url(resourceUrlModelPrimitives)

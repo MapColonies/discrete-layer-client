@@ -3,9 +3,10 @@ import { useIntl } from 'react-intl';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { JobModelType, Status } from '../../../models';
-import { CopyButton } from '../job-details.copy-button';
+import { CopyButton } from '../../job-manager/job-details.copy-button';
 
 import './job-details.header.css';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
 interface JobDetailsHeaderProps {
   job: JobModelType;
@@ -88,12 +89,12 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
         {Object.values(dataToPresent.detailsRow).map(({ label, value }, index) => {
           return (
             <Box className="detailsField" key={`${label}${index}`}>
-              <Typography tag="p" className="detailLabel">
+              <TooltippedValue tag="p" className="detailLabel">
                 {`${label}:`}
-              </Typography>
-              <Typography tag="p" className="detailValue">
+              </TooltippedValue>
+              <TooltippedValue tag="p" className="detailValue">
                 {value}
-              </Typography>
+              </TooltippedValue>
               <CopyButton text={value}/>
             </Box>
           );

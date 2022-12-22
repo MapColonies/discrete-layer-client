@@ -5,7 +5,6 @@ import {
   CesiumWMTSLayer,
   CesiumXYZLayer,
   ICesiumImageryLayer,
-  RCesiumWMTSLayerOptions,
   useCesiumMap
 } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
@@ -53,8 +52,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   }, [store.discreteLayersStore.previewedLayers]);
 
   const generateLayerComponent = (layer: ILayerImage): JSX.Element | undefined  => {
-    let capability;
-    let optionsWMTS;
     const layerLink = getLayerLink(layer);
 
     switch (layerLink.protocol) {
@@ -85,10 +82,10 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             url={getTokenResource(layerLink.url as string, (layer as Layer3DRecordModelType).productVersion as string)}
           />
         );
-      case LinkType.WMTS_TILE:
       case LinkType.WMTS_LAYER:
-        capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
-        optionsWMTS = {
+      case LinkType.WMTS: {
+        const capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
+        const optionsWMTS = {
           ...getWMTSOptions(layer as LayerRasterRecordModelType, layerLink.url as string, capability)
         };
         return (
@@ -96,8 +93,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             key={layer.id}
             meta={{
               searchLayerPredicate: ((cesiumLayer, idx) => {
-                const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
-                const linkUrl = get(correctLinkByProtocol, 'url') as string;
+                const linkUrl = (optionsWMTS.url as Record<string, any>)._url as string;
                 const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
                 const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
                 return isLayerFound;
@@ -108,9 +104,10 @@ export const SelectedLayersContainer: React.FC = observer(() => {
               } as ILayerImage
             }}
             rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
-            options={optionsWMTS as RCesiumWMTSLayerOptions}
+            options={optionsWMTS}
           />
         );
+      }
       default:
         return undefined;
     }

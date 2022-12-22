@@ -40,6 +40,8 @@ import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
 
+const FOOTPRINT_FIELD_NAME = 'footprint';
+
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
   mode: Mode;
@@ -76,12 +78,9 @@ export const getValuePresentor = (
         <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
       );
     case 'json':
-      {
-        const FOOTPRINT_FIELD_NAME = 'footprint';
-        return (
-          <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}></JsonValuePresentorComponent>
-          );
-      }
+      return (
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}></JsonValuePresentorComponent>
+      );
     case 'number':
       return (
         <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></NumberValuePresentorComponent>

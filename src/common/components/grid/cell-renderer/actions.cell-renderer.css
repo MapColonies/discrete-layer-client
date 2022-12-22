@@ -35,7 +35,7 @@ body[dir='rtl'] #gridActionsCellRenderer.actionsContainer .actionIcon {
 }
 
 #gridActionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
-  top: 42px !important;
+  top: 40px !important;
   left: -160px !important;
   width: 200px;
   padding: 8px;

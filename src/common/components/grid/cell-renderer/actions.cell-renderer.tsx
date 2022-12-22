@@ -3,8 +3,6 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { isEmpty } from 'lodash';
 import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { FINAL_NEGATIVE_STATUSES, JOB_ENTITY } from '../../../../discrete-layer/components/system-status/job.types';
-import { JobModelType, Status } from '../../../../discrete-layer/models';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
@@ -20,13 +18,25 @@ interface IActionsRendererParams extends ICellRendererParams {
 export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   const entity = (props.data as Record<string,unknown>).__typename as string;
 
-  const isJobEntity = entity === JOB_ENTITY;
+  const filterActionsByDependentFields = (actions: IActionGroup[]): IActionGroup[] => {
+    const jobData = (props.data as Record<string,unknown>);
+    const filteredActionGroups = actions.map(actionGroup => {
+      return ({
+        ...actionGroup,
+        group: actionGroup.group.filter(action => {
+          const { dependentField } = action;
+          if (typeof dependentField === 'undefined') return true;
+                    
+          return jobData[dependentField] === true;
+        })
+      })
+    });
 
-  const isJobFinalNegativeStatus = useMemo(() => {
-    return isJobEntity && FINAL_NEGATIVE_STATUSES.includes((props.data as JobModelType).status as Status);
-  }, [props.data, isJobEntity]);
+    return filteredActionGroups;
 
-  const actions = props.actions[entity];
+  }
+
+  const actions = useMemo(() => filterActionsByDependentFields(props.actions[entity]), [props.actions[entity]]);
   let frequentActions: IAction[] = [];
   let allFlatActions: IAction[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -52,11 +62,6 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
       data: data,
     });
   };
-  
-  // We only want to show job actions picker on negative-final job statuses
-  if (isJobEntity && !isJobFinalNegativeStatus) {
-    return null;
-  }
 
   return (
     <Box id="gridActionsCellRenderer" className="actionsContainer">
