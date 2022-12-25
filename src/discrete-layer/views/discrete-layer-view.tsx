@@ -20,6 +20,7 @@ import {
   BboxCorner,
   Box,
   CesiumColor,
+  CesiumConstantProperty,
   CesiumDrawingsDataSource,
   CesiumGeojsonLayer,
   CesiumMap,
@@ -83,9 +84,10 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
 import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
-import useGetMenuProperties from '../../common/hooks/useGetMenuProperties.hook';
+import useGetMenuProperties from '../../common/hooks/mapMenus/useGetMenuProperties.hook';
 import { MapMenusIds } from '../models/mapMenusManagerStore';
-import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/useGetMenuDimensions';
+import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
+import { WfsFeature } from '../components/map-container/wfs-feature.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -252,6 +254,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
     }
+
+    store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();
   };
 
   useEffect(() => {
@@ -824,11 +828,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
               />
               <Terrain/>
-              {
-                // JUST AN EXAMPLE TEMPORARY!!
-                // eslint-disable-next-line
-                store.mapMenusManagerStore.currentWfsFeatureInfo && <CesiumGeojsonLayer data={store.mapMenusManagerStore.currentWfsFeatureInfo.features?.[0]?.geometry}/>
-              }
+              <WfsFeature />
               {
                 poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }

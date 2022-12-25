@@ -20,7 +20,7 @@ import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel'
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
-import useHandleWfsGetFeatureRequests from '../../../common/hooks/useHandleWfsGetFeatureRequests';
+import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 
 const FIRST = 0;
 
@@ -188,9 +188,9 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
         case ContextActions.QUERY_WFS_FEATURE: {
           const coordinates = data.coordinates as { longitude: number, latitude: number };
-          const typeNames = data.feature as string;
+          const typeName = data.feature as string;
 
-          setGetFeatureOptions({pointCoordinates: [ coordinates.longitude.toString(), coordinates.latitude.toString()], typeNames: [typeNames]});
+          setGetFeatureOptions({ pointCoordinates: [ coordinates.longitude.toString(), coordinates.latitude.toString()], typeName, count: 1 });
           break;
         }
         case ContextActions.GET_HEIGHT: {

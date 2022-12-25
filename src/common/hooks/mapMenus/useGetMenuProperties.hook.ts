@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useStore } from "../../discrete-layer/models";
-import { MapMenusIds, IMapMenuProperties } from "../../discrete-layer/models/mapMenusManagerStore";
+import { useStore } from "../../../discrete-layer/models";
+import { MapMenusIds, IMapMenuProperties } from "../../../discrete-layer/models/mapMenusManagerStore";
 
 
 const useGetMenuProperties = (menuId: MapMenusIds): IMapMenuProperties | undefined => {

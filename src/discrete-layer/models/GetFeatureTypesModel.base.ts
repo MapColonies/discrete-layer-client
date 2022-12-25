@@ -17,6 +17,7 @@ export const GetFeatureTypesModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("GetFeatureTypes"), "GetFeatureTypes"),
     typesArr: types.union(types.undefined, types.null, types.array(types.string)),
+    featureConfigs: types.union(types.undefined, types.null, types.frozen()),
   })
   .views(self => ({
     get store() {
@@ -26,9 +27,10 @@ export const GetFeatureTypesModelBase = ModelBase
 
 export class GetFeatureTypesModelSelector extends QueryBuilder {
   get typesArr() { return this.__attr(`typesArr`) }
+  get featureConfigs() { return this.__attr(`featureConfigs`) }
 }
 export function selectFromGetFeatureTypes() {
   return new GetFeatureTypesModelSelector()
 }
 
-export const getFeatureTypesModelPrimitives = selectFromGetFeatureTypes().typesArr
+export const getFeatureTypesModelPrimitives = selectFromGetFeatureTypes().typesArr.featureConfigs

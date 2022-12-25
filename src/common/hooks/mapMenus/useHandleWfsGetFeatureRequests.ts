@@ -4,8 +4,9 @@ import {
   GetFeatureModelType,
   useQuery,
   useStore,
-} from '../../discrete-layer/models';
-import { WfsGetFeatureParams } from '../../discrete-layer/models/RootStore.base';
+} from '../../../discrete-layer/models';
+import { WfsGetFeatureParams } from '../../../discrete-layer/models/RootStore.base';
+import { IFeatureConfig } from '../../../discrete-layer/views/components/data-fetchers/wfs-features-fetcher.component';
 
 const useHandleWfsGetFeatureRequests = (): {
   data: { getFeature: GetFeatureModelType } | undefined;
@@ -24,7 +25,12 @@ const useHandleWfsGetFeatureRequests = (): {
 
   useEffect(() => {
     if (getFeatureOptions) {
-      setQuery(store.queryGetFeature({ data: { ...getFeatureOptions } }));
+      store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();
+      
+      const featureConfig = store.mapMenusManagerStore.getFeatureConfig(getFeatureOptions.typeName);
+      const dWithin = featureConfig.dWithin;
+  
+        setQuery(store.queryGetFeature({ data: { ...getFeatureOptions, dWithin } }));
     }
   }, [getFeatureOptions]);
 
@@ -33,6 +39,7 @@ const useHandleWfsGetFeatureRequests = (): {
       store.mapMenusManagerStore.setCurrentWfsFeatureInfo({
         ...cloneDeep(data.getFeature),
         pointCoordinates: getFeatureOptions.pointCoordinates,
+        typeName: getFeatureOptions.typeName,
       });
     }
 

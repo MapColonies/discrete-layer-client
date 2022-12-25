@@ -3,11 +3,14 @@ import React from 'react';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { MenuItemsList } from '../../../models/mapMenusManagerStore';
+import { getCoordinatesDisplayText } from '../../layer-details/utils';
 import { ContextMenu } from './context-menu';
 
 interface IActionsContextMenuProps extends IContextMenuData {
   menuItems?: MenuItemsList;
 }
+
+export const COORDS_DISPLAY_PRECISION = 5;
 
 export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   menuItems,
@@ -45,10 +48,11 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
     });
   };
 
+
   return (
 
         <ContextMenu
-          menuTitle="Query Services"
+          menuTitle={getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
           menuSections={getMenuSections()}
           {...restProps}
         />

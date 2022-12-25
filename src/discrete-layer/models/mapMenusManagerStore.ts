@@ -7,6 +7,7 @@ import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 import {GetFeatureModelType} from './GetFeatureModel';
 import { WfsGetFeatureParams } from './RootStore.base';
+import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetchers/wfs-features-fetcher.component';
 
 interface MenuItem {
   title: string;
@@ -31,7 +32,7 @@ export type MapMenus = {
     [key in MapMenusIds]? : IMapMenuProperties;
 }
 
-export type WfsFeatureInfo = GetFeatureModelType & Pick<WfsGetFeatureParams, 'pointCoordinates'>;
+export type WfsFeatureInfo = GetFeatureModelType & Pick<WfsGetFeatureParams, 'pointCoordinates' | 'typeName'> & { config: IFeatureConfig };
 
 export const mapMenusManagerStore = ModelBase
   .props({
@@ -41,6 +42,7 @@ export const mapMenusManagerStore = ModelBase
     ),
     mapMenus: types.maybe(types.frozen<MapMenus>()),
     actionsMenuFeatures: types.maybe(types.frozen<string[]>()),
+    actionsMenuFeatureConfigs: types.maybe(types.frozen<IFeatureConfigs>()),
     currentWfsFeatureInfo: types.maybe(types.frozen<WfsFeatureInfo>()),
   })
   .views((self) => ({
@@ -101,12 +103,32 @@ export const mapMenusManagerStore = ModelBase
       self.actionsMenuFeatures = actionsMenuFeatures;
     }
 
-    function setCurrentWfsFeatureInfo(currentFeatureInfo: WfsFeatureInfo): void {
-      self.currentWfsFeatureInfo = currentFeatureInfo;
+    function setFeatureConfigs(featureConfigs: IFeatureConfigs): void {
+      self.actionsMenuFeatureConfigs = featureConfigs;
     }
+
+    function setCurrentWfsFeatureInfo(currentFeatureInfo: Omit<WfsFeatureInfo , 'config'>): void {
+      const featureInfoWithConfig: WfsFeatureInfo = {...currentFeatureInfo, config: getFeatureConfig(currentFeatureInfo.typeName)};
+      
+      self.currentWfsFeatureInfo = featureInfoWithConfig;
+    }
+
+    function getFeatureConfig(typeName: string): IFeatureConfig {
+      const DEFAULT_CONFIG_KEY = 'default';
+
+      return self.actionsMenuFeatureConfigs?.[typeName] ?? self.actionsMenuFeatureConfigs?.[DEFAULT_CONFIG_KEY] as IFeatureConfig
+    }
+
+    function resetCurrentWfsFeatureInfo(): void {
+      self.currentWfsFeatureInfo = undefined;
+    }
+
     return {
       setActionsMenuFeatures,
       setCurrentWfsFeatureInfo,
+      setFeatureConfigs,
+      getFeatureConfig,
+      resetCurrentWfsFeatureInfo,
       initStore,
     }
   });
