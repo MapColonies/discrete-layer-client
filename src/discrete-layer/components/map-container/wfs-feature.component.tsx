@@ -10,26 +10,29 @@ import {
 import { useStore } from '../../models';
 import { Feature } from 'geojson';
 import { getCoordinatesDisplayText } from '../layer-details/utils';
+import { useForceEntitySelection } from '../../../common/hooks/useForceEntitySelection.hook';
 
 const NONE_OR_FIRST_ELEM = 0;
 interface WfsFeatureProps {}
 
 export const WfsFeature: React.FC<WfsFeatureProps> = () => {
   const store = useStore();
-
+  
+  
   const wfsFeature = store.mapMenusManagerStore.currentWfsFeatureInfo;
-
+  
   const memoizedFeatureInfo = useMemo(() => {
-      if(!wfsFeature) return '';
-
-      const featureInfo = (wfsFeature.features?.[NONE_OR_FIRST_ELEM] as Feature | undefined)?.properties ?? {};
-
-      return `${
-        Object.entries(featureInfo as Record<string, unknown>).map(([key, val]) => {
-          return `${key}: ${val as string}`
-        }).join('</br>')
-      }` 
+    if(!wfsFeature) return '';
+    const featureInfo = (wfsFeature.features?.[NONE_OR_FIRST_ELEM] as Feature | undefined)?.properties ?? {};
+    
+    return `${
+      Object.entries(featureInfo as Record<string, unknown>).map(([key, val]) => {
+        return `${key}: ${val as string}`
+      }).join('</br>')
+    }` 
   }, [wfsFeature])
+  
+  const { entitySelected } = useForceEntitySelection([memoizedFeatureInfo]);
 
   if(!wfsFeature || wfsFeature.features?.length === NONE_OR_FIRST_ELEM) return null;
 
@@ -50,8 +53,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
          description={`
             ${memoizedFeatureInfo}
          `}
-         selected={true}
-         
+         selected={entitySelected}
        />
     }
 
@@ -67,16 +69,20 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
             onLoad={(geoJsonDataSource): void => {
               const featureFillColor = wfsFeature.config.color;
               const featureOutlineColor = wfsFeature.config.outlineColor;
+              const lineWidth = 5;
+              const outlineWidth = 4;
 
               geoJsonDataSource.entities.values.forEach((item) => {
                 if (item.polyline) {
                   // @ts-ignore
                   item.polyline.material = CesiumColor.fromCssColorString(featureFillColor);
+                  (item.polyline.width as CesiumConstantProperty).setValue(lineWidth);
                 }
 
                 if (item.polygon) {
                   // @ts-ignore
                   (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(featureOutlineColor));
+                  (item.polygon.outlineWidth  as CesiumConstantProperty).setValue(outlineWidth)
 
                   // @ts-ignore
                   item.polygon.material = CesiumColor.fromCssColorString(featureFillColor);

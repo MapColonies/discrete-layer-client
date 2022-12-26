@@ -80,14 +80,17 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
 
           <MenuSurfaceAnchor className='menuAnchor'>
             <Menu open={true} className="imageryMenu" style={{ maxHeight: (size?.height ?? MENU_HEIGHT_PADDING) + MENU_HEIGHT_PADDING }}>
-              {menuSections.map((section, sectionIdx) => {        
+              {menuSections.map((section, sectionIdx) => {   
                  const sectionItems = section.map((item, itemIdx) => {
                     // Get click callback from item
                     const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
+                    const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
+
                     return (
                       <MenuItem
                         key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
-                        onClick={menuItemClick as MouseEventHandler<HTMLElement> | MouseEventHandler<HTMLDivElement>}
+                        onClick={menuItemClick as MouseEventHandler<HTMLElement>}
+                        disabled={menuItemDisabled as boolean}
                       >
                         {item}
                       </MenuItem>
@@ -96,7 +99,7 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
                   
                   const lastSectionIdx = menuSections.length - 1;
                   if(sectionIdx < lastSectionIdx && section.length) {
-                    sectionItems.push(<ListDivider key={`sectionDivider_${sectionIdx}}`} className='sectionDivider'/>);
+                    sectionItems.push(<ListDivider style={{opacity: 0.3}} key={`sectionDivider_${sectionIdx}}`} className='sectionDivider'/>);
                   }
 
                   return sectionItems;

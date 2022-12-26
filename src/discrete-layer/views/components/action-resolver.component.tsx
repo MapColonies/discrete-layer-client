@@ -189,8 +189,18 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case ContextActions.QUERY_WFS_FEATURE: {
           const coordinates = data.coordinates as { longitude: number, latitude: number };
           const typeName = data.feature as string;
+          const closeMenu = (data.handleClose as (() => void | undefined));
 
-          setGetFeatureOptions({ pointCoordinates: [ coordinates.longitude.toString(), coordinates.latitude.toString()], typeName, count: 1 });
+          setGetFeatureOptions({
+            pointCoordinates: [
+              coordinates.longitude.toString(),
+              coordinates.latitude.toString(),
+            ],
+            typeName,
+            count: 1,
+            onDataResolved: closeMenu,
+          });
+          
           break;
         }
         case ContextActions.GET_HEIGHT: {

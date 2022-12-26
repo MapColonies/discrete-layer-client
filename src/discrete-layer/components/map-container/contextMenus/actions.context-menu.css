@@ -1,0 +1,18 @@
+.actionsMenuItem {
+    display: flex;
+    width: 100%;
+}
+
+.actionsMenuItem.mdc-button:disabled {
+    background-color: transparent;
+}
+
+.actionsMenuItemLoading { 
+    position: absolute;
+    right: 0;
+}
+
+body[dir='rtl'] .actionsMenuItemLoading {
+    right: unset;
+    left: 0;
+}
