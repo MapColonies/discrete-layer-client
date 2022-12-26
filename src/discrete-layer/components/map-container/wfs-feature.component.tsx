@@ -11,13 +11,14 @@ import { useStore } from '../../models';
 import { Feature } from 'geojson';
 import { getCoordinatesDisplayText } from '../layer-details/utils';
 import { useForceEntitySelection } from '../../../common/hooks/useForceEntitySelection.hook';
+import { useTheme } from '@map-colonies/react-core';
 
 const NONE_OR_FIRST_ELEM = 0;
 interface WfsFeatureProps {}
 
 export const WfsFeature: React.FC<WfsFeatureProps> = () => {
   const store = useStore();
-  
+  const theme = useTheme();
   
   const wfsFeature = store.mapMenusManagerStore.currentWfsFeatureInfo;
   
@@ -25,11 +26,45 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
     if(!wfsFeature) return '';
     const featureInfo = (wfsFeature.features?.[NONE_OR_FIRST_ELEM] as Feature | undefined)?.properties ?? {};
     
-    return `${
-      Object.entries(featureInfo as Record<string, unknown>).map(([key, val]) => {
-        return `${key}: ${val as string}`
-      }).join('</br>')
-    }` 
+    return `
+    <style>
+      body {
+        background-color: ${theme.surface as string}; 
+      }
+
+      .featureInfoTable {
+        width: 100%;
+        padding: 0.5rem;
+        color: ${theme.textPrimaryOnDark as string} !important;
+      }
+    
+      .featureInfoTable td,
+      .featureInfoTable tr {
+          text-align: left;
+          padding: 0.5rem;
+      }
+      
+      .featureInfoTable tr:nth-child(even) {
+          background-color: ${theme.gcSelectionBackground as string};
+      }
+    </style>
+    <table class='featureInfoTable'>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+      </tr>
+
+    ${Object.entries(featureInfo as Record<string, unknown>)
+      .map(([key, val]) => {
+        return `
+          <tr>
+            <td>${key}</td>
+            <td>${val as string}</td>
+          </tr>
+        `;
+      })
+      .join('')}
+    `; 
   }, [wfsFeature])
   
   const { entitySelected } = useForceEntitySelection([memoizedFeatureInfo]);

@@ -54,6 +54,10 @@
   /* animation: glow 1s ease-in-out infinite alternate; */
 }
 
+.cesium-infoBox-title {
+  background-color: var(--mdc-theme-alternative-surface);
+}
+
 @keyframes glow {
   from {
     text-shadow: 0 0 10px #fff, 0 0 12px #fff, 0 0 14px #e60073, 0 0 18px #e60073, 0 0 20px #e60073;
