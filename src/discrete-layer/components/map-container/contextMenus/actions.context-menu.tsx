@@ -1,4 +1,4 @@
-import { IContextMenuData } from '@map-colonies/react-components';
+import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { Button, CircularProgress } from '@map-colonies/react-core';
 import React, { useCallback, useState } from 'react';
 import { useStore } from '../../../models';
@@ -48,10 +48,10 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
         };
   
         return (
-          <Button className='actionsMenuItem' disabled={typeof currentClickedItem !== 'undefined'} onClick={(): void => onItemClick(item.title, actionToDispatch)}>
+          <Box className='actionsMenuItem' onClick={(): void => onItemClick(item.title, actionToDispatch)}>
             { item.title }
             { currentClickedItem === item.title && <CircularProgress className='actionsMenuItemLoading' /> }
-          </Button>
+          </Box>
         );
       });
     });

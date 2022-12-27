@@ -1,0 +1,6 @@
+.MCCesiumInfoBox {
+    width: 100%;
+    height: 100%;
+    color: var(--mdc-theme-text-primary-on-dark);
+    background-color: var(--mdc-theme-surface);
+}
