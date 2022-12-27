@@ -6,10 +6,7 @@ interface ILookupTablesContext {
   setLookupTablesData: (lookupTablesData: LookupTablesDataModelType) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const LookupContext = createContext<ILookupTablesContext>({
+export default createContext<ILookupTablesContext>({
   lookupTablesData: null,
   setLookupTablesData: () => { return }
 });
-
-export default LookupContext;
