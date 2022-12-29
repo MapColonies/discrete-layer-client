@@ -88,6 +88,7 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
 
                     return (
                       <MenuItem
+                        className='imageryMenuItemAction'
                         key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
                         onClick={menuItemClick as MouseEventHandler<HTMLElement>}
                         disabled={menuItemDisabled as boolean}

@@ -61,6 +61,7 @@
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
   "action.job.retry": "Try again",
   "action.job.abort": "Abort",
+  "actions.wfs.buildings-title": "Building",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -574,5 +575,9 @@
   "ProductType.point_cloud": "PointCloud",
 
   "RecordStatus.published": "Published",
-  "RecordStatus.unpublished": "Unpublished"
+  "RecordStatus.unpublished": "Unpublished",
+
+  "map-context-menu.title": "Map info services",
+
+  "wfs-info.no-data.message": "No data found for type {feature}"
 }

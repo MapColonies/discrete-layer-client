@@ -12,6 +12,7 @@ function useStaticHTML<T>({ FunctionalComp, props }: UseStaticHTMLProps<T>): str
   const [html, setHTML] = useState<string>('');
 
   useEffect(() => {
+    // @ts-ignore
     const htmlString = renderToStaticMarkup(React.createElement(FunctionalComp, {...props}));
     setHTML(htmlString);
   }, [FunctionalComp, props]);

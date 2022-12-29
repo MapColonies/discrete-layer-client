@@ -1,6 +1,7 @@
 .actionsMenuItem {
     display: flex;
     width: 100%;
+    align-items: center;
 }
 
 .actionsMenuItem.mdc-button:disabled {
@@ -9,10 +10,28 @@
 
 .actionsMenuItemLoading { 
     position: absolute;
-    right: 0;
+    right: 10px;
 }
 
 body[dir='rtl'] .actionsMenuItemLoading {
     right: unset;
-    left: 0;
+    left: 10px;
+}
+
+.coordinatesContainer {
+    text-align: left;
+    padding: 20px;
+}
+
+body[dir='rtl'] .coordinatesContainer {
+    text-align: right;
+}
+
+.featureIcon {
+    margin-right: 10px;
+}
+
+body[dir='rtl'] .featureIcon {
+    margin-right: unset;
+    margin-left: 10px;
 }

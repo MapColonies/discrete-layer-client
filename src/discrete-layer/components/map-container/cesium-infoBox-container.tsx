@@ -1,8 +1,7 @@
 import React from 'react';
-import './CesiumInfoBoxContainer.css'
 
-export const CesiumInfoBoxContainer: React.FC = (props) => {
-    return <div className='MCCesiumInfoBox'>
+export const CesiumInfoBoxContainer: React.FC<{ theme: Record<string, string> }> = (props) => {
+    return <div style={{ backgroundColor: props.theme.surface, width: '100%' }} className='MCCesiumInfoBox'>
         { props.children }
     </div>
 }

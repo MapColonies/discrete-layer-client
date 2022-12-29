@@ -12,6 +12,7 @@ import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetche
 interface MenuItem {
   title: string;
   action: IAction;
+  icon?: string;
   payloadData?: Record<string, unknown>;
 }
 
@@ -68,7 +69,12 @@ export const mapMenusManagerStore = ModelBase
             if(action.action === ContextActions.QUERY_WFS_FEATURE) {
               const featureTypesList = (featureTypes ?? self.actionsMenuFeatures) ?? [];
               const wfsAvailableFeatures: MenuItem[] = featureTypesList
-              .map(feature => ({title: feature, action: {...action}, payloadData: { feature }}));
+              .map(feature => {
+                const featureConfig = getFeatureConfig(feature);
+                const featureTitle = featureConfig.translationId ?? feature;
+
+                return ({title: featureTitle, icon: featureConfig.icon, action: {...action}, payloadData: { feature }})
+              });
 
               flatGroup.push(...wfsAvailableFeatures);
               return;
@@ -86,7 +92,8 @@ export const mapMenusManagerStore = ModelBase
 
         return {
           ActionsMenu: {
-            itemsList: actionsMenuSections
+            itemsList: actionsMenuSections,
+            heightBuffer: 70
           }
         }
 

@@ -48,18 +48,18 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
           }
         ],
       },
-      {
-        id: 2,
-        titleTranslationId: '',
-        type: ContextActionsTypes.CLIENT_SIDE_OPERATIONS,
-        group: [
-          {
-            ...defaultContextActionProps,
-            titleTranslationId: 'Get Height',
-            action: ContextActions.GET_HEIGHT,
-          },
-        ],
-      },
+      // {
+      //   id: 2,
+      //   titleTranslationId: '',
+      //   type: ContextActionsTypes.CLIENT_SIDE_OPERATIONS,
+      //   group: [
+      //     {
+      //       ...defaultContextActionProps,
+      //       titleTranslationId: 'Get Height',
+      //       action: ContextActions.GET_HEIGHT,
+      //     },
+      //   ],
+      // },
     ],
   },
 ];

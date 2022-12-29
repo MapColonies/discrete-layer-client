@@ -7,7 +7,9 @@ export interface IFeatureConfig {
   isVisualized?: boolean,
   color?: string,
   outlineColor?: string,
-  dWithin?: number, 
+  dWithin?: number,
+  translationId?: string,
+  icon?: string 
 }
 
 export interface IFeatureConfigs {

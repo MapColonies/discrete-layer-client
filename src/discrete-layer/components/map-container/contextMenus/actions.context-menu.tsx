@@ -1,5 +1,5 @@
 import { IContextMenuData, Box } from '@map-colonies/react-components';
-import { Button, CircularProgress } from '@map-colonies/react-core';
+import { Button, CircularProgress, Icon } from '@map-colonies/react-core';
 import React, { useCallback, useState } from 'react';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
@@ -8,6 +8,7 @@ import { getCoordinatesDisplayText } from '../../layer-details/utils';
 import { ContextMenu } from './context-menu';
 
 import './actions.context-menu.css';
+import { useIntl } from 'react-intl';
 
 interface IActionsContextMenuProps extends IContextMenuData {
   menuItems?: MenuItemsList;
@@ -21,6 +22,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
 }) => {
   const { handleClose, coordinates } = restProps;
   const store = useStore();
+  const intl = useIntl();
   const [currentClickedItem, setCurrentClickedItem] = useState<string>();
 
   const dispatchAction = useCallback((action: IDispatchAction): void => {
@@ -49,7 +51,8 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   
         return (
           <Box className='actionsMenuItem' onClick={(): void => onItemClick(item.title, actionToDispatch)}>
-            { item.title }
+            {typeof item.icon !== 'undefined' && <Icon className="featureIcon" icon={{ icon: item.icon, size: 'small' }} />}
+            { intl.formatMessage({ id: item.title }) }
             { currentClickedItem === item.title && <CircularProgress className='actionsMenuItemLoading' /> }
           </Box>
         );
@@ -60,9 +63,13 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
 
   return (
         <ContextMenu
-          menuTitle={getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
+          menuTitle={intl.formatMessage({ id: 'map-context-menu.title' })}
           menuSections={getMenuSections()}
           {...restProps}
-        />
+        >
+          <Box className="coordinatesContainer">
+            {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
+          </Box>
+        </ContextMenu>
   );
 };

@@ -102,3 +102,7 @@ body[dir='rtl'] .imageryMenuIcon {
   display: flex;
   align-items: center;
 }
+
+.imageryMenuItemAction:hover {
+  background: var(--mdc-theme-gc-alternative-surface);
+}
