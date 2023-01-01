@@ -31,6 +31,8 @@
   width: 100%;
   box-shadow: none;
   position: unset;
+  max-height: 350px !important;
+  overflow-y: auto;
 }
 
 .imageryMenuIcon {

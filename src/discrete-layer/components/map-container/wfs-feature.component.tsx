@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+/* eslint-disable @typescript-eslint/naming-convention */
+import React from 'react';
 import {
   CesiumColor,
   CesiumConstantProperty,
@@ -11,10 +12,11 @@ import { useStore } from '../../models';
 import { Feature } from 'geojson';
 import { getCoordinatesDisplayText } from '../layer-details/utils';
 import { useForceEntitySelection } from '../../../common/hooks/useForceEntitySelection.hook';
-import { Icon, Typography, useTheme } from '@map-colonies/react-core';
+import { Typography, useTheme } from '@map-colonies/react-core';
 import { CesiumInfoBoxContainer } from './cesium-infoBox-container';
 import useStaticHTML from '../../../common/hooks/useStaticHtml';
 import { useIntl } from 'react-intl';
+import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
 
 const NONE_OR_FIRST_ELEM = 0;
 const LONGITUDE_POSITION = 0;
@@ -40,14 +42,15 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
     return (
       <> 
         <Typography tag="h4" style={{ 
-           padding: '0.5rem',
+           margin: '0',
+           marginBottom: '10px',
            color: theme.textPrimaryOnDark,
            display: 'flex',
            alignItems: 'center',
            justifyContent: 'center',
-           fontSize: '1.1rem' 
+           fontSize: '1rem' 
         }}>
-          <svg style={{stroke: 'currentColor', fill: 'currentColor', transform: 'scale(0.5)'}}xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M24 23.5q1.45 0 2.475-1.025Q27.5 21.45 27.5 20q0-1.45-1.025-2.475Q25.45 16.5 24 16.5q-1.45 0-2.475 1.025Q20.5 18.55 20.5 20q0 1.45 1.025 2.475Q22.55 23.5 24 23.5Zm0 16.55q6.65-6.05 9.825-10.975Q37 24.15 37 20.4q0-5.9-3.775-9.65T24 7q-5.45 0-9.225 3.75Q11 14.5 11 20.4q0 3.75 3.25 8.675Q17.5 34 24 40.05ZM24 44q-8.05-6.85-12.025-12.725Q8 25.4 8 20.4q0-7.5 4.825-11.95Q17.65 4 24 4q6.35 0 11.175 4.45Q40 12.9 40 20.4q0 5-3.975 10.875T24 44Zm0-23.6Z"/></svg>
+            <CreateSvgIconLocationOn className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor', transform: 'scale(0.5)'}} height="48" width="48" />
           {getCoordinatesDisplayText(lat, long)}
         </Typography>
         {children}
@@ -59,7 +62,6 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
     children: React.ReactNode;
     theme: Record<string, string>;
   }>({
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     FunctionalComp: CesiumInfoBoxContainer,
     props: {
       children: (
@@ -70,12 +72,6 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
               color: theme.textPrimaryOnDark,
               backgroundColor: theme.gcAlternativeSurface,
             }}>
-              <thead>
-                <tr style={{textAlign: 'left'}}>
-                  <th>Property</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
               <tbody>
                 {Object.entries(featureInfo as Record<string, unknown>).map(
                   ([key, val]) => {
@@ -101,7 +97,6 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
     children: React.ReactNode;
     theme: Record<string, string>;
   }>({
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     FunctionalComp: CesiumInfoBoxContainer,
     props: {
       children: (
@@ -166,7 +161,6 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
       }
 
       {wfsFeature.features?.map((feature) => {
-        console.log(feature);
         if (wfsFeature.config.isVisualized === false) return null;
 
         const geoJsonFeature = feature as Feature;

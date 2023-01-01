@@ -20,7 +20,11 @@ body[dir='rtl'] .actionsMenuItemLoading {
 
 .coordinatesContainer {
     text-align: left;
-    padding: 20px;
+    background-color: var(--mdc-theme-gc-selection-background);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 body[dir='rtl'] .coordinatesContainer {

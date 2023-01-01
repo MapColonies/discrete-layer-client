@@ -1,6 +1,7 @@
+import React, { useCallback, useState } from 'react';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { Button, CircularProgress, Icon } from '@map-colonies/react-core';
-import React, { useCallback, useState } from 'react';
+import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { MenuItemsList } from '../../../models/mapMenusManagerStore';
@@ -44,6 +45,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
     return menuItems?.map((section) => {
       return section.map((item) => {
         
+        
         const actionToDispatch = {
           action: item.action.action,
           data: { ...item.payloadData, coordinates, handleClose }
@@ -51,7 +53,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   
         return (
           <Box className='actionsMenuItem' onClick={(): void => onItemClick(item.title, actionToDispatch)}>
-            {typeof item.icon !== 'undefined' && <Icon className="featureIcon" icon={{ icon: item.icon, size: 'small' }} />}
+            {typeof item.icon !== 'undefined' && <Icon className="glow-missing-icon featureIcon" icon={{ icon: item.icon, size: 'small' }} />}
             { intl.formatMessage({ id: item.title }) }
             { currentClickedItem === item.title && <CircularProgress className='actionsMenuItemLoading' /> }
           </Box>
@@ -63,12 +65,12 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
 
   return (
         <ContextMenu
-          menuTitle={intl.formatMessage({ id: 'map-context-menu.title' })}
           menuSections={getMenuSections()}
           {...restProps}
         >
           <Box className="coordinatesContainer">
             {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
+            <CreateSvgIconLocationOn className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor' }} height="48" width="48" />
           </Box>
         </ContextMenu>
   );

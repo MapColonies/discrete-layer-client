@@ -65,7 +65,8 @@
 /* SELECT CUSTOMIZATION */
 
 .dark-theme .mdc-menu .mdc-list {
-  color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));
+  /* color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87)); */
+  color: var(--mdc-theme-text-primary-on-dark)
 }
 
 .dark-theme .mdc-menu .mdc-list .mdc-list-item {

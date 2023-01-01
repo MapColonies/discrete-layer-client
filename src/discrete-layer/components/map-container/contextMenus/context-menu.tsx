@@ -64,10 +64,8 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
           style={style}
           className="imageryContextMenuTheme imageryContextMenu"
         >
-          <Box style={{ height: `${TITLE_HEIGHT}px` }} className='titleContainer'>
-            {menuTitle && (
-              <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
-            )}
+          {menuTitle && <Box style={{ height: `${TITLE_HEIGHT}px` }} className='titleContainer'>
+            <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
             {menuTitle && menuTitleTooltip && (
               <Tooltip content={menuTitleTooltip}>
                 <Icon
@@ -76,10 +74,10 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
                 />
               </Tooltip>
             )}
-          </Box>
+          </Box>}
 
           <MenuSurfaceAnchor className='menuAnchor'>
-            <Menu open={true} className="imageryMenu" style={{ maxHeight: (size?.height ?? MENU_HEIGHT_PADDING) + MENU_HEIGHT_PADDING }}>
+            <Menu open={true} className="imageryMenu">
               {menuSections.map((section, sectionIdx) => {   
                  const sectionItems = section.map((item, itemIdx) => {
                     // Get click callback from item
