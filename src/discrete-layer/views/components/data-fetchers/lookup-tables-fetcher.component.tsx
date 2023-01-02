@@ -8,7 +8,6 @@ export const LookupTablesFetcher: React.FC = observer(() => {
   const store = useStore();
   const { data, loading } = useQuery((store) => store.queryGetLookupTablesData({},
     `classificationList
-      countryList
   `));
 
   const { setLookupTablesData } = useContext(lookupTablesContext);
