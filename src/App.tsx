@@ -68,7 +68,7 @@ const App: React.FC = () => {
     }
   };
 
-  const [lookupTablesData, setLookupTablesData] = useState<ILookupTablesData | null>(null);
+  const [lookupTablesData, setLookupTablesData] = useState<ILookupTablesData>({});
 
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
