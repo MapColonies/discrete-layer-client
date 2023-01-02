@@ -574,5 +574,9 @@
   "ProductType.point_cloud": "PointCloud",
 
   "RecordStatus.published": "Published",
-  "RecordStatus.unpublished": "Unpublished"
+  "RecordStatus.unpublished": "Unpublished",
+
+  "lookupTable.classification.classified": "Classified",
+  "lookupTable.classification.balmas": "Public",
+  "lookupTable.classification.superClassified": "Super Classified"
 }

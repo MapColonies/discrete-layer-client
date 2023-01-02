@@ -574,5 +574,9 @@
   "ProductType.point_cloud": "PointCloud",
 
   "RecordStatus.published": "מפורסם",
-  "RecordStatus.unpublished": "לא מפורסם"
+  "RecordStatus.unpublished": "לא מפורסם",
+
+  "lookupTable.classification.classified": "סודי",
+  "lookupTable.classification.balmas": "בלמ\"ס",
+  "lookupTable.classification.superClassified": "סודי ביותר"
 }
