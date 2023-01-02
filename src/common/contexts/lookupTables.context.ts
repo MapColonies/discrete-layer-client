@@ -1,5 +1,7 @@
 import { createContext } from 'react';
 
+export type LookupKey = 'classificationList' | 'countryList';
+
 export interface ILookupOption {
   value: string;
   translationCode?: string;
@@ -7,16 +9,15 @@ export interface ILookupOption {
 }
 
 export interface ILookupTablesData {
-  countryList: ILookupOption[];
-  classificationList: ILookupOption[];
+  countryList?: ILookupOption[];
+  classificationList?: ILookupOption[];
 }
 
 interface ILookupTablesContext {
-  lookupTablesData: ILookupTablesData | null;
+  lookupTablesData?: ILookupTablesData;
   setLookupTablesData: (lookupTablesData: ILookupTablesData) => void;
 }
 
 export default createContext<ILookupTablesContext>({
-  lookupTablesData: null,
   setLookupTablesData: () => { return }
 });
