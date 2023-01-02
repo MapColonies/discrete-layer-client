@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect,useEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import Moment from 'moment';
 import 'moment/locale/he'; // TODO: improve dynamic moment locales loading
@@ -44,6 +44,7 @@ import CONFIG from './common/config';
 import { camelize } from './common/helpers/string';
 import { CustomTheme } from './theming/custom.theme';
 import EnumsMapContext, { IEnumsMapType } from './common/contexts/enumsMap.context';
+import LookupTablesContext, { ILookupTablesData } from './common/contexts/lookupTables.context';
 
 const App: React.FC = () => {
   /*const prefersDarkMode = */useMediaQuery('(prefers-color-scheme: dark)');
@@ -52,7 +53,7 @@ const App: React.FC = () => {
   const [enumsMap, setEnumsMap] = useState<IEnumsMapType | null>(null);
 
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
-  const customThemeProps: Record<string,string> = {};
+  const customThemeProps: Record<string, string> = {};
   for (const prop in CustomTheme.darkTheme) {
     customThemeProps[camelize(prop)] = (CustomTheme.darkTheme as Record<string, string>)[prop];
   }
@@ -67,10 +68,12 @@ const App: React.FC = () => {
     }
   };
 
+  const [lookupTablesData, setLookupTablesData] = useState<ILookupTablesData | null>(null);
+
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
   }, []);
-  
+
   useEffect(() => {
     Moment.locale(lang);
   }, [lang]);
@@ -89,10 +92,12 @@ const App: React.FC = () => {
       >
         <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme}>
           <CssBaseline />
-          <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>
-            <StaticDataFetcher />
-            <DiscreteLayerView />
-          </EnumsMapContext.Provider>
+          <LookupTablesContext.Provider value={{ lookupTablesData, setLookupTablesData }}>
+            <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>
+              <StaticDataFetcher />
+              <DiscreteLayerView />
+            </EnumsMapContext.Provider>
+          </LookupTablesContext.Provider>
           <SnackContainer />
           <SnackbarQueue messages={queue.messages} leading timeout={-1} />
         </RMWCThemeProvider>
