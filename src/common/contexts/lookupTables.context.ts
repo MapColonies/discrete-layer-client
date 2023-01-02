@@ -1,9 +1,19 @@
 import { createContext } from 'react';
-import { LookupTablesDataModelType } from '../../discrete-layer/models';
+
+export interface ILookupOption {
+  value: string;
+  translationCode?: string;
+  properties: Record<string, unknown>
+}
+
+export interface ILookupTablesData {
+  countryList: ILookupOption[];
+  classificationList: ILookupOption[];
+}
 
 interface ILookupTablesContext {
-  lookupTablesData: LookupTablesDataModelType | null;
-  setLookupTablesData: (lookupTablesData: LookupTablesDataModelType) => void;
+  lookupTablesData: ILookupTablesData | null;
+  setLookupTablesData: (lookupTablesData: ILookupTablesData) => void;
 }
 
 export default createContext<ILookupTablesContext>({
