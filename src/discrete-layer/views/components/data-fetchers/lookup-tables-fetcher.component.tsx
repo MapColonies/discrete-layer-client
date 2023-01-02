@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect } from 'react';
-import lookupTablesContext from '../../../../common/contexts/lookupTables.context';
-import { LookupTablesDataModelType } from '../../../models';
+import lookupTablesContext, { ILookupTablesData } from '../../../../common/contexts/lookupTables.context';
 import { useQuery, useStore } from '../../../models/RootStore';
 
 export const LookupTablesFetcher: React.FC = observer(() => {
@@ -14,7 +13,7 @@ export const LookupTablesFetcher: React.FC = observer(() => {
 
   useEffect(() => {
     if (!loading) {
-      const lookupTablesData = data?.getLookupTablesData as LookupTablesDataModelType;
+      const lookupTablesData = data?.getLookupTablesData as ILookupTablesData;
       console.log(lookupTablesData)
       setLookupTablesData(lookupTablesData);
     }
