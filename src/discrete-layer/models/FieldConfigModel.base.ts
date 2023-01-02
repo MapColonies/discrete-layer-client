@@ -48,10 +48,11 @@ export const FieldConfigModelBase = withTypedRefs<Refs>()(ModelBase
     validation: types.union(types.undefined, types.null, types.array(types.late((): any => ValidationConfigModel))),
     enumValues: types.union(types.undefined, types.null, types.late((): any => EnumAspectsModel)),
     //subFields: types.union(types.undefined, types.null, types.array(MSTGQLRef(types.late((): any => FieldConfigModel)))),
-    subFields: types.union(types.undefined, types.null, types.array(types.late((): any => FieldConfigModel))), default: types.union(types.undefined, types.null, types.string),
+    subFields: types.union(types.undefined, types.null, types.array(types.late((): any => FieldConfigModel))),
+    default: types.union(types.undefined, types.null, types.string),
+    lookupTable: types.union(types.undefined, types.null, types.string),
     dateGranularity: types.union(types.undefined, types.null, DateGranularityTypeEnumType),
     updateRules: types.union(types.undefined, types.null, types.late((): any => UpdateRulesModel)),
-    lookupTable: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
