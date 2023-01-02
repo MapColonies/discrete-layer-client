@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useLayoutEffect,useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import Moment from 'moment';
 import 'moment/locale/he'; // TODO: improve dynamic moment locales loading
@@ -53,7 +53,7 @@ const App: React.FC = () => {
   const [enumsMap, setEnumsMap] = useState<IEnumsMapType | null>(null);
 
   // const theme = Themes.lightTheme; //TODO: when dark theme will be tuned use this --> prefersDarkMode ? Themes.darkTheme : Themes.lightTheme;
-  const customThemeProps: Record<string, string> = {};
+  const customThemeProps: Record<string,string> = {};
   for (const prop in CustomTheme.darkTheme) {
     customThemeProps[camelize(prop)] = (CustomTheme.darkTheme as Record<string, string>)[prop];
   }

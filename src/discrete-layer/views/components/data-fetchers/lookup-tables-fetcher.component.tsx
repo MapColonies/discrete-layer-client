@@ -14,7 +14,6 @@ export const LookupTablesFetcher: React.FC = observer(() => {
   useEffect(() => {
     if (!loading) {
       const lookupTablesData = data?.getLookupTablesData as ILookupTablesData;
-      console.log(lookupTablesData)
       setLookupTablesData(lookupTablesData);
     }
   }, [data, loading, store.discreteLayersStore]);

@@ -16,10 +16,10 @@ interface LookupTablesPresentorProps {
 }
 
 export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = ({ lookupKey, fieldInfo, value, formik }) => {
-  const intl = useIntl(); 
+  const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
 
-  if (!lookupTablesData) return <></>;
+  if (!lookupTablesData) return null;
   const lookupOptions = lookupTablesData[lookupKey] as ILookupOption[];
 
   if (!formik) {
@@ -28,32 +28,32 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
         {"tooltip test value"}
       </TooltippedValue>
     );
-  } else {
-    return (
-      <Box className="detailsFieldValue selectBoxContainer">
-        <Select
-          value={value}
-          id={fieldInfo.fieldName as string}
-          name={fieldInfo.fieldName as string}
-          onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-            formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
-          }}
-          onBlur={formik.handleBlur}
-          outlined
-          enhanced>
-          {
-            lookupOptions.map(({ translationCode, value }) => {
-              const translation = intl.formatMessage({ id: translationCode });
-
-              return (
-                <MenuItem key={translationCode} value={value}>
-                  {translation}
-                </MenuItem>
-              );
-            })
-          }
-        </Select>
-      </Box>
-    );
   }
+
+  return (
+    <Box className="detailsFieldValue selectBoxContainer">
+      <Select
+        value={value}
+        id={fieldInfo.fieldName as string}
+        name={fieldInfo.fieldName as string}
+        onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
+          formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
+        }}
+        onBlur={formik.handleBlur}
+        outlined
+        enhanced>
+        {
+          lookupOptions.map(({ translationCode, value }) => {
+            const translation = intl.formatMessage({ id: translationCode });
+
+            return (
+              <MenuItem key={translationCode} value={value}>
+                {translation}
+              </MenuItem>
+            );
+          })
+        }
+      </Select>
+    </Box>
+  );
 }
