@@ -14,7 +14,6 @@ export enum ContextActionsTypes {
 
 export enum ContextActions {
   QUERY_WFS_FEATURE = 'QUERY_WFS_FEATURE',
-  GET_HEIGHT = 'GET_HEIGHT',
 }
 
 export interface IContextActions {
@@ -48,18 +47,6 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
           }
         ],
       },
-      // {
-      //   id: 2,
-      //   titleTranslationId: '',
-      //   type: ContextActionsTypes.CLIENT_SIDE_OPERATIONS,
-      //   group: [
-      //     {
-      //       ...defaultContextActionProps,
-      //       titleTranslationId: 'Get Height',
-      //       action: ContextActions.GET_HEIGHT,
-      //     },
-      //   ],
-      // },
     ],
   },
 ];

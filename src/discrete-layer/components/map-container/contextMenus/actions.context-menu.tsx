@@ -69,8 +69,8 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
           {...restProps}
         >
           <Box className="coordinatesContainer">
+            <CreateSvgIconLocationOn fontSize='small' className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor' }} height="28" width="28" />
             {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
-            <CreateSvgIconLocationOn className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor' }} height="48" width="48" />
           </Box>
         </ContextMenu>
   );

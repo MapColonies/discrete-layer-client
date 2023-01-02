@@ -203,10 +203,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           
           break;
         }
-        case ContextActions.GET_HEIGHT: {
-
-          break;
-        }
         
         // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {

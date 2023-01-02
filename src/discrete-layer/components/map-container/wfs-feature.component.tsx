@@ -114,6 +114,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
               style={{
                 color: theme.textPrimaryOnDark,
               }}
+              dir={intl.locale === 'he' ? 'rtl' : 'ltr'}
             >
               {
               intl.formatMessage({ id: 'wfs-info.no-data.message' })

@@ -21,7 +21,7 @@ body[dir='rtl'] .actionsMenuItemLoading {
 .coordinatesContainer {
     text-align: left;
     background-color: var(--mdc-theme-gc-selection-background);
-    padding: 8px;
+    padding: 8px 20px;
     display: flex;
     align-items: center;
     gap: 10px;

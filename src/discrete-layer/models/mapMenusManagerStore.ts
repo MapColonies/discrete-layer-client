@@ -121,9 +121,7 @@ export const mapMenusManagerStore = ModelBase
     }
 
     function getFeatureConfig(typeName: string): IFeatureConfig {
-      const DEFAULT_CONFIG_KEY = 'default';
-
-      return self.actionsMenuFeatureConfigs?.[typeName] ?? self.actionsMenuFeatureConfigs?.[DEFAULT_CONFIG_KEY] as IFeatureConfig
+      return self.actionsMenuFeatureConfigs?.[typeName] as IFeatureConfig;
     }
 
     function resetCurrentWfsFeatureInfo(): void {
