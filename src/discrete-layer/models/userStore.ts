@@ -115,7 +115,6 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: true,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: true,
       [ContextActions.QUERY_WFS_FEATURE]: true,
-      [ContextActions.GET_HEIGHT]: true,
     },
   },
   {
@@ -158,7 +157,6 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: false,
       [ContextActions.QUERY_WFS_FEATURE]: true,
-      [ContextActions.GET_HEIGHT]: true,
     },
   },
 ];
