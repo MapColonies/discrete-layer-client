@@ -180,6 +180,7 @@
   "field-names.raster.footprint": "Footprint",
   "field-names.raster.producerName": "Producer Name",
   "field-names.raster.layerPolygonParts": "Polygon Parts",
+  "field-names.raster.transparency": "Transparency",
 
   "field-names.3d.fileNames": "File name",
   "field-names.3d.id": "ID",
@@ -574,5 +575,8 @@
   "ProductType.point_cloud": "PointCloud",
 
   "RecordStatus.published": "Published",
-  "RecordStatus.unpublished": "Unpublished"
+  "RecordStatus.unpublished": "Unpublished",
+
+  "Transparency.transparent": "Transparent",
+  "Transparency.opaque": "Opaque"
 }
