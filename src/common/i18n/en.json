@@ -62,6 +62,7 @@
   "action.job.retry": "Try again",
   "action.job.abort": "Abort",
   "actions.wfs.buildings-title": "Building info",
+  "actions.meter.sign": "m",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",

@@ -62,6 +62,7 @@
   "action.job.retry": "נסה שוב",
   "action.job.abort": "בטל",
   "actions.wfs.buildings-title": "תשאול מבנה",
+  "actions.meter.sign": "מ'",
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
