@@ -102,6 +102,7 @@ export const getValuePresentor = (
     case 'VerticalDatum':
     case 'Units':
     case 'UndulationModel':
+    case 'Transparency':
     case 'ProductType': {
       let options: string[] = [];
       if (basicType === 'ProductType') {
@@ -110,7 +111,7 @@ export const getValuePresentor = (
         options = getEnumKeys(enumsMap as IEnumsMapType, basicType);
       }
       return (
-        <EnumValuePresentorComponent options={options} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent options={['',...options]} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
       );
     }
     case 'RecordType':

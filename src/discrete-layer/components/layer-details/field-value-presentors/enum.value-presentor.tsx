@@ -70,17 +70,19 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             {
               options.map(
                 (item, index) => {
-                  let icon: string;
-                  let translation: string;
-                  if (dictionary !== undefined) {
-                    icon = dictionary[item].icon;
-                    translation = get(dictionary[item], locale) as string;
-                  } else {
-                    const { translationKey, internal } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
-                    icon = enums[item].icon;
-                    translation = intl.formatMessage({ id: translationKey });
-                    if (internal) {
-                      return null;
+                  let icon = '';
+                  let translation = '';
+                  if(item !== ''){
+                    if (dictionary !== undefined) {
+                      icon = dictionary[item].icon;
+                      translation = get(dictionary[item], locale) as string;
+                    } else {
+                      const { translationKey, internal } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
+                      icon = enums[item].icon;
+                      translation = intl.formatMessage({ id: translationKey });
+                      if (internal) {
+                        return null;
+                      }
                     }
                   }
                   return (

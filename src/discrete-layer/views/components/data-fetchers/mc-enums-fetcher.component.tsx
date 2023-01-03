@@ -10,7 +10,8 @@ import {
   RecordType,
   UndulationModel,
   Units,
-  VerticalDatum
+  VerticalDatum,
+  Transparency
 } from '../../../models';
 import { useQuery, useStore } from '../../../models/RootStore';
 
@@ -26,7 +27,8 @@ export const MCEnumsFetcher: React.FC = observer(() => {
     UndulationModel,
     ProductType,
     RecordStatus,
-    RecordType
+    RecordType,
+    Transparency
   };
 
   useEffect(() => {
