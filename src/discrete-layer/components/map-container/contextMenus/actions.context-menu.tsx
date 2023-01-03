@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
-import { Button, CircularProgress, Icon } from '@map-colonies/react-core';
+import { CircularProgress, Icon } from '@map-colonies/react-core';
 import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
