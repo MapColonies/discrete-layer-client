@@ -59,6 +59,7 @@
 }
 
 .cesium-infoBox-close {
+  background: transparent;
   width: 20px;
   height: 20px;
   background-color: transparent;
@@ -67,8 +68,8 @@
   font-size: 18px;
 }
 
-.cesium-infoBox-close:hover {
-  background: unset;
+button.cesium-infoBox-close:hover {
+  background: transparent;
   color: unset;
   cursor: pointer;
 }
