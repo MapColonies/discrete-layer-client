@@ -9,7 +9,8 @@ export interface IFeatureConfig {
   outlineColor?: string,
   dWithin?: number,
   translationId?: string,
-  icon?: string 
+  icon?: string,
+  outlineWidth?: number,
 }
 
 export interface IFeatureConfigs {
