@@ -173,8 +173,8 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
             onLoad={(geoJsonDataSource): void => {
               const featureFillColor = wfsFeature.config.color;
               const featureOutlineColor = wfsFeature.config.outlineColor;
-              const lineWidth = 5;
-              const outlineWidth = 4;
+              const lineWidth = wfsFeature.config.outlineWidth;
+              const outlineWidth = wfsFeature.config.outlineWidth;
 
               geoJsonDataSource.entities.values.forEach((item) => {
                 if (item.polyline) {
