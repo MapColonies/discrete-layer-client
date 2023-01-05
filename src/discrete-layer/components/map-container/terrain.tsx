@@ -14,15 +14,21 @@ export const Terrain: React.FC<TerrainProps> = () => {
 
   // eslint-disable-next-line
   const setTerrainProvider = () => {
-    if (CONFIG.DEFAULT_TERRAIN_PROVIDER_URL) {
       mapViewer.terrainProvider = new CesiumCesiumTerrainProvider({
         url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
       });
 
-      return;
-    }
+      const terrainErrorEvent = mapViewer.terrainProvider.errorEvent;
 
-    mapViewer.terrainProvider = new CesiumEllipsoidTerrainProvider({});
+      function handleTerrainError(e: unknown): void {
+        console.error('Terrain provider errored. falling back to default terrain. ', e);
+        mapViewer.terrainProvider = new CesiumEllipsoidTerrainProvider({});
+
+        // Remove the error listener after failing once.
+        terrainErrorEvent.removeEventListener(handleTerrainError);
+      }
+
+      terrainErrorEvent.addEventListener(handleTerrainError);
   };
 
   useEffect(setTerrainProvider, []);

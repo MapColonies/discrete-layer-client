@@ -14,6 +14,7 @@ export const useHeightFromTerrain = ({ longitude, latitude, precision }: UseHeig
     const [height, setHeight] = useState<number>();
 
     useEffect(() => {
+      if(latitude && longitude) {
         void cesiumSampleTerrainMostDetailed(
             mapViewer.terrainProvider,
             [ CesiumCartographic.fromDegrees(longitude, latitude) ]
@@ -24,6 +25,7 @@ export const useHeightFromTerrain = ({ longitude, latitude, precision }: UseHeig
               }
             }
           );
+      }
     }, [longitude, latitude])
 
     return typeof precision !== 'undefined' ? Number(height?.toFixed(precision)) : height;
