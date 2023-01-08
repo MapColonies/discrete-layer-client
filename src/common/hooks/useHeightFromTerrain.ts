@@ -1,32 +1,49 @@
-import { CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from "@map-colonies/react-components";
+import { CesiumCartesian2, CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from "@map-colonies/react-components";
 import { useEffect, useState } from "react";
 import { isEmpty } from 'lodash';
 
 
+export interface IPosition {
+  latitude: number,
+  longitude: number
+}
 interface UseHeightFromTerrainProps {
-    longitude: number;
-    latitude: number;
-    precision?: number;
-  }
+    position: IPosition[];
+}
 
-export const useHeightFromTerrain = ({ longitude, latitude, precision }: UseHeightFromTerrainProps): number | undefined => {
+interface IHeightFromTerrain {
+  newPositions?: CesiumCartographic[];
+  setCoordinates: (pos: IPosition[]) => void; 
+}
+
+export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeightFromTerrain => {
     const mapViewer = useCesiumMap();
-    const [height, setHeight] = useState<number>();
+    const [newPositions, setNewPositions] = useState<CesiumCartographic[]>();
+    const [coordinates, setCoordinates] = useState<IPosition[]>();
 
     useEffect(() => {
-      if(latitude && longitude) {
+      if(options) {
+        setCoordinates(options.position);
+      }
+    }, [])
+
+
+    useEffect(() => {
+      if(coordinates) {
+        const cartographicArr = coordinates.map(coord => CesiumCartographic.fromDegrees(coord.longitude, coord.latitude));
+
         void cesiumSampleTerrainMostDetailed(
             mapViewer.terrainProvider,
-            [ CesiumCartographic.fromDegrees(longitude, latitude) ]
+            cartographicArr
           ).then(
             (updatedPositions) => {
               if (!isEmpty(updatedPositions)) {
-                setHeight(updatedPositions[0].height);
+                setNewPositions([...updatedPositions] as CesiumCartographic[]);
               }
             }
           );
       }
-    }, [longitude, latitude])
+    }, [coordinates])
 
-    return typeof precision !== 'undefined' ? Number(height?.toFixed(precision)) : height;
+    return { newPositions, setCoordinates }
 }

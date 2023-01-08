@@ -12,6 +12,8 @@ interface TerrainProps {}
 export const Terrain: React.FC<TerrainProps> = () => {
   const mapViewer = useCesiumMap();
 
+  mapViewer.scene.globe.depthTestAgainstTerrain = true;
+
   // eslint-disable-next-line
   const setTerrainProvider = () => {
       mapViewer.terrainProvider = new CesiumCesiumTerrainProvider({

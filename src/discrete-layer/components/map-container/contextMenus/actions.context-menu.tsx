@@ -17,7 +17,8 @@ interface IActionsContextMenuProps extends IContextMenuData {
   menuItems?: MenuItemsList;
 }
 
-export const COORDS_DISPLAY_PRECISION = 5;
+export const COORDS_DISPLAY_PRECISION = 1;
+const FIRST = 0;
 
 export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   menuItems,
@@ -27,7 +28,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   const store = useStore();
   const intl = useIntl();
   const [currentClickedItem, setCurrentClickedItem] = useState<string>();
-  const heightAtCoordinates = useHeightFromTerrain({ ...coordinates, precision: 1 });
+  const heightsAtCoordinates = useHeightFromTerrain({ position: [{ ...coordinates }] });
 
   const dispatchAction = useCallback((action: IDispatchAction): void => {
     store.actionDispatcherStore.dispatchAction({
@@ -66,8 +67,10 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   };
 
   const getHeightText = (): string => {
-    if(typeof heightAtCoordinates !== 'undefined' && !isNaN(heightAtCoordinates)){
-      return `${heightAtCoordinates} ${intl.formatMessage({ id: 'actions.meter.sign' })}`;
+    const coordinateHeight = heightsAtCoordinates.newPositions?.[FIRST].height;
+
+    if(typeof coordinateHeight === 'number' && !isNaN(coordinateHeight)) {
+      return `${coordinateHeight.toFixed(COORDS_DISPLAY_PRECISION)} ${intl.formatMessage({ id: 'actions.meter.sign' })}`;
     }
 
     return `N/A`;
