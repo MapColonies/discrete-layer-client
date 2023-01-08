@@ -1,21 +1,17 @@
 import { createContext } from 'react';
 
-export type LookupKey = 'classificationList' | 'countryList';
-
 export interface ILookupOption {
   value: string;
   translationCode?: string;
   properties: Record<string, unknown>
 }
-
-export interface ILookupTablesData {
-  countryList?: ILookupOption[];
-  classificationList?: ILookupOption[];
+export interface ILookupTableData {
+  dictionary?: Record<string, ILookupOption[]>;
 }
 
 interface ILookupTablesContext {
-  lookupTablesData?: ILookupTablesData;
-  setLookupTablesData: (lookupTablesData: ILookupTablesData) => void;
+  lookupTablesData?: ILookupTableData;
+  setLookupTablesData: (lookupTablesData: ILookupTableData) => void;
 }
 
 export default createContext<ILookupTablesContext>({

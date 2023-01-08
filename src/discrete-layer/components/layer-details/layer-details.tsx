@@ -40,7 +40,6 @@ import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
 import { LookupOptionsPresentorComponent } from './field-value-presentors/lookup.options-presentor';
-import { LookupKey } from '../../../common/contexts/lookupTables.context';
 
 const FOOTPRINT_FIELD_NAME = 'footprint';
 
@@ -61,8 +60,8 @@ export const getValuePresentor = (
   formik?: EntityFormikHandlers,
   enumsMap?: IEnumsMapType | null
 ): JSX.Element => {
-  const { fieldName, lookupTable } = fieldInfo;
-  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupTable as string);
+  const { fieldName, lookupKey } = fieldInfo;
+  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupKey as string);
   const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
   
   switch (basicType) {
@@ -124,7 +123,7 @@ export const getValuePresentor = (
       );
     case 'LookupTableType':
       return (
-        <LookupOptionsPresentorComponent fieldInfo={fieldInfo} formik={formik} lookupKey={lookupTable as LookupKey} />
+        <LookupOptionsPresentorComponent fieldInfo={fieldInfo} mode={mode} formik={formik} />
       );
     default:
       return (

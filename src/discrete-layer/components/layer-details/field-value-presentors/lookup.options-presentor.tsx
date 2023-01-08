@@ -1,31 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Box } from '@map-colonies/react-components';
 import { MenuItem, Select } from '@map-colonies/react-core';
-import React, { useContext } from 'react';
+import { get, isEmpty } from 'lodash';
+import React, { useCallback, useContext, useState } from 'react';
 import { useIntl } from 'react-intl';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
-import lookupTablesContext, { ILookupOption, LookupKey } from '../../../../common/contexts/lookupTables.context';
+import CONFIG from '../../../../common/config';
+import lookupTablesContext from '../../../../common/contexts/lookupTables.context';
+import useDebounceField from '../../../../common/hooks/debounce-field.hook';
+import { IDictionary } from '../../../../common/models/dictionary';
+import { Mode } from '../../../../common/models/mode.enum';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 
 interface LookupTablesPresentorProps {
-  lookupKey: LookupKey;
+  mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  dictionary?: IDictionary;
 }
 
-export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = ({ lookupKey, fieldInfo, value, formik }) => {
+export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = ({ mode, fieldInfo, value, formik, dictionary }) => {
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
+  const [locale] = useState<string>(CONFIG.I18N.DEFAULT_LANGUAGE);
+  const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
 
-  if (!lookupTablesData) return null;
-  const lookupOptions = lookupTablesData[lookupKey] as ILookupOption[];
+  const getDisplayValue = useCallback((): string => {
+    if (isEmpty(innerValue)) {
+      return innerValue;
+    } else if (Array.isArray(innerValue)) {
+      return innerValue.join(',');
+    } else if (dictionary !== undefined) {
+      return get(dictionary[innerValue], locale) as string;
+    } else {
+      return intl.formatMessage({ id: lookupOptions[0].translationCode });
+    }
+  }, [innerValue]);
 
-  if (!formik) {
+  if (!lookupTablesData || !lookupTablesData.dictionary) return null;
+  const lookupOptions = lookupTablesData.dictionary[fieldInfo.lookupKey as string];
+
+  if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <TooltippedValue className="detailsFieldValue">
-        {"tooltip test value"}
+        {getDisplayValue()}
       </TooltippedValue>
     );
   }

@@ -44,7 +44,7 @@ import CONFIG from './common/config';
 import { camelize } from './common/helpers/string';
 import { CustomTheme } from './theming/custom.theme';
 import EnumsMapContext, { IEnumsMapType } from './common/contexts/enumsMap.context';
-import LookupTablesContext, { ILookupTablesData } from './common/contexts/lookupTables.context';
+import LookupTablesContext, { ILookupTableData } from './common/contexts/lookupTables.context';
 
 const App: React.FC = () => {
   /*const prefersDarkMode = */useMediaQuery('(prefers-color-scheme: dark)');
@@ -68,7 +68,7 @@ const App: React.FC = () => {
     }
   };
 
-  const [lookupTablesData, setLookupTablesData] = useState<ILookupTablesData>({});
+  const [lookupTablesData, setLookupTablesData] = useState<ILookupTableData>({});
 
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
