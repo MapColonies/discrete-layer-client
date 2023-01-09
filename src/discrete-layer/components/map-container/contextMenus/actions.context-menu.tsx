@@ -69,7 +69,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   const getHeightText = (): string => {
     const coordinateHeight = heightsAtCoordinates.newPositions?.[FIRST].height;
 
-    if(typeof coordinateHeight === 'number' && !isNaN(coordinateHeight)) {
+    if(typeof coordinateHeight !== 'undefined' && !isNaN(coordinateHeight)) {
       return `${coordinateHeight.toFixed(COORDS_DISPLAY_PRECISION)} ${intl.formatMessage({ id: 'actions.meter.sign' })}`;
     }
 

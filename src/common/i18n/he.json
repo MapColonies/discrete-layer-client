@@ -28,6 +28,8 @@
   "general.empty.text": "ריק",
   "general.more.text": "עוד...",
   "general.missing.translation": "##MISSING_TRANSLATION##",
+  
+  "terrain-provider.access.error": "מידע פני השטח לא זמין",
 
   "action.tab-views.catalog.tooltip": "טאב קטלוג",
   "action.tab-views.search-results.tooltip": "טאב תוצאות חיפוש",

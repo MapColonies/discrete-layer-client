@@ -7,9 +7,6 @@ import {
   CesiumGeojsonLayer,
   CesiumCartesian3,
   CesiumVerticalOrigin,
-  CesiumCartographic,
-  useCesiumMap,
-  cesiumSampleTerrainMostDetailed,
   CesiumMath,
 } from '@map-colonies/react-components';
 import { useStore } from '../../models';
@@ -45,59 +42,50 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
         const longitude = Number(wfsFeature.pointCoordinates[LONGITUDE_POSITION]);
         const latitude = Number(wfsFeature.pointCoordinates[LATITUDE_POSITION]);
 
-        console.log("POINT",longitude, latitude)
         setCoordinates([{ longitude, latitude }]);
       }
   }, [wfsFeature?.pointCoordinates])
 
   
   const WfsFeatureGeometries: React.FC<{feature: Feature}> = ({ feature }) => {
-    const mapViewer = useCesiumMap();
     const [featureWithHeight, setFeatureWithHeight] = useState<Feature<LineString | Polygon>>();
+    const { setCoordinates, newPositions } = useHeightFromTerrain();
     
     useEffect(() => {
+          switch(feature.geometry.type) {
+            case "LineString": {
+              const posArr: IPosition[] = feature.geometry.coordinates.map(coord => ({ longitude: coord[0], latitude: coord[1] }));
+              setCoordinates(posArr);
+              break;
+            }
+            case "Polygon":{
+              // NOTICE THE coordinates[0].
+              const posArr: IPosition[] = feature.geometry.coordinates[0].map(coord => ({ longitude: coord[0], latitude: coord[1] }));
+              setCoordinates(posArr);
+              break;
+            }
 
-          if(feature.geometry.type === 'LineString') {
-            const cartographicArr = feature.geometry.coordinates.map(coord => CesiumCartographic.fromCartesian(CesiumCartesian3.fromDegrees(coord[0], coord[1])));
-
-            void cesiumSampleTerrainMostDetailed(
-              mapViewer.terrainProvider,
-              cartographicArr
-            ).then(val => {
-              setFeatureWithHeight({
-                ...feature,
-                geometry: {
-                  ...feature.geometry,
-                  type: 'LineString',
-                  coordinates: val.map(cartographic => {
-                    return [CesiumMath.toDegrees(cartographic.longitude), CesiumMath.toDegrees(cartographic.latitude), cartographic.height]
-                  })
-                }
-              })
-            })
-          }
-
-          if(feature.geometry.type === 'Polygon') {
-            // NOTICE THE coordinates[0].
-            const cartographicArr = feature.geometry.coordinates[0].map(coord => CesiumCartographic.fromCartesian(CesiumCartesian3.fromDegrees(coord[0], coord[1])));
-            
-            void cesiumSampleTerrainMostDetailed(
-              mapViewer.terrainProvider,
-              cartographicArr
-            ).then(val => {
-              setFeatureWithHeight({
-                ...feature,
-                geometry: {
-                  ...feature.geometry,
-                  type: 'Polygon',
-                  coordinates: [val.map(cartographic => {
-                    return [CesiumMath.toDegrees(cartographic.longitude), CesiumMath.toDegrees(cartographic.latitude), cartographic.height]
-                  })]
-                }
-              })
-            })
+            default:
+              break;
           }
     }, [feature])
+
+    useEffect(() => {
+      if(newPositions) {
+        const newCoordinates = newPositions.map(cartographic => {
+          return [CesiumMath.toDegrees(cartographic.longitude), CesiumMath.toDegrees(cartographic.latitude), cartographic.height]
+        });
+
+        setFeatureWithHeight({
+          ...feature,
+          // @ts-ignore
+          geometry: {
+            ...feature.geometry,
+            coordinates: feature.geometry.type === 'LineString' ? newCoordinates : [newCoordinates]
+          }
+        })
+      }
+    }, [newPositions])
 
     if(!featureWithHeight || !wfsFeature) return null;
 
@@ -238,7 +226,6 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
           scale: 0.7,
           image: 'assets/img/map-marker.gif',
-          heightReference: 1
         }}
         description={noEntityDataHtml}
         selected={entitySelected}
@@ -255,7 +242,6 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
             verticalOrigin: CesiumVerticalOrigin.BOTTOM,
             scale: 0.7,
             image: 'assets/img/map-marker.gif',
-            heightReference: 1
           }}
           description={wfsInfoHtml}
           selected={entitySelected}
