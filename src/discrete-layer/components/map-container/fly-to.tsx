@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CesiumRectangle, CesiumSceneMode, useCesiumMap } from '@map-colonies/react-components';
+import { CesiumColor, CesiumRectangle, CesiumSceneMode, useCesiumMap } from '@map-colonies/react-components';
 import { LayerMetadataMixedUnion, RecordType } from '../../models';
 
 const IMMEDIATELY = 0;
@@ -17,7 +17,22 @@ export const FlyTo: React.FC<FlyToProps> = ({ rect, setRect, layer}): JSX.Elemen
     if (mapViewer.scene.mode !== CesiumSceneMode.SCENE3D && layer.type === RecordType.RECORD_3D) {
       mapViewer.scene.morphTo3D(IMMEDIATELY);
     }
-    mapViewer.camera.flyTo({ destination: rect });
+
+    const rectangle = mapViewer.entities.add({
+      rectangle: {
+        coordinates: rect,
+        material: CesiumColor.PURPLE.withAlpha(0.0),
+        extrudedHeight: 400.0,
+        height: 300.0
+      },
+    });
+    
+    mapViewer.flyTo(
+      rectangle,
+    ).then(()=>{
+      mapViewer.entities.remove(rectangle);
+    });
+
     setRect(undefined);
   }, []);
 
