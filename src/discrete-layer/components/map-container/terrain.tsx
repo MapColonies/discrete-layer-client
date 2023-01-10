@@ -27,7 +27,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
       const terrainErrorEvent = mapViewer.terrainProvider.errorEvent;
 
       function handleTerrainError(e: unknown): void {
-        if(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL){
+        if(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL as string){
           console.error('Terrain provider errored. falling back to default terrain. ', e);
 
           queue.notify({
@@ -35,7 +35,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
               <Error
                 className="errorNotification"
                 message={intl.formatMessage({ id: "terrain-provider.access.error" })}
-                details={CONFIG.DEFAULT_TERRAIN_PROVIDER_URL}
+                details={CONFIG.DEFAULT_TERRAIN_PROVIDER_URL as string}
               />
             ),
           });
