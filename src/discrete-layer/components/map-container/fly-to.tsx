@@ -3,6 +3,7 @@ import { CesiumColor, CesiumRectangle, CesiumSceneMode, useCesiumMap } from '@ma
 import { LayerMetadataMixedUnion, RecordType } from '../../models';
 
 const IMMEDIATELY = 0;
+const TRANSPARENT = 0.0;
 
 interface FlyToProps {
   rect: CesiumRectangle;
@@ -21,15 +22,15 @@ export const FlyTo: React.FC<FlyToProps> = ({ rect, setRect, layer}): JSX.Elemen
     const rectangle = mapViewer.entities.add({
       rectangle: {
         coordinates: rect,
-        material: CesiumColor.PURPLE.withAlpha(0.0),
+        material: CesiumColor.PURPLE.withAlpha(TRANSPARENT),
         extrudedHeight: 400.0,
         height: 300.0
       },
     });
     
-    mapViewer.flyTo(
+    void mapViewer.flyTo(
       rectangle,
-    ).then(()=>{
+    ).then(() => {
       mapViewer.entities.remove(rectangle);
     });
 
