@@ -77,6 +77,7 @@ import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , La
 import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
 import { RecordStatus } from "./RecordStatusEnum"
+import { Transparency } from "./TransparencyEnum"
 import { VerticalDatum } from "./VerticalDatumEnum"
 import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
@@ -198,6 +199,7 @@ export type LayerRasterRecordInput = {
   layerPolygonParts?: any
   includedInBests?: string[]
   productBoundingBox?: string
+  transparency: Transparency
   insertDate?: any
   keywords?: string
   links?: LinkInput[]
