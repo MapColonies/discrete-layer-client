@@ -801,7 +801,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
               {
-                rect && <FlyTo rect={rect} setRect={setRect} is3D={is3D}/>
+                rect && <FlyTo rect={rect} setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
               }
           </CesiumMap>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}

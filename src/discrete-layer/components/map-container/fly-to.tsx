@@ -1,20 +1,23 @@
 import React, { useEffect } from 'react';
-import { CesiumRectangle, useCesiumMap } from '@map-colonies/react-components';
+import { CesiumRectangle, CesiumSceneMode, useCesiumMap } from '@map-colonies/react-components';
+import { LayerMetadataMixedUnion, RecordType } from '../../models';
+
+const IMMEDIATELY = 0;
 
 interface FlyToProps {
   rect: CesiumRectangle;
   setRect: (rect: CesiumRectangle | undefined) => void;
-  is3D: boolean;
+  layer: LayerMetadataMixedUnion;
 }
 
-export const FlyTo: React.FC<FlyToProps> = ({ rect, setRect, is3D}): JSX.Element => {
+export const FlyTo: React.FC<FlyToProps> = ({ rect, setRect, layer}): JSX.Element => {
   const mapViewer = useCesiumMap();
 
   useEffect(() => {
     mapViewer.camera.flyTo({ destination: rect });
     setRect(undefined);
-    if (is3D) {
-      mapViewer.scene.morphTo3D(0);
+    if (mapViewer.scene.mode !== CesiumSceneMode.SCENE3D && layer.type === RecordType.RECORD_3D) {
+      mapViewer.scene.morphTo3D(IMMEDIATELY);
     }
   }, []);
 
