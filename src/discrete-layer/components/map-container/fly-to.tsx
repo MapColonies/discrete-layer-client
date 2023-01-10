@@ -14,11 +14,11 @@ export const FlyTo: React.FC<FlyToProps> = ({ rect, setRect, layer}): JSX.Elemen
   const mapViewer = useCesiumMap();
 
   useEffect(() => {
-    mapViewer.camera.flyTo({ destination: rect });
-    setRect(undefined);
     if (mapViewer.scene.mode !== CesiumSceneMode.SCENE3D && layer.type === RecordType.RECORD_3D) {
       mapViewer.scene.morphTo3D(IMMEDIATELY);
     }
+    mapViewer.camera.flyTo({ destination: rect });
+    setRect(undefined);
   }, []);
 
   return <></>;

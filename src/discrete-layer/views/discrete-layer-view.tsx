@@ -126,7 +126,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
-  const [is3D, setIs3D] = useState<boolean>(false);
   const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
@@ -401,15 +400,10 @@ const DiscreteLayerView: React.FC = observer(() => {
         geojson: polygon.geojson,
       },
     ]);
-
   };
 
   const onFlyTo = useCallback((): void => {
-    const layerToFlyTo = store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion;
-    if (layerToFlyTo.type === RecordType.RECORD_3D) {
-      setIs3D(true);
-    }
-    setRect(generateFactoredLayerRectangle(layerToFlyTo));
+    setRect(generateFactoredLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
     dispatchAction({
       action: UserAction.SYSTEM_CALLBACK_FLYTO,
       data: { selectedLayer: store.discreteLayersStore.selectedLayer }
