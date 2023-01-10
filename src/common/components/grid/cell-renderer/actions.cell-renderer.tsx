@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup, IAction } from '../../../actions/entity.actions';
@@ -27,7 +27,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           const { dependentField } = action;
           if (typeof dependentField === 'undefined') return true;
                     
-          return jobData[dependentField] === true;
+          return get(jobData, dependentField) as boolean;
         })
       })
     });

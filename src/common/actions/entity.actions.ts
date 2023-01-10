@@ -261,7 +261,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             class: 'mc-icon-Refresh',
             titleTranslationId: 'action.job.retry',
             views: [],
-            dependentField: 'isResettable'
+            dependentField: 'availableActions.isResumable'
           },
           {
             action: 'abort',
@@ -270,7 +270,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             class: 'mc-icon-Delete glow-missing-icon',
             titleTranslationId: 'action.job.abort',
             views: [],
-            dependentField: 'isAbortable'
+            dependentField: 'availableActions.isAbortable'
           },
         ],
       }
