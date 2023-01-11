@@ -22,6 +22,7 @@ import { JOB_ENTITY } from './job.types';
 
 import './jobs.dialog.css';
 import JobManagerGrid from './grids/job-manager-grid.common';
+import useDateNow from '../../../common/hooks/useDateNow.hook';
 
 const START_CYCLE_ITERATION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
@@ -47,6 +48,8 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // @ts-ignore
   const [timeLeft, actions] = useCountDown(POLLING_CYCLE_INTERVAL, COUNTDOWN_REFRESH_RATE);
 
+  const dateNow = useDateNow();
+
   // start the timer during the first render
   useEffect(() => {
     (actions as IActions).start();
@@ -64,6 +67,10 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       fetchPolicy: 'no-cache'
     }
   );
+
+  useEffect(() => {
+    setTillDate(dateNow)
+  }, [dateNow])
 
   const mutationQuery = useQuery();
 
@@ -102,7 +109,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           },
         })
     );
-  }, [fromDate, tillDate, setQuery]);
+  }, [fromDate, setQuery]);
 
   // const getFilterJobsPredicate = (requestedDomain: RecordType): ((cur: JobModelType) => boolean) => {
   //   return (cur: JobModelType): boolean => {
@@ -121,9 +128,15 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   useEffect(() => {
     if (mutationQuery.data) {
       setUpdateTaskPayload({});
-      void query?.refetch();
+      setQuery((store) =>
+      store.queryJobs({
+        params: {
+          fromDate,
+          tillDate,
+        },
+      }));
     }
-  }, [mutationQuery.data, query]);
+  }, [mutationQuery.data]);
 
   useEffect(() => {
     if (updateTaskPayload.id !== undefined) {
@@ -146,7 +159,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     const pollingInterval = setInterval(() => {
       setPollingCycle(pollingCycle + 1);
       (actions as IActions).start(POLLING_CYCLE_INTERVAL);
-      void query?.refetch();
+      setQuery((store) =>
+          store.queryJobs({
+            params: {
+              fromDate,
+              tillDate,
+            },
+          }));
     }, POLLING_CYCLE_INTERVAL);
 
     return (): void => {
@@ -266,7 +285,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             className="refreshContainer"
             onClick={(): void => {
               (actions as IActions).start(POLLING_CYCLE_INTERVAL);
-              void query?.refetch();
+              setQuery((store) =>
+                store.queryJobs({
+                  params: {
+                    fromDate,
+                    tillDate,
+                  },
+              }));
             }}
           >
             <IconButton className="refreshIcon mc-icon-Refresh" />
