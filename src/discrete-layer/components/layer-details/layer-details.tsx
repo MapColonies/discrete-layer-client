@@ -123,7 +123,7 @@ export const getValuePresentor = (
       );
     case 'LookupTableType':
       return (
-        <LookupOptionsPresentorComponent fieldInfo={fieldInfo} mode={mode} formik={formik} />
+        <LookupOptionsPresentorComponent value={value as string} fieldInfo={fieldInfo} mode={mode} formik={formik} />
       );
     default:
       return (
