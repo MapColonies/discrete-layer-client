@@ -28,6 +28,7 @@ const START_CYCLE_ITERATION = 0;
 const POLLING_CYCLE_INTERVAL = CONFIG.JOB_STATUS.POLLING_CYCLE_INTERVAL;
 const COUNTDOWN_REFRESH_RATE = 1000; // interval to change remaining time amount, defaults to 1000
 const MILLISECONDS_IN_SEC = 1000;
+const TILL_DATE_ACTION_REQUEST_BUFFER = Number(POLLING_CYCLE_INTERVAL);
 
 interface JobsDialogProps {
   isOpen: boolean;
@@ -132,7 +133,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       store.queryJobs({
         params: {
           fromDate,
-          tillDate,
+          tillDate: new Date(tillDate.getTime() + TILL_DATE_ACTION_REQUEST_BUFFER),
         },
       }));
     }
@@ -158,12 +159,14 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   useEffect(() => {
     const pollingInterval = setInterval(() => {
       setPollingCycle(pollingCycle + 1);
+      
+      const bufferedRequestedTime = new Date(tillDate.getTime() + Number(POLLING_CYCLE_INTERVAL));
       (actions as IActions).start(POLLING_CYCLE_INTERVAL);
       setQuery((store) =>
           store.queryJobs({
             params: {
               fromDate,
-              tillDate,
+              tillDate: bufferedRequestedTime,
             },
           }));
     }, POLLING_CYCLE_INTERVAL);
