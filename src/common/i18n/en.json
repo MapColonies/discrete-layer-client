@@ -180,6 +180,7 @@
   "field-names.raster.footprint": "Footprint",
   "field-names.raster.producerName": "Producer Name",
   "field-names.raster.layerPolygonParts": "Polygon Parts",
+  "field-names.raster.transparency": "Transparency",
 
   "field-names.3d.fileNames": "File name",
   "field-names.3d.id": "ID",
@@ -581,5 +582,8 @@
   "lookupTable.classification.levelThree": "Classified Level 3",
   "lookupTable.classification.levelFour": "Classified Level 4",
   "lookupTable.classification.levelFive": "Classified Level 5",
-  "lookupTable.classification.levelSix": "Classified Level 6"
+  "lookupTable.classification.levelSix": "Classified Level 6",
+  
+  "Transparency.transparent": "Transparent",
+  "Transparency.opaque": "Opaque"
 }

@@ -180,6 +180,7 @@
   "field-names.raster.footprint": "תיחום גאוגרפי",
   "field-names.raster.producerName": "יצרן המוצר",
   "field-names.raster.layerPolygonParts": "חלקי התיחום",
+  "field-names.raster.transparency": "שקיפות",
 
   "field-names.3d.fileNames": "שם הקובץ",
   "field-names.3d.id": "מזהה",
@@ -555,7 +556,7 @@
   "UndulationModel.ilum": "ILUM",
 
   "ProductType.orthophoto": "Orthophoto",
-  "ProductType.orthophoto_history": "OrthophotoHistoryו",
+  "ProductType.orthophoto_history": "OrthophotoHistory",
   "ProductType.orthophoto_best": "OrthophotoBest",
   "ProductType.raster_map": "RasterMap",
   "ProductType.raster_map_best": "RasterMapBest",
@@ -581,5 +582,8 @@
   "lookupTable.classification.levelThree": "סיווג רמה 3",
   "lookupTable.classification.levelFour": "סיווג רמה 4",
   "lookupTable.classification.levelFive": "סיווג רמה 5",
-  "lookupTable.classification.levelSix": "סיווג רמה 6"
+  "lookupTable.classification.levelSix": "סיווג רמה 6",
+  
+  "Transparency.transparent": "Transparent",
+  "Transparency.opaque": "Opaque"
 }
