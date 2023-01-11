@@ -60,8 +60,8 @@ export const getValuePresentor = (
   formik?: EntityFormikHandlers,
   enumsMap?: IEnumsMapType | null
 ): JSX.Element => {
-  const { fieldName, lookupKey } = fieldInfo;
-  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupKey as string);
+  const { fieldName, lookupTable } = fieldInfo;
+  const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupTable as string);
   const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
   
   switch (basicType) {

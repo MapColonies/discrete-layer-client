@@ -15,7 +15,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           type
           value
         }
-        lookupKey
+        lookupTable
         lookupExcludeFields
         fieldName
         label

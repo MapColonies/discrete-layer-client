@@ -80,9 +80,9 @@ export const getFlatEntityDescriptors = (
   return flat;
 };
 
-export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupKey?: string): string => {
+export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupTable?: string): string => {
   let recordModel;
-  if (lookupKey != null) return 'LookupTableType';
+  if (lookupTable != null) return 'LookupTableType';
 
   switch (typename) {
     case 'LayerDemRecord':
