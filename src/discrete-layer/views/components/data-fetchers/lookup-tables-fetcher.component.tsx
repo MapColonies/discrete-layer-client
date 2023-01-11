@@ -15,7 +15,5 @@ export const LookupTablesFetcher: React.FC = observer(() => {
     }
   }, [data, loading, store.discreteLayersStore]);
 
-  return (
-    <></>
-  );
+  return null;
 });
