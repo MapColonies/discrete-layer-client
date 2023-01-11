@@ -22,9 +22,7 @@ export const FlyTo: React.FC<FlyToProps> = ({ rect, setRect, layer}): JSX.Elemen
     const rectangle = mapViewer.entities.add({
       rectangle: {
         coordinates: rect,
-        material: CesiumColor.PURPLE.withAlpha(TRANSPARENT),
-        extrudedHeight: 400.0,
-        height: 300.0
+        material: CesiumColor.PURPLE.withAlpha(TRANSPARENT)
       },
     });
     
