@@ -576,7 +576,10 @@
   "RecordStatus.published": "Published",
   "RecordStatus.unpublished": "Unpublished",
 
-  "lookupTable.classification.classified": "Classified",
-  "lookupTable.classification.balmas": "Public",
-  "lookupTable.classification.superClassified": "Super Classified"
+  "lookupTable.classification.levelOne": "Classified Level 1",
+  "lookupTable.classification.levelTwo": "Classified Level 2",
+  "lookupTable.classification.levelThree": "Classified Level 3",
+  "lookupTable.classification.levelFour": "Classified Level 4",
+  "lookupTable.classification.levelFive": "Classified Level 5",
+  "lookupTable.classification.levelSix": "Classified Level 6"
 }

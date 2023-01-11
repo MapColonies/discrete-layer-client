@@ -1,6 +1,6 @@
 import { Box } from '@map-colonies/react-components';
-import { MenuItem, Select } from '@map-colonies/react-core';
-import { get, isEmpty } from 'lodash';
+import { MenuItem, Select, Typography } from '@map-colonies/react-core';
+import { isEmpty } from 'lodash';
 import React, { useCallback, useContext, useState } from 'react';
 import { useIntl } from 'react-intl';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
@@ -11,19 +11,19 @@ import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface LookupTablesPresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
-  dictionary?: IDictionary;
 }
 
-export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = ({ mode, fieldInfo, value, formik, dictionary }) => {
+export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = (props) => {
+  const { mode, fieldInfo, value, formik } = props;
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
-  const [locale] = useState<string>(CONFIG.I18N.DEFAULT_LANGUAGE);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
 
   const getDisplayValue = useCallback((): string => {
@@ -31,10 +31,10 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
       return innerValue;
     } else if (Array.isArray(innerValue)) {
       return innerValue.join(',');
-    } else if (dictionary !== undefined) {
-      return get(dictionary[innerValue], locale) as string;
     } else {
-      return intl.formatMessage({ id: lookupOptions[0].translationCode });
+      const filteredOptions = lookupOptions.filter(option => option.value === innerValue);
+      const displayValue = filteredOptions.length ? filteredOptions[0].translationCode : value;
+      return intl.formatMessage({ id: displayValue });
     }
   }, [innerValue]);
 
@@ -62,17 +62,22 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
         outlined
         enhanced>
         {
-          lookupOptions.map(({ translationCode, value }) => {
+          lookupOptions.map(({ translationCode, value }, index) => {
             const translation = intl.formatMessage({ id: translationCode });
 
             return (
-              <MenuItem key={translationCode} value={value}>
+              <MenuItem key={index} value={value}>
+                <Typography tag="span"></Typography>
                 {translation}
               </MenuItem>
             );
           })
         }
       </Select>
+      {
+        !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
+        <FormInputInfoTooltipComponent fieldInfo={fieldInfo} />
+      }
     </Box>
   );
 }

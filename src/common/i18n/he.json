@@ -576,7 +576,10 @@
   "RecordStatus.published": "מפורסם",
   "RecordStatus.unpublished": "לא מפורסם",
 
-  "lookupTable.classification.classified": "סודי",
-  "lookupTable.classification.balmas": "בלמ\"ס",
-  "lookupTable.classification.superClassified": "סודי ביותר"
+  "lookupTable.classification.levelOne": "סיווג רמה 1",
+  "lookupTable.classification.levelTwo": "סיווג רמה 2",
+  "lookupTable.classification.levelThree": "סיווג רמה 3",
+  "lookupTable.classification.levelFour": "סיווג רמה 4",
+  "lookupTable.classification.levelFive": "סיווג רמה 5",
+  "lookupTable.classification.levelSix": "סיווג רמה 6"
 }
