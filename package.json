@@ -83,7 +83,7 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/react-components": "^3.12.3",
+    "@map-colonies/react-components": "^3.13.0",
     "@map-colonies/react-core": "3.3.4",
     "@map-colonies/static-assets": "^0.2.0",
     "@material-ui/core": "^4.11.0",
