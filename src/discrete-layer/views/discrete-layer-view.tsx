@@ -20,12 +20,15 @@ import {
   BboxCorner,
   Box,
   CesiumColor,
+  CesiumConstantProperty,
   CesiumDrawingsDataSource,
+  CesiumGeojsonLayer,
   CesiumMap,
   CesiumPolylineDashMaterialProperty,
   CesiumRectangle,
   CesiumSceneMode,
   DrawType,
+  IContextMenuData,
   IDrawing,
   IDrawingEvent
 } from '@map-colonies/react-components';
@@ -58,7 +61,7 @@ import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
-import { BestMapContextMenu } from '../components/best-management/best-map-context-menu';
+import { BestMapContextMenu } from '../components/map-container/contextMenus/best-map-context-menu';
 import { generateFactoredLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
@@ -80,6 +83,11 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
+import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
+import useGetMenuProperties from '../../common/hooks/mapMenus/useGetMenuProperties.hook';
+import { MapMenusIds } from '../models/mapMenusManagerStore';
+import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
+import { WfsFeature } from '../components/map-container/wfs-feature.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -137,6 +145,10 @@ const DiscreteLayerView: React.FC = observer(() => {
     type: DrawType.UNKNOWN,
   }]);
 
+  const actionsMenuDynamicHeight = 30;
+  const actionsContextMenuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
+  const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
+  
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
     store.discreteLayersStore.clearLayersImages();
@@ -179,6 +191,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
   }, [data, store.discreteLayersStore]);
+
   
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
@@ -236,6 +249,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
     }
+
+    store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();
   };
 
   useEffect(() => {
@@ -633,6 +648,22 @@ const DiscreteLayerView: React.FC = observer(() => {
       setUserRole(store.userStore.user.role);
     }
   }, [store.userStore.user]);
+
+  const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
+    if (activeTabView === TabViews.CREATE_BEST) {
+      return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
+    }
+    // Should add global flag or find the proper condition to whether show the context menu or not.
+    return <ActionsContextMenu {...props} menuItems={actionsContextMenuProperties?.itemsList}/>;
+  };
+
+  const getContextMenuSizeTab = (): MenuDimensions => {
+    if (activeTabView === TabViews.CREATE_BEST) {
+      return { height: 212, width: 260, dynamicHeightIncrement: 120 };
+    }
+
+    return actionsContextMenuDimensions as MenuDimensions;
+  };
  
   return (
     <>
@@ -765,8 +796,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             locale = {mapSettingsLocale}
             baseMaps={store.discreteLayersStore.baseMaps}
             // @ts-ignore
-            imageryContextMenu={activeTabView === TabViews.CREATE_BEST ? <BestMapContextMenu entityTypeName='BestRecord' /> : undefined}
-            imageryContextMenuSize={activeTabView === TabViews.CREATE_BEST ? { height: 212, width: 260, dynamicHeightIncrement: 120 } : undefined}
+            imageryContextMenu={<ContextMenuByTab />}
+            imageryContextMenuSize={getContextMenuSizeTab()}
             legends={{
               mapLegendsExtractor,
               title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
@@ -791,6 +822,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
               />
               <Terrain/>
+              <WfsFeature />
               {
                 poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }

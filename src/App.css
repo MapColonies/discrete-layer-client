@@ -54,6 +54,48 @@
   /* animation: glow 1s ease-in-out infinite alternate; */
 }
 
+.cesium-infoBox-visible {
+  transform: unset;
+}
+
+.cesium-infoBox-close {
+  background: transparent;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  right: unset;
+  left : 5px;
+  font-size: 18px;
+}
+
+button.cesium-infoBox-close:hover {
+  background: transparent;
+  color: unset;
+  cursor: pointer;
+}
+
+.cesium-infoBox-camera {
+  display: none !important;
+}
+
+.cesium-infoBox {
+  transform: unset;
+  top: 60px;
+  right: 8px;
+  left: unset;
+}
+
+[dir=rtl] .cesium-infoBox {
+  right: unset;
+  left: 8px;
+}
+
+.cesium-infoBox-title {
+  background-color: var(--mdc-theme-alternative-surface);
+  display: flex;
+  justify-content: space-evenly;
+}
+
 @keyframes glow {
   from {
     text-shadow: 0 0 10px #fff, 0 0 12px #fff, 0 0 14px #e60073, 0 0 18px #e60073, 0 0 20px #e60073;
