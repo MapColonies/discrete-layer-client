@@ -29,6 +29,8 @@
   "general.more.text": "more...",
   "general.missing.translation": "##MISSING_TRANSLATION##",
 
+  "terrain-provider.access.error": "Unavailable terrain information",
+
   "action.tab-views.catalog.tooltip": "Catalog tab",
   "action.tab-views.search-results.tooltip": "Search results tab",
   "action.tab-views.create-best.tooltip": "BEST draft creation/edit tab",
@@ -61,6 +63,8 @@
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
   "action.job.retry": "Try again",
   "action.job.abort": "Abort",
+  "actions.wfs.buildings-title": "Building info",
+  "actions.meter.sign": "m",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -578,5 +582,9 @@
   "RecordStatus.unpublished": "Unpublished",
 
   "Transparency.transparent": "Transparent",
-  "Transparency.opaque": "Opaque"
+  "Transparency.opaque": "Opaque",
+
+  "map-context-menu.title": "Map info services",
+
+  "wfs-info.no-data.message": "No data found for type {feature}"
 }

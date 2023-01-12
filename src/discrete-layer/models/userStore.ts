@@ -4,6 +4,7 @@ import { ResponseState } from '../../common/models/response-state.enum';
 import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
+import { ContextActions } from '../../common/actions/context.actions';
 
 export enum UserRole {
   USER = 'USER',
@@ -58,6 +59,7 @@ export enum UserAction {
 }
 
 type UserActionKeys = { [K in UserAction]?: boolean; }
+type ContextActionKeys = { [K in ContextActions]?: boolean; }
 
 interface IUser {
   userName: string;
@@ -69,7 +71,7 @@ interface IUser {
 
 interface IRole {
   role: UserRole;
-  permissions: UserActionKeys;
+  permissions: UserActionKeys | ContextActionKeys;
 }
 
 const ROLES: IRole[] = [
@@ -112,6 +114,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: true,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: true,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: true,
+      [ContextActions.QUERY_WFS_FEATURE]: true,
     },
   },
   {
@@ -153,6 +156,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: false,
+      [ContextActions.QUERY_WFS_FEATURE]: true,
     },
   },
 ];
@@ -176,9 +180,10 @@ export const userStore = ModelBase
   .actions((self) => {
     const store = self.root;
 
-    function isActionAllowed(action: UserAction | string): boolean | undefined {
+
+    function isActionAllowed(action: UserActionKeys | ContextActionKeys | string): boolean | undefined {
       const role = ROLES.find(item => item.role === self.user?.role);
-      return role ? role.permissions[action as UserAction] as boolean : false;
+      return role ? role.permissions[(action as keyof (UserActionKeys | ContextActionKeys))] : false;
     }
 
     function changeUserRole(role: UserRole): void {

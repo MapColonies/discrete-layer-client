@@ -16,6 +16,8 @@ export const CustomTheme = {
     GC_SUCCESS: 'green',
     GC_ERROR_HIGH: '#CC1616', /*Warning / Red Dark*/
     GC_ERROR_MEDIUM: '#FF3636', /*Warning / Red*/
+    GC_MENU_ITEM_HEIGHT: '32px',
+    GC_CONTEXT_MENU_WIDTH: '260px',
   },
 };
   

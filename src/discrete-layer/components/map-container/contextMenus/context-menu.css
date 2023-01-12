@@ -1,5 +1,4 @@
 .imageryContextMenuTheme {
-  --context-menu-width: 260px;
   --order-width: 60px;
   --scrollbar-width: 16px;
 }
@@ -8,19 +7,19 @@
   background: var(--mdc-theme-surface);
   position: absolute;
   border-radius: 4px;
-  padding: 12px;
-  width: var(--context-menu-width);
+  width: var(--mdc-theme-gc-context-menu-width);
 }
 
 .imageryContextMenuTitle {
   color: var(--mdc-theme-primary);
   font-weight: bold;
   display: inline-block;
-  max-width: calc(var(--context-menu-width) - 52px);
+  max-width: calc(var(--mdc-theme-gc-context-menu-width) - 52px);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   direction: ltr;
+  padding: 10px;
 }
 
 .imageryContextMenuTitleInfo {
@@ -30,6 +29,10 @@
 
 .imageryMenu {
   width: 100%;
+  box-shadow: none;
+  position: unset;
+  max-height: 350px !important;
+  overflow-y: auto;
 }
 
 .imageryMenuIcon {
@@ -45,6 +48,7 @@ body[dir='rtl'] .imageryMenuIcon {
 .imageryContextMenuSubTitle {
   font-weight: bold;
   margin-top: 12px;
+  padding: 10px;
 }
 
 .imageryContextMenuSubTitleIcon {
@@ -56,6 +60,7 @@ body[dir='rtl'] .imageryMenuIcon {
 .imageryContextMenuTableContainer {
   max-height: 100px;
   overflow: auto;
+  padding-bottom: 10px;
 }
 
 .imageryContextMenuTable {
@@ -68,7 +73,7 @@ body[dir='rtl'] .imageryMenuIcon {
 }
 
 .imageryContextMenuTableField {
-  max-width: calc(var(--context-menu-width) - var(--order-width) - var(--scrollbar-width) - 24px);
+  max-width: calc(var(--mdc-theme-gc-context-menu-width) - var(--order-width) - var(--scrollbar-width) - 24px);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -84,4 +89,22 @@ body[dir='rtl'] .imageryMenuIcon {
   background: var(--mdc-theme-surface);
   position: absolute;
   border-radius: 4px;
+}
+
+.menuSection{
+  padding: 10px;
+  width: 100%;
+}
+
+.sectionDivider {
+  border-bottom-color: var(--mdc-theme-text-secondary-on-dark);
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.imageryMenuItemAction:hover {
+  background: var(--mdc-theme-gc-alternative-surface);
 }
