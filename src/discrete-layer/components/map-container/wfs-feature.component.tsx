@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { Feature, LineString, Polygon } from 'geojson';
+import { useIntl } from 'react-intl';
+import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
 import {
   CesiumColor,
   CesiumConstantProperty,
@@ -9,15 +13,12 @@ import {
   CesiumVerticalOrigin,
   CesiumMath,
 } from '@map-colonies/react-components';
+import { Typography, useTheme } from '@map-colonies/react-core';
 import { useStore } from '../../models';
-import { Feature, LineString, Polygon } from 'geojson';
 import { getCoordinatesDisplayText } from '../layer-details/utils';
 import { useForceEntitySelection } from '../../../common/hooks/useForceEntitySelection.hook';
-import { Typography, useTheme } from '@map-colonies/react-core';
 import { CesiumInfoBoxContainer } from './cesium-infoBox-container';
 import useStaticHTML from '../../../common/hooks/useStaticHtml';
-import { useIntl } from 'react-intl';
-import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
 import { IPosition, useHeightFromTerrain } from '../../../common/hooks/useHeightFromTerrain';
 
 const NONE_OR_FIRST_ELEM = 0;
@@ -26,7 +27,7 @@ const LATITUDE_POSITION = 1;
 
 interface WfsFeatureProps {}
 
-export const WfsFeature: React.FC<WfsFeatureProps> = () => {
+export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
   const store = useStore();
   const themeObj = useTheme();
   const intl = useIntl();
@@ -259,4 +260,4 @@ export const WfsFeature: React.FC<WfsFeatureProps> = () => {
       })}
     </>
   );
-};
+});

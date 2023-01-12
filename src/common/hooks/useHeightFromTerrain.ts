@@ -40,6 +40,9 @@ export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeig
               if (!isEmpty(updatedPositions)) {
                 setNewPositions([...updatedPositions] as CesiumCartographic[]);
               }
+            },
+            () => {
+              setNewPositions(cartographicArr);
             }
           );
       }
