@@ -187,11 +187,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   }, []);
 
-
-  useEffect(() => {
-    console.log("store.mapMenusManagerStore.currentWfsFeatureInfo", store.mapMenusManagerStore.currentWfsFeatureInfo);
-  }, [store.mapMenusManagerStore.currentWfsFeatureInfo])
-
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
     store.discreteLayersStore.setLayersImages([...layers]);
