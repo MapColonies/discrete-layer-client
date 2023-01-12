@@ -18,7 +18,7 @@ import { ValidationConfigModel, ValidationConfigModelType } from "./ValidationCo
 import { ValidationConfigModelSelector, validationConfigModelPrimitives } from "./ValidationConfigModel.base"
 import { RootStoreType } from "./index"
 
-unnesseray
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   subFields: IObservableArray<FieldConfigModelType>;
