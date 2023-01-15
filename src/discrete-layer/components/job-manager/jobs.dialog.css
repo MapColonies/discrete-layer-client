@@ -160,6 +160,11 @@ body[dir='rtl'] .jobsBody .ag-pinned-right-cols-container {
   border-bottom: 2px solid var(--mdc-theme-gc-selection-background);
 }
 
+#jobsDialog .jobsTimeRangePicker .drpContainer > div:nth-child(2) {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 .jobsBody .actionsContainer {
   right:0 !important;
   position:relative;

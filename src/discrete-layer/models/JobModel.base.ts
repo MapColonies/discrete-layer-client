@@ -5,6 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { AvailableActionsModel, AvailableActionsModelType } from "./AvailableActionsModel"
+import { availableActionsModelPrimitives, AvailableActionsModelSelector } from "./AvailableActionsModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { StatusEnumType } from "./StatusEnum"
 import { RootStoreType } from "./index"
@@ -44,8 +46,7 @@ export const JobModelBase = ModelBase
     inProgressTasks: types.union(types.undefined, types.null, types.number),
     isCleaned: types.union(types.undefined, types.null, types.boolean),
     domain: types.union(types.undefined, types.null, types.string),
-    isResettable: types.union(types.undefined, types.null, types.boolean),
-    isAbortable: types.union(types.undefined, types.null, types.boolean),
+    availableActions: types.union(types.undefined, types.null, types.late((): any => AvailableActionsModel)),
   })
   .views(self => ({
     get store() {
@@ -79,11 +80,10 @@ export class JobModelSelector extends QueryBuilder {
   get inProgressTasks() { return this.__attr(`inProgressTasks`) }
   get isCleaned() { return this.__attr(`isCleaned`) }
   get domain() { return this.__attr(`domain`) }
-  get isResettable() { return this.__attr(`isResettable`) }
-  get isAbortable() { return this.__attr(`isAbortable`) }
+  availableActions(builder?: string | AvailableActionsModelSelector | ((selector: AvailableActionsModelSelector) => AvailableActionsModelSelector)) { return this.__child(`availableActions`, AvailableActionsModelSelector, builder) }
 }
 export function selectFromJob() {
   return new JobModelSelector()
 }
 
-export const jobModelPrimitives = selectFromJob().resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.domain.isResettable.isAbortable.id
+export const jobModelPrimitives = selectFromJob().availableActions(availableActionsModelPrimitives).resourceId.version.description.parameters.status.reason.type.percentage.priority.expirationDate.internalId.producerName.productName.productType.created.updated.taskCount.completedTasks.failedTasks.expiredTasks.pendingTasks.inProgressTasks.isCleaned.domain

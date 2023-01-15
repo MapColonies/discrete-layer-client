@@ -55,6 +55,8 @@ import { ExternalServiceModel, ExternalServiceModelType } from "./ExternalServic
 import { externalServiceModelPrimitives, ExternalServiceModelSelector } from "./ExternalServiceModel.base"
 import { JobModel, JobModelType } from "./JobModel"
 import { jobModelPrimitives, JobModelSelector } from "./JobModel.base"
+import { AvailableActionsModel, AvailableActionsModelType } from "./AvailableActionsModel"
+import { availableActionsModelPrimitives, AvailableActionsModelSelector } from "./AvailableActionsModel.base"
 import { LookupTableDataModel, LookupTableDataModelType } from "./LookupTableDataModel"
 import { lookupTableDataModelPrimitives, LookupTableDataModelSelector } from "./LookupTableDataModel.base"
 import { DeploymentWithServicesModel, DeploymentWithServicesModelType } from "./DeploymentWithServicesModel"
