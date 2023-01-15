@@ -36,6 +36,8 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
       return innerValue;
+    } else if (Array.isArray(innerValue)) {
+      return innerValue.join(',');
     } else if (dictionary !== undefined) {
       return get(dictionary[innerValue], locale) as string;
     } else {
