@@ -57,6 +57,8 @@ import { JobModel, JobModelType } from "./JobModel"
 import { jobModelPrimitives, JobModelSelector } from "./JobModel.base"
 import { AvailableActionsModel, AvailableActionsModelType } from "./AvailableActionsModel"
 import { availableActionsModelPrimitives, AvailableActionsModelSelector } from "./AvailableActionsModel.base"
+import { LookupTableDataModel, LookupTableDataModelType } from "./LookupTableDataModel"
+import { lookupTableDataModelPrimitives, LookupTableDataModelSelector } from "./LookupTableDataModel.base"
 import { DeploymentWithServicesModel, DeploymentWithServicesModelType } from "./DeploymentWithServicesModel"
 import { deploymentWithServicesModelPrimitives, DeploymentWithServicesModelSelector } from "./DeploymentWithServicesModel.base"
 import { K8SServiceModel, K8SServiceModelType } from "./K8SServiceModel"
@@ -333,6 +335,7 @@ queryEntityDescriptors="queryEntityDescriptors",
 queryGetMcEnums="queryGetMcEnums",
 queryGetExternalServices="queryGetExternalServices",
 queryJobs="queryJobs",
+queryGetLookupTablesData="queryGetLookupTablesData",
 queryGetClusterServices="queryGetClusterServices",
 queryGetDirectory="queryGetDirectory",
 queryGetDirectoryById="queryGetDirectoryById",
@@ -361,7 +364,7 @@ mutateJobAbort="mutateJobAbort"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -410,6 +413,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryJobs(variables: { params?: JobsSearchParams }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ jobs: JobModelType[]}>(`query jobs($params: JobsSearchParams) { jobs(params: $params) {
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryGetLookupTablesData(variables?: {  }, resultSelector: string | ((qb: LookupTableDataModelSelector) => LookupTableDataModelSelector) = lookupTableDataModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getLookupTablesData: LookupTableDataModelType}>(`query getLookupTablesData { getLookupTablesData {
+        ${typeof resultSelector === "function" ? resultSelector(new LookupTableDataModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryGetClusterServices(variables?: {  }, resultSelector: string | ((qb: DeploymentWithServicesModelSelector) => DeploymentWithServicesModelSelector) = deploymentWithServicesModelPrimitives.toString(), options: QueryOptions = {}) {

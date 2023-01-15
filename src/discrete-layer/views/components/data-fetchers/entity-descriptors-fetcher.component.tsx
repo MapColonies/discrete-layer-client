@@ -15,6 +15,8 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           type
           value
         }
+        lookupTable
+        lookupExcludeFields
         fieldName
         label
         fullWidth

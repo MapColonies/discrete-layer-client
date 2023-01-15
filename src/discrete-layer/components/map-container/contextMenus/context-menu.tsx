@@ -63,6 +63,7 @@ export const ContextMenu: React.FC<IMapContextMenuData> = ({
           ref={imageryContextMenuRef}
           style={style}
           className="imageryContextMenuTheme imageryContextMenu"
+          onContextMenu={(e): void => e.preventDefault()}
         >
           {menuTitle && <Box style={{ height: `${TITLE_HEIGHT}px` }} className='titleContainer'>
             <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
