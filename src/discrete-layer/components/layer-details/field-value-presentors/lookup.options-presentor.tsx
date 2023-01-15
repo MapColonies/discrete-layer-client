@@ -29,8 +29,6 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
       return innerValue;
-    } else if (Array.isArray(innerValue)) {
-      return innerValue.join(',');
     } else {
       const filteredOptions = lookupOptions.filter(option => option.value === innerValue);
       const displayValue = filteredOptions.length ? filteredOptions[0].translationCode : value;
