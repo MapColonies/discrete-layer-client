@@ -121,8 +121,8 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
   };
   if (capability) {
     const defaultStyle = (capability.style as StyleModelType[]).find((s: StyleModelType) => s.isDefault !== undefined && s.isDefault === 'true')?.value;
-    style = defaultStyle !== undefined ? defaultStyle : (get(capability, style[0]) as StyleModelType).value as string;
-    // TODO: format should be taken from layer object from new Transparent/Opaque field if exists in capabilities, otherwise - take first (format[0])
+    style = defaultStyle !== undefined ? defaultStyle : (get(capability, 'style[0]') as StyleModelType).value as string;
+    // TODO: format should be taken from layer record from new Transparent/Opaque field if exists in capabilities, otherwise - take first (format[0])
     format = get(capability, 'format[0]') as string; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tiles format
     const tileMatrixSet = get(capability, 'tileMatrixSet[0]') as TileMatrixSetModelType; // (!IMPORTANT) derived from raster implementation: there is only ONE surved tile matrix set
     if (tileMatrixSet.tileMatrixSetID !== undefined) {
