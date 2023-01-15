@@ -28,6 +28,8 @@
   "general.empty.text": "ריק",
   "general.more.text": "עוד...",
   "general.missing.translation": "##MISSING_TRANSLATION##",
+  
+  "terrain-provider.access.error": "מידע פני השטח לא זמין",
 
   "action.tab-views.catalog.tooltip": "טאב קטלוג",
   "action.tab-views.search-results.tooltip": "טאב תוצאות חיפוש",
@@ -61,6 +63,8 @@
   "action.layer.move-to-bottom.tooltip": "הורדה לתחתית",
   "action.job.retry": "נסה שוב",
   "action.job.abort": "בטל",
+  "actions.wfs.buildings-title": "תשאול מבנה",
+  "actions.meter.sign": "מ'",
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
@@ -585,5 +589,9 @@
   "lookupTable.classification.levelSix": "סיווג רמה 6",
   
   "Transparency.transparent": "Transparent",
-  "Transparency.opaque": "Opaque"
+  "Transparency.opaque": "Opaque",
+
+  "map-context-menu.title": "שירותי תשאול מפה",
+
+  "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}"
 }

@@ -2,36 +2,54 @@ import React, { useEffect } from 'react';
 import {
   CesiumCesiumTerrainProvider,
   CesiumEllipsoidTerrainProvider,
-  CesiumSceneMode,
-  useCesiumMap
+  useCesiumMap,
 } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { getTokenResource } from '../helpers/layersUtils';
+import { queue } from '../snackbar/notification-queue';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { useIntl } from 'react-intl';
 
-interface TerrainProps {
-}
+interface TerrainProps {}
 
 export const Terrain: React.FC<TerrainProps> = () => {
   const mapViewer = useCesiumMap();
+  const intl = useIntl();
+
+  mapViewer.scene.globe.depthTestAgainstTerrain = true;
 
   // eslint-disable-next-line
   const setTerrainProvider = () => {
-    if (mapViewer.scene.mode === CesiumSceneMode.SCENE3D || mapViewer.scene.mode === CesiumSceneMode.COLUMBUS_VIEW) {
-      mapViewer.terrainProvider =
-        // eslint-disable-next-line
-        CONFIG.DEFAULT_TERRAIN_PROVIDER_URL ?
-          new CesiumCesiumTerrainProvider({
-            url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
-          }) :
-          new CesiumEllipsoidTerrainProvider({});
-    } else {
-      mapViewer.terrainProvider = new CesiumEllipsoidTerrainProvider({});
-    }
+      mapViewer.terrainProvider = new CesiumCesiumTerrainProvider({
+        url: getTokenResource(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL),
+      });
+
+      const terrainErrorEvent = mapViewer.terrainProvider.errorEvent;
+
+      function handleTerrainError(e: unknown): void {
+        if(CONFIG.DEFAULT_TERRAIN_PROVIDER_URL as string){
+          console.error('Terrain provider errored. falling back to default terrain. ', e);
+
+          queue.notify({
+            body: (
+              <Error
+                className="errorNotification"
+                message={intl.formatMessage({ id: "terrain-provider.access.error" })}
+                details={CONFIG.DEFAULT_TERRAIN_PROVIDER_URL as string}
+              />
+            ),
+          });
+        }
+        mapViewer.terrainProvider = new CesiumEllipsoidTerrainProvider({});
+
+        // Remove the error listener after failing once.
+        terrainErrorEvent.removeEventListener(handleTerrainError);
+      }
+
+      terrainErrorEvent.addEventListener(handleTerrainError);
   };
 
-  useEffect(() => {
-    mapViewer.scene.morphComplete.addEventListener(setTerrainProvider);
-  }, []);
+  useEffect(setTerrainProvider, []);
 
   return <></>;
 };

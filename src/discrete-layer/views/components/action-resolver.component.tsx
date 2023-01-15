@@ -19,6 +19,8 @@ import { ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
+import { ContextActions } from '../../../common/actions/context.actions';
+import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 
 const FIRST = 0;
 
@@ -31,6 +33,8 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   const { handleOpenEntityDialog, handleFlyTo } = props;
 
   const store = useStore();
+
+  const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
 
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
@@ -182,6 +186,25 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
+        case ContextActions.QUERY_WFS_FEATURE: {
+          const coordinates = data.coordinates as { longitude: number, latitude: number };
+          const typeName = data.feature as string;
+          const closeMenu = (data.handleClose as (() => void | undefined));
+
+          setGetFeatureOptions({
+            pointCoordinates: [
+              coordinates.longitude.toString(),
+              coordinates.latitude.toString(),
+            ],
+            typeName,
+            count: 1,
+            onDataResolved: closeMenu,
+          });
+          
+          break;
+        }
+        
+        // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;
           baseUpdateEntity(inputValues);

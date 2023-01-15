@@ -1,0 +1,54 @@
+.actionsMenuItem {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.actionsMenuItem.mdc-button:disabled {
+    background-color: transparent;
+}
+
+.actionsMenuItemLoading { 
+    position: absolute;
+    right: 10px;
+}
+
+body[dir='rtl'] .actionsMenuItemLoading {
+    right: unset;
+    left: 10px;
+}
+
+.contextMenuFooter {
+    background-color: var(--mdc-theme-gc-selection-background);
+    height: 4rem;
+
+}
+
+.contextMenuFooter .heightContainer {
+    display: flex;
+    gap: 10px;
+    padding: 0px 20px;  
+    align-items: center;
+    height: 2rem;
+}
+
+.contextMenuFooter .coordinatesContainer {
+    text-align: left;
+    padding: 5px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body[dir='rtl'] .contextMenuFooter .coordinatesContainer {
+    text-align: right;
+}
+
+.featureIcon {
+    margin-right: 10px;
+}
+
+body[dir='rtl'] .featureIcon {
+    margin-right: unset;
+    margin-left: 10px;
+}

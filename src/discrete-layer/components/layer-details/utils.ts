@@ -436,3 +436,9 @@ export const getEnumKeys = (enumsMap: IEnumsMapType, enumName: string, parent?: 
 export const getProductDomain = (productType: ProductType, enumsMap?: IEnumsMapType): string => {
   return enumsMap?.[productType as string]?.parentDomain as string;
 }
+
+export const getCoordinatesDisplayText = (latitude: number, longitude: number): string => {
+  const COORDS_DISPLAY_PRECISION = 5;
+  
+  return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`
+}
