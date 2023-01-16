@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.24.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.23.0...v1.24.0) (2023-01-16)
+
+
+### Features
+
+* wfs polygon to polyline logic ([#414](https://github.com/MapColonies/discrete-layer-client/issues/414)) ([f319648](https://github.com/MapColonies/discrete-layer-client/commit/f3196487b485f9afcf15596306abb465f824b09c))
+
 ## [1.23.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.22.2...v1.23.0) (2023-01-15)
 
 
