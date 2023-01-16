@@ -16,7 +16,7 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
 }) => {
   const intl = useIntl();
   const [unpublished, setUnpublished] = useState<boolean>(isUnpublished(layer as any));
-  const [icon, setIcon] = useState<string>(unpublished ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel');
+  const [icon, setIcon] = useState<string>(unpublished ? 'mc-icon-Publish' : 'mc-icon-Unpublish');
   const [tooltip, setTooltip] = useState<string>(unpublished ? 'action.publish.tooltip' : 'action.unpublish.tooltip');
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -25,7 +25,7 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
   }, [layer]);
 
   useEffect(() => {
-    setIcon(unpublished ? 'mc-icon-Expand-Panel' : 'mc-icon-Collapce-Panel');
+    setIcon(unpublished ? 'mc-icon-Publish' : 'mc-icon-Unpublish');
     setTooltip(unpublished ? 'action.publish.tooltip' : 'action.unpublish.tooltip');
   }, [unpublished]);
 
@@ -35,7 +35,7 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
         content={intl.formatMessage({ id: tooltip })}
       >
         <IconButton
-          className={`${className} ${icon} glow-missing-icon`}
+          className={`${className} ${icon}`}
           label="PUBLISH AND UNPUBLISH"
           onClick={(): void => {
             setDialogOpen(true);

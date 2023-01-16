@@ -715,7 +715,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             permissions.isSystemCoreInfoAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
               <IconButton
-                className="operationIcon mc-icon-System-Missions glow-missing-icon"
+                className="operationIcon mc-icon-System-Info"
                 label="SYSTEM CORE INFO"
                 onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
               />

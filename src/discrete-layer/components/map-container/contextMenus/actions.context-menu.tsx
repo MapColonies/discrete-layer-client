@@ -57,7 +57,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   
         return (
           <Box className='actionsMenuItem' onClick={(): void => onItemClick(item.title, actionToDispatch)}>
-            {typeof item.icon !== 'undefined' && <Icon className="glow-missing-icon featureIcon" icon={{ icon: item.icon, size: 'small' }} />}
+            {typeof item.icon !== 'undefined' && <Icon className={`featureIcon ${item.icon}`} />}
             { intl.formatMessage({ id: item.title }) }
             { currentClickedItem === item.title && <CircularProgress className='actionsMenuItemLoading' /> }
           </Box>
@@ -83,11 +83,11 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
         >
           <Box className="contextMenuFooter">
             <Box className="coordinatesContainer">
-              <CreateSvgIconLocationOn fontSize='small' className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor' }} height="28" width="28" />
+              <Icon className='menuIcon mc-icon-Location-Full' />
               {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
             </Box>
             <Box className="heightContainer"> 
-              <CreateSvgIconTerrain fontSize='small' className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor' }} height="28" width="28" />
+              <Icon className='menuIcon mc-icon-Height-Terrain' />
               <Typography tag="p">
                 {getHeightText()} 
               </Typography>

@@ -76,7 +76,7 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
         content={intl.formatMessage({ id: 'action.saveMetadata.tooltip' })}
       >
         <IconButton
-          className={`mc-icon-Status-Downloads glow-missing-icon ${className}`}
+          className={`mc-icon-Save-Metadata ${className}`}
           label="SAVE METADATA"
           onClick={(): void =>
              dispatchAction({ action: `${metadata.__typename}.saveMetadata`, data: filteredMetadataToDownload })
