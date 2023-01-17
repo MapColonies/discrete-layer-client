@@ -19,6 +19,7 @@ body[dir='rtl'] #jobsDialog .mdc-dialog__surface {
   justify-content: center;
   margin-top: 10px;
   padding: 0;
+  gap: 12px;
 }
 
 #jobsDialog .jobsBody {

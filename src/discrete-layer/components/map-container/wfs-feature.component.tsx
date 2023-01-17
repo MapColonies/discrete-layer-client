@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Feature, LineString, Polygon } from 'geojson';
 import { useIntl } from 'react-intl';
+import polygonToLine from '@turf/polygon-to-line';
 import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
 import {
   CesiumColor,
@@ -48,45 +49,59 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
   }, [wfsFeature?.pointCoordinates])
 
   
-  const WfsFeatureGeometries: React.FC<{feature: Feature}> = ({ feature }) => {
+  const WfsFeatureGeometries: React.FC<{feature: Feature<LineString | Polygon>, isPolylined?: boolean}> =
+ ({ feature, isPolylined = false }) => {
     const [featureWithHeight, setFeatureWithHeight] = useState<Feature<LineString | Polygon>>();
+    const [transformedFeature, setTransformedFeature] = useState<Feature<LineString | Polygon>>();
     const { setCoordinates, newPositions } = useHeightFromTerrain();
     
     useEffect(() => {
-          switch(feature.geometry.type) {
-            case "LineString": {
-              const posArr: IPosition[] = feature.geometry.coordinates.map(coord => ({ longitude: coord[0], latitude: coord[1] }));
-              setCoordinates(posArr);
-              break;
-            }
-            case "Polygon":{
-              // NOTICE THE coordinates[0].
-              const posArr: IPosition[] = feature.geometry.coordinates[0].map(coord => ({ longitude: coord[0], latitude: coord[1] }));
-              setCoordinates(posArr);
-              break;
-            }
-
-            default:
-              break;
-          }
+      if (isPolylined && feature.geometry.type === 'Polygon') {
+        /* Polyline features fixes cesium bug with polygon visualization, Also allows us to clamp it to ground (Using terrain). */
+        setTransformedFeature(polygonToLine(feature.geometry) as Feature<LineString>);
+      } else {
+        setTransformedFeature(feature);
+      }
     }, [feature])
 
     useEffect(() => {
-      if(newPositions) {
+      if(transformedFeature) {
+        switch(transformedFeature.geometry.type) {
+          case "LineString": {
+            const posArr: IPosition[] = transformedFeature.geometry.coordinates.map(coord => ({ longitude: coord[0], latitude: coord[1] }));
+            setCoordinates(posArr);
+            break;
+          }
+  
+          case "Polygon":{
+            // NOTICE THE coordinates[0].
+            const posArr: IPosition[] = transformedFeature.geometry.coordinates[0].map(coord => ({ longitude: coord[0], latitude: coord[1] }));
+            setCoordinates(posArr);
+            break;
+          }
+  
+          default:
+            break;
+        }
+      }
+    }, [transformedFeature])
+
+    useEffect(() => {
+      if(newPositions && transformedFeature) {
         const newCoordinates = newPositions.map(cartographic => {
           return [CesiumMath.toDegrees(cartographic.longitude), CesiumMath.toDegrees(cartographic.latitude), cartographic.height]
         });
 
         setFeatureWithHeight({
-          ...feature,
+          ...transformedFeature,
           // @ts-ignore
           geometry: {
-            ...feature.geometry,
-            coordinates: feature.geometry.type === 'LineString' ? newCoordinates : [newCoordinates]
+            ...transformedFeature.geometry,
+            coordinates: transformedFeature.geometry.type === 'LineString' ? newCoordinates : [newCoordinates]
           }
         })
       }
-    }, [newPositions])
+    }, [newPositions, transformedFeature])
 
     if(!featureWithHeight || !wfsFeature) return null;
 
@@ -255,7 +270,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
         const geoJsonFeature = feature as Feature;
 
         return (
-         <WfsFeatureGeometries feature={geoJsonFeature} />
+         <WfsFeatureGeometries feature={geoJsonFeature as Feature<LineString | Polygon>} isPolylined={true} />
         );
       })}
     </>
