@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.24.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.23.0...v1.24.0) (2023-01-16)
+
+
+### Features
+
+* wfs polygon to polyline logic ([#414](https://github.com/MapColonies/discrete-layer-client/issues/414)) ([f319648](https://github.com/MapColonies/discrete-layer-client/commit/f3196487b485f9afcf15596306abb465f824b09c))
+
+## [1.23.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.22.2...v1.23.0) (2023-01-15)
+
+
+### Features
+
+* set 3d scene mode in case of fly to a 3d model ([#406](https://github.com/MapColonies/discrete-layer-client/issues/406)) ([168725a](https://github.com/MapColonies/discrete-layer-client/commit/168725acdd42c701339a03fba6469c8feaab9e16))
+* transparency field added to model ([#404](https://github.com/MapColonies/discrete-layer-client/issues/404)) ([2a9a3ec](https://github.com/MapColonies/discrete-layer-client/commit/2a9a3ece4c183a30b5cf41663a277ce239678ec7))
+
+
+### Bug Fixes
+
+* add gap between date range picker inputs ([#411](https://github.com/MapColonies/discrete-layer-client/issues/411)) ([7023fd4](https://github.com/MapColonies/discrete-layer-client/commit/7023fd459d0124dee0a053b93388b342ace8aac1))
+* alignment in case of a small screen ([ae90bf6](https://github.com/MapColonies/discrete-layer-client/commit/ae90bf69f80a34582f55ce7cee39992ea9faace4))
+* app crashes when there is no default style ([#410](https://github.com/MapColonies/discrete-layer-client/issues/410)) ([d676247](https://github.com/MapColonies/discrete-layer-client/commit/d676247e34ffc2e8f7f2c2aa4e89ef9cfaabc21a))
+* change abort and reset jobs logic according to job model ([#407](https://github.com/MapColonies/discrete-layer-client/issues/407)) ([6cf0a4b](https://github.com/MapColonies/discrete-layer-client/commit/6cf0a4b8414fe4ce1f6eb008304fb34a7f382d23))
+* disable browser context menu on top of app context menu ([#409](https://github.com/MapColonies/discrete-layer-client/issues/409)) ([7b183aa](https://github.com/MapColonies/discrete-layer-client/commit/7b183aaf95cd138d7b8f1c7b838b86f5701c1cd1))
+* tab view data bug MAPCO-2728 ([#401](https://github.com/MapColonies/discrete-layer-client/issues/401)) ([325370d](https://github.com/MapColonies/discrete-layer-client/commit/325370d71beca935b748b5b335cc31fe6430de76))
+* use wmts layer url from capabilities (MAPCO-2648) ([#395](https://github.com/MapColonies/discrete-layer-client/issues/395)) ([d0e89a1](https://github.com/MapColonies/discrete-layer-client/commit/d0e89a15495dbcb9fc0904e133381c932e8e6d2b))
+* wfs feature store observation and no terrain functionality ([#408](https://github.com/MapColonies/discrete-layer-client/issues/408)) ([761a4e3](https://github.com/MapColonies/discrete-layer-client/commit/761a4e3686452362e261bdd86dedea7ee0d6e89f))
+
 ### [1.22.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.22.1...v1.22.2) (2022-11-07)
 
 
