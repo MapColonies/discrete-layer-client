@@ -62,7 +62,6 @@ import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
 import { BestMapContextMenu } from '../components/map-container/contextMenus/best-map-context-menu';
-import { generateFactoredLayerRectangle } from '../components/helpers/layersUtils';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
 import { ActionResolver } from './components/action-resolver.component';
@@ -418,7 +417,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const onFlyTo = useCallback((): void => {
-    setRect(generateFactoredLayerRectangle(store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion));
+    setRect( new CesiumRectangle());
     dispatchAction({
       action: UserAction.SYSTEM_CALLBACK_FLYTO,
       data: { selectedLayer: store.discreteLayersStore.selectedLayer }
@@ -827,7 +826,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
               }
               {
-                rect && <FlyTo rect={rect} setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
+                rect && <FlyTo setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
               }
           </CesiumMap>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
