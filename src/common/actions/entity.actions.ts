@@ -92,7 +92,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -100,7 +100,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'update',
             frequent: false,
             icon: '',
-            class: 'mc-icon-Edit glow-missing-icon',
+            class: 'mc-icon-Update',
             titleTranslationId: 'action.update.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -129,7 +129,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -159,7 +159,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -188,7 +188,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -209,7 +209,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -230,7 +230,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },

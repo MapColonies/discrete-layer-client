@@ -87,7 +87,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
               {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
             </Box>
             <Box className="heightContainer"> 
-              <Icon className='menuIcon mc-icon-Height-Terrain' />
+              <Icon className='menuIcon mc-icon-Height-DTM' />
               <Typography tag="p">
                 {getHeightText()} 
               </Typography>

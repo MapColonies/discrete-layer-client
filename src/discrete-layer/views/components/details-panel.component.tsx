@@ -67,7 +67,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           permissions.isEditAllowed === true && 
           <Tooltip content={intl.formatMessage({ id: 'action.edit.tooltip' })}>
             <IconButton
-              className="operationIcon mc-icon-Edit"
+              className="operationIcon mc-icon-Edit1"
               label="EDIT"
               onClick={(): void => {
                 handleEditEntityDialogClick();

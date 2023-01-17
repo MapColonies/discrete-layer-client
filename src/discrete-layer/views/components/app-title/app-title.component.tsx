@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { Tooltip, Typography } from '@map-colonies/react-core';
+import { Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { version } from '../../../../../package.json';
 
@@ -13,16 +13,22 @@ const AppTitle = (): JSX.Element => {
 
   return (
     <>
-      <Typography use="body2">
-        {intl.formatMessage({ id: 'general.logo.text' })}
-      </Typography>
-      <Tooltip
-        content={`${intl.formatMessage({
-          id: 'general.version.tooltip',
-        })} ${version}`}
-      >
-        <Box className="version">{version}</Box>
+    <Box className='appLogoContainer'>
+      <Box className='appTitleVersionContainer'>
+        <Typography tag="b">
+            {intl.formatMessage({ id: 'general.logo.text' })}
+        </Typography>
+        <Tooltip
+          content={`${intl.formatMessage({
+            id: 'general.version.tooltip',
+          })} ${version}`}
+        >
+          <Box className="version">{version}</Box>
       </Tooltip>
+      </Box>
+      <Icon className="appIcon mc-icon-AppIcon" />
+    </Box>
+     
     </>
   );
 };

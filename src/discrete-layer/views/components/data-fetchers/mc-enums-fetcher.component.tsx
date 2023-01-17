@@ -64,8 +64,8 @@ export const MCEnumsFetcher: React.FC = observer(() => {
 
       enums['LayerRasterRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Orthophoto', translationKey: 'record-type.record_raster.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_RASTER };
       enums['Layer3DRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-3D', translationKey: 'record-type.record_3d.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
-      enums['LayerDemRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Terrain', translationKey: 'record-type.record_dem.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_DEM };
-      enums['QuantizedMeshBestRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Terrain', translationKey: 'record-type.record_quantized_mesh.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
+      enums['LayerDemRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-DTM', translationKey: 'record-type.record_dem.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_DEM };
+      enums['QuantizedMeshBestRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-DTM', translationKey: 'record-type.record_quantized_mesh.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
       enums[ORTHOPHOTO] = { ...enums[ORTHOPHOTO], icon: 'mc-icon-Map-Orthophoto', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
       enums[ORTHOPHOTO_HISTORY] = { ...enums[ORTHOPHOTO_HISTORY], icon: 'mc-icon-Map-Orthophoto', parent: 'LayerRasterRecord', internal: true, parentDomain: RecordType.RECORD_RASTER };
       enums[ORTHOPHOTO_BEST] = { ...enums[ORTHOPHOTO_BEST], icon: 'mc-icon-Map-Best-Orthophoto', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
@@ -76,12 +76,12 @@ export const MCEnumsFetcher: React.FC = observer(() => {
       enums[RASTER_VECTOR] = { ...enums[RASTER_VECTOR], icon: 'mc-icon-Map-Vector', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
       enums[RASTER_VECTOR_BEST] = { ...enums[RASTER_VECTOR_BEST], icon: 'mc-icon-Map-Vector', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
       enums[VECTOR_BEST] = { ...enums[VECTOR_BEST], icon: 'mc-icon-Map-Vector', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
-      enums[DTM] = { ...enums[DTM], icon: 'mc-icon-Map-Terrain', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM };
-      enums[DSM] = { ...enums[DSM], icon: 'mc-icon-Map-Terrain', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM };
+      enums[DTM] = { ...enums[DTM], icon: 'mc-icon-Map-DTM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM };
+      enums[DSM] = { ...enums[DSM], icon: 'mc-icon-Map-DTM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM };
       enums[QUANTIZED_MESH_DTM] = { ...enums[QUANTIZED_MESH_DTM], icon: 'mc-icon-Map-Qmesh', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM  };
       enums[QUANTIZED_MESH_DSM] = { ...enums[QUANTIZED_MESH_DSM], icon: 'mc-icon-Map-DSM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM  };
       enums[QUANTIZED_MESH_DTM_BEST] = { ...enums[QUANTIZED_MESH_DTM_BEST], icon: 'mc-icon-Map-Best-Mash', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM };
-      enums[QUANTIZED_MESH_DSM_BEST] = { ...enums[QUANTIZED_MESH_DSM_BEST], icon: 'mc-icon-Map-Terrain', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM  };
+      enums[QUANTIZED_MESH_DSM_BEST] = { ...enums[QUANTIZED_MESH_DSM_BEST], icon: 'mc-icon-Map-DTM', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM  };
       enums[PHOTO_REALISTIC_3D] = { ...enums[PHOTO_REALISTIC_3D], icon: 'mc-icon-Map-3D', parent: 'Layer3DRecord', parentDomain: RecordType.RECORD_3D  };
       enums[POINT_CLOUD] = { ...enums[POINT_CLOUD], icon: 'mc-icon-Map-3D', parent: 'Layer3DRecord', parentDomain: RecordType.RECORD_3D };
 
