@@ -34,6 +34,8 @@
   "action.tab-views.catalog.tooltip": "טאב קטלוג",
   "action.tab-views.search-results.tooltip": "טאב תוצאות חיפוש",
   "action.tab-views.create-best.tooltip": "טאב עריכת טיוטת BEST",
+  "action.tab-views.export-layer.tooltip": "טאב ייצוא שכבה",
+
   "action.point.tooltip": "חיפוש בקטלוג בעזרת קואורדינטות נקודת ציון",
   "action.box.tooltip": "חיפוש בקטלוג בעזרת מלבן חוסם",
   "action.polygon.tooltip": "חיפוש בקטלוג בעזרת פוליגון חוסם",
@@ -122,6 +124,7 @@
   "tab-views.search-results": "תוצאות חיפוש",
   "tab-views.catalog": "קטלוג",
   "tab-views.create-best": "עריכת טיוטת BEST",
+  "tab-views.export-layer": "ייצוא שכבה",
 
   "tab-views.catalog.top-categories.unlinked": "לא משוייכים",
   "tab-views.catalog.top-categories.unpublished": "לא מפורסמים",

@@ -33,7 +33,7 @@ body[dir='rtl'] .actionsContainer .actionIcon{
 }
 
 #actionsMenuContainer .mdc-menu-surface.mdc-menu-surface--open {
-  top: 30px !important;
+  top: 28px !important;
   left: -88px !important;
   width: 124px; /*36+36+36+16*/
   padding: 8px;

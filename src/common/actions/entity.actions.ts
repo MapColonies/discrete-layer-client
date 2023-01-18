@@ -36,6 +36,14 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       titleTranslationId: 'action.flyTo.tooltip',
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
+    {
+      action: 'export',
+      frequent: false,
+      icon: '',
+      class: 'mc-icon-Export',
+      titleTranslationId: 'action.export.tooltip',
+      views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+    },
   ],
 };
 

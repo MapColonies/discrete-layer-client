@@ -87,6 +87,7 @@ import useGetMenuProperties from '../../common/hooks/mapMenus/useGetMenuProperti
 import { MapMenusIds } from '../models/mapMenusManagerStore';
 import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { WfsFeature } from '../components/map-container/wfs-feature.component';
+import { ExportLayerComponent } from '../components/export-layer/export-layer.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -439,6 +440,11 @@ const DiscreteLayerView: React.FC = observer(() => {
       idx: TabViews.CREATE_BEST,
       title: 'tab-views.create-best',
       iconClassName: 'mc-icon-Bests',
+    },
+    {
+      idx: TabViews.EXPORT_LAYER,
+      title: 'tab-views.export-layer',
+      iconClassName: intl.locale === 'en' ? 'mc-icon-Export' : 'mc-icon-Export-Left',
     }
   ];
 
@@ -746,6 +752,21 @@ const DiscreteLayerView: React.FC = observer(() => {
                   getActiveTabHeader(activeTabView)
                 }
                 <LayersResultsComponent 
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)'
+                  }}
+                />
+              </Box>
+            }
+            {
+              activeTabView === TabViews.EXPORT_LAYER &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <ExportLayerComponent 
+                  handleFlyTo={onFlyTo}
                   style={{
                     height: 'calc(100% - 50px)',
                     width: 'calc(100% - 8px)'

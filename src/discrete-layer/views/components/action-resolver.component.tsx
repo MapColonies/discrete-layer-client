@@ -21,6 +21,7 @@ import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
+import { LayerMetadataMixedUnion } from '../../models';
 
 const FIRST = 0;
 
@@ -185,6 +186,22 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'VectorBestRecord.saveMetadata':
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
+          break;
+        case 'LayerRasterRecord.export':{
+          // @ts-ignore
+          const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.setLayerToExport(selectedLayerToExport);
+        }
+        break;
+        case 'Layer3DRecord.export':
+          break;
+        case 'LayerDemRecord.export':
+          break;
+        case 'BestRecord.export':
+          break;
+        case 'VectorBestRecord.export':
+          break;
+        case 'QuantizedMeshBestRecord.export':
           break;
         case ContextActions.QUERY_WFS_FEATURE: {
           const coordinates = data.coordinates as { longitude: number, latitude: number };

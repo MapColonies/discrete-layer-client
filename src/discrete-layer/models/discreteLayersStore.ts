@@ -43,7 +43,7 @@ const INITIAL_STATE = {
   highlightedLayer: null,
   selectedLayer: null,
   selectedLayerIsUpdateMode: false,
-  tabViews: [{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}],
+  tabViews: [{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}, {idx: TabViews.EXPORT_LAYER}],
   entityDescriptors: [],
   previewedLayers: [],
   capabilities: [],

@@ -34,6 +34,7 @@
   "action.tab-views.catalog.tooltip": "Catalog tab",
   "action.tab-views.search-results.tooltip": "Search results tab",
   "action.tab-views.create-best.tooltip": "BEST draft creation/edit tab",
+  "action.tab-views.export-layer.tooltip": "Export layer tab",
   "action.point.tooltip": "Search by POI",
   "action.box.tooltip": "Search by bounding box",
   "action.polygon.tooltip": "Search by bounding polygon",
@@ -53,6 +54,7 @@
   "action.flyTo.tooltip": "Fly To",
   "action.update.tooltip": "Update",
   "action.expand.tooltip": "Expand",
+  "action.export.tooltip": "Export",
   "action.collapse.tooltip": "Collapse",
   "action.close.tooltip": "Close",
   "action.copy-url.tooltip": "Copy URL",
@@ -122,6 +124,7 @@
   "tab-views.search-results": "Search results",
   "tab-views.catalog": "Catalog",
   "tab-views.create-best": "BEST edit",
+  "tab-views.export-layer": "Export Layer",
 
   "tab-views.catalog.top-categories.unlinked": "Unlinked",
   "tab-views.catalog.top-categories.unpublished": "Unpublished",

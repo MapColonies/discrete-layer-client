@@ -11,6 +11,7 @@ import { userStore } from './userStore';
 import { actionDispatcherStore } from './actionDispatcherStore';
 import { catalogTreeStore } from './catalogTreeStore';
 import { mapMenusManagerStore } from './mapMenusManagerStore';
+import { exportStore } from './exportStore';
 
 type FetchAction = (
   url: string,
@@ -37,6 +38,9 @@ export const baseRootStore = RootStoreBase
       state: ResponseState.IDLE,
     }),
     mapMenusManagerStore: types.optional(mapMenusManagerStore, {
+      state: ResponseState.IDLE,
+    }),
+    exportStore: types.optional(exportStore, {
       state: ResponseState.IDLE,
     }),
   })
