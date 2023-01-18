@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.25.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.24.0...v1.25.0) (2023-01-18)
+
+
+### Features
+
+* font 3_0 integrated ([#418](https://github.com/MapColonies/discrete-layer-client/issues/418)) ([1187df1](https://github.com/MapColonies/discrete-layer-client/commit/1187df152b835849d47a19d2d088999bff35bdbf))
+* new icons start implementation ([#412](https://github.com/MapColonies/discrete-layer-client/issues/412)) ([d336852](https://github.com/MapColonies/discrete-layer-client/commit/d336852486b604d4febe6e4d13966cc471ea5dc2))
+
+
+### Bug Fixes
+
+* classification tranaslations ([#415](https://github.com/MapColonies/discrete-layer-client/issues/415)) ([acacfc4](https://github.com/MapColonies/discrete-layer-client/commit/acacfc44dabcd0fa974a2e1beae2a3439e3dd8f4))
+* revert 2d fly to along with 3d ([#416](https://github.com/MapColonies/discrete-layer-client/issues/416)) ([a7ff126](https://github.com/MapColonies/discrete-layer-client/commit/a7ff126f6cf9bb0da97535bdc59c4e10a8b752df))
+
 ## [1.24.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.23.0...v1.24.0) (2023-01-16)
 
 
