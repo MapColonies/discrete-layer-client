@@ -545,7 +545,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   */}
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Property-1Add" onClick={(evt): void => setOpenNew(!openNew)}/>
+                  <IconButton className="operationIcon mc-icon-Plus" onClick={(evt): void => setOpenNew(!openNew)}/>
                 </Tooltip>
               </MenuSurfaceAnchor>
             }
@@ -554,7 +554,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               <>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
                   <IconButton
-                    className="operationIcon mc-icon-Edit"
+                    className="operationIcon mc-icon-Edit1"
                     label="EDIT"
                     onClick={(): void => {
                       store.discreteLayersStore.selectLayer(undefined);
@@ -672,7 +672,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       />
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
-          <Box style={{padding: '0 12px 0 12px'}}>
+          <Box>
            <AppTitle />
           </Box>
           <TabViewsSwitcher
@@ -704,7 +704,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             permissions.isSystemJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>
               <IconButton
-                className="operationIcon mc-icon-System-Missions"
+                className="operationIcon mc-icon-Job-Management"
                 label="SYSTEM JOBS"
                 onClick={ (): void => { handleSystemsJobsDialogClick(); } }
               />
@@ -714,7 +714,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             permissions.isSystemCoreInfoAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-core-info.tooltip' })}>
               <IconButton
-                className="operationIcon mc-icon-System-Missions glow-missing-icon"
+                className="operationIcon mc-icon-System-Info"
                 label="SYSTEM CORE INFO"
                 onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
               />

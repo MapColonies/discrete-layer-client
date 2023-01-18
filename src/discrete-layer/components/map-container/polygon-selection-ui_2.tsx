@@ -80,7 +80,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     >
       <Tooltip content={intl.formatMessage({ id: 'action.point.tooltip' })}>
         <IconButton 
-          className="mc-icon-Coordinates"
+          className="mc-icon-POI"
           label="POINT"
           onClick={(): void => {setOpenPoiDialog(true);}}/>
       </Tooltip>
@@ -99,7 +99,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
       </Tooltip>
       <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
         <IconButton 
-          className="mc-icon-Set-Coordinates" 
+          className="mc-icon-Coordinates" 
           label="BBOX CORNERS" 
           onClick={(): void => {setOpen(true);}}/>
       </Tooltip>

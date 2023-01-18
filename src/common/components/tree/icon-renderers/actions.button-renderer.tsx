@@ -90,8 +90,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
         {
           !isEmpty(allFlatActions) && <IconButton 
             id="allActionsIcon"
-            icon="more_vert" 
-            className="actionIcon" 
+            className="actionIcon mc-icon-More" 
             onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
           />
         }

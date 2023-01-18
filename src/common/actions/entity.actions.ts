@@ -32,7 +32,7 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       action: 'flyTo',
       frequent: true,
       icon: '',
-      class: 'mc-icon-Coordinates glow-missing-icon',
+      class: 'mc-icon-Fly-to',
       titleTranslationId: 'action.flyTo.tooltip',
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
@@ -92,7 +92,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -100,7 +100,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'update',
             frequent: false,
             icon: '',
-            class: 'mc-icon-Edit glow-missing-icon',
+            class: 'mc-icon-Update',
             titleTranslationId: 'action.update.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -129,7 +129,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -159,7 +159,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -188,7 +188,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -209,7 +209,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -230,7 +230,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'edit',
             frequent: true,
             icon: '',
-            class: 'mc-icon-Edit',
+            class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
@@ -258,7 +258,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'retry',
             frequent: false,
             icon: '',
-            class: 'mc-icon-Refresh',
+            class: 'mc-icon-Job-Resume',
             titleTranslationId: 'action.job.retry',
             views: [],
             dependentField: 'availableActions.isResumable'
@@ -267,7 +267,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             action: 'abort',
             frequent: false,
             icon: '',
-            class: 'mc-icon-Delete glow-missing-icon',
+            class: 'mc-icon-Job-Abort',
             titleTranslationId: 'action.job.abort',
             views: [],
             dependentField: 'availableActions.isAbortable'

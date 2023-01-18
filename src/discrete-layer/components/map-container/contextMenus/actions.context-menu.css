@@ -48,6 +48,11 @@ body[dir='rtl'] .contextMenuFooter .coordinatesContainer {
     margin-right: 10px;
 }
 
+.featureIcon,
+.menuIcon {
+    font-size: 20px;
+}
+
 body[dir='rtl'] .featureIcon {
     margin-right: unset;
     margin-left: 10px;
