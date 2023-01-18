@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.25.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.25.1...v1.25.2) (2023-01-18)
+
+
+### Bug Fixes
+
+* show hide icon renamed ([#420](https://github.com/MapColonies/discrete-layer-client/issues/420)) ([db13629](https://github.com/MapColonies/discrete-layer-client/commit/db13629568e5232c712859f2f1c7da708f0a2b23))
+
 ### [1.25.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.25.0...v1.25.1) (2023-01-18)
 
 
