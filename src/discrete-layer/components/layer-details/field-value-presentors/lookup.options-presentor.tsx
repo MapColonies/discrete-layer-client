@@ -1,16 +1,15 @@
 import { Box } from '@map-colonies/react-components';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { isEmpty } from 'lodash';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useIntl } from 'react-intl';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
-import CONFIG from '../../../../common/config';
 import lookupTablesContext from '../../../../common/contexts/lookupTables.context';
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
-import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { IRecordFieldInfo } from '../layer-details.field-info';
+import './enum.value-presentor.css';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 interface LookupTablesPresentorProps {
@@ -50,6 +49,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
   return (
     <Box className="detailsFieldValue selectBoxContainer">
       <Select
+        className="enumOptions"
         value={value}
         id={fieldInfo.fieldName as string}
         name={fieldInfo.fieldName as string}
