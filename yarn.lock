@@ -3114,10 +3114,10 @@
     rimraf "3.0.2"
     typescript "3.7.2"
 
-"@map-colonies/static-assets@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@map-colonies/static-assets/-/static-assets-0.2.0.tgz#fd0e54d689b87a5b05a970c57a3228189ec2d591"
-  integrity sha512-EgcAu7sUUjj47UcKkpKtJ5WWXthvmyqM0IzbakTM66W/kcm82g/F+Oj7yWtKd7krhnqPUI0NIjqqEsKyRK097w==
+"@map-colonies/static-assets@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@map-colonies/static-assets/-/static-assets-0.4.0.tgz#9be21ab0f37599616d0e8d4d5c55213736aae3f0"
+  integrity sha512-JRNj+hFbd4g3GoDA+F/eP0p/b+wv45M+/cLMk0Utfl3uXTzENaA+Tnx10gu51z8+YVkivK8FWuzRTd9l2i7uEA==
   dependencies:
     "@commitlint/cli" "^9.1.1"
     "@commitlint/config-conventional" "^9.1.1"
