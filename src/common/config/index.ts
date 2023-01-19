@@ -46,38 +46,39 @@ const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
 };
 
 const systemJobsPriorityOptions =
-  // Priority is an integer, normal / default value is 1000.
-  // It can be lower.
+  // Priority is an integer
+  // Normal/default value is: 1000
+  // It can be lower
   [
     {
       label: 'system-status.job-priority-highest',
       value: '2000',
       icon: 'Arrows-Right',
-      iconColor: 'red',
+      iconColor: 'var(--mdc-theme-gc-priority-highest)',
     },
     {
       label: 'system-status.job-priority-high',
       value: '1500',
       icon: 'Arrow-Right',
-      iconColor: 'green',
+      iconColor: 'var(--mdc-theme-gc-priority-high)',
     },
     {
       label: 'system-status.job-priority-normal',
       value: '1000',
       icon: 'Move-Row',
-      iconColor: 'blue',
+      iconColor: 'var(--mdc-theme-gc-priority-normal)',
     },
     {
       label: 'system-status.job-priority-low',
       value: '500',
       icon: 'Arrow-Left',
-      iconColor: 'pink',
+      iconColor: 'var(--mdc-theme-gc-priority-low)',
     },
     {
       label: 'system-status.job-priority-lowest',
       value: '0',
       icon: 'Arrows-Left',
-      iconColor: 'orange',
+      iconColor: 'var(--mdc-theme-gc-priority-lowest)',
     },
   ];
 
