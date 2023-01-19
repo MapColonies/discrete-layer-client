@@ -11,11 +11,18 @@ export const CustomTheme = {
     GC_SELECTION_BACKGROUND: '#455570',
     GC_HOVER_BACKGROUND: 'rgba(33, 150, 243, 0.1)',
 
-    GC_WARNING_HIGH: '#FFA032', /*Warning / Orange*/
-    GC_WARNING_MEDIUM: '#FFEB87', /*Warning / Yellow*/
+    GC_WARNING_HIGH: '#FFA032', /* Orange */
+    GC_WARNING_MEDIUM: '#FFEB87', /* Yellow */
     GC_SUCCESS: 'green',
-    GC_ERROR_HIGH: '#CC1616', /*Warning / Red Dark*/
-    GC_ERROR_MEDIUM: '#FF3636', /*Warning / Red*/
+    GC_ERROR_HIGH: '#CC1616', /* Dark Red */
+    GC_ERROR_MEDIUM: '#FF3636', /* Red */
+
+    GC_PRIORITY_HIGHEST: '#FF3636', /* Dark Red */
+    GC_PRIORITY_HIGH: '#FE6814', /* Orange */
+    GC_PRIORITY_NORMAL: '#00B45A', /* Green */
+    GC_PRIORITY_LOW: '#FFB932', /* Yellow */
+    GC_PRIORITY_LOWEST: '#00B6EE', /* Light Blue */
+
     GC_MENU_ITEM_HEIGHT: '32px',
     GC_CONTEXT_MENU_WIDTH: '260px',
   },
