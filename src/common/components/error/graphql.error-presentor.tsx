@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { isEmpty } from 'lodash';
@@ -9,6 +10,7 @@ import { Box } from '@map-colonies/react-components';
 
 import './error-presentor.css';
 
+const NONE = 0;
 const USER_ERROR_RESPONSE_CODE = 400;
 const SERVER_ERROR_RESPONSE_CODE = 500;
 
@@ -32,10 +34,11 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
   const intl = useIntl();
 
   const formatMessage = (serverError: IServerError): string => {
-    const status = serverError.serverResponse?.status;
-    const message = serverError.serverResponse?.data.message;
-    if (status && status >= USER_ERROR_RESPONSE_CODE && status < SERVER_ERROR_RESPONSE_CODE) {
-      return `${intl.formatMessage({ id: `general.http-${status}.error` })}<br/>${message}`;
+    const status = serverError.serverResponse?.status ?? NONE;
+    const message = serverError.serverResponse?.data.message ?? '';
+    if (status && status >= USER_ERROR_RESPONSE_CODE && status < SERVER_ERROR_RESPONSE_CODE && message) {
+      const translatedError = intl.formatMessage({ id: `general.http-${status}.error` });
+      return `${translatedError}<br/>${message}`;
     }  else if (message) {
       return message;
     } else {
