@@ -64,7 +64,7 @@ export const MCEnumsFetcher: React.FC = observer(() => {
       enums['LayerRasterRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Orthophoto', translationKey: 'record-type.record_raster.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_RASTER };
       enums['Layer3DRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-3D', translationKey: 'record-type.record_3d.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
       enums['LayerDemRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-DTM', translationKey: 'record-type.record_dem.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_DEM };
-      enums['QuantizedMeshBestRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-DTM', translationKey: 'record-type.record_quantized_mesh.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
+      enums['QuantizedMeshBestRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Best-Qmash', translationKey: 'record-type.record_quantized_mesh.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
       enums[ORTHOPHOTO] = { ...enums[ORTHOPHOTO], icon: 'mc-icon-Map-Orthophoto', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
       enums[ORTHOPHOTO_HISTORY] = { ...enums[ORTHOPHOTO_HISTORY], icon: 'mc-icon-Map-Orthophoto', parent: 'LayerRasterRecord', internal: true, parentDomain: RecordType.RECORD_RASTER };
       enums[ORTHOPHOTO_BEST] = { ...enums[ORTHOPHOTO_BEST], icon: 'mc-icon-Map-Best-Orthophoto', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
