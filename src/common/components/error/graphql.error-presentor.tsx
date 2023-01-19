@@ -9,25 +9,37 @@ import { Box } from '@map-colonies/react-components';
 
 import './error-presentor.css';
 
+const USER_ERROR_RESPONSE_CODE = 400;
 const SERVER_ERROR_RESPONSE_CODE = 500;
-const BAD_REQUEST_ERROR_CODE = 400;
-const CONFLICT_ERROR_CODE = 409;
 
 interface IGpaphQLError {
   error: any;
+}
+
+interface IServerError {
+  message: string;
+  serverResponse?: IServerErrorResponse;
+}
+
+interface IServerErrorResponse {
+  data: { message: string };
+  status?: number;
+  statusText?: string;
 }
 
 export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
 
   const intl = useIntl();
 
-  const formatMessage = (message: string): string => {
-    if (message.includes(BAD_REQUEST_ERROR_CODE.toString())) {
-      return intl.formatMessage({ id: 'general.bad-request.error' });
-    } else if (message.includes(CONFLICT_ERROR_CODE.toString())) {
-      return intl.formatMessage({ id: 'general.duplicate.error' });
+  const formatMessage = (serverError: IServerError): string => {
+    const status = serverError.serverResponse?.status;
+    const message = serverError.serverResponse?.data.message;
+    if (status && status >= USER_ERROR_RESPONSE_CODE && status < SERVER_ERROR_RESPONSE_CODE) {
+      return `${intl.formatMessage({ id: `general.http-${status}.error` })}<br/>${message}`;
+    }  else if (message) {
+      return message;
     } else {
-      return message.substring(+message.indexOf('; ') + 1);
+      return serverError.message.substring(+serverError.message.indexOf('; ') + 1);
     }
   };
 
@@ -39,9 +51,9 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
             {
-              props.error.response.errors?.map((error: Record<string, any>, index: number) => {
+              props.error.response.errors?.map((error: IServerError, index: number) => {
                 return (
-                  <li dir="auto" key={index}>{formatMessage(error.message)}</li>
+                  <li dir="auto" key={index} dangerouslySetInnerHTML={{__html: formatMessage(error)}}></li>
                 );
               })
             }
