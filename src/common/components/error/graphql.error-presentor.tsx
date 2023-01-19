@@ -36,7 +36,7 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
   const formatMessage = (serverError: IServerError): string => {
     const status = serverError.serverResponse?.status ?? NONE;
     const message = serverError.serverResponse?.data.message ?? '';
-    if (status && status >= USER_ERROR_RESPONSE_CODE && status < SERVER_ERROR_RESPONSE_CODE && message) {
+    if (status && status >= USER_ERROR_RESPONSE_CODE && status < SERVER_ERROR_RESPONSE_CODE) {
       const translatedError = intl.formatMessage({ id: `general.http-${status}.error` });
       return `${translatedError}<br/>${message}`;
     }  else if (message) {
