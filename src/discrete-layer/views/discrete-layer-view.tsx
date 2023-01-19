@@ -258,6 +258,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       handlePolygonReset();
       setActiveTabView(TabViews.CATALOG);
     }
+
+    store.exportStore.reset();
+    store.discreteLayersStore.resetTabView();
   }, [userRole])
 
   const handleNewEntityDialogClick = (recordType: RecordType): void => {
@@ -734,7 +737,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             className="sidePanelContainer"
             style={{
               backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-              height: detailsPanelExpanded ? '50%' : '75%'
+              height: activeTabView !== TabViews.EXPORT_LAYER ? (detailsPanelExpanded ? '50%' : '75%') : '100%'
             }}
           >
             <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block' : 'none'}}>
@@ -794,17 +797,18 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Box>
             }
           </Box>
-          <Box className="sidePanelContainer sideDetailsPanel" style={{
-            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-            height: detailsPanelExpanded ? '50%' : '25%',
-          }}>
+          {activeTabView !== TabViews.EXPORT_LAYER && 
+            <Box className="sidePanelContainer sideDetailsPanel" style={{
+              backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
+              height: detailsPanelExpanded ? '50%' : '25%',
+            }}>
             <DetailsPanel
               isEditEntityDialogOpen = {isEditEntityDialogOpen}
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
               setDetailsPanelExpanded = {setDetailsPanelExpanded} 
             />
-          </Box>
+          </Box>}
         </Box>
         <Box className="mapAppContainer">
           <CesiumMap 

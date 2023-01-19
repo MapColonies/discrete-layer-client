@@ -47,7 +47,9 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     return null;
   };
 
-  if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
+  const isReadOnlyMode = mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true) || mode === Mode.EXPORT;
+
+  if (isReadOnlyMode) {
     return (
       <TooltippedValue className="detailsFieldValue">
         {dateFormatter(value, shouldShowTime)}

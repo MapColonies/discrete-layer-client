@@ -55,6 +55,7 @@
   "action.flyTo.tooltip": "הצג מיקום",
   "action.update.tooltip": "עדכון",
   "action.expand.tooltip": "הרחבת תצוגה",
+  "action.export.tooltip": "ייצוא שכבה",
   "action.collapse.tooltip": "צמצום תצוגה",
   "action.close.tooltip": "סגירה",
   "action.copy-url.tooltip": "העתקת קישור",

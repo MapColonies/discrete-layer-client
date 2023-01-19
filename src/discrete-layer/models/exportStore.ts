@@ -21,13 +21,18 @@ export const exportStore = ModelBase
     },
   }))
   .actions((self) => {
-    const store = self.root;
+    // const store = self.root;
 
     function setLayerToExport(layer: LayerMetadataMixedUnion): void {
         self.layerToExport = layer;
     }
+
+    function reset(): void {
+      self.layerToExport = undefined;
+    }
     
     return {
         setLayerToExport,
+        reset,
     };
   });
