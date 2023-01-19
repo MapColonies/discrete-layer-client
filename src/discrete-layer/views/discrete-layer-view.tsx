@@ -523,7 +523,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     permissions.isLayerDemRecordIngestAllowed &&
                     <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_dem' })}>
                       <IconButton
-                        className="operationIcon mc-icon-Map-Terrain"
+                        className="operationIcon mc-icon-Map-DTM"
                         label="NEW DEM"
                         onClick={ (): void => { setOpenNew(false); handleNewEntityDialogClick(RecordType.RECORD_DEM); } }
                       />
@@ -564,7 +564,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
                   <IconButton
-                    className="operationIcon mc-icon-Property-1Add"
+                    className="operationIcon mc-icon-Plus"
                     label="ADD TO BEST"
                     onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
                   />
