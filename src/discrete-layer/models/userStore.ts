@@ -14,6 +14,7 @@ export enum UserRole {
 export enum UserAction {
   SYSTEM_ACTION_JOBS = 'system_action.jobs',
   SYSTEM_ACTION_COREINFO = 'system_action.coreInfo',
+  SYSTEM_ACTION_TOOLS = 'system_action.tools',
   SYSTEM_ACTION_FILTER = 'system_action.filter',
   SYSTEM_ACTION_FREETEXTSEARCH = 'system_action.freeTextSearch',
   SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND = 'system_action.sidebarCollapseExapnd',
@@ -80,6 +81,7 @@ const ROLES: IRole[] = [
     permissions: {
       [UserAction.SYSTEM_ACTION_JOBS]: true,
       [UserAction.SYSTEM_ACTION_COREINFO]: true,
+      [UserAction.SYSTEM_ACTION_TOOLS]: true,
       [UserAction.SYSTEM_ACTION_FILTER]: false,
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: false,
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: false,
@@ -122,6 +124,7 @@ const ROLES: IRole[] = [
     permissions: {
       [UserAction.SYSTEM_ACTION_JOBS]: false,
       [UserAction.SYSTEM_ACTION_COREINFO]: false,
+      [UserAction.SYSTEM_ACTION_TOOLS]: false,
       [UserAction.SYSTEM_ACTION_FILTER]: false,
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: false,
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: false,
