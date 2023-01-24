@@ -26,7 +26,7 @@ export interface IEntityActions {
 const GENERAL_ACTIONS_GROUP: IActionGroup = {
   id: 0,
   titleTranslationId: 'layerCatalogToMap',
-  type: 'catalogToMapOperations',
+  type: 'generalActions',
   group: [
     {
       action: 'flyTo',
