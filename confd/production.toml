@@ -31,6 +31,7 @@ keys = [
   "/configuration/default/user/role",
   "/configuration/basemaps",
   "/configuration/default/terrain/provider/url",
+  "/configuration/web/tools/url",
   "/configuration/running/mode/type",
   "/configuration/running/mode/autocomplete",
   "/configuration/access/token/attribute/name",
