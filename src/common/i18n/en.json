@@ -70,7 +70,7 @@
   "action.filter.tooltip": "Filter",
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
-  "action.web-tools.tooltip": "Go to Web Tools App",
+  "action.web-tools.tooltip": "Go to Web Tools",
   "action.publish.tooltip": "Publish",
   "action.unpublish.tooltip": "Unpublish",
   "action.edit.tooltip": "Edit",

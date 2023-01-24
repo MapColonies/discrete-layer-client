@@ -124,7 +124,7 @@ const ROLES: IRole[] = [
     permissions: {
       [UserAction.SYSTEM_ACTION_JOBS]: false,
       [UserAction.SYSTEM_ACTION_COREINFO]: false,
-      [UserAction.SYSTEM_ACTION_TOOLS]: false,
+      [UserAction.SYSTEM_ACTION_TOOLS]: true,
       [UserAction.SYSTEM_ACTION_FILTER]: false,
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: false,
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: false,
