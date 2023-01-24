@@ -19,6 +19,7 @@ const JOB_STATUS = (window as any)._env_.JOB_STATUS;
 const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 const DEFAULT_TERRAIN_PROVIDER_URL = (window as any)._env_.DEFAULT_TERRAIN_PROVIDER_URL;
+const WEB_TOOLS_URL = (window as any)._env_.WEB_TOOLS_URL;
 const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
 const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
@@ -46,38 +47,39 @@ const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
 };
 
 const systemJobsPriorityOptions =
-  // Priority is an integer, normal / default value is 1000.
-  // It can be lower.
+  // Priority is an integer
+  // Normal/default value is: 1000
+  // It can be lower
   [
     {
       label: 'system-status.job-priority-highest',
       value: '2000',
       icon: 'Arrows-Right',
-      iconColor: 'red',
+      iconColor: 'var(--mdc-theme-gc-priority-highest)',
     },
     {
       label: 'system-status.job-priority-high',
       value: '1500',
       icon: 'Arrow-Right',
-      iconColor: 'green',
+      iconColor: 'var(--mdc-theme-gc-priority-high)',
     },
     {
       label: 'system-status.job-priority-normal',
       value: '1000',
       icon: 'Move-Row',
-      iconColor: 'blue',
+      iconColor: 'var(--mdc-theme-gc-priority-normal)',
     },
     {
       label: 'system-status.job-priority-low',
       value: '500',
       icon: 'Arrow-Left',
-      iconColor: 'pink',
+      iconColor: 'var(--mdc-theme-gc-priority-low)',
     },
     {
       label: 'system-status.job-priority-lowest',
       value: '0',
       icon: 'Arrows-Left',
-      iconColor: 'orange',
+      iconColor: 'var(--mdc-theme-gc-priority-lowest)',
     },
   ];
 
@@ -141,6 +143,7 @@ const APP_CONFIG = {
   },
   BASE_MAPS: enrichBaseMaps(BASE_MAPS),
   DEFAULT_TERRAIN_PROVIDER_URL: DEFAULT_TERRAIN_PROVIDER_URL,
+  WEB_TOOLS_URL: WEB_TOOLS_URL,
   RUNNING_MODE: {
     TYPE: RUNNING_MODE.type,
     AUTOCOMPLETE: RUNNING_MODE.autocomplete,

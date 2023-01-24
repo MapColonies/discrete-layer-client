@@ -20,9 +20,7 @@ import {
   BboxCorner,
   Box,
   CesiumColor,
-  CesiumConstantProperty,
   CesiumDrawingsDataSource,
-  CesiumGeojsonLayer,
   CesiumMap,
   CesiumPolylineDashMaterialProperty,
   CesiumRectangle,
@@ -455,6 +453,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     return {
       isSystemJobsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_JOBS),
       isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
+      isWebToolsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_TOOLS),
       isSystemFilterEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FILTER),
       isSystemFreeTextSearchEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FREETEXTSEARCH),
       isSystemSidebarCollapseEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND),
@@ -532,7 +531,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     permissions.isLayerDemRecordIngestAllowed &&
                     <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.ingest_dem' })}>
                       <IconButton
-                        className="operationIcon mc-icon-Map-Terrain"
+                        className="operationIcon mc-icon-Map-DTM"
                         label="NEW DEM"
                         onClick={ (): void => { setOpenNew(false); handleNewEntityDialogClick(RecordType.RECORD_DEM); } }
                       />
@@ -573,7 +572,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
                 <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
                   <IconButton
-                    className="operationIcon mc-icon-Property-1Add"
+                    className="operationIcon mc-icon-Plus"
                     label="ADD TO BEST"
                     onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
                   />
@@ -726,6 +725,18 @@ const DiscreteLayerView: React.FC = observer(() => {
                 className="operationIcon mc-icon-System-Info"
                 label="SYSTEM CORE INFO"
                 onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
+              />
+            </Tooltip>
+          }
+          {
+            permissions.isWebToolsAllowed as boolean &&
+            CONFIG.WEB_TOOLS_URL &&
+            <Tooltip content={intl.formatMessage({ id: 'action.web-tools.tooltip' })}>
+              <IconButton
+                className="operationIcon"
+                label="WEB TOOLS"
+                icon="apps"
+                onClick={ (): void => { window.open(CONFIG.WEB_TOOLS_URL); } }
               />
             </Tooltip>
           }
