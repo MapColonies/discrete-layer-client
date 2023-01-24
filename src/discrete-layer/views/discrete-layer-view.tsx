@@ -20,9 +20,7 @@ import {
   BboxCorner,
   Box,
   CesiumColor,
-  CesiumConstantProperty,
   CesiumDrawingsDataSource,
-  CesiumGeojsonLayer,
   CesiumMap,
   CesiumPolylineDashMaterialProperty,
   CesiumRectangle,
@@ -446,6 +444,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     return {
       isSystemJobsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_JOBS),
       isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
+      isWebToolsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_TOOLS),
       isSystemFilterEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FILTER),
       isSystemFreeTextSearchEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FREETEXTSEARCH),
       isSystemSidebarCollapseEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND),
@@ -717,6 +716,18 @@ const DiscreteLayerView: React.FC = observer(() => {
                 className="operationIcon mc-icon-System-Info"
                 label="SYSTEM CORE INFO"
                 onClick={ (): void => { handleSystemsCoreInfoDialogClick(); } }
+              />
+            </Tooltip>
+          }
+          {
+            permissions.isWebToolsAllowed as boolean &&
+            CONFIG.WEB_TOOLS_URL &&
+            <Tooltip content={intl.formatMessage({ id: 'action.web-tools.tooltip' })}>
+              <IconButton
+                className="operationIcon"
+                label="WEB TOOLS"
+                icon="apps"
+                onClick={ (): void => { window.open(CONFIG.WEB_TOOLS_URL); } }
               />
             </Tooltip>
           }

@@ -70,6 +70,7 @@
   "action.filter.tooltip": "סינון",
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.system-core-info.tooltip": "צפייה במידע המערכת",
+  "action.web-tools.tooltip": "פתיחת ממשק כלים",
   "action.publish.tooltip": "פרסום",
   "action.unpublish.tooltip": "ביטול פרסום",
   "action.edit.tooltip": "עריכה",
