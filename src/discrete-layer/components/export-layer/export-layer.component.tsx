@@ -1,6 +1,7 @@
 import { Box } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
+import { EntityActionsTypes } from '../../../common/actions/entity.actions';
 import {
   EntityDescriptorModelType,
   useStore,
@@ -30,6 +31,9 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
         store.discreteLayersStore.showLayer(layerToExport.id, true, null);
         handleFlyTo();
       }
+
+      const actions = store.actionDispatcherStore.getEntityActionGroups('LayerRasterRecord');
+      console.log(actions.filter(({type}) => type === EntityActionsTypes.EXPORT_ACTIONS));
     }, [layerToExport]);
 
     return (

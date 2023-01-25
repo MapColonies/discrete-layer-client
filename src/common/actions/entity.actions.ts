@@ -23,10 +23,19 @@ export interface IEntityActions {
   actions: IActionGroup[];
 }
 
+export enum EntityActionsTypes {
+  GENERAL_ACTIONS = 'generalActions',
+  MAP_ACTIONS = 'mapActions',
+  CRUD = 'CRUD',
+  JOB_ACTIONS = 'jobActions',
+  EXPORT_ACTIONS = 'exportActions',
+
+}
+
 const GENERAL_ACTIONS_GROUP: IActionGroup = {
   id: 0,
   titleTranslationId: 'layerCatalogToMap',
-  type: 'generalActions',
+  type: EntityActionsTypes.GENERAL_ACTIONS,
   group: [
     {
       action: 'flyTo',
@@ -55,7 +64,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'OperationsOnMap',
-        type: 'mapActions',
+        type: EntityActionsTypes.MAP_ACTIONS,
         group: [
           {
             action: 'moveToTop',
@@ -94,7 +103,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 2,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -122,6 +131,45 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           },
         ],
       },
+      {
+        id: 3,
+        titleTranslationId: 'exportActions',
+        type: EntityActionsTypes.EXPORT_ACTIONS,
+        group: [
+          {
+            action: 'rectangle',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Rectangle',
+            titleTranslationId: 'action.box.tooltip',
+            views: [TabViews.EXPORT_LAYER]
+          },
+          {
+            action: 'polygon',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Polygon',
+            titleTranslationId: 'action.polygon.tooltip',
+            views: [TabViews.EXPORT_LAYER]
+          },
+          {
+            action: 'coordinates',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Coordinates',
+            titleTranslationId: 'action.bbox-corners.tooltip',
+            views: [TabViews.EXPORT_LAYER]
+          },
+          {
+            action: 'clear',
+            frequent: true,
+            icon: '',
+            class: 'mc-icon-Delete',
+            titleTranslationId: 'action.clear.tooltip',
+            views: [TabViews.EXPORT_LAYER]
+          },
+        ],
+      },
     ]
   },
   {
@@ -131,7 +179,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -161,7 +209,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -190,7 +238,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -211,7 +259,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -232,7 +280,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -260,7 +308,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'OperationsOnJobs',
-        type: 'jobActions',
+        type: EntityActionsTypes.JOB_ACTIONS,
         group: [
           {
             action: 'retry',
