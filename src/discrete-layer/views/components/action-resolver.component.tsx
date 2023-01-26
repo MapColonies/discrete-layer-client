@@ -22,6 +22,7 @@ import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 import { LayerMetadataMixedUnion } from '../../models';
+import { ExportActions } from '../../components/export-layer/hooks/useGetExportActions';
 
 const FIRST = 0;
 
@@ -220,7 +221,10 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           
           break;
         }
-        
+        case ExportActions.TOGGLE_FULL_LAYER_EXPORT: 
+          store.exportStore.toggleIsFullLayerExportEnabled();
+          break;
+          
         // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;

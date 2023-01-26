@@ -11,6 +11,8 @@ export const exportStore = ModelBase
       Object.values(ResponseState)
     ),
     layerToExport: types.maybe(types.frozen<LayerMetadataMixedUnion>()),
+    isFullLayerExportEnabled: types.maybe(types.frozen<boolean>(false)),
+    geometrySelectionList: types.maybe(types.frozen<unknown[]>([])),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -27,12 +29,22 @@ export const exportStore = ModelBase
         self.layerToExport = layer;
     }
 
+    function toggleIsFullLayerExportEnabled(): void {
+        self.isFullLayerExportEnabled = !self.isFullLayerExportEnabled;
+    }
+
+    function setGeometrySelectionList(newSelections: unknown[]): void {
+        self.geometrySelectionList = newSelections;
+    }
+
     function reset(): void {
       self.layerToExport = undefined;
     }
     
     return {
         setLayerToExport,
+        setGeometrySelectionList,
+        toggleIsFullLayerExportEnabled,
         reset,
     };
   });

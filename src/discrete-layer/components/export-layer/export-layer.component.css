@@ -1,17 +1,56 @@
 #exportLayerHeader {
-    position: relative;
-    display: flex;
-    background-color: var(--mdc-theme-text-primary-on-light);
-    padding: 20px;
-    margin-top: 12px;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: var(--update-layer-header-height);
-  }
-  
-  #exportLayerHeaderContent {
-    margin: 0 auto;
-    width: 100%;
-  }
-  
+  display: flex;
+  flex-direction: column;
+}
+
+.exportLayerDetails {
+  position: relative;
+  display: flex;
+  background-color: var(--mdc-theme-text-primary-on-light);
+  padding: 20px;
+  margin-top: 12px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--update-layer-header-height);
+}
+
+#exportLayerHeaderContent {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.exportToolbarContainer {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--mdc-theme-text-primary-on-dark);
+}
+
+.exportTabContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.exportFooter {
+  padding: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+#exportBtn, #cancelBtn {
+  color: var(--mdc-theme-text-primary-on-dark);
+  background-color: var(--mdc-theme-gc-tab-active-background);
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 10px;
+}
+
+body[dir='rtl'] .exportFooter {
+  flex-direction: row;
+}

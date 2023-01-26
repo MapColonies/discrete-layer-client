@@ -130,46 +130,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
           },
         ],
-      },
-      {
-        id: 3,
-        titleTranslationId: 'exportActions',
-        type: EntityActionsTypes.EXPORT_ACTIONS,
-        group: [
-          {
-            action: 'rectangle',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Rectangle',
-            titleTranslationId: 'action.box.tooltip',
-            views: [TabViews.EXPORT_LAYER]
-          },
-          {
-            action: 'polygon',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Polygon',
-            titleTranslationId: 'action.polygon.tooltip',
-            views: [TabViews.EXPORT_LAYER]
-          },
-          {
-            action: 'coordinates',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Coordinates',
-            titleTranslationId: 'action.bbox-corners.tooltip',
-            views: [TabViews.EXPORT_LAYER]
-          },
-          {
-            action: 'clear',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Delete',
-            titleTranslationId: 'action.clear.tooltip',
-            views: [TabViews.EXPORT_LAYER]
-          },
-        ],
-      },
+      }
     ]
   },
   {

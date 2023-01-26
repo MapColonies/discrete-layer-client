@@ -92,6 +92,9 @@
   "action.job.abort": "Abort",
   "actions.wfs.buildings-title": "Building info",
   "actions.meter.sign": "m",
+  "action.export.box.tooltip": "Select by bounding box",
+  "action.export.polygon.tooltip": "Select by bounding polygon",
+  "action.export.bbox-corners.tooltip": "Select by bounding box corners",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -619,5 +622,7 @@
 
   "map-context-menu.title": "Map info services",
 
-  "wfs-info.no-data.message": "No data found for type {feature}"
+  "wfs-info.no-data.message": "No data found for type {feature}",
+
+  "export-layer.export.button": "Export Layer"
 }

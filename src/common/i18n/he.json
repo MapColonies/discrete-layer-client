@@ -93,6 +93,10 @@
   "action.job.abort": "בטל",
   "actions.wfs.buildings-title": "תשאול מבנה",
   "actions.meter.sign": "מ'",
+  "action.export.box.tooltip": "בחירה בעזרת מלבן חוסם",
+  "action.export.polygon.tooltip": "בחירה בעזרת פוליגון חוסם",
+  "action.export.bbox-corners.tooltip": "בחירה בעזרת קואורדינטות מלבן חוסם",
+  
 
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
@@ -620,5 +624,7 @@
 
   "map-context-menu.title": "שירותי תשאול מפה",
 
-  "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}"
+  "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
+
+  "export-layer.export.button": "ייצא שכבה"
 }
