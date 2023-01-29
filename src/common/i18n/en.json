@@ -95,6 +95,10 @@
   "action.export.box.tooltip": "Select by bounding box",
   "action.export.polygon.tooltip": "Select by bounding polygon",
   "action.export.bbox-corners.tooltip": "Select by bounding box corners",
+  "action.export.full-layer.tooltip": "Export Full Layer",
+  "action.export.full-layer.label": "Full Export",
+  "action.export.custom-selection.label": "Custom Export",
+  "action.export.import-shape.tooltip": "Import Selection from file",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",

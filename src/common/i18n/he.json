@@ -96,6 +96,10 @@
   "action.export.box.tooltip": "בחירה בעזרת מלבן חוסם",
   "action.export.polygon.tooltip": "בחירה בעזרת פוליגון חוסם",
   "action.export.bbox-corners.tooltip": "בחירה בעזרת קואורדינטות מלבן חוסם",
+  "action.export.full-layer.tooltip": "ייצוא שכבה מלאה",
+  "action.export.full-layer.label": "ייצוא מלא",
+  "action.export.custom-selection.label": "ייצוא מבחירה",
+  "action.export.import-shape.tooltip": "ייבא מקובץ",
   
 
   "record-type.record_raster.label": "ראסטר",

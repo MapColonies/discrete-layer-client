@@ -86,6 +86,8 @@ import { MapMenusIds } from '../models/mapMenusManagerStore';
 import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { WfsFeature } from '../components/map-container/wfs-feature.component';
 import { ExportLayerComponent } from '../components/export-layer/export-layer.component';
+import ExportDrawingHandler from '../components/export-layer/export-drawing-handler.component';
+import ExportPolygonsRenderer from '../components/export-layer/export-polygons-renderer.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -686,6 +688,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <TabViewsSwitcher
             handleTabViewChange = {handleTabViewChange}
             activeTabView = {activeTabView}
+            disabled={isDrawing || store.exportStore.drawingState?.drawing}
           />
         </Box>
         <Box className="headerSearchOptionsContainer">
@@ -845,7 +848,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }}
            >
               {memoizedLayers}
-              <CesiumDrawingsDataSource
+              {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
                 drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
                 drawingMaterial={DRAWING_MATERIAL_COLOR}
                 drawState={{
@@ -856,7 +859,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                 hollow={true}
                 outlineWidth={2}
                 material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
-              />
+              />}
+
+              {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
               <Terrain/>
               <WfsFeature />
               {
@@ -865,6 +870,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               {
                 rect && <FlyTo setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
               }
+              {activeTabView === TabViews.EXPORT_LAYER && <ExportPolygonsRenderer />}
           </CesiumMap>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
         </Box>

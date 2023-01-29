@@ -54,3 +54,16 @@
 body[dir='rtl'] .exportFooter {
   flex-direction: row;
 }
+
+.exportAction.exportToggle > label {
+  width: 3rem;
+}
+
+.exportAction.exportToggle .mdc-checkbox--disabled input[type='checkbox'] {
+  opacity: 0;
+}
+
+.exportAction.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}

@@ -1,8 +1,18 @@
+import { DrawType } from '@map-colonies/react-components';
+import { Feature, FeatureCollection } from 'geojson';
 import { types, getParent } from 'mobx-state-tree';
 import { LayerMetadataMixedUnion } from '.';
 import { ResponseState } from '../../common/models/response-state.enum';
+import { IDrawingState } from '../components/export-layer/export-drawing-handler.component';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
+
+const INITIAL_DRAWING_STATE: IDrawingState = {
+  drawing: false,
+  type: DrawType.UNKNOWN
+};
+
+const INITIAL_GEOMETRY_SELECTION: FeatureCollection = { type: "FeatureCollection", features: [] };
 
 export const exportStore = ModelBase
   .props({
@@ -12,7 +22,8 @@ export const exportStore = ModelBase
     ),
     layerToExport: types.maybe(types.frozen<LayerMetadataMixedUnion>()),
     isFullLayerExportEnabled: types.maybe(types.frozen<boolean>(false)),
-    geometrySelectionList: types.maybe(types.frozen<unknown[]>([])),
+    geometrySelectionsCollection: types.frozen<FeatureCollection>(INITIAL_GEOMETRY_SELECTION),
+    drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -29,22 +40,40 @@ export const exportStore = ModelBase
         self.layerToExport = layer;
     }
 
-    function toggleIsFullLayerExportEnabled(): void {
-        self.isFullLayerExportEnabled = !self.isFullLayerExportEnabled;
+    function addFeatureSelection(newSelection: Feature): void {
+        self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: [...self.geometrySelectionsCollection.features, newSelection]};
     }
 
-    function setGeometrySelectionList(newSelections: unknown[]): void {
-        self.geometrySelectionList = newSelections;
+    function resetFeatureSelections(): void {
+      self.geometrySelectionsCollection = INITIAL_GEOMETRY_SELECTION;
+    }
+
+    function setDrawingState(drawingState: IDrawingState): void {
+      self.drawingState = {...drawingState};
+    }
+    
+    function resetDrawingState(): void {
+      self.drawingState = INITIAL_DRAWING_STATE;
+    }
+
+    function toggleIsFullLayerExportEnabled(): void {
+      self.isFullLayerExportEnabled = !(self.isFullLayerExportEnabled as boolean);
+      resetDrawingState();
     }
 
     function reset(): void {
       self.layerToExport = undefined;
+      resetFeatureSelections();
+      resetDrawingState();
     }
     
     return {
         setLayerToExport,
-        setGeometrySelectionList,
+        addFeatureSelection,
         toggleIsFullLayerExportEnabled,
+        setDrawingState,
+        resetFeatureSelections,
+        resetDrawingState,
         reset,
     };
   });

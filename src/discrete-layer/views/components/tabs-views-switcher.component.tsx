@@ -14,6 +14,7 @@ import { isEmpty } from 'lodash';
 interface TabViewsSwitcherComponentProps {
   handleTabViewChange: (tabView: TabViews) => void;
   activeTabView: TabViews;
+  disabled?: boolean;
 }
 
 export interface ITabView {
@@ -83,7 +84,7 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
   
   return (
     <>
-      <Box className="headerViewsSwitcherContainer">
+      <Box style={props.disabled as boolean ? { pointerEvents: 'none' , opacity: 0.3 } : {}} className="headerViewsSwitcherContainer">
         {
           availableTabs.map((tab) => {
             return <Tooltip key={`tabView_${tab.idx}`} content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>

@@ -23,6 +23,7 @@ import { ContextActions } from '../../../common/actions/context.actions';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 import { LayerMetadataMixedUnion } from '../../models';
 import { ExportActions } from '../../components/export-layer/hooks/useGetExportActions';
+import { DrawType } from '@map-colonies/react-components';
 
 const FIRST = 0;
 
@@ -191,6 +192,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerRasterRecord.export':{
           // @ts-ignore
           const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.reset();
           store.exportStore.setLayerToExport(selectedLayerToExport);
         }
         break;
@@ -224,7 +226,22 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: 
           store.exportStore.toggleIsFullLayerExportEnabled();
           break;
-          
+        case ExportActions.DRAW_RECTANGLE:
+          store.exportStore.setDrawingState({
+            drawing: true,
+            type: DrawType.BOX
+          })
+          break;
+        case ExportActions.DRAW_POLYGON:
+          store.exportStore.setDrawingState({
+            drawing: true,
+            type: DrawType.POLYGON
+          })
+          break;
+        case ExportActions.CLEAR_DRAWINGS:
+          store.exportStore.resetFeatureSelections();
+          break;
+
         // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;
