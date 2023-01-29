@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.26.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.26.1...v1.26.2) (2023-01-29)
+
+
+### Bug Fixes
+
+* new link type wmts base should be displayed with a copy icon ([#425](https://github.com/MapColonies/discrete-layer-client/issues/425)) ([957b81a](https://github.com/MapColonies/discrete-layer-client/commit/957b81a8a5e246e9c1a5c90c413669878b6f4639))
+* producttype freeze support and context placement ([#426](https://github.com/MapColonies/discrete-layer-client/issues/426)) ([217ff14](https://github.com/MapColonies/discrete-layer-client/commit/217ff14b4f6654704d6f4316a20f8cf6d1003be2))
+
 ### [1.26.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.26.0...v1.26.1) (2023-01-24)
 
 
