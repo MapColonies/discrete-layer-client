@@ -2,6 +2,7 @@
 import { LinkType } from '../../common/models/link-type.enum';
 
 const {
+  WMTS_BASE,
   WMTS_LAYER,
   XYZ_LAYER,
   THREE_D_LAYER,
@@ -32,6 +33,7 @@ export interface ILink {
 }
 
 export const links: Partial<Record<LinkType, ILink>> = {
+  [WMTS_BASE]: { linkAction: 'copy' },
   [WMTS_LAYER]: { linkAction: 'copy' },
   [XYZ_LAYER]: { linkAction: 'copy' },
   [THREE_D_LAYER]: { linkAction: 'copy' },
