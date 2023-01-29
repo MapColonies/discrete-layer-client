@@ -1,4 +1,5 @@
 export enum LinkType {
+  WMTS_BASE = 'WMTS_BASE',
   WMTS_LAYER = 'WMTS_LAYER',
   XYZ_LAYER = 'XYZ_LAYER',
   THREE_D_LAYER = '3D_LAYER',
