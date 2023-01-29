@@ -11,6 +11,7 @@ import EnumsMapContext, { DEFAULT_ENUM_DESCRIPTOR, IEnumsMapType } from '../../.
 import useDebounceField from '../../../../common/hooks/debounce-field.hook';
 import { IDictionary } from '../../../../common/models/dictionary';
 import { Mode } from '../../../../common/models/mode.enum';
+import { UpdateRulesModelType } from '../../../models/UpdateRulesModel';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
@@ -59,6 +60,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
             value={innerValue}
             id={fieldInfo.fieldName as string}
             name={fieldInfo.fieldName as string}
+            disabled={mode === Mode.UPDATE && ((fieldInfo.updateRules as UpdateRulesModelType | undefined | null)?.freeze) as boolean}
             onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
               formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
             }}

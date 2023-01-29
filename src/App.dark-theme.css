@@ -96,6 +96,15 @@
   border-radius: 20px;
 }
 
+.dark-theme .mdc-select.mdc-select--disabled .mdc-select__selected-text {
+  color: unset; 
+}
+
+.dark-theme .mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--disabled {
+  background-color: var(--mdc-theme-text-disabled-on-light);
+  opacity: 0.2;
+}
+
 /* AG-GRID CUSTOMIZATION */
 
 .dark-theme .ag-theme-alpine-dark {
