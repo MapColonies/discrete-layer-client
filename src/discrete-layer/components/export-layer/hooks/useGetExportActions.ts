@@ -4,7 +4,7 @@ import { IAction } from '../../../../common/actions/entity.actions';
 import { useStore } from '../../../models';
 import { TabViews } from '../../../views/tab-views';
 
-const IS_MULTI_SELECTION_ALLOWED = true;
+const IS_MULTI_SELECTION_ALLOWED = false;
 
 export enum ExportActions {
     DRAW_RECTANGLE = 'export-draw-rectangle',
@@ -103,10 +103,16 @@ export const useGetExportActions = (): ExportAction[] => {
             case isFullLayerExportEnabled as boolean:
                 setExportActions((currentActions) => currentActions.map(action => {
                     if(!isEmpty(geometrySelectionList.features) && !(action.multipleAllowed ?? false)) {
+                        if(isFullLayerExportEnabled as boolean && action.action !== ExportActions.CLEAR_DRAWINGS) {
+                            return { ...action, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT }
+                        }
+                        
                         if(action.action !== ExportActions.CLEAR_DRAWINGS) {
                             return { ...action, disabled: true }
                         }
-                    } else if(isFullLayerExportEnabled as boolean){
+                    } 
+                   
+                    if(isFullLayerExportEnabled as boolean){
                         if(![ExportActions.CLEAR_DRAWINGS, ExportActions.TOGGLE_FULL_LAYER_EXPORT].includes(action.action as ExportActions)) {
                             return { ...action, disabled: true }
                         }

@@ -24,6 +24,7 @@ export const exportStore = ModelBase
     isFullLayerExportEnabled: types.maybe(types.frozen<boolean>(false)),
     geometrySelectionsCollection: types.frozen<FeatureCollection>(INITIAL_GEOMETRY_SELECTION),
     drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
+    isBBoxDialogOpen: types.maybe(types.frozen<boolean>(false)),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -48,6 +49,10 @@ export const exportStore = ModelBase
       self.geometrySelectionsCollection = INITIAL_GEOMETRY_SELECTION;
     }
 
+    function resetFullLayerExport(): void {
+      self.isFullLayerExportEnabled = false;
+    }
+
     function setDrawingState(drawingState: IDrawingState): void {
       self.drawingState = {...drawingState};
     }
@@ -61,10 +66,15 @@ export const exportStore = ModelBase
       resetDrawingState();
     }
 
+    function setIsBBoxDialogOpen(isOpen: boolean): void {
+      self.isBBoxDialogOpen = isOpen;
+    }
+
     function reset(): void {
       self.layerToExport = undefined;
       resetFeatureSelections();
       resetDrawingState();
+      resetFullLayerExport();
     }
     
     return {
@@ -72,8 +82,10 @@ export const exportStore = ModelBase
         addFeatureSelection,
         toggleIsFullLayerExportEnabled,
         setDrawingState,
+        setIsBBoxDialogOpen,
         resetFeatureSelections,
         resetDrawingState,
+        resetFullLayerExport,
         reset,
     };
   });

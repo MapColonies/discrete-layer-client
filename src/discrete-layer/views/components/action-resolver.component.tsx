@@ -15,7 +15,7 @@ import {
 } from '../../components/layer-details/entity-types-keys';
 import { cleanUpEntity, downloadJSONToClient } from '../../components/layer-details/utils'
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { ILayerImage } from '../../models/layerImage';
+import { getLayerFootprint, ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
@@ -24,6 +24,7 @@ import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHa
 import { LayerMetadataMixedUnion } from '../../models';
 import { ExportActions } from '../../components/export-layer/hooks/useGetExportActions';
 import { DrawType } from '@map-colonies/react-components';
+import { Feature } from 'geojson';
 
 const FIRST = 0;
 
@@ -223,9 +224,19 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           
           break;
         }
-        case ExportActions.TOGGLE_FULL_LAYER_EXPORT: 
+        case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
+          if(!(store.exportStore.isFullLayerExportEnabled as boolean)) {
+            const {layerToExport} = store.exportStore;
+            // Clean any previous selections
+            store.exportStore.resetFeatureSelections();
+            store.exportStore.addFeatureSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+          } else {
+            store.exportStore.resetFeatureSelections();
+          }
+
           store.exportStore.toggleIsFullLayerExportEnabled();
           break;
+        }
         case ExportActions.DRAW_RECTANGLE:
           store.exportStore.setDrawingState({
             drawing: true,
@@ -238,8 +249,12 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             type: DrawType.POLYGON
           })
           break;
+        case ExportActions.DRAW_BY_COORDINATES:
+          store.exportStore.setIsBBoxDialogOpen(true);
+          break;
         case ExportActions.CLEAR_DRAWINGS:
           store.exportStore.resetFeatureSelections();
+          store.exportStore.resetFullLayerExport();
           break;
 
         // System Callback operations
