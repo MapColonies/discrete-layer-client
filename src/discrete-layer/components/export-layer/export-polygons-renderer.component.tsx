@@ -24,8 +24,6 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
     <CesiumGeojsonLayer
       data={exportGeometrySelections}
       onLoad={(geoJsonDataSource): void => {
-        console.log(geoJsonDataSource);
-
         geoJsonDataSource.entities.values.forEach((item) => {
           if (item.polygon) {
             // @ts-ignore
@@ -53,7 +51,8 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
             item.position = CesiumCartesian3.fromDegrees(centerInDegrees[1], centerInDegrees[0]); // [lon, lat]
 
             const label = {
-              text: 'ZOOM LEVEL HERE',
+              // eslint-disable-next-line
+              text: item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '',
               font: '12px Roboto, Helvetica, Arial, sans-serif',
               fillColor: CesiumColor.WHITE,
               outlineColor: CesiumColor.BLACK,

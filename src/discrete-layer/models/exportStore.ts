@@ -1,5 +1,7 @@
+import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { DrawType } from '@map-colonies/react-components';
 import { Feature, FeatureCollection } from 'geojson';
+import { get } from 'lodash';
 import { types, getParent } from 'mobx-state-tree';
 import { LayerMetadataMixedUnion } from '.';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -42,7 +44,16 @@ export const exportStore = ModelBase
     }
 
     function addFeatureSelection(newSelection: Feature): void {
-        self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: [...self.geometrySelectionsCollection.features, newSelection]};
+        let areaZoomLevel: number | null = null;
+
+        try{ 
+          areaZoomLevel = degreesPerPixelToZoomLevel(get(self.layerToExport, "maxResolutionDeg"));
+        } catch(e) {
+          console.error(e);
+        }
+
+        const newFeatures = [...self.geometrySelectionsCollection.features, {...newSelection, properties: { areaZoomLevel }}]; 
+        self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
     }
 
     function resetFeatureSelections(): void {
