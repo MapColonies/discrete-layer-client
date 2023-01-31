@@ -114,6 +114,7 @@
     "axios": "^0.21.1",
     "copyfiles": "^2.4.0",
     "date-fns": "^2.14.0",
+    "detect-gpu": "^5.0.9",
     "enzyme-to-json": "^3.6.1",
     "formik": "^2.1.6",
     "graphql-request": "^3.4.0",

@@ -537,6 +537,8 @@
   "compatibility-check.browser-not-supported": "The browser {browserName} is not supported, and the app may not work correctly.\nPlease use chromium based browser v{minimumVersion} or newer.",
   "compatibility-check.browser-version-not-supported": "Your browser is outdated, and the app may not work correctly.\nPlease update to {browserName} v{minimumVersion} or newer for the best experience.",
 
+  "gpu-insufficient.error": "You'r system GPU is insufficient.\nYou may experience issues with the app's performance.\nPlease attend to your IT for assistance.",
+
   "map-legends.sidebar-title": "Map Legends",
   "map-legends.empty-text": "No legends found for the active layers",
   "map-legends.actions.doc": "Open Document",
