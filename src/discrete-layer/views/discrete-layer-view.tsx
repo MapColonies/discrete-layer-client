@@ -85,6 +85,7 @@ import useGetMenuProperties from '../../common/hooks/mapMenus/useGetMenuProperti
 import { MapMenusIds } from '../models/mapMenusManagerStore';
 import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { WfsFeature } from '../components/map-container/wfs-feature.component';
+import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -841,6 +842,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               }
           </CesiumMap>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
+          <GPUInsufficiencyDetector />
         </Box>
 
         <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
