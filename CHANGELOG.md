@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.27.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.26.2...v1.27.0) (2023-01-31)
+
+
+### Features
+
+* error message when system gpu is insufficient ([#427](https://github.com/MapColonies/discrete-layer-client/issues/427)) ([e0011fd](https://github.com/MapColonies/discrete-layer-client/commit/e0011fdcc22ad8cb0d7cb934ef1349a4c5ae2038))
+
 ### [1.26.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.26.1...v1.26.2) (2023-01-29)
 
 
