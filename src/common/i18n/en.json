@@ -630,5 +630,7 @@
 
   "wfs-info.no-data.message": "No data found for type {feature}",
 
-  "export-layer.export.button": "Export Layer"
+  "export-layer.export.button": "Export Layer",
+  "export-layer.selection-index.text":"Selection",
+  "export-layer.areaZoomLevel.field": "Zoom Level"
 }

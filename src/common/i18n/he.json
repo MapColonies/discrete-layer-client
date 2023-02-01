@@ -632,5 +632,7 @@
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
 
-  "export-layer.export.button": "ייצא שכבה"
+  "export-layer.export.button": "ייצא שכבה",
+  "export-layer.selection-index.text":"בחירה",
+  "export-layer.areaZoomLevel.field": "רמת זום"
 }

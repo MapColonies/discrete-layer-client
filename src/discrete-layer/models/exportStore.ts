@@ -24,6 +24,7 @@ export const exportStore = ModelBase
     ),
     layerToExport: types.maybe(types.frozen<LayerMetadataMixedUnion>()),
     isFullLayerExportEnabled: types.maybe(types.frozen<boolean>(false)),
+    tempRawSelection: types.maybe(types.frozen<Feature>()),
     geometrySelectionsCollection: types.frozen<FeatureCollection>(INITIAL_GEOMETRY_SELECTION),
     drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
     isBBoxDialogOpen: types.maybe(types.frozen<boolean>(false)),
@@ -43,17 +44,29 @@ export const exportStore = ModelBase
         self.layerToExport = layer;
     }
 
+    function setTempRawSelection(selection: Feature): void {
+      self.tempRawSelection = selection;
+    }
+
+    function resetTempRawSelection(): void {
+      self.tempRawSelection = undefined;
+    }
+
     function addFeatureSelection(newSelection: Feature): void {
-        let areaZoomLevel: number | null = null;
-
-        try{ 
-          areaZoomLevel = degreesPerPixelToZoomLevel(get(self.layerToExport, "maxResolutionDeg"));
-        } catch(e) {
-          console.error(e);
-        }
-
-        const newFeatures = [...self.geometrySelectionsCollection.features, {...newSelection, properties: { areaZoomLevel }}]; 
+        const newFeatures = [...self.geometrySelectionsCollection.features, newSelection]; 
         self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
+    }
+
+    function setSelectionProperty(selectionId: string, key: string, value: unknown): void {
+      const updatedFeatures = self.geometrySelectionsCollection.features
+      .map(feature => {
+        if(feature.properties?.id !== selectionId) return feature;
+
+        return {...feature, properties: {...feature.properties, [key]: value}};
+      });
+
+      self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: updatedFeatures};
+
     }
 
     function resetFeatureSelections(): void {
@@ -86,11 +99,15 @@ export const exportStore = ModelBase
       resetFeatureSelections();
       resetDrawingState();
       resetFullLayerExport();
+      resetTempRawSelection();
     }
     
     return {
         setLayerToExport,
+        setTempRawSelection,
+        resetTempRawSelection,
         addFeatureSelection,
+        setSelectionProperty,
         toggleIsFullLayerExportEnabled,
         setDrawingState,
         setIsBBoxDialogOpen,

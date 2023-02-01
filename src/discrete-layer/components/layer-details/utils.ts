@@ -442,3 +442,5 @@ export const getCoordinatesDisplayText = (latitude: number, longitude: number): 
   
   return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`
 }
+
+export const getTimeStamp = (): string => new Date().getTime().toString();

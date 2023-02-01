@@ -18,13 +18,13 @@ const SELECTION_POLYGON_LINE_WIDTH = 2;
 
 const ExportPolygonsRenderer: React.FC = observer(() => {
   const store = useStore();
-  const exportGeometrySelections =
-    store.exportStore.geometrySelectionsCollection;
+  const exportGeometrySelections = store.exportStore.geometrySelectionsCollection;
+  
   return (
     <CesiumGeojsonLayer
       data={exportGeometrySelections}
       onLoad={(geoJsonDataSource): void => {
-        geoJsonDataSource.entities.values.forEach((item) => {
+        geoJsonDataSource.entities.values.forEach((item, i) => {
           if (item.polygon) {
             // @ts-ignore
             (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(SELECTION_POLYGON_OUTLINE_COLOR));
@@ -52,8 +52,8 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
 
             const label = {
               // eslint-disable-next-line
-              text: item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '',
-              font: '12px Roboto, Helvetica, Arial, sans-serif',
+              text: 'Selection ' + (i + 1) + ':\n' + item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '',
+              font: '16px Roboto, Helvetica, Arial, sans-serif',
               fillColor: CesiumColor.WHITE,
               outlineColor: CesiumColor.BLACK,
               outlineWidth: 2,

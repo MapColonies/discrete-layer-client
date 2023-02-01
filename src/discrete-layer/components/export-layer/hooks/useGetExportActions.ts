@@ -4,7 +4,7 @@ import { IAction } from '../../../../common/actions/entity.actions';
 import { useStore } from '../../../models';
 import { TabViews } from '../../../views/tab-views';
 
-const IS_MULTI_SELECTION_ALLOWED = false;
+const IS_MULTI_SELECTION_ALLOWED = true;
 
 export enum ExportActions {
     DRAW_RECTANGLE = 'export-draw-rectangle',

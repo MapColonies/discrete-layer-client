@@ -33,7 +33,7 @@ const ExportDrawingHandler: React.FC = observer(() => {
         drawing,
         type,
         handler: (draw): void => {
-          store.exportStore.addFeatureSelection(draw.geojson as Feature);
+          store.exportStore.setTempRawSelection(draw.geojson as Feature);
           store.exportStore.resetDrawingState();
         },
       }}

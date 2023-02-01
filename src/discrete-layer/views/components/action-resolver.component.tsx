@@ -229,7 +229,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             const {layerToExport} = store.exportStore;
             // Clean any previous selections
             store.exportStore.resetFeatureSelections();
-            store.exportStore.addFeatureSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+            store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
           } else {
             store.exportStore.resetFeatureSelections();
           }
