@@ -19,11 +19,6 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
     const layerToExport = store.exportStore.layerToExport;
     useGeneralExportBehavior(handleFlyTo);
 
-    useEffect(() => {
-      return (): void => {
-        store.exportStore.reset();
-      } 
-    }, [])
 
     return (
         <Box style={style}>

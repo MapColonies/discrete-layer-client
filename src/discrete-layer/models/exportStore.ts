@@ -53,7 +53,8 @@ export const exportStore = ModelBase
     }
 
     function addFeatureSelection(newSelection: Feature): void {
-        const newFeatures = [...self.geometrySelectionsCollection.features, newSelection]; 
+      const currentFeatures = self.geometrySelectionsCollection.features;
+        const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, selectionNumber: currentFeatures.length + 1}}]; 
         self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
     }
 

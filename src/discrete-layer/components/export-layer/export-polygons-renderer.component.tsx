@@ -5,6 +5,7 @@ import {
   CesiumConstantProperty,
   CesiumGeojsonLayer,
   CesiumMath,
+  useCesiumMap,
 } from '@map-colonies/react-components';
 import center from '@turf/center';
 import { points } from '@turf/helpers';
@@ -52,7 +53,7 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
 
             const label = {
               // eslint-disable-next-line
-              text: 'Selection ' + (i + 1) + ':\n' + item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '',
+              text: item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '',
               font: '16px Roboto, Helvetica, Arial, sans-serif',
               fillColor: CesiumColor.WHITE,
               outlineColor: CesiumColor.BLACK,
