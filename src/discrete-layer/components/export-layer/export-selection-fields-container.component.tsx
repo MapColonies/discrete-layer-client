@@ -31,24 +31,26 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
         const featProps = feature.properties as Record<string, unknown>;
         const selectionId = featProps.id;
         
-        return Object.entries(featProps)
-            .filter(([key,]) => key in internalFields)
-            .map(([key, val]) => {
-                const fieldLabel = intl.formatMessage({ id: `export-layer.${key}.field` });
-                return <Box className='selectionContainer' key={selectionId as string}>
-                         <Typography tag='p' className='selectionIndex'>{`${selectionText} ${selectionIdx + 1}:`}</Typography>
+        const selectionFields = Object.entries(featProps)
+        .filter(([key,]) => key in internalFields)
+        .map(([key, val]) => {
+            const fieldLabel = intl.formatMessage({ id: `export-layer.${key}.field` });
+            return <Box className="fieldInputContainer" key={selectionId as string}>
+                          <Typography tag='label' htmlFor={key} className='selectionIndex'>{fieldLabel}</Typography>
+                         
+                          <TextField name={key} value={val as string} onChange={
+                              (e: React.ChangeEvent<HTMLInputElement>): void => {
+                                  store.exportStore.setSelectionProperty(selectionId as string, key, e.target.value);
+                              }
+                          }/>
+                      </Box>
+        });
 
-                          <Box className="fieldInputContainer">
-                              <Typography tag='label' htmlFor={key} className='selectionIndex'>{fieldLabel}</Typography>
-                             
-                              <TextField name={key} value={val as string} onChange={
-                                  (e: React.ChangeEvent<HTMLInputElement>): void => {
-                                      store.exportStore.setSelectionProperty(selectionId as string, key, e.target.value);
-                                  }
-                              }/>
-                          </Box>
-                        </Box>
-            });
+        return <Box className='selectionContainer'>
+          <Typography tag='p' className='selectionIndex'>{`${selectionText} ${selectionIdx + 1}:`}</Typography>
+          {selectionFields}
+        </Box>
+
         }).flat()
       }
     </Box>;

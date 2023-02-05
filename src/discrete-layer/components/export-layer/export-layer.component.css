@@ -76,3 +76,14 @@ body[dir='rtl'] .exportFooter {
   margin: 20px 0;
   padding: 0 12px;
 }
+
+.exportSelectionsContainer .selectionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.exportSelectionsContainer .selectionContainer .selectionIndex {
+  margin: 0;
+}

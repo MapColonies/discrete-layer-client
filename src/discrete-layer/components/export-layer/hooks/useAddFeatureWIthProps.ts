@@ -3,7 +3,7 @@ import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
-import { RecordType, LayerMetadataMixedUnion, useStore } from '../../../models';
+import { RecordType, LayerMetadataMixedUnion, useStore, FieldConfigModelType } from '../../../models';
 import { getTimeStamp } from '../../layer-details/utils';
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
@@ -16,7 +16,7 @@ type AvailableProperties = 'areaZoomLevel';
 
 type ExportEntityProp = Record<
   AvailableProperties,
-  {
+  Partial<FieldConfigModelType> & {
     defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
     formatValueFunc?: (val: unknown) => unknown,
     isExternal?: boolean;
