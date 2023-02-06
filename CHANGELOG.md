@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.27.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.0...v1.27.1) (2023-02-06)
+
+
+### Bug Fixes
+
+* don't fail terrain provider if a tile is missing ([#428](https://github.com/MapColonies/discrete-layer-client/issues/428)) ([70d279e](https://github.com/MapColonies/discrete-layer-client/commit/70d279efd56ae0388ea5bf2a3d722b162de1fc4a))
+
 ## [1.27.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.26.2...v1.27.0) (2023-01-31)
 
 
