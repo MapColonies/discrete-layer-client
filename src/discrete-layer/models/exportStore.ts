@@ -1,4 +1,3 @@
-import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { DrawType } from '@map-colonies/react-components';
 import { Feature, FeatureCollection } from 'geojson';
 import { get } from 'lodash';
@@ -28,6 +27,7 @@ export const exportStore = ModelBase
     geometrySelectionsCollection: types.frozen<FeatureCollection>(INITIAL_GEOMETRY_SELECTION),
     drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
     isBBoxDialogOpen: types.maybe(types.frozen<boolean>(false)),
+    highlightedSelection: types.maybe(types.frozen<Feature>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -39,6 +39,18 @@ export const exportStore = ModelBase
   }))
   .actions((self) => {
     // const store = self.root;
+
+    function getFeatureById(id: string): Feature | null {
+      return self.geometrySelectionsCollection.features.find(feature => feature.properties?.id === id) ?? null;
+    }
+
+    function setHighlightedFeature(feature: Feature): void {
+      self.highlightedSelection = feature;
+    }
+
+    function resetHighlightedFeature(): void {
+      self.highlightedSelection = undefined;
+    }
 
     function setLayerToExport(layer: LayerMetadataMixedUnion): void {
         self.layerToExport = layer;
@@ -104,6 +116,9 @@ export const exportStore = ModelBase
     }
     
     return {
+        getFeatureById,
+        setHighlightedFeature,
+        resetHighlightedFeature,
         setLayerToExport,
         setTempRawSelection,
         resetTempRawSelection,

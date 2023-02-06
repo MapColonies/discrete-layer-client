@@ -82,7 +82,18 @@ body[dir='rtl'] .exportFooter {
   flex-direction: column;
   gap: 12px;
   margin-top: 20px;
+  padding: 12px;
 }
+
+.exportSelectionsContainer .selectionContainer:hover {
+  box-shadow: -14px 0px 0px -12px var(--mdc-theme-text-primary-on-dark);
+  ;
+ }
+
+ body[dir="rtl"] .exportSelectionsContainer .selectionContainer:hover {
+  box-shadow: 14px 0px 0px -12px var(--mdc-theme-text-primary-on-dark);
+
+ }
 
 .exportSelectionsContainer .selectionContainer .selectionIndex {
   margin: 0;

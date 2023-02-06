@@ -3,16 +3,17 @@ import { observer } from 'mobx-react-lite';
 import { Box } from '@map-colonies/react-components';
 import { TextField, Typography } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
-import useAddFeatureWithProps from './hooks/useAddFeatureWIthProps';
+import useAddFeatureWithProps from './hooks/useAddFeatureWithProps';
 import { useStore } from '../../models';
 
 import './export-layer.component.css';
 
+import useHighlightSelection from './hooks/useHighlightSelection';
+
 const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const store = useStore();
   const intl = useIntl();
-  const exportGeometrySelections =
-    store.exportStore.geometrySelectionsCollection;
+  const exportGeometrySelections =  store.exportStore.geometrySelectionsCollection;
 
   const {
     externalFields,
@@ -20,9 +21,11 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
     propsForDomain,
   } = useAddFeatureWithProps();
 
+  const {onSelectionMouseOver, onSelectionMouseOut} = useHighlightSelection();
+
   if (!internalFields) return null;
 
-  const featuresWithProps = exportGeometrySelections.features.filter((feat) => feat.properties);
+  const featuresWithProps = exportGeometrySelections.features;
   const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
 
   return <Box className='exportSelectionsContainer'>
@@ -43,15 +46,23 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
                                   store.exportStore.setSelectionProperty(selectionId as string, key, e.target.value);
                               }
                           }/>
-                      </Box>
+                   </Box>
         });
 
-        return <Box className='selectionContainer'>
-          <Typography tag='p' className='selectionIndex'>{`${selectionText} ${selectionIdx + 1}:`}</Typography>
-          {selectionFields}
-        </Box>
+        return (
+          <Box
+            className="selectionContainer"
+            onMouseEnter={(): void => {
+              onSelectionMouseOver(feature.properties?.id as string);
+            }}
+            onMouseLeave={onSelectionMouseOut}
+          >
+            <Typography tag="p" className="selectionIndex">{`${selectionText} ${selectionIdx + 1}:`}</Typography>
+            {selectionFields}
+          </Box>
+        );
 
-        }).flat()
+      })
       }
     </Box>;
 });

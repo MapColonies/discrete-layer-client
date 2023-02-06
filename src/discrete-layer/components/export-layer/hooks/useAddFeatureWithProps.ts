@@ -12,7 +12,7 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
 // Add here more fields as union of strings.
-type AvailableProperties = 'areaZoomLevel';
+export type AvailableProperties = 'areaZoomLevel';
 
 type ExportEntityProp = Record<
   AvailableProperties,
