@@ -12,21 +12,31 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
 // Add here more fields as union of strings.
-export type AvailableProperties = 'areaZoomLevel';
+export type AvailableProperties = 'areaZoomLevel' | 'description';
+
+export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
+  defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
+  formatValueFunc?: (val: unknown) => unknown,
+  isExternal?: boolean;
+}
 
 type ExportEntityProp = Record<
   AvailableProperties,
-  Partial<FieldConfigModelType> & {
-    defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
-    formatValueFunc?: (val: unknown) => unknown,
-    isExternal?: boolean;
-  }
+  ExportFieldOptions
 >;
 
 const PROPS_PER_DOMAIN = new Map<RecordType, Partial<ExportEntityProp>>([
   [
     RecordType.RECORD_RASTER,
     {
+      description: {
+        fieldName: 'description',
+        isManuallyEditable: true,
+        isExternal: true,
+        label: 'field-names.raster.description',
+        rows: 4,
+        fullWidth: true
+      },
       areaZoomLevel: {
         defaultsFromEntityField: 'maxResolutionDeg',
         formatValueFunc: (val): string | undefined => {
@@ -44,8 +54,8 @@ const PROPS_PER_DOMAIN = new Map<RecordType, Partial<ExportEntityProp>>([
 ]);
 
 interface IUseAddFeatureWithProps { 
-  externalFields?: Record<string, unknown>;
-  internalFields?: Record<string, unknown>;
+  externalFields?: Record<AvailableProperties, unknown>;
+  internalFields?: Record<AvailableProperties, unknown>;
   propsForDomain?: ExportEntityProp;
 }
 
@@ -55,17 +65,17 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   const enums = enumsMap as IEnumsMapType;
 
   const [propsForDomain, setPropsForDomain] = useState<ExportEntityProp>();
-  const [internalPropsForDomain, setInternalPropsForDomain] = useState<Record<string, unknown>>();
-  const [externalPropsForDomain, setExternalPropsForDomain] = useState<Record<string, unknown>>();
+  const [internalPropsForDomain, setInternalPropsForDomain] = useState<Record<AvailableProperties, unknown>>();
+  const [externalPropsForDomain, setExternalPropsForDomain] = useState<Record<AvailableProperties, unknown>>();
 
   const tempRawSelection = store.exportStore.tempRawSelection;
   const layerToExport = store.exportStore.layerToExport;
 
-  const getInternalPropsForFeature = (): Record<string, unknown> => {
+  const getPropsForFeature = (predicate: (fieldOptions: ExportFieldOptions) => boolean): Record<string, unknown> => {
     const featureProps: Record<string, unknown> = {};
 
     for(const [fieldName, fieldOptions] of Object.entries(propsForDomain ?? {})) {
-      if(!(fieldOptions.isExternal as boolean)) {
+      if(predicate(fieldOptions)) {
         let fieldValue = get(layerToExport, fieldOptions.defaultsFromEntityField as string) as string | undefined ?? '';
         
         if(typeof fieldOptions.formatValueFunc !== 'undefined' && fieldValue) {
@@ -79,23 +89,12 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
     return featureProps; 
   }
 
+  const getInternalPropsForFeature = (): Record<string, unknown> => {
+    return getPropsForFeature((options) => !(options.isExternal as boolean)); 
+  }
+
   const getExternalPropsForEntity = (): Record<string, unknown> => {
-    const featureProps: Record<string, unknown> = {};
-
-    for(const [fieldName, fieldOptions] of Object.entries(propsForDomain ?? {})) {
-      if(fieldOptions.isExternal as boolean) {
-        let fieldValue = get(layerToExport, fieldOptions.defaultsFromEntityField as string) as string | undefined ?? '';
-        
-        if(typeof fieldOptions.formatValueFunc !== 'undefined' && fieldValue) {
-          const formattedVal = fieldOptions.formatValueFunc(fieldValue) as string | undefined;
-            fieldValue = formattedVal ?? '';
-        }
-
-        featureProps[fieldName] = fieldValue;
-      }
-    }
-
-    return featureProps; 
+    return getPropsForFeature((options) => options.isExternal as boolean); 
   }
 
   useEffect(() => {
