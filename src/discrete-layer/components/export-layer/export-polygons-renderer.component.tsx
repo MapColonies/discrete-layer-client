@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   CesiumCartesian3,
   CesiumCartographic,
@@ -5,7 +6,6 @@ import {
   CesiumConstantProperty,
   CesiumGeojsonLayer,
   CesiumMath,
-  useCesiumMap,
 } from '@map-colonies/react-components';
 import center from '@turf/center';
 import { points } from '@turf/helpers';

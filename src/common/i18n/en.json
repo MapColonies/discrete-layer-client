@@ -632,5 +632,9 @@
 
   "export-layer.export.button": "Export Layer",
   "export-layer.selection-index.text":"Selection",
-  "export-layer.areaZoomLevel.field": "Zoom Level"
+  "export-layer.description.field": "Description",
+  "export-layer.areaZoomLevel.field": "Zoom Level",
+  "export-layer.validations.max": "Value is greater than the maximum: {max}",
+  "export-layer.validations.min": "Value is lower than the minimum: {min}",
+  "export-layer.validations.required": "Required field"
 }

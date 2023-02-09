@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { CesiumColor, CesiumConstantProperty, CesiumGeojsonLayer } from '@map-colonies/react-components';
 import { FeatureCollection } from 'geojson';
 import { observer } from 'mobx-react-lite';

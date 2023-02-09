@@ -39,7 +39,8 @@ const getLayerTitle = (product: ILayerImage): string => {
   return product[PRODUCT_TITLE_PROPERTY] as string;
 };
 
-const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string).localeCompare(b[sortByField] as string);
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string)?.localeCompare(b[sortByField] as string);
 
 interface IGetParentNode {
   parentNode: NodeData | undefined;

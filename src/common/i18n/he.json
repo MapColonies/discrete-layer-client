@@ -634,5 +634,9 @@
 
   "export-layer.export.button": "ייצא שכבה",
   "export-layer.selection-index.text":"בחירה",
-  "export-layer.areaZoomLevel.field": "רמת זום"
+  "export-layer.description.field": "תיאור",
+  "export-layer.areaZoomLevel.field": "רמת זום",
+  "export-layer.validations.max": "ערך גדול מהמקסימום {max}",
+  "export-layer.validations.min": "ערך קטן מהמינימום {min}",
+  "export-layer.validations.required": "שדה חובה"
 }

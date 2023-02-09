@@ -1,7 +1,9 @@
 import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { Feature } from 'geojson';
 import { get } from 'lodash';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { RegisterOptions } from 'react-hook-form';
+import { useIntl } from 'react-intl';
 import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import { RecordType, LayerMetadataMixedUnion, useStore, FieldConfigModelType } from '../../../models';
 import { getTimeStamp } from '../../layer-details/utils';
@@ -18,40 +20,13 @@ export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
   formatValueFunc?: (val: unknown) => unknown,
   isExternal?: boolean;
+  rhfValidation?: RegisterOptions;
 }
 
 type ExportEntityProp = Record<
   AvailableProperties,
   ExportFieldOptions
 >;
-
-const PROPS_PER_DOMAIN = new Map<RecordType, Partial<ExportEntityProp>>([
-  [
-    RecordType.RECORD_RASTER,
-    {
-      description: {
-        fieldName: 'description',
-        isManuallyEditable: true,
-        isExternal: true,
-        label: 'field-names.raster.description',
-        rows: 4,
-        fullWidth: true
-      },
-      areaZoomLevel: {
-        defaultsFromEntityField: 'maxResolutionDeg',
-        formatValueFunc: (val): string | undefined => {
-          try {
-            return degreesPerPixelToZoomLevel(val as number).toString();
-          } catch (e) {
-            console.error(e);
-          }
-        },
-      },
-    },
-  ],
-  [RecordType.RECORD_3D, {}],
-  [RecordType.RECORD_DEM, {}],
-]);
 
 interface IUseAddFeatureWithProps { 
   externalFields?: Record<AvailableProperties, unknown>;
@@ -61,6 +36,7 @@ interface IUseAddFeatureWithProps {
 
 const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   const store = useStore();
+  const intl = useIntl();
   const { enumsMap } = useContext(EnumsMapContext);
   const enums = enumsMap as IEnumsMapType;
 
@@ -70,6 +46,47 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
 
   const tempRawSelection = store.exportStore.tempRawSelection;
   const layerToExport = store.exportStore.layerToExport;
+
+  const PROPS_PER_DOMAIN = useMemo(() => new Map<RecordType, Partial<ExportEntityProp>>([
+    [
+      RecordType.RECORD_RASTER,
+      {
+        description: {
+          isExternal: true,
+        },
+        areaZoomLevel: {
+          defaultsFromEntityField: 'maxResolutionDeg',
+          formatValueFunc: (val): string | undefined => {
+            try {
+              return degreesPerPixelToZoomLevel(val as number).toString();
+            } catch (e) {
+              console.error(e);
+            }
+          },
+          rhfValidation: {
+            required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})},
+            validate: {
+              checkMinVal: (val): string | boolean => {
+                const MIN_VALUE = 1;
+                const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: MIN_VALUE})
+                
+                return parseInt(val) < 1 ? minimumErrMsg : true
+              },
+              lowerOrEqualsToMaxRes: (val): string | boolean => {
+                const maxZoomLevel = degreesPerPixelToZoomLevel(get(layerToExport, 'maxResolutionDeg') as number);
+                const maximumErrMsg = intl.formatMessage({id: 'export-layer.validations.max'}, {max: maxZoomLevel});
+                
+                return parseInt(val) > maxZoomLevel ? maximumErrMsg : true;
+              }
+            },
+            valueAsNumber: true
+           }
+        },
+      },
+    ],
+    [RecordType.RECORD_3D, {}],
+    [RecordType.RECORD_DEM, {}],
+  ]), [layerToExport]);
 
   const getPropsForFeature = (predicate: (fieldOptions: ExportFieldOptions) => boolean): Record<string, unknown> => {
     const featureProps: Record<string, unknown> = {};

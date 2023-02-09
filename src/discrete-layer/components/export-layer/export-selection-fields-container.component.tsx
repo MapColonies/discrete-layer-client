@@ -25,7 +25,10 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const {onSelectionMouseOver, onSelectionMouseOut} = useHighlightSelection();
   const SelectionFieldPerDomainRenderer = useGetSelectionFieldForDomain();
 
-  const renderExportSelectionsFields = useCallback((): JSX.Element[] => {
+  const featuresWithProps = exportGeometrySelections.features;
+  const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
+
+  const renderExportSelectionsFields = (): JSX.Element[] => {
     return featuresWithProps.map((feature, selectionIdx) => {
       const featProps = feature.properties as Record<string, unknown>;
       const selectionId = featProps.id;
@@ -35,6 +38,7 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
         .map(([key, val]) => {
           return (
             <SelectionFieldPerDomainRenderer
+              selectionIdx={selectionIdx + 1}
               selectionId={selectionId as string}
               fieldInfo={get(propsForDomain, key) as ExportFieldOptions}
               fieldName={key as AvailableProperties}
@@ -56,19 +60,16 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
         </Box>
       );
     });
-  }, [exportGeometrySelections.features]);
-
-  const featuresWithProps = exportGeometrySelections.features;
-  const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
-
+  };
 
   const renderExternalExportFields = (): JSX.Element | JSX.Element[] => {
     const generalExportFields = Object.entries(
       externalFields as Record<AvailableProperties, unknown>
-    ).map(([key, val], generalFieldIdx) => {
+    ).map(([key, val]) => {
       return (
         <SelectionFieldPerDomainRenderer
-          selectionId={generalFieldIdx.toString()}
+          selectionIdx={0}
+          selectionId={"0"}
           fieldInfo={get(propsForDomain, key) as ExportFieldOptions}
           fieldName={key as AvailableProperties}
           fieldValue={val as string}

@@ -1,6 +1,5 @@
 import React from 'react';
-import ExportNumberFieldComponent from '../export-common-fields/export-number-field.component';
-import ExportStringFieldComponent from '../export-common-fields/export-string-field.component';
+import ExportGeneralFieldComponent from '../export-common-fields/export-general-field.component';
 import {
   AvailableProperties,
   ExportFieldOptions,
@@ -8,9 +7,11 @@ import {
 
 export interface ExportFieldProps {
   selectionId: string;
+  selectionIdx: number;
   fieldName: Partial<AvailableProperties>;
   fieldValue: string;
   fieldInfo: ExportFieldOptions;
+  type?: 'text' | 'number';
 }
 
 const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
@@ -20,21 +21,21 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
     case 'areaZoomLevel': {
       return (
         <>
-          <ExportNumberFieldComponent {...props} />
+          <ExportGeneralFieldComponent type="number" {...props} />
         </>
       );
     }
     case 'description': {
       return (
         <>
-          <ExportStringFieldComponent {...props} />
+          <ExportGeneralFieldComponent type="text" {...props} />
         </>
       );
     }
     default: {
       return (
         <>
-          <ExportStringFieldComponent {...props} />
+          <ExportGeneralFieldComponent {...props} />
         </>
       );
     }
