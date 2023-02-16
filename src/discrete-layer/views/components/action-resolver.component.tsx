@@ -255,6 +255,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case ExportActions.CLEAR_DRAWINGS:
           store.exportStore.resetFeatureSelections();
           store.exportStore.resetFullLayerExport();
+          store.exportStore.resetHasExportPreviewed();
           break;
 
         // System Callback operations

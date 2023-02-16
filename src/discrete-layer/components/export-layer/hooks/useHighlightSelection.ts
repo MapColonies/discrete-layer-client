@@ -5,7 +5,7 @@ import { Feature } from "geojson";
 import { useCallback } from "react";
 import { useStore } from "../../../models";
 
-const HIGHLIGHT_BUFFER_METERS = 80;
+const HIGHLIGHT_BUFFER_METERS = 2;
 
 interface IHighlightSelectionUtils {
     onSelectionMouseOver: (selectionId: string) => void;

@@ -633,9 +633,11 @@
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
 
   "export-layer.export.button": "ייצא שכבה",
+  "export-layer.preview.button": "תצוגה מקדימה",
   "export-layer.selection-index.text":"בחירה",
   "export-layer.description.field": "תיאור",
   "export-layer.areaZoomLevel.field": "רמת זום",
+  "export-layer.areaZoomLevel.helper-text": "(רזולוציה לפיקסל: {res})",
   "export-layer.validations.max": "ערך גדול מהמקסימום {max}",
   "export-layer.validations.min": "ערך קטן מהמינימום {min}",
   "export-layer.validations.required": "שדה חובה"

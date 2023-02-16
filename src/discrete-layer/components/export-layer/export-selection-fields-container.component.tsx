@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Box } from '@map-colonies/react-components';
-import { Typography } from '@map-colonies/react-core';
+import { IconButton, Typography } from '@map-colonies/react-core';
 import { useIntl } from 'react-intl';
 import useAddFeatureWithProps, { AvailableProperties, ExportFieldOptions } from './hooks/useAddFeatureWithProps';
 import { useStore } from '../../models';
@@ -55,14 +55,20 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
           }}
           onMouseLeave={onSelectionMouseOut}
         >
-          <Typography tag="p" className="selectionIndex">{`${selectionText} ${selectionIdx + 1}:`}</Typography>
-          {selectionFields}
+          <Box className='selectionFields'>
+            <Typography tag="p" className="selectionIndex">{`${selectionText} ${selectionIdx + 1}:`}</Typography>
+            {selectionFields}
+          </Box>
+          <IconButton type="button" className="removeSelectionBtn mc-icon-Close" onClick={(): void => {
+            store.exportStore.resetHighlightedFeature();
+            store.exportStore.removeFeatureById(feature.properties?.id as string);
+          }}/>
         </Box>
       );
     });
   };
 
-  const renderExternalExportFields = (): JSX.Element | JSX.Element[] => {
+  const renderExternalExportFields = useMemo((): JSX.Element | JSX.Element[] => {
     const generalExportFields = Object.entries(
       externalFields as Record<AvailableProperties, unknown>
     ).map(([key, val]) => {
@@ -78,13 +84,13 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
     });
 
     return generalExportFields;
-  };
+  }, [externalFields]);
 
   return (
     <>
       {propsForDomain && externalFields && internalFields && (
         <Box className="exportSelectionsContainer">
-          {renderExternalExportFields()}
+          {renderExternalExportFields}
           {renderExportSelectionsFields()}
         </Box>
       )}

@@ -35,9 +35,6 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
               <form
                 className='exportLayerForm'
                 id={EXPORT_FORM_ID}
-                onSubmit={formMethods.handleSubmit((data) => {
-                  console.log('export submit', data);
-                })}
               >
                 <ExportSelectionFieldsContainer />
               </form>

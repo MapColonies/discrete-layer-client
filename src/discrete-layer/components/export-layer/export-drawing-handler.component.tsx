@@ -1,8 +1,11 @@
 import {
   CesiumColor,
   CesiumDrawingsDataSource,
+  CesiumRectangle,
   DrawType,
+  useCesiumMap,
 } from '@map-colonies/react-components';
+import bbox from '@turf/bbox';
 import { Feature } from 'geojson';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
@@ -18,6 +21,7 @@ export interface IDrawingState {
 
 const ExportDrawingHandler: React.FC = observer(() => {
   const store = useStore();
+  const cesiumViewer = useCesiumMap();
   const { drawing, type } = store.exportStore.drawingState as IDrawingState;
 
   useEffect(() => {
@@ -25,6 +29,13 @@ const ExportDrawingHandler: React.FC = observer(() => {
       store.exportStore.resetDrawingState();
     };
   }, []);
+
+  useEffect(() => {
+    if(store.exportStore.hasExportPreviewed) {
+      const selectedFeaturesRect = CesiumRectangle.fromDegrees(...bbox(store.exportStore.geometrySelectionsCollection)) as CesiumRectangle;
+      cesiumViewer.camera.flyTo({ destination: selectedFeaturesRect });
+    }
+  }, [store.exportStore.hasExportPreviewed]);
 
   return (
     <CesiumDrawingsDataSource

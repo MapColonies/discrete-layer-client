@@ -1,4 +1,4 @@
-import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
+import { degreesPerPixel, degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -21,6 +21,7 @@ export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   formatValueFunc?: (val: unknown) => unknown,
   isExternal?: boolean;
   rhfValidation?: RegisterOptions;
+  helperTextValue?: string | ((value: unknown) => string);
 }
 
 type ExportEntityProp = Record<
@@ -34,6 +35,8 @@ interface IUseAddFeatureWithProps {
   propsForDomain?: ExportEntityProp;
 }
 
+const ABSOLUTE_MAX_ZOOM_LEVEL = 22;
+
 const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   const store = useStore();
   const intl = useIntl();
@@ -41,8 +44,8 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   const enums = enumsMap as IEnumsMapType;
 
   const [propsForDomain, setPropsForDomain] = useState<ExportEntityProp>();
-  const [internalPropsForDomain, setInternalPropsForDomain] = useState<Record<AvailableProperties, unknown>>();
-  const [externalPropsForDomain, setExternalPropsForDomain] = useState<Record<AvailableProperties, unknown>>();
+  const [internalPropsForDomain, setInternalPropsForDomain] = useState<Record<AvailableProperties, unknown>>({} as Record<AvailableProperties, unknown>);
+  const [externalPropsForDomain, setExternalPropsForDomain] = useState<Record<AvailableProperties, unknown>>({} as Record<AvailableProperties, unknown>);
 
   const tempRawSelection = store.exportStore.tempRawSelection;
   const layerToExport = store.exportStore.layerToExport;
@@ -63,8 +66,21 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
               console.error(e);
             }
           },
+          helperTextValue: (value): string => {
+            const RES_PER_PIXEL_ACCURACY = 5;
+            let resPerPixel = NaN;
+           
+            try {
+              resPerPixel = parseFloat(degreesPerPixel(value as number).toFixed(RES_PER_PIXEL_ACCURACY));
+            } catch (e) {
+              console.error(e);
+            }
+
+            const helperTextVal = intl.formatMessage({id: 'export-layer.areaZoomLevel.helper-text'}, { res: resPerPixel });
+            return helperTextVal;
+          },
           rhfValidation: {
-            required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})},
+            // required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})},
             validate: {
               checkMinVal: (val): string | boolean => {
                 const MIN_VALUE = 1;
@@ -73,7 +89,15 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
                 return parseInt(val) < 1 ? minimumErrMsg : true
               },
               lowerOrEqualsToMaxRes: (val): string | boolean => {
-                const maxZoomLevel = degreesPerPixelToZoomLevel(get(layerToExport, 'maxResolutionDeg') as number);
+                let maxZoomLevel: number;
+                try {
+                  maxZoomLevel = degreesPerPixelToZoomLevel(get(layerToExport, 'maxResolutionDeg') as number);
+
+                } catch(e){
+                  console.error(e);
+                  maxZoomLevel = ABSOLUTE_MAX_ZOOM_LEVEL;
+                }
+
                 const maximumErrMsg = intl.formatMessage({id: 'export-layer.validations.max'}, {max: maxZoomLevel});
                 
                 return parseInt(val) > maxZoomLevel ? maximumErrMsg : true;
@@ -126,7 +150,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   }, [propsForDomain])
 
   useEffect(() => {
-    if(tempRawSelection && internalPropsForDomain) {
+    if(tempRawSelection) {
       // Add entity related properties to the raw selection.
       const selectionWithProps: Feature = {...tempRawSelection, properties: {...internalPropsForDomain, id: getTimeStamp()}};
 

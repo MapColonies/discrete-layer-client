@@ -631,9 +631,11 @@
   "wfs-info.no-data.message": "No data found for type {feature}",
 
   "export-layer.export.button": "Export Layer",
+  "export-layer.preview.button": "Preview Export",
   "export-layer.selection-index.text":"Selection",
   "export-layer.description.field": "Description",
   "export-layer.areaZoomLevel.field": "Zoom Level",
+  "export-layer.areaZoomLevel.helper-text": "(Resolution per pixel: {res})",
   "export-layer.validations.max": "Value is greater than the maximum: {max}",
   "export-layer.validations.min": "Value is lower than the minimum: {min}",
   "export-layer.validations.required": "Required field"

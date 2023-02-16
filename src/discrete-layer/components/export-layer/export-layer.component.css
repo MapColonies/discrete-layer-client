@@ -76,10 +76,16 @@
   padding: 12px;
 }
 
-.exportSelectionsContainer .selectionContainer {
+.exportSelectionsContainer .selectionFields {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
+}
+
+.exportSelectionsContainer .selectionContainer {
+  display: flex;
+  flex-direction: row-reverse;
   margin-top: 10px;
   padding: 10px;
 }
@@ -115,4 +121,13 @@
 
 .errorText {
   margin: 0;
+}
+
+.exportSelectionField .mdc-text-field-helper-text {
+  color: var(--mdc-theme-text-primary-on-dark) !important;
+  opacity: 0.8;
+}
+
+.exportSelectionsContainer .selectionContainer .removeSelectionBtn {
+  height: 20px;
 }

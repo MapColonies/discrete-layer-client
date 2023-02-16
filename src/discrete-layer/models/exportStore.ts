@@ -28,6 +28,7 @@ export const exportStore = ModelBase
     drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
     isBBoxDialogOpen: types.maybe(types.frozen<boolean>(false)),
     highlightedSelection: types.maybe(types.frozen<Feature>()),
+    hasExportPreviewed: types.frozen<boolean>(false),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -42,6 +43,14 @@ export const exportStore = ModelBase
 
     function getFeatureById(id: string): Feature | null {
       return self.geometrySelectionsCollection.features.find(feature => feature.properties?.id === id) ?? null;
+    }
+
+    function removeFeatureById(id: string): void {
+      const currentFeatures = [...self.geometrySelectionsCollection.features];
+      const filteredFeatures = currentFeatures.filter(feat => feat.properties?.id !== id).map((feat, i) => ({...feat, properties: { ...feat.properties, selectionNumber: i + 1 }}));
+
+      self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: filteredFeatures};
+      resetHasExportPreviewed()
     }
 
     function setHighlightedFeature(feature: Feature): void {
@@ -68,6 +77,7 @@ export const exportStore = ModelBase
       const currentFeatures = self.geometrySelectionsCollection.features;
         const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, selectionNumber: currentFeatures.length + 1}}]; 
         self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
+        resetHasExportPreviewed();
     }
 
     function setSelectionProperty(selectionId: string, key: string, value: unknown): void {
@@ -107,16 +117,26 @@ export const exportStore = ModelBase
       self.isBBoxDialogOpen = isOpen;
     }
 
+    function setHasExportPreviewed(hasPreviewed: boolean): void {
+      self.hasExportPreviewed = hasPreviewed;
+    }
+
+    function resetHasExportPreviewed(): void {
+      self.hasExportPreviewed = false;
+    }
+
     function reset(): void {
       self.layerToExport = undefined;
       resetFeatureSelections();
       resetDrawingState();
       resetFullLayerExport();
       resetTempRawSelection();
+      resetHasExportPreviewed();
     }
     
     return {
         getFeatureById,
+        removeFeatureById,
         setHighlightedFeature,
         resetHighlightedFeature,
         setLayerToExport,
@@ -127,6 +147,8 @@ export const exportStore = ModelBase
         toggleIsFullLayerExportEnabled,
         setDrawingState,
         setIsBBoxDialogOpen,
+        setHasExportPreviewed,
+        resetHasExportPreviewed,
         resetFeatureSelections,
         resetDrawingState,
         resetFullLayerExport,
