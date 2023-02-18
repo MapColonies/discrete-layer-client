@@ -54,31 +54,31 @@ const systemJobsPriorityOptions =
     {
       label: 'system-status.job-priority-highest',
       value: '2000',
-      icon: 'Arrows-Right',
+      icon: 'Priority-Highest-Monochrome',
       iconColor: 'var(--mdc-theme-gc-priority-highest)',
     },
     {
       label: 'system-status.job-priority-high',
       value: '1500',
-      icon: 'Arrow-Right',
+      icon: 'Priority-High-Monochrome',
       iconColor: 'var(--mdc-theme-gc-priority-high)',
     },
     {
       label: 'system-status.job-priority-normal',
       value: '1000',
-      icon: 'Move-Row',
+      icon: 'Priority-Normal-Monochrome',
       iconColor: 'var(--mdc-theme-gc-priority-normal)',
     },
     {
       label: 'system-status.job-priority-low',
       value: '500',
-      icon: 'Arrow-Left',
+      icon: 'Priority-Low-Monochrome',
       iconColor: 'var(--mdc-theme-gc-priority-low)',
     },
     {
       label: 'system-status.job-priority-lowest',
       value: '0',
-      icon: 'Arrows-Left',
+      icon: 'Priority-Lowest-Monochrome',
       iconColor: 'var(--mdc-theme-gc-priority-lowest)',
     },
   ];
