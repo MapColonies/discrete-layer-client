@@ -10,6 +10,8 @@ import { Error } from '../../../common/components/tree/statuses/error';
 import { getTokenResource } from '../helpers/layersUtils';
 import { queue } from '../snackbar/notification-queue';
 
+const NONE = 0;
+
 interface TerrainProps {}
 
 export const Terrain: React.FC<TerrainProps> = () => {
@@ -20,7 +22,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
   
   useEffect(() => {
     function isTerrainTileError (e: Record<string, unknown>): boolean {
-      return (e as Record<string, unknown>).level as number > 0;
+      return e.level as number > NONE;
     }
 
     function handleTerrainError(e: unknown): void {
