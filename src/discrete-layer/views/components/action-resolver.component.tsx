@@ -224,6 +224,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           
           break;
         }
+        case ExportActions.DRAW_FOOTPRINT: {
+          const {layerToExport} = store.exportStore;
+          store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+          break;
+        }
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
           if(!(store.exportStore.isFullLayerExportEnabled as boolean)) {
             const {layerToExport} = store.exportStore;

@@ -5,6 +5,7 @@ import { types, getParent } from 'mobx-state-tree';
 import { LayerMetadataMixedUnion } from '.';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { IDrawingState } from '../components/export-layer/export-drawing-handler.component';
+import { TabViews } from '../views/tab-views';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 
@@ -39,7 +40,7 @@ export const exportStore = ModelBase
     },
   }))
   .actions((self) => {
-    // const store = self.root;
+    const store = self.root;
 
     function getFeatureById(id: string): Feature | null {
       return self.geometrySelectionsCollection.features.find(feature => feature.properties?.id === id) ?? null;
@@ -50,7 +51,7 @@ export const exportStore = ModelBase
       const filteredFeatures = currentFeatures.filter(feat => feat.properties?.id !== id).map((feat, i) => ({...feat, properties: { ...feat.properties, selectionNumber: i + 1 }}));
 
       self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: filteredFeatures};
-      resetHasExportPreviewed()
+      resetHasExportPreviewed();
     }
 
     function setHighlightedFeature(feature: Feature): void {
@@ -132,6 +133,8 @@ export const exportStore = ModelBase
       resetFullLayerExport();
       resetTempRawSelection();
       resetHasExportPreviewed();
+
+      store.discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
     }
     
     return {

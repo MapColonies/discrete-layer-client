@@ -123,11 +123,47 @@
   margin: 0;
 }
 
-.exportSelectionField .mdc-text-field-helper-text {
+.exportSelectionField {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.exportSelectionField .exportFieldHelper {
   color: var(--mdc-theme-text-primary-on-dark) !important;
   opacity: 0.8;
+  width: 10rem;
+}
+
+.exportSelectionField .exportGeneralField {
+  flex: 1;
+  min-width: 4rem;
 }
 
 .exportSelectionsContainer .selectionContainer .removeSelectionBtn {
   height: 20px;
+}
+
+.exportActionSeparator {
+  width: 1px;
+  height: 28px;
+  border: 1px solid var(--mdc-theme-text-primary-on-dark);
+  opacity: 0.7;
+}
+
+.selectionContainer.backdrop {
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+}
+.selectionContainer.backdrop::after {
+  content: "";
+  display: block;
+  position: absolute;  
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.2);
 }

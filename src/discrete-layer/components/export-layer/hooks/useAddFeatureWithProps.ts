@@ -22,6 +22,7 @@ export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   isExternal?: boolean;
   rhfValidation?: RegisterOptions;
   helperTextValue?: string | ((value: unknown) => string);
+  placeholderValue?: string | (() => string);
 }
 
 type ExportEntityProp = Record<
@@ -58,13 +59,27 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
           isExternal: true,
         },
         areaZoomLevel: {
-          defaultsFromEntityField: 'maxResolutionDeg',
-          formatValueFunc: (val): string | undefined => {
+          // defaultsFromEntityField: 'maxResolutionDeg',
+          // formatValueFunc: (val): string | undefined => {
+          //   try {
+          //     return degreesPerPixelToZoomLevel(val as number).toString();
+          //   } catch (e) {
+          //     console.error(e);
+          //   }
+          // },
+          placeholderValue: (): string => {
+            let maxZoomLevel: number;
+            const minZoomLevel = 1;
             try {
-              return degreesPerPixelToZoomLevel(val as number).toString();
+              maxZoomLevel = degreesPerPixelToZoomLevel(
+                get(layerToExport, 'maxResolutionDeg') as number
+              );
             } catch (e) {
               console.error(e);
+              maxZoomLevel = ABSOLUTE_MAX_ZOOM_LEVEL;
             }
+
+            return `${minZoomLevel} - ${maxZoomLevel}`;
           },
           helperTextValue: (value): string => {
             const RES_PER_PIXEL_ACCURACY = 5;

@@ -784,7 +784,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {
                   getActiveTabHeader(activeTabView)
                 }
-                <ExportLayerComponent 
+                <ExportLayerComponent
+                  setActiveTabView={setActiveTabView} 
                   handleFlyTo={onFlyTo}
                   style={{
                     height: 'calc(100% - 50px)',

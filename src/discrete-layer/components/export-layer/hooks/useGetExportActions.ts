@@ -8,6 +8,7 @@ const IS_MULTI_SELECTION_ALLOWED = true;
 
 export enum ExportActions {
     DRAW_RECTANGLE = 'export-draw-rectangle',
+    DRAW_FOOTPRINT = 'export-draw-footprint',
     DRAW_POLYGON = 'export-draw-polygon',
     DRAW_BY_COORDINATES = 'export-draw-coordinates',
     CLEAR_DRAWINGS = 'export-clear-drawings',
@@ -15,7 +16,7 @@ export enum ExportActions {
     TOGGLE_FULL_LAYER_EXPORT = 'toggle-full-layer-export'
 };
 
-export type ExportAction = IAction & {
+export type ExportAction = (IAction & {
     disabled: boolean;
     toggleExportStoreFieldOptions?: {
         field: string;
@@ -23,7 +24,7 @@ export type ExportAction = IAction & {
         labelUnchecked: string;
     };
     multipleAllowed?: boolean;
-};
+}) | 'SEPARATOR';
 
 const EXPORT_ACTIONS: ExportAction[] = [
     {
@@ -38,6 +39,17 @@ const EXPORT_ACTIONS: ExportAction[] = [
       },
       titleTranslationId: 'action.export.full-layer.tooltip',
       disabled: false,
+      views: [TabViews.EXPORT_LAYER]
+    },
+    "SEPARATOR",
+    {
+      action: ExportActions.DRAW_FOOTPRINT,
+      frequent: true,
+      icon: '',
+      class: 'mc-icon-Map-Orthophoto',
+      titleTranslationId: 'action.export.footprint.tooltip',
+      disabled: false,
+      multipleAllowed: IS_MULTI_SELECTION_ALLOWED,
       views: [TabViews.EXPORT_LAYER]
     },
     {
@@ -79,6 +91,7 @@ const EXPORT_ACTIONS: ExportAction[] = [
       disabled: false,
       views: [TabViews.EXPORT_LAYER]
     },
+    "SEPARATOR",
     {
       action: ExportActions.CLEAR_DRAWINGS,
       frequent: true,
@@ -102,19 +115,21 @@ export const useGetExportActions = (): ExportAction[] => {
             case !isEmpty(geometrySelectionList.features):
             case isFullLayerExportEnabled as boolean:
                 setExportActions((currentActions) => currentActions.map(action => {
-                    if(!isEmpty(geometrySelectionList.features) && !(action.multipleAllowed ?? false)) {
-                        if(isFullLayerExportEnabled as boolean && action.action !== ExportActions.CLEAR_DRAWINGS) {
-                            return { ...action, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT }
-                        }
-                        
-                        if(action.action !== ExportActions.CLEAR_DRAWINGS) {
-                            return { ...action, disabled: true }
-                        }
-                    } 
-                   
-                    if(isFullLayerExportEnabled as boolean){
-                        if(![ExportActions.CLEAR_DRAWINGS, ExportActions.TOGGLE_FULL_LAYER_EXPORT].includes(action.action as ExportActions)) {
-                            return { ...action, disabled: true }
+                    if(action !== 'SEPARATOR') {
+                        if(!isEmpty(geometrySelectionList.features) && !(action.multipleAllowed ?? false)) {
+                            if(isFullLayerExportEnabled as boolean && action.action !== ExportActions.CLEAR_DRAWINGS) {
+                                return { ...action, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT }
+                            }
+                            
+                            if(action.action !== ExportActions.CLEAR_DRAWINGS) {
+                                return { ...action, disabled: true }
+                            }
+                        } 
+                       
+                        if(isFullLayerExportEnabled as boolean){
+                            if(![ExportActions.CLEAR_DRAWINGS, ExportActions.TOGGLE_FULL_LAYER_EXPORT].includes(action.action as ExportActions)) {
+                                return { ...action, disabled: true }
+                            }
                         }
                     }
                     return action;
@@ -124,8 +139,10 @@ export const useGetExportActions = (): ExportAction[] => {
             case isEmpty(geometrySelectionList.features):
             case !(isFullLayerExportEnabled as boolean):
                 setExportActions((currentActions) => currentActions.map(action => {
-                    if(action.action !== ExportActions.CLEAR_DRAWINGS) {
-                        return { ...action, disabled: false }
+                    if(action !== 'SEPARATOR') {
+                        if(action.action !== ExportActions.CLEAR_DRAWINGS) {
+                            return { ...action, disabled: false }
+                        }
                     }
                     return action;
                 }));

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { TextField, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -25,7 +25,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   selectionIdx,
   fieldName,
   fieldValue,
-  fieldInfo: {helperTextValue, rhfValidation},
+  fieldInfo: {placeholderValue, helperTextValue, rhfValidation},
   type,
 }) => {
   const intl = useIntl();
@@ -33,6 +33,14 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   const formMethods = useFormContext();
   const [helperText, setHelperText] = useState<string | undefined>(getHelperTextValue(helperTextValue, fieldValue));
   const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
+  const placeholderVal = useMemo(() =>
+    typeof placeholderValue !== 'undefined'
+      ? typeof placeholderValue === 'string'
+        ? placeholderValue
+        : placeholderValue()
+      : '',
+    [placeholderValue]
+  );
 
   useEffect(() => {
     formMethods.register(fieldId, {...(rhfValidation ?? {})});
@@ -69,24 +77,30 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
 
   return (
     <Box className="exportSelectionField" key={selectionId}>
-      <Typography tag="label" htmlFor={fieldId}>
+      <Typography tag="span" className="exportFieldLabel" htmlFor={fieldId}>
         {fieldLabel}
       </Typography>
       <TextField
+        dir="auto"
+        className="exportGeneralField"
         name={fieldId}
         type={type}
         value={innerValue}
         onBlur={(): void => {
           formMethods.setValue(fieldId, innerValue, {shouldValidate: true});
         }}
+        placeholder={placeholderVal}
         // inputRef={formMethods.register({...(rhfValidation ?? {})})}
         onChange={handleFieldChange}
         invalid={!isEmpty(formMethods.errors[fieldId])}
-        helpText={!isEmpty(helperText) && {
-          persistent: true,
-          children: helperText
-        }}
+        // helpText={!isEmpty(helperText) && {
+        //   persistent: true,
+        //   children: helperText
+        // }}
       />
+      {<Typography tag="span" className="exportFieldHelper" htmlFor={fieldId}>
+        {!isEmpty(helperText) && helperText}
+      </Typography>}
     </Box>
   );
 };

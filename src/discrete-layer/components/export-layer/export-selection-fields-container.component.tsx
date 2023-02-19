@@ -49,7 +49,7 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
 
       return (
         <Box
-          className="selectionContainer"
+          className={`selectionContainer ${store.exportStore.isFullLayerExportEnabled as boolean ? 'backdrop' : ''}`}
           onMouseEnter={(): void => {
             onSelectionMouseOver(feature.properties?.id as string);
           }}

@@ -94,6 +94,7 @@
   "actions.wfs.buildings-title": "תשאול מבנה",
   "actions.meter.sign": "מ'",
   "action.export.box.tooltip": "בחירה בעזרת מלבן חוסם",
+  "action.export.footprint.tooltip": "בחירה לפי תיחום גיאוגרפי",
   "action.export.polygon.tooltip": "בחירה בעזרת פוליגון חוסם",
   "action.export.bbox-corners.tooltip": "בחירה בעזרת קואורדינטות מלבן חוסם",
   "action.export.full-layer.tooltip": "ייצוא שכבה מלאה",
@@ -637,7 +638,7 @@
   "export-layer.selection-index.text":"בחירה",
   "export-layer.description.field": "תיאור",
   "export-layer.areaZoomLevel.field": "רמת זום",
-  "export-layer.areaZoomLevel.helper-text": "(רזולוציה לפיקסל: {res})",
+  "export-layer.areaZoomLevel.helper-text": "(פיקסל°: {res})",
   "export-layer.validations.max": "ערך גדול מהמקסימום {max}",
   "export-layer.validations.min": "ערך קטן מהמינימום {min}",
   "export-layer.validations.required": "שדה חובה"

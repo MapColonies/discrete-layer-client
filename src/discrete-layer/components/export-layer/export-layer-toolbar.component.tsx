@@ -31,7 +31,7 @@ const ToggleActionPresentor: React.FC<ActionPresentorBaseProps> = ({
   const intl = useIntl();
   const store = useStore();
 
-  if (typeof action.toggleExportStoreFieldOptions === 'undefined')
+  if (action === 'SEPARATOR' || typeof action.toggleExportStoreFieldOptions === 'undefined')
     return null;
 
   const toggleOptions = action.toggleExportStoreFieldOptions;
@@ -55,6 +55,10 @@ const ToggleActionPresentor: React.FC<ActionPresentorBaseProps> = ({
 const ActionPresentor: React.FC<ActionPresentorBaseProps> = (props) => {
   const { action, listKey, data, dispatchAction } = props;
   const intl = useIntl();
+
+  if(action === 'SEPARATOR'){
+    return <Box className='exportActionSeparator'></Box>;
+  }
 
   return (
     <Tooltip content={intl.formatMessage({ id: action.titleTranslationId })}>

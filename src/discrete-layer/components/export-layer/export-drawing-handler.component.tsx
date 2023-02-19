@@ -32,7 +32,8 @@ const ExportDrawingHandler: React.FC = observer(() => {
 
   useEffect(() => {
     if(store.exportStore.hasExportPreviewed) {
-      const selectedFeaturesRect = CesiumRectangle.fromDegrees(...bbox(store.exportStore.geometrySelectionsCollection)) as CesiumRectangle;
+      const selectedFeaturesRect = 
+        CesiumRectangle.fromDegrees(...bbox(store.exportStore.geometrySelectionsCollection)) as CesiumRectangle;
       cesiumViewer.camera.flyTo({ destination: selectedFeaturesRect });
     }
   }, [store.exportStore.hasExportPreviewed]);

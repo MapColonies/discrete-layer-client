@@ -6,9 +6,15 @@ import { FieldErrors, useFormContext } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import { useStore } from '../../models';
 import { observer } from 'mobx-react-lite';
+import { TabViews } from '../../views/tab-views';
 
 interface ExportLayerFooterProps {
-  formId: string;
+  setActiveTabView: (tabView: TabViews) => void;
+}
+
+export enum ExportMode {
+  PREVIEW = "preview",
+  EXPORT = "export",
 }
 
 const NONE = 0;
@@ -52,10 +58,10 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   )
 }
 
-const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(() => {
+const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ setActiveTabView }) => {
   const { formState, handleSubmit } = useFormContext();
   const { exportStore } = useStore();
-  const mode = exportStore.hasExportPreviewed ? 'export' : 'preview';
+  const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
 
   const renderPreviewOrSubmit = useMemo((): JSX.Element => {
     const handleButtonClick = (): void => {
@@ -69,7 +75,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(() => {
         return;
       }
 
-      // Handle Preview logic
+      // Handle Preview logic such as estimated size and free disk space
       exportStore.setHasExportPreviewed(true);
 
     };
@@ -93,7 +99,10 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(() => {
     <Box className="exportFooter">
       <Box className="buttonsContainer">
         {renderPreviewOrSubmit}
-        <Button id="cancelBtn" raised type="button" onClick={(): void => {}}>
+        <Button id="cancelBtn" raised type="button" onClick={(): void => {
+          exportStore.reset();
+          setActiveTabView(TabViews.CATALOG);
+        }}>
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
       </Box>

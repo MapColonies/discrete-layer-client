@@ -1,6 +1,6 @@
 import { Box } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useStore } from '../../models';
 import ExportLayerFooter from './export-layer-footer.component';
 import ExportLayerHeader from './export-layer-header.component';
@@ -8,15 +8,18 @@ import { useGeneralExportBehavior } from './hooks/useGeneralExportBehavior';
 import './export-layer.component.css';
 import ExportSelectionFieldsContainer from './export-selection-fields-container.component';
 import { FormProvider, useForm } from 'react-hook-form';
+import { isEmpty } from 'lodash';
+import { TabViews } from '../../views/tab-views';
 interface ExportLayerComponentProps {
   style?: { [key: string]: string };
   handleFlyTo: () => void;
+  setActiveTabView: (tabView: TabViews) => void;
 }
 
 const EXPORT_FORM_ID = 'exportForm';
 
 export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observer(
-  ({ style, handleFlyTo }) => {
+  ({ style, handleFlyTo, setActiveTabView }) => {
     const store = useStore();
     const formMethods = useForm({
       mode: 'onBlur',
@@ -24,7 +27,11 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
     });
 
     const layerToExport = store.exportStore.layerToExport;
-    useGeneralExportBehavior(handleFlyTo);
+    useGeneralExportBehavior(() => {
+      if(isEmpty(store.exportStore.geometrySelectionsCollection.features)) {
+        handleFlyTo();
+      }
+    });
 
     return (
       <Box style={style}>
@@ -38,7 +45,7 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
               >
                 <ExportSelectionFieldsContainer />
               </form>
-               <ExportLayerFooter formId={EXPORT_FORM_ID} />
+               <ExportLayerFooter setActiveTabView={setActiveTabView} />
             </FormProvider>
           </Box>
         )}

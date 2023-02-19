@@ -93,6 +93,7 @@
   "actions.wfs.buildings-title": "Building info",
   "actions.meter.sign": "m",
   "action.export.box.tooltip": "Select by bounding box",
+  "action.export.footprint.tooltip": "Select from footprint",
   "action.export.polygon.tooltip": "Select by bounding polygon",
   "action.export.bbox-corners.tooltip": "Select by bounding box corners",
   "action.export.full-layer.tooltip": "Export Full Layer",
@@ -635,7 +636,7 @@
   "export-layer.selection-index.text":"Selection",
   "export-layer.description.field": "Description",
   "export-layer.areaZoomLevel.field": "Zoom Level",
-  "export-layer.areaZoomLevel.helper-text": "(Resolution per pixel: {res})",
+  "export-layer.areaZoomLevel.helper-text": "(pixel°: {res})",
   "export-layer.validations.max": "Value is greater than the maximum: {max}",
   "export-layer.validations.min": "Value is lower than the minimum: {min}",
   "export-layer.validations.required": "Required field"
