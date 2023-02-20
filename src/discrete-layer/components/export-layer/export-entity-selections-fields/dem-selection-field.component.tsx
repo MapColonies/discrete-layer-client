@@ -1,0 +1,39 @@
+import React, { useContext } from 'react';
+import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import ExportEnumSelectionField from '../export-common-fields/export-enum-selection-field.component';
+import ExportGeneralFieldComponent from '../export-common-fields/export-general-field.component';
+import { getEnumKeys } from '../../layer-details/utils';
+import { ExportFieldProps } from './raster-selection-field.component';
+
+const DemSelectionField: React.FC<ExportFieldProps> = (props) => {
+  const { fieldName } = props;
+
+  const { enumsMap } = useContext(EnumsMapContext);
+  const enums = enumsMap as IEnumsMapType;
+
+  switch (fieldName) {
+    case 'interpolation': {
+      return (
+        <>
+          <ExportEnumSelectionField {...props} options={getEnumKeys(enums, 'ProductType')}/>
+        </>
+      );
+    }
+    case 'description': {
+      return (
+        <>
+          <ExportGeneralFieldComponent type="text" {...props} />
+        </>
+      );
+    }
+    default: {
+      return (
+        <>
+          <ExportGeneralFieldComponent {...props} />
+        </>
+      );
+    }
+  }
+};
+
+export default DemSelectionField;

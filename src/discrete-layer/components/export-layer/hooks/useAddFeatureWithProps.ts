@@ -14,7 +14,7 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
 // Add here more fields as union of strings.
-export type AvailableProperties = 'areaZoomLevel' | 'description';
+export type AvailableProperties = 'areaZoomLevel' | 'description' | 'projection' | 'interpolation' | 'dataType';
 
 export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
@@ -59,14 +59,6 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
           isExternal: true,
         },
         areaZoomLevel: {
-          // defaultsFromEntityField: 'maxResolutionDeg',
-          // formatValueFunc: (val): string | undefined => {
-          //   try {
-          //     return degreesPerPixelToZoomLevel(val as number).toString();
-          //   } catch (e) {
-          //     console.error(e);
-          //   }
-          // },
           placeholderValue: (): string => {
             let maxZoomLevel: number;
             const minZoomLevel = 1;
@@ -95,7 +87,6 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
             return helperTextVal;
           },
           rhfValidation: {
-            // required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})},
             validate: {
               checkMinVal: (val): string | boolean => {
                 const MIN_VALUE = 1;
@@ -123,8 +114,35 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
         },
       },
     ],
-    [RecordType.RECORD_3D, {}],
-    [RecordType.RECORD_DEM, {}],
+    [RecordType.RECORD_3D, {
+      description: {
+        isExternal: true,
+      },
+    }],
+    [RecordType.RECORD_DEM, {
+      description: {
+        isExternal: true,
+      },
+      projection: {
+        isExternal: true,
+        rhfValidation: {
+          required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
+        }
+      },
+      interpolation: {
+        isExternal: true,
+        rhfValidation: {
+          required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
+        }
+      },
+      dataType: {
+        isExternal: true,
+        rhfValidation: {
+          required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
+        }
+      }
+
+    }],
   ]), [layerToExport]);
 
   const getPropsForFeature = (predicate: (fieldOptions: ExportFieldOptions) => boolean): Record<string, unknown> => {

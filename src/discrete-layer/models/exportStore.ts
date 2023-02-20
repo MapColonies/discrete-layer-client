@@ -23,7 +23,7 @@ export const exportStore = ModelBase
       Object.values(ResponseState)
     ),
     layerToExport: types.maybe(types.frozen<LayerMetadataMixedUnion>()),
-    isFullLayerExportEnabled: types.maybe(types.frozen<boolean>(false)),
+    isFullLayerExportEnabled: types.frozen<boolean>(false),
     tempRawSelection: types.maybe(types.frozen<Feature>()),
     geometrySelectionsCollection: types.frozen<FeatureCollection>(INITIAL_GEOMETRY_SELECTION),
     drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
@@ -110,7 +110,7 @@ export const exportStore = ModelBase
     }
 
     function toggleIsFullLayerExportEnabled(): void {
-      self.isFullLayerExportEnabled = !(self.isFullLayerExportEnabled as boolean);
+      self.isFullLayerExportEnabled = !self.isFullLayerExportEnabled;
       resetDrawingState();
     }
 

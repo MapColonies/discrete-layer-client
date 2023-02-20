@@ -5,6 +5,7 @@ import EnumsMapContext, {
 } from '../../../../common/contexts/enumsMap.context';
 import { RecordType, useStore } from '../../../models';
 import ExportStringFieldComponent from '../export-common-fields/export-general-field.component';
+import DemSelectionField from '../export-entity-selections-fields/dem-selection-field.component';
 import RasterSelectionField, {
   ExportFieldProps,
 } from '../export-entity-selections-fields/raster-selection-field.component';
@@ -22,6 +23,8 @@ const useGetSelectionFieldForDomain = (): React.FC<ExportFieldProps> => {
     switch (layerRecordType) {
       case RecordType.RECORD_RASTER:
         return RasterSelectionField;
+      case RecordType.RECORD_DEM:
+        return DemSelectionField;
       default:
           return ExportStringFieldComponent;
     }

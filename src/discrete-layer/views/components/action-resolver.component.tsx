@@ -22,9 +22,9 @@ import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 import { LayerMetadataMixedUnion } from '../../models';
-import { ExportActions } from '../../components/export-layer/hooks/useGetExportActions';
 import { DrawType } from '@map-colonies/react-components';
 import { Feature } from 'geojson';
+import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 
 const FIRST = 0;
 
@@ -190,17 +190,27 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
-        case 'LayerRasterRecord.export':{
+        case 'LayerRasterRecord.export': {
           // @ts-ignore
           const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
           store.exportStore.reset();
           store.exportStore.setLayerToExport(selectedLayerToExport);
+          break;
         }
-        break;
-        case 'Layer3DRecord.export':
+        case 'Layer3DRecord.export': {
+          // @ts-ignore
+          const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.reset();
+          store.exportStore.setLayerToExport(selectedLayerToExport);
           break;
-        case 'LayerDemRecord.export':
+        }
+        case 'LayerDemRecord.export': {
+          // @ts-ignore
+          const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.reset();
+          store.exportStore.setLayerToExport(selectedLayerToExport);
           break;
+        }
         case 'BestRecord.export':
           break;
         case 'VectorBestRecord.export':
@@ -230,7 +240,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
         }
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
-          if(!(store.exportStore.isFullLayerExportEnabled as boolean)) {
+          if(!store.exportStore.isFullLayerExportEnabled) {
             const {layerToExport} = store.exportStore;
             // Clean any previous selections
             store.exportStore.resetFeatureSelections();

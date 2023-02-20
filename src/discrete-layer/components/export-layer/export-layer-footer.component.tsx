@@ -18,12 +18,14 @@ export enum ExportMode {
 }
 
 const NONE = 0;
+const GENERAL_FIELDS_IDX = 0;
 
 const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, unknown>>}> = ({errors}) => {
   const intl = useIntl();
   const [validationErrors, setValidationErrors] = useState<Map<string, string[]>>(new Map<string, string[]>());
 
   const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
+  const generalFieldsText = intl.formatMessage({ id: 'export-layer.generalFields.text' });
 
   useEffect(() => {
     if(!isEmpty(errors)) {
@@ -32,7 +34,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
       Object.entries(errors).forEach(([erroredFieldName, errorMsg]) => {
         const [selectionIdx, fieldName] = erroredFieldName.split('_');
         const fieldLabel = intl.formatMessage({ id: `export-layer.${fieldName}.field` });
-        const selectionKey = `${selectionText} ${selectionIdx}`;
+        const selectionKey = +selectionIdx === GENERAL_FIELDS_IDX ? generalFieldsText : `${selectionText} ${selectionIdx}`;
         const currentSelectionErrors = errorsBySelection.get(selectionKey) ?? [];
 
         errorsBySelection.set(selectionKey,[...currentSelectionErrors, `${fieldLabel}: ${errorMsg?.message as string}`]);

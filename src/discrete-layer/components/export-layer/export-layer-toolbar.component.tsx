@@ -11,7 +11,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { useStore } from '../../models';
 import { BBoxDialog } from '../map-container/bbox.dialog';
-import { ExportAction, useGetExportActions } from './hooks/useGetExportActions';
+import useDomainExportActionsConfig, { ExportAction } from './hooks/useDomainExportActionsConfig';
 
 
 interface ExportLayerToolbarProps {}
@@ -82,7 +82,7 @@ const ActionPresentor: React.FC<ActionPresentorBaseProps> = (props) => {
 const ExportLayerToolbar: React.FC<ExportLayerToolbarProps> = observer(() => {
   const store = useStore();
   const exportStore = store.exportStore;
-  const exportActions = useGetExportActions();
+  const exportActions = useDomainExportActionsConfig();
 
   const dispatchAction = (action: Record<string, unknown>): void => {
     store.actionDispatcherStore.dispatchAction({

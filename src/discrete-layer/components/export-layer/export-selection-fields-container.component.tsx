@@ -11,6 +11,8 @@ import useHighlightSelection from './hooks/useHighlightSelection';
 import { get } from 'lodash';
 import useGetSelectionFieldForDomain from './hooks/useGetSelectionFieldForDomain';
 
+const NONE = 0;
+
 const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const store = useStore();
   const intl = useIntl();
@@ -47,28 +49,32 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
           );
         });
 
+      const selectionTitle = `${selectionText} ${selectionIdx + 1}${selectionFields.length > NONE ? ':' : '.'}`;
+
       return (
         <Box
-          className={`selectionContainer ${store.exportStore.isFullLayerExportEnabled as boolean ? 'backdrop' : ''}`}
+          className={`selectionContainer ${store.exportStore.isFullLayerExportEnabled ? 'backdrop' : ''}`}
           onMouseEnter={(): void => {
             onSelectionMouseOver(feature.properties?.id as string);
           }}
           onMouseLeave={onSelectionMouseOut}
         >
           <Box className='selectionFields'>
-            <Typography tag="p" className="selectionIndex">{`${selectionText} ${selectionIdx + 1}:`}</Typography>
+            <Box className='selectionTitleContainer'>
+              <IconButton type="button" className="removeSelectionBtn mc-icon-Close" onClick={(): void => {
+                store.exportStore.resetHighlightedFeature();
+                store.exportStore.removeFeatureById(feature.properties?.id as string);
+              }}/>
+              <Typography tag="p" dir={'auto'} className="selectionIndex">{selectionTitle}</Typography>
+            </Box>
             {selectionFields}
-          </Box>
-          <IconButton type="button" className="removeSelectionBtn mc-icon-Close" onClick={(): void => {
-            store.exportStore.resetHighlightedFeature();
-            store.exportStore.removeFeatureById(feature.properties?.id as string);
-          }}/>
+          </Box>          
         </Box>
       );
     });
   };
 
-  const renderExternalExportFields = useMemo((): JSX.Element | JSX.Element[] => {
+  const externalExportFields = useMemo((): JSX.Element | JSX.Element[] => {
     const generalExportFields = Object.entries(
       externalFields as Record<AvailableProperties, unknown>
     ).map(([key, val]) => {
@@ -90,7 +96,7 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
     <>
       {propsForDomain && externalFields && internalFields && (
         <Box className="exportSelectionsContainer">
-          {renderExternalExportFields}
+          {externalExportFields}
           {renderExportSelectionsFields()}
         </Box>
       )}

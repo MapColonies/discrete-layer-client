@@ -634,6 +634,7 @@
   "export-layer.export.button": "Export Layer",
   "export-layer.preview.button": "Preview Export",
   "export-layer.selection-index.text":"Selection",
+  "export-layer.generalFields.text":"General Fields",
   "export-layer.description.field": "Description",
   "export-layer.areaZoomLevel.field": "Zoom Level",
   "export-layer.areaZoomLevel.helper-text": "(pixel°: {res})",

@@ -207,6 +207,10 @@ const DiscreteLayerView: React.FC = observer(() => {
       if (targetViewIdx === TabViews.CREATE_BEST) {
         store.bestStore.restoreData();
       }
+
+      if(activeTabView === TabViews.EXPORT_LAYER) {
+        store.exportStore.setHasExportPreviewed(false);
+      }
   
       setActiveTabView(targetViewIdx);
     }
