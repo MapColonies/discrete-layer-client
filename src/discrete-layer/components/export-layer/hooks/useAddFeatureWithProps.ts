@@ -14,7 +14,13 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
 // Add here more fields as union of strings.
-export type AvailableProperties = 'areaZoomLevel' | 'description' | 'projection' | 'interpolation' | 'dataType';
+export type AvailableProperties =
+  | 'areaZoomLevel'
+  | 'description'
+  | 'projection'
+  | 'interpolation'
+  | 'dataType'
+  | 'targetResolution';
 
 export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
@@ -37,6 +43,7 @@ interface IUseAddFeatureWithProps {
 }
 
 const ABSOLUTE_MAX_ZOOM_LEVEL = 22;
+const ABSOLUTE_MAX_RESOLUTION = degreesPerPixel(ABSOLUTE_MAX_ZOOM_LEVEL);
 
 const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   const store = useStore();
@@ -92,7 +99,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
                 const MIN_VALUE = 1;
                 const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: MIN_VALUE})
                 
-                return parseInt(val) < 1 ? minimumErrMsg : true
+                return parseInt(val) < MIN_VALUE ? minimumErrMsg : true;
               },
               lowerOrEqualsToMaxRes: (val): string | boolean => {
                 let maxZoomLevel: number;
@@ -120,6 +127,31 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
       },
     }],
     [RecordType.RECORD_DEM, {
+      targetResolution: {
+        placeholderValue: (): string => {
+          const minResolutionDeg = degreesPerPixel(1);
+          const maxResolutionDeg = get(layerToExport, 'resolutionDegree') as number | undefined ?? ABSOLUTE_MAX_RESOLUTION;
+          
+          return `${minResolutionDeg} - ${maxResolutionDeg}`;
+        },
+        rhfValidation: {
+          validate: {
+            checkMinVal: (val): string | boolean => {
+              const minResolutionDeg = degreesPerPixel(1);
+              const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: minResolutionDeg})
+
+              return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
+            },
+            lowerOrEqualsToMaxRes: (val): string | boolean => {
+              const maxResolutionDeg = Number(get(layerToExport, 'resolutionDegree') as number | undefined ?? ABSOLUTE_MAX_RESOLUTION);
+              const maximumErrMsg = intl.formatMessage({id: 'export-layer.validations.max'}, {max: maxResolutionDeg});
+
+              return val !== '' && +val > maxResolutionDeg ? maximumErrMsg : true;
+            }
+          },
+          valueAsNumber: true
+         }
+      },
       description: {
         isExternal: true,
       },
