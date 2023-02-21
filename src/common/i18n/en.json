@@ -638,6 +638,7 @@
   "export-layer.description.field": "Description",
   "export-layer.areaZoomLevel.field": "Zoom Level",
   "export-layer.targetResolution.field": "Requested Resolution",
+  "export-layer.targetResolution.helper-text": "(Meters)",
   "export-layer.areaZoomLevel.helper-text": "(pixel°: {res})",
   "export-layer.validations.max": "Value is greater than the maximum: {max}",
   "export-layer.validations.min": "Value is lower than the minimum: {min}",

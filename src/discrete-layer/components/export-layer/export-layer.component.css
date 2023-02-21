@@ -134,7 +134,7 @@
 .exportSelectionField .exportFieldHelper {
   color: var(--mdc-theme-text-primary-on-dark) !important;
   opacity: 0.8;
-  width: 10rem;
+  width: 8rem;
 }
 
 .exportSelectionField .exportGeneralField {

@@ -5,7 +5,7 @@ import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
 import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
-import { cloneDeep, set, get } from 'lodash';
+import { cloneDeep, set, get, isEmpty } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -20,6 +20,8 @@ import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { CapabilityModelType } from './CapabilityModel';
 import { getFlatEntityDescriptors } from '../components/layer-details/utils';
 import { isUnpublished } from '../../common/helpers/style';
+import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../components/layer-details/entity-types-keys';
+import { FieldConfigModelType } from './FieldConfigModel';
 
 export type LayersImagesResponse = ILayerImage[];
 
@@ -314,6 +316,18 @@ export const discreteLayersStore = ModelBase
 
     } 
 
+    function getFieldConfig(
+      layerRecordType: LayerRecordTypes,
+      fieldName: LayerMetadataMixedUnionKeys
+    ): FieldConfigModelType | undefined {
+      const descriptors = self.entityDescriptors;
+      if(typeof descriptors === 'undefined') return undefined;
+
+      const layerDescriptors = getFlatEntityDescriptors(layerRecordType, descriptors);
+
+      return layerDescriptors.find(descriptor => descriptor.fieldName === fieldName);
+    }
+
     return {
       getLayersImages,
       setLayersImages,
@@ -339,6 +353,7 @@ export const discreteLayersStore = ModelBase
       getEditablePartialObject,
       resetAppState,
       resetTabView,
+      getFieldConfig,
     };
   });
 

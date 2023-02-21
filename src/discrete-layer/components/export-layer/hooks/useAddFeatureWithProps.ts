@@ -1,17 +1,13 @@
 import { degreesPerPixel, degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { Feature } from 'geojson';
-import { get } from 'lodash';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { get, isEmpty } from 'lodash';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { RegisterOptions } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
-import { RecordType, LayerMetadataMixedUnion, useStore, FieldConfigModelType } from '../../../models';
+import { RecordType, useStore, FieldConfigModelType, ValidationConfigModelType } from '../../../models';
+import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../../layer-details/entity-types-keys';
 import { getTimeStamp } from '../../layer-details/utils';
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-
-// All fields from all entities.
-type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
 // Add here more fields as union of strings.
 export type AvailableProperties =
@@ -24,7 +20,7 @@ export type AvailableProperties =
 
 export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
-  formatValueFunc?: (val: unknown) => unknown,
+  formatValueFunc?: (val: unknown) => unknown;
   isExternal?: boolean;
   rhfValidation?: RegisterOptions;
   helperTextValue?: string | ((value: unknown) => string);
@@ -43,7 +39,6 @@ interface IUseAddFeatureWithProps {
 }
 
 const ABSOLUTE_MAX_ZOOM_LEVEL = 22;
-const ABSOLUTE_MAX_RESOLUTION = degreesPerPixel(ABSOLUTE_MAX_ZOOM_LEVEL);
 
 const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   const store = useStore();
@@ -57,6 +52,30 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
 
   const tempRawSelection = store.exportStore.tempRawSelection;
   const layerToExport = store.exportStore.layerToExport;
+
+  const getStaticMinMaxForField = useCallback((
+    layerRecordType: LayerRecordTypes,
+    fieldName: LayerMetadataMixedUnionKeys
+  ): { min?: number; max?: number } => {
+    const fieldConfig = store.discreteLayersStore.getFieldConfig(layerRecordType, fieldName);
+    const fieldValidation = (fieldConfig?.validation ??[]) as ValidationConfigModelType[];
+    const minMaxValues = fieldValidation.reduce<{ min?: number; max?: number }>(
+      (acc, validation): { min?: number; max?: number } => {
+        if (!isEmpty(validation.min)) {
+          return { ...acc, min: Number(validation.min as string) };
+        }
+
+        if (!isEmpty(validation.max)) {
+          return { ...acc, max: Number(validation.max as string) };
+        }
+
+        return acc;
+      },
+      {}
+    );
+
+    return minMaxValues;
+  }, [store.discreteLayersStore.getFieldConfig]);
 
   const PROPS_PER_DOMAIN = useMemo(() => new Map<RecordType, Partial<ExportEntityProp>>([
     [
@@ -129,21 +148,24 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
     [RecordType.RECORD_DEM, {
       targetResolution: {
         placeholderValue: (): string => {
-          const minResolutionDeg = degreesPerPixel(1);
-          const maxResolutionDeg = get(layerToExport, 'resolutionDegree') as number | undefined ?? ABSOLUTE_MAX_RESOLUTION;
+          const minMaxValues = getStaticMinMaxForField('LayerDemRecord', 'resolutionMeter');
+
+          const minResolutionMeter = get(layerToExport, 'resolutionMeter') as number;
+          const maxResolutionMeter = minMaxValues.max as number;
           
-          return `${minResolutionDeg} - ${maxResolutionDeg}`;
+          return `${minResolutionMeter} - ${maxResolutionMeter}`;
         },
+        helperTextValue: intl.formatMessage({id: 'export-layer.targetResolution.helper-text'}),
         rhfValidation: {
           validate: {
             checkMinVal: (val): string | boolean => {
-              const minResolutionDeg = degreesPerPixel(1);
+              const minResolutionDeg = get(layerToExport, 'resolutionMeter') as number;
               const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: minResolutionDeg})
 
               return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
             },
             lowerOrEqualsToMaxRes: (val): string | boolean => {
-              const maxResolutionDeg = Number(get(layerToExport, 'resolutionDegree') as number | undefined ?? ABSOLUTE_MAX_RESOLUTION);
+              const maxResolutionDeg = getStaticMinMaxForField('LayerDemRecord', 'resolutionMeter').max as number;
               const maximumErrMsg = intl.formatMessage({id: 'export-layer.validations.max'}, {max: maxResolutionDeg});
 
               return val !== '' && +val > maxResolutionDeg ? maximumErrMsg : true;

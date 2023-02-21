@@ -199,14 +199,14 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         }
         case 'Layer3DRecord.export': {
           // @ts-ignore
-          const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          const selectedLayerToExport = cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion;
           store.exportStore.reset();
           store.exportStore.setLayerToExport(selectedLayerToExport);
           break;
         }
         case 'LayerDemRecord.export': {
           // @ts-ignore
-          const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          const selectedLayerToExport = cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion;
           store.exportStore.reset();
           store.exportStore.setLayerToExport(selectedLayerToExport);
           break;
