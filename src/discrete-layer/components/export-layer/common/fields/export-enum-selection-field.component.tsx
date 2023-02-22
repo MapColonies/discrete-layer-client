@@ -1,26 +1,27 @@
 import { Box } from '@map-colonies/react-components';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import EnumsMapContext, {
   DEFAULT_ENUM_DESCRIPTOR,
   IEnumsMapType,
-} from '../../../../common/contexts/enumsMap.context';
-import { IDictionary } from '../../../../common/models/dictionary';
-import CONFIG from '../../../../common/config';
-import { useStore } from '../../../models';
-import { ExportFieldProps } from '../export-entity-selections-fields/raster-selection-field.component';
+} from '../../../../../common/contexts/enumsMap.context';
+import { IDictionary } from '../../../../../common/models/dictionary';
+import CONFIG from '../../../../../common/config';
+import { useStore } from '../../../../models';
+import { ExportFieldProps } from '../../export-entity-selections-fields/raster-selection-field.component';
+import ExportFieldLabel from '../export-field-label.component';
 
-interface ExportEnumSelectionFieldProps {
+interface ExportEnumSelectionFieldProps extends ExportFieldProps {
   options: string[];
   dictionary?: IDictionary;
 }
 
 const NONE = 0;
 
-const ExportEnumSelectionField: React.FC<ExportFieldProps & ExportEnumSelectionFieldProps> = ({
+const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
   options,
   dictionary,
   selectionId,
@@ -39,15 +40,11 @@ const ExportEnumSelectionField: React.FC<ExportFieldProps & ExportEnumSelectionF
   const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
   const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
 
-  const fieldLabel = intl.formatMessage({
-    id: `export-layer.${fieldName}.field`,
-  });
-
   useEffect(() => {
     formMethods.register(fieldId, {...(rhfValidation ?? {})});
     
     // Mitigate errors on init
-    formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE })
+    formMethods.setValue(fieldId, innerValue, { shouldValidate: fieldValue.length > NONE })
 
     // Trigger form validations
     // void formMethods.trigger();
@@ -59,18 +56,11 @@ const ExportEnumSelectionField: React.FC<ExportFieldProps & ExportEnumSelectionF
 
   return (
     <Box className="exportSelectionField enumSelectContainer">
-      <Typography tag="span" className="exportFieldLabel" htmlFor={fieldId}>
-        {fieldLabel}
-      </Typography>
+      <ExportFieldLabel required={!isEmpty(rhfValidation?.required)} fieldId={fieldId} fieldName={fieldName} />
       <Select
         value={innerValue}
         id={fieldId}
         name={fieldId}
-        // disabled={
-        //   mode === Mode.UPDATE &&
-        //   ((fieldInfo.updateRules as UpdateRulesModelType | undefined | null)
-        //     ?.freeze as boolean)
-        // }
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
           const newFieldVal = e.currentTarget.value;
           
@@ -79,15 +69,16 @@ const ExportEnumSelectionField: React.FC<ExportFieldProps & ExportEnumSelectionF
             fieldName,
             newFieldVal
           );
-
+          formMethods.setValue(fieldId, newFieldVal, { shouldValidate: true });
           setInnerValue(newFieldVal);
         }}
         onBlur={(): void => {
-          formMethods.setValue(fieldId, innerValue, { shouldValidate: true });
+          void formMethods.trigger(fieldId);
         }}
+        invalid={!isEmpty(formMethods.errors[fieldId])}
         outlined
         enhanced
-        className="enumOptions"
+        className="exportOptionsSelect"
       >
         {options.map((item, index) => {
           let icon = '';

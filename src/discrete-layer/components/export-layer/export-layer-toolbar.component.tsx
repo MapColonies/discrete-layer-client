@@ -25,7 +25,7 @@ interface ActionPresentorBaseProps {
 const ToggleActionPresentor: React.FC<ActionPresentorBaseProps> = ({
   action,
   listKey,
-  data,
+  data = {},
   dispatchAction
 }) => {
   const intl = useIntl();

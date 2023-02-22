@@ -1,5 +1,5 @@
 import React from 'react';
-import ExportGeneralFieldComponent from '../export-common-fields/export-general-field.component';
+import ExportGeneralFieldComponent from '../common/fields/export-general-field.component';
 import {
   AvailableProperties,
   ExportFieldOptions,

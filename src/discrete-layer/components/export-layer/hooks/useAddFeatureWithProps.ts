@@ -14,7 +14,7 @@ export type AvailableProperties =
   | 'areaZoomLevel'
   | 'description'
   | 'projection'
-  | 'interpolation'
+  | 'resampleMethod'
   | 'dataType'
   | 'targetResolution';
 
@@ -183,7 +183,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
           required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
         }
       },
-      interpolation: {
+      resampleMethod: {
         isExternal: true,
         rhfValidation: {
           required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}

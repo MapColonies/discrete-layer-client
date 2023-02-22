@@ -4,7 +4,7 @@ import EnumsMapContext, {
   IEnumsMapType,
 } from '../../../../common/contexts/enumsMap.context';
 import { RecordType, useStore } from '../../../models';
-import ExportStringFieldComponent from '../export-common-fields/export-general-field.component';
+import ExportStringFieldComponent from '../common/fields/export-general-field.component';
 import DemSelectionField from '../export-entity-selections-fields/dem-selection-field.component';
 import RasterSelectionField, {
   ExportFieldProps,

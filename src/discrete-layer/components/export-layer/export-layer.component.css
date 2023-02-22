@@ -108,14 +108,14 @@
 
 .exportLayerForm {
   height: 100%;
-  overflow-y: auto;
+  overflow-y: overlay;
 }
 
 .validationErrorsContainer {
   color: var(--mdc-theme-gc-error-high);
   height: 80px;
   width: 100%;
-  overflow-y: auto;
+  overflow-y: overlay;
   gap: 4px;
   display: flex;
   flex-direction: column;
@@ -173,4 +173,59 @@
 .selectionTitleContainer {
   display: flex;
   align-items: center;
+}
+
+.exportOptionsSelect .mdc-select__anchor {
+  border: 1px solid var(--mdc-theme-gc-selection-background);
+  border-radius: 4px !important;
+}
+
+.exportOptionsSelect li {
+  gap: 8px;
+}
+
+.detailsFieldValue.selectBoxContainer {
+  overflow: unset;
+}
+
+.exportOptionsSelect .mdc-select__dropdown-icon {
+  bottom: 2px;
+  right: 16px;
+}
+
+body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
+  right: unset;
+  left: 16px;
+}
+
+.exportOptionsSelect [aria-hidden="true"] {
+  display: none;
+  transition: none;
+}
+
+.exportOptionsSelect .mdc-menu.mdc-select__menu.mdc-menu-surface.mdc-menu-surface--open {
+  max-height: 120px !important;
+  overflow: overlay;
+}
+
+.exportOptionsSelect .mdc-select__anchor {
+  height: 25px;
+}
+
+.exportOptionsSelect .mdc-select__anchor .mdc-select__selected-text {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 20px;
+}
+
+.exportFieldLabelContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2px;
+}
+
+.exportFieldLabelContainer .requiredAsterisk {
+  color: var(--mdc-theme-gc-error-high);
+
 }

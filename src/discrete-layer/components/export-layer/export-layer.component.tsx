@@ -1,6 +1,6 @@
 import { Box } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStore } from '../../models';
 import ExportLayerFooter from './export-layer-footer.component';
 import ExportLayerHeader from './export-layer-header.component';
@@ -32,6 +32,19 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
         handleFlyTo();
       }
     });
+
+    const {formState: { isSubmitted }} = formMethods;
+
+    useEffect(() => {
+      return (): void => {
+        // Save form data to store.
+        if(!isSubmitted) {
+          store.exportStore.setFormData(formMethods.getValues());
+        } else {
+          store.exportStore.resetFormData();
+        }
+      }
+    }, [isSubmitted]);
 
     return (
       <Box style={style}>

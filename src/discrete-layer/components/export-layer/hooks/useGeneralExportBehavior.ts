@@ -1,7 +1,7 @@
 import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { useContext, useEffect, useMemo } from 'react';
-import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import { LayerMetadataMixedUnion, RecordType, useStore } from '../../../models';
 import { getLayerFootprint } from '../../../models/layerImage';
 import { ExportActions } from './useDomainExportActionsConfig';
@@ -19,7 +19,7 @@ export const useGeneralExportBehavior = (cbFunction: () => void): void => {
 
   const { enumsMap } = useContext(EnumsMapContext);
   const enums = enumsMap as IEnumsMapType;
-  const layerRecordType = useMemo(() => get(enums, layerToExport?.productType as string).parentDomain as RecordType, [layerToExport]);
+  const layerRecordType = useMemo(() => (get(enums, layerToExport?.productType as string) as IEnumDescriptor | undefined)?.parentDomain as RecordType, [layerToExport]);
 
 
   useEffect(() => {
@@ -29,6 +29,8 @@ export const useGeneralExportBehavior = (cbFunction: () => void): void => {
       store.discreteLayersStore.setLayersImages([layerToExport], true);
       store.discreteLayersStore.showLayer(layerToExport.id, true, null);
       
+      cbFunction();
+
       switch(layerRecordType) {
         case RecordType.RECORD_3D: {
           const INVOKE_ON_CLEAN_STACK = 0;
@@ -36,7 +38,9 @@ export const useGeneralExportBehavior = (cbFunction: () => void): void => {
           setTimeout(() => {
             store.actionDispatcherStore.dispatchAction({
               action: ExportActions.TOGGLE_FULL_LAYER_EXPORT,
-              data: {}
+              data: {
+                is3DInit: true,
+              }
             });
           }, INVOKE_ON_CLEAN_STACK);
           break;
@@ -45,8 +49,6 @@ export const useGeneralExportBehavior = (cbFunction: () => void): void => {
         default:
           break;
       }
-      
-      cbFunction();
     }
   }, [layerToExport]);
 };

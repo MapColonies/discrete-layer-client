@@ -69,7 +69,8 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ setActiv
     const handleButtonClick = (): void => {
       if (exportStore.hasExportPreviewed) {
         const formSubmitHandler = handleSubmit((data) => {
-          console.log('export submit', data);
+          exportStore.reset();
+          setActiveTabView(TabViews.CATALOG);
         });
 
         void formSubmitHandler();

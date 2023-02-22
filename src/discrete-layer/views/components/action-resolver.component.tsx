@@ -240,8 +240,17 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
         }
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
+          const {layerToExport} = store.exportStore;
+
+          if(data.is3DInit as boolean) {
+            store.exportStore.resetFeatureSelections();
+            store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+            store.exportStore.setIsFullyLayerExportEnabled(true);
+
+            break;
+          }
+
           if(!store.exportStore.isFullLayerExportEnabled) {
-            const {layerToExport} = store.exportStore;
             // Clean any previous selections
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);

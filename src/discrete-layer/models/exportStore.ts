@@ -30,6 +30,7 @@ export const exportStore = ModelBase
     isBBoxDialogOpen: types.maybe(types.frozen<boolean>(false)),
     highlightedSelection: types.maybe(types.frozen<Feature>()),
     hasExportPreviewed: types.frozen<boolean>(false),
+    formData: types.frozen<Record<string, unknown>>({}),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -114,6 +115,10 @@ export const exportStore = ModelBase
       resetDrawingState();
     }
 
+    function setIsFullyLayerExportEnabled(isFullLayerExportEnabled: boolean): void {
+      self.isFullLayerExportEnabled = isFullLayerExportEnabled;
+    }
+
     function setIsBBoxDialogOpen(isOpen: boolean): void {
       self.isBBoxDialogOpen = isOpen;
     }
@@ -126,6 +131,14 @@ export const exportStore = ModelBase
       self.hasExportPreviewed = false;
     }
 
+    function setFormData(formData: Record<string, unknown>): void {
+      self.formData = formData;
+    }
+
+    function resetFormData(): void {
+      self.formData = {};
+    }
+
     function reset(): void {
       self.layerToExport = undefined;
       resetFeatureSelections();
@@ -133,6 +146,7 @@ export const exportStore = ModelBase
       resetFullLayerExport();
       resetTempRawSelection();
       resetHasExportPreviewed();
+      resetFormData();
 
       store.discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
     }
@@ -148,9 +162,12 @@ export const exportStore = ModelBase
         addFeatureSelection,
         setSelectionProperty,
         toggleIsFullLayerExportEnabled,
+        setIsFullyLayerExportEnabled,
         setDrawingState,
         setIsBBoxDialogOpen,
         setHasExportPreviewed,
+        setFormData,
+        resetFormData,
         resetHasExportPreviewed,
         resetFeatureSelections,
         resetDrawingState,

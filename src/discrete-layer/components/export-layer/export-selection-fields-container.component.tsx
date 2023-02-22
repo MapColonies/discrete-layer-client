@@ -30,7 +30,7 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const featuresWithProps = exportGeometrySelections.features;
   const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
 
-  const renderExportSelectionsFields = (): JSX.Element[] => {
+  const renderExportSelectionsFields = useMemo((): JSX.Element[] => {
     return featuresWithProps.map((feature, selectionIdx) => {
       const featProps = feature.properties as Record<string, unknown>;
       const selectionId = featProps.id;
@@ -72,32 +72,40 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
         </Box>
       );
     });
-  };
+  }, [featuresWithProps, internalFields]);
 
   const externalExportFields = useMemo((): JSX.Element | JSX.Element[] => {
     const generalExportFields = Object.entries(
       externalFields as Record<AvailableProperties, unknown>
-    ).map(([key, val]) => {
+    ).map(([key,]) => {
+      const formFieldValue = Object.entries(store.exportStore.formData)
+        .reduce<string>((storedValue, [fieldName, value]): string => {
+          if(fieldName.includes(key)) {
+            return value as string;
+          }
+          return storedValue;
+        }, '');
+
       return (
         <SelectionFieldPerDomainRenderer
           selectionIdx={0}
           selectionId={"0"}
           fieldInfo={get(propsForDomain, key) as ExportFieldOptions}
           fieldName={key as AvailableProperties}
-          fieldValue={val as string}
+          fieldValue={formFieldValue}
         />
       );
     });
 
     return generalExportFields;
-  }, [externalFields]);
+  }, [store.exportStore.formData, externalFields]);
 
   return (
     <>
       {propsForDomain && externalFields && internalFields && (
         <Box className="exportSelectionsContainer">
           {externalExportFields}
-          {renderExportSelectionsFields()}
+          {renderExportSelectionsFields}
         </Box>
       )}
     </>

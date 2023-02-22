@@ -125,18 +125,26 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
 
                 const newActionList = domainActionList.map((action) => {
                     if(action === 'SEPARATOR' || action.action === ExportActions.CLEAR_DRAWINGS) return action;
+                        const rasterAction: ExportAction = {
+                          ...action,
+                          class:
+                            action.action === ExportActions.DRAW_FOOTPRINT
+                              ? 'mc-icon-Map-Orthophoto'
+                              : action.class,
+                        };
+                        
                         if(!isEmpty(selectionsFeatures)) {
                             if(action.action === ExportActions.TOGGLE_FULL_LAYER_EXPORT && !isFullLayerExportEnabled) {
-                                return { ...action, disabled: true };
+                                return { ...rasterAction, disabled: true };
                             }
 
                             if(isFullLayerExportEnabled) {
-                                return { ...action, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT };
+                                return { ...rasterAction, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT };
                             }
 
-                            return { ...action, disabled: !multiSelectionAllowed };
+                            return { ...rasterAction, disabled: !multiSelectionAllowed };
                         } else {
-                            return { ...action, disabled: false };
+                            return { ...rasterAction, disabled: false };
                         }
                     });
 
@@ -151,7 +159,15 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
                 const newActionList = domainActionList.map((action) => {
                     if(action === 'SEPARATOR') return action;
 
-                    return ({ ...action, disabled: true });
+                    const action3D: ExportAction = {
+                        ...action,
+                        class:
+                          action.action === ExportActions.DRAW_FOOTPRINT
+                            ? 'mc-icon-Map-3D'
+                            : action.class,
+                      };
+
+                    return ({ ...action3D, disabled: true });
                 });
 
                 setDomainActionList(newActionList);
@@ -166,18 +182,26 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
 
                 const newActionList = domainActionList.map((action) => {
                     if(action === 'SEPARATOR' || action.action === ExportActions.CLEAR_DRAWINGS) return action;
+                        const demAction: ExportAction = {
+                            ...action,
+                            class:
+                              action.action === ExportActions.DRAW_FOOTPRINT
+                                ? 'mc-icon-Map-DTM'
+                                : action.class,
+                          };
+
                         if(!isEmpty(selectionsFeatures)) {
                             if(action.action === ExportActions.TOGGLE_FULL_LAYER_EXPORT && !isFullLayerExportEnabled) {
-                                return { ...action, disabled: true };
+                                return { ...demAction, disabled: true };
                             }
 
                             if(isFullLayerExportEnabled) {
-                                return { ...action, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT };
+                                return { ...demAction, disabled: action.action !== ExportActions.TOGGLE_FULL_LAYER_EXPORT };
                             }
 
-                            return { ...action, disabled: !multiSelectionAllowed };
+                            return { ...demAction, disabled: !multiSelectionAllowed };
                         } else {
-                            return { ...action, disabled: false };
+                            return { ...demAction, disabled: false };
                         }
                     });
 
