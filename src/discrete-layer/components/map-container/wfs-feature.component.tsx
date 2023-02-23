@@ -106,34 +106,35 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
     if(!featureWithHeight || !wfsFeature) return null;
 
     return <CesiumGeojsonLayer
-        key={featureWithHeight.id}
-        data={featureWithHeight.geometry}
-        onLoad={(geoJsonDataSource): void => {
-          const featureFillColor = wfsFeature.config.color;
-          const featureOutlineColor = wfsFeature.config.outlineColor;
-          const lineWidth = wfsFeature.config.outlineWidth;
-          const outlineWidth = wfsFeature.config.outlineWidth;
+              clampToGround={true}
+              key={featureWithHeight.id}
+              data={featureWithHeight.geometry}
+              onLoad={(geoJsonDataSource): void => {
+                const featureFillColor = wfsFeature.config.color;
+                const featureOutlineColor = wfsFeature.config.outlineColor;
+                const lineWidth = wfsFeature.config.outlineWidth;
+                const outlineWidth = wfsFeature.config.outlineWidth;
 
-          geoJsonDataSource.entities.values.forEach((item) => {
-            if (item.polyline) {
-              // @ts-ignore
-              item.polyline.material = CesiumColor.fromCssColorString(featureFillColor);
-              (item.polyline.width as CesiumConstantProperty).setValue(lineWidth);
-              (item.polyline.clampToGround as CesiumConstantProperty).setValue(true);
-            }
-            
-            if (item.polygon) {
-              // @ts-ignore
-              (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(featureOutlineColor));
-              (item.polygon.outlineWidth as CesiumConstantProperty).setValue(outlineWidth); 
-              
+                geoJsonDataSource.entities.values.forEach((item) => {
+                  if (item.polyline) {
+                    // @ts-ignore
+                    item.polyline.material = CesiumColor.fromCssColorString(featureFillColor);
+                    (item.polyline.width as CesiumConstantProperty).setValue(lineWidth);
+                    (item.polyline.clampToGround as CesiumConstantProperty).setValue(true);
+                  }
+                  
+                  if (item.polygon) {
+                    // @ts-ignore
+                    (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(featureOutlineColor));
+                    (item.polygon.outlineWidth as CesiumConstantProperty).setValue(outlineWidth); 
+                    
 
-              // @ts-ignore
-              item.polygon.material = CesiumColor.fromCssColorString(featureFillColor);
-            }
-          });
-        }}
-      />
+                    // @ts-ignore
+                    item.polygon.material = CesiumColor.fromCssColorString(featureFillColor);
+                  }
+                });
+              }}                    
+            />
   }
   
   const WfsFeatureInfoContainer: React.FC<{ position?: IPosition }> = ({ position, children }) => {    
