@@ -742,9 +742,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             CONFIG.WEB_TOOLS_URL &&
             <Tooltip content={intl.formatMessage({ id: 'action.web-tools.tooltip' })}>
               <IconButton
-                className="operationIcon"
+                className="operationIcon mc-icon-Tools"
                 label="WEB TOOLS"
-                icon="apps"
                 onClick={ (): void => { window.open(CONFIG.WEB_TOOLS_URL); } }
               />
             </Tooltip>

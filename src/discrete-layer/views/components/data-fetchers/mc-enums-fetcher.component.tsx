@@ -76,10 +76,10 @@ export const MCEnumsFetcher: React.FC = observer(() => {
       enums[RASTER_VECTOR_BEST] = { ...enums[RASTER_VECTOR_BEST], icon: 'mc-icon-Map-Vector', parent: 'LayerRasterRecord', parentDomain: RecordType.RECORD_RASTER };
       enums[DTM] = { ...enums[DTM], icon: 'mc-icon-Map-DTM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM };
       enums[DSM] = { ...enums[DSM], icon: 'mc-icon-Map-DSM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM };
-      enums[QUANTIZED_MESH_DTM] = { ...enums[QUANTIZED_MESH_DTM], icon: 'mc-icon-Map-Qmesh', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM  };
-      enums[QUANTIZED_MESH_DSM] = { ...enums[QUANTIZED_MESH_DSM], icon: 'mc-icon-Map-Qmesh', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM  };
-      enums[QUANTIZED_MESH_DTM_BEST] = { ...enums[QUANTIZED_MESH_DTM_BEST], icon: 'mc-icon-Map-Best-Qmash', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM };
-      enums[QUANTIZED_MESH_DSM_BEST] = { ...enums[QUANTIZED_MESH_DSM_BEST], icon: 'mc-icon-Map-Best-Qmash', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM  };
+      enums[QUANTIZED_MESH_DTM] = { ...enums[QUANTIZED_MESH_DTM], icon: 'mc-icon-Map-QMesh-DTM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM  };
+      enums[QUANTIZED_MESH_DSM] = { ...enums[QUANTIZED_MESH_DSM], icon: 'mc-icon-Map-QMesh-DSM', parent: 'LayerDemRecord', parentDomain: RecordType.RECORD_DEM  };
+      enums[QUANTIZED_MESH_DTM_BEST] = { ...enums[QUANTIZED_MESH_DTM_BEST], icon: 'mc-icon-Map-QMesh-DTM', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM };
+      enums[QUANTIZED_MESH_DSM_BEST] = { ...enums[QUANTIZED_MESH_DSM_BEST], icon: 'mc-icon-Map-QMesh-DSM', parent: 'QuantizedMeshBestRecord', parentDomain: RecordType.RECORD_DEM  };
       enums[PHOTO_REALISTIC_3D] = { ...enums[PHOTO_REALISTIC_3D], icon: 'mc-icon-Map-3D', parent: 'Layer3DRecord', parentDomain: RecordType.RECORD_3D  };
       enums[POINT_CLOUD] = { ...enums[POINT_CLOUD], icon: 'mc-icon-Map-3D', parent: 'Layer3DRecord', parentDomain: RecordType.RECORD_3D };
 
