@@ -13,6 +13,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../../models';
 import ExportLayerHighLightSelection from './export-layer.highlight-selection';
+import useGetEntityLabelForDomain from './hooks/useGetEntityLabelForDomain';
 
 const SELECTION_POLYGON_OUTLINE_COLOR = '#22ABDD';
 const SELECTION_POLYGON_OPACITY = 0.5;
@@ -21,10 +22,12 @@ const SELECTION_POLYGON_LINE_WIDTH = 2;
 const ExportPolygonsRenderer: React.FC = observer(() => {
   const store = useStore();
   const exportGeometrySelections = store.exportStore.geometrySelectionsCollection;
+  const getEntityLabel = useGetEntityLabelForDomain();
   
   return (
     <>
       <CesiumGeojsonLayer
+        clampToGround={true}
         data={exportGeometrySelections}
         onLoad={(geoJsonDataSource): void => {
           geoJsonDataSource.entities.values.forEach((item, i) => {
@@ -55,12 +58,13 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
 
               const label = {
                 // eslint-disable-next-line
-                text: item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '',
+                text: getEntityLabel(item),
                 font: '16px Roboto, Helvetica, Arial, sans-serif',
                 fillColor: CesiumColor.WHITE,
                 outlineColor: CesiumColor.BLACK,
                 outlineWidth: 2,
                 showBackground: true,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY
               };
 
               // @ts-ignore

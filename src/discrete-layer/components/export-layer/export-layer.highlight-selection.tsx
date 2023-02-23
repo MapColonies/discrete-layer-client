@@ -25,6 +25,7 @@ const ExportLayerHighLightSelection: React.FC = observer(() => {
     return <>
             {highlightCollection?.features && 
             <CesiumGeojsonLayer
+                clampToGround={true}
                 data={highlightCollection}
                 onLoad={(geoJsonDataSource): void => {
                     geoJsonDataSource.entities.values.forEach(item => {

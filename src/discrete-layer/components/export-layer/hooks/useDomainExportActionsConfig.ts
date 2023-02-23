@@ -1,11 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { get, isEmpty } from "lodash";
 import EnumsMapContext, { IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
-import { LayerMetadataMixedUnion, RecordType, useStore } from "../../../models";
+import { RecordType, useStore } from "../../../models";
 import { TabViews } from "../../../views/tab-views";
 import { IAction } from "../../../../common/actions/entity.actions";
-import { getLayerFootprint } from "../../../models/layerImage";
-import { Feature } from "geojson";
 
 export enum ExportActions {
     DRAW_RECTANGLE = 'export-draw-rectangle',
