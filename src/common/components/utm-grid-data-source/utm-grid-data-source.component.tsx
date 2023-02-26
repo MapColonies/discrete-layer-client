@@ -6,40 +6,33 @@ import {
   CesiumConstantProperty,
   CesiumGeojsonLayer,
   CesiumMath,
+  useCesiumMap,
 } from '@map-colonies/react-components';
 import center from '@turf/center';
 import { points } from '@turf/helpers';
-import { observer } from 'mobx-react-lite';
-import React from 'react';
-import UTMGridDataSource from '../../../common/components/utm-grid-data-source/utm-grid-data-source.component';
-import { useStore } from '../../models';
-import ExportLayerHighLightSelection from './export-layer.highlight-selection';
-import useGetEntityLabelForDomain from './hooks/useGetEntityLabelForDomain';
+import React, { useEffect } from 'react';
 
-const SELECTION_POLYGON_OUTLINE_COLOR = '#22ABDD';
-const SELECTION_POLYGON_OPACITY = 0.5;
+
+const SELECTION_POLYGON_OUTLINE_COLOR = '#8a3e00';
 const SELECTION_POLYGON_LINE_WIDTH = 2;
 
-const ExportPolygonsRenderer: React.FC = observer(() => {
-  const store = useStore();
-  const exportGeometrySelections = store.exportStore.geometrySelectionsCollection;
-  const getEntityLabel = useGetEntityLabelForDomain();
-  
+const UTMGridDataSource: React.FC = () => {
   return (
     <>
-      <UTMGridDataSource />
       <CesiumGeojsonLayer
-        clampToGround={true}
-        data={exportGeometrySelections}
+        data={'./assets/data/utmzone.geojson'}
         onLoad={(geoJsonDataSource): void => {
-          geoJsonDataSource.entities.values.forEach((item, i) => {
+          geoJsonDataSource.entities.values.forEach(item => {
             if (item.polygon) {
+
               // @ts-ignore
               (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(SELECTION_POLYGON_OUTLINE_COLOR));
-              (item.polygon.outlineWidth as CesiumConstantProperty).setValue(SELECTION_POLYGON_LINE_WIDTH);
-              
+              (item.polygon.outlineWidth as CesiumConstantProperty).setValue(
+                SELECTION_POLYGON_LINE_WIDTH
+              );
+
               // @ts-ignore
-              item.polygon.material = CesiumColor.CYAN.withAlpha(SELECTION_POLYGON_OPACITY);
+              item.polygon.material = CesiumColor.TRANSPARENT;
 
               const centerInDegrees = center(
                 points(
@@ -60,13 +53,13 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
 
               const label = {
                 // eslint-disable-next-line
-                text: getEntityLabel(item),
-                font: '16px Roboto, Helvetica, Arial, sans-serif',
-                fillColor: CesiumColor.WHITE,
-                outlineColor: CesiumColor.BLACK,
+                text: item.properties?.ZONE.getValue().toString() as string,
+                font: '24px bold Roboto, Helvetica, Arial, sans-serif',
+                fillColor: CesiumColor.fromCssColorString('#ea00ff'),
+                outlineColor: CesiumColor.WHITE,
                 outlineWidth: 2,
-                showBackground: true,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY
+                showBackground: false,
+                // disableDepthTestDistance: Number.POSITIVE_INFINITY,
               };
 
               // @ts-ignore
@@ -75,10 +68,8 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
           });
         }}
       />
-
-      <ExportLayerHighLightSelection />
     </>
   );
-});
+};
 
-export default ExportPolygonsRenderer;
+export default UTMGridDataSource;

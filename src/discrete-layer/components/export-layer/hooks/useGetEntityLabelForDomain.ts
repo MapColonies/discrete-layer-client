@@ -8,7 +8,7 @@ const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
     const {exportStore: { layerToExport }} = useStore();
     const { enumsMap } = useContext(EnumsMapContext);
     const enums = enumsMap as IEnumsMapType;
-    const layerRecordType = useMemo(() => get(enums, layerToExport?.productType as string).parentDomain as RecordType, [layerToExport]);
+    const layerRecordType = useMemo(() => get(enums, `${layerToExport?.productType as string}.parentDomain`) as unknown as RecordType, [layerToExport]);
 
     const getEntityLabel = useCallback((item: RCesiumEntityProps): string => {
         /* eslint-disable */
