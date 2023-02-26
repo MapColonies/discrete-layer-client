@@ -121,6 +121,7 @@ export const LayersFootprints: React.FC = observer(() => {
 
   return (
     <CesiumGeojsonLayer
+      clampToGround={true}
       data={getFootprints()}
       onLoad={(geoJsonDataSouce): void => {
         
@@ -161,6 +162,7 @@ export const LayersFootprints: React.FC = observer(() => {
             pixelOffset: new CesiumCartesian2(0, 8),
             backgroundColor:  bckColor,
             showBackground: true,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
           };
 
           item.label = label;
