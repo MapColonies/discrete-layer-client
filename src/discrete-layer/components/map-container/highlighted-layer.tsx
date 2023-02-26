@@ -30,6 +30,7 @@ export const HighlightedLayer: React.FC = observer(() => {
 
   return (
     <CesiumGeojsonLayer
+      clampToGround={true}
       data={layersFootprints}
       onLoad={(geoJsonDataSouce): void => {
         geoJsonDataSouce.entities.values.forEach(item => {
