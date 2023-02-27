@@ -16,7 +16,7 @@ const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
             case RecordType.RECORD_RASTER: 
                 return item.properties?.areaZoomLevel.getValue().toString() as string | null ?? '';
             case RecordType.RECORD_DEM: 
-                return item.properties?.targetResolution.getValue().toString() as string | null ?? '';
+                return item.properties?.resolution.getValue().toString() as string | null ?? '';
             default:
                 return '';
             }

@@ -13,7 +13,7 @@ import {
   QuantizedMeshBestRecordModelKeys,
   VectorBestRecordModelKeys
 } from '../../components/layer-details/entity-types-keys';
-import { cleanUpEntity, downloadJSONToClient } from '../../components/layer-details/utils'
+import { cleanUpEntity, downloadJSONToClient, importShapeFileFromClient } from '../../components/layer-details/utils'
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { getLayerFootprint, ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
@@ -280,6 +280,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.exportStore.resetFeatureSelections();
           store.exportStore.resetFullLayerExport();
           store.exportStore.resetHasExportPreviewed();
+          break;
+        case ExportActions.IMPORT_FROM_SHAPE_FILE: 
+          importShapeFileFromClient((evt, fileType) => {
+            void store.exportStore.handleUploadedFile(evt, fileType);
+          }, true);
           break;
 
         // System Callback operations

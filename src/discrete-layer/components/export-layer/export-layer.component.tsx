@@ -13,13 +13,13 @@ import { TabViews } from '../../views/tab-views';
 interface ExportLayerComponentProps {
   style?: { [key: string]: string };
   handleFlyTo: () => void;
-  setActiveTabView: (tabView: TabViews) => void;
+  handleTabViewChange: (tabView: TabViews) => void;
 }
 
 const EXPORT_FORM_ID = 'exportForm';
 
 export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observer(
-  ({ style, handleFlyTo, setActiveTabView }) => {
+  ({ style, handleFlyTo, handleTabViewChange }) => {
     const store = useStore();
     const formMethods = useForm({
       mode: 'onBlur',
@@ -58,7 +58,7 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
               >
                 <ExportSelectionFieldsContainer />
               </form>
-               <ExportLayerFooter setActiveTabView={setActiveTabView} />
+               <ExportLayerFooter handleTabViewChange={handleTabViewChange} />
             </FormProvider>
           </Box>
         )}

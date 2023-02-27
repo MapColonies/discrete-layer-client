@@ -27,7 +27,7 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
   
   return (
     <>
-      <UTMGridDataSource />
+      {/* <UTMGridDataSource />  //TODO: Decide if we want it */}
       <CesiumGeojsonLayer
         clampToGround={true}
         data={exportGeometrySelections}

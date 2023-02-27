@@ -103,7 +103,7 @@ const EXPORT_ACTIONS: ExportAction[] = [
  */
 const useDomainExportActionsConfig = (): ExportAction[] => {
     const store = useStore();
-    const {exportStore: { layerToExport, geometrySelectionsCollection, isFullLayerExportEnabled }} = store;
+    const {exportStore: { layerToExport, geometrySelectionsCollection, isFullLayerExportEnabled, setIsMultiSelectionAllowed }} = store;
     const { enumsMap } = useContext(EnumsMapContext);
     const enums = enumsMap as IEnumsMapType;
     const layerRecordType = useMemo(() => get(enums, layerToExport?.productType as string).parentDomain as RecordType, [layerToExport]);
@@ -120,6 +120,7 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
                 // If full export ticked, all other drawing actions should be disabled.
 
                 const multiSelectionAllowed = true;
+                setIsMultiSelectionAllowed(multiSelectionAllowed);
 
                 const newActionList = domainActionList.map((action) => {
                     if(action === 'SEPARATOR' || action.action === ExportActions.CLEAR_DRAWINGS) return action;
@@ -153,6 +154,9 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
             case RecordType.RECORD_3D: {
                 // Only full export is allowed, all other actions are disabled. (including clear selections and full export.)
                 // Full export toggle should be ticked.
+
+                const multiSelectionAllowed = false;
+                setIsMultiSelectionAllowed(multiSelectionAllowed);
                 
                 const newActionList = domainActionList.map((action) => {
                     if(action === 'SEPARATOR') return action;
@@ -177,6 +181,7 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
                 // After the first selection all drawing actions should be disabled.
 
                 const multiSelectionAllowed = false;
+                setIsMultiSelectionAllowed(multiSelectionAllowed);
 
                 const newActionList = domainActionList.map((action) => {
                     if(action === 'SEPARATOR' || action.action === ExportActions.CLEAR_DRAWINGS) return action;

@@ -13,7 +13,7 @@ const DemSelectionField: React.FC<ExportFieldProps> = (props) => {
   const enums = enumsMap as IEnumsMapType;
 
   switch (fieldName) {
-    case 'targetResolution': {
+    case 'resolution': {
       return (
         <>
           <ExportGeneralFieldComponent type="number" {...props} />

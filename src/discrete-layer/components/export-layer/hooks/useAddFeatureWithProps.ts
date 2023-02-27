@@ -16,7 +16,7 @@ export type AvailableProperties =
   | 'projection'
   | 'resampleMethod'
   | 'dataType'
-  | 'targetResolution';
+  | 'resolution';
 
 export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
@@ -146,7 +146,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
       },
     }],
     [RecordType.RECORD_DEM, {
-      targetResolution: {
+      resolution: {
         placeholderValue: (): string => {
           const minMaxValues = getStaticMinMaxForField('LayerDemRecord', 'resolutionMeter');
 
@@ -155,7 +155,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
           
           return `${minResolutionMeter} - ${maxResolutionMeter}`;
         },
-        helperTextValue: intl.formatMessage({id: 'export-layer.targetResolution.helper-text'}),
+        helperTextValue: intl.formatMessage({id: 'export-layer.resolution.helper-text'}),
         rhfValidation: {
           validate: {
             checkMinVal: (val): string | boolean => {

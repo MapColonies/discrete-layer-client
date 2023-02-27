@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from "@map-colonies/react-components";
 import { Button, Typography } from "@map-colonies/react-core";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { TabViews } from '../../views/tab-views';
 
 interface ExportLayerFooterProps {
-  setActiveTabView: (tabView: TabViews) => void;
+  handleTabViewChange: (tabView: TabViews) => void;
 }
 
 export enum ExportMode {
@@ -49,10 +49,10 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   return (
     <Box className='validationErrorsContainer'>
       {validationErrors.size > NONE && 
-        Array.from(validationErrors).map(([key, val]) => {
-            return <Box className='errorSelectionContainer'>
+        Array.from(validationErrors).map(([key, val], i) => {
+            return <Box key={`${key}_${i}`} className='errorSelectionContainer'>
               <Typography tag='b' className="errorSelectionText">{key}:</Typography>
-              {val.map(error => <Typography tag='p' className='errorText'>{error}</Typography>)}
+              {val.map(error => <Typography key={`${error}`} tag='p' className='errorText'>{error}</Typography>)}
             </Box>
           })
       }
@@ -60,17 +60,40 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   )
 }
 
-const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ setActiveTabView }) => {
+
+const ExportImportedFileError: React.FC<{error: string | null}> = ({error}) => {
+  const intl = useIntl();
+  const importedFileErrorTitle = intl.formatMessage({ id: 'export-layer.fileError.text' });
+
+  return (
+    <Box className='validationErrorsContainer'>
+      {
+      error && <Box className='errorSelectionContainer'>
+              <Typography tag='b' className="errorSelectionText">{importedFileErrorTitle}:</Typography>
+              <Typography tag='p' className='errorText'>{error}</Typography>
+            </Box>
+      }
+    </Box>
+  )
+}
+
+const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange }) => {
   const { formState, handleSubmit } = useFormContext();
-  const { exportStore } = useStore();
+  const { exportStore, discreteLayersStore } = useStore();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
+
+  const endExportSession = useCallback(() => {
+    discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
+    exportStore.reset();
+    handleTabViewChange(TabViews.CATALOG);
+  }, []);
 
   const renderPreviewOrSubmit = useMemo((): JSX.Element => {
     const handleButtonClick = (): void => {
       if (exportStore.hasExportPreviewed) {
         const formSubmitHandler = handleSubmit((data) => {
-          exportStore.reset();
-          setActiveTabView(TabViews.CATALOG);
+          // Submit logic
+          endExportSession();
         });
 
         void formSubmitHandler();
@@ -102,13 +125,11 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ setActiv
     <Box className="exportFooter">
       <Box className="buttonsContainer">
         {renderPreviewOrSubmit}
-        <Button id="cancelBtn" raised type="button" onClick={(): void => {
-          exportStore.reset();
-          setActiveTabView(TabViews.CATALOG);
-        }}>
+        <Button id="cancelBtn" raised type="button" onClick={endExportSession}>
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
       </Box>
+      <ExportImportedFileError error={exportStore.importedFileError} />
       <ExportFormValidationErrors errors={{...formState.errors}}/>
     </Box>
   );

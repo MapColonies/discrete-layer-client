@@ -1,7 +1,8 @@
 import { DrawType } from '@map-colonies/react-components';
 import { Feature, FeatureCollection } from 'geojson';
-import { get } from 'lodash';
-import { types, getParent } from 'mobx-state-tree';
+import { isEmpty } from 'lodash';
+import { types, getParent, flow } from 'mobx-state-tree';
+import shpjs from 'shpjs';
 import { LayerMetadataMixedUnion } from '.';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { IDrawingState } from '../components/export-layer/export-drawing-handler.component';
@@ -31,6 +32,8 @@ export const exportStore = ModelBase
     highlightedSelection: types.maybe(types.frozen<Feature>()),
     hasExportPreviewed: types.frozen<boolean>(false),
     formData: types.frozen<Record<string, unknown>>({}),
+    isMultiSelectionAllowed: types.frozen<boolean>(false),
+    importedFileError: types.frozen<null | string>(null),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -139,6 +142,60 @@ export const exportStore = ModelBase
       self.formData = {};
     }
 
+    function setImportedFileError(error: string | null) {
+      self.importedFileError = error;
+    }
+
+    const handleUploadedFile = flow(function* handleUploadedFileGen(ev: ProgressEvent<FileReader>, fileType: string): Generator<
+      Promise<shpjs.FeatureCollectionWithFilename | shpjs.FeatureCollectionWithFilename[]>,
+      void,
+      shpjs.FeatureCollectionWithFilename | shpjs.FeatureCollectionWithFilename[]
+    > {
+      const GEOJSON_FILE_EXTENSION = 'geojson';
+      const SHAPE_ZIP_FILE_EXTENSION = 'zip';
+      
+      const shpOrGeojson = (ev.target?.result as unknown) as ArrayBuffer;
+
+      if(fileType === GEOJSON_FILE_EXTENSION) {
+        // Check json validity
+        try {
+          const parsedGeojson = JSON.parse(new TextDecoder().decode(shpOrGeojson)) as Record<string, unknown>;
+          if(parsedGeojson.type !== 'FeatureCollection' || isEmpty(parsedGeojson.features)) {
+            throw new Error('Unsupported geojson');
+          }
+
+          if((parsedGeojson.features as Feature[]).length > 1 && !self.isMultiSelectionAllowed) {
+            throw new Error('Multi selection is not supported');
+          }
+
+          self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: [...self.geometrySelectionsCollection.features, ...(parsedGeojson.features as Feature[])]}
+          setImportedFileError(null);
+        } catch(e) {
+          setImportedFileError((e as Error).message);
+        }
+      } else if(fileType === SHAPE_ZIP_FILE_EXTENSION) {
+          try {
+            const featureCollectionData = yield shpjs(shpOrGeojson);
+
+            if(Array.isArray(featureCollectionData) || isEmpty(featureCollectionData.features)) throw new Error('invalid shape file');
+            
+            if(featureCollectionData.features.length > 1 && !self.isMultiSelectionAllowed) {
+              throw new Error('Multi selection is not supported');
+            }
+              
+            self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: [...self.geometrySelectionsCollection.features, ...(featureCollectionData.features)]}
+            setImportedFileError(null);
+          } catch(e) {
+            setImportedFileError((e as Error).message);
+          }
+        }
+      }
+    );
+
+    function setIsMultiSelectionAllowed(isMultiSelectionAllowed: boolean): void {
+      self.isMultiSelectionAllowed = isMultiSelectionAllowed; 
+    }
+
     function reset(): void {
       self.layerToExport = undefined;
       resetFeatureSelections();
@@ -167,6 +224,8 @@ export const exportStore = ModelBase
         setIsBBoxDialogOpen,
         setHasExportPreviewed,
         setFormData,
+        setIsMultiSelectionAllowed,
+        handleUploadedFile,
         resetFormData,
         resetHasExportPreviewed,
         resetFeatureSelections,

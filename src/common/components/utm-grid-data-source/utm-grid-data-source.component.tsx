@@ -6,23 +6,48 @@ import {
   CesiumConstantProperty,
   CesiumGeojsonLayer,
   CesiumMath,
-  useCesiumMap,
 } from '@map-colonies/react-components';
 import center from '@turf/center';
 import { points } from '@turf/helpers';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 
 const SELECTION_POLYGON_OUTLINE_COLOR = '#8a3e00';
 const SELECTION_POLYGON_LINE_WIDTH = 2;
 
+const HIGHLIGHT_OUTLINE_WIDTH = 5;
+const SELECTION_OUTLINE_COLOR = CesiumColor.DODGERBLUE;
+
 const UTMGridDataSource: React.FC = () => {
   return (
     <>
       <CesiumGeojsonLayer
+        // TODO: Change the data source path.
         data={'./assets/data/utmzone.geojson'}
         onLoad={(geoJsonDataSource): void => {
           geoJsonDataSource.entities.values.forEach(item => {
+            let centerInDegrees;
+
+            if(item.polyline) {
+              (item.polyline.clampToGround as CesiumConstantProperty).setValue(true);
+              (item.polyline.width as CesiumConstantProperty).setValue(HIGHLIGHT_OUTLINE_WIDTH);
+
+              // @ts-ignore
+              item.polyline.material = SELECTION_OUTLINE_COLOR;
+
+              centerInDegrees = center(
+                points(
+                  // @ts-ignore
+                  ((item.polyline.positions.getValue() as Record<string, unknown>).map((pos) => {
+                    const cartographicPos = CesiumCartographic.fromCartesian(pos);
+                    return [
+                      CesiumMath.toDegrees(cartographicPos.latitude),
+                      CesiumMath.toDegrees(cartographicPos.longitude),
+                    ];
+                  })
+                ))).geometry.coordinates;
+          }
+
             if (item.polygon) {
 
               // @ts-ignore
@@ -34,7 +59,7 @@ const UTMGridDataSource: React.FC = () => {
               // @ts-ignore
               item.polygon.material = CesiumColor.TRANSPARENT;
 
-              const centerInDegrees = center(
+              centerInDegrees = center(
                 points(
                   // @ts-ignore
                   ((item.polygon.hierarchy.getValue() as Record<string, unknown>)
@@ -47,24 +72,25 @@ const UTMGridDataSource: React.FC = () => {
                   })
                 )
               ).geometry.coordinates;
-
-              // @ts-ignore
-              item.position = CesiumCartesian3.fromDegrees(centerInDegrees[1], centerInDegrees[0]); // [lon, lat]
-
-              const label = {
-                // eslint-disable-next-line
-                text: item.properties?.ZONE.getValue().toString() as string,
-                font: '24px bold Roboto, Helvetica, Arial, sans-serif',
-                fillColor: CesiumColor.fromCssColorString('#ea00ff'),
-                outlineColor: CesiumColor.WHITE,
-                outlineWidth: 2,
-                showBackground: false,
-                // disableDepthTestDistance: Number.POSITIVE_INFINITY,
-              };
-
-              // @ts-ignore
-              item.label = label;
             }
+
+            // @ts-ignore
+            item.position = CesiumCartesian3.fromDegrees(centerInDegrees[1], centerInDegrees[0]); // [lon, lat]
+
+            const label = {
+              // eslint-disable-next-line
+              text: item.properties?.ZONE.getValue().toString() as string,
+              font: '24px bold Roboto, Helvetica, Arial, sans-serif',
+              fillColor: CesiumColor.fromCssColorString('#ea00ff'),
+              outlineColor: CesiumColor.WHITE,
+              outlineWidth: 2,
+              showBackground: false,
+              heightReference: 1,
+              // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            };
+
+            // @ts-ignore
+            item.label = label;
           });
         }}
       />
