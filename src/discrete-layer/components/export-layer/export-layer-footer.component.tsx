@@ -19,6 +19,7 @@ export enum ExportMode {
 
 const NONE = 0;
 const GENERAL_FIELDS_IDX = 0;
+const FILE_ERROR_IDX = -1;
 
 const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, unknown>>}> = ({errors}) => {
   const intl = useIntl();
@@ -26,6 +27,18 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
 
   const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
   const generalFieldsText = intl.formatMessage({ id: 'export-layer.generalFields.text' });
+  const importedFileErrorTitle = intl.formatMessage({ id: 'export-layer.fileError.text' });
+
+  const getSelectionKey = (selectionIdx: string): string => {
+    switch(+selectionIdx) {
+      case GENERAL_FIELDS_IDX:
+        return generalFieldsText;
+      case FILE_ERROR_IDX:
+        return importedFileErrorTitle;
+      default:
+        return `${selectionText} ${selectionIdx}`;
+    }
+  };
 
   useEffect(() => {
     if(!isEmpty(errors)) {
@@ -34,10 +47,14 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
       Object.entries(errors).forEach(([erroredFieldName, errorMsg]) => {
         const [selectionIdx, fieldName] = erroredFieldName.split('_');
         const fieldLabel = intl.formatMessage({ id: `export-layer.${fieldName}.field` });
-        const selectionKey = +selectionIdx === GENERAL_FIELDS_IDX ? generalFieldsText : `${selectionText} ${selectionIdx}`;
+        const selectionKey = getSelectionKey(selectionIdx);
         const currentSelectionErrors = errorsBySelection.get(selectionKey) ?? [];
+        const newSelectionError =
+          +selectionIdx === FILE_ERROR_IDX
+            ? (errorMsg?.message as string)
+            : `${fieldLabel}: ${errorMsg?.message as string}`;
 
-        errorsBySelection.set(selectionKey,[...currentSelectionErrors, `${fieldLabel}: ${errorMsg?.message as string}`]);
+        errorsBySelection.set(selectionKey,[...currentSelectionErrors, newSelectionError]);
       });
 
       setValidationErrors(errorsBySelection);
@@ -60,27 +77,15 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   )
 }
 
-
-const ExportImportedFileError: React.FC<{error: string | null}> = ({error}) => {
-  const intl = useIntl();
-  const importedFileErrorTitle = intl.formatMessage({ id: 'export-layer.fileError.text' });
-
-  return (
-    <Box className='validationErrorsContainer'>
-      {
-      error && <Box className='errorSelectionContainer'>
-              <Typography tag='b' className="errorSelectionText">{importedFileErrorTitle}:</Typography>
-              <Typography tag='p' className='errorText'>{error}</Typography>
-            </Box>
-      }
-    </Box>
-  )
-}
-
 const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange }) => {
   const { formState, handleSubmit } = useFormContext();
   const { exportStore, discreteLayersStore } = useStore();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
+
+  const formattedFileError =
+    exportStore.importedFileError !== null
+      ? { [`${FILE_ERROR_IDX}_`]: { message: exportStore.importedFileError } }
+      : {};
 
   const endExportSession = useCallback(() => {
     discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
@@ -129,8 +134,8 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
       </Box>
-      <ExportImportedFileError error={exportStore.importedFileError} />
-      <ExportFormValidationErrors errors={{...formState.errors}}/>
+
+      <ExportFormValidationErrors errors={{...formattedFileError ,...formState.errors}}/>
     </Box>
   );
 });

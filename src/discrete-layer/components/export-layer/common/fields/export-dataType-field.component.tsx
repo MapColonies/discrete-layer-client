@@ -10,12 +10,8 @@ interface ExportDataTypeField extends ExportFieldProps {
 }
 
 const DATA_TYPE_OPTIONS = [
-  'Int8',
-  'UInt16',
   'Int16',
-  'UInt32',
   'Int32',
-  'UInt64',
   'Int64',
   'Float32',
   'Float64',

@@ -25,6 +25,7 @@ import { LayerMetadataMixedUnion } from '../../models';
 import { DrawType } from '@map-colonies/react-components';
 import { Feature } from 'geojson';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
+import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 
 const FIRST = 0;
 
@@ -39,6 +40,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   const store = useStore();
 
   const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
+  const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
 
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
@@ -280,10 +282,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.exportStore.resetFeatureSelections();
           store.exportStore.resetFullLayerExport();
           store.exportStore.resetHasExportPreviewed();
+          store.exportStore.resetDrawingState();
           break;
         case ExportActions.IMPORT_FROM_SHAPE_FILE: 
           importShapeFileFromClient((evt, fileType) => {
-            void store.exportStore.handleUploadedFile(evt, fileType);
+            void store.exportStore.handleUploadedFile(evt, fileType, exportDomainInternalFields);
           }, true);
           break;
 
@@ -324,7 +327,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
       }
     }
-  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore, props]);
+  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore]);
 
   return (
     <></>

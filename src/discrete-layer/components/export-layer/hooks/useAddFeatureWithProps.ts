@@ -4,14 +4,13 @@ import { get, isEmpty } from 'lodash';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { RegisterOptions } from 'react-hook-form';
 import { useIntl } from 'react-intl';
-import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import { RecordType, useStore, FieldConfigModelType, ValidationConfigModelType } from '../../../models';
 import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../../layer-details/entity-types-keys';
-import { getTimeStamp } from '../../layer-details/utils';
 
 // Add here more fields as union of strings.
 export type AvailableProperties =
-  | 'areaZoomLevel'
+  | 'zoomLevel'
   | 'description'
   | 'projection'
   | 'resampleMethod'
@@ -40,7 +39,7 @@ interface IUseAddFeatureWithProps {
 
 const ABSOLUTE_MAX_ZOOM_LEVEL = 22;
 
-const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
+const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProps => {
   const store = useStore();
   const intl = useIntl();
   const { enumsMap } = useContext(EnumsMapContext);
@@ -84,7 +83,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
         description: {
           isExternal: true,
         },
-        areaZoomLevel: {
+        zoomLevel: {
           placeholderValue: (): string => {
             let maxZoomLevel: number;
             const minZoomLevel = 1;
@@ -109,7 +108,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
               console.error(e);
             }
 
-            const helperTextVal = intl.formatMessage({id: 'export-layer.areaZoomLevel.helper-text'}, { res: resPerPixel });
+            const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { res: resPerPixel });
             return helperTextVal;
           },
           rhfValidation: {
@@ -226,7 +225,7 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   }
 
   useEffect(() => {
-    const layerRecordType = get(enums, layerToExport?.productType as string).parentDomain as RecordType;
+    const layerRecordType = (get(enums, layerToExport?.productType as string) as IEnumDescriptor | undefined)?.parentDomain as RecordType;
 
     setPropsForDomain(PROPS_PER_DOMAIN.get(layerRecordType) as ExportEntityProp);
   }, [layerToExport]);
@@ -237,9 +236,9 @@ const useAddFeatureWithProps = (): IUseAddFeatureWithProps => {
   }, [propsForDomain])
 
   useEffect(() => {
-    if(tempRawSelection) {
+    if(tempRawSelection && shouldAddFeature) {
       // Add entity related properties to the raw selection.
-      const selectionWithProps: Feature = {...tempRawSelection, properties: {...internalPropsForDomain, id: getTimeStamp()}};
+      const selectionWithProps: Feature = {...tempRawSelection, properties: {...internalPropsForDomain}};
 
       // Add the enhanced feature to the feature collection.
       store.exportStore.addFeatureSelection(selectionWithProps);

@@ -1,11 +1,17 @@
 import { DrawType } from '@map-colonies/react-components';
+import { createIntl } from 'react-intl';
+import uuid from 'uuid';
+import CONFIG from '../../common/config';
 import { Feature, FeatureCollection } from 'geojson';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { types, getParent, flow } from 'mobx-state-tree';
 import shpjs from 'shpjs';
 import { LayerMetadataMixedUnion } from '.';
 import { ResponseState } from '../../common/models/response-state.enum';
+import MESSAGES from '../../common/i18n';
 import { IDrawingState } from '../components/export-layer/export-drawing-handler.component';
+import { AvailableProperties } from '../components/export-layer/hooks/useAddFeatureWithProps';
+import { getTimeStamp } from '../components/layer-details/utils';
 import { TabViews } from '../views/tab-views';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
@@ -16,6 +22,9 @@ const INITIAL_DRAWING_STATE: IDrawingState = {
 };
 
 const INITIAL_GEOMETRY_SELECTION: FeatureCollection = { type: "FeatureCollection", features: [] };
+
+const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
+const intl = createIntl({ locale, messages: MESSAGES[locale] });
 
 export const exportStore = ModelBase
   .props({
@@ -78,13 +87,19 @@ export const exportStore = ModelBase
       self.tempRawSelection = undefined;
     }
 
+    
     function addFeatureSelection(newSelection: Feature): void {
       const currentFeatures = self.geometrySelectionsCollection.features;
-        const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, selectionNumber: currentFeatures.length + 1}}]; 
-        self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
-        resetHasExportPreviewed();
+      const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, id: uuid.v4(), selectionNumber: currentFeatures.length + 1}}]; 
+      self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
+      resetHasExportPreviewed();
+      setImportedFileError(null);
     }
-
+    
+    function addFeaturesList(newSelections: Feature[]): void {
+      newSelections.forEach(feature => addFeatureSelection(feature));
+    }
+    
     function setSelectionProperty(selectionId: string, key: string, value: unknown): void {
       const updatedFeatures = self.geometrySelectionsCollection.features
       .map(feature => {
@@ -110,7 +125,7 @@ export const exportStore = ModelBase
     }
     
     function resetDrawingState(): void {
-      self.drawingState = INITIAL_DRAWING_STATE;
+      self.drawingState = {...INITIAL_DRAWING_STATE};
     }
 
     function toggleIsFullLayerExportEnabled(): void {
@@ -142,52 +157,109 @@ export const exportStore = ModelBase
       self.formData = {};
     }
 
-    function setImportedFileError(error: string | null) {
+    function setImportedFileError(error: string | null): void {
       self.importedFileError = error;
     }
 
-    const handleUploadedFile = flow(function* handleUploadedFileGen(ev: ProgressEvent<FileReader>, fileType: string): Generator<
+    function validateInternalPropsOfFeatures(features: Feature[], internalPropsForDomain: Record<AvailableProperties, unknown>): boolean {
+      return features.every((feature) => {
+        const featureProps = feature.properties ?? {};
+        for(const propKey of Object.keys(featureProps)) {
+          if(!(propKey in internalPropsForDomain)) {
+            return false;
+          }
+        }
+        return true;
+      })
+    }
+
+    const handleUploadedFile = 
+    flow(function* handleUploadedFileGen(ev: ProgressEvent<FileReader>, fileType: string, internalPropsForDomain?: Record<AvailableProperties, unknown>): Generator<
       Promise<shpjs.FeatureCollectionWithFilename | shpjs.FeatureCollectionWithFilename[]>,
       void,
       shpjs.FeatureCollectionWithFilename | shpjs.FeatureCollectionWithFilename[]
     > {
-      const GEOJSON_FILE_EXTENSION = 'geojson';
-      const SHAPE_ZIP_FILE_EXTENSION = 'zip';
-      
-      const shpOrGeojson = (ev.target?.result as unknown) as ArrayBuffer;
+        const GEOJSON_FILE_EXTENSION = 'geojson';
+        const SHAPE_ZIP_FILE_EXTENSION = 'zip';
+        const FEATURE_COLLECTION_TYPE = 'FeatureCollection';
+        
+        const multiSelectionSupportError = new Error(intl.formatMessage({id: 'export-layer.validations.multiSelectionSupport'}));
+        const invalidGeojsonError = new Error(intl.formatMessage({id: 'export-layer.validations.invalidGeojson'}));
+        const invalidFeaturePropsError = new Error(intl.formatMessage({id: 'export-layer.validations.invalidFeatureProps'}));
+        const invalidShapefileError = new Error(intl.formatMessage({id: 'export-layer.validations.invalidShapefile'}));
+        const generalInvalidError = new Error(intl.formatMessage({id: 'export-layer.validations.generalInvalidType'}));
+        
+        // Clear previous errors
+        setImportedFileError(null);
+        
+        const shpOrGeojson = (ev.target?.result as unknown) as ArrayBuffer;
 
-      if(fileType === GEOJSON_FILE_EXTENSION) {
-        // Check json validity
-        try {
-          const parsedGeojson = JSON.parse(new TextDecoder().decode(shpOrGeojson)) as Record<string, unknown>;
-          if(parsedGeojson.type !== 'FeatureCollection' || isEmpty(parsedGeojson.features)) {
-            throw new Error('Unsupported geojson');
-          }
 
-          if((parsedGeojson.features as Feature[]).length > 1 && !self.isMultiSelectionAllowed) {
-            throw new Error('Multi selection is not supported');
-          }
-
-          self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: [...self.geometrySelectionsCollection.features, ...(parsedGeojson.features as Feature[])]}
-          setImportedFileError(null);
-        } catch(e) {
-          setImportedFileError((e as Error).message);
-        }
-      } else if(fileType === SHAPE_ZIP_FILE_EXTENSION) {
-          try {
-            const featureCollectionData = yield shpjs(shpOrGeojson);
-
-            if(Array.isArray(featureCollectionData) || isEmpty(featureCollectionData.features)) throw new Error('invalid shape file');
-            
-            if(featureCollectionData.features.length > 1 && !self.isMultiSelectionAllowed) {
-              throw new Error('Multi selection is not supported');
-            }
+        switch(fileType) {
+          case GEOJSON_FILE_EXTENSION: 
+            try {
+              const parsedGeojson = JSON.parse(new TextDecoder().decode(shpOrGeojson)) as Record<string, unknown>;
               
-            self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: [...self.geometrySelectionsCollection.features, ...(featureCollectionData.features)]}
-            setImportedFileError(null);
-          } catch(e) {
-            setImportedFileError((e as Error).message);
+              if(parsedGeojson.type !== FEATURE_COLLECTION_TYPE || isEmpty(parsedGeojson.features)) {
+                throw invalidGeojsonError;
+              }
+
+              const featuresList = parsedGeojson.features as Feature[];
+    
+              if(featuresList.length > 1 && !self.isMultiSelectionAllowed) {
+                throw multiSelectionSupportError;
+              }
+
+              if(typeof internalPropsForDomain === 'undefined') {
+                addFeaturesList(featuresList);
+              } else if(validateInternalPropsOfFeatures(featuresList, internalPropsForDomain)) {
+                addFeaturesList(featuresList);
+              } else {
+                throw invalidFeaturePropsError;
+              }
+              
+              
+            } catch(e) {
+              setImportedFileError((e as Error).message);
+            }
+          break;
+
+          case SHAPE_ZIP_FILE_EXTENSION: {
+            let featureCollectionData: shpjs.FeatureCollectionWithFilename | shpjs.FeatureCollectionWithFilename[] = [];
+            try {
+              featureCollectionData = yield shpjs(shpOrGeojson);
+            } catch(e) {
+              setImportedFileError(generalInvalidError.message);
+              break;
+            }
+
+            try {
+              
+              if(Array.isArray(featureCollectionData) || isEmpty(featureCollectionData.features)){
+                throw invalidShapefileError;
+              }
+              
+              if(featureCollectionData.features.length > 1 && !self.isMultiSelectionAllowed) {
+                throw multiSelectionSupportError;
+              }
+              
+              if(typeof internalPropsForDomain === 'undefined') {
+                addFeaturesList(featureCollectionData.features);
+              } else if(validateInternalPropsOfFeatures(featureCollectionData.features, internalPropsForDomain)) {
+                addFeaturesList(featureCollectionData.features);
+              } else {
+                throw invalidFeaturePropsError;
+              }
+              
+            } catch(e) {
+              setImportedFileError((e as Error).message);
+            }
           }
+          break;
+
+          default:
+            setImportedFileError(generalInvalidError.message);
+            break;
         }
       }
     );
@@ -203,6 +275,7 @@ export const exportStore = ModelBase
       resetFullLayerExport();
       resetTempRawSelection();
       resetHasExportPreviewed();
+      setImportedFileError(null);
       resetFormData();
 
       store.discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
@@ -217,6 +290,7 @@ export const exportStore = ModelBase
         setTempRawSelection,
         resetTempRawSelection,
         addFeatureSelection,
+        addFeaturesList,
         setSelectionProperty,
         toggleIsFullLayerExportEnabled,
         setIsFullyLayerExportEnabled,

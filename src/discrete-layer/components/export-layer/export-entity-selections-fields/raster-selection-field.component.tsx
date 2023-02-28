@@ -18,7 +18,7 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
   const { fieldName } = props;
 
   switch (fieldName) {
-    case 'areaZoomLevel': {
+    case 'zoomLevel': {
       return (
         <>
           <ExportGeneralFieldComponent type="number" {...props} />
