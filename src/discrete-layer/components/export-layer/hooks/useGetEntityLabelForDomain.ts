@@ -14,7 +14,6 @@ const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
         /* eslint-disable */
         switch(layerRecordType) {
             case RecordType.RECORD_RASTER: 
-                return item.properties?.zoomLevel.getValue().toString() as string | null ?? '';
             case RecordType.RECORD_DEM: 
                 return item.properties?.resolution.getValue().toString() as string | null ?? '';
             default:

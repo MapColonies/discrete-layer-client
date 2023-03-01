@@ -10,7 +10,6 @@ import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../../layer-detai
 
 // Add here more fields as union of strings.
 export type AvailableProperties =
-  | 'zoomLevel'
   | 'description'
   | 'projection'
   | 'resampleMethod'
@@ -36,8 +35,6 @@ interface IUseAddFeatureWithProps {
   internalFields?: Record<AvailableProperties, unknown>;
   propsForDomain?: ExportEntityProp;
 }
-
-const ABSOLUTE_MAX_ZOOM_LEVEL = 22;
 
 const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProps => {
   const store = useStore();
@@ -83,56 +80,34 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
         description: {
           isExternal: true,
         },
-        zoomLevel: {
+        resolution: {
           placeholderValue: (): string => {
-            let maxZoomLevel: number;
-            const minZoomLevel = 1;
-            try {
-              maxZoomLevel = degreesPerPixelToZoomLevel(
-                get(layerToExport, 'maxResolutionDeg') as number
-              );
-            } catch (e) {
-              console.error(e);
-              maxZoomLevel = ABSOLUTE_MAX_ZOOM_LEVEL;
-            }
-
-            return `${minZoomLevel} - ${maxZoomLevel}`;
+            const minResolutionDeg = get(layerToExport, 'maxResolutionDeg') as number;
+            const placeholderValue = intl.formatMessage({id: 'export-layer.minimum.placeholder'}, {min: minResolutionDeg});
+           
+            return placeholderValue;
           },
           helperTextValue: (value): string => {
-            const RES_PER_PIXEL_ACCURACY = 5;
-            let resPerPixel = NaN;
-           
+            let zoomLevel: number;
             try {
-              resPerPixel = parseFloat(degreesPerPixel(value as number).toFixed(RES_PER_PIXEL_ACCURACY));
-            } catch (e) {
+              zoomLevel = degreesPerPixelToZoomLevel(value as number);
+            } catch(e) {
               console.error(e);
+              zoomLevel = NaN;
             }
-
-            const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { res: resPerPixel });
+            
+            const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { zoomLevel });
             return helperTextVal;
+            
           },
           rhfValidation: {
             validate: {
               checkMinVal: (val): string | boolean => {
-                const MIN_VALUE = 1;
-                const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: MIN_VALUE})
-                
-                return parseInt(val) < MIN_VALUE ? minimumErrMsg : true;
+                const minResolutionDeg = get(layerToExport, 'maxResolutionDeg') as number;
+                const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: minResolutionDeg});
+
+                return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
               },
-              lowerOrEqualsToMaxRes: (val): string | boolean => {
-                let maxZoomLevel: number;
-                try {
-                  maxZoomLevel = degreesPerPixelToZoomLevel(get(layerToExport, 'maxResolutionDeg') as number);
-
-                } catch(e){
-                  console.error(e);
-                  maxZoomLevel = ABSOLUTE_MAX_ZOOM_LEVEL;
-                }
-
-                const maximumErrMsg = intl.formatMessage({id: 'export-layer.validations.max'}, {max: maxZoomLevel});
-                
-                return parseInt(val) > maxZoomLevel ? maximumErrMsg : true;
-              }
             },
             valueAsNumber: true
            }
@@ -147,12 +122,10 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
     [RecordType.RECORD_DEM, {
       resolution: {
         placeholderValue: (): string => {
-          const minMaxValues = getStaticMinMaxForField('LayerDemRecord', 'resolutionMeter');
-
           const minResolutionMeter = get(layerToExport, 'resolutionMeter') as number;
-          const maxResolutionMeter = minMaxValues.max as number;
-          
-          return `${minResolutionMeter} - ${maxResolutionMeter}`;
+          const placeholderValue = intl.formatMessage({id: 'export-layer.minimum.placeholder'}, {min: minResolutionMeter});
+
+          return placeholderValue;
         },
         helperTextValue: intl.formatMessage({id: 'export-layer.resolution.helper-text'}),
         rhfValidation: {
@@ -162,12 +135,6 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
               const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: minResolutionDeg})
 
               return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
-            },
-            lowerOrEqualsToMaxRes: (val): string | boolean => {
-              const maxResolutionDeg = getStaticMinMaxForField('LayerDemRecord', 'resolutionMeter').max as number;
-              const maximumErrMsg = intl.formatMessage({id: 'export-layer.validations.max'}, {max: maxResolutionDeg});
-
-              return val !== '' && +val > maxResolutionDeg ? maximumErrMsg : true;
             }
           },
           valueAsNumber: true

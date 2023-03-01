@@ -161,16 +161,21 @@ export const exportStore = ModelBase
       self.importedFileError = error;
     }
 
-    function validateInternalPropsOfFeatures(features: Feature[], internalPropsForDomain: Record<AvailableProperties, unknown>): boolean {
-      return features.every((feature) => {
-        const featureProps = feature.properties ?? {};
-        for(const propKey of Object.keys(featureProps)) {
-          if(!(propKey in internalPropsForDomain)) {
-            return false;
-          }
+    function sanitizeFeaturesWithProps(features: Feature[], internalPropsForDomain: Record<AvailableProperties, unknown>): Feature[] {
+      const getNewFeatureProps = (feature: Feature): Record<AvailableProperties, unknown> => {
+        const internalProps = Object.keys(internalPropsForDomain)
+        .reduce((props, key) => ({ ...props, [key]: '' }), {} as Record<AvailableProperties, unknown>);
+
+        const featureProps = (feature.properties ?? {}) as Record<string, unknown>;
+        const newFeatureProps = {} as Record<string, unknown>;
+
+        for(const [internalPropKey, internalPropValue] of  Object.entries(internalProps)) {
+          newFeatureProps[internalPropKey] = featureProps[internalPropKey] ?? internalPropValue;
         }
-        return true;
-      })
+        return newFeatureProps;
+      }
+
+      return features.map(feature => ({...feature, properties: getNewFeatureProps(feature)}));
     }
 
     const handleUploadedFile = 
@@ -210,15 +215,9 @@ export const exportStore = ModelBase
                 throw multiSelectionSupportError;
               }
 
-              if(typeof internalPropsForDomain === 'undefined') {
-                addFeaturesList(featuresList);
-              } else if(validateInternalPropsOfFeatures(featuresList, internalPropsForDomain)) {
-                addFeaturesList(featuresList);
-              } else {
-                throw invalidFeaturePropsError;
+              if(typeof internalPropsForDomain !== 'undefined') {
+                addFeaturesList(sanitizeFeaturesWithProps(featuresList, internalPropsForDomain));
               }
-              
-              
             } catch(e) {
               setImportedFileError((e as Error).message);
             }
@@ -243,14 +242,9 @@ export const exportStore = ModelBase
                 throw multiSelectionSupportError;
               }
               
-              if(typeof internalPropsForDomain === 'undefined') {
-                addFeaturesList(featureCollectionData.features);
-              } else if(validateInternalPropsOfFeatures(featureCollectionData.features, internalPropsForDomain)) {
-                addFeaturesList(featureCollectionData.features);
-              } else {
-                throw invalidFeaturePropsError;
+              if(typeof internalPropsForDomain !== 'undefined') {
+                addFeaturesList(sanitizeFeaturesWithProps(featureCollectionData.features, internalPropsForDomain));
               }
-              
             } catch(e) {
               setImportedFileError((e as Error).message);
             }
