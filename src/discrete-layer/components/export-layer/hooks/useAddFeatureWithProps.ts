@@ -205,7 +205,9 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
   useEffect(() => {
     if(tempRawSelection && shouldAddFeature) {
       // Add entity related properties to the raw selection.
-      const selectionWithProps: Feature = {...tempRawSelection, properties: {...internalPropsForDomain}};
+      const tempRawSelectionProps = tempRawSelection.properties ?? {};
+      const currentSelectionLabelProp =  !isEmpty(tempRawSelectionProps.label) ? {label: tempRawSelectionProps.label as string} : {};
+      const selectionWithProps: Feature = {...tempRawSelection, properties: {...currentSelectionLabelProp, ...internalPropsForDomain}};
 
       // Add the enhanced feature to the feature collection.
       store.exportStore.addFeatureSelection(selectionWithProps);

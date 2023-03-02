@@ -22,7 +22,7 @@
 
 .exportToolbarContainer {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -228,4 +228,18 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 .exportFieldLabelContainer .requiredAsterisk {
   color: var(--mdc-theme-gc-error-high);
 
+}
+
+.exportActionMenu {
+  max-height: 180px !important;
+  overflow-y: overlay;
+  width: 180px;
+}
+
+.exportActionMenuItem {
+  width: 100%;
+}
+
+.exportActionMenuItem:hover {
+  color: white;
 }

@@ -4,6 +4,10 @@ import EnumsMapContext, { IEnumsMapType } from "../../../../common/contexts/enum
 import { RecordType, useStore } from "../../../models";
 import { TabViews } from "../../../views/tab-views";
 import { IAction } from "../../../../common/actions/entity.actions";
+import lookupTablesContext, { ILookupOption } from "../../../../common/contexts/lookupTables.context";
+import { HOT_AREAS_TABLES_KEY } from "../../../views/components/data-fetchers/lookup-tables-fetcher.component";
+import { Feature } from "geojson";
+import { useIntl } from "react-intl";
 
 export enum ExportActions {
     DRAW_RECTANGLE = 'export-draw-rectangle',
@@ -12,7 +16,9 @@ export enum ExportActions {
     DRAW_BY_COORDINATES = 'export-draw-coordinates',
     CLEAR_DRAWINGS = 'export-clear-drawings',
     IMPORT_FROM_SHAPE_FILE = 'import-from-shape-file',
-    TOGGLE_FULL_LAYER_EXPORT = 'toggle-full-layer-export'
+    TOGGLE_FULL_LAYER_EXPORT = 'toggle-full-layer-export',
+    OPEN_HOT_AREAS_MENU = 'export-open-hot-areas-menu',
+    EXPORT_HOT_AREA_SELECTION = 'export-hot_area_selection',
 };
 
 export type ExportAction = (IAction & {
@@ -22,6 +28,13 @@ export type ExportAction = (IAction & {
         labelChecked: string;
         labelUnchecked: string;
     };
+    menuActionOptions?: {
+      items: Map<string, unknown>;
+      dispatchOnItemClick: {
+        action: ExportActions;
+        data?: unknown;
+      };
+    }
 }) | 'SEPARATOR';
 
 const EXPORT_ACTIONS: ExportAction[] = [
@@ -85,6 +98,21 @@ const EXPORT_ACTIONS: ExportAction[] = [
       disabled: false,
       views: [TabViews.EXPORT_LAYER]
     },
+    {
+      action: ExportActions.OPEN_HOT_AREAS_MENU,
+      frequent: true,
+      icon: '',
+      class: 'glow-missing-icon mc-icon-More',
+      titleTranslationId: 'action.export.select-hot-area.tooltip',
+      menuActionOptions: {
+        items: new Map<string, unknown>(),
+        dispatchOnItemClick: {
+          action: ExportActions.EXPORT_HOT_AREA_SELECTION
+        }
+      },
+      disabled: false,
+      views: [TabViews.EXPORT_LAYER]
+    },
     "SEPARATOR",
     {
       action: ExportActions.CLEAR_DRAWINGS,
@@ -103,14 +131,50 @@ const EXPORT_ACTIONS: ExportAction[] = [
  */
 const useDomainExportActionsConfig = (): ExportAction[] => {
     const store = useStore();
+    const intl = useIntl();
     const {exportStore: { layerToExport, geometrySelectionsCollection, isFullLayerExportEnabled, setIsMultiSelectionAllowed }} = store;
     const { enumsMap } = useContext(EnumsMapContext);
+    const { lookupTablesData } = useContext(lookupTablesContext);
     const enums = enumsMap as IEnumsMapType;
     const layerRecordType = useMemo(() => get(enums, layerToExport?.productType as string).parentDomain as RecordType, [layerToExport]);
 
     const selectionsFeatures = geometrySelectionsCollection.features;
 
-    const [domainActionList, setDomainActionList] = useState<ExportAction[]>(EXPORT_ACTIONS);
+    const initExportActions = useMemo((): ExportAction[] => {
+      const initializedActions = [...EXPORT_ACTIONS].map(action => {
+        if(action === 'SEPARATOR') return action;
+
+        if(action.menuActionOptions) {
+          switch(action.action) {
+            case ExportActions.OPEN_HOT_AREAS_MENU: {
+              if(!lookupTablesData?.dictionary) {
+                return action;
+              }
+              
+              const hotAreasTable = (lookupTablesData.dictionary[HOT_AREAS_TABLES_KEY] as ILookupOption[] | undefined) ?? [];
+              const hotAreasMenuItems = new Map<string, Feature>();
+
+              for(const hotAreaOption of hotAreasTable) {
+                const areaTranslation = intl.formatMessage({ id: hotAreaOption.translationCode });
+                hotAreasMenuItems.set(areaTranslation, hotAreaOption.properties.footprint as Feature);
+              } 
+              
+              return {...action, menuActionOptions: {...action.menuActionOptions, items: hotAreasMenuItems }};
+            }
+
+            default:
+              return action;
+          }
+        }
+
+        return action;
+      })
+
+      return initializedActions;
+
+    }, []);
+
+    const [domainActionList, setDomainActionList] = useState<ExportAction[]>(initExportActions);
 
     useEffect(() => {
         switch(layerRecordType) {
@@ -180,7 +244,7 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
                 // Multi selection is not allowed.
                 // After the first selection all drawing actions should be disabled.
 
-                const multiSelectionAllowed = false;
+                const multiSelectionAllowed = true;
                 setIsMultiSelectionAllowed(multiSelectionAllowed);
 
                 const newActionList = domainActionList.map((action) => {

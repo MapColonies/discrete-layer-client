@@ -101,6 +101,7 @@
   "action.export.full-layer.label": "ייצוא מלא",
   "action.export.custom-selection.label": "ייצוא מבחירה",
   "action.export.import-shape.tooltip": "ייבא מקובץ",
+  "action.export.select-hot-area.tooltip": "בחירה מאזורים חמים",
   
 
   "record-type.record_raster.label": "ראסטר",
@@ -625,6 +626,16 @@
   "lookupTable.classification.levelFour": "סודי",
   "lookupTable.classification.levelFive": "שמור",
   "lookupTable.classification.levelSix": "בלמ''ס",
+
+  "lookupTable.hotAreas.eilat": "אילת",
+  "lookupTable.hotAreas.gaza": "עזה",
+  "lookupTable.hotAreas.heifa": "חיפה",
+  "lookupTable.hotAreas.iraq": "עירק",
+  "lookupTable.hotAreas.israel": "ישראל",
+  "lookupTable.hotAreas.lebanon": "לבנון",
+  "lookupTable.hotAreas.sderot": "שדרות",
+  "lookupTable.hotAreas.syria": "סוריה",
+  "lookupTable.hotAreas.telAviv": "תל אביב",
   
   "Transparency.transparent": "Transparent",
   "Transparency.opaque": "Opaque",

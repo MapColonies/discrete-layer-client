@@ -100,6 +100,7 @@
   "action.export.full-layer.label": "Full Export",
   "action.export.custom-selection.label": "Custom Export",
   "action.export.import-shape.tooltip": "Import Selection from file",
+  "action.export.select-hot-area.tooltip": "Choose from hot areas",
 
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
@@ -623,6 +624,16 @@
   "lookupTable.classification.levelFour": "Secret",
   "lookupTable.classification.levelFive": "Confidential",
   "lookupTable.classification.levelSix": "Not classified",
+
+  "lookupTable.hotAreas.eilat": "Eilat",
+  "lookupTable.hotAreas.gaza": "Gaza",
+  "lookupTable.hotAreas.heifa": "Heifa",
+  "lookupTable.hotAreas.iraq": "Iraq",
+  "lookupTable.hotAreas.israel": "Israel",
+  "lookupTable.hotAreas.lebanon": "Lebanon",
+  "lookupTable.hotAreas.sderot": "Sderot",
+  "lookupTable.hotAreas.syria": "Syria",
+  "lookupTable.hotAreas.telAviv": "Tel Aviv",
   
   "Transparency.transparent": "Transparent",
   "Transparency.opaque": "Opaque",

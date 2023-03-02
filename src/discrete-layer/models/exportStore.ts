@@ -11,10 +11,10 @@ import { ResponseState } from '../../common/models/response-state.enum';
 import MESSAGES from '../../common/i18n';
 import { IDrawingState } from '../components/export-layer/export-drawing-handler.component';
 import { AvailableProperties } from '../components/export-layer/hooks/useAddFeatureWithProps';
-import { getTimeStamp } from '../components/layer-details/utils';
 import { TabViews } from '../views/tab-views';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
+import { sanitizeFeaturesWithProps } from '../components/export-layer/utils/expory-layer-utils';
 
 const INITIAL_DRAWING_STATE: IDrawingState = {
   drawing: false,
@@ -161,23 +161,6 @@ export const exportStore = ModelBase
       self.importedFileError = error;
     }
 
-    function sanitizeFeaturesWithProps(features: Feature[], internalPropsForDomain: Record<AvailableProperties, unknown>): Feature[] {
-      const getNewFeatureProps = (feature: Feature): Record<AvailableProperties, unknown> => {
-        const internalProps = Object.keys(internalPropsForDomain)
-        .reduce((props, key) => ({ ...props, [key]: '' }), {} as Record<AvailableProperties, unknown>);
-
-        const featureProps = (feature.properties ?? {}) as Record<string, unknown>;
-        const newFeatureProps = {} as Record<string, unknown>;
-
-        for(const [internalPropKey, internalPropValue] of  Object.entries(internalProps)) {
-          newFeatureProps[internalPropKey] = featureProps[internalPropKey] ?? internalPropValue;
-        }
-        return newFeatureProps;
-      }
-
-      return features.map(feature => ({...feature, properties: getNewFeatureProps(feature)}));
-    }
-
     const handleUploadedFile = 
     flow(function* handleUploadedFileGen(ev: ProgressEvent<FileReader>, fileType: string, internalPropsForDomain?: Record<AvailableProperties, unknown>): Generator<
       Promise<shpjs.FeatureCollectionWithFilename | shpjs.FeatureCollectionWithFilename[]>,
@@ -190,7 +173,6 @@ export const exportStore = ModelBase
         
         const multiSelectionSupportError = new Error(intl.formatMessage({id: 'export-layer.validations.multiSelectionSupport'}));
         const invalidGeojsonError = new Error(intl.formatMessage({id: 'export-layer.validations.invalidGeojson'}));
-        const invalidFeaturePropsError = new Error(intl.formatMessage({id: 'export-layer.validations.invalidFeatureProps'}));
         const invalidShapefileError = new Error(intl.formatMessage({id: 'export-layer.validations.invalidShapefile'}));
         const generalInvalidError = new Error(intl.formatMessage({id: 'export-layer.validations.generalInvalidType'}));
         

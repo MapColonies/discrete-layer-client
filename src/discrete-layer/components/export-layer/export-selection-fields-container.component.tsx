@@ -8,7 +8,7 @@ import { useStore } from '../../models';
 import './export-layer.component.css';
 
 import useHighlightSelection from './hooks/useHighlightSelection';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import useGetSelectionFieldForDomain from './hooks/useGetSelectionFieldForDomain';
 
 const NONE = 0;
@@ -28,7 +28,6 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const SelectionFieldPerDomainRenderer = useGetSelectionFieldForDomain();
 
   const featuresWithProps = exportGeometrySelections.features;
-  const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
 
   const renderExportSelectionsFields = useMemo((): JSX.Element[] => {
     return featuresWithProps.map((feature, selectionIdx) => {
@@ -48,8 +47,14 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
             />
           );
         });
-
-      const selectionTitle = `${selectionText} ${selectionIdx + 1}${selectionFields.length > NONE ? ':' : '.'}`;
+      
+      const hasPropsSign = selectionFields.length > NONE ? ':' : '.';
+      const selectionTextId = isEmpty(featProps.label) ? 'export-layer.selection-index.text' : featProps.label as string;
+      
+      const customOrGeneralSelectionText = intl.formatMessage({ id: selectionTextId }); 
+      const selectionTitle = !isEmpty(featProps.label)
+        ? `${selectionIdx + 1}. ${customOrGeneralSelectionText}${hasPropsSign}`
+        : `${customOrGeneralSelectionText} ${selectionIdx + 1}${hasPropsSign}`;
 
       return (
         <Box

@@ -289,7 +289,9 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             void store.exportStore.handleUploadedFile(evt, fileType, exportDomainInternalFields);
           }, true);
           break;
-
+        case ExportActions.EXPORT_HOT_AREA_SELECTION:
+          store.exportStore.setTempRawSelection(data as unknown as Feature);
+          break;
         // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;
