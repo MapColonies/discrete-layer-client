@@ -8,7 +8,7 @@ import { queue } from '../../../../discrete-layer/components/snackbar/notificati
 
 export const LookupTablesFetcher: React.FC = observer(() => {
   const store = useStore();
-  const { data, loading, error } = useQuery((store) => store.queryGetLookupTablesData({}, `dictionary`))
+  const { data, loading, error } = useQuery((store) => store.queryGetLookupTablesData({data: {}}, `dictionary`))
   const { setLookupTablesData } = useContext(lookupTablesContext);
 
   useEffect(() => {
