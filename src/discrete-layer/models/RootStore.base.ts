@@ -82,10 +82,8 @@ import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
 import { RecordStatus } from "./RecordStatusEnum"
 import { Transparency } from "./TransparencyEnum"
-import { VerticalDatum } from "./VerticalDatumEnum"
-import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
-import { DataType } from "./DataTypeEnum"
+import { DemDataType } from "./DemDataTypeEnum"
 import { NoDataValue } from "./NoDataValueEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocompletionType } from "./AutocompletionTypeEnum"
@@ -298,11 +296,11 @@ export type LayerDemRecordInput = {
   productBoundingBox?: string
   heightRangeFrom?: number
   heightRangeTo?: number
-  verticalDatum: VerticalDatum
-  units?: Units
+  verticalDatum: string
+  units?: string
   geographicArea?: string
   undulationModel: UndulationModel
-  dataType: DataType
+  dataType: DemDataType
   noDataValue: NoDataValue
   id: string
   insertDate?: any

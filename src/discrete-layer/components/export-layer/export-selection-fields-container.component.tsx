@@ -70,7 +70,7 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
                 store.exportStore.resetHighlightedFeature();
                 store.exportStore.removeFeatureById(feature.properties?.id as string);
               }}/>
-              <Typography tag="p" dir={'auto'} className="selectionIndex">{selectionTitle}</Typography>
+              <Typography tag="bdi" className="selectionIndex">{selectionTitle}</Typography>
             </Box>
             {selectionFields}
           </Box>          

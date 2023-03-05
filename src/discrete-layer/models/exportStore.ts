@@ -14,7 +14,7 @@ import { AvailableProperties } from '../components/export-layer/hooks/useAddFeat
 import { TabViews } from '../views/tab-views';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
-import { sanitizeFeaturesWithProps } from '../components/export-layer/utils/expory-layer-utils';
+import { sanitizeFeaturesWithProps } from '../components/export-layer/utils/export-layer-utils';
 
 const INITIAL_DRAWING_STATE: IDrawingState = {
   drawing: false,

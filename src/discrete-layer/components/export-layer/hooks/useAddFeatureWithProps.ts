@@ -81,6 +81,7 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
           isExternal: true,
         },
         resolution: {
+          defaultsFromEntityField: 'maxResolutionDeg',
           placeholderValue: (): string => {
             const minResolutionDeg = get(layerToExport, 'maxResolutionDeg') as number;
             const placeholderValue = intl.formatMessage({id: 'export-layer.minimum.placeholder'}, {min: minResolutionDeg});
@@ -109,7 +110,8 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
                 return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
               },
             },
-            valueAsNumber: true
+            valueAsNumber: true,
+            required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
            }
         },
       },
@@ -121,6 +123,7 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
     }],
     [RecordType.RECORD_DEM, {
       resolution: {
+        defaultsFromEntityField: 'resolutionMeter',
         placeholderValue: (): string => {
           const minResolutionMeter = get(layerToExport, 'resolutionMeter') as number;
           const placeholderValue = intl.formatMessage({id: 'export-layer.minimum.placeholder'}, {min: minResolutionMeter});
@@ -137,7 +140,8 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
               return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
             }
           },
-          valueAsNumber: true
+          valueAsNumber: true,
+          required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
          }
       },
       description: {

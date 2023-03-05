@@ -244,7 +244,7 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
                 // Multi selection is not allowed.
                 // After the first selection all drawing actions should be disabled.
 
-                const multiSelectionAllowed = true;
+                const multiSelectionAllowed = false;
                 setIsMultiSelectionAllowed(multiSelectionAllowed);
 
                 const newActionList = domainActionList.map((action) => {

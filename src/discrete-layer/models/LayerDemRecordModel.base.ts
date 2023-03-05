@@ -5,15 +5,13 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { DataTypeEnumType } from "./DataTypeEnum"
+import { DemDataTypeEnumType } from "./DemDataTypeEnum"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { NoDataValueEnumType } from "./NoDataValueEnum"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { UndulationModelEnumType } from "./UndulationModelEnum"
-import { UnitsEnumType } from "./UnitsEnum"
-import { VerticalDatumEnumType } from "./VerticalDatumEnum"
 import { RootStoreType } from "./index"
 
 
@@ -48,12 +46,12 @@ export const LayerDemRecordModelBase = ModelBase
     productBoundingBox: types.union(types.undefined, types.null, types.string),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
     heightRangeTo: types.union(types.undefined, types.null, types.number),
-    verticalDatum: types.union(types.undefined, VerticalDatumEnumType),
-    units: types.union(types.undefined, types.null, UnitsEnumType),
+    verticalDatum: types.union(types.undefined, types.null, types.string),
+    units: types.union(types.undefined, types.null, types.string),
     geographicArea: types.union(types.undefined, types.null, types.string),
     undulationModel: types.union(types.undefined, UndulationModelEnumType),
-    dataType: types.union(types.undefined, DataTypeEnumType),
-    noDataValue: types.union(types.undefined, NoDataValueEnumType),
+    dataType: types.union(types.undefined, DemDataTypeEnumType),
+    noDataValue: types.union(types.undefined, types.null, NoDataValueEnumType),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),

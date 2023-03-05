@@ -26,14 +26,14 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
 }) => {
   const store = useStore();
   const formMethods = useFormContext();
-  const [innerValue, setInnerValue] = useState(fieldValue);
+  const [innerValue, setInnerValue] = useState(isEmpty(fieldValue) ? defaultValue ?? '' : fieldValue);
   const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
 
   useEffect(() => {
     formMethods.register(fieldId, {...(rhfValidation ?? {})});
     
     // Mitigate errors on init
-    formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE })
+    formMethods.setValue(fieldId, innerValue, { shouldValidate: innerValue.length > NONE })
 
     // Trigger form validations
     // void formMethods.trigger();

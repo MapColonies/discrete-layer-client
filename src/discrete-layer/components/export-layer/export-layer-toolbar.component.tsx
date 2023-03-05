@@ -30,7 +30,7 @@ const MenuActionPresentor: React.FC<ActionPresentorBaseProps> = ({
   const intl = useIntl();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
 
-  if (action === 'SEPARATOR') return null;
+  if (action === 'SEPARATOR' || isEmpty(action.menuActionOptions?.items)) return null;
 
   return (
     <>

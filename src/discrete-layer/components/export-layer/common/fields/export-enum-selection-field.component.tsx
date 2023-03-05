@@ -91,7 +91,7 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
               // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               const { translationKey, internal } = enums[item] ?? DEFAULT_ENUM_DESCRIPTOR;
               icon = enums[item].icon;
-              translation = intl.formatMessage({ id: translationKey });
+              translation = !isEmpty(translationKey) ? intl.formatMessage({ id: translationKey }) : '';
               if (internal) {
                 return null;
               }

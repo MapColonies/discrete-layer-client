@@ -12,7 +12,7 @@ import ExportFieldLabel from '../export-field-label.component';
 const NONE = 0;
 
 const getHelperTextValue = (helperTextValue?: string | ((value: unknown) => string), value?: string): string | undefined => {
-  if(typeof helperTextValue !== 'undefined' && typeof helperTextValue !== 'string' && !isEmpty(value)) {
+  if(typeof helperTextValue !== 'undefined' && typeof helperTextValue !== 'string' && !isEmpty(value?.toString())) {
     return helperTextValue(value);
   }
 
@@ -59,7 +59,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
     formMethods.register(fieldId, {...(rhfValidation ?? {})});
     
     // Mitigate errors on init
-    formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE })
+    formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE });
 
     // Trigger form validations
     // void formMethods.trigger();
