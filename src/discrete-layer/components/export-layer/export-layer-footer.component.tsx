@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import { useStore } from '../../models';
 import { observer } from 'mobx-react-lite';
 import { TabViews } from '../../views/tab-views';
+import { useExportTrigger } from './hooks/useExportTrigger';
 
 interface ExportLayerFooterProps {
   handleTabViewChange: (tabView: TabViews) => void;
@@ -82,6 +83,8 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   const { exportStore, discreteLayersStore } = useStore();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
 
+  const {setFormValues: setFormValuesToQuery} = useExportTrigger();
+
   const formattedFileError =
     exportStore.importedFileError !== null
       ? { [`${FILE_ERROR_IDX}_`]: { message: exportStore.importedFileError } }
@@ -97,8 +100,9 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
     const handleButtonClick = (): void => {
       if (exportStore.hasExportPreviewed) {
         const formSubmitHandler = handleSubmit((data) => {
+          setFormValuesToQuery(data);
           // Submit logic
-          endExportSession();
+          // endExportSession();
         });
 
         void formSubmitHandler();

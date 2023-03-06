@@ -23,6 +23,8 @@ export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   rhfValidation?: RegisterOptions;
   helperTextValue?: string | ((value: unknown) => string);
   placeholderValue?: string | (() => string);
+  rows?: number;
+  maxLength?: number;
 }
 
 type ExportEntityProp = Record<
@@ -79,6 +81,8 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
       {
         description: {
           isExternal: true,
+          rows: 4,
+          maxLength: 50
         },
         resolution: {
           defaultsFromEntityField: 'maxResolutionDeg',
@@ -119,6 +123,8 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
     [RecordType.RECORD_3D, {
       description: {
         isExternal: true,
+        rows: 4,
+        maxLength: 50
       },
     }],
     [RecordType.RECORD_DEM, {
@@ -146,6 +152,8 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
       },
       description: {
         isExternal: true,
+        rows: 4,
+        maxLength: 50
       },
       projection: {
         isExternal: true,

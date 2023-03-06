@@ -24,7 +24,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   selectionIdx,
   fieldName,
   fieldValue,
-  fieldInfo: {placeholderValue, helperTextValue, rhfValidation},
+  fieldInfo: {placeholderValue, helperTextValue, rhfValidation, rows, maxLength},
   type,
 }) => {
   const store = useStore();
@@ -41,7 +41,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   );
 
   const handleOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    const newFieldVal = e.target.value;
+    const newFieldVal = rhfValidation?.valueAsNumber as boolean ? e.target.valueAsNumber : e.target.value;
 
     store.exportStore.setSelectionProperty(
       selectionId,
@@ -49,7 +49,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
       newFieldVal
     );
 
-    setHelperText(getHelperTextValue(helperTextValue, newFieldVal));
+    setHelperText(getHelperTextValue(helperTextValue, `${newFieldVal}`));
     
   }, [store.exportStore.setSelectionProperty, selectionId, fieldName])
 
@@ -76,6 +76,9 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
       <TextField
         dir="auto"
         className="exportGeneralField"
+        textarea={(rows ?? NONE) > 1}
+        rows={rows}
+        maxLength={maxLength}
         name={fieldId}
         type={type}
         value={innerValue}
