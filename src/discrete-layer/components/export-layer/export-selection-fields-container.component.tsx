@@ -10,6 +10,7 @@ import './export-layer.component.css';
 import useHighlightSelection from './hooks/useHighlightSelection';
 import { get, isEmpty } from 'lodash';
 import useGetSelectionFieldForDomain from './hooks/useGetSelectionFieldForDomain';
+import { GENERAL_FIELDS_ID, GENERAL_FIELDS_IDX } from './constants';
 
 const NONE = 0;
 
@@ -93,8 +94,8 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
 
       return (
         <SelectionFieldPerDomainRenderer
-          selectionIdx={0}
-          selectionId={"0"}
+          selectionIdx={GENERAL_FIELDS_IDX}
+          selectionId={GENERAL_FIELDS_ID}
           fieldInfo={get(propsForDomain, key) as ExportFieldOptions}
           fieldName={key as AvailableProperties}
           fieldValue={formFieldValue}

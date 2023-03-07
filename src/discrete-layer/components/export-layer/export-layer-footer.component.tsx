@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from "@map-colonies/react-components";
-import { Button, Typography } from "@map-colonies/react-core";
+import { Button, CircularProgress, Typography } from "@map-colonies/react-core";
 import { FormattedMessage, useIntl } from "react-intl";
 import { FieldErrors, useFormContext } from 'react-hook-form';
-import { isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import { useStore } from '../../models';
 import { observer } from 'mobx-react-lite';
 import { TabViews } from '../../views/tab-views';
 import { useExportTrigger } from './hooks/useExportTrigger';
+import { GENERAL_FIELDS_IDX } from './constants';
 
 interface ExportLayerFooterProps {
   handleTabViewChange: (tabView: TabViews) => void;
@@ -19,8 +20,8 @@ export enum ExportMode {
 }
 
 const NONE = 0;
-const GENERAL_FIELDS_IDX = 0;
 const FILE_ERROR_IDX = -1;
+const SERVICE_ERROR_IDX = -2;
 
 const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, unknown>>}> = ({errors}) => {
   const intl = useIntl();
@@ -29,6 +30,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   const selectionText = intl.formatMessage({ id: 'export-layer.selection-index.text' });
   const generalFieldsText = intl.formatMessage({ id: 'export-layer.generalFields.text' });
   const importedFileErrorTitle = intl.formatMessage({ id: 'export-layer.fileError.text' });
+  const serviceErrorTitle = intl.formatMessage({ id: 'export-layer.serviceError.text' });
 
   const getSelectionKey = (selectionIdx: string): string => {
     switch(+selectionIdx) {
@@ -36,6 +38,8 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
         return generalFieldsText;
       case FILE_ERROR_IDX:
         return importedFileErrorTitle;
+      case SERVICE_ERROR_IDX:
+        return serviceErrorTitle;
       default:
         return `${selectionText} ${selectionIdx}`;
     }
@@ -51,10 +55,10 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
         const selectionKey = getSelectionKey(selectionIdx);
         const currentSelectionErrors = errorsBySelection.get(selectionKey) ?? [];
         const newSelectionError =
-          +selectionIdx === FILE_ERROR_IDX
-            ? (errorMsg?.message as string)
-            : `${fieldLabel}: ${errorMsg?.message as string}`;
-
+          +selectionIdx > GENERAL_FIELDS_IDX
+            ? `${fieldLabel}: ${errorMsg?.message as string}`
+            : (errorMsg?.message as string)
+            
         errorsBySelection.set(selectionKey,[...currentSelectionErrors, newSelectionError]);
       });
 
@@ -83,11 +87,21 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   const { exportStore, discreteLayersStore } = useStore();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
 
-  const {setFormValues: setFormValuesToQuery} = useExportTrigger();
+  const {setFormValues: setFormValuesToQuery, data: exportTriggerRes, error: exportTriggerError, loading: isExportTriggerLoading} = useExportTrigger();
+
+  useEffect(() => {
+    // Do something with the data
+    console.log({...cloneDeep(exportTriggerRes)});
+  }, [exportTriggerRes])
 
   const formattedFileError =
     exportStore.importedFileError !== null
       ? { [`${FILE_ERROR_IDX}_`]: { message: exportStore.importedFileError } }
+      : {};
+  
+  const serviceError =
+      exportTriggerError as boolean
+      ? { [`${SERVICE_ERROR_IDX}_`]: { message: get(exportTriggerError, 'response.errors[0].message') as string } }
       : {};
 
   const endExportSession = useCallback(() => {
@@ -119,16 +133,22 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
       <Button
         id="exportBtn"
         raised
-        type='button'
+        type="button"
         disabled={
-          isEmpty(exportStore.geometrySelectionsCollection.features) || !isEmpty(formState.errors)
+          isEmpty(exportStore.geometrySelectionsCollection.features) ||
+          !isEmpty(formState.errors) ||
+          isExportTriggerLoading
         }
         onClick={handleButtonClick}
       >
-        <FormattedMessage id={`export-layer.${mode}.button`} />
+        {isExportTriggerLoading ? (
+          <CircularProgress className="exportButtonLoading" />
+        ) : (
+          <FormattedMessage id={`export-layer.${mode}.button`} />
+        )}
       </Button>
     );
-  }, [mode, handleSubmit, formState, exportStore.geometrySelectionsCollection]);
+  }, [mode, handleSubmit, formState, exportStore.geometrySelectionsCollection, isExportTriggerLoading]);
 
   return (
     <Box className="exportFooter">
@@ -138,8 +158,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
       </Box>
-
-      <ExportFormValidationErrors errors={{...formattedFileError ,...formState.errors}}/>
+      <ExportFormValidationErrors errors={{...serviceError, ...formattedFileError, ...formState.errors}}/>
     </Box>
   );
 });

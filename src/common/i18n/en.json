@@ -647,6 +647,7 @@
   "export-layer.selection-index.text":"Selection",
   "export-layer.generalFields.text":"General Fields",
   "export-layer.fileError.text":"Imported File",
+  "export-layer.serviceError.text":"Service Error",
   "export-layer.description.field": "Description",
   "export-layer.zoomLevel.field": "Zoom Level",
   "export-layer.resolution.field": "Requested Resolution",

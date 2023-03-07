@@ -649,6 +649,7 @@
   "export-layer.selection-index.text":"בחירה",
   "export-layer.generalFields.text":"שדות כלליים",
   "export-layer.fileError.text":"בחירה מקובץ",
+  "export-layer.serviceError.text":"שגיאה מהשרת",
   "export-layer.description.field": "תיאור",
   "export-layer.zoomLevel.field": "רמת זום",
   "export-layer.resolution.field": "רזולוציה מבוקשת",
