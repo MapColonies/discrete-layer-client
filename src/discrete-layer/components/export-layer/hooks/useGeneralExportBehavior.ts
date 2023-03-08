@@ -1,9 +1,7 @@
-import { Feature } from 'geojson';
-import { get } from 'lodash';
 import { useContext, useEffect, useMemo } from 'react';
+import { get } from 'lodash';
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
-import { LayerMetadataMixedUnion, RecordType, useStore } from '../../../models';
-import { getLayerFootprint } from '../../../models/layerImage';
+import { RecordType, useStore } from '../../../models';
 import { ExportActions } from './useDomainExportActionsConfig';
 
 /**

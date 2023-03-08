@@ -143,7 +143,7 @@ export type GetExportEstimatedSizeInput = {
 }
 export type GeojsonFeatureCollectionInput = {
   type: string
-  features: GeojsonFeatureInput
+  features: GeojsonFeatureInput[]
 }
 export type GeojsonFeatureInput = {
   type: string

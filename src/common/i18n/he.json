@@ -659,6 +659,7 @@
   "export-layer.projection.field": "היטל",
   "export-layer.resampleMethod.field": "שיטת דגימה",
   "export-layer.dataType.field": "סוג מידע",
+  "export-layer.selection-estimated-size.text": "גודל מוערך (MB): {estimatedSize}",
   "export-layer.validations.max": "ערך גדול מהמקסימום {max}",
   "export-layer.validations.min": "ערך קטן מהמינימום {min}",
   "export-layer.validations.required": "שדה חובה",

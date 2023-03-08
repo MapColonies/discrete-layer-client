@@ -61,7 +61,7 @@ export const exportStore = ModelBase
 
     function removeFeatureById(id: string): void {
       const currentFeatures = [...self.geometrySelectionsCollection.features];
-      const filteredFeatures = currentFeatures.filter(feat => feat.properties?.id !== id).map((feat, i) => ({...feat, properties: { ...feat.properties, selectionNumber: i + 1 }}));
+      const filteredFeatures = currentFeatures.filter(feat => feat.properties?.id !== id).map((feat, i) => ({...feat, properties: { ...feat.properties}}));
 
       self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: filteredFeatures};
       resetHasExportPreviewed();
@@ -90,7 +90,7 @@ export const exportStore = ModelBase
     
     function addFeatureSelection(newSelection: Feature): void {
       const currentFeatures = self.geometrySelectionsCollection.features;
-      const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, id: uuid.v4(), selectionNumber: currentFeatures.length + 1}}]; 
+      const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, id: uuid.v4()}}]; 
       self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
       resetHasExportPreviewed();
       setImportedFileError(null);

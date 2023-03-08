@@ -657,6 +657,7 @@
   "export-layer.projection.field": "Projection",
   "export-layer.resampleMethod.field": "Resample Method",
   "export-layer.dataType.field": "Data Type",
+  "export-layer.selection-estimated-size.text": "Estimated size (MB): {estimatedSize}",
   "export-layer.validations.max": "Value is greater than the maximum: {max}",
   "export-layer.validations.min": "Value is lower than the minimum: {min}",
   "export-layer.validations.required": "Required field",

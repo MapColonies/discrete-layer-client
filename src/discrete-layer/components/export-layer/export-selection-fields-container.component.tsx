@@ -1,23 +1,21 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Box } from '@map-colonies/react-components';
-import { IconButton, Typography } from '@map-colonies/react-core';
-import { useIntl } from 'react-intl';
-import useAddFeatureWithProps, { AvailableProperties, ExportFieldOptions } from './hooks/useAddFeatureWithProps';
+import useAddFeatureWithProps, {
+  AvailableProperties,
+  ExportFieldOptions,
+} from './hooks/useAddFeatureWithProps';
 import { useStore } from '../../models';
 import './export-layer.component.css';
-
-import useHighlightSelection from './hooks/useHighlightSelection';
-import { get, isEmpty } from 'lodash';
+import { get } from 'lodash';
 import useGetSelectionFieldForDomain from './hooks/useGetSelectionFieldForDomain';
 import { GENERAL_FIELDS_ID, GENERAL_FIELDS_IDX } from './constants';
-
-const NONE = 0;
+import ExportSelectionComponent from './export-selection.component';
 
 const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const store = useStore();
-  const intl = useIntl();
-  const exportGeometrySelections =  store.exportStore.geometrySelectionsCollection;
+  const exportGeometrySelections =
+    store.exportStore.geometrySelectionsCollection;
 
   const {
     externalFields,
@@ -25,57 +23,20 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
     propsForDomain,
   } = useAddFeatureWithProps();
 
-  const {onSelectionMouseOver, onSelectionMouseOut} = useHighlightSelection();
   const SelectionFieldPerDomainRenderer = useGetSelectionFieldForDomain();
 
   const featuresWithProps = exportGeometrySelections.features;
 
   const renderExportSelectionsFields = useMemo((): JSX.Element[] => {
     return featuresWithProps.map((feature, selectionIdx) => {
-      const featProps = feature.properties as Record<string, unknown>;
-      const selectionId = featProps.id;
-
-      const selectionFields = Object.entries(featProps)
-        .filter(([key]) => key in (internalFields ?? {}))
-        .map(([key, val]) => {
-          return (
-            <SelectionFieldPerDomainRenderer
-              selectionIdx={selectionIdx + 1}
-              selectionId={selectionId as string}
-              fieldInfo={get(propsForDomain, key) as ExportFieldOptions}
-              fieldName={key as AvailableProperties}
-              fieldValue={val as string}
-            />
-          );
-        });
-      
-      const hasPropsSign = selectionFields.length > NONE ? ':' : '.';
-      const selectionTextId = isEmpty(featProps.label) ? 'export-layer.selection-index.text' : featProps.label as string;
-      
-      const customOrGeneralSelectionText = intl.formatMessage({ id: selectionTextId }); 
-      const selectionTitle = !isEmpty(featProps.label)
-        ? `${selectionIdx + 1}. ${customOrGeneralSelectionText}${hasPropsSign}`
-        : `${customOrGeneralSelectionText} ${selectionIdx + 1}${hasPropsSign}`;
-
       return (
-        <Box
-          className={`selectionContainer ${store.exportStore.isFullLayerExportEnabled ? 'backdrop' : ''}`}
-          onMouseEnter={(): void => {
-            onSelectionMouseOver(feature.properties?.id as string);
-          }}
-          onMouseLeave={onSelectionMouseOut}
-        >
-          <Box className='selectionFields'>
-            <Box className='selectionTitleContainer'>
-              <IconButton type="button" className="removeSelectionBtn mc-icon-Close" onClick={(): void => {
-                store.exportStore.resetHighlightedFeature();
-                store.exportStore.removeFeatureById(feature.properties?.id as string);
-              }}/>
-              <Typography tag="bdi" className="selectionIndex">{selectionTitle}</Typography>
-            </Box>
-            {selectionFields}
-          </Box>          
-        </Box>
+        <ExportSelectionComponent
+          key={get(feature,'properties.id') as string}
+          feature={feature}
+          selectionIdx={selectionIdx}
+          internalFields={internalFields}
+          propsForDomain={propsForDomain}
+        />
       );
     });
   }, [featuresWithProps, internalFields]);
@@ -83,14 +44,15 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const externalExportFields = useMemo((): JSX.Element | JSX.Element[] => {
     const generalExportFields = Object.entries(
       externalFields as Record<AvailableProperties, unknown>
-    ).map(([key,]) => {
-      const formFieldValue = Object.entries(store.exportStore.formData)
-        .reduce<string>((storedValue, [fieldName, value]): string => {
-          if(fieldName.includes(key)) {
-            return value as string;
-          }
-          return storedValue;
-        }, '');
+    ).map(([key]) => {
+      const formFieldValue = Object.entries(store.exportStore.formData).reduce<
+        string
+      >((storedValue, [fieldName, value]): string => {
+        if (fieldName.includes(key)) {
+          return value as string;
+        }
+        return storedValue;
+      }, '');
 
       return (
         <SelectionFieldPerDomainRenderer

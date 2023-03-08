@@ -27,7 +27,7 @@ export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   maxLength?: number;
 }
 
-type ExportEntityProp = Record<
+export type ExportEntityProp = Record<
   AvailableProperties,
   ExportFieldOptions
 >;
