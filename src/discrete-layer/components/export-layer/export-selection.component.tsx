@@ -6,6 +6,7 @@ import { get, isEmpty, isEqual } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { formatBytes, kbToBytes } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models';
 import {
@@ -64,14 +65,19 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
   }, [newFeature])
 
   const estimatedSizeText = useMemo(() => {
-    const estimatedSizeLabel = intl.formatMessage(
-      { id: 'export-layer.selection-estimated-size.text' },
-      { estimatedSize: estimatedSizeRes ?? (loading ? '' : 'N/A')}
-    );
+    const NOT_AVAILABLE_TEXT = 'N/A';
+    const estimatedSizeValue = typeof estimatedSizeRes === 'number' ? formatBytes(kbToBytes(estimatedSizeRes)) : NOT_AVAILABLE_TEXT;
+
+    const estimatedSizeLabel = intl.formatMessage({ id: 'export-layer.sizeEstimation.label' });
 
     return (
       <Box className="estimatedSizeContainer">
-        <Typography tag="p">{estimatedSizeLabel}</Typography>   
+        <Typography tag="bdi">
+          {estimatedSizeLabel}
+          <Typography tag="bdi">
+            {loading ? '' : estimatedSizeValue}
+          </Typography>
+        </Typography>   
       </Box>
     );
   }, [estimatedSizeRes, error, loading]);
@@ -99,21 +105,25 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
       const customOrGeneralSelectionText = intl.formatMessage({
         id: selectionTextId,
       });
-      const selectionTitle = !isEmpty(featProps.label)
-        ? `${selectionIdx + 1}. ${customOrGeneralSelectionText}${hasPropsSign}`
-        : `${customOrGeneralSelectionText} ${selectionIdx + 1}${hasPropsSign}`;
+      const selectionTitle = `${selectionIdx + 1}. ${customOrGeneralSelectionText}${hasPropsSign}`;
     
       return (
         <Box
           className={`selectionContainer ${
-            store.exportStore.isFullLayerExportEnabled || loading ? 'backdrop' : ''
+            store.exportStore.isFullLayerExportEnabled || loading
+              ? 'backdrop'
+              : ''
           }`}
           onMouseEnter={(): void => {
             onSelectionMouseOver(feature.properties?.id as string);
           }}
           onMouseLeave={onSelectionMouseOut}
         >
-         {loading && <CircularProgress className="selectionLoading" /> }
+          {loading && (
+            <Box className="selectionLoadingContainer">
+              <CircularProgress className="selectionLoading" />
+            </Box>
+          )}
           <Box className="selectionFields">
             <Box className="selectionTitleContainer">
               <IconButton

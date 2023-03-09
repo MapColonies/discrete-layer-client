@@ -1,14 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
-import { Feature } from "geojson";
+import { Feature, FeatureCollection } from "geojson";
 import { EstimatedSizeModelType, RecordType, useQuery, useStore } from '../../../models';
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { GeojsonFeatureCollectionInput } from '../../../models/RootStore.base';
 
-export const useEstimatedSize = (initSelection: Feature): {
-    setSelection: (selection: Feature) => void;
+export const useEstimatedSize = (initSelection: Feature | FeatureCollection = {} as Feature): {
+    setSelection: (selection: Feature | FeatureCollection) => void;
     data: number | null | undefined,
     loading: boolean,
+    refetch?: () => Promise<{
+        getEstimatedSize: EstimatedSizeModelType;
+    }>,
     error?: string,
 } => {
     const store = useStore();
@@ -23,20 +26,38 @@ export const useEstimatedSize = (initSelection: Feature): {
 
 
     useEffect(() => {
-        const selectionFeatureCollection: GeojsonFeatureCollectionInput = {
-            type: 'FeatureCollection',
-            features: [{ ...selection, id: `${get(selection.properties, 'id') as string | undefined ?? ''}` }]
-        };
+        if(!isEmpty(selection)) {
+            const selectionFeatureCollection: GeojsonFeatureCollectionInput =
+                selection.type === "Feature"
+                    ? {
+                          type: "FeatureCollection",
+                          features: [
+                              {
+                                  ...selection,
+                                  id: `${
+                                      (get(selection.properties, "id") as string | undefined) ?? ""
+                                  }`
+                              }
+                          ]
+                      }
+                    : selection as GeojsonFeatureCollectionInput;
 
-        setQuery(
-            store.queryGetEstimatedSize({
-                data: {
-                    type: layerRecordType,
-                    selections: selectionFeatureCollection
-                }
-            })
-        );
+            setQuery(
+                store.queryGetEstimatedSize({
+                    data: {
+                        type: layerRecordType,
+                        selections: selectionFeatureCollection
+                    }
+                })
+            );
+        }
     }, [selection])
 
-    return {setSelection, data: data?.getEstimatedSize.estimatedSizeInMb, loading , error: get(query?.error, 'response.errors[0].message') as string}
+    return {
+        setSelection,
+        data: data?.getEstimatedSize.estimatedSizeInKb,
+        loading,
+        refetch: query?.refetch,
+        error: get(query?.error, "response.errors[0].message") as string
+    };
 };

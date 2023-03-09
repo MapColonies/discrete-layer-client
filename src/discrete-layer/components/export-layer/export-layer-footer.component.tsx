@@ -9,6 +9,9 @@ import { observer } from 'mobx-react-lite';
 import { TabViews } from '../../views/tab-views';
 import { useExportTrigger } from './hooks/useExportTrigger';
 import { GENERAL_FIELDS_IDX } from './constants';
+import { useGetFreeDiskSpace } from './hooks/useGetFreeDiskSpace';
+import { useEstimatedSize } from './hooks/useEstimatedSize';
+import { formatBytes, kbToBytes } from '../../../common/helpers/formatters';
 
 interface ExportLayerFooterProps {
   handleTabViewChange: (tabView: TabViews) => void;
@@ -22,6 +25,8 @@ export enum ExportMode {
 const NONE = 0;
 const FILE_ERROR_IDX = -1;
 const SERVICE_ERROR_IDX = -2;
+const GENERAL_ERROR_IDX = -3;
+const NOT_AVAILABLE_TEXT = 'N/A';
 
 const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, unknown>>}> = ({errors}) => {
   const intl = useIntl();
@@ -31,6 +36,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   const generalFieldsText = intl.formatMessage({ id: 'export-layer.generalFields.text' });
   const importedFileErrorTitle = intl.formatMessage({ id: 'export-layer.fileError.text' });
   const serviceErrorTitle = intl.formatMessage({ id: 'export-layer.serviceError.text' });
+  const generalErrorTitle = intl.formatMessage({ id: 'export-layer.generalError.text' });
 
   const getSelectionKey = (selectionIdx: string): string => {
     switch(+selectionIdx) {
@@ -40,6 +46,8 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
         return importedFileErrorTitle;
       case SERVICE_ERROR_IDX:
         return serviceErrorTitle;
+      case GENERAL_ERROR_IDX:
+        return generalErrorTitle;
       default:
         return `${selectionText} ${selectionIdx}`;
     }
@@ -85,14 +93,55 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
 const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange }) => {
   const { formState, handleSubmit } = useFormContext();
   const { exportStore, discreteLayersStore } = useStore();
+  const intl = useIntl();
+  const [insufficientSpaceError, setIsInsufficientSpaceError] = useState<string | undefined>();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
 
-  const {setFormValues: setFormValuesToQuery, data: exportTriggerRes, error: exportTriggerError, loading: isExportTriggerLoading} = useExportTrigger();
+  const { data: freeDiskSpaceRes, loading: isExportFreeDiskSpaceLoading } = useGetFreeDiskSpace();
+
+  const {
+    setSelection: setExportDataToEstimateSize,
+    data: exportSizeEstimationRes,
+    loading: isExportSizeEstimationLoading
+  } = useEstimatedSize();
+
+  const [exportSizeEstimation, setExportSizeEstimation] = useState<number | null>();
+
+  const {
+    setFormValues: setFormValuesToQuery,
+    data: exportTriggerRes,
+    error: exportTriggerError,
+    loading: isExportTriggerLoading,
+  } = useExportTrigger();
 
   useEffect(() => {
-    // Do something with the data
-    console.log({...cloneDeep(exportTriggerRes)});
-  }, [exportTriggerRes])
+    setExportSizeEstimation(undefined);
+  }, [exportStore.geometrySelectionsCollection])
+
+  useEffect(() => {
+    setExportSizeEstimation(exportSizeEstimationRes);
+  }, [exportSizeEstimationRes])
+
+  useEffect(() => {
+    if(typeof exportSizeEstimation === 'number' && typeof freeDiskSpaceRes === 'number') {
+      if(exportSizeEstimation > freeDiskSpaceRes) {
+        const insufficientSizeErrorText = intl.formatMessage({ id: 'export-layer.insufficient-space.error' });
+        setIsInsufficientSpaceError(insufficientSizeErrorText);
+      } else {
+        setIsInsufficientSpaceError(undefined);
+      }
+    }
+  }, [exportSizeEstimation, freeDiskSpaceRes])
+
+  useEffect(() => {
+    if(exportStore.hasExportPreviewed) {
+      setExportDataToEstimateSize(exportStore.geometrySelectionsCollection);
+    }
+  }, [exportStore.hasExportPreviewed]);
+
+  useEffect(() => {
+    setIsInsufficientSpaceError(undefined);
+  }, [exportStore.geometrySelectionsCollection])
 
   const formattedFileError =
     exportStore.importedFileError !== null
@@ -102,6 +151,11 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   const serviceError =
       exportTriggerError as boolean
       ? { [`${SERVICE_ERROR_IDX}_`]: { message: get(exportTriggerError, 'response.errors[0].message') as string } }
+      : {};
+
+  const insufficientSpaceErrorObj = 
+      !isEmpty(insufficientSpaceError)
+      ? { [`${GENERAL_ERROR_IDX}_`]: { message: insufficientSpaceError as string } }
       : {};
 
   const endExportSession = useCallback(() => {
@@ -126,7 +180,6 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
 
       // Handle Preview logic such as estimated size and free disk space
       exportStore.setHasExportPreviewed(true);
-
     };
 
     return (
@@ -137,6 +190,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
         disabled={
           isEmpty(exportStore.geometrySelectionsCollection.features) ||
           !isEmpty(formState.errors) ||
+          !isEmpty(insufficientSpaceError) ||
           isExportTriggerLoading
         }
         onClick={handleButtonClick}
@@ -148,17 +202,63 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
         )}
       </Button>
     );
-  }, [mode, handleSubmit, formState, exportStore.geometrySelectionsCollection, isExportTriggerLoading]);
+  }, [mode, handleSubmit, formState, insufficientSpaceError, exportStore.geometrySelectionsCollection, isExportTriggerLoading]);
+
+
+  const sizeEstimationsContainer = useMemo(() => {
+    return (
+      <Box className="estimationsContainer">
+        <Typography tag="bdi" className="freeDiskSpaceContainer">
+          <Typography tag="p" className="freeDiskSpaceLabel">
+            {intl.formatMessage({ id: 'export-layer.freeDiskSpace.label' })}
+          </Typography>
+
+          <Typography tag="bdi" className="freeDiskSpaceValue">
+            {isExportFreeDiskSpaceLoading ? (
+              <CircularProgress className="freeDiskSpaceLoading" />
+            ) : typeof freeDiskSpaceRes === 'number' ? (
+              formatBytes(kbToBytes(freeDiskSpaceRes))
+            ) : (
+              NOT_AVAILABLE_TEXT
+            )}
+          </Typography>
+        </Typography>
+        <Typography tag="bdi" className="sizeEstimationContainer">
+          <Typography tag="p" className="sizeEstimationLabel">
+            {intl.formatMessage({ id: 'export-layer.sizeEstimation.label' })}
+          </Typography>
+
+          <Typography tag="bdi" className="sizeEstimationValue">
+            {isExportSizeEstimationLoading ? (
+              <CircularProgress className="sizeEstimationLoading" />
+            ) : typeof exportSizeEstimation === 'number' ? (
+              formatBytes(kbToBytes(exportSizeEstimation))
+            ) : (
+              NOT_AVAILABLE_TEXT
+            )}
+          </Typography>
+        </Typography>
+      </Box>
+    );
+  }, [
+    isExportFreeDiskSpaceLoading,
+    isExportSizeEstimationLoading,
+    freeDiskSpaceRes,
+    exportSizeEstimation,
+  ]);
 
   return (
     <Box className="exportFooter">
       <Box className="buttonsContainer">
         {renderPreviewOrSubmit}
-        <Button id="cancelBtn" raised type="button" onClick={endExportSession}>
+        <Button id="cancelBtn" type="button" onClick={endExportSession}>
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
+        {sizeEstimationsContainer}
       </Box>
-      <ExportFormValidationErrors errors={{...serviceError, ...formattedFileError, ...formState.errors}}/>
+      <ExportFormValidationErrors
+        errors={{ ...insufficientSpaceErrorObj, ...serviceError, ...formattedFileError, ...formState.errors }}
+      />
     </Box>
   );
 });

@@ -110,6 +110,7 @@ export const exportStore = ModelBase
 
       self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: updatedFeatures};
 
+      resetHasExportPreviewed();
     }
 
     function resetFeatureSelections(): void {

@@ -10,6 +10,7 @@ import ExportSelectionFieldsContainer from './export-selection-fields-container.
 import { FormProvider, useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import { TabViews } from '../../views/tab-views';
+
 interface ExportLayerComponentProps {
   style?: { [key: string]: string };
   handleFlyTo: () => void;

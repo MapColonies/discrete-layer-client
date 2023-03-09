@@ -35,6 +35,7 @@
   height: 100%;
   justify-content: space-between;
   gap: 12px;
+  color: var(--mdc-theme-text-primary-on-dark);
 }
 
 .exportFooter {
@@ -43,15 +44,17 @@
   gap: 10px;
   align-items: flex-end;
 }
-#exportBtn, #cancelBtn {
-  color: var(--mdc-theme-text-primary-on-dark);
-  background-color: var(--mdc-theme-gc-tab-active-background);
+
+#exportBtn {
+  width: 140px;
 }
 
 .buttonsContainer {
   display: flex;
   gap: 10px;
-  padding: 20px;
+  padding: 12px;
+  align-items: flex-end;
+  flex: 1;
 }
 
 
@@ -88,6 +91,24 @@
   flex-direction: row-reverse;
   margin-top: 10px;
   padding: 10px;
+}
+
+.selectionLoading {
+  width: 80px;
+  height: 80px; 
+  z-index: 9999;
+}
+
+.selectionLoadingContainer {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
 }
 
 .exportSelectionsContainer .selectionContainer:hover {
@@ -167,7 +188,7 @@
   height: 100%;
   width: 100%;
   z-index: 10;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.3);
 }
 
 .selectionTitleContainer {
@@ -242,4 +263,52 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 
 .exportActionMenuItem:hover {
   color: white;
+}
+
+.estimationsContainer {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  background: var(--mdc-theme-gc-tab-active-background);
+  padding: 10px;
+  border: 1px solid var(--mdc-theme-text-primary-on-dark);
+  border-radius: 2px;
+  height: 80px;
+  width: 200px;
+}
+
+.freeDiskSpaceContainer, .sizeEstimationContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  line-height: 1;
+  gap: 5px;
+  text-align: left;
+  width: 100%;
+  flex: 1;
+}
+
+body[dir="rtl"] .freeDiskSpaceContainer, .sizeEstimationContainer {
+  text-align: right;
+}
+
+.freeDiskSpaceLabel, .sizeEstimationLabel {
+  margin: 0;
+  padding: 0;
+}
+
+.freeDiskSpaceValue, .sizeEstimationValue {
+  height: 1rem;
+  width: 10ch;
+  line-height: 1.4;
+}
+
+.sizeEstimationLoading, .freeDiskSpaceLoading {
+  align-self: center;
+}
+
+.freeDiskSpaceLoading, .sizeEstimationLoading {
+  width: 1rem;
+  height: 1rem;
+  margin-inline: 10px;
 }

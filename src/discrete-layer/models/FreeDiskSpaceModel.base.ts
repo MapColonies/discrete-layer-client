@@ -16,7 +16,7 @@ export const FreeDiskSpaceModelBase = ModelBase
   .named('FreeDiskSpace')
   .props({
     __typename: types.optional(types.literal("FreeDiskSpace"), "FreeDiskSpace"),
-    freeDiskSpaceInMb: types.union(types.undefined, types.null, types.number),
+    freeDiskSpaceInKb: types.union(types.undefined, types.null, types.number),
   })
   .views(self => ({
     get store() {
@@ -25,10 +25,10 @@ export const FreeDiskSpaceModelBase = ModelBase
   }))
 
 export class FreeDiskSpaceModelSelector extends QueryBuilder {
-  get freeDiskSpaceInMb() { return this.__attr(`freeDiskSpaceInMb`) }
+  get freeDiskSpaceInKb() { return this.__attr(`freeDiskSpaceInKb`) }
 }
 export function selectFromFreeDiskSpace() {
   return new FreeDiskSpaceModelSelector()
 }
 
-export const freeDiskSpaceModelPrimitives = selectFromFreeDiskSpace().freeDiskSpaceInMb
+export const freeDiskSpaceModelPrimitives = selectFromFreeDiskSpace().freeDiskSpaceInKb
