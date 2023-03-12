@@ -125,6 +125,7 @@
   margin: 0;
   height: 20px;
   line-height: 1.5rem;
+  font-weight: bold;
 }
 
 .exportLayerForm {
