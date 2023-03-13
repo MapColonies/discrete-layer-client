@@ -26,7 +26,7 @@ export interface ICommonJobManagerGridProps {
   rowData: unknown[];
   dispatchAction: (action: Record<string, unknown> | undefined) => void;
   getJobActions: { [JOB_ENTITY]: IActionGroup[] };
-  priorityChangeCB: (updateParam: Record<string, unknown>) => void;
+  updateJobCB: (updateParam: Record<string, unknown>) => void;
   rowDataChangeCB?: () => void;
   gridOptionsOverride?: Partial<GridComponentOptions>;
   gridStyleOverride?: React.CSSProperties;
@@ -43,7 +43,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
     rowData,
     dispatchAction,
     getJobActions,
-    priorityChangeCB,
+    updateJobCB,
     customColDef,
     gridOptionsOverride = {},
     gridStyleOverride = {},
@@ -87,13 +87,13 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
     () => [
       {
         headerName: '',
-        width: 40,
+        width: 48,
         field: 'productType',
         cellRenderer: 'productTypeRenderer',
         cellRendererParams: {
           style: {
-            height: '40px',
-            width: '40px',
+            height: '48px',
+            width: '48px',
             display: 'flex',
             alignItems: 'center',
           },
@@ -109,6 +109,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
         cellRendererParams: {
           tag: 'p',
         },
+        filter: true,
       },
       {
         headerName: intl.formatMessage({
@@ -147,7 +148,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
               enumsMap ?? undefined
             );
 
-            priorityChangeCB({
+            updateJobCB({
               id: id,
               domain: updateTaskDomain,
               data: {
@@ -164,7 +165,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
         headerName: intl.formatMessage({
           id: 'system-status.job.fields.created.label',
         }),
-        width: 172,
+        width: 140,
         field: 'created',
         cellRenderer: 'dateCellRenderer',
         cellRendererParams: {
@@ -179,12 +180,53 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
         headerName: intl.formatMessage({
           id: 'system-status.job.fields.updated.label',
         }),
-        width: 172,
+        width: 140,
         field: 'updated',
         sortable: true,
         cellRenderer: 'dateCellRenderer',
         cellRendererParams: {
           field: 'updated',
+        },
+        // @ts-ignore
+        comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+          valueA - valueB,
+      },
+      {
+        headerName: intl.formatMessage({
+          id: 'system-status.job.fields.expirationDate.label',
+        }),
+        width: 160,
+        field: 'parameters.cleanupData.cleanupExpirationTime',
+        sortable: true,
+        cellRenderer: 'dateCellRenderer',
+        cellRendererParams: {
+          field: 'parameters.cleanupData.cleanupExpirationTime',
+          comingSoonDaysIndication: 10,
+          shouldShowPredicate: (data: JobModelType): boolean => {
+            return (data.type as string).toLowerCase().includes('export');
+          },
+          onChange: (
+            updatedExpirationDate: Date,
+            jobData: JobModelType
+          ): void => {
+            const { id, productType } = jobData;
+            const updateTaskDomain = getProductDomain(
+              productType as ProductType,
+              enumsMap ?? undefined
+            );
+
+            updateJobCB({
+              id,
+              domain: updateTaskDomain,
+              data: {
+                parameters: {
+                  cleanupData: {
+                    cleanupExpirationTime: updatedExpirationDate
+                  }
+                },
+              },
+            });
+          }
         },
         // @ts-ignore
         comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>

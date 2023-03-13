@@ -492,6 +492,7 @@
   "system-status.job.fields.priority.label": "עדיפות",
   "system-status.job.fields.created.label": "נוצר",
   "system-status.job.fields.updated.label": "עודכן",
+  "system-status.job.fields.expirationDate.label": "פג תוקף",
 
   "system-status.job.status_translation.Pending": "ממתין",
   "system-status.job.status_translation.InProgress": "בתהליך",
