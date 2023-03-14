@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { Tooltip } from '@map-colonies/react-core';
 import { Box, DateTimePicker, SupportedLocales } from '@map-colonies/react-components';
@@ -12,23 +12,34 @@ import PlaceholderCellRenderer from './placeholder.cell-renderer';
 
 import './date.cell-renderer.css';
 import { get } from 'lodash';
-import { usePrevious } from '../../../../common/hooks/previous.hook';
+import { DateGranularityType } from '../../../models';
 
 interface IDateCellRendererParams extends ICellRendererParams {
   field: string;
   shouldShowPredicate?: (data: unknown) => boolean;
   comingSoonDaysIndication?: number;
   onChange?: (updatedExpirationDate: Date, jobData: unknown) => void;
+  datePickerProps?: {
+    disablePast?: boolean;
+    disableFuture?: boolean;
+    minDate?: Date;
+  }
 }
 
 const FUTURE_DATE_DIFF_ANCHOR = 0;
+const SOON_INDICATOR_CSS_CLASS = 'soonIndicator';
+const CHANGEABLE_DATE_CSS_CLASS = 'changeable';
+const DATE_GRANULARITY = DateGranularityType.DATE_AND_TIME;
 
 export const DateCellRenderer: React.FC<IDateCellRendererParams> = (props) => {
-  const {field, shouldShowPredicate, comingSoonDaysIndication, onChange} = props;
+  const {field, shouldShowPredicate, comingSoonDaysIndication, onChange, datePickerProps} = props;
   const currentDate = typeof get(props.data, field) === 'undefined' ? undefined : moment(get(props.data, field)); 
   const [date, setDate] = useState<Moment | undefined>(currentDate);
-  const prevDate = usePrevious(date);
+  const prevDate = useRef<Moment | undefined>(currentDate);
   const isChangeable = typeof onChange !== 'undefined';
+
+  const shouldShowTime = useMemo(() => DATE_GRANULARITY as DateGranularityType === DateGranularityType.DATE_AND_TIME, []);
+  const dateFnsFormat = useMemo(() => shouldShowTime ? 'dd/LL/yyyy HH:mm' : 'dd/LL/yyyy', [shouldShowTime]);
 
   const isComingSoonClassName = (): string => {
     if(typeof date === 'undefined') return '';
@@ -37,7 +48,7 @@ export const DateCellRenderer: React.FC<IDateCellRendererParams> = (props) => {
     const diffFromToday = today.diff(date);
     if(typeof comingSoonDaysIndication === 'undefined' || diffFromToday > FUTURE_DATE_DIFF_ANCHOR) return '';
 
-    return moment(date).diff(today, 'days') <= comingSoonDaysIndication ? 'soonIndicator' :  '';
+    return moment(date).diff(today, 'days') <= comingSoonDaysIndication ? SOON_INDICATOR_CSS_CLASS :  '';
   }
 
   if (
@@ -47,9 +58,7 @@ export const DateCellRenderer: React.FC<IDateCellRendererParams> = (props) => {
     return (
       <Tooltip content={dateFormatter(date, true)}>
         <Box
-          className={`dateCellRendererContainer ${
-            isChangeable ? 'changeable' : ''
-          }`}
+          className={`dateCellRendererContainer ${ isChangeable ? CHANGEABLE_DATE_CSS_CLASS : ''}`}
         >
           <Box className={isComingSoonClassName()}>
             {relativeDateFormatter(date)}
@@ -58,31 +67,29 @@ export const DateCellRenderer: React.FC<IDateCellRendererParams> = (props) => {
           {isChangeable && (
             <DateTimePicker
               className="updateableDateCellRendererPicker"
-              showTime
-              disablePast
-              disableFuture={false}
-              minDate={moment().add(1,'day').toDate()}
+              showTime={shouldShowTime}
               value={date.toDate()}
               allowKeyboardControl={false}
-              format={'dd/LL/yyyy HH:mm'}
+              format={dateFnsFormat}
               helperText={false}
               error={false}
               onClose={(): void => {
                 if (
                   typeof onChange !== 'undefined' &&
-                  !moment(prevDate).isSame(date, 'day')
+                  !moment(prevDate.current).isSame(date, 'day')
                 ) {
                   onChange(date.toDate(), props.data);
                 }
               }}
+              onOpen={(): void => {
+                prevDate.current = date;
+              }}
               onChange={(newDate: string): void => {
                 setDate(moment(newDate))
               }}
-              local={{
-                calendarLocale: CONFIG.I18N
-                  .DEFAULT_LANGUAGE as SupportedLocales,
-              }}
+              local={{ calendarLocale: CONFIG.I18N.DEFAULT_LANGUAGE as SupportedLocales }}
               autoOk
+              {...(datePickerProps ?? {})}
             />
           )}
         </Box>

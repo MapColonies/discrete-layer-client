@@ -15,6 +15,7 @@ import { CopyButton } from '../../job-manager/job-details.copy-button';
 import { JobDetailsHeader } from './job-details.header';
 
 import './job-details.cell-renderer.css';
+import JobDetailsExportJobData from './job.details.export-job-data';
 
 type ValueType = 'string' | 'Status' | 'date';
 interface ITaskField {
@@ -178,6 +179,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
   return (
     <Box className="jobDetailsContainer">
       <JobDetailsHeader job={props.data as JobModelType} />
+      <JobDetailsExportJobData {...props} />
       <Box className="gridContainer">
         {taskFields.map((field) => (
           <Typography
@@ -189,7 +191,6 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
             <FormattedMessage id={field.label} />
           </Typography>
         ))}
-
         <TasksRenderer productType={(props.data as JobModelType).productType as ProductType} jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
       </Box>
     </Box>

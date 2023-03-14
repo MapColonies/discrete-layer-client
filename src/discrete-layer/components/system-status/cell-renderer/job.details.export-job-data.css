@@ -1,0 +1,19 @@
+.exportJobDataContainer {
+    padding: 20px;
+    background: var(--mdc-theme-gc-tab-active-background);
+    border: 1px solid var(--mdc-theme-text-primary-on-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.exportJobDataContainer .exportJobLinkContainer > a {
+    text-decoration: underline;
+    color:  var(--mdc-theme-text-primary-on-dark);
+    font-size: 1.1rem;
+}
+
+.exportJobDataContainer .exportJobLinkContainer > a:hover {
+    filter: brightness(150%);
+}

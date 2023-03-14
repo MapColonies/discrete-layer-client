@@ -1,5 +1,5 @@
 import { get, isEmpty } from "lodash";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
 import { RecordType, TriggerExportTaskModelType, useQuery, useStore } from "../../../models";
 
@@ -14,7 +14,7 @@ const EXTERNAL_FIELDS_IDX = 0;
 
 interface ExportTriggerOpts {
     setFormValues: (values: Record<string, unknown>) => void;
-    data: { triggerExportTask: TriggerExportTaskModelType } | undefined,
+    data: TriggerExportTaskModelType | undefined,
     loading: boolean,
     error: unknown
 }
@@ -59,6 +59,6 @@ export const useExportTrigger = (): ExportTriggerOpts => {
     }, [formValues]);
 
 
-    return { setFormValues, data, loading, error: query?.error as unknown }
+    return { setFormValues, data: data?.triggerExportTask, loading, error: query?.error as unknown }
 
 }

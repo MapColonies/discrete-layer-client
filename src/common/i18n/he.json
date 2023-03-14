@@ -512,6 +512,10 @@
   "system-status.job-details.header.internalId": "מזהה פנימי",
   "system-status.job-details.header.extetnalId": "מזהה חיצוני",
   "system-status.job-details.header.producerName": "שם יצרן",
+  
+  "system-status.export-details.link.label": "לינק לקבצים",
+  "system-status.export-details.description.text": "תיאור משימה: {desc}",
+  "system-status.export-details.no-description.text": "ללא",
 
   "system-status.task.fields.type.label": "מטלה",
   "system-status.task.fields.status.label": "סטטוס",

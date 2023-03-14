@@ -21,6 +21,7 @@ import { JobProductTypeRenderer } from '../../../../common/components/grid/cell-
 import { DateCellRenderer } from '../../system-status/cell-renderer/date.cell-renderer';
 import { TooltippedCellRenderer } from '../../system-status/cell-renderer/tool-tipped.cell-renderer';
 import PlaceholderCellRenderer from '../../system-status/cell-renderer/placeholder.cell-renderer';
+import moment from 'moment';
 
 export interface ICommonJobManagerGridProps {
   rowData: unknown[];
@@ -226,6 +227,11 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
                 },
               },
             });
+          },
+          datePickerProps: {
+            disablePast: true,
+            disableFuture: false,
+            minDate: moment().add(1,'day').toDate(),
           }
         },
         // @ts-ignore

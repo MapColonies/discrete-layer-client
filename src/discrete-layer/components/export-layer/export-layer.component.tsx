@@ -1,6 +1,6 @@
 import { Box } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from '../../models';
 import ExportLayerFooter from './export-layer-footer.component';
 import ExportLayerHeader from './export-layer-header.component';
@@ -10,6 +10,7 @@ import ExportSelectionFieldsContainer from './export-selection-fields-container.
 import { FormProvider, useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import { TabViews } from '../../views/tab-views';
+import ExportLayerJobIdModal from './export-layer-jobIdModal.component';
 
 interface ExportLayerComponentProps {
   style?: { [key: string]: string };
@@ -17,10 +18,9 @@ interface ExportLayerComponentProps {
   handleTabViewChange: (tabView: TabViews) => void;
 }
 
-const EXPORT_FORM_ID = 'exportForm';
-
 export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observer(
   ({ style, handleFlyTo, handleTabViewChange }) => {
+    const [isFinalModalOpen, setIsFinalModalOpen] = useState(false);
     const store = useStore();
     const formMethods = useForm({
       mode: 'onBlur',
@@ -55,12 +55,15 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
             <FormProvider {...formMethods}>
               <form
                 className='exportLayerForm'
-                id={EXPORT_FORM_ID}
+                id={'exportForm'}
               >
                 <ExportSelectionFieldsContainer />
               </form>
-               <ExportLayerFooter handleTabViewChange={handleTabViewChange} />
+               <ExportLayerFooter handleTabViewChange={handleTabViewChange} onExportSuccess={(): void => {setIsFinalModalOpen(true)}} />
             </FormProvider>
+            <ExportLayerJobIdModal isOpen={isFinalModalOpen} onClose={(): void => {
+              setIsFinalModalOpen(false);
+            }}/>
           </Box>
         )}
       </Box>

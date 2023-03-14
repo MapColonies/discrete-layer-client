@@ -15,6 +15,7 @@ import { formatBytes, kbToBytes } from '../../../common/helpers/formatters';
 
 interface ExportLayerFooterProps {
   handleTabViewChange: (tabView: TabViews) => void;
+  onExportSuccess: () => void;
 }
 
 export enum ExportMode {
@@ -90,7 +91,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   )
 }
 
-const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange }) => {
+const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange, onExportSuccess }) => {
   const { formState, handleSubmit } = useFormContext();
   const { exportStore, discreteLayersStore } = useStore();
   const intl = useIntl();
@@ -142,6 +143,12 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   useEffect(() => {
     setIsInsufficientSpaceError(undefined);
   }, [exportStore.geometrySelectionsCollection])
+
+  useEffect(() => {
+    if(typeof exportTriggerRes !== 'undefined' && typeof exportTriggerRes.jobId !== 'undefined') {
+      onExportSuccess();
+    }
+  }, [exportTriggerRes])
 
   const formattedFileError =
     exportStore.importedFileError !== null

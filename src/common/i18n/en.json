@@ -505,6 +505,10 @@
   "system-status.job-details.header.extetnalId": "External Id",
   "system-status.job-details.header.producerName": "Producer Name",
 
+  "system-status.export-details.link.label": "Link to files",
+  "system-status.export-details.description.text": "Job Description: {desc}",
+  "system-status.export-details.no-description.text": "None",
+
   "system-status.job-priority-lowest": "Lowest",
   "system-status.job-priority-low": "Low",
   "system-status.job-priority-normal": "Normal",
