@@ -200,9 +200,9 @@ export const catalogTreeStore = ModelBase.props({
           // are subsets of the catalog layers list
 
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          const { RECORD_ALL, RECORD_RASTER, RECORD_DEM } = RecordType;
+          const { RECORD_ALL, RECORD_RASTER } = RecordType;
           try {
-            const withCapabilities = [RECORD_RASTER, RECORD_DEM];
+            const withCapabilities = [RECORD_RASTER];
             if (
               [RECORD_ALL, ...withCapabilities].includes(
                 store.discreteLayersStore.searchParams.recordType as RecordType
