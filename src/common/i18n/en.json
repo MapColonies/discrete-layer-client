@@ -84,6 +84,7 @@
   "action.close.tooltip": "Close",
   "action.copy-url.tooltip": "Copy URL",
   "action.copy.tooltip": "Copy Text",
+  "action.copied.tooltip": "Text Copied",
   "action.layer.move-to-top.tooltip": "Bring to top",
   "action.layer.move-up.tooltip": "Move up",
   "action.layer.move-down.tooltip": "Move down",
@@ -647,6 +648,9 @@
 
   "wfs-info.no-data.message": "No data found for type {feature}",
 
+  "export-layer.exportSuccessModal.title": "Export request triggered",
+  "export-layer.exportSuccessModal.approve": "Copy and exit",
+  "export-layer.exportSuccessModal.jobId.title": "Job ID",
   "export-layer.export.button": "Export Layer",
   "export-layer.preview.button": "Evaluate Export",
   "export-layer.selection-index.text":"Selection",

@@ -1,11 +1,21 @@
 .exportJobDataContainer {
-    padding: 20px;
+    padding: 10px;
     background: var(--mdc-theme-gc-tab-active-background);
     border: 1px solid var(--mdc-theme-text-primary-on-dark);
     display: flex;
+    gap: 10px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.exportJobDataContainer .jobDescription {
+    margin: 0;
+}
+
+.exportJobDataContainer .exportJobLinkContainer {
+    display: flex;
+    gap: 10px;
 }
 
 .exportJobDataContainer .exportJobLinkContainer > a {

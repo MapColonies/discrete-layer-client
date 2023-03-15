@@ -3,7 +3,7 @@ import { Box } from "@map-colonies/react-components";
 import { Button, CircularProgress, Typography } from "@map-colonies/react-core";
 import { FormattedMessage, useIntl } from "react-intl";
 import { FieldErrors, useFormContext } from 'react-hook-form';
-import { cloneDeep, get, isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { useStore } from '../../models';
 import { observer } from 'mobx-react-lite';
 import { TabViews } from '../../views/tab-views';
@@ -12,10 +12,11 @@ import { GENERAL_FIELDS_IDX } from './constants';
 import { useGetFreeDiskSpace } from './hooks/useGetFreeDiskSpace';
 import { useEstimatedSize } from './hooks/useEstimatedSize';
 import { formatBytes, kbToBytes } from '../../../common/helpers/formatters';
+import { ExportActions } from './hooks/useDomainExportActionsConfig';
 
 interface ExportLayerFooterProps {
   handleTabViewChange: (tabView: TabViews) => void;
-  onExportSuccess: () => void;
+  onExportSuccess: (jobId: string) => void;
 }
 
 export enum ExportMode {
@@ -93,7 +94,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
 
 const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange, onExportSuccess }) => {
   const { formState, handleSubmit } = useFormContext();
-  const { exportStore, discreteLayersStore } = useStore();
+  const { exportStore, discreteLayersStore, actionDispatcherStore } = useStore();
   const intl = useIntl();
   const [insufficientSpaceError, setIsInsufficientSpaceError] = useState<string | undefined>();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
@@ -146,7 +147,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
 
   useEffect(() => {
     if(typeof exportTriggerRes !== 'undefined' && typeof exportTriggerRes.jobId !== 'undefined') {
-      onExportSuccess();
+      onExportSuccess(exportTriggerRes.jobId);
     }
   }, [exportTriggerRes])
 
@@ -166,9 +167,10 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
       : {};
 
   const endExportSession = useCallback(() => {
-    discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
-    exportStore.reset();
-    handleTabViewChange(TabViews.CATALOG);
+    actionDispatcherStore.dispatchAction({
+      action: ExportActions.END_EXPORT_SESSION,
+      data: {}
+    });
   }, []);
 
   const renderPreviewOrSubmit = useMemo((): JSX.Element => {
@@ -176,8 +178,6 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
       if (exportStore.hasExportPreviewed) {
         const formSubmitHandler = handleSubmit((data) => {
           setFormValuesToQuery(data);
-          // Submit logic
-          // endExportSession();
         });
 
         void formSubmitHandler();

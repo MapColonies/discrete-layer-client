@@ -19,6 +19,7 @@ export enum ExportActions {
     TOGGLE_FULL_LAYER_EXPORT = 'toggle-full-layer-export',
     OPEN_HOT_AREAS_MENU = 'export-open-hot-areas-menu',
     EXPORT_HOT_AREA_SELECTION = 'export-hot_area_selection',
+    END_EXPORT_SESSION = 'end_export_session',
 };
 
 export type ExportAction = (IAction & {

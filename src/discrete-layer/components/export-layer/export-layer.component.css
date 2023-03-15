@@ -30,6 +30,7 @@
 }
 
 .exportTabContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -312,4 +313,67 @@ body[dir="rtl"] .freeDiskSpaceContainer, .sizeEstimationContainer {
   width: 1rem;
   height: 1rem;
   margin-inline: 10px;
+}
+
+.jobIdModal {
+  position: absolute;
+}
+
+.jobIdModal .mdc-dialog__surface {
+  width: 400px;
+}
+
+.jobIdModal .mdc-dialog__scrim {
+  position: absolute;
+}
+
+.jobIdModal .closeIcon {
+ font-size: 1rem;
+}
+
+.jobIdModalBody {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.jobIdModal .jobIdModalTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jobIdModalBody .buttonsContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  justify-self: flex-end;
+}
+
+.jobIdModalBody .jobIdTitle {
+  font-size: 1.2rem;
+  margin: 5px 0;
+}
+
+.jobIdModalBody .jobIdText {
+  font-size: 1.5rem;
+  margin: 5px 0;
+  font-weight: bold;
+  background-color: var(--mdc-theme-gc-tab-active-background);
+  opacity: 0.8;
+  cursor: copy;
+  user-select: none;
+  padding: 20px;
+}
+
+.jobIdModalBody .jobIdText:hover {
+  opacity: 1;
+}
+
+.jobIdModalBody .mainTextContainer {
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+  flex: 1;
 }

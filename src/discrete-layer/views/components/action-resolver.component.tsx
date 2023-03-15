@@ -26,16 +26,18 @@ import { DrawType } from '@map-colonies/react-components';
 import { Feature } from 'geojson';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
+import { TabViews } from '../tab-views';
 
 const FIRST = 0;
 
 interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
   handleFlyTo: () => void;
+  handleTabViewChange: (tabView: TabViews) => void;
 }
 
 export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((props) => {
-  const { handleOpenEntityDialog, handleFlyTo } = props;
+  const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange } = props;
 
   const store = useStore();
 
@@ -291,6 +293,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
         case ExportActions.EXPORT_HOT_AREA_SELECTION:
           store.exportStore.setTempRawSelection(data as unknown as Feature);
+          break;
+        case ExportActions.END_EXPORT_SESSION:
+          handleTabViewChange(TabViews.CATALOG);
+          store.discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
+          store.exportStore.reset();
           break;
         // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {

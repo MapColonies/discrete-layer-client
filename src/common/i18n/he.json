@@ -85,6 +85,7 @@
   "action.close.tooltip": "סגירה",
   "action.copy-url.tooltip": "העתקת קישור",
   "action.copy.tooltip": "העתקת טקסט",
+  "action.copied.tooltip": "טקסט הועתק",
   "action.layer.move-to-top.tooltip": "העלאה מעל כולם",
   "action.layer.move-up.tooltip": "הזזה למעלה",
   "action.layer.move-down.tooltip": "הזזה למטה",
@@ -649,6 +650,9 @@
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
 
+  "export-layer.exportSuccessModal.title": "בקשת הייצוא נוצרה בהצלחה",
+  "export-layer.exportSuccessModal.approve": "העתקה וסיום",
+  "export-layer.exportSuccessModal.jobId.title": "מזהה משימה",
   "export-layer.export.button": "ייצא שכבה",
   "export-layer.preview.button": "שערך ייצוא",
   "export-layer.selection-index.text":"בחירה",

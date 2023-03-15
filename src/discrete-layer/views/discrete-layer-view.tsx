@@ -684,6 +684,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       <ActionResolver
         handleOpenEntityDialog = {setEditEntityDialogOpen}
         handleFlyTo = {onFlyTo}
+        handleTabViewChange = {handleTabViewChange}
       />
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
