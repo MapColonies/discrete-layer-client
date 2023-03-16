@@ -11,7 +11,6 @@ import center from '@turf/center';
 import { points } from '@turf/helpers';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import UTMGridDataSource from '../../../common/components/utm-grid-data-source/utm-grid-data-source.component';
 import { useStore } from '../../models';
 import ExportLayerHighLightSelection from './export-layer.highlight-selection';
 import useGetEntityLabelForDomain from './hooks/useGetEntityLabelForDomain';
@@ -27,7 +26,6 @@ const ExportPolygonsRenderer: React.FC = observer(() => {
   
   return (
     <>
-      {/* <UTMGridDataSource />  //TODO: Decide if we want it */}
       <CesiumGeojsonLayer
         clampToGround={true}
         data={exportGeometrySelections}

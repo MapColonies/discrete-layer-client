@@ -61,9 +61,6 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
     // Mitigate errors on init
     formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE });
 
-    // Trigger form validations
-    // void formMethods.trigger();
-
     return (): void => {
       formMethods.unregister(fieldId);
     }

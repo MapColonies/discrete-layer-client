@@ -218,7 +218,7 @@ const useDomainExportActionsConfig = (): ExportAction[] => {
             }
             case RecordType.RECORD_3D: {
                 // Only full export is allowed, all other actions are disabled. (including clear selections and full export.)
-                // Full export toggle should be ticked.
+                // Full export toggle should be ticked automatically.
 
                 const multiSelectionAllowed = false;
                 setIsMultiSelectionAllowed(multiSelectionAllowed);

@@ -45,9 +45,8 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
     const generalExportFields = Object.entries(
       externalFields as Record<AvailableProperties, unknown>
     ).map(([key]) => {
-      const formFieldValue = Object.entries(store.exportStore.formData).reduce<
-        string
-      >((storedValue, [fieldName, value]): string => {
+      const formFieldValue = Object.entries(store.exportStore.formData)
+      .reduce<string>((storedValue, [fieldName, value]): string => {
         if (fieldName.includes(key)) {
           return value as string;
         }

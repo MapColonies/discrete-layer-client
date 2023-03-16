@@ -94,7 +94,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
 
 const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTabViewChange, onExportSuccess }) => {
   const { formState, handleSubmit } = useFormContext();
-  const { exportStore, discreteLayersStore, actionDispatcherStore } = useStore();
+  const { exportStore, actionDispatcherStore } = useStore();
   const intl = useIntl();
   const [insufficientSpaceError, setIsInsufficientSpaceError] = useState<string | undefined>();
   const mode = exportStore.hasExportPreviewed ? ExportMode.EXPORT : ExportMode.PREVIEW;
@@ -189,17 +189,18 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
       exportStore.setHasExportPreviewed(true);
     };
 
+    const isExportBtnDisabled =
+      isEmpty(exportStore.geometrySelectionsCollection.features) ||
+      !isEmpty(formState.errors) ||
+      !isEmpty(insufficientSpaceError) ||
+      isExportTriggerLoading;
+
     return (
       <Button
         id="exportBtn"
         raised
         type="button"
-        disabled={
-          isEmpty(exportStore.geometrySelectionsCollection.features) ||
-          !isEmpty(formState.errors) ||
-          !isEmpty(insufficientSpaceError) ||
-          isExportTriggerLoading
-        }
+        disabled={isExportBtnDisabled}
         onClick={handleButtonClick}
       >
         {isExportTriggerLoading ? (

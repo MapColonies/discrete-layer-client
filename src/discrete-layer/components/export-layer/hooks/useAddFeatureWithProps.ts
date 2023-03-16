@@ -51,29 +51,31 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
   const tempRawSelection = store.exportStore.tempRawSelection;
   const layerToExport = store.exportStore.layerToExport;
 
-  const getStaticMinMaxForField = useCallback((
-    layerRecordType: LayerRecordTypes,
-    fieldName: LayerMetadataMixedUnionKeys
-  ): { min?: number; max?: number } => {
-    const fieldConfig = store.discreteLayersStore.getFieldConfig(layerRecordType, fieldName);
-    const fieldValidation = (fieldConfig?.validation ??[]) as ValidationConfigModelType[];
-    const minMaxValues = fieldValidation.reduce<{ min?: number; max?: number }>(
-      (acc, validation): { min?: number; max?: number } => {
-        if (!isEmpty(validation.min)) {
-          return { ...acc, min: Number(validation.min as string) };
-        }
+  // Get min and max values from field config validations
+  
+  // const getStaticMinMaxForField = useCallback((
+  //   layerRecordType: LayerRecordTypes,
+  //   fieldName: LayerMetadataMixedUnionKeys
+  // ): { min?: number; max?: number } => {
+  //   const fieldConfig = store.discreteLayersStore.getFieldConfig(layerRecordType, fieldName);
+  //   const fieldValidation = (fieldConfig?.validation ??[]) as ValidationConfigModelType[];
+  //   const minMaxValues = fieldValidation.reduce<{ min?: number; max?: number }>(
+  //     (acc, validation): { min?: number; max?: number } => {
+  //       if (!isEmpty(validation.min)) {
+  //         return { ...acc, min: Number(validation.min as string) };
+  //       }
 
-        if (!isEmpty(validation.max)) {
-          return { ...acc, max: Number(validation.max as string) };
-        }
+  //       if (!isEmpty(validation.max)) {
+  //         return { ...acc, max: Number(validation.max as string) };
+  //       }
 
-        return acc;
-      },
-      {}
-    );
+  //       return acc;
+  //     },
+  //     {}
+  //   );
 
-    return minMaxValues;
-  }, [store.discreteLayersStore.getFieldConfig]);
+  //   return minMaxValues;
+  // }, [store.discreteLayersStore.getFieldConfig]);
 
   const PROPS_PER_DOMAIN = useMemo(() => new Map<RecordType, Partial<ExportEntityProp>>([
     [

@@ -59,7 +59,6 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
 
   useEffect(() => {
     // Estimate size.
-    console.log('render! ', selectionIdx)
     setSelection(newFeature);
     
   }, [newFeature])
