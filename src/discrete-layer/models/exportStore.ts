@@ -43,6 +43,7 @@ export const exportStore = ModelBase
     formData: types.frozen<Record<string, unknown>>({}),
     isMultiSelectionAllowed: types.frozen<boolean>(false),
     importedFileError: types.frozen<null | string>(null),
+    finalJobId: types.maybe(types.frozen<string>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -245,6 +246,14 @@ export const exportStore = ModelBase
       self.isMultiSelectionAllowed = isMultiSelectionAllowed; 
     }
 
+    function setFinalJobId(jobId: string): void {
+      self.finalJobId = jobId;
+    }
+
+    function resetFinalJobId(): void {
+      self.finalJobId = undefined;
+    }
+
     function reset(): void {
       self.layerToExport = undefined;
       resetFeatureSelections();
@@ -254,6 +263,7 @@ export const exportStore = ModelBase
       resetHasExportPreviewed();
       setImportedFileError(null);
       resetFormData();
+      resetFinalJobId();
 
       store.discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
     }
@@ -276,6 +286,7 @@ export const exportStore = ModelBase
         setHasExportPreviewed,
         setFormData,
         setIsMultiSelectionAllowed,
+        setFinalJobId,
         handleUploadedFile,
         resetFormData,
         resetHasExportPreviewed,

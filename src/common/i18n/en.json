@@ -648,9 +648,9 @@
 
   "wfs-info.no-data.message": "No data found for type {feature}",
 
-  "export-layer.exportSuccessModal.title": "Export request triggered",
-  "export-layer.exportSuccessModal.approve": "Copy and exit",
-  "export-layer.exportSuccessModal.jobId.title": "Job ID",
+  "export-layer.exportSuccessContainer.title": "Export request triggered",
+  "export-layer.exportSuccessContainer.approve": "Copy and exit",
+  "export-layer.exportSuccessContainer.jobId.title": "Job ID",
   "export-layer.export.button": "Export Layer",
   "export-layer.preview.button": "Evaluate Export",
   "export-layer.selection-index.text":"Selection",

@@ -650,9 +650,9 @@
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
 
-  "export-layer.exportSuccessModal.title": "בקשת הייצוא נוצרה בהצלחה",
-  "export-layer.exportSuccessModal.approve": "העתקה וסיום",
-  "export-layer.exportSuccessModal.jobId.title": "מזהה משימה",
+  "export-layer.exportSuccessContainer.title": "בקשת הייצוא נוצרה בהצלחה",
+  "export-layer.exportSuccessContainer.approve": "העתקה וסיום",
+  "export-layer.exportSuccessContainer.jobId.title": "מזהה משימה",
   "export-layer.export.button": "ייצא שכבה",
   "export-layer.preview.button": "שערך ייצוא",
   "export-layer.selection-index.text":"בחירה",

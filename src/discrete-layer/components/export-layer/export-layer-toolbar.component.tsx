@@ -14,7 +14,9 @@ import { BBoxDialog } from '../map-container/bbox.dialog';
 import useDomainExportActionsConfig, { ExportAction } from './hooks/useDomainExportActionsConfig';
 
 
-interface ExportLayerToolbarProps {}
+interface ExportLayerToolbarProps {
+  disableAll?: boolean;
+}
 interface ActionPresentorBaseProps {
   action: ExportAction;
   listKey: string;
@@ -165,7 +167,7 @@ const ActionPresentor: React.FC<ActionPresentorBaseProps> = (props) => {
   return getActionPresentorByProps;
 };
 
-const ExportLayerToolbar: React.FC<ExportLayerToolbarProps> = observer(() => {
+const ExportLayerToolbar: React.FC<ExportLayerToolbarProps> = observer(({ disableAll }) => {
   const store = useStore();
   const exportStore = store.exportStore;
   const exportActions = useDomainExportActionsConfig();
@@ -180,7 +182,15 @@ const ExportLayerToolbar: React.FC<ExportLayerToolbarProps> = observer(() => {
   return (
     <Box className="exportToolbarContainer">
       {exportActions.map((action, i) => {
-        return <ActionPresentor dispatchAction={dispatchAction} action={action} listKey={i.toString()} />;
+        const actionToDisplay =
+          action === 'SEPARATOR'
+            ? action
+            : {
+                ...action,
+                disabled: disableAll ?? action.disabled,
+              };
+
+        return <ActionPresentor dispatchAction={dispatchAction} action={actionToDisplay} listKey={i.toString()} />;
       })}
 
       <BBoxDialog

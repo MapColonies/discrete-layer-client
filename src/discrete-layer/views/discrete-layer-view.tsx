@@ -793,7 +793,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                   handleFlyTo={onFlyTo}
                   style={{
                     height: 'calc(100% - 50px)',
-                    width: 'calc(100% - 8px)'
+                    width: 'calc(100% - 8px)',
+                    display: 'flex'
                   }}
                 />
               </Box>
