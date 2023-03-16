@@ -21,7 +21,7 @@ interface ExportTriggerOpts {
 
 export const useExportTrigger = (): ExportTriggerOpts => {
     const store = useStore();
-    const { exportStore: { geometrySelectionsCollection, layerToExport } } = store;
+    const { exportStore: { geometrySelectionsCollection, layerToExport, isFullLayerExportEnabled } } = store;
     const [formValues, setFormValues] = useState<Record<string, unknown>>({});
     const { enumsMap } = useContext(EnumsMapContext);
     const enums = enumsMap as IEnumsMapType;
@@ -50,7 +50,8 @@ export const useExportTrigger = (): ExportTriggerOpts => {
                 catalogRecordID: layerToExport?.id,
                 type: layerRecordType,
                 parameters: {
-                    roi: geometrySelectionsCollection
+                    roi: geometrySelectionsCollection,
+                    isFullLayerExport: isFullLayerExportEnabled
                 }
             } as ExportTriggerParams);
             

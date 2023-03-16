@@ -14,7 +14,8 @@ export type AvailableProperties =
   | 'projection'
   | 'resampleMethod'
   | 'dataType'
-  | 'resolution';
+  | 'resolution'
+  | 'maxResolutionDeg';
 
 export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
@@ -86,7 +87,7 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
           rows: 4,
           maxLength: 50
         },
-        resolution: {
+        maxResolutionDeg: {
           defaultsFromEntityField: 'maxResolutionDeg',
           placeholderValue: (): string => {
             const minResolutionDeg = get(layerToExport, 'maxResolutionDeg') as number;

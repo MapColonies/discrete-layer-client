@@ -661,6 +661,7 @@
   "export-layer.description.field": "Description",
   "export-layer.zoomLevel.field": "Zoom Level",
   "export-layer.resolution.field": "Requested Resolution",
+  "export-layer.maxResolutionDeg.field": "Max Resolution",
   "export-layer.minimum.placeholder": "Min Value: {min}",
   "export-layer.resolution.helper-text": "(Meters)",
   "export-layer.zoomLevel.helper-text": "(ZoomLevel: {zoomLevel})",

@@ -94,7 +94,7 @@ const EXPORT_ACTIONS: ExportAction[] = [
       action: ExportActions.IMPORT_FROM_SHAPE_FILE,
       frequent: true,
       icon: '',
-      class: 'glow-missing-icon mc-icon-Publish',
+      class: 'mc-icon-Upload',
       titleTranslationId: 'action.export.import-shape.tooltip',
       disabled: false,
       views: [TabViews.EXPORT_LAYER]
@@ -103,7 +103,7 @@ const EXPORT_ACTIONS: ExportAction[] = [
       action: ExportActions.OPEN_HOT_AREAS_MENU,
       frequent: true,
       icon: '',
-      class: 'glow-missing-icon mc-icon-More',
+      class: 'mc-icon-Predefined-AOIs',
       titleTranslationId: 'action.export.select-hot-area.tooltip',
       menuActionOptions: {
         items: new Map<string, unknown>(),

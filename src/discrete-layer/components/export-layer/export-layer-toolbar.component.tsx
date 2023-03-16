@@ -187,10 +187,10 @@ const ExportLayerToolbar: React.FC<ExportLayerToolbarProps> = observer(({ disabl
             ? action
             : {
                 ...action,
-                disabled: disableAll ?? action.disabled,
+                disabled: disableAll as boolean || action.disabled,
               };
 
-        return <ActionPresentor dispatchAction={dispatchAction} action={actionToDisplay} listKey={i.toString()} />;
+        return <ActionPresentor key={`action_${i}`} dispatchAction={dispatchAction} action={actionToDisplay} listKey={i.toString()} />;
       })}
 
       <BBoxDialog

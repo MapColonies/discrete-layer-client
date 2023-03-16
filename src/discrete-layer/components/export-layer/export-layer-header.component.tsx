@@ -18,7 +18,9 @@ const ExportLayerHeader: React.FC<ExportLayerHeaderProps> = observer(() => {
 
   return (
     <Box id="exportLayerHeader">
-      <ExportLayerToolbar disableAll={!isEmpty(store.exportStore.finalJobId)}/>
+      <ExportLayerToolbar 
+        disableAll={!isEmpty(store.exportStore.finalJobId)}
+      />
       <Box className='exportLayerDetails'>
         <Box id="exportLayerHeaderContent">
           <LayersDetailsComponent
