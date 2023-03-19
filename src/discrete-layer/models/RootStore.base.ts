@@ -82,10 +82,8 @@ import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
 import { RecordStatus } from "./RecordStatusEnum"
 import { Transparency } from "./TransparencyEnum"
-import { VerticalDatum } from "./VerticalDatumEnum"
-import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
-import { DataType } from "./DataTypeEnum"
+import { DemDataType } from "./DemDataTypeEnum"
 import { NoDataValue } from "./NoDataValueEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocompletionType } from "./AutocompletionTypeEnum"
@@ -141,6 +139,13 @@ export type JobsSearchParams = {
   type?: string
   fromDate?: any
   tillDate?: any
+}
+export type GetLookupTablesParams = {
+  lookupFields?: LookupTableFieldInput[]
+}
+export type LookupTableFieldInput = {
+  lookupTable?: string
+  lookupExcludeFields?: string
 }
 export type ExplorerGetByPathSuffix = {
   pathSuffix: string
@@ -287,16 +292,17 @@ export type LayerDemRecordInput = {
   relativeAccuracyLEP90?: number
   resolutionDegree?: number
   resolutionMeter: number
+  imagingSortieAccuracyCEP90?: number
   layerPolygonParts?: any
   productBoundingBox?: string
   heightRangeFrom?: number
   heightRangeTo?: number
-  verticalDatum: VerticalDatum
-  units?: Units
   geographicArea?: string
   undulationModel: UndulationModel
-  dataType: DataType
+  dataType: DemDataType
   noDataValue: NoDataValue
+  productStatus?: RecordStatus
+  hasTerrain?: boolean
   id: string
   insertDate?: any
   wktGeometry?: string
@@ -364,7 +370,7 @@ mutateJobAbort="mutateJobAbort"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['AvailableActions', () => AvailableActionsModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -415,8 +421,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryGetLookupTablesData(variables?: {  }, resultSelector: string | ((qb: LookupTableDataModelSelector) => LookupTableDataModelSelector) = lookupTableDataModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getLookupTablesData: LookupTableDataModelType}>(`query getLookupTablesData { getLookupTablesData {
+    queryGetLookupTablesData(variables: { data: GetLookupTablesParams }, resultSelector: string | ((qb: LookupTableDataModelSelector) => LookupTableDataModelSelector) = lookupTableDataModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getLookupTablesData: LookupTableDataModelType}>(`query getLookupTablesData($data: GetLookupTablesParams!) { getLookupTablesData(data: $data) {
         ${typeof resultSelector === "function" ? resultSelector(new LookupTableDataModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
