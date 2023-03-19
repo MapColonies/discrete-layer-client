@@ -132,7 +132,6 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
       tileMatrixLabels = tileMatrixSet.tileMatrixLabels;
     }
     url = (capability.url as ResourceUrlModelType[]).find((u: ResourceUrlModelType) => u.format === format)?.template ?? url;
-    url = url.replace('http:', 'https:'); // (!IMPORTANT) relevant ONLY to DEM deployment and probably might be removed
   }
   return {
     url: getTokenResource(url, layer.productVersion as string),
