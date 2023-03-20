@@ -258,11 +258,11 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   return (
     <Box className="exportFooter">
       <Box className="buttonsContainer">
+        {sizeEstimationsContainer}
         {renderPreviewOrSubmit}
         <Button id="cancelBtn" type="button" onClick={endExportSession}>
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
-        {sizeEstimationsContainer}
       </Box>
       <ExportFormValidationErrors
         errors={{ ...insufficientSpaceErrorObj, ...serviceError, ...formattedFileError, ...formState.errors }}

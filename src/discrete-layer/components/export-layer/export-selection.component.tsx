@@ -87,6 +87,7 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
         .map(([key, val]) => {
           return (
             <SelectionFieldPerDomainRenderer
+              isLoading={loading}
               selectionIdx={selectionIdx + 1}
               selectionId={selectionId as string}
               fieldInfo={get(propsForDomain, key) as ExportFieldOptions}

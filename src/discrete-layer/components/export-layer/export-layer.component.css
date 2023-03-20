@@ -166,6 +166,15 @@
   min-width: 4rem;
 }
 
+.exportSelectionField .exportOptionsSelect {
+  width: 12rem;
+}
+
+.exportSelectionField .exportOptionsSelect .mdc-ripple-upgraded.mdc-select__selected-text{
+  direction: ltr;
+  overflow: hidden;
+}
+
 .exportSelectionsContainer .selectionContainer .removeSelectionBtn {
   height: 20px;
 }
@@ -230,6 +239,7 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 .exportOptionsSelect .mdc-menu.mdc-select__menu.mdc-menu-surface.mdc-menu-surface--open {
   max-height: 120px !important;
   overflow: overlay;
+  width: 15rem;
 }
 
 .exportOptionsSelect .mdc-select__anchor {

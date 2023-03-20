@@ -1,5 +1,5 @@
 import { Box } from '@map-colonies/react-components';
-import { MenuItem, Select } from '@map-colonies/react-core';
+import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -14,6 +14,14 @@ interface ExportOptionsFieldProps extends ExportFieldProps {
 
 const NONE = 0;
 
+const getHelperTextValue = (helperTextValue?: string | ((value: unknown) => string), value?: string): string | undefined => {
+  if(typeof helperTextValue !== 'undefined' && typeof helperTextValue !== 'string' && !isEmpty(value?.toString())) {
+    return helperTextValue(value);
+  }
+
+  return !isEmpty(helperTextValue) && typeof helperTextValue === 'string' ? helperTextValue : undefined;
+}
+
 const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
   options,
   defaultValue,
@@ -27,6 +35,8 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
   const store = useStore();
   const formMethods = useFormContext();
   const [innerValue, setInnerValue] = useState(isEmpty(fieldValue) ? defaultValue ?? '' : fieldValue);
+  const [helperText, setHelperText] = useState<string | undefined>(getHelperTextValue(helperTextValue, fieldValue));
+
   const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
 
   useEffect(() => {
@@ -34,6 +44,9 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
     
     // Mitigate errors on init
     formMethods.setValue(fieldId, innerValue, { shouldValidate: innerValue.length > NONE });
+
+    // Revalidate fields
+    void formMethods.trigger();
 
     return (): void => {
       formMethods.unregister(fieldId);
@@ -49,7 +62,7 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
         id={fieldId}
         name={fieldId}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-          const newFieldVal = e.currentTarget.value;
+          const newFieldVal = rhfValidation?.valueAsNumber as boolean ? Number(e.currentTarget.value) : e.currentTarget.value;
 
           store.exportStore.setSelectionProperty(
             selectionId,
@@ -57,8 +70,10 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
             newFieldVal
           );
 
+          setHelperText(getHelperTextValue(helperTextValue, `${newFieldVal}`));
+
           formMethods.setValue(fieldId, newFieldVal, { shouldValidate: true });
-          setInnerValue(newFieldVal);
+          setInnerValue(e.currentTarget.value);
         }}
         onBlur={(): void => {
           void formMethods.trigger(fieldId);
@@ -76,6 +91,11 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
           );
         })}
       </Select>
+      {typeof helperText !== 'undefined' && (
+        <Typography tag="span" className="exportFieldHelper" htmlFor={fieldId}>
+          {!isEmpty(helperText) && helperText}
+        </Typography>
+      )}
     </Box>
   );
 };

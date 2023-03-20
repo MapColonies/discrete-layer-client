@@ -46,6 +46,9 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
     // Mitigate errors on init
     formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE });
 
+    // Revalidate fields
+    void formMethods.trigger();
+    
     return (): void => {
       formMethods.unregister(fieldId);
     }

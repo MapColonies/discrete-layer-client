@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { TextField, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { useStore } from '../../../../models';
@@ -8,6 +8,7 @@ import { isEmpty } from 'lodash';
 import useDebounceField from '../../../../../common/hooks/debounce-field.hook';
 import { EntityFormikHandlers } from '../../../layer-details/layer-datails-form';
 import ExportFieldLabel from '../export-field-label.component';
+import { DEBOUNCE_PERIOD_EXPORT_FIELDS } from '../../constants';
 
 const NONE = 0;
 
@@ -26,6 +27,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   fieldValue,
   fieldInfo: {placeholderValue, helperTextValue, rhfValidation, rows, maxLength},
   type,
+  isLoading,
 }) => {
   const store = useStore();
   const formMethods = useFormContext();
@@ -53,7 +55,11 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
     
   }, [store.exportStore.setSelectionProperty, selectionId, fieldName])
 
-  const [innerValue, handleFieldChange] = useDebounceField({ handleChange: handleOnChange } as EntityFormikHandlers, fieldValue);
+  const [innerValue, handleFieldChange] = useDebounceField(
+    { handleChange: handleOnChange } as EntityFormikHandlers,
+    fieldValue,
+    DEBOUNCE_PERIOD_EXPORT_FIELDS
+  );
 
   useEffect(() => {
     formMethods.register(fieldId, {...(rhfValidation ?? {})});
@@ -61,6 +67,9 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
     // Mitigate errors on init
     formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE });
 
+    // Revalidate fields
+    void formMethods.trigger();
+    
     return (): void => {
       formMethods.unregister(fieldId);
     }
@@ -69,7 +78,11 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
 
   return (
     <Box className="exportSelectionField" key={selectionId}>
-      <ExportFieldLabel required={!isEmpty(rhfValidation?.required)} fieldId={fieldId} fieldName={fieldName} />
+      <ExportFieldLabel
+        required={!isEmpty(rhfValidation?.required)}
+        fieldId={fieldId}
+        fieldName={fieldName}
+      />
       <TextField
         dir="auto"
         className="exportGeneralField"
@@ -80,15 +93,21 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
         type={type}
         value={innerValue}
         onBlur={(): void => {
-          formMethods.setValue(fieldId, innerValue, {shouldValidate: true});
+          formMethods.setValue(fieldId, innerValue, { shouldValidate: true });
         }}
         placeholder={placeholderVal}
-        onChange={handleFieldChange}
+        onChange={(e: ChangeEvent<HTMLInputElement>): void => {
+          if(!(isLoading as boolean)) {
+            handleFieldChange(e);
+          }
+        }}
         invalid={!isEmpty(formMethods.errors[fieldId])}
       />
-      {<Typography tag="span" className="exportFieldHelper" htmlFor={fieldId}>
-        {!isEmpty(helperText) && helperText}
-      </Typography>}
+      {typeof helperText !== 'undefined' && (
+        <Typography tag="span" className="exportFieldHelper" htmlFor={fieldId}>
+          {!isEmpty(helperText) && helperText}
+        </Typography>
+      )}
     </Box>
   );
 };

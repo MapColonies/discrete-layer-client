@@ -56,7 +56,7 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
       });
     }, [])
 
-    const tabContentByMode: JSX.Element = useMemo(() => {
+    const tabContentByMode = (): JSX.Element => {
       if (!isEmpty(finalJobId)) {
         return <ExportLayerFinalStage onClose={endExportSession} jobId={finalJobId as string}/>;
       }
@@ -74,14 +74,14 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
           />
         </FormProvider>
       );
-    }, [finalJobId]);
+    };
 
     return (
       <Box style={style}>
         {typeof layerToExport !== 'undefined' && (
           <Box className="exportTabContainer">
             <ExportLayerHeader />
-            {tabContentByMode}
+            {tabContentByMode()}
           </Box>
         )}
       </Box>
