@@ -16,7 +16,7 @@ export const EstimatedSizeModelBase = ModelBase
   .named('EstimatedSize')
   .props({
     __typename: types.optional(types.literal("EstimatedSize"), "EstimatedSize"),
-    estimatedSizeInKb: types.union(types.undefined, types.null, types.number),
+    estimatedSizeBytes: types.union(types.undefined, types.null, types.number),
   })
   .views(self => ({
     get store() {
@@ -25,10 +25,10 @@ export const EstimatedSizeModelBase = ModelBase
   }))
 
 export class EstimatedSizeModelSelector extends QueryBuilder {
-  get estimatedSizeInKb() { return this.__attr(`estimatedSizeInKb`) }
+  get estimatedSizeBytes() { return this.__attr(`estimatedSizeBytes`) }
 }
 export function selectFromEstimatedSize() {
   return new EstimatedSizeModelSelector()
 }
 
-export const estimatedSizeModelPrimitives = selectFromEstimatedSize().estimatedSizeInKb
+export const estimatedSizeModelPrimitives = selectFromEstimatedSize().estimatedSizeBytes

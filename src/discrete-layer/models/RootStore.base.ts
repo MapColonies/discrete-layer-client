@@ -149,6 +149,7 @@ export type GeojsonFeatureInput = {
   type: string
   geometry: any
   id?: string
+  bbox?: number[]
   properties: any
 }
 export type GetFreeDiskSpaceInput = {

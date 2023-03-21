@@ -2,13 +2,13 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'r
 import { TextField, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { useStore } from '../../../../models';
-import { ExportFieldProps } from '../../export-entity-selections-fields/raster-selection-field.component';
 import { useFormContext } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import useDebounceField from '../../../../../common/hooks/debounce-field.hook';
 import { EntityFormikHandlers } from '../../../layer-details/layer-datails-form';
 import ExportFieldLabel from '../export-field-label.component';
 import { DEBOUNCE_PERIOD_EXPORT_FIELDS } from '../../constants';
+import { ExportFieldProps } from '../../types/interfaces';
 
 const NONE = 0;
 

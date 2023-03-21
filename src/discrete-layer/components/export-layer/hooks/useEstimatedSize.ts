@@ -55,7 +55,7 @@ export const useEstimatedSize = (initSelection: Feature | FeatureCollection = {}
 
     return {
         setSelection,
-        data: data?.getEstimatedSize.estimatedSizeInKb,
+        data: data?.getEstimatedSize.estimatedSizeBytes,
         loading,
         refetch: query?.refetch,
         error: get(query?.error, "response.errors[0].message") as string

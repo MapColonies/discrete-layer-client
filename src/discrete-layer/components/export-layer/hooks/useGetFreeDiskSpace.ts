@@ -26,7 +26,7 @@ export const useGetFreeDiskSpace = (): {
     }, []);
 
     return {
-        data: data?.getFreeDiskSpace.freeDiskSpaceInKb,
+        data: data?.getFreeDiskSpace.freeDiskSpaceBytes,
         loading,
         refetch: query?.refetch,
         error: get(query?.error, "response.errors[0].message") as string

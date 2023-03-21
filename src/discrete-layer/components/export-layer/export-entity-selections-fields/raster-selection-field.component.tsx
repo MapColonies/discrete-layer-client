@@ -1,33 +1,27 @@
-import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { get } from 'lodash';
 import React from 'react';
 import { useStore } from '../../../models';
 import { LayerMetadataMixedUnionKeys } from '../../layer-details/entity-types-keys';
 import ExportGeneralFieldComponent from '../common/fields/export-general-field.component';
 import ExportOptionsField from '../common/fields/export-options-field.component';
+import { ExportFieldProps } from '../types/interfaces';
 import { ZOOM_LEVELS_TABLE } from '../constants';
-import {
-  AvailableProperties,
-  ExportFieldOptions,
-} from '../hooks/useAddFeatureWithProps';
-
-export interface ExportFieldProps {
-  selectionId: string;
-  selectionIdx: number;
-  fieldName: Partial<AvailableProperties>;
-  fieldValue: string;
-  fieldInfo: ExportFieldOptions;
-  isLoading?: boolean;
-  type?: 'text' | 'number';
-}
 
 const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
-  const { fieldName, fieldInfo } = props;
+  const { fieldName, fieldInfo, selectionIdx } = props;
   const { exportStore } = useStore();
 
   switch (fieldName) {
     case 'maxResolutionDeg': {
-      const currentRes = (get(exportStore.layerToExport, fieldInfo.defaultsFromEntityField as LayerMetadataMixedUnionKeys) as number).toString();
+      const currentRes = (get(
+        exportStore.layerToExport,
+        fieldInfo.defaultsFromEntityField as LayerMetadataMixedUnionKeys
+      ) as number).toString();
+
+      const resFromEntityProps = (get(
+        exportStore.geometrySelectionsCollection.features[selectionIdx - 1],
+        `properties.maxResolutionDeg`
+      ) as number | undefined)?.toString();
 
       const getValidResolutions = (): string[] => {
         return Object.values(ZOOM_LEVELS_TABLE)
@@ -42,19 +36,11 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
         })
       }
 
-      let defaultZoomLevel: number;
-      try {
-        defaultZoomLevel = degreesPerPixelToZoomLevel(+currentRes);
-      } catch(e) {
-        console.error(e);
-        defaultZoomLevel = NaN;
-      }
-
       return (
         <>
           <ExportOptionsField 
-            options={getValidResolutions()}
-            defaultValue={(get(ZOOM_LEVELS_TABLE, defaultZoomLevel) as number | undefined)?.toString()}
+            options={Array.from(new Set([currentRes, ...getValidResolutions()]))}
+            defaultValue={resFromEntityProps ?? currentRes}
             {...props} />
         </>
       );

@@ -11,7 +11,7 @@ import { useExportTrigger } from './hooks/useExportTrigger';
 import { GENERAL_FIELDS_IDX } from './constants';
 import { useGetFreeDiskSpace } from './hooks/useGetFreeDiskSpace';
 import { useEstimatedSize } from './hooks/useEstimatedSize';
-import { formatBytes, kbToBytes } from '../../../common/helpers/formatters';
+import { formatBytes } from '../../../common/helpers/formatters';
 import { ExportActions } from './hooks/useDomainExportActionsConfig';
 
 interface ExportLayerFooterProps {
@@ -225,7 +225,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
             {isExportFreeDiskSpaceLoading ? (
               <CircularProgress className="freeDiskSpaceLoading" />
             ) : typeof freeDiskSpaceRes === 'number' ? (
-              formatBytes(kbToBytes(freeDiskSpaceRes))
+              formatBytes(freeDiskSpaceRes)
             ) : (
               NOT_AVAILABLE_TEXT
             )}
@@ -240,7 +240,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
             {isExportSizeEstimationLoading ? (
               <CircularProgress className="sizeEstimationLoading" />
             ) : typeof exportSizeEstimation === 'number' ? (
-              formatBytes(kbToBytes(exportSizeEstimation))
+              formatBytes(exportSizeEstimation)
             ) : (
               NOT_AVAILABLE_TEXT
             )}
@@ -257,16 +257,16 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
 
   return (
     <Box className="exportFooter">
+      <ExportFormValidationErrors
+        errors={{ ...insufficientSpaceErrorObj, ...serviceError, ...formattedFileError, ...formState.errors }}
+      />
+      {sizeEstimationsContainer}
       <Box className="buttonsContainer">
-        {sizeEstimationsContainer}
         {renderPreviewOrSubmit}
         <Button id="cancelBtn" type="button" onClick={endExportSession}>
           <FormattedMessage id="general.cancel-btn.text" />
         </Button>
       </Box>
-      <ExportFormValidationErrors
-        errors={{ ...insufficientSpaceErrorObj, ...serviceError, ...formattedFileError, ...formState.errors }}
-      />
     </Box>
   );
 });

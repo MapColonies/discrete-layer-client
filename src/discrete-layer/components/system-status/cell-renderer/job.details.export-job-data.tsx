@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
 import { JobModelType, Status } from '../../../models';
 import { getTokenParam } from '../../helpers/layersUtils';
+import { CopyButton } from '../../job-manager/job-details.copy-button';
 
 import './job.details.export-job-data.css';
 
@@ -53,11 +54,14 @@ const JobDetailsExportJobData: React.FC<JobDetailsExportJobDataProps> = ({ data 
             {Object.entries(exportLinks).map(([linkType, exportLink]) => {
               const typeToPresent = linkType.replace('URI', '');
               return (
-                <Hyperlink
-                  url={exportLink}
-                  token={getTokenParam()}
-                  label={typeToPresent}
-                />
+                <Box className="linkContainer">
+                  <Hyperlink
+                    url={exportLink}
+                    token={getTokenParam()}
+                    label={typeToPresent}
+                  />
+                  <CopyButton text={exportLink} key={exportLink} />
+                </Box>
               );
             })}
           </Box>

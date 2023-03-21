@@ -6,7 +6,7 @@ import { get, isEmpty, isEqual } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { formatBytes, kbToBytes } from '../../../common/helpers/formatters';
+import { formatBytes } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models';
 import {
@@ -65,7 +65,7 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
 
   const estimatedSizeText = useMemo(() => {
     const NOT_AVAILABLE_TEXT = 'N/A';
-    const estimatedSizeValue = typeof estimatedSizeRes === 'number' ? formatBytes(kbToBytes(estimatedSizeRes)) : NOT_AVAILABLE_TEXT;
+    const estimatedSizeValue = typeof estimatedSizeRes === 'number' ? formatBytes(estimatedSizeRes) : NOT_AVAILABLE_TEXT;
 
     const estimatedSizeLabel = intl.formatMessage({ id: 'export-layer.sizeEstimation.label' });
 

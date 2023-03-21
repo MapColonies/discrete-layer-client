@@ -42,21 +42,21 @@
 
 .exportFooter {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 10px;
   align-items: flex-end;
 }
 
 #exportBtn {
-  width: 140px;
+  flex: 1;
 }
 
 .buttonsContainer {
   display: flex;
   gap: 10px;
   padding: 12px;
-  align-items: flex-end;
-  flex: 1;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 
@@ -280,14 +280,16 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 
 .estimationsContainer {
   display: flex;
-  flex: 2;
-  flex-direction: column;
-  background: var(--mdc-theme-gc-tab-active-background);
-  padding: 10px;
-  border: 1px solid var(--mdc-theme-text-primary-on-dark);
+  flex: 1;
+  flex-direction: row;
+  background-color: rgba(5,5,5,0.1);
+  padding: 4px;
   border-radius: 2px;
-  height: 80px;
-  width: 200px;
+  height: 60px;
+  width: 420px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .freeDiskSpaceContainer, .sizeEstimationContainer {

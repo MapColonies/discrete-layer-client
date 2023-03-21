@@ -47,7 +47,7 @@ const EXPORT_ACTIONS: ExportAction[] = [
       toggleExportStoreFieldOptions: { 
         field: 'isFullLayerExportEnabled', 
         labelChecked: 'action.export.full-layer.label',
-        labelUnchecked: 'action.export.custom-selection.label' 
+        labelUnchecked: 'action.export.full-layer.label' 
       },
       titleTranslationId: 'action.export.full-layer.tooltip',
       disabled: false,
