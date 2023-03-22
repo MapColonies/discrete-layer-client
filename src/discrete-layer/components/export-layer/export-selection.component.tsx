@@ -9,6 +9,7 @@ import { useIntl } from 'react-intl';
 import { formatBytes } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { useStore } from '../../models';
+import { SELECTION_ERROR_CLASSNAME } from './constants';
 import {
   AvailableProperties,
   ExportEntityProp,
@@ -41,6 +42,7 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
   const selectionId = featProps.id;
   const prevFeature = usePrevious(feature);
   const [newFeature, setNewFeature] = useState(feature);
+  const isSelectionServerError = store.exportStore.serverErroredSelectionId === feature.properties?.id as string;
 
   const {data: estimatedSizeRes, error, loading, setSelection} = useEstimatedSize(feature);
 
@@ -113,7 +115,7 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
             store.exportStore.isFullLayerExportEnabled || loading
               ? 'backdrop'
               : ''
-          }`}
+          } ${isSelectionServerError ? SELECTION_ERROR_CLASSNAME : ''}`}
           onMouseEnter={(): void => {
             onSelectionMouseOver(feature.properties?.id as string);
           }}
@@ -145,7 +147,7 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
           </Box>
         </Box>
       );
-  }, [newFeature, estimatedSizeRes, error, loading, selectionIdx]);
+  }, [newFeature, estimatedSizeRes, error, loading, selectionIdx, isSelectionServerError]);
 
   return selection;
 });

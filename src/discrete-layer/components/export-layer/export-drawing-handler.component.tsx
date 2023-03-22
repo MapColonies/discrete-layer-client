@@ -31,9 +31,21 @@ const ExportDrawingHandler: React.FC = observer(() => {
   }, []);
 
   useEffect(() => {
-    if(store.exportStore.hasExportPreviewed) {
-      const selectedFeaturesRect = 
-        CesiumRectangle.fromDegrees(...bbox(store.exportStore.geometrySelectionsCollection)) as CesiumRectangle;
+    if (store.exportStore.hasExportPreviewed) {
+      const selectedRoi = store.exportStore.geometrySelectionsCollection;
+      const layerFootprint = store.exportStore.layerToExport?.footprint as Record<string, unknown>;
+
+      const bboxWithLayerToExport = {
+        ...selectedRoi,
+        features: [
+          ...selectedRoi.features,
+          { type: 'Feature', geometry: layerFootprint },
+        ],
+      };
+
+      const selectedFeaturesRect = CesiumRectangle.fromDegrees(
+        ...bbox(bboxWithLayerToExport)
+      ) as CesiumRectangle;
       cesiumViewer.camera.flyTo({ destination: selectedFeaturesRect });
     }
   }, [store.exportStore.hasExportPreviewed]);

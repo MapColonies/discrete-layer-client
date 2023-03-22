@@ -386,3 +386,7 @@ body[dir="rtl"] .freeDiskSpaceContainer, .sizeEstimationContainer {
   align-items: center;
   justify-content: center;
 }
+
+.erroredSelection {
+  border: 1px solid var(--mdc-theme-gc-error-high);
+}

@@ -1,9 +1,10 @@
 import { DrawType } from '@map-colonies/react-components';
 import { createIntl } from 'react-intl';
 import uuid from 'uuid';
+import { digest } from 'jsum';
 import CONFIG from '../../common/config';
-import { Feature, FeatureCollection } from 'geojson';
-import { isEmpty, isEqual } from 'lodash';
+import { Feature, FeatureCollection, Geometry } from 'geojson';
+import { isEmpty } from 'lodash';
 import { types, getParent, flow } from 'mobx-state-tree';
 import shpjs from 'shpjs';
 import { LayerMetadataMixedUnion } from '.';
@@ -44,6 +45,7 @@ export const exportStore = ModelBase
     isMultiSelectionAllowed: types.frozen<boolean>(false),
     importedFileError: types.frozen<null | string>(null),
     finalJobId: types.maybe(types.frozen<string>()),
+    serverErroredSelectionId: types.maybe(types.frozen<string>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -55,6 +57,17 @@ export const exportStore = ModelBase
   }))
   .actions((self) => {
     const store = self.root;
+
+    function getFeatureIdByGeom(geom: Geometry): string | undefined {
+      const digestAlgo = 'SHA256';
+      const digestEncoding = 'base64';
+      const geomChecksum = digest(geom, digestAlgo, digestEncoding);
+      
+      return self.geometrySelectionsCollection.features.find(feature => {
+        const featureGeomChecksum = digest(feature.geometry, digestAlgo, digestEncoding);
+        return featureGeomChecksum === geomChecksum;
+      })?.properties?.id as string;
+    }
 
     function getFeatureById(id: string): Feature | null {
       return self.geometrySelectionsCollection.features.find(feature => feature.properties?.id === id) ?? null;
@@ -250,6 +263,10 @@ export const exportStore = ModelBase
       self.finalJobId = jobId;
     }
 
+    function setServerErroredSelectionId(selectionId: string | undefined): void {
+      self.serverErroredSelectionId = selectionId;
+    }
+
     function resetFinalJobId(): void {
       self.finalJobId = undefined;
     }
@@ -269,6 +286,7 @@ export const exportStore = ModelBase
     }
     
     return {
+        getFeatureIdByGeom,
         getFeatureById,
         removeFeatureById,
         setHighlightedFeature,
@@ -287,6 +305,7 @@ export const exportStore = ModelBase
         setFormData,
         setIsMultiSelectionAllowed,
         setFinalJobId,
+        setServerErroredSelectionId,
         handleUploadedFile,
         resetFormData,
         resetHasExportPreviewed,

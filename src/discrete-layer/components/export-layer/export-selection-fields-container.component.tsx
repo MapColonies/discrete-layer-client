@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Box } from '@map-colonies/react-components';
 import useAddFeatureWithProps, {
@@ -7,15 +7,27 @@ import useAddFeatureWithProps, {
 } from './hooks/useAddFeatureWithProps';
 import { useStore } from '../../models';
 import './export-layer.component.css';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import useGetSelectionFieldForDomain from './hooks/useGetSelectionFieldForDomain';
-import { GENERAL_FIELDS_ID, GENERAL_FIELDS_IDX } from './constants';
+import { GENERAL_FIELDS_ID, GENERAL_FIELDS_IDX, SELECTION_ERROR_CLASSNAME } from './constants';
 import ExportSelectionComponent from './export-selection.component';
+import { usePrevious } from '../../../common/hooks/previous.hook';
+
+const scrollToElement = (elem?: Element | null): void => {
+  setTimeout(() => {
+    elem?.scrollIntoView({
+      behavior: 'smooth',
+    });
+  }, NONE);
+}
+
+const NONE = 0;
 
 const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const store = useStore();
-  const exportGeometrySelections =
-    store.exportStore.geometrySelectionsCollection;
+  const selectionsContainerRef = useRef<HTMLDivElement | null>(null);
+  const exportGeometrySelections = store.exportStore.geometrySelectionsCollection;
+  const selectionServerError = store.exportStore.serverErroredSelectionId;
 
   const {
     externalFields,
@@ -26,6 +38,8 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   const SelectionFieldPerDomainRenderer = useGetSelectionFieldForDomain();
 
   const featuresWithProps = exportGeometrySelections.features;
+
+  const prevFeaturesList = usePrevious(featuresWithProps);
 
   const renderExportSelectionsFields = useMemo((): JSX.Element[] => {
     return featuresWithProps.map((feature, selectionIdx) => {
@@ -40,6 +54,22 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
       );
     });
   }, [featuresWithProps, internalFields]);
+
+  useLayoutEffect(() => {
+    if ((prevFeaturesList?.length ?? NONE) >= featuresWithProps.length) return;
+
+    scrollToElement(selectionsContainerRef.current?.lastElementChild);
+  }, [featuresWithProps]);
+
+  useLayoutEffect(() => {
+    if(typeof selectionServerError !== 'undefined') {
+      const erroredSelection = selectionsContainerRef.current?.querySelector(`.${SELECTION_ERROR_CLASSNAME}`);
+      
+      if(!isEmpty(erroredSelection)) {
+        scrollToElement(erroredSelection);
+      }
+    }
+  }, [selectionServerError]);
 
   const externalExportFields = useMemo((): JSX.Element | JSX.Element[] => {
     const generalExportFields = Object.entries(
@@ -70,10 +100,10 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   return (
     <>
       {propsForDomain && externalFields && internalFields && (
-        <Box className="exportSelectionsContainer">
+        <div ref={selectionsContainerRef} className="exportSelectionsContainer">
           {externalExportFields}
           {renderExportSelectionsFields}
-        </Box>
+        </div>
       )}
     </>
   );

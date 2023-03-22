@@ -28,3 +28,5 @@ export const ZOOM_LEVELS_TABLE = {
     21: 0.000000335276126861572,
     22: 0.000000167638063430786
 };
+
+export const SELECTION_ERROR_CLASSNAME = 'erroredSelection';

@@ -13,6 +13,8 @@ import { useGetFreeDiskSpace } from './hooks/useGetFreeDiskSpace';
 import { useEstimatedSize } from './hooks/useEstimatedSize';
 import { formatBytes } from '../../../common/helpers/formatters';
 import { ExportActions } from './hooks/useDomainExportActionsConfig';
+import { extractJsonObjFromString } from '../../../common/helpers/string';
+import { Polygon } from 'geojson';
 
 interface ExportLayerFooterProps {
   handleTabViewChange: (tabView: TabViews) => void;
@@ -116,6 +118,22 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
     loading: isExportTriggerLoading,
   } = useExportTrigger();
 
+  const exportTriggerErrorMsg = get(exportTriggerError, 'response.errors[0].serverResponse.data.message') as string | undefined;
+
+  useEffect(() => {
+    if(typeof exportTriggerErrorMsg !== 'undefined') {
+      const issuedSelection = extractJsonObjFromString<Polygon>(exportTriggerErrorMsg);
+      
+      if(typeof issuedSelection !== 'undefined') {
+        const issuedSelectionId = exportStore.getFeatureIdByGeom(issuedSelection);
+        exportStore.setServerErroredSelectionId(issuedSelectionId);
+      }
+
+    } else {
+      exportStore.setServerErroredSelectionId(undefined);
+    }
+  }, [exportTriggerErrorMsg])
+
   useEffect(() => {
     setExportSizeEstimation(undefined);
   }, [exportStore.geometrySelectionsCollection])
@@ -158,7 +176,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   
   const serviceError =
       exportTriggerError as boolean
-      ? { [`${SERVICE_ERROR_IDX}_`]: { message: get(exportTriggerError, 'response.errors[0].message') as string } }
+      ? { [`${SERVICE_ERROR_IDX}_`]: { message: exportTriggerErrorMsg as string} }
       : {};
 
   const insufficientSpaceErrorObj = 

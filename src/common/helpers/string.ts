@@ -7,3 +7,11 @@ export const camelize = (value: string): string => {
     }
   );
 };
+
+export const extractJsonObjFromString = <T = Record<string, unknown>>(input: string): T | undefined => {
+  const FIRST_MATCH = 0;
+  const jsonRegex = new RegExp(/\{(?:[^{}]|(R))*\}/);
+  const match = jsonRegex.exec(input)?.[FIRST_MATCH];
+
+  if(typeof match === 'string') return JSON.parse(match) as T;
+}
