@@ -10,6 +10,7 @@ import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { NoDataValueEnumType } from "./NoDataValueEnum"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
+import { RecordStatusEnumType } from "./RecordStatusEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { UndulationModelEnumType } from "./UndulationModelEnum"
 import { RootStoreType } from "./index"
@@ -42,16 +43,17 @@ export const LayerDemRecordModelBase = ModelBase
     relativeAccuracyLEP90: types.union(types.undefined, types.null, types.number),
     resolutionDegree: types.union(types.undefined, types.null, types.number),
     resolutionMeter: types.union(types.undefined, types.number),
+    imagingSortieAccuracyCEP90: types.union(types.undefined, types.null, types.number),
     layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
     heightRangeFrom: types.union(types.undefined, types.null, types.number),
     heightRangeTo: types.union(types.undefined, types.null, types.number),
-    verticalDatum: types.union(types.undefined, types.null, types.string),
-    units: types.union(types.undefined, types.null, types.string),
     geographicArea: types.union(types.undefined, types.null, types.string),
     undulationModel: types.union(types.undefined, UndulationModelEnumType),
     dataType: types.union(types.undefined, DemDataTypeEnumType),
-    noDataValue: types.union(types.undefined, types.null, NoDataValueEnumType),
+    noDataValue: types.union(types.undefined, NoDataValueEnumType),
+    productStatus: types.union(types.undefined, types.null, RecordStatusEnumType),
+    hasTerrain: types.union(types.undefined, types.null, types.boolean),
     //id: types.union(types.undefined, types.string),
     id: types.identifier, //Alex change till proper deffs
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -85,16 +87,17 @@ export class LayerDemRecordModelSelector extends QueryBuilder {
   get relativeAccuracyLEP90() { return this.__attr(`relativeAccuracyLEP90`) }
   get resolutionDegree() { return this.__attr(`resolutionDegree`) }
   get resolutionMeter() { return this.__attr(`resolutionMeter`) }
+  get imagingSortieAccuracyCEP90() { return this.__attr(`imagingSortieAccuracyCEP90`) }
   get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
   get heightRangeFrom() { return this.__attr(`heightRangeFrom`) }
   get heightRangeTo() { return this.__attr(`heightRangeTo`) }
-  get verticalDatum() { return this.__attr(`verticalDatum`) }
-  get units() { return this.__attr(`units`) }
   get geographicArea() { return this.__attr(`geographicArea`) }
   get undulationModel() { return this.__attr(`undulationModel`) }
   get dataType() { return this.__attr(`dataType`) }
   get noDataValue() { return this.__attr(`noDataValue`) }
+  get productStatus() { return this.__attr(`productStatus`) }
+  get hasTerrain() { return this.__attr(`hasTerrain`) }
   get id() { return this.__attr(`id`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get wktGeometry() { return this.__attr(`wktGeometry`) }
@@ -105,4 +108,4 @@ export function selectFromLayerDemRecord() {
   return new LayerDemRecordModelSelector()
 }
 
-export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensors.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.verticalDatum.units.geographicArea.undulationModel.dataType.noDataValue.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
+export const layerDemRecordModelPrimitives = selectFromLayerDemRecord().type.classification.productName.description.srsId.srsName.producerName.updateDate.sourceDateStart.sourceDateEnd.sensors.region.productId.productType.footprint.absoluteAccuracyLEP90.relativeAccuracyLEP90.resolutionDegree.resolutionMeter.imagingSortieAccuracyCEP90.layerPolygonParts.productBoundingBox.heightRangeFrom.heightRangeTo.geographicArea.undulationModel.dataType.noDataValue.productStatus.hasTerrain.insertDate.wktGeometry.keywords.id.links(linkModelPrimitives)
