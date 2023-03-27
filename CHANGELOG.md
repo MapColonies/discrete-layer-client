@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.27.5](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.4...v1.27.5) (2023-03-27)
+
+
+### Bug Fixes
+
+* clean up dem deprecated translation ([#432](https://github.com/MapColonies/discrete-layer-client/issues/432)) ([4c8e658](https://github.com/MapColonies/discrete-layer-client/commit/4c8e6587994a3c65323c7ea61e258ae71206183c))
+
 ### [1.27.4](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.3...v1.27.4) (2023-03-15)
 
 ### [1.27.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.2...v1.27.3) (2023-03-14)
