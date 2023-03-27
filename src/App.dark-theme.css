@@ -150,6 +150,10 @@
   opacity: 0.3;
 }
 
+.dark-theme .mdc-form-field > label {
+  color: var(--mdc-theme-text-primary-on-dark);
+}
+
 .dark-theme .mdc-text-field__input {
   color: var(--mdc-theme-text-primary-on-dark, #fff) !important;
 }

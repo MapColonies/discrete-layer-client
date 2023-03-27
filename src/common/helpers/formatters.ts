@@ -48,3 +48,23 @@ export const dateSerializer: FormatterFunc = (date): string => {
 export const emphasizeByHTML: FormatterFunc = (value): string => {
   return `<strong>${value as string}</strong>`;
 };
+
+const DEFAULT_DECIMALS = 2;
+export const formatBytes = (bytes: number, decimals = DEFAULT_DECIMALS): string => {
+  const NONE = 0;
+
+  if (!+bytes) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < NONE ? NONE : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+export const kbToBytes = (n: number): number => {
+  const multiplyFactorToBytes = 1024;
+  return n * multiplyFactorToBytes;
+}

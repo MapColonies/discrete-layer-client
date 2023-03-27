@@ -13,28 +13,36 @@ import {
   QuantizedMeshBestRecordModelKeys,
   VectorBestRecordModelKeys
 } from '../../components/layer-details/entity-types-keys';
-import { cleanUpEntity, downloadJSONToClient } from '../../components/layer-details/utils'
+import { cleanUpEntity, downloadJSONToClient, importShapeFileFromClient } from '../../components/layer-details/utils'
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { ILayerImage } from '../../models/layerImage';
+import { getLayerFootprint, ILayerImage } from '../../models/layerImage';
 import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel';
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
+import { LayerMetadataMixedUnion } from '../../models';
+import { DrawType } from '@map-colonies/react-components';
+import { Feature } from 'geojson';
+import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
+import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
+import { TabViews } from '../tab-views';
 
 const FIRST = 0;
 
 interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
   handleFlyTo: () => void;
+  handleTabViewChange: (tabView: TabViews) => void;
 }
 
 export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((props) => {
-  const { handleOpenEntityDialog, handleFlyTo } = props;
+  const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange } = props;
 
   const store = useStore();
 
   const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
+  const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
 
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
@@ -186,6 +194,33 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
           break;
+        case 'LayerRasterRecord.export': {
+          // @ts-ignore
+          const selectedLayerToExport = cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.reset();
+          store.exportStore.setLayerToExport(selectedLayerToExport);
+          break;
+        }
+        case 'Layer3DRecord.export': {
+          // @ts-ignore
+          const selectedLayerToExport = cleanUpEntity(data, Layer3DRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.reset();
+          store.exportStore.setLayerToExport(selectedLayerToExport);
+          break;
+        }
+        case 'LayerDemRecord.export': {
+          // @ts-ignore
+          const selectedLayerToExport = cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion;
+          store.exportStore.reset();
+          store.exportStore.setLayerToExport(selectedLayerToExport);
+          break;
+        }
+        case 'BestRecord.export':
+          break;
+        case 'VectorBestRecord.export':
+          break;
+        case 'QuantizedMeshBestRecord.export':
+          break;
         case ContextActions.QUERY_WFS_FEATURE: {
           const coordinates = data.coordinates as { longitude: number, latitude: number };
           const typeName = data.feature as string;
@@ -203,7 +238,67 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           
           break;
         }
-        
+        case ExportActions.DRAW_FOOTPRINT: {
+          const {layerToExport} = store.exportStore;
+          store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+          break;
+        }
+        case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
+          const {layerToExport} = store.exportStore;
+
+          if(data.is3DInit as boolean) {
+            store.exportStore.resetFeatureSelections();
+            store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+            store.exportStore.setIsFullyLayerExportEnabled(true);
+
+            break;
+          }
+
+          if(!store.exportStore.isFullLayerExportEnabled) {
+            // Clean any previous selections
+            store.exportStore.resetFeatureSelections();
+            store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
+          } else {
+            store.exportStore.resetFeatureSelections();
+          }
+
+          store.exportStore.toggleIsFullLayerExportEnabled();
+          break;
+        }
+        case ExportActions.DRAW_RECTANGLE:
+          store.exportStore.setDrawingState({
+            drawing: true,
+            type: DrawType.BOX
+          })
+          break;
+        case ExportActions.DRAW_POLYGON:
+          store.exportStore.setDrawingState({
+            drawing: true,
+            type: DrawType.POLYGON
+          })
+          break;
+        case ExportActions.DRAW_BY_COORDINATES:
+          store.exportStore.setIsBBoxDialogOpen(true);
+          break;
+        case ExportActions.CLEAR_DRAWINGS:
+          store.exportStore.resetFeatureSelections();
+          store.exportStore.resetFullLayerExport();
+          store.exportStore.resetHasExportPreviewed();
+          store.exportStore.resetDrawingState();
+          break;
+        case ExportActions.IMPORT_FROM_SHAPE_FILE: 
+          importShapeFileFromClient((evt, fileType) => {
+            void store.exportStore.handleUploadedFile(evt, fileType, exportDomainInternalFields);
+          }, true);
+          break;
+        case ExportActions.EXPORT_HOT_AREA_SELECTION:
+          store.exportStore.setTempRawSelection(data as unknown as Feature);
+          break;
+        case ExportActions.END_EXPORT_SESSION:
+          handleTabViewChange(TabViews.CATALOG);
+          store.discreteLayersStore.resetTabView([TabViews.EXPORT_LAYER]);
+          store.exportStore.reset();
+          break;
         // System Callback operations
         case UserAction.SYSTEM_CALLBACK_EDIT: {
           const inputValues = data as unknown as ILayerImage;
@@ -241,7 +336,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
       }
     }
-  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore, props]);
+  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore]);
 
   return (
     <></>
