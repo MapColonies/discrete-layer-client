@@ -14,8 +14,11 @@ import {
     VectorBestRecordModelType,
     VectorBestRecordModel,
     QuantizedMeshBestRecordModelType,
-    QuantizedMeshBestRecordModel
+    QuantizedMeshBestRecordModel,
+    LayerMetadataMixedUnion
   } from '../../models';
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
 
 export type LayerDemRecordModelArray = Array<keyof LayerDemRecordModelType>;
 export type Layer3DRecordModelArray = Array<keyof Layer3DRecordModelType>;
@@ -38,3 +41,8 @@ export const VectorBestRecordModelKeys: VectorBestRecordModelArray = Object.keys
 export const QuantizedMeshBestRecordModelKeys: QuantizedMeshBestRecordModelArray = Object.keys(QuantizedMeshBestRecordModel.properties) as QuantizedMeshBestRecordModelArray;
 
 export const FieldConfigModelKeys: FieldConfigModelArray = Object.keys(FieldConfigModel.properties) as FieldConfigModelArray;
+
+// All fields from all entities.
+export type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
+
+export type LayerRecordTypes = "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord";

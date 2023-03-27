@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.27.4](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.3...v1.27.4) (2023-03-15)
+
+### [1.27.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.2...v1.27.3) (2023-03-14)
+
+### [1.27.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.1...v1.27.2) (2023-03-14)
+
+
+### Bug Fixes
+
+* cesium geojson layer shows behind terrain on 3d mode ([#431](https://github.com/MapColonies/discrete-layer-client/issues/431)) ([a1513d8](https://github.com/MapColonies/discrete-layer-client/commit/a1513d8ecd41953e4f17ff21c44e92d2b1c1a32d))
+* http to https ([#434](https://github.com/MapColonies/discrete-layer-client/issues/434)) ([a08df48](https://github.com/MapColonies/discrete-layer-client/commit/a08df48c8fd4318e7b17274ec88c237cb2525b14))
+* icons ([#429](https://github.com/MapColonies/discrete-layer-client/issues/429)) ([3320980](https://github.com/MapColonies/discrete-layer-client/commit/33209800fcd82ac6b67409c1693026bf563fa747))
+
 ### [1.27.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.0...v1.27.1) (2023-02-06)
 
 

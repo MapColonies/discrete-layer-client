@@ -39,7 +39,8 @@ const getLayerTitle = (product: ILayerImage): string => {
   return product[PRODUCT_TITLE_PROPERTY] as string;
 };
 
-const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string).localeCompare(b[sortByField] as string);
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string)?.localeCompare(b[sortByField] as string);
 
 interface IGetParentNode {
   parentNode: NodeData | undefined;
@@ -200,9 +201,9 @@ export const catalogTreeStore = ModelBase.props({
           // are subsets of the catalog layers list
 
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          const { RECORD_ALL, RECORD_RASTER, RECORD_DEM } = RecordType;
+          const { RECORD_ALL, RECORD_RASTER } = RecordType;
           try {
-            const withCapabilities = [RECORD_RASTER, RECORD_DEM];
+            const withCapabilities = [RECORD_RASTER];
             if (
               [RECORD_ALL, ...withCapabilities].includes(
                 store.discreteLayersStore.searchParams.recordType as RecordType

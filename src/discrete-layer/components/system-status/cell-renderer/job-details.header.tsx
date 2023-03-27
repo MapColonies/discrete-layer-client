@@ -7,6 +7,7 @@ import { CopyButton } from '../../job-manager/job-details.copy-button';
 
 import './job-details.header.css';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
+import {DETAILS_ROW_ID_SUFFIX} from '../../../../common/components/grid';
 
 interface JobDetailsHeaderProps {
   job: JobModelType;
@@ -19,7 +20,7 @@ interface JobDetailsHeaderProps {
 
 export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
   job: {
-    internalId,
+    id,
     resourceId,
     producerName,
     reason,
@@ -46,9 +47,9 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
 
   const dataToPresent = {
     detailsRow: {
-      internalId: {
+      id: {
         label: getDetailsTranslation('internalId'),
-        value: internalId as string,
+        value: id.replace(DETAILS_ROW_ID_SUFFIX, ''),
       },
       externalId: {
         label: getDetailsTranslation('extetnalId'),

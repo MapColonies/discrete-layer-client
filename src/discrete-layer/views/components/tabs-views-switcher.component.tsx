@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
@@ -9,10 +9,19 @@ import { useStore } from '../../models/RootStore';
 import { TabViews } from '../tab-views';
 
 import './tabs-views-switcher.component.css';
+import { isEmpty } from 'lodash';
 
 interface TabViewsSwitcherComponentProps {
   handleTabViewChange: (tabView: TabViews) => void;
   activeTabView: TabViews;
+  disabled?: boolean;
+}
+
+export interface ITabView {
+  idx: TabViews;
+  title: string;
+  iconClassName: string;
+  dependentValue?: unknown;
 }
 
 export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observer((props) => {
@@ -20,7 +29,11 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
   const intl = useIntl();
   const theme = useTheme();
   const { handleTabViewChange, activeTabView } = props;
-  const tabViews = [
+
+  const editingBest = store.bestStore.editingBest;
+  const layerToExport =  store.exportStore.layerToExport;
+
+  const tabViews: ITabView[] = useMemo(() => [
     {
       idx: TabViews.CATALOG,
       title: 'tab-views.catalog',
@@ -35,23 +48,43 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
       idx: TabViews.CREATE_BEST,
       title: 'tab-views.create-best',
       iconClassName: 'mc-icon-Bests',
+      dependentValue: store.bestStore.editingBest,
+    },
+    {
+      idx: TabViews.EXPORT_LAYER,
+      title: 'tab-views.export-layer',
+      iconClassName: intl.locale === 'en' ? 'mc-icon-Export' : 'mc-icon-Export-Left',
+      dependentValue: store.exportStore.layerToExport,
     }
-  ];
+  ], [editingBest, layerToExport]);
 
-  const editingBest = store.bestStore.editingBest;
-  const availableTabs = (editingBest !== undefined) ? tabViews : tabViews.filter((tab) => tab.idx !== TabViews.CREATE_BEST);
+  const [availableTabs, setAvailableTabs] = useState<ITabView[]>(tabViews);
+
+  useEffect(() => {
+    const dependentTabs = tabViews.filter(tab => {
+      if('dependentValue' in tab) {
+        return !isEmpty(tab.dependentValue);
+      }
+
+      return tab;
+    });
+
+    setAvailableTabs(dependentTabs);
+  }, [tabViews])
   
   useEffect(() => {
     if (editingBest !== undefined) {
       handleTabViewChange(TabViews.CREATE_BEST);
-    } else {
+    } else if(layerToExport !== undefined) {
+      handleTabViewChange(TabViews.EXPORT_LAYER);
+    } else { 
       handleTabViewChange(TabViews.CATALOG);
     }
-  }, [editingBest]);
+  }, [editingBest, layerToExport]);
   
   return (
     <>
-      <Box className="headerViewsSwitcherContainer">
+      <Box style={props.disabled as boolean ? { pointerEvents: 'none' , opacity: 0.3 } : {}} className="headerViewsSwitcherContainer">
         {
           availableTabs.map((tab) => {
             return <Tooltip key={`tabView_${tab.idx}`} content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>
@@ -60,7 +93,7 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
                   key={tab.idx}
                   className={`${tab.iconClassName} tabViewIcon`}
                   mini 
-                  onClick={(evt): void => handleTabViewChange(tab.idx)}
+                  onClick={(evt: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => handleTabViewChange(tab.idx)}
                   style={{ 
                     backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
                   }}

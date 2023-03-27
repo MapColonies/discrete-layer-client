@@ -9,7 +9,7 @@ import { types } from "mobx-state-tree"
 
 export enum NoDataValue {
   NO_DATA_32768="NO_DATA_32768",
-NO_DATA_326767="NO_DATA_326767",
+NO_DATA_32767="NO_DATA_32767",
 NO_DATA_999="NO_DATA_999"
 }
 
@@ -18,6 +18,6 @@ NO_DATA_999="NO_DATA_999"
 */
 export const NoDataValueEnumType = types.enumeration("NoDataValue", [
         "NO_DATA_32768",
-  "NO_DATA_326767",
+  "NO_DATA_32767",
   "NO_DATA_999",
       ])

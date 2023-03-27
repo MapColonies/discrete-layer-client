@@ -284,9 +284,9 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
   input.click();
 }  
 
-export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void): void {
+export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void, allowGeojson = false): void {
   const input = document.createElement('input');
-  const supportedExtensions = ['.shp', '.zip'];
+  const supportedExtensions = ['.shp', '.zip', ...(allowGeojson ? ['.geojson'] : [])];
   input.setAttribute('type', 'file');
   input.setAttribute('accept', supportedExtensions.join(','));
   input.addEventListener('change',(e): void => {
@@ -442,3 +442,5 @@ export const getCoordinatesDisplayText = (latitude: number, longitude: number): 
   
   return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`
 }
+
+export const getTimeStamp = (): string => new Date().getTime().toString();
