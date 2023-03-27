@@ -51,6 +51,12 @@ import { UpdateRulesOperationModel, UpdateRulesOperationModelType } from "./Upda
 import { updateRulesOperationModelPrimitives, UpdateRulesOperationModelSelector } from "./UpdateRulesOperationModel.base"
 import { McEnumsModel, McEnumsModelType } from "./McEnumsModel"
 import { mcEnumsModelPrimitives, McEnumsModelSelector } from "./McEnumsModel.base"
+import { EstimatedSizeModel, EstimatedSizeModelType } from "./EstimatedSizeModel"
+import { estimatedSizeModelPrimitives, EstimatedSizeModelSelector } from "./EstimatedSizeModel.base"
+import { FreeDiskSpaceModel, FreeDiskSpaceModelType } from "./FreeDiskSpaceModel"
+import { freeDiskSpaceModelPrimitives, FreeDiskSpaceModelSelector } from "./FreeDiskSpaceModel.base"
+import { TriggerExportTaskModel, TriggerExportTaskModelType } from "./TriggerExportTaskModel"
+import { triggerExportTaskModelPrimitives, TriggerExportTaskModelSelector } from "./TriggerExportTaskModel.base"
 import { ExternalServiceModel, ExternalServiceModelType } from "./ExternalServiceModel"
 import { externalServiceModelPrimitives, ExternalServiceModelSelector } from "./ExternalServiceModel.base"
 import { JobModel, JobModelType } from "./JobModel"
@@ -82,10 +88,8 @@ import { RecordType } from "./RecordTypeEnum"
 import { ProductType } from "./ProductTypeEnum"
 import { RecordStatus } from "./RecordStatusEnum"
 import { Transparency } from "./TransparencyEnum"
-import { VerticalDatum } from "./VerticalDatumEnum"
-import { Units } from "./UnitsEnum"
 import { UndulationModel } from "./UndulationModelEnum"
-import { DataType } from "./DataTypeEnum"
+import { DemDataType } from "./DemDataTypeEnum"
 import { NoDataValue } from "./NoDataValueEnum"
 import { FieldCategory } from "./FieldCategoryEnum"
 import { AutocompletionType } from "./AutocompletionTypeEnum"
@@ -133,6 +137,29 @@ export type SortField = {
 export type StringArray = {
   value: string[]
 }
+export type GetExportEstimatedSizeInput = {
+  type: RecordType
+  selections: GeojsonFeatureCollectionInput
+}
+export type GeojsonFeatureCollectionInput = {
+  type: string
+  features: GeojsonFeatureInput[]
+}
+export type GeojsonFeatureInput = {
+  type: string
+  geometry: any
+  id?: string
+  bbox?: number[]
+  properties: any
+}
+export type GetFreeDiskSpaceInput = {
+  type: RecordType
+}
+export type TriggerExportTaskInput = {
+  type: RecordType
+  catalogRecordID: string
+  parameters: any
+}
 export type JobsSearchParams = {
   resourceId?: string
   version?: string
@@ -141,6 +168,13 @@ export type JobsSearchParams = {
   type?: string
   fromDate?: any
   tillDate?: any
+}
+export type GetLookupTablesParams = {
+  lookupFields?: LookupTableFieldInput[]
+}
+export type LookupTableFieldInput = {
+  lookupTable?: string
+  lookupExcludeFields?: string
 }
 export type ExplorerGetByPathSuffix = {
   pathSuffix: string
@@ -291,12 +325,12 @@ export type LayerDemRecordInput = {
   productBoundingBox?: string
   heightRangeFrom?: number
   heightRangeTo?: number
-  verticalDatum: VerticalDatum
-  units?: Units
+  verticalDatum?: string
+  units?: string
   geographicArea?: string
   undulationModel: UndulationModel
-  dataType: DataType
-  noDataValue: NoDataValue
+  dataType: DemDataType
+  noDataValue?: NoDataValue
   id: string
   insertDate?: any
   wktGeometry?: string
@@ -333,6 +367,9 @@ querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
 queryEntityDescriptors="queryEntityDescriptors",
 queryGetMcEnums="queryGetMcEnums",
+queryGetEstimatedSize="queryGetEstimatedSize",
+queryGetFreeDiskSpace="queryGetFreeDiskSpace",
+queryTriggerExportTask="queryTriggerExportTask",
 queryGetExternalServices="queryGetExternalServices",
 queryJobs="queryJobs",
 queryGetLookupTablesData="queryGetLookupTablesData",
@@ -364,7 +401,7 @@ mutateJobAbort="mutateJobAbort"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['EstimatedSize', () => EstimatedSizeModel], ['FreeDiskSpace', () => FreeDiskSpaceModel], ['TriggerExportTask', () => TriggerExportTaskModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['AvailableActions', () => AvailableActionsModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -405,6 +442,21 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new McEnumsModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
+    queryGetEstimatedSize(variables: { data: GetExportEstimatedSizeInput }, resultSelector: string | ((qb: EstimatedSizeModelSelector) => EstimatedSizeModelSelector) = estimatedSizeModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getEstimatedSize: EstimatedSizeModelType}>(`query getEstimatedSize($data: GetExportEstimatedSizeInput!) { getEstimatedSize(data: $data) {
+        ${typeof resultSelector === "function" ? resultSelector(new EstimatedSizeModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryGetFreeDiskSpace(variables: { data: GetFreeDiskSpaceInput }, resultSelector: string | ((qb: FreeDiskSpaceModelSelector) => FreeDiskSpaceModelSelector) = freeDiskSpaceModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getFreeDiskSpace: FreeDiskSpaceModelType}>(`query getFreeDiskSpace($data: GetFreeDiskSpaceInput!) { getFreeDiskSpace(data: $data) {
+        ${typeof resultSelector === "function" ? resultSelector(new FreeDiskSpaceModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryTriggerExportTask(variables: { data: TriggerExportTaskInput }, resultSelector: string | ((qb: TriggerExportTaskModelSelector) => TriggerExportTaskModelSelector) = triggerExportTaskModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ triggerExportTask: TriggerExportTaskModelType}>(`query triggerExportTask($data: TriggerExportTaskInput!) { triggerExportTask(data: $data) {
+        ${typeof resultSelector === "function" ? resultSelector(new TriggerExportTaskModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
     queryGetExternalServices(variables?: {  }, resultSelector: string | ((qb: ExternalServiceModelSelector) => ExternalServiceModelSelector) = externalServiceModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getExternalServices: ExternalServiceModelType[]}>(`query getExternalServices { getExternalServices {
         ${typeof resultSelector === "function" ? resultSelector(new ExternalServiceModelSelector()).toString() : resultSelector}
@@ -415,8 +467,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryGetLookupTablesData(variables?: {  }, resultSelector: string | ((qb: LookupTableDataModelSelector) => LookupTableDataModelSelector) = lookupTableDataModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getLookupTablesData: LookupTableDataModelType}>(`query getLookupTablesData { getLookupTablesData {
+    queryGetLookupTablesData(variables: { data: GetLookupTablesParams }, resultSelector: string | ((qb: LookupTableDataModelSelector) => LookupTableDataModelSelector) = lookupTableDataModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getLookupTablesData: LookupTableDataModelType}>(`query getLookupTablesData($data: GetLookupTablesParams!) { getLookupTablesData(data: $data) {
         ${typeof resultSelector === "function" ? resultSelector(new LookupTableDataModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

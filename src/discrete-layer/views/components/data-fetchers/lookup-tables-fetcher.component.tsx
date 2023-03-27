@@ -6,9 +6,11 @@ import { useStore, useQuery } from '../../../models/RootStore';
 import { Error } from './../../../../common/components/tree/statuses/error';
 import { queue } from '../../../../discrete-layer/components/snackbar/notification-queue';
 
+export const HOT_AREAS_TABLES_KEY = 'hotAreas';
+
 export const LookupTablesFetcher: React.FC = observer(() => {
   const store = useStore();
-  const { data, loading, error } = useQuery((store) => store.queryGetLookupTablesData({}, `dictionary`))
+  const { data, loading, error } = useQuery((store) => store.queryGetLookupTablesData({data: {lookupFields: [{ lookupTable: HOT_AREAS_TABLES_KEY }]}}, `dictionary`));
   const { setLookupTablesData } = useContext(lookupTablesContext);
 
   useEffect(() => {

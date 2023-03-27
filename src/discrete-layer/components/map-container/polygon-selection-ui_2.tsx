@@ -34,6 +34,7 @@ export interface PolygonSelectionUiProps {
   onPoiUpdate: (longitude: number, latitude: number) => void;
   poi?: IPOI;
   corners?: BBoxCorners;
+  disabled?: boolean;
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
@@ -49,6 +50,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     onPoiUpdate,
     poi,
     corners,
+    disabled,
   } = props;
 
   const intl = useIntl();
@@ -75,7 +77,9 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         display: 'flex',
         gap: '4px',
         alignItems: 'center',
-        padding: '0 16px 0 16px'
+        padding: '0 16px 0 16px',
+        opacity: disabled as boolean ? '0.3' : '1',
+        pointerEvents: disabled as boolean ? 'none' : 'unset',
       }}
     >
       <Tooltip content={intl.formatMessage({ id: 'action.point.tooltip' })}>

@@ -85,6 +85,9 @@ import useGetMenuProperties from '../../common/hooks/mapMenus/useGetMenuProperti
 import { MapMenusIds } from '../models/mapMenusManagerStore';
 import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { WfsFeature } from '../components/map-container/wfs-feature.component';
+import { ExportLayerComponent } from '../components/export-layer/export-layer.component';
+import ExportDrawingHandler from '../components/export-layer/export-drawing-handler.component';
+import ExportPolygonsRenderer from '../components/export-layer/export-polygons-renderer.component';
 import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
@@ -204,6 +207,10 @@ const DiscreteLayerView: React.FC = observer(() => {
       if (targetViewIdx === TabViews.CREATE_BEST) {
         store.bestStore.restoreData();
       }
+
+      if(activeTabView === TabViews.EXPORT_LAYER) {
+        store.exportStore.setHasExportPreviewed(false);
+      }
   
       setActiveTabView(targetViewIdx);
     }
@@ -256,6 +263,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       handlePolygonReset();
       setActiveTabView(TabViews.CATALOG);
     }
+
+    store.exportStore.reset();
+    store.discreteLayersStore.resetTabView();
   }, [userRole])
 
   const handleNewEntityDialogClick = (recordType: RecordType): void => {
@@ -438,6 +448,11 @@ const DiscreteLayerView: React.FC = observer(() => {
       idx: TabViews.CREATE_BEST,
       title: 'tab-views.create-best',
       iconClassName: 'mc-icon-Bests',
+    },
+    {
+      idx: TabViews.EXPORT_LAYER,
+      title: 'tab-views.export-layer',
+      iconClassName: intl.locale === 'en' ? 'mc-icon-Export' : 'mc-icon-Export-Left',
     }
   ];
 
@@ -669,6 +684,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       <ActionResolver
         handleOpenEntityDialog = {setEditEntityDialogOpen}
         handleFlyTo = {onFlyTo}
+        handleTabViewChange = {handleTabViewChange}
       />
       <Box className="headerContainer">
         <Box className="headerViewsSwitcher">
@@ -678,6 +694,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <TabViewsSwitcher
             handleTabViewChange = {handleTabViewChange}
             activeTabView = {activeTabView}
+            disabled={isDrawing || store.exportStore.drawingState?.drawing}
           />
         </Box>
         <Box className="headerSearchOptionsContainer">
@@ -691,6 +708,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             onPoiUpdate={onPoiSelection}
             poi={poi}
             corners={corners}
+            disabled={activeTabView === TabViews.EXPORT_LAYER}
           />
         </Box>
         <Box className="headerSystemAreaContainer">
@@ -739,7 +757,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             className="sidePanelContainer"
             style={{
               backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-              height: detailsPanelExpanded ? '50%' : '75%'
+              height: activeTabView !== TabViews.EXPORT_LAYER ? (detailsPanelExpanded ? '50%' : '75%') : '100%'
             }}
           >
             <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block' : 'none'}}>
@@ -765,6 +783,23 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Box>
             }
             {
+              activeTabView === TabViews.EXPORT_LAYER &&
+              <Box className="tabContentContainer">
+                {
+                  getActiveTabHeader(activeTabView)
+                }
+                <ExportLayerComponent
+                  handleTabViewChange={handleTabViewChange}
+                  handleFlyTo={onFlyTo}
+                  style={{
+                    height: 'calc(100% - 50px)',
+                    width: 'calc(100% - 8px)',
+                    display: 'flex'
+                  }}
+                />
+              </Box>
+            }
+            {
               activeTabView === TabViews.CREATE_BEST &&
               <Box className="tabContentContainer">
                 {
@@ -784,17 +819,18 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Box>
             }
           </Box>
-          <Box className="sidePanelContainer sideDetailsPanel" style={{
-            backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-            height: detailsPanelExpanded ? '50%' : '25%',
-          }}>
+          {activeTabView !== TabViews.EXPORT_LAYER && 
+            <Box className="sidePanelContainer sideDetailsPanel" style={{
+              backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
+              height: detailsPanelExpanded ? '50%' : '25%',
+            }}>
             <DetailsPanel
               isEditEntityDialogOpen = {isEditEntityDialogOpen}
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
               setDetailsPanelExpanded = {setDetailsPanelExpanded} 
             />
-          </Box>
+          </Box>}
         </Box>
         <Box className="mapAppContainer">
           <CesiumMap 
@@ -819,7 +855,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             }}
            >
               {memoizedLayers}
-              <CesiumDrawingsDataSource
+              {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
                 drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
                 drawingMaterial={DRAWING_MATERIAL_COLOR}
                 drawState={{
@@ -830,7 +866,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                 hollow={true}
                 outlineWidth={2}
                 material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
-              />
+              />}
+
+              {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
               <Terrain/>
               <WfsFeature />
               {
@@ -839,6 +877,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               {
                 rect && <FlyTo setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
               }
+              {activeTabView === TabViews.EXPORT_LAYER && <ExportPolygonsRenderer />}
           </CesiumMap>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
           <GPUInsufficiencyDetector />

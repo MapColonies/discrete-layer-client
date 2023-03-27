@@ -3,14 +3,12 @@ import React, { useContext, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import {
-  DataType,
+  DemDataType,
   NoDataValue,
   ProductType,
   RecordStatus,
   RecordType,
   UndulationModel,
-  Units,
-  VerticalDatum,
   Transparency
 } from '../../../models';
 import { useQuery, useStore } from '../../../models/RootStore';
@@ -20,10 +18,8 @@ export const MCEnumsFetcher: React.FC = observer(() => {
   const mcEnumsQuery = useQuery((store) => store.queryGetMcEnums());
   const { setEnumsMap } = useContext(EnumsMapContext);
   const enumUnion = {
-    DataType,
+    DemDataType,
     NoDataValue,
-    VerticalDatum,
-    Units,
     UndulationModel,
     ProductType,
     RecordStatus,
