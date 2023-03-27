@@ -1,0 +1,29 @@
+.exportJobDataContainer {
+    padding: 10px;
+    background: var(--mdc-theme-gc-tab-active-background);
+    border: 1px solid var(--mdc-theme-text-primary-on-dark);
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.exportJobDataContainer .jobDescription {
+    margin: 0;
+}
+
+.exportJobDataContainer .exportJobLinkContainer {
+    display: flex;
+    gap: 12px;
+}
+
+.exportJobDataContainer .exportJobLinkContainer .linkContainer > a {
+    text-decoration: underline;
+    color:  var(--mdc-theme-text-primary-on-dark);
+    font-size: 1.1rem;
+}
+
+.exportJobDataContainer .exportJobLinkContainer > a:hover {
+    filter: brightness(150%);
+}

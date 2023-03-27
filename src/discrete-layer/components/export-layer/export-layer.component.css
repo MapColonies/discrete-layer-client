@@ -1,0 +1,392 @@
+#exportLayerHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.exportLayerDetails {
+  position: relative;
+  display: flex;
+  background-color: var(--mdc-theme-text-primary-on-light);
+  padding: 20px;
+  margin-top: 12px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--update-layer-header-height);
+}
+
+#exportLayerHeaderContent {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.exportToolbarContainer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--mdc-theme-text-primary-on-dark);
+}
+
+.exportTabContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  max-width: 100%;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--mdc-theme-text-primary-on-dark);
+}
+
+.exportFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+#exportBtn {
+  flex: 1;
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+
+.exportAction.exportToggle > label {
+  width: 3rem;
+}
+
+.exportAction.exportToggle .mdc-checkbox--disabled input[type='checkbox'] {
+  opacity: 0;
+}
+
+.exportAction.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.exportSelectionsContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 20px 0;
+  padding: 12px;
+}
+
+.exportSelectionsContainer .selectionFields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.exportSelectionsContainer .selectionContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.selectionLoading {
+  width: 80px;
+  height: 80px; 
+  z-index: 9999;
+}
+
+.selectionLoadingContainer {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+.exportSelectionsContainer .selectionContainer:hover {
+  box-shadow: -14px 0px 0px -12px var(--mdc-theme-text-primary-on-dark);
+  ;
+ }
+
+ body[dir="rtl"] .exportSelectionsContainer .selectionContainer:hover {
+  box-shadow: 14px 0px 0px -12px var(--mdc-theme-text-primary-on-dark);
+
+ }
+
+.exportSelectionsContainer .selectionContainer .selectionIndex {
+  margin: 0;
+  height: 20px;
+  line-height: 1.5rem;
+  font-weight: bold;
+}
+
+.exportLayerForm {
+  height: 100%;
+  overflow-y: overlay;
+}
+
+.validationErrorsContainer {
+  color: var(--mdc-theme-gc-error-high);
+  height: 80px;
+  width: 100%;
+  overflow-y: overlay;
+  gap: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.errorText {
+  margin: 0;
+}
+
+.exportSelectionField {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.exportSelectionField .exportFieldHelper {
+  color: var(--mdc-theme-text-primary-on-dark) !important;
+  opacity: 0.8;
+  width: 8rem;
+}
+
+.exportSelectionField .exportGeneralField {
+  flex: 1;
+  min-width: 4rem;
+}
+
+.exportSelectionField .exportOptionsSelect {
+  width: 12rem;
+}
+
+.exportSelectionField .exportOptionsSelect .mdc-ripple-upgraded.mdc-select__selected-text{
+  direction: ltr;
+  overflow: hidden;
+}
+
+.exportSelectionsContainer .selectionContainer .removeSelectionBtn {
+  height: 20px;
+}
+
+.exportActionSeparator {
+  width: 1px;
+  height: 28px;
+  border: 1px solid var(--mdc-theme-text-primary-on-dark);
+  opacity: 0.7;
+}
+
+.selectionContainer.backdrop {
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+}
+.selectionContainer.backdrop::after {
+  content: "";
+  display: block;
+  position: absolute;  
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.3);
+}
+
+.selectionTitleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.exportOptionsSelect .mdc-select__anchor {
+  border: 1px solid var(--mdc-theme-gc-selection-background);
+  border-radius: 4px !important;
+}
+
+.exportOptionsSelect li {
+  gap: 8px;
+}
+
+.detailsFieldValue.selectBoxContainer {
+  overflow: unset;
+}
+
+.exportOptionsSelect .mdc-select__dropdown-icon {
+  bottom: 2px;
+  right: 16px;
+}
+
+body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
+  right: unset;
+  left: 16px;
+}
+
+.exportOptionsSelect [aria-hidden="true"] {
+  display: none;
+  transition: none;
+}
+
+.exportOptionsSelect .mdc-menu.mdc-select__menu.mdc-menu-surface.mdc-menu-surface--open {
+  max-height: 120px !important;
+  overflow: overlay;
+  width: 15rem;
+}
+
+.exportOptionsSelect .mdc-select__anchor {
+  height: 25px;
+}
+
+.exportOptionsSelect .mdc-select__anchor .mdc-select__selected-text {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 20px;
+}
+
+.exportFieldLabelContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2px;
+}
+
+.exportFieldLabelContainer .requiredAsterisk {
+  color: var(--mdc-theme-gc-error-high);
+
+}
+
+.exportActionMenu {
+  max-height: 180px !important;
+  overflow-y: overlay;
+  width: 180px;
+}
+
+.exportActionMenuItem {
+  width: 100%;
+}
+
+.exportActionMenuItem:hover {
+  color: white;
+}
+
+.estimationsContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  background-color: rgba(5,5,5,0.1);
+  padding: 4px;
+  border-radius: 2px;
+  height: 60px;
+  width: 420px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.freeDiskSpaceContainer, .sizeEstimationContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  line-height: 1;
+  gap: 5px;
+  text-align: left;
+  width: 100%;
+  flex: 1;
+}
+
+body[dir="rtl"] .freeDiskSpaceContainer, .sizeEstimationContainer {
+  text-align: right;
+}
+
+.freeDiskSpaceLabel, .sizeEstimationLabel {
+  margin: 0;
+  padding: 0;
+}
+
+.freeDiskSpaceValue, .sizeEstimationValue {
+  height: 1rem;
+  width: 10ch;
+  line-height: 1.4;
+}
+
+.sizeEstimationLoading, .freeDiskSpaceLoading {
+  align-self: center;
+}
+
+.freeDiskSpaceLoading, .sizeEstimationLoading {
+  width: 1rem;
+  height: 1rem;
+  margin-inline: 10px;
+}
+
+
+.exportLayerSuccessContainer .mdc-dialog__surface {
+  width: 400px;
+}
+
+
+.exportLayerSuccessContainer .closeIcon {
+ font-size: 1rem;
+}
+
+.exportLayerSuccessContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.exportLayerSuccessContainer .finalStageButtonsContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  justify-self: flex-end;
+  width: 100%;
+  padding: 20px;
+}
+
+.finalStageButtonsContainer #copyAndApprove {
+  width: 100%;
+}
+
+.exportLayerSuccessContainer .jobIdTitle {
+  font-size: 1.2rem;
+  margin: 5px 0;
+}
+
+.exportLayerSuccessContainer .jobIdText {
+  font-size: 1.5rem;
+  margin: 5px 0;
+  font-weight: bold;
+  background-color: var(--mdc-theme-gc-tab-active-background);
+  opacity: 0.8;
+  cursor: copy;
+  user-select: none;
+  padding: 20px;
+  text-align: center;
+}
+
+.exportLayerSuccessContainer .jobIdText:hover {
+  opacity: 1;
+}
+
+.exportLayerSuccessContainer .mainTextContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.erroredSelection {
+  border: 1px solid var(--mdc-theme-gc-error-high);
+}

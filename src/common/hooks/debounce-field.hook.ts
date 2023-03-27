@@ -11,12 +11,15 @@ export interface GCHTMLInputElement{
   }
 };
 
+const DEFAULT_DEBOUNCE = 300;
+
 const useDebounceField = <T> (
   formikHandlers: EntityFormikHandlers,
   value: T | string,
+  debouncePeriod = DEFAULT_DEBOUNCE
 ): [T | string, (event: React.ChangeEvent<HTMLInputElement | GCHTMLInputElement>) => void] => {
   const [innerValue, setInnerValue] = useState<T | string>(value);
-  const INPUT_DELAY = 300;
+  const INPUT_DELAY = debouncePeriod;
 
   useEffect(() => {
       setInnerValue(value);

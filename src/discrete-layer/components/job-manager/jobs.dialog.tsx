@@ -233,7 +233,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             onGridReadyCB={(params): void => {
               setGridApi(params.api)
             }}
-            priorityChangeCB={setUpdateTaskPayload}
+            updateJobCB={setUpdateTaskPayload}
             rowDataChangeCB={(): void => {
               gridApi?.applyTransaction({ update: gridRowData });
             }}

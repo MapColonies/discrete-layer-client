@@ -23,10 +23,19 @@ export interface IEntityActions {
   actions: IActionGroup[];
 }
 
+export enum EntityActionsTypes {
+  GENERAL_ACTIONS = 'generalActions',
+  MAP_ACTIONS = 'mapActions',
+  CRUD = 'CRUD',
+  JOB_ACTIONS = 'jobActions',
+  EXPORT_ACTIONS = 'exportActions',
+
+}
+
 const GENERAL_ACTIONS_GROUP: IActionGroup = {
   id: 0,
   titleTranslationId: 'layerCatalogToMap',
-  type: 'catalogToMapOperations',
+  type: EntityActionsTypes.GENERAL_ACTIONS,
   group: [
     {
       action: 'flyTo',
@@ -34,6 +43,14 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       icon: '',
       class: 'mc-icon-Fly-to',
       titleTranslationId: 'action.flyTo.tooltip',
+      views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+    },
+    {
+      action: 'export',
+      frequent: false,
+      icon: '',
+      class: 'mc-icon-Export',
+      titleTranslationId: 'action.export.tooltip',
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
   ],
@@ -47,7 +64,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'OperationsOnMap',
-        type: 'mapActions',
+        type: EntityActionsTypes.MAP_ACTIONS,
         group: [
           {
             action: 'moveToTop',
@@ -86,7 +103,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 2,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -113,7 +130,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
           },
         ],
-      },
+      }
     ]
   },
   {
@@ -123,7 +140,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -153,7 +170,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -182,7 +199,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -203,7 +220,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -224,7 +241,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'CRUD',
-        type: 'CRUD',
+        type: EntityActionsTypes.CRUD,
         group: [
           {
             action: 'edit',
@@ -252,7 +269,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       {
         id: 1,
         titleTranslationId: 'OperationsOnJobs',
-        type: 'jobActions',
+        type: EntityActionsTypes.JOB_ACTIONS,
         group: [
           {
             action: 'retry',
