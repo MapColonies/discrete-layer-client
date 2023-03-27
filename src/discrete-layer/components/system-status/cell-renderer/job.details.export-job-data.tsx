@@ -6,7 +6,6 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
 import { JobModelType, Status } from '../../../models';
-import { getTokenParam } from '../../helpers/layersUtils';
 import { CopyButton } from '../../job-manager/job-details.copy-button';
 
 import './job.details.export-job-data.css';
@@ -29,23 +28,20 @@ const JobDetailsExportJobData: React.FC<JobDetailsExportJobDataProps> = ({ data 
     // const exportLinkLabel = intl.formatMessage({id: 'system-status.export-details.link.label'});
     const jobNoDescriptionText = intl.formatMessage({id: 'system-status.export-details.no-description.text'});
     
-    const jobDescriptionText = intl.formatMessage(
-      { id: 'system-status.export-details.description.text' },
-      {
-        desc:
-          jobDescription.length === NONE
-            ? jobNoDescriptionText
-            : jobDescription,
-      }
-    );
+    const jobDescriptionText = intl.formatMessage({ id: 'system-status.export-details.description.label' } );
 
     if(!(isExportJob as boolean)) return null;
 
     return (
       <Box className="exportJobDataContainer">
         <Box className="jobDescriptionContainer">
-          <Typography tag="p" className="jobDescription">
+          <Typography tag="bdi" className="jobDescriptionLabel">
             {jobDescriptionText}
+          </Typography>
+          <Typography tag="bdi" className="jobDescription">
+            {jobDescription.length === NONE
+              ? jobNoDescriptionText
+              : jobDescription}
           </Typography>
         </Box>
 
@@ -55,11 +51,7 @@ const JobDetailsExportJobData: React.FC<JobDetailsExportJobDataProps> = ({ data 
               const typeToPresent = linkType.replace('URI', '');
               return (
                 <Box className="linkContainer">
-                  <Hyperlink
-                    url={exportLink}
-                    token={getTokenParam()}
-                    label={typeToPresent}
-                  />
+                  <Hyperlink url={exportLink} label={typeToPresent} />
                   <CopyButton text={exportLink} key={exportLink} />
                 </Box>
               );
