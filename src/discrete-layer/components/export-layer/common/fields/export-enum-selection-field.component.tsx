@@ -28,7 +28,7 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
   selectionIdx,
   fieldName,
   fieldValue,
-  fieldInfo: { placeholderValue, helperTextValue, rhfValidation },
+  fieldInfo: { placeholderValue, helperTextValue, rhfValidation, validationAgainstField },
   type,
 }) => {
   const intl = useIntl();
@@ -37,11 +37,28 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
   const { enumsMap } = useContext(EnumsMapContext);
   const [innerValue, setInnerValue] = useState(fieldValue);
   const enums = enumsMap as IEnumsMapType;
-  const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
   const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
+  
+  const getFormFieldId = (name: string): string => {
+    return `${selectionIdx}_${name}_${selectionId}`
+  }
 
+  const fieldId = getFormFieldId(fieldName);
+  
   useEffect(() => {
-    formMethods.register(fieldId, {...(rhfValidation ?? {})});
+    const registerValidation = {
+      ...(rhfValidation ?? {}),
+      validate: {
+        ...((rhfValidation?.validate) ?? {}),
+        validationAgainstField: (value: unknown): string | boolean |undefined => {
+          if(typeof validationAgainstField !== 'undefined') {
+            return validationAgainstField.validate(value, formMethods.watch(getFormFieldId(validationAgainstField.watch)));
+          }
+        }
+      },
+    };
+    
+    formMethods.register(fieldId, {...registerValidation});
     
     // Mitigate errors on init
     formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE });
