@@ -2,7 +2,7 @@ import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { Feature } from 'geojson';
 import { get, isEmpty } from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { RegisterOptions, useFormContext } from 'react-hook-form';
+import { RegisterOptions } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import { RecordType, useStore, FieldConfigModelType } from '../../../models';
