@@ -655,9 +655,10 @@
   "export-layer.zoomLevel.field": "Zoom Level",
   "export-layer.resolution.field": "Requested Resolution",
   "export-layer.maxResolutionDeg.field": "Resolution",
+  "export-layer.minResolutionDeg.field": "Min. Resolution",
   "export-layer.minimum.placeholder": "Min Value: {min}",
   "export-layer.resolution.helper-text": "(Meters)",
-  "export-layer.zoomLevel.helper-text": "(ZoomLevel: {zoomLevel})",
+  "export-layer.zoomLevel.helper-text": "(Zoom Level: {zoomLevel})",
   "export-layer.projection.field": "Projection",
   "export-layer.resampleMethod.field": "Resample Method",
   "export-layer.dataType.field": "Data Type",
@@ -671,5 +672,11 @@
   "export-layer.validations.invalidGeojson": "Invalid geoJSON format",
   "export-layer.validations.invalidFeatureProps": "Invalid features props",
   "export-layer.validations.invalidShapefile": "Invalid shapeFile format",
-  "export-layer.validations.generalInvalidType": "Please select ZIP files including shapeFile including all metadata files,\nOr a geoJSON of the correct format"
+  "export-layer.validations.generalInvalidType": "Please select ZIP files including shapeFile including all metadata files,\nOr a geoJSON of the correct format",
+  "export-layer.validations.relations.larger": "greater than-",
+  "export-layer.validations.relations.greaterOrEqual": "greater or equal to-",
+  "export-layer.validations.relations.lower": "lower than-",
+  "export-layer.validations.relations.lowerOrEqual": "lower or equal to-",
+  "export-layer.validations.relations.equal": "equals to-",
+  "export-layer.validations.againstOtherField": "Value should be {relation} field {fieldName}"
 }

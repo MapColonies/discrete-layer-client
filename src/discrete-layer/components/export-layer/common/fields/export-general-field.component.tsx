@@ -25,14 +25,20 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   selectionIdx,
   fieldName,
   fieldValue,
-  fieldInfo: {placeholderValue, helperTextValue, rhfValidation, rows, maxLength},
+  fieldInfo: {placeholderValue, helperTextValue, rhfValidation, validationAgainstField, rows, maxLength},
   type,
   isLoading,
 }) => {
   const store = useStore();
   const formMethods = useFormContext();
   const [helperText, setHelperText] = useState<string | undefined>(getHelperTextValue(helperTextValue, fieldValue));
-  const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
+  
+  const getFormFieldId = (name: string): string => {
+    return `${selectionIdx}_${name}_${selectionId}`
+  }
+
+  const fieldId = getFormFieldId(fieldName);
+  
   const placeholderVal = useMemo(() =>
     typeof placeholderValue !== 'undefined'
       ? typeof placeholderValue === 'string'
@@ -62,7 +68,19 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   );
 
   useEffect(() => {
-    formMethods.register(fieldId, {...(rhfValidation ?? {})});
+    const registerValidation = {
+      ...(rhfValidation ?? {}),
+      validate: {
+        ...((rhfValidation?.validate) ?? {}),
+        validationAgainstField: (value: unknown): string | boolean |undefined => {
+          if(typeof validationAgainstField !== 'undefined') {
+            return validationAgainstField.validate(value, formMethods.watch(getFormFieldId(validationAgainstField.watch)));
+          }
+        }
+      },
+    };
+    
+    formMethods.register(fieldId, {...registerValidation});
     
     // Mitigate errors on init
     formMethods.setValue(fieldId, fieldValue, { shouldValidate: fieldValue.length > NONE });
