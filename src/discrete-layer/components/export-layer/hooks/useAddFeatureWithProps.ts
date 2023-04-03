@@ -23,7 +23,7 @@ export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
   defaultValue?: unknown;
   validationAgainstField?: {
-    watch: string, // fieldName
+    watch: AvailableProperties,
     validate: (fieldVal: unknown, otherFieldVal: unknown) => string | boolean | undefined
   };
   formatValueFunc?: (val: unknown) => unknown;
