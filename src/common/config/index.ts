@@ -107,6 +107,7 @@ const APP_CONFIG = {
     CENTER: MAP.center as [number, number],
     ZOOM: MAP.zoom as number,
     PROJECTION: Proj.WGS84,
+    USE_OPTIMIZED_TILE_REQUESTS: MAP.useOptimizedTileRequests as boolean,
   },
   ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER'
   ACTIVE_LAYER_PROPERTIES: ACTIVE_LAYER_PROPERTIES,

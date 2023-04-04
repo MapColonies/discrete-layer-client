@@ -841,6 +841,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             imageryProvider={false}
             locale = {mapSettingsLocale}
             baseMaps={store.discreteLayersStore.baseMaps}
+            useOptimizedTileRequests={CONFIG.MAP.USE_OPTIMIZED_TILE_REQUESTS}
             // @ts-ignore
             imageryContextMenu={<ContextMenuByTab />}
             imageryContextMenuSize={getContextMenuSizeTab()}
