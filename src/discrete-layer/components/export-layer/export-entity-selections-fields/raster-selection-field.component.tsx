@@ -12,6 +12,36 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
   const { exportStore } = useStore();
 
   switch (fieldName) {
+    case 'minResolutionDeg': {
+      const currentRes = (get(
+        exportStore.geometrySelectionsCollection.features[selectionIdx - 1],
+        `properties.minResolutionDeg`
+      ) as number | undefined)?.toString();
+
+      const maxResFromLayer = (get(
+        exportStore.layerToExport,
+        `maxResolutionDeg`
+      ) as number | undefined)?.toString();
+
+      const getValidResolutions = (): string[] => {
+        return Object.values(ZOOM_LEVELS_TABLE)
+        .map((res) => res.toString())
+        .filter((res) => {
+         return typeof maxResFromLayer !== 'undefined' ? +res >= +maxResFromLayer : res;
+        })
+      }
+
+      const options = getValidResolutions();
+
+      return (
+        <>
+          <ExportOptionsField
+            options={Array.from(new Set(options))}
+            defaultValue={currentRes}
+            {...props} />
+        </>
+      )
+    }
     case 'maxResolutionDeg': {
       const currentRes = (get(
         exportStore.layerToExport,

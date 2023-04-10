@@ -29,7 +29,7 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
   selectionIdx,
   fieldName,
   fieldValue,
-  fieldInfo: { placeholderValue, helperTextValue, rhfValidation },
+  fieldInfo: { placeholderValue, helperTextValue, rhfValidation, validationAgainstField },
   type,
 }) => {
   const store = useStore();
@@ -37,10 +37,25 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
   const [innerValue, setInnerValue] = useState(isEmpty(fieldValue) ? defaultValue ?? '' : fieldValue);
   const [helperText, setHelperText] = useState<string | undefined>(getHelperTextValue(helperTextValue, fieldValue));
 
-  const fieldId = `${selectionIdx}_${fieldName}_${selectionId}`;
+  const getFormFieldId = (name: string): string => {
+    return `${selectionIdx}_${name}_${selectionId}`
+  }
+  const fieldId = getFormFieldId(fieldName);
 
   useEffect(() => {
-    formMethods.register(fieldId, {...(rhfValidation ?? {})});
+    const registerValidation = {
+      ...(rhfValidation ?? {}),
+      validate: {
+        ...((rhfValidation?.validate) ?? {}),
+        validationAgainstField: (value: unknown): string | boolean |undefined => {
+          if(typeof validationAgainstField !== 'undefined') {
+            return validationAgainstField.validate(value, formMethods.watch(getFormFieldId(validationAgainstField.watch)));
+          }
+        }
+      },
+    };
+    
+    formMethods.register(fieldId, {...registerValidation});
     
     // Mitigate errors on init
     formMethods.setValue(fieldId, innerValue, { shouldValidate: innerValue.length > NONE });

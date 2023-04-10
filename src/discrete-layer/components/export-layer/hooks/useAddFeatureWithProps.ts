@@ -1,12 +1,13 @@
-import { degreesPerPixel, degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
+import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { Feature } from 'geojson';
 import { get, isEmpty } from 'lodash';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { RegisterOptions } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
-import { RecordType, useStore, FieldConfigModelType, ValidationConfigModelType } from '../../../models';
-import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../../layer-details/entity-types-keys';
+import { RecordType, useStore, FieldConfigModelType } from '../../../models';
+import { LayerMetadataMixedUnionKeys } from '../../layer-details/entity-types-keys';
+import { ZOOM_LEVELS_TABLE } from '../constants';
 
 // Add here more fields as union of strings.
 export type AvailableProperties =
@@ -15,10 +16,16 @@ export type AvailableProperties =
   | 'resampleMethod'
   | 'dataType'
   | 'resolution'
-  | 'maxResolutionDeg';
+  | 'maxResolutionDeg'
+  | 'minResolutionDeg';
 
 export type ExportFieldOptions =  Partial<FieldConfigModelType> & {
   defaultsFromEntityField?: LayerMetadataMixedUnionKeys;
+  defaultValue?: unknown;
+  validationAgainstField?: {
+    watch: AvailableProperties,
+    validate: (fieldVal: unknown, otherFieldVal: unknown) => string | boolean | undefined
+  };
   formatValueFunc?: (val: unknown) => unknown;
   isExternal?: boolean;
   rhfValidation?: RegisterOptions;
@@ -38,6 +45,8 @@ interface IUseAddFeatureWithProps {
   internalFields?: Record<AvailableProperties, unknown>;
   propsForDomain?: ExportEntityProp;
 }
+
+const FIRST = 0;
 
 const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProps => {
   const store = useStore();
@@ -121,6 +130,45 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
             required: {value: true, message: intl.formatMessage({id: 'export-layer.validations.required'})}
            }
         },
+        minResolutionDeg: {
+          defaultValue: ZOOM_LEVELS_TABLE[FIRST],
+          helperTextValue: (value): string => {
+            let zoomLevel: number;
+            try {
+              zoomLevel = degreesPerPixelToZoomLevel(value as number);
+            } catch(e) {
+              console.error(e);
+              zoomLevel = NaN;
+            }
+            
+            const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { zoomLevel });
+            return helperTextVal;
+            
+          },
+          validationAgainstField: {
+            watch: 'maxResolutionDeg',
+            validate: (minResolutionValue, maxResolutionValue): string | undefined => {
+              const validationRelationText = intl.formatMessage({id: 'export-layer.validations.relations.largerOrEqual'});
+              const maxResDegFieldName = intl.formatMessage({id: 'export-layer.maxResolutionDeg.field'});
+              const validationErrorMsg = intl.formatMessage({id: 'export-layer.validations.againstOtherField'}, {relation: validationRelationText, fieldName: maxResDegFieldName});
+              
+              if(Number(minResolutionValue) < Number(maxResolutionValue)) {
+                return validationErrorMsg;
+              }
+            }
+          },
+          rhfValidation: {
+            validate: {
+              checkMinVal: (val): string | boolean => {
+                const minResolutionDeg = get(layerToExport, 'minResolutionDeg') as number;
+                const minimumErrMsg = intl.formatMessage({id: 'export-layer.validations.min'}, {min: minResolutionDeg});
+
+                return val !== '' && +val < minResolutionDeg ? minimumErrMsg : true;
+              },
+            },
+            valueAsNumber: true,
+           }
+        },
       },
     ],
     [RecordType.RECORD_3D, {
@@ -185,7 +233,8 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
 
     for(const [fieldName, fieldOptions] of Object.entries(propsForDomain ?? {})) {
       if(predicate(fieldOptions)) {
-        let fieldValue = get(layerToExport, fieldOptions.defaultsFromEntityField as string) as string | undefined ?? '';
+        let fieldValue = fieldOptions.defaultValue as string | undefined ?? 
+        (get(layerToExport, fieldOptions.defaultsFromEntityField as string) as string | undefined ?? '');
         
         if(typeof fieldOptions.formatValueFunc !== 'undefined' && fieldValue) {
           const formattedVal = fieldOptions.formatValueFunc(fieldValue) as string | undefined;

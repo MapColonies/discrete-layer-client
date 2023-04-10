@@ -1,8 +1,6 @@
 import { Feature } from "geojson";
-import { get, isEmpty } from "lodash";
+import { get } from "lodash";
 import { IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
-import { LayerMetadataMixedUnion } from "../../../models";
-import { LayerMetadataMixedUnionKeys } from "../../layer-details/entity-types-keys";
 import { AvailableProperties } from "../hooks/useAddFeatureWithProps";
 
 export function sanitizeFeaturesWithProps(features: Feature[], internalPropsForDomain: Record<AvailableProperties, unknown>): Feature[] {
