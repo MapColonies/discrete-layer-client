@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.28.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.5...v1.28.0) (2023-04-13)
+
+
+### Features
+
+* add min resolution field to raster export feature ([#439](https://github.com/MapColonies/discrete-layer-client/issues/439)) ([69644d0](https://github.com/MapColonies/discrete-layer-client/commit/69644d03dd0b61265a6b891f8f74c8343607e66d))
+
+
+### Bug Fixes
+
+* qmesh export actions permissions ([#438](https://github.com/MapColonies/discrete-layer-client/issues/438)) ([fa33799](https://github.com/MapColonies/discrete-layer-client/commit/fa33799db39a5a057bfec3df73d579eb2b24b773))
+* validationAgainstField watch should be of type AvailableProperties ([842e5d3](https://github.com/MapColonies/discrete-layer-client/commit/842e5d30da746c499d017cbfdb62b37a8b0fe915))
+
 ### [1.27.5](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.4...v1.27.5) (2023-03-27)
 
 
