@@ -22,6 +22,7 @@ keys = [
   "/configuration/active/layer/properties/url/pattern/params/format",
   "/configuration/map/center",
   "/configuration/map/zoom",
+  "/configuration/map/use/optimized/tile/requests",
   "/configuration/logger/http/host",
   "/configuration/logger/http/port",
   "/configuration/logger/http/path",
@@ -38,5 +39,5 @@ keys = [
   "/configuration/access/token/injection/type",
   "/configuration/access/token/token/value",
   "/configuration/served/entity/types",
-  "/configuration/admin/password"
+  "/configuration/admin/password",
 ]
