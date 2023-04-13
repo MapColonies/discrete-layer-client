@@ -97,7 +97,7 @@ export const getValuePresentor = (
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
       );
-    case 'DataType':
+    case 'DemDataType':
     case 'NoDataValue':
     case 'VerticalDatum':
     case 'Units':
