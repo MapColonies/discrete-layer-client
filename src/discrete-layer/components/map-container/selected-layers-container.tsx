@@ -60,6 +60,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           <CesiumXYZLayer
             key={layer.id}
             meta={{
+              id: layer.id,
               searchLayerPredicate: ((cesiumLayer, idx) => {
                 const correctLinkByProtocol = (layer.links as LinkModelType[]).find(link => link.protocol === layerLink.protocol);
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -92,6 +93,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           <CesiumWMTSLayer
             key={layer.id}
             meta={{
+              id: layer.id,
               searchLayerPredicate: ((cesiumLayer, idx) => {
                 const linkUrl = (optionsWMTS.url as Record<string, any>)._url as string;
                 const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
