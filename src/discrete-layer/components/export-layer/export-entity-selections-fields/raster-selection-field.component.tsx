@@ -38,6 +38,12 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
           <ExportOptionsField
             options={Array.from(new Set(options))}
             defaultValue={currentRes}
+            valueToPresentPredicate={(value: string): string => {
+              const [integers, decimals] = value.split('.');
+              const substrStart = 0;
+              const numberOfDecimals = 8;
+              return `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
+            }}
             {...props} />
         </>
       )
@@ -71,6 +77,12 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
           <ExportOptionsField 
             options={Array.from(new Set([currentRes, ...getValidResolutions()]))}
             defaultValue={resFromEntityProps ?? currentRes}
+            valueToPresentPredicate={(value: string): string => {
+              const [integers, decimals] = value.split('.');
+              const substrStart = 0;
+              const numberOfDecimals = 8;
+              return `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
+            }}
             {...props} />
         </>
       );

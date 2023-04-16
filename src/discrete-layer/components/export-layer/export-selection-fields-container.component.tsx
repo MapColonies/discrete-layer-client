@@ -101,7 +101,9 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
     <>
       {propsForDomain && externalFields && internalFields && (
         <div ref={selectionsContainerRef} className="exportSelectionsContainer">
-          {externalExportFields}
+          <Box className="externalFields">
+            {externalExportFields}
+          </Box>
           {renderExportSelectionsFields}
         </div>
       )}
