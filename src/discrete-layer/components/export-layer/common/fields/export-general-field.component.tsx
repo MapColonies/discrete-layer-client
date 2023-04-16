@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { TextField, Typography } from '@map-colonies/react-core';
+import React, { ChangeEvent, useCallback, useEffect, useMemo } from 'react';
+import { TextField } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { useStore } from '../../../../models';
 import { useFormContext } from 'react-hook-form';
@@ -9,16 +9,9 @@ import { EntityFormikHandlers } from '../../../layer-details/layer-datails-form'
 import ExportFieldLabel from '../export-field-label.component';
 import { DEBOUNCE_PERIOD_EXPORT_FIELDS } from '../../constants';
 import { ExportFieldProps } from '../../types/interfaces';
+import ExportFieldHelperText from '../export-field-helper-text.component';
 
 const NONE = 0;
-
-const getHelperTextValue = (helperTextValue?: string | ((value: unknown) => string), value?: string): string | undefined => {
-  if(typeof helperTextValue !== 'undefined' && typeof helperTextValue !== 'string' && !isEmpty(value?.toString())) {
-    return helperTextValue(value);
-  }
-
-  return !isEmpty(helperTextValue) && typeof helperTextValue === 'string' ? helperTextValue : undefined;
-}
 
 const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
   selectionId,
@@ -31,7 +24,6 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
 }) => {
   const store = useStore();
   const formMethods = useFormContext();
-  const [helperText, setHelperText] = useState<string | undefined>(getHelperTextValue(helperTextValue, fieldValue));
   
   const getFormFieldId = (name: string): string => {
     return `${selectionIdx}_${name}_${selectionId}`
@@ -56,8 +48,6 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
       fieldName,
       newFieldVal
     );
-
-    setHelperText(getHelperTextValue(helperTextValue, `${newFieldVal}`));
     
   }, [store.exportStore.setSelectionProperty, selectionId, fieldName])
 
@@ -121,11 +111,8 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
         }}
         invalid={!isEmpty(formMethods.errors[fieldId])}
       />
-      {typeof helperText !== 'undefined' && (
-        <Typography tag="span" className="exportFieldHelper" htmlFor={fieldId}>
-          {!isEmpty(helperText) && helperText}
-        </Typography>
-      )}
+
+      <ExportFieldHelperText key={`${fieldId}_helper`} helperText={helperTextValue} fieldValue={fieldValue} />
     </Box>
   );
 };

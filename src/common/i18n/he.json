@@ -657,7 +657,7 @@
   "export-layer.description.field": "תיאור",
   "export-layer.zoomLevel.field": "רמת זום",
   "export-layer.resolution.field": "רזולוציה מבוקשת",
-  "export-layer.maxResolutionDeg.field": "רזולוציה",
+  "export-layer.maxResolutionDeg.field": "רזולוציה מקס'",
   "export-layer.minResolutionDeg.field": "רזולוציה מינ'",
   "export-layer.minimum.placeholder": "ערך מינימלי: {min}",
   "export-layer.resolution.helper-text": "(מטר)",

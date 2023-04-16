@@ -6,21 +6,16 @@ import { useFormContext } from 'react-hook-form';
 import { useStore } from '../../../../models';
 import { ExportFieldProps } from '../../types/interfaces';
 import ExportFieldLabel from '../export-field-label.component';
+import TooltippedValue from '../../../../../common/components/form/tooltipped.value';
+import ExportFieldHelperText from '../export-field-helper-text.component';
 
 interface ExportOptionsFieldProps extends ExportFieldProps {
   options: string[];
   defaultValue?: string;
+  valueToPresentPredicate?: (value: string) => string;
 }
 
 const NONE = 0;
-
-const getHelperTextValue = (helperTextValue?: string | ((value: unknown) => string), value?: string): string | undefined => {
-  if(typeof helperTextValue !== 'undefined' && typeof helperTextValue !== 'string' && !isEmpty(value?.toString())) {
-    return helperTextValue(value);
-  }
-
-  return !isEmpty(helperTextValue) && typeof helperTextValue === 'string' ? helperTextValue : undefined;
-}
 
 const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
   options,
@@ -30,12 +25,11 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
   fieldName,
   fieldValue,
   fieldInfo: { placeholderValue, helperTextValue, rhfValidation, validationAgainstField },
-  type,
+  valueToPresentPredicate = (value): string => value,
 }) => {
   const store = useStore();
   const formMethods = useFormContext();
   const [innerValue, setInnerValue] = useState(isEmpty(fieldValue) ? defaultValue ?? '' : fieldValue);
-  const [helperText, setHelperText] = useState<string | undefined>(getHelperTextValue(helperTextValue, fieldValue));
 
   const getFormFieldId = (name: string): string => {
     return `${selectionIdx}_${name}_${selectionId}`
@@ -85,8 +79,6 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
             newFieldVal
           );
 
-          setHelperText(getHelperTextValue(helperTextValue, `${newFieldVal}`));
-
           formMethods.setValue(fieldId, newFieldVal, { shouldValidate: true });
           setInnerValue(e.currentTarget.value);
         }}
@@ -101,16 +93,13 @@ const ExportOptionsField: React.FC<ExportOptionsFieldProps> = ({
         {options.map((option, i) => {
           return (
             <MenuItem key={i} value={option}>
-              {option}
+              {valueToPresentPredicate(option)}
             </MenuItem>
           );
         })}
       </Select>
-      {typeof helperText !== 'undefined' && (
-        <Typography tag="span" className="exportFieldHelper" htmlFor={fieldId}>
-          {!isEmpty(helperText) && helperText}
-        </Typography>
-      )}
+
+      <ExportFieldHelperText key={`${fieldId}_helper`} helperText={helperTextValue} fieldValue={fieldValue} />
     </Box>
   );
 };

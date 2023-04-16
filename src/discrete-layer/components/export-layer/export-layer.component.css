@@ -78,7 +78,7 @@
   flex: 1;
   flex-direction: column;
   margin: 20px 0;
-  padding: 12px;
+  padding: 10px;
 }
 
 .exportSelectionsContainer .selectionFields {
@@ -91,8 +91,8 @@
 .exportSelectionsContainer .selectionContainer {
   display: flex;
   flex-direction: row-reverse;
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 20px;
+  padding: 0px 10px;
 }
 
 .selectionLoading {
@@ -158,7 +158,10 @@
 .exportSelectionField .exportFieldHelper {
   color: var(--mdc-theme-text-primary-on-dark) !important;
   opacity: 0.8;
-  width: 8rem;
+  width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .exportSelectionField .exportGeneralField {
@@ -255,8 +258,17 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 .exportFieldLabelContainer {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
+  white-space: nowrap;
   gap: 2px;
+}
+
+.exportFieldLabelContainer {
+  width: 13ch;
+}
+
+.externalFields .exportFieldLabelContainer {
+  width: unset;
 }
 
 .exportFieldLabelContainer .requiredAsterisk {

@@ -13,6 +13,8 @@ import CONFIG from '../../../../../common/config';
 import { useStore } from '../../../../models';
 import { ExportFieldProps } from '../../types/interfaces';
 import ExportFieldLabel from '../export-field-label.component';
+import TooltippedValue from '../../../../../common/components/form/tooltipped.value';
+import ExportFieldHelperText from '../export-field-helper-text.component';
 
 interface ExportEnumSelectionFieldProps extends ExportFieldProps {
   options: string[];
@@ -122,6 +124,8 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
           );
         })}
       </Select>
+
+      <ExportFieldHelperText key={`${fieldId}_helper`} helperText={helperTextValue} fieldValue={fieldValue} />
     </Box>
   );
 };
