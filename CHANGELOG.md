@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.28.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.28.0...v1.28.1) (2023-04-16)
+
+
+### Bug Fixes
+
+* export layer selection fields styling ([#442](https://github.com/MapColonies/discrete-layer-client/issues/442)) ([e7c6b53](https://github.com/MapColonies/discrete-layer-client/commit/e7c6b53851575570b95dabe0dc3e1d291f473a6b))
+
 ## [1.28.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.27.5...v1.28.0) (2023-04-13)
 
 
