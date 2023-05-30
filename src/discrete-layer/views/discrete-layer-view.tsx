@@ -173,7 +173,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const mapSettingsLocale = useMemo(() => ({
     MAP_SETTINGS_DIALOG_TITLE:  intl.formatMessage({ id: 'map-settings.dialog.title' }),
     MAP_SETTINGS_SCENE_MODE_TITLE: intl.formatMessage({ id: 'map-settings.base-map.scene-mode.title' }),
-    MAP_SETTINGS_BASE_MAP_TITLE: intl.formatMessage({ id: 'map-settings.base-map.title' })
+    MAP_SETTINGS_BASE_MAP_TITLE: intl.formatMessage({ id: 'map-settings.base-map.title' }),
+    ZOOM_LABEL: intl.formatMessage({ id: 'map.zoom.label' })
   }), [intl]);
   /* eslint-enable */
 
@@ -834,6 +835,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="mapAppContainer">
           <CesiumMap 
+            showZoomLevel={true}
             projection={CONFIG.MAP.PROJECTION}  
             center={CONFIG.MAP.CENTER}
             zoom={CONFIG.MAP.ZOOM}

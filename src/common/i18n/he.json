@@ -561,6 +561,7 @@
   "map-settings.base-map.title": "מפות בסיס",
   "map-settings.base-map.scene-mode.title": "מצב תצוגה",
   "map-settings.dialog.title": "הגדרות מפה",
+  "map.zoom.label": "zoom",
 
   "user-role.switch.user.text": "משתמש",
   "user-role.switch.admin.text": "מנהל",
