@@ -559,6 +559,7 @@
   "map-settings.base-map.title": "Base Maps",
   "map-settings.base-map.scene-mode.title": "Scene Mode",
   "map-settings.dialog.title": "Map Settings",
+  "map.zoom.label": "zoom",
 
   "user-role.switch.user.text": "User",
   "user-role.switch.admin.text": "Admin",
