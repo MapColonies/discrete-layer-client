@@ -31,12 +31,16 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     placeHolderText: shouldShowTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT,
     calendarLocale: CONFIG.I18N.DEFAULT_LANGUAGE as SupportedLocales,
   }), [shouldShowTime]);
+
+  const isInvalidDate = (): boolean => {
+    return innerValue === null || !moment(innerValue).isValid();
+  }
   
   const inputValue = (): string | undefined => {
-    if (innerValue === null || !moment(innerValue).isValid()) {
+    if (isInvalidDate()) {
       return undefined;
     } 
-    return dateFormatter(innerValue, shouldShowTime);
+    return dateFormatter(innerValue as string | moment.Moment, shouldShowTime);
   };
   
 
@@ -48,6 +52,11 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
   };
 
   const isReadOnlyMode = mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true) || mode === Mode.EXPORT;
+
+  // Render empty field for null dates
+  if(!isInvalidDate()) {
+    return <></>;
+  }
 
   if (isReadOnlyMode) {
     return (

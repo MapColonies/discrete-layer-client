@@ -22,6 +22,8 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [copied, setCopied] = useState<boolean>(false);
   const intl = useIntl();
+
+  // Render COPY action for unknown link types also.
   return (
     <>
       <TooltippedValue
@@ -36,7 +38,7 @@ export const UrlValuePresentorComponent: React.FC<UrlValuePresentorProps> = ({ v
       </TooltippedValue>
 
       {
-        linkInfo?.linkAction === COPY ? (
+        !linkInfo || linkInfo.linkAction === COPY ? (
           <Box className="detailsUrlFieldUrlCopy">
             <Tooltip
               content={intl.formatMessage({ id: 'action.copy-url.tooltip' })}
