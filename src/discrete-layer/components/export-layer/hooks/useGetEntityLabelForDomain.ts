@@ -12,6 +12,7 @@ const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
     const layerRecordType = useMemo(() => get(enums, `${layerToExport?.productType as string}.parentDomain`) as unknown as RecordType, [layerToExport]);
 
     const getEntityLabel = useCallback((item: RCesiumEntityProps): string => {
+        /* eslint-disable */
         switch(layerRecordType) {
             case RecordType.RECORD_RASTER: 
                 const maxVal = item.properties?.maxResolutionDeg.getValue();
@@ -22,6 +23,7 @@ const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
             default:
                 return '';
             }
+        /* eslint-enable */
     }, [layerRecordType]);
 
     return getEntityLabel;
