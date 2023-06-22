@@ -1,3 +1,4 @@
+import { degreesPerPixelToZoomLevel } from "@map-colonies/mc-utils";
 import { RCesiumEntityProps } from "@map-colonies/react-components";
 import { get } from "lodash";
 import { useCallback, useContext, useMemo } from "react";
@@ -11,16 +12,16 @@ const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
     const layerRecordType = useMemo(() => get(enums, `${layerToExport?.productType as string}.parentDomain`) as unknown as RecordType, [layerToExport]);
 
     const getEntityLabel = useCallback((item: RCesiumEntityProps): string => {
-        /* eslint-disable */
         switch(layerRecordType) {
             case RecordType.RECORD_RASTER: 
-                return item.properties?.maxResolutionDeg.getValue().toString() as string | null ?? '';
+                const maxVal = item.properties?.maxResolutionDeg.getValue();
+                const minVal = item.properties?.minResolutionDeg.getValue();
+                return (maxVal && minVal) ? `${degreesPerPixelToZoomLevel(minVal as number)} - ${degreesPerPixelToZoomLevel(maxVal as number)}` : '';
             case RecordType.RECORD_DEM: 
                 return item.properties?.resolution.getValue().toString() as string | null ?? '';
             default:
                 return '';
             }
-        /* eslint-enable */
     }, [layerRecordType]);
 
     return getEntityLabel;
