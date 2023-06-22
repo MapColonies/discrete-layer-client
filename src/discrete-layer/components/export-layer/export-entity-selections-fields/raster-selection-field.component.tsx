@@ -11,6 +11,8 @@ import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
   const { fieldName, fieldInfo, selectionIdx } = props;
   const { exportStore } = useStore();
+  const MAX_PADDING_LENGTH = 18;
+  const MAX_VALUE_LENGTH = 10;
 
   switch (fieldName) {
     case 'minResolutionDeg': {
@@ -45,7 +47,7 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
               const numberOfDecimals = 8;
               const resString = `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
               const zoomLevel = degreesPerPixelToZoomLevel(Number.parseFloat(value));
-              return `${resString.padEnd(18 + (10 - resString.length),' ')}${zoomLevel}`;
+              return `${resString.padEnd(MAX_PADDING_LENGTH + (MAX_VALUE_LENGTH - resString.length),' ')}${zoomLevel}`;
             }}
             {...props} />
         </>
@@ -86,7 +88,7 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
               const numberOfDecimals = 8;
               const resString = `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
               const zoomLevel = degreesPerPixelToZoomLevel(Number.parseFloat(value));
-              return `${resString.padEnd(18 + (10 - resString.length),' ')}${zoomLevel}`;
+              return `${resString.padEnd(MAX_PADDING_LENGTH + (MAX_VALUE_LENGTH - resString.length),' ')}${zoomLevel}`;
             }}
             {...props} />
         </>
