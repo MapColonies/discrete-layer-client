@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.29.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.28.1...v1.29.0) (2023-06-25)
+
+
+### Features
+
+* zoom level tracker ([#443](https://github.com/MapColonies/discrete-layer-client/issues/443)) ([43d242d](https://github.com/MapColonies/discrete-layer-client/commit/43d242d70d94fff62324f7608be22de913cbe1f5))
+
+
+### Bug Fixes
+
+* update build_and_push.yaml ([a222db1](https://github.com/MapColonies/discrete-layer-client/commit/a222db1842cd0112ab2454e4a4af3c8405f92c73))
+* zoom level and gpu error msg ([#445](https://github.com/MapColonies/discrete-layer-client/issues/445)) ([800a02f](https://github.com/MapColonies/discrete-layer-client/commit/800a02f54b5703b45e76a06fd2854603c7bdd11e))
+
 ### [1.28.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.28.0...v1.28.1) (2023-04-16)
 
 
