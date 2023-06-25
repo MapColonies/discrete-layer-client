@@ -6,10 +6,13 @@ import ExportGeneralFieldComponent from '../common/fields/export-general-field.c
 import ExportOptionsField from '../common/fields/export-options-field.component';
 import { ExportFieldProps } from '../types/interfaces';
 import { ZOOM_LEVELS_TABLE } from '../constants';
+import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 
 const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
   const { fieldName, fieldInfo, selectionIdx } = props;
   const { exportStore } = useStore();
+  const MAX_PADDING_LENGTH = 18;
+  const MAX_VALUE_LENGTH = 10;
 
   switch (fieldName) {
     case 'minResolutionDeg': {
@@ -42,7 +45,9 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
               const [integers, decimals] = value.split('.');
               const substrStart = 0;
               const numberOfDecimals = 8;
-              return `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
+              const resString = `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
+              const zoomLevel = degreesPerPixelToZoomLevel(Number.parseFloat(value));
+              return `${resString.padEnd(MAX_PADDING_LENGTH + (MAX_VALUE_LENGTH - resString.length),' ')}${zoomLevel}`;
             }}
             {...props} />
         </>
@@ -81,7 +86,9 @@ const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
               const [integers, decimals] = value.split('.');
               const substrStart = 0;
               const numberOfDecimals = 8;
-              return `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
+              const resString = `${integers}.${decimals.substring(substrStart, numberOfDecimals)}`;
+              const zoomLevel = degreesPerPixelToZoomLevel(Number.parseFloat(value));
+              return `${resString.padEnd(MAX_PADDING_LENGTH + (MAX_VALUE_LENGTH - resString.length),' ')}${zoomLevel}`;
             }}
             {...props} />
         </>

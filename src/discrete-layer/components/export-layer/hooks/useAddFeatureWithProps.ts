@@ -104,19 +104,19 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
            
             return placeholderValue;
           },
-          helperTextValue: (value): string => {
-            let zoomLevel: number;
-            try {
-              zoomLevel = degreesPerPixelToZoomLevel(value as number);
-            } catch(e) {
-              console.error(e);
-              zoomLevel = NaN;
-            }
+          // helperTextValue: (value): string => {
+          //   let zoomLevel: number;
+          //   try {
+          //     zoomLevel = degreesPerPixelToZoomLevel(value as number);
+          //   } catch(e) {
+          //     console.error(e);
+          //     zoomLevel = NaN;
+          //   }
             
-            const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { zoomLevel });
-            return helperTextVal;
+          //   const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { zoomLevel });
+          //   return helperTextVal;
             
-          },
+          // },
           rhfValidation: {
             validate: {
               checkMinVal: (val): string | boolean => {
@@ -132,19 +132,19 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
         },
         minResolutionDeg: {
           defaultValue: ZOOM_LEVELS_TABLE[FIRST],
-          helperTextValue: (value): string => {
-            let zoomLevel: number;
-            try {
-              zoomLevel = degreesPerPixelToZoomLevel(value as number);
-            } catch(e) {
-              console.error(e);
-              zoomLevel = NaN;
-            }
+          // helperTextValue: (value): string => {
+          //   let zoomLevel: number;
+          //   try {
+          //     zoomLevel = degreesPerPixelToZoomLevel(value as number);
+          //   } catch(e) {
+          //     console.error(e);
+          //     zoomLevel = NaN;
+          //   }
             
-            const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { zoomLevel });
-            return helperTextVal;
+          //   const helperTextVal = intl.formatMessage({id: 'export-layer.zoomLevel.helper-text'}, { zoomLevel });
+          //   return helperTextVal;
             
-          },
+          // },
           validationAgainstField: {
             watch: 'maxResolutionDeg',
             validate: (minResolutionValue, maxResolutionValue): string | undefined => {
