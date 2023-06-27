@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { PropsWithChildren, useMemo, useRef } from 'react';
 import { Typography, Tooltip } from '@map-colonies/react-core';
 import useIsEllipsisActive from '../../hooks/isEllipsisActive.hook';
 
@@ -10,7 +10,7 @@ export interface TooltippedValueProps {
   customTooltipText?: string;
 }
 
-const TooltippedValue: React.FC<TooltippedValueProps> = ({
+const TooltippedValue: React.FC<PropsWithChildren<TooltippedValueProps>> = ({
   tag = 'span',
   className = '',
   disableTooltip = false,

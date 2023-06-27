@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Feature, LineString, Polygon } from 'geojson';
 import { useIntl } from 'react-intl';
 import polygonToLine from '@turf/polygon-to-line';
-import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
+import CreateSvgIconLocationOn from '../../../icons/LocationOn';
 import {
   CesiumColor,
   CesiumConstantProperty,
