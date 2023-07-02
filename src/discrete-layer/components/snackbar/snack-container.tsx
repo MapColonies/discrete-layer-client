@@ -40,7 +40,7 @@ export const SnackContainer: React.FC = observer(() => {
       {!!snackDetails.message && (
         <Snackbar
           open={snackOpen}
-          onClose={(evt): void => setSnackOpen(false)}
+          onClose={(): void => setSnackOpen(false)}
           message={intl.formatMessage({ id: snackDetails.message })}
           dismissesOnAction
           action={

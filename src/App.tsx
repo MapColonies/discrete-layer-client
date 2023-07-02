@@ -9,6 +9,7 @@ import {
   RMWCProvider,
   Themes,
   SnackbarQueue,
+  IOptions,
 } from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
@@ -90,7 +91,7 @@ const App: React.FC = () => {
           ),
         }}
       >
-        <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme}>
+        <RMWCThemeProvider options={theme as IOptions}>
           <CssBaseline />
           <LookupTablesContext.Provider value={{ lookupTablesData, setLookupTablesData }}>
             <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>

@@ -511,7 +511,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
-                <MenuSurface open={openNew} onClose={(evt): void => setOpenNew(false)}>
+                <MenuSurface open={openNew} onClose={(): void => setOpenNew(false)}>
                   {
                     CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
                     permissions.isLayerRasterRecordIngestAllowed &&

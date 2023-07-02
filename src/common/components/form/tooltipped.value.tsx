@@ -21,7 +21,7 @@ const TooltippedValue: React.FC<PropsWithChildren<TooltippedValueProps>> = ({
   const elementRef = useRef<HTMLElement>(null);
   const isEllipsisActive = useIsEllipsisActive(elementRef);
   const typographyElement = useMemo(() => (
-    <Typography dir="auto" ref={elementRef} className={className} tag={tag}>
+    <Typography dir="auto" ref={elementRef} className={className} tag={tag as React.ElementType<any>}>
       {children}
     </Typography>
   ), [children]);

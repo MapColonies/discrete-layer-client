@@ -58,7 +58,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
       <MenuSurfaceAnchor id="actionsMenuContainer">
         <MenuSurface
           open={openActionsMenu}
-          onClose={(evt): void => setOpenActionsMenu(false)}
+          onClose={(): void => setOpenActionsMenu(false)}
           onMouseOver={(evt): void => { evt.stopPropagation(); }}
         >
           {

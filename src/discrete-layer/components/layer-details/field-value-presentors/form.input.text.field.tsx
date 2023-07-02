@@ -87,6 +87,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             name={fieldInfo.fieldName as string}
             type={type}
             // eslint-disable-next-line
+            // @ts-ignore
             onChange={handleOnChange}
             // eslint-disable-next-line
             onBlur={formik?.handleBlur}

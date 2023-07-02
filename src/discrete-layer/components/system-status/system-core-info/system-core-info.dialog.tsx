@@ -13,6 +13,7 @@ import {
   TabBar,
   Tab,
   Button,
+  TabBarOnActivateEventT
 } from '@map-colonies/react-core';
 import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { useQuery, useStore } from '../../../models/RootStore';
@@ -213,7 +214,7 @@ export const SystemCoreInfoDialog: React.FC<SystemCoreInfoDialogProps> = observe
           >
             <TabBar
               activeTabIndex={activeTab}
-              onActivate={(evt): void => setActiveTab(evt.detail.index)}
+              onActivate={(evt: TabBarOnActivateEventT): void => setActiveTab(evt.detail.index)}
             >
               <Tab>
                 <FormattedMessage id="system-core-info.externalServicesTitle" />
