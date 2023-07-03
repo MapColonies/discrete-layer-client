@@ -8,7 +8,7 @@ const AppTitle = (): JSX.Element => {
   const intl = useIntl();
 
   useEffect(() => {
-    document.title = `${intl.formatMessage({ id: 'general.logo.text' })} - V${version}`
+    document.title = `${intl.formatMessage({ id: 'general.logo.text' })} - V${version.version}`
   }, [])
 
   return (

@@ -13,24 +13,25 @@ import {
 } from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
-// import '@map-colonies/react-core/dist/theme/styles';
-// import '@map-colonies/react-core/dist/button/styles';
-// import '@map-colonies/react-core/dist/tooltip/styles';
-// import '@map-colonies/react-core/dist/menu/styles';
-// import '@map-colonies/react-core/dist/select/styles';
-// import '@map-colonies/react-core/dist/circular-progress/styles';
-// import '@map-colonies/react-core/dist/typography/styles';
-// import '@map-colonies/react-core/dist/dialog/styles';
-// import '@map-colonies/react-core/dist/textfield/styles';
-// import '@map-colonies/react-core/dist/snackbar/styles';
-// import '@map-colonies/react-core/dist/icon/styles';
-// import '@map-colonies/react-core/dist/linear-progress/styles';
-// import '@map-colonies/react-core/dist/drawer/styles';
-// import '@map-colonies/react-core/dist/checkbox/styles';
-// import '@map-colonies/react-core/dist/fab/styles';
-// import '@map-colonies/react-core/dist/avatar/styles';
-// import '@map-colonies/react-core/dist/tabs/styles';
-// import '@map-colonies/react-core/dist/switch/styles';
+import '@map-colonies/react-core/dist/theme/styles';
+import '@map-colonies/react-core/dist/button/styles';
+import '@map-colonies/react-core/dist/button/styles';
+import '@map-colonies/react-core/dist/tooltip/styles';
+import '@map-colonies/react-core/dist/menu/styles';
+import '@map-colonies/react-core/dist/select/styles';
+import '@map-colonies/react-core/dist/circular-progress/styles';
+import '@map-colonies/react-core/dist/typography/styles';
+import '@map-colonies/react-core/dist/dialog/styles';
+import '@map-colonies/react-core/dist/textfield/styles';
+import '@map-colonies/react-core/dist/snackbar/styles';
+import '@map-colonies/react-core/dist/icon/styles';
+import '@map-colonies/react-core/dist/linear-progress/styles';
+import '@map-colonies/react-core/dist/drawer/styles';
+import '@map-colonies/react-core/dist/checkbox/styles';
+import '@map-colonies/react-core/dist/fab/styles';
+import '@map-colonies/react-core/dist/avatar/styles';
+import '@map-colonies/react-core/dist/tabs/styles';
+import '@map-colonies/react-core/dist/switch/styles';
 import 'react-sortable-tree/style.css';
 import './App.css';
 import './App.dark-theme.css';
@@ -71,6 +72,9 @@ const App: React.FC = () => {
 
   const [lookupTablesData, setLookupTablesData] = useState<ILookupTableData>({});
 
+  const isDarkTheme = true;
+  const themeClassPrefix = isDarkTheme ? 'dark-theme' : 'light-theme';
+
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
   }, []);
@@ -91,7 +95,7 @@ const App: React.FC = () => {
           ),
         }}
       >
-        <RMWCThemeProvider options={theme as IOptions}>
+        <RMWCThemeProvider className={`app-container ${themeClassPrefix}`} options={theme as IOptions}>
           <CssBaseline />
           <LookupTablesContext.Provider value={{ lookupTablesData, setLookupTablesData }}>
             <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>
