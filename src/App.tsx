@@ -15,7 +15,6 @@ import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
 import '@map-colonies/react-core/dist/theme/styles';
 import '@map-colonies/react-core/dist/button/styles';
-import '@map-colonies/react-core/dist/button/styles';
 import '@map-colonies/react-core/dist/tooltip/styles';
 import '@map-colonies/react-core/dist/menu/styles';
 import '@map-colonies/react-core/dist/select/styles';
@@ -36,6 +35,7 @@ import 'react-sortable-tree/style.css';
 import './App.css';
 import './App.dark-theme.css';
 import './App.light-theme.css';
+
 
 import { queue } from './discrete-layer/components/snackbar/notification-queue';
 import { SnackContainer } from './discrete-layer/components/snackbar/snack-container';
@@ -72,9 +72,6 @@ const App: React.FC = () => {
 
   const [lookupTablesData, setLookupTablesData] = useState<ILookupTableData>({});
 
-  const isDarkTheme = true;
-  const themeClassPrefix = isDarkTheme ? 'dark-theme' : 'light-theme';
-
   useLayoutEffect(() => {
     setLang(document.documentElement.lang);
   }, []);
@@ -95,7 +92,7 @@ const App: React.FC = () => {
           ),
         }}
       >
-        <RMWCThemeProvider className={`app-container ${themeClassPrefix}`} options={theme as IOptions}>
+        <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme as IOptions}>
           <CssBaseline />
           <LookupTablesContext.Provider value={{ lookupTablesData, setLookupTablesData }}>
             <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>
