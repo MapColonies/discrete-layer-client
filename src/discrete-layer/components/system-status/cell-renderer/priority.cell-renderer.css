@@ -32,6 +32,10 @@
   left: 10px;
 }
 
+.priorityCellContainer .mdc-select--outlined .mdc-select__anchor {
+  height: 40px;
+}
+
 .loadingContainer {
   position: absolute;
   display: flex;

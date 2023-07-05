@@ -9,6 +9,11 @@
 
 .detailsFieldValue.selectBoxContainer {
   overflow: unset;
+  width: 100%;
+}
+.selectBoxContainer .enumOptions {
+  width: 100%;
+
 }
 
 .enumOptions .mdc-select__dropdown-icon {
@@ -27,6 +32,11 @@ body[dir='rtl'] .enumOptions .mdc-select__dropdown-icon {
 
 .enumOptions .mdc-select__anchor {
   height: 25px;
+}
+
+.enumOptions .mdc-select__dropdown-icon {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .enumOptions .mdc-select__anchor .mdc-select__selected-text {

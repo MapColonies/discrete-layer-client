@@ -105,12 +105,13 @@
   opacity: 0.2;
 }
 
-.dark-theme :not(.mdc-list--non-interactive) > :not(.mdc-list-item--disabled).mdc-list-item::before, :not(.mdc-list--non-interactive) > :not(.mdc-list-item--disabled).mdc-list-item::after {
-  background-color: var(--mdc-theme-primary);
-}
-
 .dark-theme .mdc-list.mdc-menu__items .mdc-list-item.mdc-ripple-upgraded--background-focused {
   color: var(--mdc-theme-primary);
+}
+
+.dark-theme .mdc-select__dropdown-icon {
+  color: var(--mdc-theme-primary);
+  filter: opacity(0.6);
 }
 
 /* AG-GRID CUSTOMIZATION */
