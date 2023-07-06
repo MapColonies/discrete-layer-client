@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Feature, LineString, Polygon } from 'geojson';
 import { useIntl } from 'react-intl';
@@ -137,7 +137,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
             />
   }
   
-  const WfsFeatureInfoContainer: React.FC<{ position?: IPosition }> = ({ position, children }) => {    
+  const WfsFeatureInfoContainer: React.FC<PropsWithChildren<{ position?: IPosition }>> = ({ position, children }) => {    
     if(!position) return null;
 
     return (

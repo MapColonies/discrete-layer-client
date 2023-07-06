@@ -25,7 +25,7 @@ const INITIAL_DRAWING_STATE: IDrawingState = {
 const INITIAL_GEOMETRY_SELECTION: FeatureCollection = { type: "FeatureCollection", features: [] };
 
 const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
-const intl = createIntl({ locale, messages: MESSAGES[locale] });
+const intl = createIntl({ locale, messages: MESSAGES[locale] as Record<string, string> });
 
 export const exportStore = ModelBase
   .props({

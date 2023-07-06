@@ -125,7 +125,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         />
       </Box>
       <Box id="searchTerm">
-        <TextField disabled={!isSystemFreeTextSearchEnabled} fullwidth style={{padding: '0 6px 0 6px'}}/>
+        <TextField disabled={!isSystemFreeTextSearchEnabled} style={{padding: '0 6px 0 6px'}}/>
       </Box>
       <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
         <IconButton disabled={!isSystemFreeTextSearchEnabled} icon="search" label="SEARCH" className="searchIconBtn"/>

@@ -81,7 +81,7 @@ const App: React.FC = () => {
   }, [lang]);
 
   return (
-    <IntlProvider locale={lang} messages={MESSAGES[lang]}>
+    <IntlProvider locale={lang} messages={MESSAGES[lang] as Record<string, string>}>
       <RMWCProvider
         typography={{
           body1: 'span',

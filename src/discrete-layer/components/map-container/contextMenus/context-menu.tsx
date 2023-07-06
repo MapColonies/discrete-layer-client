@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useMemo, useRef } from 'react';
+import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef } from 'react';
 import { get } from 'lodash';
 import {
   Icon,
@@ -25,7 +25,7 @@ interface IMapContextMenuData extends IContextMenuData {
 const NONE = 0;
 
 // Children prop isn't rendered as a part of the menu, but as a separated bottom section.
-export const ContextMenu: React.FC<IMapContextMenuData> = ({
+export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   position,
   // coordinates,
   style,

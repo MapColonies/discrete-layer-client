@@ -78,6 +78,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
         <Box className="priorityReadonlyPresentor">
           <Icon
             className="priorityIcon"
+            // @ts-ignore
             icon={iconObj}
             label="IMPORT"
           />
@@ -95,11 +96,12 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
         className="priorityOptions"
         value={value}
         options={optionsData as FormattedOption[]}
+        // @ts-ignore
         icon={iconObj}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>): void => {
           setLoading(true);
           setValue(e.currentTarget.value);
-          props.onChange(e, props.data);
+          props.onChange(e, props.data as ICellRendererParams);
         }}
       />
     );

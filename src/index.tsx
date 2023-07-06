@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 // import 'mobx-react-lite/batchingForReactDom';
 import { createHttpClient } from 'mst-gql';
 import Axios, { Method } from 'axios';
@@ -45,13 +45,15 @@ const store = rootStore.create(
   }
 })();
 
-ReactDOM.render(
-  <React.StrictMode>
-    <StoreProvider value={store}>
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
+root.render(
+  <StoreProvider value={store}>
+    <React.StrictMode>
       <App />
-    </StoreProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    </React.StrictMode>
+  </StoreProvider>
 );
 
 // If you want your app to work offline and load faster, you can change

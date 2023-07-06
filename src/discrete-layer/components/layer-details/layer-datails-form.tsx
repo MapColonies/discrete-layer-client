@@ -65,7 +65,7 @@ export interface StatusError {
 
 export interface EntityFormikHandlers extends FormikHandlers {
   setFieldValue: (field: string, value: unknown, shouldValidate?: boolean) => void;
-  setFieldError: (field: string, message: string | undefined) => void;
+  setFieldError: (field: string, message: string) => void;
   setFieldTouched: (field: string, isTouched?: boolean | undefined, shouldValidate?: boolean | undefined) => void;
   setStatus: (status?: StatusError | Record<string, unknown>) => void;
   status: StatusError | Record<string, unknown>;
@@ -119,7 +119,7 @@ const InnerForm = (
       const validationResults: Record<string, string[]> = {};
       Object.entries(errors).forEach(([key, value]) => {
         if (getFieldMeta(key).touched) {
-          validationResults[key] = [value as string];
+          validationResults[key] = [value];
         }
       });
       return validationResults;

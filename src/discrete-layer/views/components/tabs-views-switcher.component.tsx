@@ -92,7 +92,6 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
                 <IconButton 
                   key={tab.idx}
                   className={`${tab.iconClassName} tabViewIcon`}
-                  mini
                   onClick={(evt: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => handleTabViewChange(tab.idx)}
                   style={{ 
                     backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
