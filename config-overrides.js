@@ -1,4 +1,6 @@
 const webpack = require('webpack');
+const path = require('path');
+
 module.exports = function override(config, env) {
     //do stuff with the webpack config...
 
@@ -13,6 +15,13 @@ module.exports = function override(config, env) {
         stream: require.resolve('stream-browserify'),
         zlib: require.resolve("browserify-zlib")
     };
+
+    config.resolve.alias = {
+        ...config.resolve.alias,
+        'react-dnd': path.resolve(__dirname, './node_modules/react-dnd'),
+        'react-dnd-html5-backend': path.resolve(__dirname, './node_modules/react-dnd-html5-backend'),
+    }
+    
     config.plugins.push(
         new webpack.ProvidePlugin({
             process: 'process/browser',

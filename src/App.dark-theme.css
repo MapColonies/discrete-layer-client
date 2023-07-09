@@ -252,6 +252,9 @@ body[dir='rtl']
 }
 
 /* DIALOG CUSTOMIZATION */
+.dark-theme .mdc-dialog .mdc-dialog__content {
+  color: unset;
+}
 
 .dark-theme .mdc-dialog .mdc-dialog__surface {
   background-color: var(--mdc-theme-alternative-surface, #fff);

@@ -2392,35 +2392,6 @@
     lodash "^4.17.21"
     ngeohash "^0.6.3"
 
-"@map-colonies/react-components@C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\Assaf Chamoy\\\\\\\\\\\\\\\\Documents\\\\\\\\\\\\\\\\Work\\\\\\\\\\\\\\\\mc-shared-components\\\\\\\\\\\\\\\\packages\\\\\\\\\\\\\\\\react-components":
-  version "0.0.0"
-  dependencies:
-    "@date-io/date-fns" "^1.3.13"
-    "@here/quantized-mesh-decoder" "^1.2.8"
-    "@map-colonies/react-core" "file:../mc-shared-components/packages/react-ui-components"
-    "@material-ui/core" "^4.11.0"
-    "@material-ui/icons" "^4.9.1"
-    "@material-ui/pickers" "^3.2.10"
-    "@turf/bbox" "^6.0.1"
-    "@turf/bbox-polygon" "^6.0.1"
-    "@turf/boolean-point-in-polygon" "^6.5.0"
-    "@turf/helpers" "^6.1.4"
-    "@turf/rewind" "^5.1.5"
-    cesium "1.103.0"
-    chonky "^2.3.2"
-    chonky-icon-fontawesome "^2.3.2"
-    copy-webpack-plugin "^6.3.1"
-    copyfiles "2.3.0"
-    cross-env "7.0.2"
-    date-fns "^2.14.0"
-    geojson "^0.5.0"
-    get-input-selection "^1.1.4"
-    lodash "^4.17.20"
-    ol "^6.4.3"
-    resium "^1.16.1"
-    rimraf "3.0.2"
-    textarea-caret "^3.1.0"
-
 "@map-colonies/react-components@file:../mc-shared-components/packages/react-components":
   version "0.0.0"
   dependencies:
@@ -9315,6 +9286,15 @@ dlv@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.3.tgz#5c198a8a11453596e751494d49874bc7732f2e79"
   integrity sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==
+
+dnd-core@14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-14.0.0.tgz#973ab3470d0a9ac5a0fa9021c4feba93ad12347d"
+  integrity sha512-wTDYKyjSqWuYw3ZG0GJ7k+UIfzxTNoZLjDrut37PbcPGNfwhlKYlPUqjAKUjOOv80izshUiqusaKgJPItXSevA==
+  dependencies:
+    "@react-dnd/asap" "^4.0.0"
+    "@react-dnd/invariant" "^2.0.0"
+    redux "^4.0.5"
 
 dnd-core@^11.1.3:
   version "11.1.3"
@@ -16430,6 +16410,13 @@ react-dnd-html5-backend@11, react-dnd-html5-backend@^11.1.3:
   dependencies:
     dnd-core "^11.1.3"
 
+react-dnd-html5-backend@14.0.1:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-14.0.1.tgz#37d43d6b6ddd91069101969d9eac6d688a9d57ef"
+  integrity sha512-ZDmpvFpd1NR4riw/CMbr8C3mgP6ZhsTf0c48a36kw4ZW8emgiugNlAz/qhhZ4/Pz9TO6DZ63sQohUTTl+AWGiA==
+  dependencies:
+    dnd-core "14.0.0"
+
 react-dnd@11, react-dnd@^11.1.3:
   version "11.1.3"
   resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-11.1.3.tgz#f9844f5699ccc55dfc81462c2c19f726e670c1af"
@@ -16439,6 +16426,17 @@ react-dnd@11, react-dnd@^11.1.3:
     "@types/hoist-non-react-statics" "^3.3.1"
     dnd-core "^11.1.3"
     hoist-non-react-statics "^3.3.0"
+
+react-dnd@14.0.3:
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-14.0.3.tgz#1762c1ec84815439f2d8a6a40efd1f57eee41ba6"
+  integrity sha512-i73Hx5SKfDRdwXe30+CjF/DidiRdt/gwpPN14ajkPR20t/0osnNKFNHg3DLV6RZym+DJ0pO9H5APeMsBWGU3+Q==
+  dependencies:
+    "@react-dnd/invariant" "^2.0.0"
+    "@react-dnd/shallowequal" "^2.0.0"
+    dnd-core "14.0.0"
+    fast-deep-equal "^3.1.3"
+    hoist-non-react-statics "^3.3.2"
 
 react-dom@^16.3.0, react-dom@^18.2.0:
   version "18.2.0"
@@ -16605,7 +16603,7 @@ react-scripts@5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-sortable-tree@2.8.0:
+react-sortable-tree@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/react-sortable-tree/-/react-sortable-tree-2.8.0.tgz#9901711778628d0546c045f845216480507c366a"
   integrity sha512-gTjwxRNt7z0FC76KeNTnGqx1qUSlV3N78mMPRushBpSUXzZYhiFNsWHUIruyPnaAbw4SA7LgpItV7VieAuwDpw==
@@ -16826,7 +16824,7 @@ redux-watch@^1.2.0:
   dependencies:
     object-path "^0.11.5"
 
-redux@^4.0.0, redux@^4.0.4, redux@^4.2.1:
+redux@^4.0.0, redux@^4.0.4, redux@^4.0.5, redux@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.1.tgz#c08f4306826c49b5e9dc901dee0452ea8fce6197"
   integrity sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==
