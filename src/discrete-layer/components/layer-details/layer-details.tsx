@@ -225,7 +225,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       {
         layerRecord?.links &&
         getLinkUrl(layerRecord.links, LinkType.THUMBNAIL_L) !== undefined &&
-        mode !== Mode.UPDATE &&
+        mode !== Mode.UPDATE && mode !== Mode.EXPORT &&
         <img
           className="detailsThumbnail"
           src={getLinkUrlWithToken(layerRecord.links, LinkType.THUMBNAIL_L)}
