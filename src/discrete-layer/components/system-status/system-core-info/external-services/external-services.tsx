@@ -50,7 +50,7 @@ export const ExternalServices: React.FC<ExternalServicesProps> = ({
                     })}
                   >
                     <CopyToClipboard text={url as string}>
-                      <IconButton className="mc-icon-Copy" />
+                      <IconButton className="mc-icon-Copy" type="button"/>
                     </CopyToClipboard>
                   </Tooltip>
                 </Box>

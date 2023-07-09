@@ -46,7 +46,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
           <Box className="detailsFieldCopyIcon">
             <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
               <CopyToClipboard text={value as string}>
-                <IconButton className="mc-icon-Copy" />
+                <IconButton type="button" className="mc-icon-Copy" />
               </CopyToClipboard>
             </Tooltip>
           </Box>
