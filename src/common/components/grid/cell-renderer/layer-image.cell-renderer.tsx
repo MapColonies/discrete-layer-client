@@ -19,7 +19,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
         className={layerImageShown ? 'mc-icon-Show imageChecked' : 'mc-icon-Hide'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
-          (evt): void => {
+          (): void => {
             setLayerImageShown(!layerImageShown);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             props.onClick(props.data.id, !layerImageShown, props.node);

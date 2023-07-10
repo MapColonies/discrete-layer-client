@@ -42,7 +42,7 @@ const MenuActionPresentor: React.FC<ActionPresentorBaseProps> = ({
             className="exportActionMenu"
             anchorCorner={'bottomStart'}
             open={isActionMenuOpen}
-            onClose={(evt): void => setIsActionMenuOpen(false)}
+            onClose={(): void => setIsActionMenuOpen(false)}
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             onMouseOver={(evt: MouseEvent): void => evt.stopPropagation()}
@@ -75,7 +75,7 @@ const MenuActionPresentor: React.FC<ActionPresentorBaseProps> = ({
                 action.class
               }`}
               id="exportMenuActionIcon"
-              onClick={(evt): void =>
+              onClick={(): void =>
                 setIsActionMenuOpen((isMenuOpen) => !isMenuOpen)
               }
               disabled={action.disabled}

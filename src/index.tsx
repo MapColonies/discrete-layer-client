@@ -50,9 +50,10 @@ const root = createRoot(container!);
 
 root.render(
   <StoreProvider value={store}>
-    <React.StrictMode>
+    {/* Problematic. TODO: Investigate why. */}
+    {/* <React.StrictMode> */}
       <App />
-    </React.StrictMode>
+    {/* </React.StrictMode> */}
   </StoreProvider>
 );
 

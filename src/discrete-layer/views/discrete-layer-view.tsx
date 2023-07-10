@@ -561,7 +561,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   */}
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
-                  <IconButton className="operationIcon mc-icon-Plus" onClick={(evt): void => setOpenNew(!openNew)}/>
+                  <IconButton className="operationIcon mc-icon-Plus" onClick={(): void => setOpenNew(!openNew)}/>
                 </Tooltip>
               </MenuSurfaceAnchor>
             }

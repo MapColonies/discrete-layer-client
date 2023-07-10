@@ -20,7 +20,7 @@ export const ImportRenderer: React.FC<IImportCellRendererParams> = (props) => {
         icon={{ icon: selected ? 'check_circle' : 'radio_button_unchecked', size: 'small' }}
         label="IMPORT"
         onClick={
-          (evt): void => {
+          (evt: React.MouseEvent<HTMLElement>): void => {
             const value = !selected;
             evt.stopPropagation();
             setSelected(value);

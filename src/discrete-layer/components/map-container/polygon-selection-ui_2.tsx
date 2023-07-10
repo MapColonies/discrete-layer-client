@@ -118,7 +118,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
           defaultValue={recordTypeOptions[0].value}
           options={recordTypeOptions}
           onChange={
-            (evt): void => {
+            (evt: React.ChangeEvent<HTMLSelectElement>): void => {
               discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
             }
           }
