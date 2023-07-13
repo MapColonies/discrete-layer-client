@@ -54,7 +54,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
   const isReadOnlyMode = mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true) || mode === Mode.EXPORT;
 
   // Render empty field for null dates
-  if(!isInvalidDate()) {
+  if(isReadOnlyMode && isInvalidDate()) {
     return <></>;
   }
 
