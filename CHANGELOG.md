@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.29.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.2...v1.29.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* date control dissapers after selcting the date ([#450](https://github.com/MapColonies/discrete-layer-client/issues/450)) ([79203bd](https://github.com/MapColonies/discrete-layer-client/commit/79203bd5ddf0757af94bc2e2d68d310dfd4aea73))
+
 ### [1.29.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.1...v1.29.2) (2023-07-13)
 
 ### [1.29.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.0...v1.29.1) (2023-07-11)
