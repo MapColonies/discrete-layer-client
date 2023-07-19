@@ -17,6 +17,7 @@ import '@map-colonies/react-core/dist/theme/styles';
 import '@map-colonies/react-core/dist/button/styles';
 import '@map-colonies/react-core/dist/tooltip/styles';
 import '@map-colonies/react-core/dist/menu/styles';
+import '@map-colonies/react-core/dist/context-menu/styles';
 import '@map-colonies/react-core/dist/select/styles';
 import '@map-colonies/react-core/dist/circular-progress/styles';
 import '@map-colonies/react-core/dist/typography/styles';

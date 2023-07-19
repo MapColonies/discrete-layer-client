@@ -1,4 +1,11 @@
-import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef } from 'react';
+import React, {
+  MouseEventHandler,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { get } from 'lodash';
 import {
   Icon,
@@ -7,6 +14,13 @@ import {
   MenuItem,
   MenuSurfaceAnchor,
   Tooltip,
+  ContextMenu as MCContextMenu,
+  Item,
+  Separator,
+  Submenu,
+  RightSlot,
+  useContextMenu,
+  ItemParams
 } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 
@@ -35,9 +49,19 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   menuTitle = '',
   menuTitleTooltip = '',
   children,
-  data
+  data,
+  contextEvt,
 }) => {
   const imageryContextMenuRef = useRef(null);
+  const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
+
+  const { show, hideAll } = useContextMenu({
+    id: 'MENU_ID',
+  });
+
+  const handleItemClick = ({ event, props, triggerEvent, data }: ItemParams) => {
+    console.log(event, props, triggerEvent, data);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -47,71 +71,88 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
       if (imgContextMenuRef && !imgContextMenuRef.contains(target)) {
         document.removeEventListener('click', handleClickOutside, false);
         handleClose();
+        hideAll();
       }
       /* eslint-enable */
     };
 
     document.addEventListener('click', handleClickOutside, false);
+    
+    if(!isContextMenuVisible){
+      show({ event: contextEvt });
+    }
   });
 
-  const hasSections = useMemo(() => (menuSections?.length ?? NONE) > NONE, [menuSections])
+  const hasSections = useMemo(
+    () => (menuSections?.length ?? NONE) > NONE,
+    [menuSections]
+  );
 
   return (
     <>
-      { menuSections && hasSections &&
+      {menuSections && hasSections && (
         <div
           ref={imageryContextMenuRef}
           style={style}
           className="imageryContextMenuTheme imageryContextMenu"
           onContextMenu={(e): void => e.preventDefault()}
         >
-          {menuTitle && <Box style={{ height: `${TITLE_HEIGHT}px` }} className='titleContainer'>
-            <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
-            {menuTitle && menuTitleTooltip && (
-              <Tooltip content={menuTitleTooltip}>
-                <Icon
-                  className="imageryContextMenuTitleInfo"
-                  icon={{ icon: 'info', size: 'small' }}
-                />
-              </Tooltip>
-            )}
-          </Box>}
+          {menuTitle && (
+            <Box
+              style={{ height: `${TITLE_HEIGHT}px` }}
+              className="titleContainer"
+            >
+              <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
+              {menuTitle && menuTitleTooltip && (
+                <Tooltip content={menuTitleTooltip}>
+                  <Icon
+                    className="imageryContextMenuTitleInfo"
+                    icon={{ icon: 'info', size: 'small' }}
+                  />
+                </Tooltip>
+              )}
+            </Box>
+          )}
 
-          <MenuSurfaceAnchor className='menuAnchor'>
-            <Menu open={true} className="imageryMenu">
-              {menuSections.map((section, sectionIdx) => {   
-                 const sectionItems = section.map((item, itemIdx) => {
-                    // Get click callback from item
-                    const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
-                    const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
+          <MCContextMenu
+            onVisibilityChange={setIsContextMenuVisible}
+            animation={false}
+            id={'MENU_ID'}
+          >
+            {menuSections.map((section, sectionIdx) => {   
+              const sectionItems = section.map((item, itemIdx) => {
+                // Get click callback from item
+                const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
+                const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
 
-                    return (
-                      <MenuItem
-                        className='imageryMenuItemAction'
-                        key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
-                        onClick={menuItemClick as MouseEventHandler<HTMLElement>}
-                        disabled={menuItemDisabled as boolean}
-                      >
-                        {item}
-                      </MenuItem>
-                    )
-                  });
-                  
-                  const lastSectionIdx = menuSections.length - 1;
-                  if(sectionIdx < lastSectionIdx && section.length) {
-                    sectionItems.push(<ListDivider style={{opacity: 0.3}} key={`sectionDivider_${sectionIdx}}`} className='sectionDivider'/>);
-                  }
+                return (
+                  <Item
+                    className='imageryMenuItemAction'
+                    key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
+                    onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
+                    disabled={menuItemDisabled as boolean}
+                  >
+                    {item}
+                  </Item>
+                )
+              });
+              
+              const lastSectionIdx = menuSections.length - 1;
+              if(sectionIdx < lastSectionIdx && section.length) {
+                sectionItems.push(<Separator key={`sectionDivider_${sectionIdx}}`} />);
+              }
 
-                  return sectionItems;
-              })}
-                
-            </Menu>
-          </MenuSurfaceAnchor>
-          <Box style={{ maxHeight: `${SUB_MENU_MAX_HEIGHT}px` }} className='subMenuContainer'>
+              return <Submenu label="Submenu">{sectionItems}</Submenu>;
+            })}
+          </MCContextMenu>
+          <Box
+            style={{ maxHeight: `${SUB_MENU_MAX_HEIGHT}px` }}
+            className="subMenuContainer"
+          >
             {children}
           </Box>
         </div>
-      }
+      )}
     </>
   );
 };
