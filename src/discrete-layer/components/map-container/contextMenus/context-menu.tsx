@@ -23,7 +23,7 @@ import {
   ItemParams
 } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
-
+import CONFIG from '../../../../common/config';
 import './context-menu.css';
 
 export const TITLE_HEIGHT = 24;
@@ -54,14 +54,14 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
 }) => {
   const imageryContextMenuRef = useRef(null);
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
+  const direction = CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE' ? 'rtl' : 'ltr';
 
   const { show, hideAll } = useContextMenu({
     id: 'MENU_ID',
+    locale: {
+      dir: direction
+    }
   });
-
-  const handleItemClick = ({ event, props, triggerEvent, data }: ItemParams) => {
-    console.log(event, props, triggerEvent, data);
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -78,7 +78,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
 
     document.addEventListener('click', handleClickOutside, false);
     
-    if(!isContextMenuVisible){
+    if(!isContextMenuVisible) {
       show({ event: contextEvt });
     }
   });
@@ -115,9 +115,11 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
           )}
 
           <MCContextMenu
+            isContainerized
             onVisibilityChange={setIsContextMenuVisible}
             animation={false}
             id={'MENU_ID'}
+            dir={direction}
           >
             {menuSections.map((section, sectionIdx) => {   
               const sectionItems = section.map((item, itemIdx) => {
@@ -142,7 +144,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                 sectionItems.push(<Separator key={`sectionDivider_${sectionIdx}}`} />);
               }
 
-              return <Submenu label="Submenu">{sectionItems}</Submenu>;
+              return <Submenu dir={direction} label="menu">{sectionItems}</Submenu>;
             })}
           </MCContextMenu>
           <Box
