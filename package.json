@@ -19,6 +19,9 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "postinstall": "patch-package",
     "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,LayerDemRecord,BestRecord,EntityDescriptor,VectorBestRecord,QuantizedMeshBestRecord --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
