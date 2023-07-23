@@ -19,6 +19,7 @@ interface MenuItem {
 export type MenuItemsList = MenuItem[][];
 
 export interface IMapMenuProperties {
+  groupsTitles: string[];
   itemsList: MenuItemsList;
   heightBuffer?: number;
   absoluteHeight?: number;
@@ -92,6 +93,7 @@ export const mapMenusManagerStore = ModelBase
 
         return {
           ActionsMenu: {
+            groupsTitles: mapContextActions.map((group) => group.titleTranslationId),
             itemsList: actionsMenuSections,
             heightBuffer: 70
           }

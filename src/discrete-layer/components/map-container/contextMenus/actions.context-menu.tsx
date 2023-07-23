@@ -4,7 +4,7 @@ import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
-import { MenuItemsList } from '../../../models/mapMenusManagerStore';
+import { IMapMenuProperties, MenuItemsList } from '../../../models/mapMenusManagerStore';
 import { getCoordinatesDisplayText } from '../../layer-details/utils';
 import { ContextMenu } from './context-menu';
 
@@ -13,6 +13,7 @@ import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerr
 
 interface IActionsContextMenuProps extends IContextMenuData {
   menuItems?: MenuItemsList;
+  menuProperties?: IMapMenuProperties;
 }
 
 export const COORDS_DISPLAY_PRECISION = 1;
@@ -20,6 +21,7 @@ const FIRST = 0;
 
 export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   menuItems,
+  menuProperties,
   ...restProps
 }) => {
   const { handleClose, coordinates } = restProps;
@@ -44,10 +46,12 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
   }
 
   const getMenuSections = (): JSX.Element[][] | undefined => {
-    return menuItems?.map((section) => {
+    // If passed sections directly, use it, else use the items list from menuProperties
+    const items = menuItems ?? menuProperties?.itemsList;
+    
+    return items?.map((section) => {
       return section.map((item) => {
-        
-        
+
         const actionToDispatch = {
           action: item.action.action,
           data: { ...item.payloadData, coordinates, handleClose }
@@ -76,6 +80,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
 
   return (
         <ContextMenu
+          sectionsTitles={menuProperties?.groupsTitles}
           menuSections={getMenuSections()}
           {...restProps}
         >

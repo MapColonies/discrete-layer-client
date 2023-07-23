@@ -25,6 +25,7 @@ import {
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import './context-menu.css';
+import { useIntl } from 'react-intl';
 
 export const TITLE_HEIGHT = 24;
 export const SUB_MENU_MAX_HEIGHT = 120;
@@ -34,6 +35,7 @@ interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
   menuTitleTooltip?: string;
   menuSections?: JSX.Element[][];
+  sectionsTitles?: string[];
 }
 
 const NONE = 0;
@@ -48,10 +50,12 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   menuSections,
   menuTitle = '',
   menuTitleTooltip = '',
+  sectionsTitles,
   children,
   data,
   contextEvt,
 }) => {
+  const intl = useIntl();
   const imageryContextMenuRef = useRef(null);
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   const direction = CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE' ? 'rtl' : 'ltr';
@@ -139,12 +143,14 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                 )
               });
               
-              const lastSectionIdx = menuSections.length - 1;
-              if(sectionIdx < lastSectionIdx && section.length) {
-                sectionItems.push(<Separator key={`sectionDivider_${sectionIdx}}`} />);
-              }
+              // const lastSectionIdx = menuSections.length - 1;
+              // if(sectionIdx < lastSectionIdx && section.length) {
+              //   sectionItems.push(<Separator key={`sectionDivider_${sectionIdx}}`} />);
+              // }
+              const titleId = sectionsTitles?.[sectionIdx] ? sectionsTitles?.[sectionIdx] : null;
+              const menuTitle = intl.formatMessage({ id: titleId ?? 'Section Title' });
 
-              return <Submenu dir={direction} label="menu">{sectionItems}</Submenu>;
+              return <Submenu dir={direction} label={menuTitle}>{sectionItems}</Submenu>;
             })}
           </MCContextMenu>
           <Box

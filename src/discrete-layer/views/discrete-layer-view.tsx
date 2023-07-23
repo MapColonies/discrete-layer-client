@@ -146,7 +146,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     type: DrawType.UNKNOWN,
   }]);
 
-  const actionsMenuDynamicHeight = 30;
+  const actionsMenuDynamicHeight = 0;
   const actionsContextMenuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
   const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
   
@@ -669,7 +669,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
     }
     // Should add global flag or find the proper condition to whether show the context menu or not.
-    return <ActionsContextMenu {...props} menuItems={actionsContextMenuProperties?.itemsList}/>;
+    return <ActionsContextMenu {...props} menuProperties={actionsContextMenuProperties}/>;
   };
 
   const getContextMenuSizeTab = (): MenuDimensions => {
@@ -846,7 +846,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             useOptimizedTileRequests={CONFIG.MAP.USE_OPTIMIZED_TILE_REQUESTS}
             // @ts-ignore
             imageryContextMenu={<ContextMenuByTab />}
-            imageryContextMenuSize={getContextMenuSizeTab()}
+            // imageryContextMenuSize={getContextMenuSizeTab()}
             legends={{
               mapLegendsExtractor,
               title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
