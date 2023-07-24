@@ -79,11 +79,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.THREE_D_LAYER:
         return (
           <Cesium3DTileset
-            maximumScreenSpaceError={5}
-            cullRequestsWhileMovingMultiplier={120}
-            preloadFlightDestinations
-            preferLeaves
-            skipLevelOfDetail
             key={layer.id}
             url={getTokenResource(layerLink.url as string, (layer as Layer3DRecordModelType).productVersion as string)}
           />
