@@ -2,8 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
-import CreateSvgIconLocationOn from '@material-ui/icons/LocationOn';
-import CreateSvgIconTerrain from '@material-ui/icons/Terrain';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { MenuItemsList } from '../../../models/mapMenusManagerStore';

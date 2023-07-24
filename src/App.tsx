@@ -9,6 +9,7 @@ import {
   RMWCProvider,
   Themes,
   SnackbarQueue,
+  IOptions,
 } from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
@@ -34,6 +35,7 @@ import 'react-sortable-tree/style.css';
 import './App.css';
 import './App.dark-theme.css';
 import './App.light-theme.css';
+
 
 import { queue } from './discrete-layer/components/snackbar/notification-queue';
 import { SnackContainer } from './discrete-layer/components/snackbar/snack-container';
@@ -79,7 +81,7 @@ const App: React.FC = () => {
   }, [lang]);
 
   return (
-    <IntlProvider locale={lang} messages={MESSAGES[lang]}>
+    <IntlProvider locale={lang} messages={MESSAGES[lang] as Record<string, string>}>
       <RMWCProvider
         typography={{
           body1: 'span',
@@ -90,7 +92,7 @@ const App: React.FC = () => {
           ),
         }}
       >
-        <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme}>
+        <RMWCThemeProvider className={`app-container ${theme.type}-theme`} options={theme as IOptions}>
           <CssBaseline />
           <LookupTablesContext.Provider value={{ lookupTablesData, setLookupTablesData }}>
             <EnumsMapContext.Provider value={{ enumsMap, setEnumsMap }}>

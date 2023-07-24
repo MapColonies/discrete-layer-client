@@ -72,7 +72,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
               className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
               icon={action.icon}
               key={`freqAct_${action.action}_${idx}`}
-              onClick={(evt): void => { 
+              onClick={(): void => { 
                 sendAction(entity, action, props.data);
               }}
             />
@@ -82,8 +82,8 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
       <MenuSurfaceAnchor id="gridActionsMenuContainer">
         <Menu
           open={openActionsMenu}
-          onClose={(evt): void => setOpenActionsMenu(false)}
-          onMouseOver={(evt): void => evt.stopPropagation()}
+          onClose={(): void => setOpenActionsMenu(false)}
+          onMouseOver={(evt: React.MouseEvent): void => evt.stopPropagation()}
         >
           {
             actions.map((actionGroup: IActionGroup, groupIdx: number) => {
@@ -128,7 +128,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           <IconButton 
             id="allActionsIcon"
             className="actionIcon mc-icon-More"
-            onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
+            onClick={(): void => setOpenActionsMenu(!openActionsMenu)}
           />
         }
       </MenuSurfaceAnchor>

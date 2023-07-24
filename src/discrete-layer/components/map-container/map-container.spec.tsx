@@ -8,8 +8,8 @@ import { MapContainer } from './map-container';
 // Enspired by https://github.com/formatjs/formatjs/issues/1477
 jest.mock('react-intl', () => {
   /* eslint-disable */
-  const reactIntl = require.requireActual('react-intl');
-  const MESSAGES = require.requireActual('../../../common/i18n');
+  const reactIntl = jest.requireActual('react-intl');
+  const MESSAGES = jest.requireActual('../../../common/i18n');
   const intl = reactIntl.createIntl({
     locale: 'en',
     messages: MESSAGES.default['en'],

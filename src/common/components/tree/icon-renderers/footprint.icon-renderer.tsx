@@ -22,7 +22,7 @@ export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = observe
       className="footprintIcon"
       checked={checked}
       onClick={
-        (evt): void => {
+        (evt: React.MouseEvent<HTMLInputElement>): void => {
           evt.stopPropagation();
           setChecked(evt.currentTarget.checked);
           props.onClick(props.data, evt.currentTarget.checked);

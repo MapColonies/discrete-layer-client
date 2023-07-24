@@ -8,7 +8,7 @@ exports[`MapContainer component renders correctly 1`] = `
     className="filtersPosition"
     style={
       Object {
-        "backgroundColor": "#2979ff",
+        "backgroundColor": "#24aee9",
         "width": "400px",
       }
     }
@@ -28,7 +28,7 @@ exports[`MapContainer component renders correctly 1`] = `
       <div
         className="filtersMargin"
       >
-        <withRipple(Function)
+        <ForwardRef
           icon="filter_alt"
           onClick={[Function]}
           outlined={true}
@@ -42,7 +42,7 @@ exports[`MapContainer component renders correctly 1`] = `
           <FormattedMessage
             id="filters.title"
           />
-        </withRipple(Function)>
+        </ForwardRef>
         <DrawerOpener
           isOpen={false}
           onClick={[Function]}
@@ -50,7 +50,7 @@ exports[`MapContainer component renders correctly 1`] = `
       </div>
     </div>
   </div>
-  <CesiumMap
+  <jn
     center={
       Array [
         34.811,
@@ -65,10 +65,10 @@ exports[`MapContainer component renders correctly 1`] = `
     <span>
       test
     </span>
-    <Memo(wrappedComponent) />
-    <Memo(wrappedComponent) />
-    <Memo(wrappedComponent) />
-    <CesiumDrawingsDataSource
+    <Memo(observerComponent) />
+    <Memo(observerComponent) />
+    <Memo(observerComponent) />
+    <ci
       drawState={
         Object {
           "drawing": false,
@@ -95,6 +95,6 @@ exports[`MapContainer component renders correctly 1`] = `
         ]
       }
     />
-  </CesiumMap>
+  </jn>
 </div>
 `;

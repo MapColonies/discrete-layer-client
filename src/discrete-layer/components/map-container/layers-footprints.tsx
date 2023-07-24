@@ -62,7 +62,7 @@ export const LayersFootprints: React.FC = observer(() => {
   const [layersFootprints, setlayersFootprints] = useState<FeatureCollection>();
 
   const prevLayersFootprints = usePrevious<FeatureCollection | undefined>(layersFootprints);
-  const cacheRef = useRef({} as FeatureCollection | undefined);
+  const cacheRef = useRef({type: 'FeatureCollection', features: []} as FeatureCollection | undefined);
   const cacheColorsRef = useRef({} as Record<string,CesiumColor>);
 
   useEffect(() => {

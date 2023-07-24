@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
-import { Fab, Tooltip, useTheme } from '@map-colonies/react-core';
+import { IconButton, Tooltip, useTheme } from '@map-colonies/react-core';
 
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../tab-views';
@@ -89,13 +89,13 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
           availableTabs.map((tab) => {
             return <Tooltip key={`tabView_${tab.idx}`} content={intl.formatMessage({ id: `action.${tab.title}.tooltip` })}>
               <Box>
-                <Fab 
+                <IconButton 
                   key={tab.idx}
                   className={`${tab.iconClassName} tabViewIcon`}
-                  mini 
                   onClick={(evt: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => handleTabViewChange(tab.idx)}
                   style={{ 
                     backgroundColor: (activeTabView === tab.idx ? theme.custom?.GC_SELECTION_BACKGROUND : theme.custom?.GC_ALTERNATIVE_SURFACE) as string, 
+                    color: (activeTabView === tab.idx ? 'var(--mdc-theme-text-icon-on-dark)' : 'var(--mdc-theme-on-primary)') 
                   }}
                   theme={[activeTabView === tab.idx ? 'onPrimary' : 'onSurface']}
                 />

@@ -18,7 +18,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
         className={layerImageShown ? 'mc-icon-Show imageChecked' : 'mc-icon-Hide'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
-          (evt): void => {
+          (evt: React.MouseEvent<HTMLButtonElement>): void => {
             const val = !layerImageShown;
             evt.stopPropagation();
             setLayerImageShown(val);

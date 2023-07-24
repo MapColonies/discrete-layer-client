@@ -48,7 +48,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
               className={action.class ? `actionIcon actionDismissible ${action.class}` : `actionIcon actionDismissible`}
               icon={action.icon}
               key={`freqAct_${node.id as string}_${idx}`}
-              onClick={(evt): void => { 
+              onClick={(): void => { 
                 sendAction(entity, action, node);
               }}
             />
@@ -58,8 +58,8 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
       <MenuSurfaceAnchor id="actionsMenuContainer">
         <MenuSurface
           open={openActionsMenu}
-          onClose={(evt): void => setOpenActionsMenu(false)}
-          onMouseOver={(evt): void => { evt.stopPropagation(); }}
+          onClose={(): void => setOpenActionsMenu(false)}
+          onMouseOver={(evt: React.SyntheticEvent<HTMLElement>): void => { evt.stopPropagation(); }}
         >
           {
             allFlatActions.map((action,idx) => {
@@ -91,7 +91,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = ({node, actions
           !isEmpty(allFlatActions) && <IconButton 
             id="allActionsIcon"
             className="actionIcon mc-icon-More" 
-            onClick={(evt): void => setOpenActionsMenu(!openActionsMenu)}
+            onClick={(): void => setOpenActionsMenu(!openActionsMenu)}
           />
         }
       </MenuSurfaceAnchor>

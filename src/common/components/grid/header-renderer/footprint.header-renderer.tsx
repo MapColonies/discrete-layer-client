@@ -17,7 +17,7 @@ export const HeaderFootprintRenderer: React.FC<IFootprintCellRendererParams> = (
     <Checkbox 
       checked={checked}
       onClick={
-        (evt): void => {
+        (evt: React.MouseEvent<HTMLInputElement>): void => {
           setChecked(evt.currentTarget.checked);
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           props.onClick(evt.currentTarget.checked, props.api);

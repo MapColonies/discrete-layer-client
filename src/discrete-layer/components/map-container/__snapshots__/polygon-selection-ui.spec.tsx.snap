@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Polygon Selection component renders correctly 1`] = `
-<McBox
+<se
   position="relative"
 >
-  <withRipple(Function)
+  <ForwardRef
     className="makeStyles-drawingButton-1"
     icon="category"
     onClick={[Function]}
@@ -19,11 +19,11 @@ exports[`Polygon Selection component renders correctly 1`] = `
     <FormattedMessage
       id="polygon-selection.draw-btn.text"
     />
-  </withRipple(Function)>
+  </ForwardRef>
   <BBoxDialog
     isOpen={false}
     onPolygonUpdate={[Function]}
     onSetOpen={[Function]}
   />
-</McBox>
+</se>
 `;

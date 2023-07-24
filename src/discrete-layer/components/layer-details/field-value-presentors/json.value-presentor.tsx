@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { Geometry } from 'geojson';
 import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
-import { useDebouncedCallback } from 'use-debounce/lib';
+import { useDebouncedCallback } from 'use-debounce';
 import { Button, TextField } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
@@ -239,7 +239,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             name={fieldInfo.fieldName as string}
             type={type}
             value={jsonValue === '{}' ? '' : jsonValue}
-            onChange={(e): void => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
               setJsonValue(e.currentTarget.value);
               debouncedRemoveStatusErrors();
             }}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useDebouncedCallback } from 'use-debounce/lib';
+import { useDebouncedCallback } from 'use-debounce';
 import { EntityFormikHandlers } from '../../discrete-layer/components/layer-details/layer-datails-form';
 
 export interface GCHTMLInputElement{

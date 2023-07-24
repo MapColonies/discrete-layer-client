@@ -77,6 +77,10 @@ body[dir='rtl'] #layerResults .ag-pinned-right-cols-container {
   overflow: visible;
 }
 
+#layerResults .ag-row .ag-cell[col-id="footprintShown"] {
+  padding: unset;
+}
+
 #layerResults .actionsContainer {
   right:0 !important;
   position:relative;

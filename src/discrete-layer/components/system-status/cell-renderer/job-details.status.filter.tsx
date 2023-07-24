@@ -60,7 +60,7 @@ export const JobDetailsStatusFilter = forwardRef((props: IFilterParams, ref) => 
         enhanced
         placeholder={showAllStatusesText}
         options={statuses}
-        onChange={(evt): void => {
+        onChange={(evt: React.ChangeEvent<HTMLSelectElement>): void => {
           setFilterStatus(evt.currentTarget.value);
         }}
       />

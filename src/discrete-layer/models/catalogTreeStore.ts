@@ -31,7 +31,7 @@ const TOP_LEVEL_GROUP_BY_FIELD = 'region';
 const INNER_SORT_FIELD = 'productName';
 
 const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
-const intl = createIntl({ locale, messages: MESSAGES[locale] });
+const intl = createIntl({ locale, messages: MESSAGES[locale] as Record<string, string> });
 
 const getLayerTitle = (product: ILayerImage): string => {
   const PRODUCT_TITLE_PROPERTY = 'productName';

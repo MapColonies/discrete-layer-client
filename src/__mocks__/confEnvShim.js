@@ -1,6 +1,7 @@
 if (!window._env_) {
   window._env_ = (function (undefined) {
     return {
+      LANGUAGE: 'he',
       MAP_SERVER: 'MAP_SERVER',
       PUBLISH_POINT: 'PUBLISH_POINT',
       CHANNEL: 1002,

@@ -1,4 +1,4 @@
-import { MessageFormatElement } from 'intl-messageformat-parser';
+import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 
 import messages_en from './en.json';
 import messages_he from './he.json';
