@@ -11,6 +11,7 @@ import { observer } from 'mobx-react-lite';
 import { get, isEmpty } from 'lodash';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
+import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
 import { Layer3DRecordModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
@@ -79,6 +80,11 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.THREE_D_LAYER:
         return (
           <Cesium3DTileset
+            maximumScreenSpaceError={CONFIG.THREE_D_LAYER.MAXIMUM_SCREEN_SPACE_ERROR}
+            cullRequestsWhileMovingMultiplier={CONFIG.THREE_D_LAYER.CULL_REQUESTS_WHILE_MOVING_MULTIPLIER}
+            preloadFlightDestinations
+            preferLeaves
+            skipLevelOfDetail
             key={layer.id}
             url={getTokenResource(layerLink.url as string, (layer as Layer3DRecordModelType).productVersion as string)}
           />
