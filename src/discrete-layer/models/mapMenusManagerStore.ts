@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { types, getParent } from 'mobx-state-tree';
-import { ApplicationContexts, ContextActions } from '../../common/actions/context.actions';
+import { ApplicationContexts, ContextActionGroupProps, ContextActions, getContextActionGroupProps } from '../../common/actions/context.actions';
 import { IAction } from '../../common/actions/entity.actions';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { ModelBase } from './ModelBase';
@@ -19,7 +19,7 @@ interface MenuItem {
 export type MenuItemsList = MenuItem[][];
 
 export interface IMapMenuProperties {
-  groupsTitles: string[];
+  groupsProps: ContextActionGroupProps[];
   itemsList: MenuItemsList;
   heightBuffer?: number;
   absoluteHeight?: number;
@@ -93,7 +93,7 @@ export const mapMenusManagerStore = ModelBase
 
         return {
           ActionsMenu: {
-            groupsTitles: mapContextActions.map((group) => group.titleTranslationId),
+            groupsProps: mapContextActions.map((group) => getContextActionGroupProps(group)),
             itemsList: actionsMenuSections,
             heightBuffer: 70
           }

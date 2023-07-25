@@ -5,7 +5,7 @@ import { ResponseState } from '../../common/models/response-state.enum';
 import ACTIONS_CONFIG, { IActionGroup, IEntityActions } from '../../common/actions/entity.actions';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
-import CONTEXT_ACTIONS_CONFIG, { IContextActions } from '../../common/actions/context.actions';
+import CONTEXT_ACTIONS_CONFIG, { IContextActionGroup, IContextActions } from '../../common/actions/context.actions';
 
 export interface IDispatchAction {
   action: string;
@@ -32,15 +32,17 @@ export const actionDispatcherStore = ModelBase
     },
   }))
   .actions((self) => {
-    const isContextActions = (actionsGroup: IEntityActions | IContextActions): actionsGroup is IContextActions => 'context' in actionsGroup;
+    const isContextActions = (actionsGroup: IEntityActions | IContextActions): actionsGroup is IContextActions => {
+      return 'context' in actionsGroup && actionsGroup.actions.every(action => 'actionsSpreadPreference' in action)
+    };
 
     function getEntityActionGroups(entity: string): IActionGroup[] {
       const actions = self.actionsConfig?.find(entityActions => entityActions.entity === entity);
       return actions?.actions ?? [];
     };
 
-    function getContextActionGroups(context: string): IActionGroup[] {
-      const actions = self.actionsConfig?.find(actions => isContextActions(actions) && actions.context === context);
+    function getContextActionGroups(context: string): IContextActionGroup[] {
+      const actions = self.actionsConfig?.find(actions => isContextActions(actions) && actions.context === context) as IContextActions;
       return actions?.actions ?? [];
     };
 

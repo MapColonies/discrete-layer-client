@@ -1,24 +1,19 @@
-import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef } from 'react';
+import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import { get } from 'lodash';
 import {
   Icon,
-  ListDivider,
-  Menu,
-  MenuItem,
-  MenuSurfaceAnchor,
   Tooltip,
   ContextMenu as MCContextMenu,
   Item,
   Separator,
   Submenu,
-  RightSlot,
-  useContextMenu,
-  ItemParams
+  useContextMenu
 } from '@map-colonies/react-core';
 import { Box, IContextMenuData } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import './context-menu.css';
 import { useIntl } from 'react-intl';
+import { ActionSpreadPreference, ContextActionGroupProps } from '../../../../common/actions/context.actions';
 
 export const TITLE_HEIGHT = 24;
 export const SUB_MENU_MAX_HEIGHT = 120;
@@ -28,7 +23,7 @@ interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
   menuTitleTooltip?: string;
   menuSections?: JSX.Element[][];
-  sectionsTitles?: string[];
+  sectionsProps?: ContextActionGroupProps[];
 }
 
 const NONE = 0;
@@ -43,7 +38,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   menuSections,
   menuTitle = '',
   menuTitleTooltip = '',
-  sectionsTitles,
+  sectionsProps,
   children,
   data,
   contextEvt,
@@ -87,7 +82,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
 
   return (
     <>
-      {menuSections && hasSections && (
+      {menuSections && hasSections && sectionsProps && (
         <div
           ref={imageryContextMenuRef}
           style={style}
@@ -136,14 +131,32 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                 )
               });
               
-              // const lastSectionIdx = menuSections.length - 1;
-              // if(sectionIdx < lastSectionIdx && section.length) {
-              //   sectionItems.push(<Separator key={`sectionDivider_${sectionIdx}}`} />);
-              // }
-              const titleId = sectionsTitles?.[sectionIdx] ? sectionsTitles?.[sectionIdx] : null;
-              const menuTitle = intl.formatMessage({ id: titleId ?? 'Section Title' });
+              const lastSectionIdx = menuSections.length - 1;
+              let sectionToRender: JSX.Element | JSX.Element[];
 
-              return <Submenu dir={direction} label={menuTitle}>{sectionItems}</Submenu>;
+              const sectionProps = sectionsProps[sectionIdx] ?? null;
+              const sectionId = sectionProps.id;
+              const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
+
+              // Spread sections by preferences
+              const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
+              if(shouldPresentAsMenu) {
+                  sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
+              } else {
+                sectionToRender = sectionItems.map((item, idx) => {
+                  return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
+                });
+              }
+
+              return (
+                <>
+                  {sectionToRender}
+                  {sectionIdx < lastSectionIdx && section.length && (
+                    <Separator key={`sectionDivider_${sectionId}}`} />
+                  )}
+                </>
+              );
+
             })}
           </MCContextMenu>
           <Box

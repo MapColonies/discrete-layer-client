@@ -80,7 +80,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
 
   return (
         <ContextMenu
-          sectionsTitles={menuProperties?.groupsTitles}
+          sectionsProps={menuProperties?.groupsProps}
           menuSections={getMenuSections()}
           {...restProps}
         >
