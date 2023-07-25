@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.29.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.2...v1.29.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* date control dissapers after selcting the date ([#450](https://github.com/MapColonies/discrete-layer-client/issues/450)) ([79203bd](https://github.com/MapColonies/discrete-layer-client/commit/79203bd5ddf0757af94bc2e2d68d310dfd4aea73))
+
+### [1.29.2](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.1...v1.29.2) (2023-07-13)
+
+### [1.29.1](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.0...v1.29.1) (2023-07-11)
+
+
+### Bug Fixes
+
+* add chrome portable as browser option ([#449](https://github.com/MapColonies/discrete-layer-client/issues/449)) ([1264412](https://github.com/MapColonies/discrete-layer-client/commit/1264412afbec127034e4a0f90dc78cc988816402))
+* copy button should have type attr ([#448](https://github.com/MapColonies/discrete-layer-client/issues/448)) ([6286a98](https://github.com/MapColonies/discrete-layer-client/commit/6286a98e07d4c808166cb1c1d62f7f00876a3fa5))
+* export server error ([#446](https://github.com/MapColonies/discrete-layer-client/issues/446)) ([88e7652](https://github.com/MapColonies/discrete-layer-client/commit/88e7652aae52e69cf16dbfe6849aa262a853929c))
+* no thumbnail while export ([#447](https://github.com/MapColonies/discrete-layer-client/issues/447)) ([427281b](https://github.com/MapColonies/discrete-layer-client/commit/427281b4431c7e208be264133df680023fb18d7e))
+
 ## [1.29.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.28.1...v1.29.0) (2023-06-25)
 
 

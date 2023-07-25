@@ -1,37 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BBoxDialog component renders correctly 1`] = `
-<McBox
+<se
   id="bboxDialog"
 >
-  <Function
+  <ForwardRef
     open={false}
     preventOutsideDismiss={true}
   >
-    <Function>
+    <ForwardRef>
       <FormattedMessage
         id="custom-bbox.dialog.title"
       />
-      <Function
+      <ForwardRef
         className="closeIcon mc-icon-Close"
         label="CLOSE"
         onClick={[Function]}
       />
-    </Function>
-    <Function>
+    </ForwardRef>
+    <ForwardRef>
       <form
         className="bboxForm"
         noValidate={true}
         onSubmit={[Function]}
       >
-        <McBox
+        <se
           className="bboxRow"
         >
           <BBoxCorner
             className="bboxField"
             corner="TOP_RIGHT"
           />
-          <McBox
+          <se
             className="bboxField"
           >
             <FieldLabelComponent
@@ -39,15 +39,15 @@ exports[`BBoxDialog component renders correctly 1`] = `
               showTooltip={false}
               value="custom-bbox.dialog-field.topRightLon.label"
             />
-            <Function
+            <ForwardRef
               name="topRightLon"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
-          </McBox>
-          <McBox
+          </se>
+          <se
             className="bboxField"
           >
             <FieldLabelComponent
@@ -55,23 +55,23 @@ exports[`BBoxDialog component renders correctly 1`] = `
               showTooltip={false}
               value="custom-bbox.dialog-field.topRightLat.label"
             />
-            <Function
+            <ForwardRef
               name="topRightLat"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
-          </McBox>
-        </McBox>
-        <McBox
+          </se>
+        </se>
+        <se
           className="bboxRow"
         >
           <BBoxCorner
             className="bboxField"
             corner="BOTTOM_LEFT"
           />
-          <McBox
+          <se
             className="bboxField"
           >
             <FieldLabelComponent
@@ -79,15 +79,15 @@ exports[`BBoxDialog component renders correctly 1`] = `
               showTooltip={false}
               value="custom-bbox.dialog-field.bottomLeftLon.label"
             />
-            <Function
+            <ForwardRef
               name="bottomLeftLon"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
-          </McBox>
-          <McBox
+          </se>
+          <se
             className="bboxField"
           >
             <FieldLabelComponent
@@ -95,25 +95,25 @@ exports[`BBoxDialog component renders correctly 1`] = `
               showTooltip={false}
               value="custom-bbox.dialog-field.bottomLeftLat.label"
             />
-            <Function
+            <ForwardRef
               name="bottomLeftLat"
               onChange={[Function]}
               required={true}
               type="number"
               value={0}
             />
-          </McBox>
-        </McBox>
-        <McBox
+          </se>
+        </se>
+        <se
           className="footer"
         >
-          <McBox
+          <se
             className="messages"
           />
-          <McBox
+          <se
             className="buttons"
           >
-            <withRipple(Function)
+            <ForwardRef
               disabled={false}
               raised={true}
               type="submit"
@@ -121,19 +121,19 @@ exports[`BBoxDialog component renders correctly 1`] = `
               <FormattedMessage
                 id="general.ok-btn.text"
               />
-            </withRipple(Function)>
-            <withRipple(Function)
+            </ForwardRef>
+            <ForwardRef
               onClick={[Function]}
               type="button"
             >
               <FormattedMessage
                 id="general.cancel-btn.text"
               />
-            </withRipple(Function)>
-          </McBox>
-        </McBox>
+            </ForwardRef>
+          </se>
+        </se>
       </form>
-    </Function>
-  </Function>
-</McBox>
+    </ForwardRef>
+  </ForwardRef>
+</se>
 `;

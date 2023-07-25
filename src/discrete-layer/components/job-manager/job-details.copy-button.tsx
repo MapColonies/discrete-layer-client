@@ -19,6 +19,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
     <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
       <CopyToClipboard text={text}>
         <IconButton
+          type="button"
           style={{ fontSize: `${iconSize}px` }}
           className="mc-icon-Copy"
         />
