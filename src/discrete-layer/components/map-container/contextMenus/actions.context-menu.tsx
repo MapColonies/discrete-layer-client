@@ -87,7 +87,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = ({
             <Box className="heightContainer"> 
               <Icon className='menuIcon mc-icon-Height-DTM' />
               <Typography tag="p">
-                {getHeightText()} 
+                {heightsAtCoordinates.isLoadingData ? <CircularProgress /> : getHeightText()}
               </Typography>
             </Box>
           </Box>
