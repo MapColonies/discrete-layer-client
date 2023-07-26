@@ -9,7 +9,7 @@ import {GetFeatureModelType} from './GetFeatureModel';
 import { WfsGetFeatureParams } from './RootStore.base';
 import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetchers/wfs-features-fetcher.component';
 
-interface MenuItem {
+export interface MenuItem {
   title: string;
   action: IAction;
   icon?: string;
@@ -43,8 +43,8 @@ export const mapMenusManagerStore = ModelBase
       Object.values(ResponseState)
     ),
     mapMenus: types.maybe(types.frozen<MapMenus>()),
-    actionsMenuFeatures: types.maybe(types.frozen<string[]>()),
-    actionsMenuFeatureConfigs: types.maybe(types.frozen<IFeatureConfigs>()),
+    wfsFeatureTypes: types.maybe(types.frozen<string[]>()),
+    wfsFeatureConfigs: types.maybe(types.frozen<IFeatureConfigs>()),
     currentWfsFeatureInfo: types.maybe(types.frozen<WfsFeatureInfo>()),
   })
   .views((self) => ({
@@ -68,7 +68,7 @@ export const mapMenusManagerStore = ModelBase
             if(!(store.userStore.isActionAllowed(action.action) as boolean)) return;
 
             if(action.action === ContextActions.QUERY_WFS_FEATURE) {
-              const featureTypesList = (featureTypes ?? self.actionsMenuFeatures) ?? [];
+              const featureTypesList = (featureTypes ?? self.wfsFeatureTypes) ?? [];
               const wfsAvailableFeatures: MenuItem[] = featureTypesList
               .map(feature => {
                 const featureConfig = getFeatureConfig(feature);
@@ -84,11 +84,11 @@ export const mapMenusManagerStore = ModelBase
           });
 
           // Omit empty sections
-          if(flatGroup.length) {
+          // if(flatGroup.length) {
             return [...actionsSections, flatGroup];
-          }
+          // }
 
-          return [...actionsSections];
+          // return [...actionsSections];
         } ,[] as MenuItem[][])
 
         return {
@@ -108,12 +108,12 @@ export const mapMenusManagerStore = ModelBase
         }
     }
     
-    function setActionsMenuFeatures(actionsMenuFeatures: string[]): void {
-      self.actionsMenuFeatures = actionsMenuFeatures;
+    function setWfsFeatureTypes(wfsFeatureTypes: string[]): void {
+      self.wfsFeatureTypes = wfsFeatureTypes;
     }
 
-    function setFeatureConfigs(featureConfigs: IFeatureConfigs): void {
-      self.actionsMenuFeatureConfigs = featureConfigs;
+    function setWfsFeatureConfigs(wfsFeatureConfigs: IFeatureConfigs): void {
+      self.wfsFeatureConfigs = wfsFeatureConfigs;
     }
 
     function setCurrentWfsFeatureInfo(currentFeatureInfo: Omit<WfsFeatureInfo , 'config'>): void {
@@ -123,7 +123,7 @@ export const mapMenusManagerStore = ModelBase
     }
 
     function getFeatureConfig(typeName: string): IFeatureConfig {
-      return self.actionsMenuFeatureConfigs?.[typeName] as IFeatureConfig;
+      return self.wfsFeatureConfigs?.[typeName] as IFeatureConfig;
     }
 
     function resetCurrentWfsFeatureInfo(): void {
@@ -131,9 +131,9 @@ export const mapMenusManagerStore = ModelBase
     }
 
     return {
-      setActionsMenuFeatures,
+      setWfsFeatureTypes,
       setCurrentWfsFeatureInfo,
-      setFeatureConfigs,
+      setWfsFeatureConfigs,
       getFeatureConfig,
       resetCurrentWfsFeatureInfo,
       initStore,

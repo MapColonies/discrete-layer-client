@@ -26,16 +26,16 @@ export const WfsFeaturesFetcher: React.FC = observer(() => {
         const featureTypes = [...(wfsGetFeatureTypesQuery.data.getFeatureTypes).typesArr as string[]];
         const featureConfigs = {...(wfsGetFeatureTypesQuery.data.getFeatureTypes).featureConfigs as IFeatureConfigs};
         
-        store.mapMenusManagerStore.setActionsMenuFeatures(featureTypes);
-        store.mapMenusManagerStore.setFeatureConfigs(featureConfigs);
+         store.mapMenusManagerStore.setWfsFeatureTypes(featureTypes);
+         store.mapMenusManagerStore.setWfsFeatureConfigs(featureConfigs);
     }
   }, [wfsGetFeatureTypesQuery.data, wfsGetFeatureTypesQuery.loading])
 
   useEffect(() => {
-    if(store.mapMenusManagerStore.actionsMenuFeatures) {
+    // if(store.mapMenusManagerStore.actionsMenuFeatures) {
       store.mapMenusManagerStore.initStore();
-    }
-  }, [store.mapMenusManagerStore.actionsMenuFeatures])
+    // }
+  }, [store.mapMenusManagerStore.wfsFeatureTypes])
   
   return null;
 });

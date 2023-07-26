@@ -80,6 +80,57 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
     [menuSections]
   );
 
+  const renderMenuContent = useMemo(() => {
+    if(!menuSections || !sectionsProps) return null;
+
+     return menuSections.map((section, sectionIdx) => {   
+
+      const sectionProps = sectionsProps[sectionIdx] ?? null;
+      const sectionId = sectionProps.id;
+      const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
+
+      const sectionItems = section.map((item, itemIdx) => {
+        // Get click callback from item
+        const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
+        const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
+
+        return (
+          <Item
+            className='imageryMenuItemAction'
+            key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
+            onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
+            disabled={menuItemDisabled as boolean}
+          >
+            {item}
+          </Item>
+        )
+      });
+      
+      const lastSectionIdx = menuSections.length - 1;
+      let sectionToRender: JSX.Element | JSX.Element[];    
+
+      // Spread sections by preferences
+      const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
+      if(shouldPresentAsMenu) {
+          sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
+      } else {
+        sectionToRender = sectionItems.map((item, idx) => {
+          return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
+        });
+      }
+
+      return (
+        <>
+          {sectionToRender}
+          {sectionIdx < lastSectionIdx && section.length > 0 && (
+            <Separator key={`sectionDivider_${sectionId}}`} />
+          )}
+        </>
+      );
+
+    })
+  }, [menuSections]);
+
   return (
     <>
       {menuSections && hasSections && sectionsProps && (
@@ -113,51 +164,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
             id={'MENU_ID'}
             dir={direction}
           >
-            {menuSections.map((section, sectionIdx) => {   
-              const sectionItems = section.map((item, itemIdx) => {
-                // Get click callback from item
-                const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
-                const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
-
-                return (
-                  <Item
-                    className='imageryMenuItemAction'
-                    key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
-                    onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
-                    disabled={menuItemDisabled as boolean}
-                  >
-                    {item}
-                  </Item>
-                )
-              });
-              
-              const lastSectionIdx = menuSections.length - 1;
-              let sectionToRender: JSX.Element | JSX.Element[];
-
-              const sectionProps = sectionsProps[sectionIdx] ?? null;
-              const sectionId = sectionProps.id;
-              const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
-
-              // Spread sections by preferences
-              const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
-              if(shouldPresentAsMenu) {
-                  sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
-              } else {
-                sectionToRender = sectionItems.map((item, idx) => {
-                  return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
-                });
-              }
-
-              return (
-                <>
-                  {sectionToRender}
-                  {sectionIdx < lastSectionIdx && section.length && (
-                    <Separator key={`sectionDivider_${sectionId}}`} />
-                  )}
-                </>
-              );
-
-            })}
+            {renderMenuContent}
           </MCContextMenu>
           <Box
             style={{ maxHeight: `${SUB_MENU_MAX_HEIGHT}px` }}
