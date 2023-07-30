@@ -13,7 +13,7 @@ import { Box, IContextMenuData } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import './context-menu.css';
 import { useIntl } from 'react-intl';
-import { ActionSpreadPreference, ContextActionGroupProps } from '../../../../common/actions/context.actions';
+import { ActionSpreadPreference } from '../../../../common/actions/context.actions';
 
 export const TITLE_HEIGHT = 24;
 export const SUB_MENU_MAX_HEIGHT = 120;
@@ -23,7 +23,6 @@ interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
   menuTitleTooltip?: string;
   menuSections?: JSX.Element[][];
-  sectionsProps?: ContextActionGroupProps[];
 }
 
 const NONE = 0;
@@ -38,7 +37,6 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   menuSections,
   menuTitle = '',
   menuTitleTooltip = '',
-  sectionsProps,
   children,
   data,
   contextEvt,
@@ -81,11 +79,11 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   );
 
   const renderMenuContent = useMemo(() => {
-    if(!menuSections || !sectionsProps) return null;
+    if(!menuSections) return null;
 
      return menuSections.map((section, sectionIdx) => {   
 
-      const sectionProps = sectionsProps[sectionIdx] ?? null;
+      // const sectionProps = sectionsProps[sectionIdx] ?? null;
       const sectionId = sectionProps.id;
       const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
 
@@ -110,7 +108,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
       let sectionToRender: JSX.Element | JSX.Element[];    
 
       // Spread sections by preferences
-      const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
+      // const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
       if(shouldPresentAsMenu) {
           sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
       } else {
@@ -133,7 +131,8 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
 
   return (
     <>
-      {menuSections && hasSections && sectionsProps && (
+      {/* {menuSections && hasSections && sectionsProps && ( */}
+      {menuSections && hasSections && (
         <div
           ref={imageryContextMenuRef}
           style={style}

@@ -17,6 +17,10 @@ export enum ContextActions {
   TEST = 'TEST',
 }
 
+export enum ContextActionsTemplates {
+  WFS_QUERY_FEATURES = 'WFS_QUERY_FEATURES',
+}
+
 export enum ContextActionsGroupTemplates {
   ACTIVE_LAYERS_IN_POSITION = 'ACTIVE_LAYERS_IN_POSITION',
 }
@@ -25,43 +29,57 @@ export enum ActionSpreadPreference {
   FLAT = 'flat',
   MENU = 'menu'
 }
-export interface IContextActionGroup extends IActionGroup {
+
+export interface IContextAction extends IAction {
+  templateId?: ContextActionsTemplates;
+};
+
+export interface IContextActionGroup extends Omit<IActionGroup, 'group'> {
   order: number;
   actionsSpreadPreference: ActionSpreadPreference;
   templateId?: ContextActionsGroupTemplates;
   minimumItemsInMenu?: number; // Ignored if spread preference is not a menu. defaults to 2.
+  actions: Array<IContextAction | IContextActionGroup>;
+  icon?: string;
 }
+
+export type ContextActionGroupProps = Omit<IContextActionGroup, 'actions'>;
 
 export interface IContextActions {
   context: ApplicationContexts;
   entity?: string;
   childEntity?: string;
-  actions: IContextActionGroup[];
+  groups: IContextActionGroup[];
 }
 
-// Only group properties, no actions.
-export interface ContextActionGroupProps extends Omit<IContextActionGroup, 'group'> {};
+// // Only group properties, no actions.
+// export interface ContextActionGroupProps extends Omit<IContextActionGroup, 'group'> {};
 
-export const getContextActionGroupProps = (actionGroup: IContextActionGroup): ContextActionGroupProps => {
-  const contextActionPropsKeys: Array<keyof ContextActionGroupProps> = [
-      "actionsSpreadPreference",
-      "id",
-      "minimumItemsInMenu",
-      "titleTranslationId",
-      "type",
-      "templateId",
-      'order'
-  ];
+// export const getContextActionGroupProps = (actionGroup: IContextActionGroup): ContextActionGroupProps => {
+//   const contextActionPropsKeys: Array<keyof ContextActionGroupProps> = [
+//       "actionsSpreadPreference",
+//       "id",
+//       "minimumItemsInMenu",
+//       "titleTranslationId",
+//       "type",
+//       "templateId",
+//       'order'
+//   ];
 
-  const groupProps: ContextActionGroupProps = {} as ContextActionGroupProps;
+//   const groupProps: ContextActionGroupProps = {} as ContextActionGroupProps;
 
-  for(const [key, val] of Object.entries(actionGroup)) {
-    if(contextActionPropsKeys.includes(key as keyof ContextActionGroupProps)) {
-      (groupProps as Record<string,unknown>)[key] = val;
-    }
-  }
+//   for(const [key, val] of Object.entries(actionGroup)) {
+//     if(contextActionPropsKeys.includes(key as keyof ContextActionGroupProps)) {
+//       (groupProps as Record<string,unknown>)[key] = val;
+//     }
+//   }
 
-  return groupProps;
+//   return groupProps;
+// }
+
+// A type guard helper function used to infer if action is a group or a single action.
+export const isActionGroup = (action: IContextAction | IContextActionGroup): action is IContextActionGroup => {
+  return (action as IContextActionGroup).actions !== undefined;
 }
 
 const DEFAULT_MINIMUM_ITEMS_IN_MENU = 2;
@@ -79,7 +97,7 @@ const defaultContextActionGroupProps: Omit<IContextActionGroup, "order"> = {
   id: 0,
   actionsSpreadPreference: ActionSpreadPreference.MENU,
   minimumItemsInMenu: DEFAULT_MINIMUM_ITEMS_IN_MENU,
-  group: [],
+  actions: [],
   titleTranslationId: '',
   type: ''
 }
@@ -87,7 +105,7 @@ const defaultContextActionGroupProps: Omit<IContextActionGroup, "order"> = {
 const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
   {
     context: ApplicationContexts.MAP_CONTEXT,
-    actions: [
+    groups: [
       {
         ...defaultContextActionGroupProps,
         order: 0,
@@ -96,9 +114,10 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.MENU,
         minimumItemsInMenu: 2,
-        group: [
+        actions: [
           {
             ...defaultContextActionProps,
+            templateId: ContextActionsTemplates.WFS_QUERY_FEATURES,
             action: ContextActions.QUERY_WFS_FEATURE,
           }
         ],
@@ -111,12 +130,39 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.FLAT,
         minimumItemsInMenu: 0,
-        group: [
+        actions: [
           {
             ...defaultContextActionProps,
             titleTranslationId: 'Heights',
             action: "TEST",
           },
+          {
+            ...defaultContextActionGroupProps,
+            id: 2,
+            order: 1,
+            titleTranslationId: 'kuku',
+            type: ContextActionsTypes.SERVICE_OPERATIONS,
+            actionsSpreadPreference: ActionSpreadPreference.FLAT,
+            minimumItemsInMenu: 0,
+            actions: [
+              {
+                ...defaultContextActionGroupProps,
+                id: 2,
+                order: 1,
+                titleTranslationId: 'kuku',
+                type: ContextActionsTypes.SERVICE_OPERATIONS,
+                actionsSpreadPreference: ActionSpreadPreference.FLAT,
+                minimumItemsInMenu: 0,
+                actions: [
+                  {
+                    ...defaultContextActionProps,
+                    titleTranslationId: 'Heights',
+                    action: "TEST",
+                  },
+                ],
+              }
+            ],
+          }
         ],
       },
       {
@@ -127,7 +173,7 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.FLAT,
         minimumItemsInMenu: 0,
-        group: [
+        actions: [
           {
             ...defaultContextActionProps,
             titleTranslationId: 'Sensitive',
@@ -144,7 +190,7 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         actionsSpreadPreference: ActionSpreadPreference.MENU,
         minimumItemsInMenu: 0,
         templateId: ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION,
-        group: [
+        actions: [
           {
             ...defaultContextActionProps,
             titleTranslationId: 'UP',

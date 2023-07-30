@@ -147,7 +147,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   }]);
 
   const actionsMenuDynamicHeight = 0;
-  const actionsContextMenuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
   const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
   
   useEffect(() => {
@@ -669,7 +668,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
     }
     // Should add global flag or find the proper condition to whether show the context menu or not.
-    return <ActionsContextMenu {...props} menuProperties={actionsContextMenuProperties}/>;
+    return <ActionsContextMenu {...props} />;
   };
 
   const getContextMenuSizeTab = (): MenuDimensions => {

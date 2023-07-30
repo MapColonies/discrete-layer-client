@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../../../discrete-layer/models";
 import { MapMenusIds, IMapMenuProperties } from "../../../discrete-layer/models/mapMenusManagerStore";
+import { useHandleMapMenuTemplates } from "./useHandleMapMenuTemplates.hook";
 
 
 const useGetMenuProperties = (menuId: MapMenusIds): IMapMenuProperties | undefined => {
     const store = useStore();
     const [menuProperties, setMenuProperties] = useState<IMapMenuProperties>();
+    const mapMenus = store.mapMenusManagerStore.mapMenus;
+    const templatedMenuProperties = useHandleMapMenuTemplates(mapMenus?.[menuId]);
     
     useEffect(() => {
-      const mapMenus = store.mapMenusManagerStore.mapMenus;
-    
-      if(mapMenus) {
-        setMenuProperties(mapMenus[menuId]);
+      if(templatedMenuProperties) {
+        setMenuProperties(templatedMenuProperties);
+        console.log("templatedMenuProperties", templatedMenuProperties)
       }
-    }, [store.mapMenusManagerStore.mapMenus])
+    }, [templatedMenuProperties])
 
     return menuProperties;
 }

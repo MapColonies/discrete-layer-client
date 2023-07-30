@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { types, getParent } from 'mobx-state-tree';
-import { ApplicationContexts, ContextActionGroupProps, ContextActions, getContextActionGroupProps } from '../../common/actions/context.actions';
-import { IAction } from '../../common/actions/entity.actions';
+import { ApplicationContexts, ContextActionGroupProps, ContextActionsGroupTemplates, ContextActionsTemplates, IContextAction, IContextActionGroup, isActionGroup } from '../../common/actions/context.actions';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
@@ -9,17 +8,31 @@ import {GetFeatureModelType} from './GetFeatureModel';
 import { WfsGetFeatureParams } from './RootStore.base';
 import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetchers/wfs-features-fetcher.component';
 
-export interface MenuItem {
+interface CommonMenuItem {
+  templateId?: ContextActionsTemplates | ContextActionsGroupTemplates;
+}
+export interface MenuItem extends CommonMenuItem {
   title: string;
-  action: IAction;
+  action: IContextAction;
   icon?: string;
   payloadData?: Record<string, unknown>;
 }
 
-export type MenuItemsList = MenuItem[][];
+export interface MenuItemsGroup extends CommonMenuItem {
+  title: string;
+  groupProps: ContextActionGroupProps;
+  items: Array<MenuItem | MenuItemsGroup>;
+  icon?: string;
+}
+
+export type MenuItemsList = Array<MenuItem | MenuItemsGroup>;
+
+// A type guard helper function to infer if a menu item is a group or a single menu item.
+export const isMenuItemGroup = (menuItem: MenuItem | MenuItemsGroup): menuItem is MenuItemsGroup => {
+  return (menuItem as MenuItemsGroup).groupProps !== undefined;
+} 
 
 export interface IMapMenuProperties {
-  groupsProps: ContextActionGroupProps[];
   itemsList: MenuItemsList;
   heightBuffer?: number;
   absoluteHeight?: number;
@@ -58,48 +71,91 @@ export const mapMenusManagerStore = ModelBase
   .actions((self) => {
     const store = self.root;
 
-    function getActionsMenuProperties(featureTypes?: string[]): MapMenus {
-        const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
-        const actionsMenuSections = mapContextActions.reduce((actionsSections, actionGroup) => {
-          const flatGroup: MenuItem[] = [];
+    // function getActionsMenuProperties(featureTypes?: string[]): MapMenus {
+    //     const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
+    //     const actionsMenuSections = mapContextActions.reduce((actionsSections, actionGroup) => {
+    //       const flatGroup: MenuItem[] = [];
           
-          actionGroup.group.forEach(action => {
-            // Exclude forbidden actions from list.
-            if(!(store.userStore.isActionAllowed(action.action) as boolean)) return;
+    //       actionGroup.actions.forEach(action => {
+    //         // Exclude forbidden actions from list.
+    //         if(!(store.userStore.isActionAllowed(action.action) as boolean)) return;
 
-            if(action.action === ContextActions.QUERY_WFS_FEATURE) {
-              const featureTypesList = (featureTypes ?? self.wfsFeatureTypes) ?? [];
-              const wfsAvailableFeatures: MenuItem[] = featureTypesList
-              .map(feature => {
-                const featureConfig = getFeatureConfig(feature);
-                const featureTitle = featureConfig.translationId ?? feature;
+    //         if(action.action === ContextActions.QUERY_WFS_FEATURE) {
+    //           const featureTypesList = (featureTypes ?? self.wfsFeatureTypes) ?? [];
+    //           const wfsAvailableFeatures: MenuItem[] = featureTypesList
+    //           .map(feature => {
+    //             const featureConfig = getFeatureConfig(feature);
+    //             const featureTitle = featureConfig.translationId ?? feature;
 
-                return ({title: featureTitle, icon: featureConfig.icon, action: {...action}, payloadData: { feature }})
-              });
+    //             return ({title: featureTitle, icon: featureConfig.icon, action: {...action}, payloadData: { feature }})
+    //           });
 
-              flatGroup.push(...wfsAvailableFeatures);
-              return;
-            }
-            flatGroup.push({title: action.titleTranslationId, action: {...action}});            
-          });
+    //           flatGroup.push(...wfsAvailableFeatures);
+    //           return;
+    //         }
+    //         flatGroup.push({title: action.titleTranslationId, action: {...action}});            
+    //       });
 
-          // Omit empty sections
-          // if(flatGroup.length) {
-            return [...actionsSections, flatGroup];
-          // }
+    //       // Omit empty sections
+    //       // if(flatGroup.length) {
+    //         return [...actionsSections, flatGroup];
+    //       // }
 
-          // return [...actionsSections];
-        } ,[] as MenuItem[][])
+    //       // return [...actionsSections];
+    //     } ,[] as MenuItem[][])
 
-        return {
-          ActionsMenu: {
-            groupsProps: mapContextActions.map((group) => getContextActionGroupProps(group)),
-            itemsList: actionsMenuSections,
-            heightBuffer: 70
+    //     return {
+    //       ActionsMenu: {
+    //         itemsList: actionsMenuSections,
+    //         heightBuffer: 70
+    //       }
+    //     }
+
+    // }
+
+    function getActionsMenuProperties(): MapMenus {
+      const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
+
+      const buildGroupItemsList = (actions: (IContextActionGroup | IContextAction)[]): MenuItemsList => {
+        const itemsList: MenuItemsList = [];
+
+        actions.forEach(groupOrAction => {
+          if(!isActionGroup(groupOrAction)) {
+            if(!(store.userStore.isActionAllowed(groupOrAction.action) as boolean)) return;
+            
+            const item: MenuItem = {
+              action: {...groupOrAction},
+              title: groupOrAction.titleTranslationId,
+              icon: groupOrAction.icon,
+              templateId: groupOrAction.templateId
+            };
+
+            itemsList.push(item);
+          } else {
+            const {actions, ...groupWithoutActions} = groupOrAction;
+            const group: MenuItemsGroup = {
+              title: groupOrAction.titleTranslationId,
+              icon: groupOrAction.icon,
+              groupProps: groupWithoutActions,
+              templateId: groupOrAction.templateId,
+              items: buildGroupItemsList(actions)
+            };
+
+            itemsList.push(group);
           }
-        }
+        });
 
-    }
+        return itemsList;
+      }
+      
+      return {
+        ActionsMenu: {
+          itemsList: buildGroupItemsList(mapContextActions),
+          heightBuffer: 70
+        }
+      }
+
+  }
 
     function initStore(): void {
         self.mapMenus = {

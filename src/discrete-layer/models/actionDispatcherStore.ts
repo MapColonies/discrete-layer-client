@@ -33,17 +33,17 @@ export const actionDispatcherStore = ModelBase
   }))
   .actions((self) => {
     const isContextActions = (actionsGroup: IEntityActions | IContextActions): actionsGroup is IContextActions => {
-      return 'context' in actionsGroup && actionsGroup.actions.every(action => 'actionsSpreadPreference' in action)
+      return 'context' in actionsGroup && actionsGroup.groups.every(action => 'actionsSpreadPreference' in action)
     };
 
     function getEntityActionGroups(entity: string): IActionGroup[] {
-      const actions = self.actionsConfig?.find(entityActions => entityActions.entity === entity);
+      const actions = self.actionsConfig?.find(entityActions => entityActions.entity === entity) as IEntityActions;
       return actions?.actions ?? [];
     };
 
     function getContextActionGroups(context: string): IContextActionGroup[] {
       const actions = self.actionsConfig?.find(actions => isContextActions(actions) && actions.context === context) as IContextActions;
-      return actions?.actions ?? [];
+      return actions?.groups ?? [];
     };
 
     function getEntityActionConfiguration(entity: string): IEntityActions | IContextActions | undefined {
