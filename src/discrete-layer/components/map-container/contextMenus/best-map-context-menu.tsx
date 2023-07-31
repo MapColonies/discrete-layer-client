@@ -160,7 +160,23 @@ export const BestMapContextMenu: React.FC<IBestMapContextMenuData> = ({
         <ContextMenu
           menuTitle={layerName}
           menuTitleTooltip={tooltipInfoPrefixText + layerName}
-          menuSections={[actionsSection]}
+          getItemRenderer={(item) => {
+            return (
+              <Box
+                onClick={(evt): void => {
+                  dispatchAction(`LayerRasterRecord.${item.action}`, layer);
+                  handleClose();
+                }}
+              >
+                <Icon
+                  className="imageryMenuIcon glow-missing-icon"
+                  icon={{ icon: item.icon, size: 'small' }}
+                />
+                {item.title}
+              </Box>
+            );
+          }}
+          // menuSections={[actionsSection]}
           // Multi sections example
           // menuSections={[actionsSection ,[<Box>One</Box>, <Box onClick={handleClose}>Two</Box>, <Box onClick={handleClose}>Three</Box>]]}
           {...restProps}

@@ -6,12 +6,13 @@ import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { IMapMenuProperties, MapMenusIds, MenuItem, MenuItemsList } from '../../../models/mapMenusManagerStore';
 import { getCoordinatesDisplayText } from '../../layer-details/utils';
-import { ContextMenu } from './context-menu';
+import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
 
 import './actions.context-menu.css';
 import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
 import { ContextActionsGroupTemplates } from '../../../../common/actions/context.actions';
 import useGetMenuProperties from '../../../../common/hooks/mapMenus/useGetMenuProperties.hook';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
 interface IActionsContextMenuProps extends IContextMenuData {}
 
@@ -25,7 +26,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
   const intl = useIntl();
   const [currentClickedItem, setCurrentClickedItem] = useState<string>();
   const heightsAtCoordinates = useHeightFromTerrain({ position: [{ ...coordinates }] });
-  const menuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu);
+  const menuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu, props);
 
   const dispatchAction = useCallback((action: IDispatchAction): void => {
     store.actionDispatcherStore.dispatchAction({
@@ -71,21 +72,21 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
   //         }
   //     });
 
-  //     // Handle template groups logic by id, add templated groups and props to general arrays.
+  //     // Handle template groups logic by id, add generated groups and props to general arrays.
   //     menuGroupTemplates.forEach((template) => {
   //         switch (template.templateProps.templateId) {
   //             case ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION: {
   //                 const numberOfDuplicates = 5;
 
   //                 for (let i = 0; i < numberOfDuplicates; i++) {
-  //                     const templatedGroupProps: ContextActionGroupProps = {
+  //                     const generatedGroupProps: ContextActionGroupProps = {
   //                         ...template.templateProps,
   //                         id: template.templateProps.id + i,
   //                         order: template.templateProps.order + i,
   //                         titleTranslationId: `${template.templateProps.titleTranslationId}_${i}`,
   //                     };
-  //                     groupsPropsWithDynamicTemplateProps.splice(templatedGroupProps.order, 0, templatedGroupProps);
-  //                     menuItemsWithDynamicTemplates.splice(templatedGroupProps.order, 0, template.items);
+  //                     groupsPropsWithDynamicTemplateProps.splice(generatedGroupProps.order, 0, generatedGroupProps);
+  //                     menuItemsWithDynamicTemplates.splice(generatedGroupProps.order, 0, template.items);
   //                 }
   //                 break;
   //             }
@@ -131,6 +132,32 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
   //   });
   // };
 
+  const menuItemRenderer: ContextMenuItemRenderer = (item) => {
+    const actionToDispatch = {
+      action: item.action.action,
+      data: { ...item.payloadData, coordinates, handleClose },
+    };
+
+    return (
+      <Box
+        className="actionsMenuItem"
+        onClick={(): void => onItemClick(item.title, actionToDispatch)}
+      >
+        {typeof item.icon !== 'undefined' && (
+          <Icon className={`featureIcon ${item.icon}`} />
+        )}
+        
+        <TooltippedValue>
+          {intl.formatMessage({ id: item.title })}
+        </TooltippedValue>
+        
+        {currentClickedItem === item.title && (
+          <CircularProgress className="actionsMenuItemLoading" />
+        )}
+      </Box>
+    );
+  };
+
   const getHeightText = (): string => {
     const coordinateHeight = heightsAtCoordinates.newPositions?.[FIRST].height;
 
@@ -143,7 +170,8 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
 
   return (
         <ContextMenu
-          // menuSections={getMenuSections()}
+          menuItems={menuProperties?.itemsList}
+          getItemRenderer={menuItemRenderer}
           {...props}
         >
           <Box className="contextMenuFooter">

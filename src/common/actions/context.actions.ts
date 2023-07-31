@@ -77,7 +77,7 @@ export interface IContextActions {
 //   return groupProps;
 // }
 
-// A type guard helper function used to infer if action is a group or a single action.
+// A "type guard" helper function used to infer if action is a group or a single action.
 export const isActionGroup = (action: IContextAction | IContextActionGroup): action is IContextActionGroup => {
   return (action as IContextActionGroup).actions !== undefined;
 }
@@ -116,71 +116,72 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         minimumItemsInMenu: 2,
         actions: [
           {
+            // Items will be generated according to store.mapMenusManagerStore.wfsFeatureTypes
             ...defaultContextActionProps,
             templateId: ContextActionsTemplates.WFS_QUERY_FEATURES,
             action: ContextActions.QUERY_WFS_FEATURE,
           }
         ],
       },
-      {
-        ...defaultContextActionGroupProps,
-        id: 2,
-        order: 1,
-        titleTranslationId: 'kuku',
-        type: ContextActionsTypes.SERVICE_OPERATIONS,
-        actionsSpreadPreference: ActionSpreadPreference.FLAT,
-        minimumItemsInMenu: 0,
-        actions: [
-          {
-            ...defaultContextActionProps,
-            titleTranslationId: 'Heights',
-            action: "TEST",
-          },
-          {
-            ...defaultContextActionGroupProps,
-            id: 2,
-            order: 1,
-            titleTranslationId: 'kuku',
-            type: ContextActionsTypes.SERVICE_OPERATIONS,
-            actionsSpreadPreference: ActionSpreadPreference.FLAT,
-            minimumItemsInMenu: 0,
-            actions: [
-              {
-                ...defaultContextActionGroupProps,
-                id: 2,
-                order: 1,
-                titleTranslationId: 'kuku',
-                type: ContextActionsTypes.SERVICE_OPERATIONS,
-                actionsSpreadPreference: ActionSpreadPreference.FLAT,
-                minimumItemsInMenu: 0,
-                actions: [
-                  {
-                    ...defaultContextActionProps,
-                    titleTranslationId: 'Heights',
-                    action: "TEST",
-                  },
-                ],
-              }
-            ],
-          }
-        ],
-      },
-      {
-        ...defaultContextActionGroupProps,
-        id: 3,
-        order: 2,
-        titleTranslationId: 'kuku',
-        type: ContextActionsTypes.SERVICE_OPERATIONS,
-        actionsSpreadPreference: ActionSpreadPreference.FLAT,
-        minimumItemsInMenu: 0,
-        actions: [
-          {
-            ...defaultContextActionProps,
-            titleTranslationId: 'Sensitive',
-            action: "TEST",
-          },
-        ],
-      },
+      // {
+      //   ...defaultContextActionGroupProps,
+      //   id: 2,
+      //   order: 1,
+      //   titleTranslationId: 'kuku',
+      //   type: ContextActionsTypes.SERVICE_OPERATIONS,
+      //   actionsSpreadPreference: ActionSpreadPreference.FLAT,
+      //   minimumItemsInMenu: 0,
+      //   actions: [
+      //     {
+      //       ...defaultContextActionProps,
+      //       titleTranslationId: 'Heights',
+      //       action: "TEST",
+      //     },
+      //     {
+      //       ...defaultContextActionGroupProps,
+      //       id: 2,
+      //       order: 1,
+      //       titleTranslationId: 'kuku',
+      //       type: ContextActionsTypes.SERVICE_OPERATIONS,
+      //       actionsSpreadPreference: ActionSpreadPreference.MENU,
+      //       minimumItemsInMenu: 0,
+      //       actions: [
+      //         {
+      //           ...defaultContextActionGroupProps,
+      //           id: 2,
+      //           order: 1,
+      //           titleTranslationId: 'kuku',
+      //           type: ContextActionsTypes.SERVICE_OPERATIONS,
+      //           actionsSpreadPreference: ActionSpreadPreference.MENU,
+      //           minimumItemsInMenu: 0,
+      //           actions: [
+      //             {
+      //               ...defaultContextActionProps,
+      //               titleTranslationId: 'Heights',
+      //               action: "TEST",
+      //             },
+      //           ],
+      //         }
+      //       ],
+      //     }
+      //   ],
+      // },
+      // {
+      //   ...defaultContextActionGroupProps,
+      //   id: 3,
+      //   order: 2,
+      //   titleTranslationId: 'kuku',
+      //   type: ContextActionsTypes.SERVICE_OPERATIONS,
+      //   actionsSpreadPreference: ActionSpreadPreference.FLAT,
+      //   minimumItemsInMenu: 0,
+      //   actions: [
+      //     {
+      //       ...defaultContextActionProps,
+      //       titleTranslationId: 'Sensitive',
+      //       action: "TEST",
+      //     },
+      //   ],
+      // },
       {
         ...defaultContextActionGroupProps,
         id: 4,
@@ -189,6 +190,7 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.MENU,
         minimumItemsInMenu: 0,
+        // Items will be generated according to active layers in position, via layers manager's data
         templateId: ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION,
         actions: [
           {

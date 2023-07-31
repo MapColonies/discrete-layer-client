@@ -14,18 +14,21 @@ import CONFIG from '../../../../common/config';
 import './context-menu.css';
 import { useIntl } from 'react-intl';
 import { ActionSpreadPreference } from '../../../../common/actions/context.actions';
+import { MenuItem, MenuItemsList, isMenuItemGroup } from '../../../models/mapMenusManagerStore';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
 export const TITLE_HEIGHT = 24;
 export const SUB_MENU_MAX_HEIGHT = 120;
 export const MENU_HEIGHT_PADDING = 20;
 
+export type ContextMenuItemRenderer = (item: MenuItem) => React.JSX.Element;
+
 interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
   menuTitleTooltip?: string;
-  menuSections?: JSX.Element[][];
+  getItemRenderer: ContextMenuItemRenderer;
+  menuItems?: MenuItemsList;
 }
-
-const NONE = 0;
 
 // Children prop isn't rendered as a part of the menu, but as a separated bottom section.
 export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
@@ -34,7 +37,8 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   style,
   size,
   handleClose,
-  menuSections,
+  menuItems,
+  getItemRenderer,
   menuTitle = '',
   menuTitleTooltip = '',
   children,
@@ -69,70 +73,184 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
     document.addEventListener('click', handleClickOutside, false);
     
     if(!isContextMenuVisible) {
-      show({ event: contextEvt });
+      setTimeout(() => {
+        show({ event: contextEvt });
+      }, 0)
     }
   });
 
-  const hasSections = useMemo(
-    () => (menuSections?.length ?? NONE) > NONE,
-    [menuSections]
-  );
+  // const hasSections = useMemo(
+  //   () => (menuSections?.length ?? NONE) > NONE,
+  //   [menuSections]
+  // );
 
-  const renderMenuContent = useMemo(() => {
-    if(!menuSections) return null;
+  // const renderMenuContent = useMemo(() => {
+  //   if(!menuSections) return null;
 
-     return menuSections.map((section, sectionIdx) => {   
+  //    return menuSections.map((section, sectionIdx) => {   
 
-      // const sectionProps = sectionsProps[sectionIdx] ?? null;
-      const sectionId = sectionProps.id;
-      const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
+  //     // const sectionProps = sectionsProps[sectionIdx] ?? null;
+  //     const sectionId = sectionProps.id;
+  //     const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
 
-      const sectionItems = section.map((item, itemIdx) => {
+  //     const sectionItems = section.map((item, itemIdx) => {
+  //       // Get click callback from item
+  //       const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
+  //       const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
+
+  //       return (
+  //         <Item
+  //           className='imageryMenuItemAction'
+  //           key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
+  //           onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
+  //           disabled={menuItemDisabled as boolean}
+  //         >
+  //           {item}
+  //         </Item>
+  //       )
+  //     });
+      
+  //     const lastSectionIdx = menuSections.length - 1;
+  //     let sectionToRender: JSX.Element | JSX.Element[];    
+
+  //     // Spread sections by preferences
+  //     // const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
+  //     if(shouldPresentAsMenu) {
+  //         sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
+  //     } else {
+  //       sectionToRender = sectionItems.map((item, idx) => {
+  //         return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
+  //       });
+  //     }
+
+  //     return (
+  //       <>
+  //         {sectionToRender}
+  //         {sectionIdx < lastSectionIdx && section.length > 0 && (
+  //           <Separator key={`sectionDivider_${sectionId}}`} />
+  //         )}
+  //       </>
+  //     );
+
+  //   })
+  // }, [menuSections]);
+
+  // const renderMenuContent = useMemo(() => {
+  //   if(!menuSections) return null;
+
+  //    return menuSections.map((section, sectionIdx) => {   
+
+  //     // const sectionProps = sectionsProps[sectionIdx] ?? null;
+  //     const sectionId = sectionProps.id;
+  //     const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
+
+  //     const sectionItems = section.map((item, itemIdx) => {
+  //       // Get click callback from item
+  //       const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
+  //       const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
+
+  //       return (
+  //         <Item
+  //           className='imageryMenuItemAction'
+  //           key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
+  //           onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
+  //           disabled={menuItemDisabled as boolean}
+  //         >
+  //           {item}
+  //         </Item>
+  //       )
+  //     });
+      
+  //     const lastSectionIdx = menuSections.length - 1;
+  //     let sectionToRender: JSX.Element | JSX.Element[];    
+
+  //     // Spread sections by preferences
+  //     // const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
+  //     if(shouldPresentAsMenu) {
+  //         sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
+  //     } else {
+  //       sectionToRender = sectionItems.map((item, idx) => {
+  //         return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
+  //       });
+  //     }
+
+  //     return (
+  //       <>
+  //         {sectionToRender}
+  //         {sectionIdx < lastSectionIdx && section.length > 0 && (
+  //           <Separator key={`sectionDivider_${sectionId}}`} />
+  //         )}
+  //       </>
+  //     );
+
+  //   })
+  // }, [menuSections]);
+
+  const renderMenuContent = (items?: MenuItemsList): React.JSX.Element[] | null => {
+    const itemsList = items ?? menuItems;
+    
+    if(!itemsList) return null;
+
+    return itemsList.map((menuItemOrGroup, idx) => {
+      if(!isMenuItemGroup(menuItemOrGroup)) {
+        const itemElement = getItemRenderer(menuItemOrGroup);
+
         // Get click callback from item
-        const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
-        const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
+        const menuItemClick = (itemElement.props as Record<string, unknown>).onClick ?? ((): void => { return });
+        const menuItemDisabled = (itemElement.props as Record<string, unknown>).disabled ?? false;
 
         return (
           <Item
             className='imageryMenuItemAction'
-            key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
+            key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
             onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
             disabled={menuItemDisabled as boolean}
           >
-            {item}
+            {itemElement}
           </Item>
         )
-      });
-      
-      const lastSectionIdx = menuSections.length - 1;
-      let sectionToRender: JSX.Element | JSX.Element[];    
-
-      // Spread sections by preferences
-      // const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
-      if(shouldPresentAsMenu) {
-          sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
       } else {
-        sectionToRender = sectionItems.map((item, idx) => {
-          return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
-        });
+        const groupProps = menuItemOrGroup.groupProps;
+        let groupToRender: JSX.Element;
+
+        // Spread sections by preferences
+        const shouldPresentAsMenu =
+          groupProps?.actionsSpreadPreference === ActionSpreadPreference.MENU &&
+          menuItemOrGroup.items.length >= (groupProps.minimumItemsInMenu ?? 0);
+        
+          const menuTitle = (
+            <TooltippedValue>
+              {intl.formatMessage({
+                id: groupProps.titleTranslationId ?? 'Sub Menu',
+              })}
+            </TooltippedValue>
+          );
+
+
+        if (shouldPresentAsMenu) {
+          groupToRender = (
+            <>
+              <Submenu key={`imageryMenuGroupItems_${JSON.stringify(menuItemOrGroup.groupProps.id)}`} dir={direction} label={menuTitle}>
+                {renderMenuContent(menuItemOrGroup.items)}
+              </Submenu>
+            </>
+          );
+        } else {
+          groupToRender = <>{renderMenuContent(menuItemOrGroup.items)}</>;
+        }
+
+        return groupToRender;
       }
+    });
 
-      return (
-        <>
-          {sectionToRender}
-          {sectionIdx < lastSectionIdx && section.length > 0 && (
-            <Separator key={`sectionDivider_${sectionId}}`} />
-          )}
-        </>
-      );
 
-    })
-  }, [menuSections]);
+
+  }
 
   return (
     <>
       {/* {menuSections && hasSections && sectionsProps && ( */}
-      {menuSections && hasSections && (
+      {menuItems && (
         <div
           ref={imageryContextMenuRef}
           style={style}
@@ -163,7 +281,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
             id={'MENU_ID'}
             dir={direction}
           >
-            {renderMenuContent}
+            {renderMenuContent()}
           </MCContextMenu>
           <Box
             style={{ maxHeight: `${SUB_MENU_MAX_HEIGHT}px` }}

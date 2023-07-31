@@ -18,19 +18,20 @@ export interface MenuItem extends CommonMenuItem {
   payloadData?: Record<string, unknown>;
 }
 
+export type MenuItemsList = Array<MenuItem | MenuItemsGroup>;
+
 export interface MenuItemsGroup extends CommonMenuItem {
   title: string;
   groupProps: ContextActionGroupProps;
-  items: Array<MenuItem | MenuItemsGroup>;
+  items: MenuItemsList;
   icon?: string;
 }
 
-export type MenuItemsList = Array<MenuItem | MenuItemsGroup>;
 
-// A type guard helper function to infer if a menu item is a group or a single menu item.
+// A "type guard" helper function to infer if a menu item is a group or a single menu item.
 export const isMenuItemGroup = (menuItem: MenuItem | MenuItemsGroup): menuItem is MenuItemsGroup => {
-  return (menuItem as MenuItemsGroup).groupProps !== undefined;
-} 
+  return (menuItem as MenuItemsGroup).items !== undefined;
+}
 
 export interface IMapMenuProperties {
   itemsList: MenuItemsList;
@@ -147,6 +148,8 @@ export const mapMenusManagerStore = ModelBase
 
         return itemsList;
       }
+
+      console.log(" buildGroupItemsList(mapContextActions)",  buildGroupItemsList(mapContextActions))
       
       return {
         ActionsMenu: {
