@@ -108,3 +108,9 @@ body[dir='rtl'] .imageryMenuIcon {
 .imageryMenuItemAction:hover {
   background: var(--mdc-theme-gc-alternative-surface);
 }
+
+.contextMenuLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

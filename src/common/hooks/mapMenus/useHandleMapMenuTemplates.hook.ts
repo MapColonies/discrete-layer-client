@@ -59,7 +59,6 @@ export const useHandleMapMenuTemplates = (
             case ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION: {
                 // Mock active layers, this should be replaced by real logic
                 // const MOCK_ACTIVE_LAYERS = [{ layerId: 'Layer 1' }, { layerId: 'Layer 2' }];
-                console.log(contextProps?.data)
                 const activeLayersInPosition = contextProps?.data as Record<string, unknown>[];
 
                 const templateProps = groupTemplateMenuItem.groupProps;
@@ -128,7 +127,6 @@ export const useHandleMapMenuTemplates = (
 
     useEffect(() => {
         if(typeof menuProperties !== 'undefined') {
-            console.log('here?')
             setGeneratedMenu(getGeneratedMenu());
         }
     }, [menuProperties, contextProps?.contextEvt]);

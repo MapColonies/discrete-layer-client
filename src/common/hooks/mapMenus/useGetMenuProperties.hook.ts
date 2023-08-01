@@ -14,7 +14,6 @@ const useGetMenuProperties = (menuId: MapMenusIds, contextProps: IContextMenuDat
     useEffect(() => {
       if(generatedByContextMenuProperties) {
         setMenuProperties(generatedByContextMenuProperties);
-        console.log("generatedByContextMenuProperties", generatedByContextMenuProperties)
       }
     }, [generatedByContextMenuProperties])
 

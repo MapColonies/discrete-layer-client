@@ -30,8 +30,11 @@ export enum ActionSpreadPreference {
   MENU = 'menu'
 }
 
+export type SeparatorPosition = "BEFORE" | "AFTER";
+
 export interface IContextAction extends IAction {
   templateId?: ContextActionsTemplates;
+  separator?: SeparatorPosition;
 };
 
 export interface IContextActionGroup extends Omit<IActionGroup, 'group'> {
@@ -41,6 +44,7 @@ export interface IContextActionGroup extends Omit<IActionGroup, 'group'> {
   minimumItemsInMenu?: number; // Ignored if spread preference is not a menu. defaults to 2.
   actions: Array<IContextAction | IContextActionGroup>;
   icon?: string;
+  separator?: SeparatorPosition;
 }
 
 export type ContextActionGroupProps = Omit<IContextActionGroup, 'actions'>;
@@ -52,30 +56,6 @@ export interface IContextActions {
   groups: IContextActionGroup[];
 }
 
-// // Only group properties, no actions.
-// export interface ContextActionGroupProps extends Omit<IContextActionGroup, 'group'> {};
-
-// export const getContextActionGroupProps = (actionGroup: IContextActionGroup): ContextActionGroupProps => {
-//   const contextActionPropsKeys: Array<keyof ContextActionGroupProps> = [
-//       "actionsSpreadPreference",
-//       "id",
-//       "minimumItemsInMenu",
-//       "titleTranslationId",
-//       "type",
-//       "templateId",
-//       'order'
-//   ];
-
-//   const groupProps: ContextActionGroupProps = {} as ContextActionGroupProps;
-
-//   for(const [key, val] of Object.entries(actionGroup)) {
-//     if(contextActionPropsKeys.includes(key as keyof ContextActionGroupProps)) {
-//       (groupProps as Record<string,unknown>)[key] = val;
-//     }
-//   }
-
-//   return groupProps;
-// }
 
 // A "type guard" helper function used to infer if action is a group or a single action.
 export const isActionGroup = (action: IContextAction | IContextActionGroup): action is IContextActionGroup => {
@@ -114,6 +94,7 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.MENU,
         minimumItemsInMenu: 2,
+        separator: 'AFTER',
         actions: [
           {
             // Items will be generated according to store.mapMenusManagerStore.wfsFeatureTypes
@@ -123,90 +104,58 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
           }
         ],
       },
-      // {
-      //   ...defaultContextActionGroupProps,
-      //   id: 2,
-      //   order: 1,
-      //   titleTranslationId: 'kuku',
-      //   type: ContextActionsTypes.SERVICE_OPERATIONS,
-      //   actionsSpreadPreference: ActionSpreadPreference.FLAT,
-      //   minimumItemsInMenu: 0,
-      //   actions: [
-      //     {
-      //       ...defaultContextActionProps,
-      //       titleTranslationId: 'Heights',
-      //       action: "TEST",
-      //     },
-      //     {
-      //       ...defaultContextActionGroupProps,
-      //       id: 2,
-      //       order: 1,
-      //       titleTranslationId: 'kuku',
-      //       type: ContextActionsTypes.SERVICE_OPERATIONS,
-      //       actionsSpreadPreference: ActionSpreadPreference.MENU,
-      //       minimumItemsInMenu: 0,
-      //       actions: [
-      //         {
-      //           ...defaultContextActionGroupProps,
-      //           id: 2,
-      //           order: 1,
-      //           titleTranslationId: 'kuku',
-      //           type: ContextActionsTypes.SERVICE_OPERATIONS,
-      //           actionsSpreadPreference: ActionSpreadPreference.MENU,
-      //           minimumItemsInMenu: 0,
-      //           actions: [
-      //             {
-      //               ...defaultContextActionProps,
-      //               titleTranslationId: 'Heights',
-      //               action: "TEST",
-      //             },
-      //           ],
-      //         }
-      //       ],
-      //     }
-      //   ],
-      // },
-      // {
-      //   ...defaultContextActionGroupProps,
-      //   id: 3,
-      //   order: 2,
-      //   titleTranslationId: 'kuku',
-      //   type: ContextActionsTypes.SERVICE_OPERATIONS,
-      //   actionsSpreadPreference: ActionSpreadPreference.FLAT,
-      //   minimumItemsInMenu: 0,
-      //   actions: [
-      //     {
-      //       ...defaultContextActionProps,
-      //       titleTranslationId: 'Sensitive',
-      //       action: "TEST",
-      //     },
-      //   ],
-      // },
+      {
+        ...defaultContextActionGroupProps,
+        id: 3,
+        order: 2,
+        titleTranslationId: 'kuku',
+        type: ContextActionsTypes.SERVICE_OPERATIONS,
+        actionsSpreadPreference: ActionSpreadPreference.FLAT,
+        separator: 'AFTER',
+        minimumItemsInMenu: 0,
+        actions: [
+          {
+            ...defaultContextActionProps,
+            titleTranslationId: 'Sensitive',
+            action: "TEST",
+          },
+        ],
+      },
       {
         ...defaultContextActionGroupProps,
         id: 4,
         order: 3,
-        titleTranslationId: 'TEMPLATE',
+        titleTranslationId: 'Active layers',
         type: ContextActionsTypes.SERVICE_OPERATIONS,
-        actionsSpreadPreference: ActionSpreadPreference.MENU,
-        minimumItemsInMenu: 0,
-        // Items will be generated according to active layers in position, via layers manager's data
-        templateId: ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION,
+        actionsSpreadPreference: ActionSpreadPreference.FLAT,
         actions: [
           {
-            ...defaultContextActionProps,
-            titleTranslationId: 'UP',
-            action: "TEST",
-          },
-          {
-            ...defaultContextActionProps,
-            titleTranslationId: 'DOWN',
-            action: "TEST",
-          },
-          {
-            ...defaultContextActionProps,
-            titleTranslationId: 'PP',
-            action: "TEST",
+            ...defaultContextActionGroupProps,
+            id: 5,
+            order: 4,
+            titleTranslationId: 'TEMPLATE',
+            type: ContextActionsTypes.SERVICE_OPERATIONS,
+            actionsSpreadPreference: ActionSpreadPreference.MENU,
+            minimumItemsInMenu: 0,
+            // Multiple groups will be generated according to active layers in position, via layers manager's data
+            templateId: ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION,
+            actions: [
+              {
+                ...defaultContextActionProps,
+                titleTranslationId: 'UP',
+                action: "TEST",
+              },
+              {
+                ...defaultContextActionProps,
+                titleTranslationId: 'DOWN',
+                action: "TEST",
+              },
+              {
+                ...defaultContextActionProps,
+                titleTranslationId: 'PP',
+                action: "TEST",
+              },
+            ],
           },
         ],
       },

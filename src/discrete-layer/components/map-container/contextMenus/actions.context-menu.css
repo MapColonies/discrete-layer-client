@@ -57,3 +57,8 @@ body[dir='rtl'] .featureIcon {
     margin-right: unset;
     margin-left: 10px;
 }
+
+.actionsContextMenuItemLabel {
+    overflow: 'hidden';
+    text-overflow: 'ellipsis';
+}

@@ -1,16 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
-import { IMapMenuProperties, MapMenusIds, MenuItem, MenuItemsList } from '../../../models/mapMenusManagerStore';
+import { MapMenusIds } from '../../../models/mapMenusManagerStore';
 import { getCoordinatesDisplayText } from '../../layer-details/utils';
 import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
 
 import './actions.context-menu.css';
 import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
-import { ContextActionsGroupTemplates } from '../../../../common/actions/context.actions';
 import useGetMenuProperties from '../../../../common/hooks/mapMenus/useGetMenuProperties.hook';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
@@ -43,95 +42,6 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
     }
   }
 
-  // const handleTemplateGroups = (
-  //     menuItems?: MenuItemsList,
-  //     groupsProps?: ContextActionGroupProps[]
-  // ): CompleteMenuItemsAndProps | undefined => {
-  //     if (!menuItems || !groupsProps) return;
-
-  //     console.log('here?')
-  //     const menuItemsWithDynamicTemplates: MenuItemsList = [];
-  //     const groupsPropsWithDynamicTemplateProps: ContextActionGroupProps[] = [];
-  //     const menuGroupTemplates: {
-  //         templateProps: ContextActionGroupProps;
-  //         items: MenuItem[];
-  //     }[] = [];
-
-  //     // Separate template groups from regular static groups
-  //     menuItems.forEach((section, sectionIdx) => {
-  //         const sectionProps = groupsProps[sectionIdx];
-  //         if (sectionProps.templateId) {
-  //             menuGroupTemplates.push({
-  //                 templateProps: sectionProps,
-  //                 items: section
-  //             });
-  //         } else {
-  //             // Add static groups directly to final items, preserving original order.
-  //             menuItemsWithDynamicTemplates[sectionProps.order] = section;
-  //             groupsPropsWithDynamicTemplateProps[sectionProps.order] = sectionProps;
-  //         }
-  //     });
-
-  //     // Handle template groups logic by id, add generated groups and props to general arrays.
-  //     menuGroupTemplates.forEach((template) => {
-  //         switch (template.templateProps.templateId) {
-  //             case ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION: {
-  //                 const numberOfDuplicates = 5;
-
-  //                 for (let i = 0; i < numberOfDuplicates; i++) {
-  //                     const generatedGroupProps: ContextActionGroupProps = {
-  //                         ...template.templateProps,
-  //                         id: template.templateProps.id + i,
-  //                         order: template.templateProps.order + i,
-  //                         titleTranslationId: `${template.templateProps.titleTranslationId}_${i}`,
-  //                     };
-  //                     groupsPropsWithDynamicTemplateProps.splice(generatedGroupProps.order, 0, generatedGroupProps);
-  //                     menuItemsWithDynamicTemplates.splice(generatedGroupProps.order, 0, template.items);
-  //                 }
-  //                 break;
-  //             }
-  //             default:
-  //                 break;
-  //         }
-  //     });
-
-  //     return {
-  //         groupsProps: groupsPropsWithDynamicTemplateProps,
-  //         menuItems: menuItemsWithDynamicTemplates
-  //     };
-  // };
-
-  // const { groupsProps, menuItems: completeMenuItems } =
-  //   useMemo<CompleteMenuItemsAndProps>(
-  //     () =>
-  //       handleTemplateGroups(
-  //         menuItems ?? menuProperties?.itemsList,
-  //         menuProperties?.groupsProps
-  //       ) as CompleteMenuItemsAndProps,
-  //     [props.contextEvt]
-  //   );
-
-
-  // const getMenuSections = (): JSX.Element[][] | undefined => {    
-  //   return menuItems?.map((section) => {
-  //     return section.map((item) => {
-
-  //       const actionToDispatch = {
-  //         action: item.action.action,
-  //         data: { ...item.payloadData, coordinates, handleClose }
-  //       };
-  
-  //       return (
-  //         <Box className='actionsMenuItem' onClick={(): void => onItemClick(item.title, actionToDispatch)}>
-  //           {typeof item.icon !== 'undefined' && <Icon className={`featureIcon ${item.icon}`} />}
-  //           { intl.formatMessage({ id: item.title }) }
-  //           { currentClickedItem === item.title && <CircularProgress className='actionsMenuItemLoading' /> }
-  //         </Box>
-  //       );
-  //     });
-  //   });
-  // };
-
   const menuItemRenderer: ContextMenuItemRenderer = (item) => {
     const actionToDispatch = {
       action: item.action.action,
@@ -147,7 +57,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
           <Icon className={`featureIcon ${item.icon}`} />
         )}
         
-        <TooltippedValue>
+        <TooltippedValue disableTooltip className={"actionsContextMenuItemLabel"}>
           {intl.formatMessage({ id: item.title })}
         </TooltippedValue>
         

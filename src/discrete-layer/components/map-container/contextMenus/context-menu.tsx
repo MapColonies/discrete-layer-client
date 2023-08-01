@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
+import React, { MouseEventHandler, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { get } from 'lodash';
 import {
   Icon,
@@ -13,7 +13,7 @@ import { Box, IContextMenuData } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import './context-menu.css';
 import { useIntl } from 'react-intl';
-import { ActionSpreadPreference } from '../../../../common/actions/context.actions';
+import { ActionSpreadPreference, SeparatorPosition } from '../../../../common/actions/context.actions';
 import { MenuItem, MenuItemsList, isMenuItemGroup } from '../../../models/mapMenusManagerStore';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 
@@ -28,7 +28,10 @@ interface IMapContextMenuData extends IContextMenuData {
   menuTitleTooltip?: string;
   getItemRenderer: ContextMenuItemRenderer;
   menuItems?: MenuItemsList;
+  contextMenuId?: string;
 }
+
+const DEFAULT_CONTEXT_MENU_ID = 'MENU_ID';
 
 // Children prop isn't rendered as a part of the menu, but as a separated bottom section.
 export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
@@ -44,6 +47,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   children,
   data,
   contextEvt,
+  contextMenuId = DEFAULT_CONTEXT_MENU_ID,
 }) => {
   const intl = useIntl();
   const imageryContextMenuRef = useRef(null);
@@ -51,7 +55,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   const direction = CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE' ? 'rtl' : 'ltr';
 
   const { show, hideAll } = useContextMenu({
-    id: 'MENU_ID',
+    id: contextMenuId,
     locale: {
       dir: direction
     }
@@ -186,12 +190,29 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   //   })
   // }, [menuSections]);
 
+  const MenuItemWithSeparator: React.FC<
+    PropsWithChildren<{ separator?: SeparatorPosition; separatorKeySuffix?: string; isLastItem?: boolean }>
+  > = ({ separator, separatorKeySuffix, isLastItem, children }) => {
+    return (
+      <>
+        {separator === 'BEFORE' && <Separator key={`separator_before_${separatorKeySuffix}`} />}
+
+        {children}
+
+        {separator === 'AFTER' && !isLastItem && <Separator  key={`separator_after_${separatorKeySuffix}`} />}
+      </>
+    );
+  };
+
   const renderMenuContent = (items?: MenuItemsList): React.JSX.Element[] | null => {
     const itemsList = items ?? menuItems;
-    
-    if(!itemsList) return null;
+
+    if(!itemsList || !itemsList.length) return null;
 
     return itemsList.map((menuItemOrGroup, idx) => {
+      const nextItem = itemsList[idx + 1];
+      const isLastItem = idx === itemsList.length - 1 || (isMenuItemGroup(nextItem) && nextItem.items.length === 0);
+
       if(!isMenuItemGroup(menuItemOrGroup)) {
         const itemElement = getItemRenderer(menuItemOrGroup);
 
@@ -200,14 +221,18 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
         const menuItemDisabled = (itemElement.props as Record<string, unknown>).disabled ?? false;
 
         return (
-          <Item
-            className='imageryMenuItemAction'
-            key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
-            onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
-            disabled={menuItemDisabled as boolean}
-          >
-            {itemElement}
-          </Item>
+          <>
+           <MenuItemWithSeparator separatorKeySuffix={`${idx}`} separator={menuItemOrGroup.action.separator} isLastItem={isLastItem}>
+             <Item
+                className='imageryMenuItemAction'
+                key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
+                onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
+                disabled={menuItemDisabled as boolean}
+              >
+                {itemElement}
+              </Item>
+           </MenuItemWithSeparator>
+          </>
         )
       } else {
         const groupProps = menuItemOrGroup.groupProps;
@@ -219,7 +244,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
           menuItemOrGroup.items.length >= (groupProps.minimumItemsInMenu ?? 0);
         
           const menuTitle = (
-            <TooltippedValue>
+            <TooltippedValue disableTooltip className={"contextMenuLabel"}>
               {intl.formatMessage({
                 id: groupProps.titleTranslationId ?? 'Sub Menu',
               })}
@@ -230,16 +255,30 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
         if (shouldPresentAsMenu) {
           groupToRender = (
             <>
-              <Submenu key={`imageryMenuGroupItems_${JSON.stringify(menuItemOrGroup.groupProps.id)}`} dir={direction} label={menuTitle}>
+              <Submenu key={`imageryMenuGroupItems_${menuItemOrGroup.groupProps.id}`} dir={direction} label={menuTitle}>
                 {renderMenuContent(menuItemOrGroup.items)}
               </Submenu>
             </>
           );
         } else {
-          groupToRender = <>{renderMenuContent(menuItemOrGroup.items)}</>;
+          groupToRender = (
+            <>
+              {renderMenuContent(menuItemOrGroup.items)}
+            </>
+          );
         }
 
-        return groupToRender;
+        return (
+          <>
+            <MenuItemWithSeparator
+              separatorKeySuffix={`${menuItemOrGroup.groupProps.id}`}
+              separator={menuItemOrGroup.groupProps.separator}
+              isLastItem={isLastItem}
+            >
+              {groupToRender}
+            </MenuItemWithSeparator>
+          </>
+        ); 
       }
     });
 
@@ -278,7 +317,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
             isContainerized
             onVisibilityChange={setIsContextMenuVisible}
             animation={false}
-            id={'MENU_ID'}
+            id={contextMenuId}
             dir={direction}
           >
             {renderMenuContent()}
