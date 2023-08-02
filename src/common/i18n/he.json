@@ -641,7 +641,7 @@
   "Transparency.transparent": "Transparent",
   "Transparency.opaque": "Opaque",
 
-  "map-context-menu.title": "שירותי תשאול מפה",
+  "map-context-menu.title": "מציג {maxLayersToPresent} שכבות מתוך {activeLayers}",
   "map-context-menu.service-operations.group.title": "שירותי תשאול",
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",

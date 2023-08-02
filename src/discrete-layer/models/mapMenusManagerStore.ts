@@ -33,8 +33,13 @@ export const isMenuItemGroup = (menuItem: MenuItem | MenuItemsGroup): menuItem i
   return (menuItem as MenuItemsGroup)?.items !== undefined;
 }
 
+export type DynamicMenuData = { 
+  [K in ContextActionsGroupTemplates | ContextActionsTemplates]: unknown;
+}
+
 export interface IMapMenuProperties {
   itemsList: MenuItemsList;
+  dynamicMenuData?: DynamicMenuData,
   heightBuffer?: number;
   absoluteHeight?: number;
 };

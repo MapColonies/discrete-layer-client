@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import { get } from 'lodash';
 import {
   Icon,
@@ -26,6 +26,7 @@ export type ContextMenuItemRenderer = (item: MenuItem) => React.JSX.Element;
 interface IMapContextMenuData extends IContextMenuData {
   menuTitle?: string;
   menuTitleTooltip?: string;
+  menuTitleComponent?: React.ReactNode;
   getItemRenderer: ContextMenuItemRenderer;
   menuItems?: MenuItemsList;
   contextMenuId?: string;
@@ -44,6 +45,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   getItemRenderer,
   menuTitle = '',
   menuTitleTooltip = '',
+  menuTitleComponent,
   children,
   data,
   contextEvt,
@@ -82,113 +84,6 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
       }, 0)
     }
   });
-
-  // const hasSections = useMemo(
-  //   () => (menuSections?.length ?? NONE) > NONE,
-  //   [menuSections]
-  // );
-
-  // const renderMenuContent = useMemo(() => {
-  //   if(!menuSections) return null;
-
-  //    return menuSections.map((section, sectionIdx) => {   
-
-  //     // const sectionProps = sectionsProps[sectionIdx] ?? null;
-  //     const sectionId = sectionProps.id;
-  //     const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
-
-  //     const sectionItems = section.map((item, itemIdx) => {
-  //       // Get click callback from item
-  //       const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
-  //       const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
-
-  //       return (
-  //         <Item
-  //           className='imageryMenuItemAction'
-  //           key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
-  //           onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
-  //           disabled={menuItemDisabled as boolean}
-  //         >
-  //           {item}
-  //         </Item>
-  //       )
-  //     });
-      
-  //     const lastSectionIdx = menuSections.length - 1;
-  //     let sectionToRender: JSX.Element | JSX.Element[];    
-
-  //     // Spread sections by preferences
-  //     // const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
-  //     if(shouldPresentAsMenu) {
-  //         sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
-  //     } else {
-  //       sectionToRender = sectionItems.map((item, idx) => {
-  //         return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
-  //       });
-  //     }
-
-  //     return (
-  //       <>
-  //         {sectionToRender}
-  //         {sectionIdx < lastSectionIdx && section.length > 0 && (
-  //           <Separator key={`sectionDivider_${sectionId}}`} />
-  //         )}
-  //       </>
-  //     );
-
-  //   })
-  // }, [menuSections]);
-
-  // const renderMenuContent = useMemo(() => {
-  //   if(!menuSections) return null;
-
-  //    return menuSections.map((section, sectionIdx) => {   
-
-  //     // const sectionProps = sectionsProps[sectionIdx] ?? null;
-  //     const sectionId = sectionProps.id;
-  //     const menuTitle = intl.formatMessage({ id: sectionProps.titleTranslationId ?? 'Section Title' });
-
-  //     const sectionItems = section.map((item, itemIdx) => {
-  //       // Get click callback from item
-  //       const menuItemClick = (item.props as Record<string, unknown>).onClick ?? ((): void => { return });
-  //       const menuItemDisabled = (item.props as Record<string, unknown>).disabled ?? false;
-
-  //       return (
-  //         <Item
-  //           className='imageryMenuItemAction'
-  //           key={`imageryMenuItemAction_${sectionIdx}_${itemIdx}`}
-  //           onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
-  //           disabled={menuItemDisabled as boolean}
-  //         >
-  //           {item}
-  //         </Item>
-  //       )
-  //     });
-      
-  //     const lastSectionIdx = menuSections.length - 1;
-  //     let sectionToRender: JSX.Element | JSX.Element[];    
-
-  //     // Spread sections by preferences
-  //     // const shouldPresentAsMenu = sectionProps?.actionsSpreadPreference === ActionSpreadPreference.MENU && sectionItems.length >= (sectionProps.minimumItemsInMenu ?? 0);
-  //     if(shouldPresentAsMenu) {
-  //         sectionToRender = [<Submenu key={`submenu_${sectionId}`} dir={direction} label={menuTitle}>{sectionItems}</Submenu>];
-  //     } else {
-  //       sectionToRender = sectionItems.map((item, idx) => {
-  //         return React.cloneElement(item, {key: `sectionItem_${sectionId}_${idx}`});
-  //       });
-  //     }
-
-  //     return (
-  //       <>
-  //         {sectionToRender}
-  //         {sectionIdx < lastSectionIdx && section.length > 0 && (
-  //           <Separator key={`sectionDivider_${sectionId}}`} />
-  //         )}
-  //       </>
-  //     );
-
-  //   })
-  // }, [menuSections]);
 
   const MenuItemWithSeparator: React.FC<
     PropsWithChildren<{
@@ -321,6 +216,8 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
     });
   }
 
+  const menuContent = useMemo(renderMenuContent, [menuItems]);
+
   return (
     <>
       {/* {menuSections && hasSections && sectionsProps && ( */}
@@ -331,20 +228,28 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
           className="imageryContextMenuTheme imageryContextMenu"
           onContextMenu={(e): void => e.preventDefault()}
         >
-          {menuTitle && (
+          {(menuTitle || menuTitleComponent) && (
             <Box
               style={{ height: `${TITLE_HEIGHT}px` }}
               className="titleContainer"
             >
-              <Box className="imageryContextMenuTitle">{`${menuTitle} `}</Box>
-              {menuTitle && menuTitleTooltip && (
-                <Tooltip content={menuTitleTooltip}>
-                  <Icon
-                    className="imageryContextMenuTitleInfo"
-                    icon={{ icon: 'info', size: 'small' }}
-                  />
-                </Tooltip>
-              )}
+              <Box className="imageryContextMenuTitle">
+                {menuTitleComponent ? (
+                  menuTitleComponent
+                ) : (
+                  <>
+                    {`${menuTitle} `}
+                    {menuTitle && menuTitleTooltip && (
+                      <Tooltip content={menuTitleTooltip}>
+                        <Icon
+                          className="imageryContextMenuTitleInfo"
+                          icon={{ icon: 'info', size: 'small' }}
+                        />
+                      </Tooltip>
+                    )}
+                  </>
+                )}
+              </Box>
             </Box>
           )}
 
@@ -355,10 +260,13 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
             id={contextMenuId}
             dir={direction}
           >
-            {renderMenuContent()}
+            {menuContent}
           </MCContextMenu>
           <Box
-            style={{ maxHeight: `${SUB_MENU_MAX_HEIGHT}px` }}
+            style={{
+              maxHeight: `${SUB_MENU_MAX_HEIGHT}px`,
+              overflow: 'hidden',
+            }}
             className="subMenuContainer"
           >
             {children}

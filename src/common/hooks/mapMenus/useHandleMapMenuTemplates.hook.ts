@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import CONFIG from '../../config';
 import {
+    DynamicMenuData,
     IMapMenuProperties,
     MenuItem,
     MenuItemsGroup,
@@ -27,13 +29,23 @@ export const useHandleMapMenuTemplates = (
 
     // Gather all of the data to be used in the process to build the complete menu. store / contexts / hooks / etc.
     const store = useStore();
+    const activeLayersInPosition = contextProps?.data as Record<string, unknown>[];
+    const wfsFeatureTypesList = store.mapMenusManagerStore.wfsFeatureTypes ?? [];
+
+    // This object holds the data that used to generate menu items from templates.
+
+    const dynamicMenuData: DynamicMenuData = useMemo(() => ({
+        [ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION]: activeLayersInPosition,
+        [ContextActionsTemplates.WFS_QUERY_FEATURES]: wfsFeatureTypesList
+    }), [activeLayersInPosition, wfsFeatureTypesList])
+
 
 
     const handleActionTemplates = (actionTemplateMenuItem: MenuItem): MenuItemsList => {
         switch (actionTemplateMenuItem.templateId) {
             case ContextActionsTemplates.WFS_QUERY_FEATURES: {
-                const featureTypesList = store.mapMenusManagerStore.wfsFeatureTypes ?? [];
-                const wfsQueryMenuItems: MenuItem[] = featureTypesList.map((feature) => {
+                const wfsFeatureTypesList = dynamicMenuData[ContextActionsTemplates.WFS_QUERY_FEATURES] as string[];
+                const wfsQueryMenuItems: MenuItem[] = wfsFeatureTypesList.map((feature) => {
                     const featureConfig =
                         store.mapMenusManagerStore.getFeatureConfig(feature);
                     const featureTitle = featureConfig.translationId ?? feature;
@@ -56,14 +68,13 @@ export const useHandleMapMenuTemplates = (
         const generatedGroups: MenuItemsList = [];
         
         switch (groupTemplateMenuItem.templateId) {
-            case ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION: {
-                // Mock active layers, this should be replaced by real logic
-                // const MOCK_ACTIVE_LAYERS = [{ layerId: 'Layer 1' }, { layerId: 'Layer 2' }];
-                const activeLayersInPosition = contextProps?.data as Record<string, unknown>[];
-
+            case ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION: {       
+                const activeLayersInPosition = dynamicMenuData[ContextActionsGroupTemplates.ACTIVE_LAYERS_IN_POSITION] as Record<string, unknown>[];       
                 const templateProps = groupTemplateMenuItem.groupProps;
+                const MAX_ACTIVE_LAYERS_TO_PRESENT = CONFIG.CONTEXT_MENUS.MAP.MAX_ACTIVE_LAYERS_TO_PRESENT;
+                const slicedActiveLayers = activeLayersInPosition.slice(0, MAX_ACTIVE_LAYERS_TO_PRESENT);
 
-                activeLayersInPosition.forEach(activeLayer => {
+                slicedActiveLayers.forEach(activeLayer => {
                     const groupProp: ContextActionGroupProps = {
                         ...templateProps,
                         id: templateProps.id + 1,
@@ -122,12 +133,12 @@ export const useHandleMapMenuTemplates = (
 
         });
 
-        return {...menuProperties, itemsList: menuItems};
+        return { ...menuProperties, itemsList: menuItems };
     };
 
     useEffect(() => {
         if(typeof menuProperties !== 'undefined') {
-            setGeneratedMenu(getGeneratedMenu());
+            setGeneratedMenu({...getGeneratedMenu(), dynamicMenuData});
         }
     }, [menuProperties, contextProps?.contextEvt]);
 

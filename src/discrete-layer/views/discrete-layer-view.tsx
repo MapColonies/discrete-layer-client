@@ -81,7 +81,6 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
 import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
-import useGetMenuProperties from '../../common/hooks/mapMenus/useGetMenuProperties.hook';
 import { MapMenusIds } from '../models/mapMenusManagerStore';
 import useGetMenuDimensions, { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { WfsFeature } from '../components/map-container/wfs-feature.component';

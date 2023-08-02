@@ -11,9 +11,10 @@ interface ITypeIconProps {
   typeName: string;
   thumbnailUrl?: string;
   style?: Record<string, unknown>;
+  className?: string
 }
 
-export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, style }) => {
+export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, style, className }) => {
 
   const intl = useIntl();
   const { enumsMap } = useContext(EnumsMapContext);
@@ -27,7 +28,7 @@ export const TypeIcon: React.FC<ITypeIconProps> = ({ typeName, thumbnailUrl, sty
   return (
     <Box style={style}>
       <Tooltip content={thumbnailUrl !== undefined ? img(thumbnailUrl) : tooltip}>
-        <IconButton className={icon} style={'color' in (style ?? {}) ? { color: style?.color as string } : undefined}/>
+        <IconButton className={`${icon} ${className ?? ''}`} style={'color' in (style ?? {}) ? { color: style?.color as string } : undefined}/>
       </Tooltip>
     </Box>
   );

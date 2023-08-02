@@ -1,17 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
+import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
+import useGetMenuProperties from '../../../../common/hooks/mapMenus/useGetMenuProperties.hook';
+import TooltippedValue from '../../../../common/components/form/tooltipped.value';
+import CONFIG from '../../../../common/config';
 import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { MapMenusIds } from '../../../models/mapMenusManagerStore';
 import { getCoordinatesDisplayText } from '../../layer-details/utils';
 import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
-
 import './actions.context-menu.css';
-import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
-import useGetMenuProperties from '../../../../common/hooks/mapMenus/useGetMenuProperties.hook';
-import TooltippedValue from '../../../../common/components/form/tooltipped.value';
+import { TypeIcon } from '../../../../common/components/shared/type-icon';
 
 interface IActionsContextMenuProps extends IContextMenuData {}
 
@@ -78,23 +79,57 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
     return `N/A`;
   }
 
+  const getActiveLayersText = (): string | undefined => {
+    const MAX_ACTIVE_LAYERS_TO_PRESENT = CONFIG.CONTEXT_MENUS.MAP.MAX_ACTIVE_LAYERS_TO_PRESENT;
+    const activeLayersInPosition = (menuProperties?.dynamicMenuData?.ACTIVE_LAYERS_IN_POSITION as unknown[] | undefined);
+    
+    if(activeLayersInPosition) {
+      if(activeLayersInPosition.length <= MAX_ACTIVE_LAYERS_TO_PRESENT) return;
+      
+      const title = intl.formatMessage(
+        { id: 'map-context-menu.title' },
+        {
+          activeLayers: activeLayersInPosition.length,
+          maxLayersToPresent: MAX_ACTIVE_LAYERS_TO_PRESENT,
+        }
+      );
+
+      return title;
+    }
+
+    return;
+  }
+
+  const activeLayersText = useMemo(getActiveLayersText, [menuProperties?.dynamicMenuData]);
+
   return (
         <ContextMenu
           menuItems={menuProperties?.itemsList}
           getItemRenderer={menuItemRenderer}
-          {...props}
-        >
-          <Box className="contextMenuFooter">
+          menuTitleComponent={
             <Box className="coordinatesContainer">
               <Icon className='menuIcon mc-icon-Location-Full' />
               {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
             </Box>
+          }
+          {...props}
+        >
+          <Box className="contextMenuFooter">
             <Box className="heightContainer"> 
               <Icon className='menuIcon mc-icon-Height-DTM' />
               <Typography tag="p">
                 {getHeightText()} 
               </Typography>
             </Box>
+            {activeLayersText && <Box className="activeLayersMessageContainer">
+              <TypeIcon
+                typeName={"ORTHOPHOTO"}
+                className={"menuIcon"}
+                style={{color: 'inherit', display: "flex", alignItems: 'center'}}
+              />
+              {activeLayersText}
+            </Box>
+            }
           </Box>
         </ContextMenu>
   );

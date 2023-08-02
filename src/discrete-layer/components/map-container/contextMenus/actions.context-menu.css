@@ -20,8 +20,6 @@ body[dir='rtl'] .actionsMenuItemLoading {
 
 .contextMenuFooter {
     background-color: var(--mdc-theme-gc-selection-background);
-    height: 4rem;
-
 }
 
 .contextMenuFooter .heightContainer {
@@ -32,7 +30,13 @@ body[dir='rtl'] .actionsMenuItemLoading {
     height: 2rem;
 }
 
-.contextMenuFooter .coordinatesContainer {
+.coordinatesContainer {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.contextMenuFooter .activeLayersMessageContainer {
     text-align: left;
     padding: 5px 20px;
     display: flex;
@@ -51,6 +55,8 @@ body[dir='rtl'] .contextMenuFooter .coordinatesContainer {
 .featureIcon,
 .menuIcon {
     font-size: 20px;
+    padding: 0;
+    pointer-events: none;
 }
 
 body[dir='rtl'] .featureIcon {
