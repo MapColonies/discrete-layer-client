@@ -191,15 +191,30 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   // }, [menuSections]);
 
   const MenuItemWithSeparator: React.FC<
-    PropsWithChildren<{ separator?: SeparatorPosition; separatorKeySuffix?: string; isLastItem?: boolean }>
-  > = ({ separator, separatorKeySuffix, isLastItem, children }) => {
+    PropsWithChildren<{
+      separator?: SeparatorPosition;
+      separatorKeySuffix?: string;
+      showSeparatorBefore?: boolean;
+      showSeparatorAfter?: boolean;
+    }>
+  > = ({
+    separator,
+    separatorKeySuffix,
+    showSeparatorBefore,
+    showSeparatorAfter,
+    children,
+  }) => {
     return (
       <>
-        {separator === 'BEFORE' && <Separator key={`separator_before_${separatorKeySuffix}`} />}
+        {separator === 'BEFORE' && showSeparatorBefore && (
+          <Separator key={`separator_before_${separatorKeySuffix}`} />
+        )}
 
         {children}
 
-        {separator === 'AFTER' && !isLastItem && <Separator  key={`separator_after_${separatorKeySuffix}`} />}
+        {separator === 'AFTER' && showSeparatorAfter && (
+          <Separator key={`separator_after_${separatorKeySuffix}`} />
+        )}
       </>
     );
   };
@@ -211,7 +226,20 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
 
     return itemsList.map((menuItemOrGroup, idx) => {
       const nextItem = itemsList[idx + 1];
-      const isLastItem = idx === itemsList.length - 1 || (isMenuItemGroup(nextItem) && nextItem.items.length === 0);
+      const itemBefore = itemsList[idx - 1];
+      
+      // For separators logic
+      const isLastItem = idx === itemsList.length - 1;
+      const isFirstItem = idx === 0;
+      const isNextItemEmpty = isMenuItemGroup(nextItem) && nextItem.items.length === 0;
+      const isItemBeforeEmpty = isMenuItemGroup(itemBefore) && itemBefore.items.length > 0;
+      const isEmptyItem = isMenuItemGroup(menuItemOrGroup) && menuItemOrGroup.items.length === 0;
+
+      // Not first item, item before not empty
+      const showSeparatorBefore = !isEmptyItem && !isFirstItem && !isItemBeforeEmpty;
+
+      // Not last item, not empty item, item after not empty
+      const showSeparatorAfter = !isEmptyItem && !isLastItem && !isNextItemEmpty;
 
       if(!isMenuItemGroup(menuItemOrGroup)) {
         const itemElement = getItemRenderer(menuItemOrGroup);
@@ -222,18 +250,27 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
 
         return (
           <>
-           <MenuItemWithSeparator separatorKeySuffix={`${idx}`} separator={menuItemOrGroup.action.separator} isLastItem={isLastItem}>
-             <Item
-                className='imageryMenuItemAction'
+            <MenuItemWithSeparator
+              separatorKeySuffix={`${idx}`}
+              separator={menuItemOrGroup.action.separator}
+              showSeparatorBefore={showSeparatorBefore}
+              showSeparatorAfter={showSeparatorAfter}
+            >
+              <Item
+                className="imageryMenuItemAction"
                 key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
-                onClick={({event}) => (menuItemClick as MouseEventHandler<HTMLElement>)(event as React.MouseEvent<HTMLElement>)}
+                onClick={({ event }) =>
+                  (menuItemClick as MouseEventHandler<HTMLElement>)(
+                    event as React.MouseEvent<HTMLElement>
+                  )
+                }
                 disabled={menuItemDisabled as boolean}
               >
                 {itemElement}
               </Item>
-           </MenuItemWithSeparator>
+            </MenuItemWithSeparator>
           </>
-        )
+        );
       } else {
         const groupProps = menuItemOrGroup.groupProps;
         let groupToRender: JSX.Element;
@@ -273,7 +310,8 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
             <MenuItemWithSeparator
               separatorKeySuffix={`${menuItemOrGroup.groupProps.id}`}
               separator={menuItemOrGroup.groupProps.separator}
-              isLastItem={isLastItem}
+              showSeparatorBefore={showSeparatorBefore}
+              showSeparatorAfter={showSeparatorAfter}
             >
               {groupToRender}
             </MenuItemWithSeparator>
@@ -281,9 +319,6 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
         ); 
       }
     });
-
-
-
   }
 
   return (

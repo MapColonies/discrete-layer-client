@@ -30,7 +30,7 @@ export interface MenuItemsGroup extends CommonMenuItem {
 
 // A "type guard" helper function to infer if a menu item is a group or a single menu item.
 export const isMenuItemGroup = (menuItem: MenuItem | MenuItemsGroup): menuItem is MenuItemsGroup => {
-  return (menuItem as MenuItemsGroup).items !== undefined;
+  return (menuItem as MenuItemsGroup)?.items !== undefined;
 }
 
 export interface IMapMenuProperties {
