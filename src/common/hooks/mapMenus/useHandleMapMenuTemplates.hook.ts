@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import CONFIG from '../../config';
 import {
     DynamicMenuData,
@@ -11,6 +11,7 @@ import {
 import { ContextActionGroupProps, ContextActionsGroupTemplates, ContextActionsTemplates } from "../../actions/context.actions";
 import { useStore } from "../../../discrete-layer/models";
 import { IContextMenuData } from "@map-colonies/react-components";
+import _ from "lodash";
 
 export const useHandleMapMenuTemplates = (
     menuProperties?: IMapMenuProperties,
@@ -25,7 +26,10 @@ export const useHandleMapMenuTemplates = (
      * - Here we need to contain all of the logic for the templates based on a templateId inside either a group or an action.
      */
 
+    const generatedMenuRef = useRef<IMapMenuProperties>();
     const [generatedMenu, setGeneratedMenu] = useState<IMapMenuProperties>();
+    const [isPending, startTransition] = useTransition();
+
 
     // Gather all of the data to be used in the process to build the complete menu. store / contexts / hooks / etc.
     const store = useStore();
@@ -137,10 +141,17 @@ export const useHandleMapMenuTemplates = (
     };
 
     useEffect(() => {
-        if(typeof menuProperties !== 'undefined') {
-            setGeneratedMenu({...getGeneratedMenu(), dynamicMenuData});
+        if(typeof menuProperties !== 'undefined' && typeof contextProps !== 'undefined') {
+            const newMenu = {...getGeneratedMenu(), dynamicMenuData};
+            const arePrvMenuEqual = _.isEqual(newMenu, generatedMenuRef.current);
+            if(!arePrvMenuEqual) {
+                generatedMenuRef.current = newMenu;
+                startTransition(() => {
+                    setGeneratedMenu(newMenu);
+                })
+            }
         }
-    }, [menuProperties, contextProps?.contextEvt]);
+    }, [contextProps?.contextEvt]);
 
     return generatedMenu;
 };

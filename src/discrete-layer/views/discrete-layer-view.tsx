@@ -67,6 +67,7 @@ import { DetailsPanel } from './components/details-panel.component';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
 import { Terrain } from '../components/map-container/terrain';
+import ActionsMenuDimensionsContext from '../components/map-container/contextMenus/contexts/actionsMenuDimensionsContext';
 import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
 import AppTitle from './components/app-title/app-title.component';
@@ -145,8 +146,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     type: DrawType.UNKNOWN,
   }]);
 
-  const actionsMenuDynamicHeight = 0;
-  const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
+  // const actionsContextMenuDimensions = useGetMenuDimensions(MapMenusIds.ActionsMenu, actionsMenuDynamicHeight);
+  const [actionsMenuDimensions, setActionsMenuDimensions] = useState<MenuDimensions>();
   
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
@@ -675,7 +676,9 @@ const DiscreteLayerView: React.FC = observer(() => {
       return { height: 212, width: 260, dynamicHeightIncrement: 120 };
     }
 
-    return actionsContextMenuDimensions as MenuDimensions;
+    console.log("getContextMenuSizeTab", actionsMenuDimensions)
+
+    return actionsMenuDimensions as MenuDimensions;
   };
  
   return (
@@ -832,55 +835,57 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>}
         </Box>
         <Box className="mapAppContainer">
-          <CesiumMap 
-            showZoomLevel={true}
-            projection={CONFIG.MAP.PROJECTION}  
-            center={CONFIG.MAP.CENTER}
-            zoom={CONFIG.MAP.ZOOM}
-            sceneMode={CesiumSceneMode.SCENE2D}
-            imageryProvider={false}
-            locale = {mapSettingsLocale}
-            baseMaps={store.discreteLayersStore.baseMaps}
-            useOptimizedTileRequests={CONFIG.MAP.USE_OPTIMIZED_TILE_REQUESTS}
-            layerManagerFootprintMetaFieldPath={'layerRecord.footprint'}
-            // @ts-ignore
-            imageryContextMenu={<ContextMenuByTab />}
-            // imageryContextMenuSize={getContextMenuSizeTab()}
-            legends={{
-              mapLegendsExtractor,
-              title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
-              emptyText: intl.formatMessage({ id: 'map-legends.empty-text' }),
-              actionsTexts: {
-                docText: intl.formatMessage({ id: 'map-legends.actions.doc' }),
-                imgText: intl.formatMessage({ id: 'map-legends.actions.img' }),
-              }
-            }}
-           >
-              {memoizedLayers}
-              {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
-                drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
-                drawingMaterial={DRAWING_MATERIAL_COLOR}
-                drawState={{
-                  drawing: isDrawing,
-                  type: drawPrimitive.type,
-                  handler: drawPrimitive.handler,
-                }}
-                hollow={true}
-                outlineWidth={2}
-                material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
-              />}
+        <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
+            <CesiumMap 
+              showZoomLevel={true}
+              projection={CONFIG.MAP.PROJECTION}  
+              center={CONFIG.MAP.CENTER}
+              zoom={CONFIG.MAP.ZOOM}
+              sceneMode={CesiumSceneMode.SCENE2D}
+              imageryProvider={false}
+              locale = {mapSettingsLocale}
+              baseMaps={store.discreteLayersStore.baseMaps}
+              useOptimizedTileRequests={CONFIG.MAP.USE_OPTIMIZED_TILE_REQUESTS}
+              layerManagerFootprintMetaFieldPath={'layerRecord.footprint'}
+              // @ts-ignore
+              imageryContextMenu={<ContextMenuByTab />}
+              imageryContextMenuSize={actionsMenuDimensions}
+              legends={{
+                mapLegendsExtractor,
+                title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),
+                emptyText: intl.formatMessage({ id: 'map-legends.empty-text' }),
+                actionsTexts: {
+                  docText: intl.formatMessage({ id: 'map-legends.actions.doc' }),
+                  imgText: intl.formatMessage({ id: 'map-legends.actions.img' }),
+                }
+              }}
+            >
+                {memoizedLayers}
+                {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
+                  drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
+                  drawingMaterial={DRAWING_MATERIAL_COLOR}
+                  drawState={{
+                    drawing: isDrawing,
+                    type: drawPrimitive.type,
+                    handler: drawPrimitive.handler,
+                  }}
+                  hollow={true}
+                  outlineWidth={2}
+                  material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
+                />}
 
-              {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
-              <Terrain/>
-              <WfsFeature />
-              {
-                poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
-              }
-              {
-                rect && <FlyTo setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
-              }
-              {activeTabView === TabViews.EXPORT_LAYER && <ExportPolygonsRenderer />}
-          </CesiumMap>
+                {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
+                <Terrain/>
+                <WfsFeature />
+                {
+                  poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
+                }
+                {
+                  rect && <FlyTo setRect={setRect} layer={store.discreteLayersStore.selectedLayer as LayerMetadataMixedUnion}/>
+                }
+                {activeTabView === TabViews.EXPORT_LAYER && <ExportPolygonsRenderer />}
+            </CesiumMap>
+          </ActionsMenuDimensionsContext.Provider>
           {/* <BrowserCompatibilityChecker />  Should talk about if we need it or not anymore. */}
           <GPUInsufficiencyDetector />
         </Box>

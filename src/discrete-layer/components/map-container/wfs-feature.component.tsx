@@ -233,7 +233,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
   
   const position = newPositions[0];
 
-  if (wfsFeature.features?.length === NONE_OR_FIRST_ELEM)
+  if (!wfsFeature.features || wfsFeature.features?.length === NONE_OR_FIRST_ELEM)
 
     return (
       <CesiumEntity

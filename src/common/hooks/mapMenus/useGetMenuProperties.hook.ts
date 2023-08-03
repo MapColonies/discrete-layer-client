@@ -5,7 +5,7 @@ import { MapMenusIds, IMapMenuProperties } from "../../../discrete-layer/models/
 import { useHandleMapMenuTemplates } from "./useHandleMapMenuTemplates.hook";
 
 
-const useGetMenuProperties = (menuId: MapMenusIds, contextProps: IContextMenuData): IMapMenuProperties | undefined => {
+const useGetMenuProperties = (menuId: MapMenusIds, contextProps?: IContextMenuData): IMapMenuProperties | undefined => {
     const store = useStore();
     const [menuProperties, setMenuProperties] = useState<IMapMenuProperties>();
     const mapMenus = store.mapMenusManagerStore.mapMenus;

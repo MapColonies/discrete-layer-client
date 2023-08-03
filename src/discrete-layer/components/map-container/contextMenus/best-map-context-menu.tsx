@@ -4,7 +4,7 @@ import { Box, IContextMenuData } from '@map-colonies/react-components';
 import { IActionGroup } from '../../../../common/actions/entity.actions';
 import { TabViews } from '../../../views/tab-views';
 import { useStore } from '../../../models/RootStore';
-import { ContextMenu } from './context-menu';
+import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
 import { get } from 'lodash';
 import { Icon, Tooltip } from '@map-colonies/react-core';
 
@@ -154,28 +154,29 @@ export const BestMapContextMenu: React.FC<IBestMapContextMenuData> = ({
     top: `${position.y}px`,
   };
 
+  const ItemRenderer: ContextMenuItemRenderer = ({ item }) => {
+    return (
+      <Box
+        onClick={(evt): void => {
+          dispatchAction(`LayerRasterRecord.${item.action}`, layer);
+          handleClose();
+        }}
+      >
+        <Icon
+          className="imageryMenuIcon glow-missing-icon"
+          icon={{ icon: item.icon, size: 'small' }}
+        />
+        {item.title}
+      </Box>
+    );
+  }
   return (
     <>
       {numOfSelectedLayers > NONE && (
         <ContextMenu
           menuTitle={layerName}
           menuTitleTooltip={tooltipInfoPrefixText + layerName}
-          getItemRenderer={(item) => {
-            return (
-              <Box
-                onClick={(evt): void => {
-                  dispatchAction(`LayerRasterRecord.${item.action}`, layer);
-                  handleClose();
-                }}
-              >
-                <Icon
-                  className="imageryMenuIcon glow-missing-icon"
-                  icon={{ icon: item.icon, size: 'small' }}
-                />
-                {item.title}
-              </Box>
-            );
-          }}
+          ItemRenderer={ItemRenderer}
           // menuSections={[actionsSection]}
           // Multi sections example
           // menuSections={[actionsSection ,[<Box>One</Box>, <Box onClick={handleClose}>Two</Box>, <Box onClick={handleClose}>Three</Box>]]}

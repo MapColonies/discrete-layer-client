@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
@@ -10,9 +10,12 @@ import { useStore } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { MapMenusIds } from '../../../models/mapMenusManagerStore';
 import { getCoordinatesDisplayText } from '../../layer-details/utils';
-import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
-import './actions.context-menu.css';
 import { TypeIcon } from '../../../../common/components/shared/type-icon';
+import useGetMenuDimensions from '../../../../common/hooks/mapMenus/useGetMenuDimensions';
+import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
+import ActionsMenuDimensionsContext from './contexts/actionsMenuDimensionsContext';
+import './actions.context-menu.css';
+import _ from 'lodash';
 
 interface IActionsContextMenuProps extends IContextMenuData {}
 
@@ -25,8 +28,19 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
   const store = useStore();
   const intl = useIntl();
   const [currentClickedItem, setCurrentClickedItem] = useState<string>();
+  const {actionsMenuDimensions, setActionsMenuDimensions } = useContext(ActionsMenuDimensionsContext);
   const heightsAtCoordinates = useHeightFromTerrain({ position: [{ ...coordinates }] });
   const menuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu, props);
+  const actionsContextMenuDimensions = useGetMenuDimensions(menuProperties, 20);
+
+  useEffect(() => {
+    const areSameDimensions = _.isEqual(actionsMenuDimensions, actionsContextMenuDimensions);
+    
+    if(actionsContextMenuDimensions && !areSameDimensions) {
+      setActionsMenuDimensions(actionsContextMenuDimensions)
+    }
+  }, [actionsContextMenuDimensions])
+
 
   const dispatchAction = useCallback((action: IDispatchAction): void => {
     store.actionDispatcherStore.dispatchAction({
@@ -43,7 +57,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
     }
   }
 
-  const menuItemRenderer: ContextMenuItemRenderer = (item) => {
+  const menuItemRenderer: ContextMenuItemRenderer = ({ item }) => {
     const actionToDispatch = {
       action: item.action.action,
       data: { ...item.payloadData, coordinates, handleClose },
@@ -105,7 +119,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
   return (
         <ContextMenu
           menuItems={menuProperties?.itemsList}
-          getItemRenderer={menuItemRenderer}
+          ItemRenderer={menuItemRenderer}
           menuTitleComponent={
             <Box className="coordinatesContainer">
               <Icon className='menuIcon mc-icon-Location-Full' />
