@@ -119,6 +119,14 @@ export const mapMenusManagerStore = ModelBase
 
     // }
 
+    function checkIfActionAllowedAndAvailable(action: string): boolean {
+      const isActionAllowed = store.userStore.isActionAllowed(action.action) as boolean;
+      const isActionAvailable = store.servicesAvailabilityStore.isActionAvailable(action.action) as boolean;
+
+      console.log("checkIfActionAllowedAndAvailable", action, isActionAvailable)
+      return isActionAllowed && isActionAvailable;
+    }
+
     function getActionsMenuProperties(): MapMenus {
       const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
 
@@ -127,7 +135,7 @@ export const mapMenusManagerStore = ModelBase
 
         actions.forEach(groupOrAction => {
           if(!isActionGroup(groupOrAction)) {
-            if(!(store.userStore.isActionAllowed(groupOrAction.action) as boolean)) return;
+            if(!checkIfActionAllowedAndAvailable(groupOrAction.action)) return;
             
             const item: MenuItem = {
               action: {...groupOrAction},

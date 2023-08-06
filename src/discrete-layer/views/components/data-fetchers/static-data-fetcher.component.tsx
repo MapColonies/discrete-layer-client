@@ -4,6 +4,7 @@ import { EntityDescriptorsFetcher } from './entity-descriptors-fetcher.component
 import { LookupTablesFetcher } from './lookup-tables-fetcher.component';
 import { MCEnumsFetcher } from './mc-enums-fetcher.component';
 import { WfsFeaturesFetcher } from './wfs-features-fetcher.component';
+import { ServicesAvailabilityFetcher } from './services-availability-fetcher-component';
 
 
 export const StaticDataFetcher: React.FC = () => {
@@ -13,6 +14,7 @@ export const StaticDataFetcher: React.FC = () => {
       <MCEnumsFetcher />
       <LookupTablesFetcher/>
       <WfsFeaturesFetcher />
+      <ServicesAvailabilityFetcher />
       {/* <BaseMapsLegendsFetcher /> */}
     </>
   );

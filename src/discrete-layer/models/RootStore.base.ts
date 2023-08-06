@@ -81,6 +81,10 @@ import { WfsFeatureModel, WfsFeatureModelType } from "./WfsFeatureModel"
 import { wfsFeatureModelPrimitives, WfsFeatureModelSelector } from "./WfsFeatureModel.base"
 import { GetFeatureTypesModel, GetFeatureTypesModelType } from "./GetFeatureTypesModel"
 import { getFeatureTypesModelPrimitives, GetFeatureTypesModelSelector } from "./GetFeatureTypesModel.base"
+import { PositionsWithHeightsModel, PositionsWithHeightsModelType } from "./PositionsWithHeightsModel"
+import { positionsWithHeightsModelPrimitives, PositionsWithHeightsModelSelector } from "./PositionsWithHeightsModel.base"
+import { PositionWithHeightModel, PositionWithHeightModelType } from "./PositionWithHeightModel"
+import { positionWithHeightModelPrimitives, PositionWithHeightModelSelector } from "./PositionWithHeightModel.base"
 
 import { layerMetadataMixedModelPrimitives, LayerMetadataMixedModelSelector , LayerMetadataMixedUnion } from "./"
 
@@ -196,6 +200,15 @@ export type WfsGetFeatureParams = {
   typeName: string
   count?: number
   dWithin?: number
+}
+export type GetDemPointsHeightsInput = {
+  positions: DemHeightsPositionInput[]
+  productType?: string
+  excludeFields?: string[]
+}
+export type DemHeightsPositionInput = {
+  latitude: number
+  longitude: number
 }
 export type RecordUpdatePartial = {
   id: string
@@ -383,7 +396,9 @@ queryGetFileById="queryGetFileById",
 queryGetDecryptedId="queryGetDecryptedId",
 queryTasks="queryTasks",
 queryGetFeature="queryGetFeature",
-queryGetFeatureTypes="queryGetFeatureTypes"
+queryGetFeatureTypes="queryGetFeatureTypes",
+queryGetPointsHeights="queryGetPointsHeights",
+queryServicesAvailability="queryServicesAvailability"
 }
 export enum RootStoreBaseMutations {
 mutateUpdateStatus="mutateUpdateStatus",
@@ -402,7 +417,7 @@ mutateJobAbort="mutateJobAbort"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['AvailableActions', () => AvailableActionsModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['MCEnums', () => McEnumsModel], ['EstimatedSize', () => EstimatedSizeModel], ['FreeDiskSpace', () => FreeDiskSpaceModel], ['TriggerExportTask', () => TriggerExportTaskModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['AvailableActions', () => AvailableActionsModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel], ['PositionsWithHeights', () => PositionsWithHeightsModel], ['PositionWithHeight', () => PositionWithHeightModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -522,6 +537,14 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       return self.query<{ getFeatureTypes: GetFeatureTypesModelType}>(`query getFeatureTypes { getFeatureTypes {
         ${typeof resultSelector === "function" ? resultSelector(new GetFeatureTypesModelSelector()).toString() : resultSelector}
       } }`, variables, options)
+    },
+    queryGetPointsHeights(variables: { data: GetDemPointsHeightsInput }, resultSelector: string | ((qb: PositionsWithHeightsModelSelector) => PositionsWithHeightsModelSelector) = positionsWithHeightsModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getPointsHeights: PositionsWithHeightsModelType}>(`query getPointsHeights($data: GetDemPointsHeightsInput!) { getPointsHeights(data: $data) {
+        ${typeof resultSelector === "function" ? resultSelector(new PositionsWithHeightsModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryServicesAvailability(variables?: {  }, options: QueryOptions = {}) {
+      return self.query<{ servicesAvailability: any }>(`query servicesAvailability { servicesAvailability }`, variables, options)
     },
     mutateUpdateStatus(variables: { data: RecordUpdatePartial }, optimisticUpdate?: () => void) {
       return self.mutate<{ updateStatus: string }>(`mutation updateStatus($data: RecordUpdatePartial!) { updateStatus(data: $data) }`, variables, optimisticUpdate)
