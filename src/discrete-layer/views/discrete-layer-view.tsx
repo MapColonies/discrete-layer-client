@@ -663,23 +663,21 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   }, [store.userStore.user]);
 
-  const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
+  const ContextMenuByTab: React.FC<IContextMenuData> = React.memo((props) => {
     if (activeTabView === TabViews.CREATE_BEST) {
       return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
     }
     // Should add global flag or find the proper condition to whether show the context menu or not.
     return <ActionsContextMenu {...props} />;
-  };
+  });
 
-  const getContextMenuSizeTab = (): MenuDimensions => {
+  const contextMenuSizeByTab = useMemo((): MenuDimensions => {
     if (activeTabView === TabViews.CREATE_BEST) {
       return { height: 212, width: 260, dynamicHeightIncrement: 120 };
     }
 
-    console.log("getContextMenuSizeTab", actionsMenuDimensions)
-
     return actionsMenuDimensions as MenuDimensions;
-  };
+  }, [activeTabView, actionsMenuDimensions]);
  
   return (
     <>
@@ -849,7 +847,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               layerManagerFootprintMetaFieldPath={'layerRecord.footprint'}
               // @ts-ignore
               imageryContextMenu={<ContextMenuByTab />}
-              imageryContextMenuSize={actionsMenuDimensions}
+              imageryContextMenuSize={contextMenuSizeByTab}
               legends={{
                 mapLegendsExtractor,
                 title: intl.formatMessage({ id: 'map-legends.sidebar-title' }),

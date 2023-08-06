@@ -28,10 +28,11 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
   const store = useStore();
   const intl = useIntl();
   const [currentClickedItem, setCurrentClickedItem] = useState<string>();
-  const {actionsMenuDimensions, setActionsMenuDimensions } = useContext(ActionsMenuDimensionsContext);
   const heightsAtCoordinates = useHeightFromTerrain({ position: [{ ...coordinates }] });
   const menuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu, props);
-  const actionsContextMenuDimensions = useGetMenuDimensions(menuProperties, 20);
+
+  const {actionsMenuDimensions, setActionsMenuDimensions } = useContext(ActionsMenuDimensionsContext);
+  const actionsContextMenuDimensions = useGetMenuDimensions(menuProperties, 35);
 
   useEffect(() => {
     const areSameDimensions = _.isEqual(actionsMenuDimensions, actionsContextMenuDimensions);
