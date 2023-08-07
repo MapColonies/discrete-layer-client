@@ -14,6 +14,7 @@ interface CommonMenuItem {
 export interface MenuItem extends CommonMenuItem {
   title: string;
   action: IContextAction;
+  disabled?: boolean;
   icon?: string;
   payloadData?: Record<string, unknown>;
 }
@@ -77,55 +78,6 @@ export const mapMenusManagerStore = ModelBase
   .actions((self) => {
     const store = self.root;
 
-    // function getActionsMenuProperties(featureTypes?: string[]): MapMenus {
-    //     const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
-    //     const actionsMenuSections = mapContextActions.reduce((actionsSections, actionGroup) => {
-    //       const flatGroup: MenuItem[] = [];
-          
-    //       actionGroup.actions.forEach(action => {
-    //         // Exclude forbidden actions from list.
-    //         if(!(store.userStore.isActionAllowed(action.action) as boolean)) return;
-
-    //         if(action.action === ContextActions.QUERY_WFS_FEATURE) {
-    //           const featureTypesList = (featureTypes ?? self.wfsFeatureTypes) ?? [];
-    //           const wfsAvailableFeatures: MenuItem[] = featureTypesList
-    //           .map(feature => {
-    //             const featureConfig = getFeatureConfig(feature);
-    //             const featureTitle = featureConfig.translationId ?? feature;
-
-    //             return ({title: featureTitle, icon: featureConfig.icon, action: {...action}, payloadData: { feature }})
-    //           });
-
-    //           flatGroup.push(...wfsAvailableFeatures);
-    //           return;
-    //         }
-    //         flatGroup.push({title: action.titleTranslationId, action: {...action}});            
-    //       });
-
-    //       // Omit empty sections
-    //       // if(flatGroup.length) {
-    //         return [...actionsSections, flatGroup];
-    //       // }
-
-    //       // return [...actionsSections];
-    //     } ,[] as MenuItem[][])
-
-    //     return {
-    //       ActionsMenu: {
-    //         itemsList: actionsMenuSections,
-    //         heightBuffer: 70
-    //       }
-    //     }
-
-    // }
-
-    function checkIfActionAllowedAndAvailable(action: string): boolean {
-      const isActionAllowed = store.userStore.isActionAllowed(action.action) as boolean;
-      const isActionAvailable = store.servicesAvailabilityStore.isActionAvailable(action.action) as boolean;
-
-      console.log("checkIfActionAllowedAndAvailable", action, isActionAvailable)
-      return isActionAllowed && isActionAvailable;
-    }
 
     function getActionsMenuProperties(): MapMenus {
       const mapContextActions = store.actionDispatcherStore.getContextActionGroups(ApplicationContexts.MAP_CONTEXT);
@@ -135,13 +87,14 @@ export const mapMenusManagerStore = ModelBase
 
         actions.forEach(groupOrAction => {
           if(!isActionGroup(groupOrAction)) {
-            if(!checkIfActionAllowedAndAvailable(groupOrAction.action)) return;
+            if(!store.userStore.isActionAllowed(groupOrAction.action) as boolean) return;
             
             const item: MenuItem = {
               action: {...groupOrAction},
               title: groupOrAction.titleTranslationId,
               icon: groupOrAction.icon,
-              templateId: groupOrAction.templateId
+              templateId: groupOrAction.templateId,
+              disabled: !store.servicesAvailabilityStore.isActionAvailable(groupOrAction.action)
             };
 
             itemsList.push(item);
@@ -161,8 +114,6 @@ export const mapMenusManagerStore = ModelBase
 
         return itemsList;
       }
-
-      console.log(" buildGroupItemsList(mapContextActions)",  buildGroupItemsList(mapContextActions))
       
       return {
         ActionsMenu: {

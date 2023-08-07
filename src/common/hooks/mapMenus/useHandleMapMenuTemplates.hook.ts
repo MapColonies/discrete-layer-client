@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CONFIG from '../../config';
 import {
     DynamicMenuData,
@@ -28,8 +28,6 @@ export const useHandleMapMenuTemplates = (
 
     const generatedMenuRef = useRef<IMapMenuProperties>();
     const [generatedMenu, setGeneratedMenu] = useState<IMapMenuProperties>();
-    const [isPending, startTransition] = useTransition();
-
 
     // Gather all of the data to be used in the process to build the complete menu. store / contexts / hooks / etc.
     const store = useStore();
@@ -146,9 +144,7 @@ export const useHandleMapMenuTemplates = (
             const arePrvMenuEqual = _.isEqual(newMenu, generatedMenuRef.current);
             if(!arePrvMenuEqual) {
                 generatedMenuRef.current = newMenu;
-                startTransition(() => {
-                    setGeneratedMenu(newMenu);
-                })
+                setGeneratedMenu(newMenu);
             }
         }
     }, [contextProps?.contextEvt]);

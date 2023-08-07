@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 import { get } from 'lodash';
 import {
   Icon,
@@ -63,19 +63,19 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
     }
   });
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent): void => {
-      /* eslint-disable */
-      const target: any = event.target;
-      const imgContextMenuRef: any = get(imageryContextMenuRef, 'current');
-      if (imgContextMenuRef && !imgContextMenuRef.contains(target)) {
-        document.removeEventListener('click', handleClickOutside, false);
-        handleClose();
-        hideAll();
-      }
-      /* eslint-enable */
-    };
+  const handleClickOutside = useCallback((event: MouseEvent): void => {
+    /* eslint-disable */
+    const target: any = event.target;
+    const imgContextMenuRef: any = get(imageryContextMenuRef, 'current');
+    if (imgContextMenuRef && !imgContextMenuRef.contains(target)) {
+      document.removeEventListener('click', handleClickOutside, false);
+      handleClose();
+      hideAll();
+    }
+    /* eslint-enable */
+  }, [imageryContextMenuRef]);
 
+  useEffect(() => {
     document.addEventListener('click', handleClickOutside, false);
     
     if(!isContextMenuVisible) {
@@ -115,121 +115,104 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   };
 
   const MenuContent: React.FC<{ items?: MenuItemsList }> = ({ items }) => {
-    const itemsList = items ?? menuItems;
+      const itemsList = items ?? menuItems;
 
-    if (!itemsList || !itemsList.length) return null;
+      if (!itemsList || !itemsList.length) return null;
 
-    return (
-      <>
-        {itemsList.map((menuItemOrGroup, idx) => {
-          const nextItem = itemsList[idx + 1];
-          const itemBefore = itemsList[idx - 1];
+      return (
+          <>
+              {itemsList.map((menuItemOrGroup, idx) => {
+                  const nextItem = itemsList[idx + 1];
+                  const itemBefore = itemsList[idx - 1];
 
-          // For separators logic
-          const isLastItem = idx === itemsList.length - 1;
-          const isFirstItem = idx === 0;
-          const isNextItemEmpty =
-            isMenuItemGroup(nextItem) && nextItem.items.length === 0;
-          const isItemBeforeEmpty =
-            isMenuItemGroup(itemBefore) && itemBefore.items.length > 0;
-          const isEmptyItem =
-            isMenuItemGroup(menuItemOrGroup) &&
-            menuItemOrGroup.items.length === 0;
+                  // For separators logic
+                  const isLastItem = idx === itemsList.length - 1;
+                  const isFirstItem = idx === 0;
+                  const isNextItemEmpty = isMenuItemGroup(nextItem) && nextItem.items.length === 0;
+                  const isItemBeforeEmpty =
+                      isMenuItemGroup(itemBefore) && itemBefore.items.length > 0;
+                  const isEmptyItem =
+                      isMenuItemGroup(menuItemOrGroup) && menuItemOrGroup.items.length === 0;
 
-          // Not first item, item before not empty
-          const showSeparatorBefore =
-            !isEmptyItem && !isFirstItem && !isItemBeforeEmpty;
+                  // Not first item, item before not empty
+                  const showSeparatorBefore = !isEmptyItem && !isFirstItem && !isItemBeforeEmpty;
 
-          // Not last item, not empty item, item after not empty
-          const showSeparatorAfter =
-            !isEmptyItem && !isLastItem && !isNextItemEmpty;
+                  // Not last item, not empty item, item after not empty
+                  const showSeparatorAfter = !isEmptyItem && !isLastItem && !isNextItemEmpty;
 
-          if (!isMenuItemGroup(menuItemOrGroup)) {
-            const itemElement = (
-              <ItemRenderer item={menuItemOrGroup} key={`menuItem_${idx}`} />
-            );
+                  if (!isMenuItemGroup(menuItemOrGroup)) {
+                      const itemElement = (
+                          <ItemRenderer item={menuItemOrGroup} key={`menuItem_${idx}`} />
+                      );
 
-            // Get click callback from item
-            const menuItemClick =
-              (itemElement.props as Record<string, unknown>).onClick ??
-              ((): void => {
-                return;
-              });
-            const menuItemDisabled =
-              (itemElement.props as Record<string, unknown>).disabled ?? false;
+                      const menuItemDisabled = menuItemOrGroup.disabled ?? false;
 
-            return (
-              <MenuItemWithSeparator
-                separatorKeySuffix={`${idx}`}
-                separator={menuItemOrGroup.action.separator}
-                showSeparatorBefore={showSeparatorBefore}
-                showSeparatorAfter={showSeparatorAfter}
-              >
-                <Item
-                  className="imageryMenuItemAction"
-                  key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
-                  onClick={({ event }) =>
-                    (menuItemClick as MouseEventHandler<HTMLElement>)(
-                      event as React.MouseEvent<HTMLElement>
-                    )
+                      return (
+                          <MenuItemWithSeparator
+                              separatorKeySuffix={`${idx}`}
+                              separator={menuItemOrGroup.action.separator}
+                              showSeparatorBefore={showSeparatorBefore}
+                              showSeparatorAfter={showSeparatorAfter}
+                          >
+                              <Item
+                                  className="imageryMenuItemAction"
+                                  key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
+                                  style={{pointerEvents: menuItemDisabled ? 'none' : 'all'}}
+                                  disabled={menuItemDisabled as boolean}
+                              >
+                                  {itemElement}
+                              </Item>
+                          </MenuItemWithSeparator>
+                      );
+                  } else {
+                      const groupProps = menuItemOrGroup.groupProps;
+                      let groupToRender: JSX.Element;
+
+                      // Spread sections by preferences
+                      const shouldPresentAsMenu =
+                          groupProps?.actionsSpreadPreference === ActionSpreadPreference.MENU &&
+                          menuItemOrGroup.items.length >= (groupProps.minimumItemsInMenu ?? 0);
+
+                      const menuTitle = (
+                          <TooltippedValue disableTooltip className={"contextMenuLabel"}>
+                              {intl.formatMessage({
+                                  id: groupProps.titleTranslationId ?? "Sub Menu"
+                              })}
+                          </TooltippedValue>
+                      );
+
+                      if (shouldPresentAsMenu) {
+                          groupToRender = (
+                              <Submenu
+                                  key={`imageryMenuGroupItems_${menuItemOrGroup.groupProps.id}`}
+                                  dir={direction}
+                                  label={menuTitle}
+                              >
+                                  <MenuContent items={menuItemOrGroup.items} />
+                              </Submenu>
+                          );
+                      } else {
+                          groupToRender = (
+                              <>
+                                  <MenuContent items={menuItemOrGroup.items} />
+                              </>
+                          );
+                      }
+
+                      return (
+                          <MenuItemWithSeparator
+                              separatorKeySuffix={`${menuItemOrGroup.groupProps.id}`}
+                              separator={menuItemOrGroup.groupProps.separator}
+                              showSeparatorBefore={showSeparatorBefore}
+                              showSeparatorAfter={showSeparatorAfter}
+                          >
+                              {groupToRender}
+                          </MenuItemWithSeparator>
+                      );
                   }
-                  disabled={menuItemDisabled as boolean}
-                >
-                  {itemElement}
-                </Item>
-              </MenuItemWithSeparator>
-            );
-          } else {
-            const groupProps = menuItemOrGroup.groupProps;
-            let groupToRender: JSX.Element;
-
-            // Spread sections by preferences
-            const shouldPresentAsMenu =
-              groupProps?.actionsSpreadPreference ===
-                ActionSpreadPreference.MENU &&
-              menuItemOrGroup.items.length >=
-                (groupProps.minimumItemsInMenu ?? 0);
-
-            const menuTitle = (
-              <TooltippedValue disableTooltip className={'contextMenuLabel'}>
-                {intl.formatMessage({
-                  id: groupProps.titleTranslationId ?? 'Sub Menu',
-                })}
-              </TooltippedValue>
-            );
-
-            if (shouldPresentAsMenu) {
-              groupToRender = (
-                <Submenu
-                  key={`imageryMenuGroupItems_${menuItemOrGroup.groupProps.id}`}
-                  dir={direction}
-                  label={menuTitle}
-                >
-                  <MenuContent items={menuItemOrGroup.items} />
-                </Submenu>
-              );
-            } else {
-              groupToRender = (
-                <>
-                  <MenuContent items={menuItemOrGroup.items} />
-                </>
-              );
-            }
-
-            return (
-              <MenuItemWithSeparator
-                separatorKeySuffix={`${menuItemOrGroup.groupProps.id}`}
-                separator={menuItemOrGroup.groupProps.separator}
-                showSeparatorBefore={showSeparatorBefore}
-                showSeparatorAfter={showSeparatorAfter}
-              >
-                {groupToRender}
-              </MenuItemWithSeparator>
-            );
-          }
-        })}
-      </>
-    );
+              })}
+          </>
+      );
   };
 
   return (
@@ -239,7 +222,14 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
           ref={imageryContextMenuRef}
           style={style}
           className="imageryContextMenuTheme imageryContextMenu"
-          onContextMenu={(e): void => e.preventDefault()}
+          onContextMenu={(e): void => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={(e): void => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
         >
           {(menuTitle || menuTitleComponent) && (
             <Box

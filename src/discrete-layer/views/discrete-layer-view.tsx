@@ -663,13 +663,13 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   }, [store.userStore.user]);
 
-  const ContextMenuByTab: React.FC<IContextMenuData> = React.memo((props) => {
+  const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
     if (activeTabView === TabViews.CREATE_BEST) {
       return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
     }
     // Should add global flag or find the proper condition to whether show the context menu or not.
     return <ActionsContextMenu {...props} />;
-  });
+  };
 
   const contextMenuSizeByTab = useMemo((): MenuDimensions => {
     if (activeTabView === TabViews.CREATE_BEST) {

@@ -16,6 +16,7 @@ import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
 import ActionsMenuDimensionsContext from './contexts/actionsMenuDimensionsContext';
 import './actions.context-menu.css';
 import _ from 'lodash';
+import { observer } from 'mobx-react-lite';
 
 interface IActionsContextMenuProps extends IContextMenuData {}
 
@@ -23,7 +24,7 @@ interface IActionsContextMenuProps extends IContextMenuData {}
 export const COORDS_DISPLAY_PRECISION = 1;
 const FIRST = 0;
 
-export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) => {
+export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((props) => {
   const { handleClose, coordinates } = props;
   const store = useStore();
   const intl = useIntl();
@@ -148,4 +149,4 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = (props) =>
           </Box>
         </ContextMenu>
   );
-};
+});
