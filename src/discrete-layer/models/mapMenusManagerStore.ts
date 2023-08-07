@@ -7,6 +7,8 @@ import { IRootStore, RootStoreType } from './RootStore';
 import {GetFeatureModelType} from './GetFeatureModel';
 import { WfsGetFeatureParams } from './RootStore.base';
 import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetchers/wfs-features-fetcher.component';
+import { PositionWithHeightModelType } from './PositionWithHeightModel';
+import { IPosition } from '../../common/hooks/useHeightFromTerrain';
 
 interface CommonMenuItem {
   templateId?: ContextActionsTemplates | ContextActionsGroupTemplates;
@@ -66,6 +68,8 @@ export const mapMenusManagerStore = ModelBase
     wfsFeatureTypes: types.maybe(types.frozen<string[]>()),
     wfsFeatureConfigs: types.maybe(types.frozen<IFeatureConfigs>()),
     currentWfsFeatureInfo: types.maybe(types.frozen<WfsFeatureInfo>()),
+    currentPositionDemHeight: types.maybe(types.frozen<PositionWithHeightModelType>()),
+    lastMenuCoordinate: types.maybe(types.frozen<IPosition>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -144,6 +148,14 @@ export const mapMenusManagerStore = ModelBase
       
       self.currentWfsFeatureInfo = featureInfoWithConfig;
     }
+    
+    function setCurrentPositionDemHeight(currentPositionDemHeight: PositionWithHeightModelType): void {
+      self.currentPositionDemHeight = currentPositionDemHeight;
+    }
+
+    function setLastMenuCoordinate(menuCoordinate: IPosition): void {
+      self.lastMenuCoordinate = menuCoordinate;
+    }
 
     function getFeatureConfig(typeName: string): IFeatureConfig {
       return self.wfsFeatureConfigs?.[typeName] as IFeatureConfig;
@@ -153,12 +165,19 @@ export const mapMenusManagerStore = ModelBase
       self.currentWfsFeatureInfo = undefined;
     }
 
+    function resetCurrentPositionDemHeight(): void {
+      self.currentPositionDemHeight = undefined;
+    }
+
     return {
       setWfsFeatureTypes,
       setCurrentWfsFeatureInfo,
+      setCurrentPositionDemHeight,
       setWfsFeatureConfigs,
+      setLastMenuCoordinate,
       getFeatureConfig,
       resetCurrentWfsFeatureInfo,
+      resetCurrentPositionDemHeight,
       initStore,
     }
   });

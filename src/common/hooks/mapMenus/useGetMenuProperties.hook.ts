@@ -12,6 +12,12 @@ const useGetMenuProperties = (menuId: MapMenusIds, contextProps?: IContextMenuDa
     const generatedByContextMenuProperties = useHandleMapMenuTemplates(mapMenus?.[menuId], contextProps);
     
     useEffect(() => {
+      if(contextProps?.coordinates) {
+        store.mapMenusManagerStore.setLastMenuCoordinate(contextProps?.coordinates);
+      }
+    }, [contextProps?.coordinates]);
+
+    useEffect(() => {
       if(generatedByContextMenuProperties) {
         setMenuProperties(generatedByContextMenuProperties);
       }

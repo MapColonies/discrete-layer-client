@@ -643,8 +643,11 @@
 
   "map-context-menu.title": "מציג {maxLayersToPresent} שכבות מתוך {activeLayers}",
   "map-context-menu.service-operations.group.title": "שירותי תשאול",
+  "map-context-menu.query-dem-height.title": "תשאול גובה בנקודה",
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
+  "dem-heights-info.no-data.message": "לא נמצאו נתוני גובה במיקום המבוקש",
+
 
   "export-layer.exportSuccessContainer.title": "בקשת הייצוא נוצרה בהצלחה",
   "export-layer.exportSuccessContainer.approve": "העתקה וסיום",

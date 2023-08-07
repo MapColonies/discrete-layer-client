@@ -34,6 +34,7 @@ const ACTIONS_TO_SERVICES_PATH_MAP: UserActionToService | ContextActionToService
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: 'exportLayerServices.raster',
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: 'exportLayerServices.dem',
       [ContextActions.QUERY_WFS_FEATURE]: 'wfs',
+      [ContextActions.QUERY_DEM_HEIGHT]: 'demHeightsService'
 }
 
 

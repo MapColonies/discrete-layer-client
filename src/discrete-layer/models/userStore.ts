@@ -130,6 +130,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: false,
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: false,
       [ContextActions.QUERY_WFS_FEATURE]: true,
+      [ContextActions.QUERY_DEM_HEIGHT]: true,
       [ContextActions.TEST]: true
     },
   },
@@ -180,6 +181,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: false,
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: false,
       [ContextActions.QUERY_WFS_FEATURE]: true,
+      [ContextActions.QUERY_DEM_HEIGHT]: true,
       [ContextActions.TEST]: true
     },
   },

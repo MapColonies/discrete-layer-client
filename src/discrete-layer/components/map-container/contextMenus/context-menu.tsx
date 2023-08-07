@@ -172,16 +172,18 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                       const shouldPresentAsMenu =
                           groupProps?.actionsSpreadPreference === ActionSpreadPreference.MENU &&
                           menuItemOrGroup.items.length >= (groupProps.minimumItemsInMenu ?? 0);
-
-                      const menuTitle = (
-                          <TooltippedValue disableTooltip className={"contextMenuLabel"}>
-                              {intl.formatMessage({
-                                  id: groupProps.titleTranslationId ?? "Sub Menu"
-                              })}
-                          </TooltippedValue>
-                      );
-
+                          
                       if (shouldPresentAsMenu) {
+                        const menuTitle = (
+                          <TooltippedValue
+                            disableTooltip
+                            className={'contextMenuLabel'}
+                          >
+                            {intl.formatMessage({
+                              id: groupProps.titleTranslationId ?? 'Sub Menu',
+                            })}
+                          </TooltippedValue>
+                        );
                           groupToRender = (
                               <Submenu
                                   key={`imageryMenuGroupItems_${menuItemOrGroup.groupProps.id}`}

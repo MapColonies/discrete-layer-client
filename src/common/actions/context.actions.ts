@@ -14,6 +14,7 @@ export enum ContextActionsTypes {
 
 export enum ContextActions {
   QUERY_WFS_FEATURE = 'QUERY_WFS_FEATURE',
+  QUERY_DEM_HEIGHT = 'QUERY_DEM_HEIGHT',
   TEST = 'TEST',
 }
 
@@ -106,9 +107,25 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
       },
       {
         ...defaultContextActionGroupProps,
-        id: 3,
+        order: 1,
+        id: 2,
+        titleTranslationId: '',
+        type: ContextActionsTypes.SERVICE_OPERATIONS,
+        actionsSpreadPreference: ActionSpreadPreference.FLAT,
+        separator: 'AFTER',
+        actions: [
+          {
+            ...defaultContextActionProps,
+            titleTranslationId: 'map-context-menu.query-dem-height.title',
+            action: ContextActions.QUERY_DEM_HEIGHT,
+          },
+        ],
+      },
+      {
+        ...defaultContextActionGroupProps,
         order: 2,
-        titleTranslationId: 'kuku',
+        id: 3,
+        titleTranslationId: '',
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.FLAT,
         separator: 'AFTER',
@@ -123,8 +140,8 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
       },
       {
         ...defaultContextActionGroupProps,
-        id: 4,
         order: 3,
+        id: 4,
         titleTranslationId: 'Active layers',
         type: ContextActionsTypes.SERVICE_OPERATIONS,
         actionsSpreadPreference: ActionSpreadPreference.FLAT,

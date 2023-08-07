@@ -641,8 +641,10 @@
 
   "map-context-menu.title": "Presenting {maxLayersToPresent} layers out of {activeLayers}",
   "map-context-menu.service-operations.group.title": "Query Services",
+  "map-context-menu.query-dem-height.title": "Query DEM point Height",
 
   "wfs-info.no-data.message": "No data found for type {feature}",
+  "dem-heights-info.no-data.message": "No height data found for the selected position",
 
   "export-layer.exportSuccessContainer.title": "Export request triggered",
   "export-layer.exportSuccessContainer.approve": "Copy and exit",

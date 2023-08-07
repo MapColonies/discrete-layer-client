@@ -27,6 +27,7 @@ import { Feature } from 'geojson';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 import { TabViews } from '../tab-views';
+import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
 
 const FIRST = 0;
 
@@ -43,7 +44,9 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
 
   const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
   const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
-
+  
+  const { setDemHeightsOptions } = useHandleDemHeightsRequests();
+  
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
       store.discreteLayersStore.updateLayer(updatedValue);
@@ -233,6 +236,17 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             ],
             typeName,
             count: 1,
+            onDataResolved: closeMenu,
+          });
+          
+          break;
+        }
+        case ContextActions.QUERY_DEM_HEIGHT: {
+          const coordinates = data.coordinates as { longitude: number, latitude: number };
+          const closeMenu = (data.handleClose as (() => void | undefined));
+
+          setDemHeightsOptions({
+            positions: [coordinates],
             onDataResolved: closeMenu,
           });
           

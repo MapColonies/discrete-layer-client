@@ -89,6 +89,7 @@ import { ExportLayerComponent } from '../components/export-layer/export-layer.co
 import ExportDrawingHandler from '../components/export-layer/export-drawing-handler.component';
 import ExportPolygonsRenderer from '../components/export-layer/export-polygons-renderer.component';
 import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
+import DemHeightsFeatureComponent from '../components/map-container/dem-heights-feature.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 const START_IDX = 0;
@@ -256,6 +257,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
 
     store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();
+    store.mapMenusManagerStore.resetCurrentPositionDemHeight();
   };
 
   useEffect(() => {
@@ -875,6 +877,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
                 <Terrain/>
                 <WfsFeature />
+                <DemHeightsFeatureComponent />
                 {
                   poi && activeTabView === TabViews.SEARCH_RESULTS && <PoiEntity longitude={poi.lon} latitude={poi.lat}/>
                 }
