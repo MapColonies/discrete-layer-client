@@ -10,6 +10,7 @@ export interface IFeatureConfig {
   dWithin?: number,
   translationId?: string,
   icon?: string,
+  markerIcon?:string;
   outlineWidth?: number,
 }
 

@@ -157,7 +157,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                               <Item
                                   className="imageryMenuItemAction"
                                   key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
-                                  style={{pointerEvents: menuItemDisabled ? 'none' : 'all'}}
+                                  style={{pointerEvents: menuItemDisabled ? 'none' : 'unset'}}
                                   disabled={menuItemDisabled as boolean}
                               >
                                   {itemElement}

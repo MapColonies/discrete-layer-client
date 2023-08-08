@@ -643,11 +643,17 @@
 
   "map-context-menu.title": "מציג {maxLayersToPresent} שכבות מתוך {activeLayers}",
   "map-context-menu.service-operations.group.title": "שירותי תשאול",
-  "map-context-menu.query-dem-height.title": "תשאול גובה בנקודה",
+  "map-context-menu.query-dem-height.title": "תשאול גובה נקודה",
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
-  "dem-heights-info.no-data.message": "לא נמצאו נתוני גובה במיקום המבוקש",
 
+  "dem-heights-info.no-data.message": "לא נמצאו נתוני גובה במיקום המבוקש",
+  "dem-heights-info.latitude.field": "קו רוחב",
+  "dem-heights-info.longitude.field": "קו אורך",
+  "dem-heights-info.height.field": "גובה",
+  "dem-heights-info.updateDate.field": "עדכניות",
+  "dem-heights-info.resolutionMeter.field": "רזולוציה במטרים",
+  "dem-heights-info.productType.field": "סוג מוצר",
 
   "export-layer.exportSuccessContainer.title": "בקשת הייצוא נוצרה בהצלחה",
   "export-layer.exportSuccessContainer.approve": "העתקה וסיום",

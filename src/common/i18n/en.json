@@ -645,6 +645,12 @@
 
   "wfs-info.no-data.message": "No data found for type {feature}",
   "dem-heights-info.no-data.message": "No height data found for the selected position",
+  "dem-heights-info.latitude.field": "Latitude",
+  "dem-heights-info.longitude.field": "Longitude",
+  "dem-heights-info.height.field": "Height",
+  "dem-heights-info.updateDate.field": "Update Date",
+  "dem-heights-info.resolutionMeter.field": "Resolution meters",
+  "dem-heights-info.productType.field": "Product Type",
 
   "export-layer.exportSuccessContainer.title": "Export request triggered",
   "export-layer.exportSuccessContainer.approve": "Copy and exit",

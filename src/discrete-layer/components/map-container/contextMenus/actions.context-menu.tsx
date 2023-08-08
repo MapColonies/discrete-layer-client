@@ -28,7 +28,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   const { handleClose, coordinates } = props;
   const store = useStore();
   const intl = useIntl();
-  const [currentClickedItem, setCurrentClickedItem] = useState<string>();
+  // const [currentClickedItem, setCurrentClickedItem] = useState<string>();
   const heightsAtCoordinates = useHeightFromTerrain({ position: [{ ...coordinates }] });
   const menuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu, props);
 
@@ -52,23 +52,32 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   }, []);
 
 
-  const onItemClick = (itemTitle: string, action: IDispatchAction): void => {
-    if (typeof currentClickedItem === 'undefined') {
-      dispatchAction(action);
-      setCurrentClickedItem(itemTitle);
-    }
-  }
+  // const onItemClick = (itemTitle: string, action: IDispatchAction): void => {
+  //   if (typeof currentClickedItem === 'undefined') {
+  //     dispatchAction(action);
+  //     setCurrentClickedItem(itemTitle);
+  //   }
+  // }
 
-  const menuItemRenderer: ContextMenuItemRenderer = ({ item }) => {
-    const actionToDispatch = {
+  const MenuItemRenderer: ContextMenuItemRenderer = ({ item }) => {
+
+    const [isClicked, setIsClicked] = useState(false);
+
+    const actionToDispatch = useMemo(() => ({
       action: item.action.action,
       data: { ...item.payloadData, coordinates, handleClose },
-    };
+    }), [item]);
 
     return (
       <Box
         className="actionsMenuItem"
-        onClick={(): void => onItemClick(item.title, actionToDispatch)}
+        onClick={(): void => {
+          // onItemClick(item.title, actionToDispatch)
+          dispatchAction(actionToDispatch);
+          if(!isClicked) {
+            setIsClicked(true);
+          }
+        }}
       >
         {typeof item.icon !== 'undefined' && (
           <Icon className={`featureIcon ${item.icon}`} />
@@ -78,7 +87,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
           {intl.formatMessage({ id: item.title })}
         </TooltippedValue>
         
-        {currentClickedItem === item.title && (
+        {isClicked && (
           <CircularProgress className="actionsMenuItemLoading" />
         )}
       </Box>
@@ -121,7 +130,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   return (
         <ContextMenu
           menuItems={menuProperties?.itemsList}
-          ItemRenderer={menuItemRenderer}
+          ItemRenderer={MenuItemRenderer}
           menuTitleComponent={
             <Box className="coordinatesContainer">
               <Icon className='menuIcon mc-icon-Location-Full' />
