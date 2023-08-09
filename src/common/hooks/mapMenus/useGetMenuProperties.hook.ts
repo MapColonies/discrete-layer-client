@@ -7,7 +7,6 @@ import { useHandleMapMenuTemplates } from "./useHandleMapMenuTemplates.hook";
 
 const useGetMenuProperties = (menuId: MapMenusIds, contextProps?: IContextMenuData): IMapMenuProperties | undefined => {
     const store = useStore();
-    const [menuProperties, setMenuProperties] = useState<IMapMenuProperties>();
     const mapMenus = store.mapMenusManagerStore.mapMenus;
     const generatedByContextMenuProperties = useHandleMapMenuTemplates(mapMenus?.[menuId], contextProps);
     
@@ -17,13 +16,7 @@ const useGetMenuProperties = (menuId: MapMenusIds, contextProps?: IContextMenuDa
       }
     }, [contextProps?.coordinates]);
 
-    useEffect(() => {
-      if(generatedByContextMenuProperties) {
-        setMenuProperties(generatedByContextMenuProperties);
-      }
-    }, [generatedByContextMenuProperties])
-
-    return menuProperties;
+    return generatedByContextMenuProperties;
 }
 
 export default useGetMenuProperties;

@@ -228,7 +228,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
         position={CesiumCartesian3.fromRadians(positionCartographic.longitude, positionCartographic.latitude, positionCartographic.height)}
         billboard={{
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
-          scale: 0.4,
+          scale: 0.3,
           image: `assets/img/${wfsFeature.config.markerIcon ? `${wfsFeature.config.markerIcon}.png` : 'map-marker.gif'}`,
         }}
         description={wfsInfoHtml}

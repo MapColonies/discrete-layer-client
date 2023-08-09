@@ -61,10 +61,9 @@ const DemHeightsFeatureComponent: React.FC = observer(() => {
             {Object.entries(
               currentPositionDemHeight as unknown as Record<string, unknown>
             ).map(([key, val]) => {
-              const fieldTranslation = intl.formatMessage({id: `dem-heights-info.${key}.field`});
               return (
                 <tr key={key}>
-                  <td>{ fieldTranslation }</td>
+                  <td>{key}</td>
                   <td>{`${val as string}`}</td>
                 </tr>
               );
@@ -118,7 +117,7 @@ const DemHeightsFeatureComponent: React.FC = observer(() => {
         position={CesiumCartesian3.fromRadians(positionWithHeight.longitude, positionWithHeight.latitude, positionWithHeight.height)}
         billboard={{
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
-          scale: 0.4,
+          scale: 0.3,
           image: 'assets/img/dem-height-marker.png',
         }}
         description={demHeightInfoHtml}

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { IContextMenuData, Box } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
@@ -28,7 +28,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   const { handleClose, coordinates } = props;
   const store = useStore();
   const intl = useIntl();
-  // const [currentClickedItem, setCurrentClickedItem] = useState<string>();
+  const menuTitleIconRef = React.createRef<HTMLElement>();
   const heightsAtCoordinates = useHeightFromTerrain({ position: [{ ...coordinates }] });
   const menuProperties = useGetMenuProperties(MapMenusIds.ActionsMenu, props);
 
@@ -43,6 +43,10 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
     }
   }, [actionsContextMenuDimensions])
 
+  useEffect(() => {
+    menuTitleIconRef.current?.classList.remove('loading')
+  }, [props.contextEvt])
+
 
   const dispatchAction = useCallback((action: IDispatchAction): void => {
     store.actionDispatcherStore.dispatchAction({
@@ -52,16 +56,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   }, []);
 
 
-  // const onItemClick = (itemTitle: string, action: IDispatchAction): void => {
-  //   if (typeof currentClickedItem === 'undefined') {
-  //     dispatchAction(action);
-  //     setCurrentClickedItem(itemTitle);
-  //   }
-  // }
-
   const MenuItemRenderer: ContextMenuItemRenderer = ({ item }) => {
-
-    const [isClicked, setIsClicked] = useState(false);
 
     const actionToDispatch = useMemo(() => ({
       action: item.action.action,
@@ -72,11 +67,9 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
       <Box
         className="actionsMenuItem"
         onClick={(): void => {
-          // onItemClick(item.title, actionToDispatch)
           dispatchAction(actionToDispatch);
-          if(!isClicked) {
-            setIsClicked(true);
-          }
+          
+          menuTitleIconRef.current?.classList.add('loading')
         }}
       >
         {typeof item.icon !== 'undefined' && (
@@ -86,10 +79,6 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
         <TooltippedValue disableTooltip className={"actionsContextMenuItemLabel"}>
           {intl.formatMessage({ id: item.title })}
         </TooltippedValue>
-        
-        {isClicked && (
-          <CircularProgress className="actionsMenuItemLoading" />
-        )}
       </Box>
     );
   };
@@ -133,7 +122,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
           ItemRenderer={MenuItemRenderer}
           menuTitleComponent={
             <Box className="coordinatesContainer">
-              <Icon className='menuIcon mc-icon-Location-Full' />
+              <Icon ref={menuTitleIconRef} className={`menuIcon mc-icon-Location-Full`} />
               {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
             </Box>
           }
