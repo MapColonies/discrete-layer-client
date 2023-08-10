@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState, useRef } from 'react';
+import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { get, isEmpty } from 'lodash';
 import {
@@ -37,6 +38,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as CacheMap);
   const mapViewer = useCesiumMap();
+  const intl = useIntl();
   
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
@@ -94,38 +96,42 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.WMTS_LAYER:
       case LinkType.WMTS: {
         const capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
-        errorQueue.notify({
-          body: (
-            <Error
-              className="errorNotification"
-              message={'Missing Layer'}
+        if (!capability && layerLink.protocol === LinkType.WMTS) {
+          errorQueue.notify({
+            body: (
+              <Error
+                className="errorNotification"
+                message={intl.formatMessage({id: 'layer.access.error'})}
+              />
+            ),
+            actions: [{icon: 'close'}]
+          });
+          return undefined;
+        } else {
+          const optionsWMTS = {
+            ...getWMTSOptions(layer as LayerRasterRecordModelType, layerLink.url as string, capability)
+          };
+          return (
+            <CesiumWMTSLayer
+              key={layer.id}
+              meta={{
+                id: layer.id,
+                searchLayerPredicate: ((cesiumLayer, idx) => {
+                  const linkUrl = (optionsWMTS.url as Record<string, any>)._url as string;
+                  const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
+                  const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
+                  return isLayerFound;
+                }) as SearchLayerPredicate,
+                layerRecord: {
+                  ...layer,
+                  links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
+                } as ILayerImage
+              }}
+              rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
+              options={optionsWMTS}
             />
-          ),
-          actions: [{icon: 'close'}]
-        });
-        const optionsWMTS = {
-          ...getWMTSOptions(layer as LayerRasterRecordModelType, layerLink.url as string, capability)
-        };
-        return (
-          <CesiumWMTSLayer
-            key={layer.id}
-            meta={{
-              id: layer.id,
-              searchLayerPredicate: ((cesiumLayer, idx) => {
-                const linkUrl = (optionsWMTS.url as Record<string, any>)._url as string;
-                const cesiumLayerLinkUrl = get(cesiumLayer, '_imageryProvider._resource._url') as string;
-                const isLayerFound = (linkUrl.split('?')[0] === cesiumLayerLinkUrl.split('?')[0]);
-                return isLayerFound;
-              }) as SearchLayerPredicate,
-              layerRecord: {
-                ...layer,
-                links: getLinksArrWithTokens([...layer.links as LinkModelType[]])
-              } as ILayerImage
-            }}
-            rectangle={generateLayerRectangle(layer as LayerRasterRecordModelType)}
-            options={optionsWMTS}
-          />
-        );
+          );
+        }
       }
       default:
         return undefined;

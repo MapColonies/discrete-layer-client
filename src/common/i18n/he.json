@@ -55,6 +55,8 @@
   
   "terrain-provider.access.error": "מידע פני השטח לא זמין",
 
+  "layer.access.error": "שכבה לא נמצאה",
+
   "action.tab-views.catalog.tooltip": "טאב קטלוג",
   "action.tab-views.search-results.tooltip": "טאב תוצאות חיפוש",
   "action.tab-views.create-best.tooltip": "טאב עריכת טיוטת BEST",

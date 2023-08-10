@@ -55,6 +55,8 @@
 
   "terrain-provider.access.error": "Unavailable terrain information",
 
+  "layer.access.error": "Unavailable layer",
+
   "action.tab-views.catalog.tooltip": "Catalog tab",
   "action.tab-views.search-results.tooltip": "Search results tab",
   "action.tab-views.create-best.tooltip": "BEST draft creation/edit tab",
