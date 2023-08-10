@@ -90,7 +90,7 @@ export const useHandleMapMenuTemplates = (
                         title: groupProp.titleTranslationId,
                         items: groupTemplateMenuItem.items.map(item => {
                             if(!isMenuItemGroup(item)) {
-                                return {...item, payloadData: activeLayer};
+                                return {...item, payloadData: activeLayer.meta as Record<string, unknown>};
                             }
 
                             return item;
