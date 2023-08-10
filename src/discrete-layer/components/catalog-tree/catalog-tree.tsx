@@ -25,7 +25,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
-import { existStatus, getStatusColoredText, isUnpublished } from '../../../common/helpers/style';
+import { getStatusColoredText } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -34,7 +34,7 @@ import { UserAction } from '../../models/userStore';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLinkUrlWithToken } from '../helpers/layersUtils';
-import { queue } from '../snackbar/notification-queue';
+import { messageQueue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
 
@@ -70,7 +70,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
 
     useEffect(() => {
       if (errorCapabilities) {
-        queue.notify({
+        messageQueue.notify({
           body: (
             <Error
               className="errorNotification"
@@ -86,7 +86,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }, [errorCapabilities]);
 
     useEffect(() => {
-      queue.clearAll();
+      messageQueue.clearAll();
 
       if (refresh) {
         setIsDataLoading(true);

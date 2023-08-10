@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
+import { get, isEmpty } from 'lodash';
 import {
   Cesium3DTileset,
   CesiumWMTSLayer,
@@ -7,8 +9,7 @@ import {
   ICesiumImageryLayer,
   useCesiumMap
 } from '@map-colonies/react-components';
-import { observer } from 'mobx-react-lite';
-import { get, isEmpty } from 'lodash';
+import { Error } from '../../../common/components/tree/statuses/error';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
 import CONFIG from '../../../common/config';
@@ -22,6 +23,7 @@ import {
   getWMTSOptions,
   getLinksArrWithTokens
 } from '../helpers/layersUtils';
+import { errorQueue } from '../snackbar/notification-queue';
 
 interface CacheMap {
   [key: string]: JSX.Element | undefined;
@@ -92,6 +94,15 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       case LinkType.WMTS_LAYER:
       case LinkType.WMTS: {
         const capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
+        errorQueue.notify({
+          body: (
+            <Error
+              className="errorNotification"
+              message={'Missing Layer'}
+            />
+          ),
+          actions: [{icon: 'close'}]
+        });
         const optionsWMTS = {
           ...getWMTSOptions(layer as LayerRasterRecordModelType, layerLink.url as string, capability)
         };

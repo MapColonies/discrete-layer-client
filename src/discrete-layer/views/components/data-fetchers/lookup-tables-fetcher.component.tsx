@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from 'react';
 import lookupTablesContext, { ILookupTableData } from '../../../../common/contexts/lookupTables.context';
 import { useStore, useQuery } from '../../../models/RootStore';
 import { Error } from './../../../../common/components/tree/statuses/error';
-import { queue } from '../../../../discrete-layer/components/snackbar/notification-queue';
+import { messageQueue } from '../../../../discrete-layer/components/snackbar/notification-queue';
 
 export const HOT_AREAS_TABLES_KEY = 'hotAreas';
 
@@ -21,7 +21,7 @@ export const LookupTablesFetcher: React.FC = observer(() => {
 
   useEffect(() => {
     if (error) {
-      queue.notify({
+      messageQueue.notify({
         body: (
           <Error
             className="errorNotification"

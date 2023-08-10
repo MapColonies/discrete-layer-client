@@ -9,7 +9,7 @@ import {
 import CONFIG from '../../../common/config';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { getTokenResource } from '../helpers/layersUtils';
-import { queue } from '../snackbar/notification-queue';
+import { messageQueue } from '../snackbar/notification-queue';
 
 const NONE = 0;
 
@@ -31,7 +31,7 @@ export const Terrain: React.FC<TerrainProps> = () => {
       if (!isTerrainTileError(e as Record<string, unknown>)) {
         console.error('Terrain provider error: Falling back to default terrain. ', e);
 
-        queue.notify({
+        messageQueue.notify({
           body: (
             <Error
               className="errorNotification"

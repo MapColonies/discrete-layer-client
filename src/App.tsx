@@ -5,11 +5,11 @@ import 'moment/locale/he'; // TODO: improve dynamic moment locales loading
 
 // Import from react core components
 import {
-  ThemeProvider as RMWCThemeProvider,
-  RMWCProvider,
-  Themes,
-  SnackbarQueue,
   IOptions,
+  RMWCProvider,
+  SnackbarQueue,
+  ThemeProvider as RMWCThemeProvider,
+  Themes,
 } from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
@@ -37,7 +37,7 @@ import './App.dark-theme.css';
 import './App.light-theme.css';
 
 
-import { queue } from './discrete-layer/components/snackbar/notification-queue';
+import { errorQueue, messageQueue } from './discrete-layer/components/snackbar/notification-queue';
 import { SnackContainer } from './discrete-layer/components/snackbar/snack-container';
 import DiscreteLayerView from './discrete-layer/views/discrete-layer-view';
 import { StaticDataFetcher } from './discrete-layer/views/components/data-fetchers/static-data-fetcher.component';
@@ -101,7 +101,8 @@ const App: React.FC = () => {
             </EnumsMapContext.Provider>
           </LookupTablesContext.Provider>
           <SnackContainer />
-          <SnackbarQueue messages={queue.messages} leading timeout={-1} />
+          <SnackbarQueue key="messageQueue" messages={messageQueue.messages} leading timeout={-1} />
+          <SnackbarQueue key="errorQueue" messages={errorQueue.messages} dismissesOnAction timeout={-1} />
         </RMWCThemeProvider>
       </RMWCProvider>
     </IntlProvider>
