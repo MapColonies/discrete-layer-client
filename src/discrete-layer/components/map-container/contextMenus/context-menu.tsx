@@ -166,14 +166,14 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                       );
                   } else {
                       const groupProps = menuItemOrGroup.groupProps;
-                      let groupToRender: JSX.Element;
+                      let groupToRender: JSX.Element = <></>;
 
                       // Spread sections by preferences
                       const shouldPresentAsMenu =
                           groupProps?.actionsSpreadPreference === ActionSpreadPreference.MENU &&
                           menuItemOrGroup.items.length >= (groupProps.minimumItemsInMenu ?? 0);
                           
-                      if (shouldPresentAsMenu) {
+                      if (shouldPresentAsMenu && menuItemOrGroup.items.length > 0) {
                         const menuTitle = (
                           <TooltippedValue
                             disableTooltip
