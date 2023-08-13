@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState, useRef } from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { get, isEmpty } from 'lodash';
+import { Typography } from '@map-colonies/react-core';
 import {
+  Box,
   Cesium3DTileset,
   CesiumWMTSLayer,
   CesiumXYZLayer,
   ICesiumImageryLayer,
   useCesiumMap
 } from '@map-colonies/react-components';
-import { Error } from '../../../common/components/tree/statuses/error';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
 import CONFIG from '../../../common/config';
@@ -26,6 +27,8 @@ import {
 } from '../helpers/layersUtils';
 import { errorQueue } from '../snackbar/notification-queue';
 
+import './selected-layers-container.css';
+
 interface CacheMap {
   [key: string]: JSX.Element | undefined;
 }
@@ -38,7 +41,6 @@ export const SelectedLayersContainer: React.FC = observer(() => {
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as CacheMap);
   const mapViewer = useCesiumMap();
-  const intl = useIntl();
   
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
@@ -98,12 +100,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
         const capability = store.discreteLayersStore.capabilities?.find(item => layerLink.name === item.id);
         if (!capability && layerLink.protocol === LinkType.WMTS) {
           errorQueue.notify({
-            body: (
-              <Error
-                className="errorNotification"
-                message={intl.formatMessage({id: 'layer.access.error'})}
-              />
-            ),
+            body: (<Box className="errorSnackbar"><Typography use="body2" tag="div" className="message"><FormattedMessage id="layer.access.error"/></Typography></Box>),
             actions: [{icon: 'close'}]
           });
           return undefined;
