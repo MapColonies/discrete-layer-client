@@ -1,6 +1,7 @@
 import { CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from "@map-colonies/react-components";
 import { useEffect, useRef, useState } from "react";
 import _, { isEmpty } from 'lodash';
+import { isArrayEqual } from "../helpers/array";
 
 
 export interface IPosition {
@@ -16,9 +17,6 @@ interface IHeightFromTerrain {
   setCoordinates: (pos: IPosition[]) => void; 
   isLoadingData: boolean;
 }
-const isArrayEqual = (x: Array<unknown>, y: Array<unknown>) => {
-  return _(x).differenceWith(y, _.isEqual).isEmpty();
-};
 
 export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeightFromTerrain => {
     const mapViewer = useCesiumMap();
