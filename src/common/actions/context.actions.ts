@@ -15,7 +15,8 @@ export enum ContextActionsTypes {
 export enum ContextActions {
   QUERY_WFS_FEATURE = 'QUERY_WFS_FEATURE',
   QUERY_DEM_HEIGHT = 'QUERY_DEM_HEIGHT',
-  TEST = 'TEST',
+  MOVE_LAYER_UP = 'MOVE_LAYER_UP',
+  MOVE_LAYER_DOWN = 'MOVE_LAYER_DOWN',
 }
 
 export enum ContextActionsTemplates {
@@ -123,23 +124,6 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
       },
       {
         ...defaultContextActionGroupProps,
-        order: 2,
-        id: 3,
-        titleTranslationId: '',
-        type: ContextActionsTypes.SERVICE_OPERATIONS,
-        actionsSpreadPreference: ActionSpreadPreference.FLAT,
-        separator: 'AFTER',
-        minimumItemsInMenu: 0,
-        actions: [
-          {
-            ...defaultContextActionProps,
-            titleTranslationId: 'Sensitive',
-            action: "TEST",
-          },
-        ],
-      },
-      {
-        ...defaultContextActionGroupProps,
         order: 3,
         id: 4,
         titleTranslationId: 'Active layers',
@@ -150,7 +134,7 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
             ...defaultContextActionGroupProps,
             id: 5,
             order: 4,
-            titleTranslationId: 'TEMPLATE',
+            titleTranslationId: 'ACTIVE_LAYERS_TEMPLATE',
             type: ContextActionsTypes.SERVICE_OPERATIONS,
             actionsSpreadPreference: ActionSpreadPreference.MENU,
             minimumItemsInMenu: 0,
@@ -159,18 +143,13 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
             actions: [
               {
                 ...defaultContextActionProps,
-                titleTranslationId: 'UP',
-                action: "TEST",
+                titleTranslationId: 'map-context-menu.layer-up.title',
+                action: ContextActions.MOVE_LAYER_UP,
               },
               {
                 ...defaultContextActionProps,
-                titleTranslationId: 'DOWN',
-                action: "TEST",
-              },
-              {
-                ...defaultContextActionProps,
-                titleTranslationId: 'PP',
-                action: "TEST",
+                titleTranslationId: 'map-context-menu.layer-down.title',
+                action: ContextActions.MOVE_LAYER_DOWN,
               },
             ],
           },
