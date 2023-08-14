@@ -16,6 +16,7 @@ import { useIntl } from 'react-intl';
 import { ActionSpreadPreference, SeparatorPosition } from '../../../../common/actions/context.actions';
 import { MenuItem, MenuItemsList, isMenuItemGroup } from '../../../models/mapMenusManagerStore';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
+import { IDispatchAction } from '../../../models/actionDispatcherStore';
 
 export const TITLE_HEIGHT = 24;
 export const SUB_MENU_MAX_HEIGHT = 120;
@@ -30,6 +31,7 @@ interface IMapContextMenuData extends IContextMenuData {
   ItemRenderer: ContextMenuItemRenderer;
   menuItems?: MenuItemsList;
   contextMenuId?: string;
+  dispatchAction?: (action: IDispatchAction) => void;
 }
 
 const DEFAULT_CONTEXT_MENU_ID = 'MENU_ID';
@@ -50,6 +52,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   data,
   contextEvt,
   contextMenuId = DEFAULT_CONTEXT_MENU_ID,
+  dispatchAction,
 }) => {
   const intl = useIntl();
   const imageryContextMenuRef = useRef(null);
@@ -114,7 +117,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
     );
   };
 
-  const MenuContent: React.FC<{ items?: MenuItemsList }> = ({ items }) => {
+  const MenuContent: React.FC<{ items?: MenuItemsList, isSubmenuItem?: boolean }> = ({ items, isSubmenuItem }) => {
       const itemsList = items ?? menuItems;
 
       if (!itemsList || !itemsList.length) return null;
@@ -140,6 +143,9 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                   // Not last item, not empty item, item after not empty
                   const showSeparatorAfter = !isEmptyItem && !isLastItem && !isNextItemEmpty;
 
+                  const handleMouseEnter = () => dispatchAction && menuItemOrGroup.mouseEnterAction && !isSubmenuItem ? dispatchAction(menuItemOrGroup.mouseEnterAction) : undefined;
+                  const handleMouseLeave = () => dispatchAction && menuItemOrGroup.mouseLeaveAction && !isSubmenuItem ? dispatchAction(menuItemOrGroup.mouseLeaveAction) : undefined;
+
                   if (!isMenuItemGroup(menuItemOrGroup)) {
                       const itemElement = (
                           <ItemRenderer item={menuItemOrGroup} key={`menuItem_${idx}`} />
@@ -159,6 +165,8 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                                   key={`imageryMenuItemAction_${menuItemOrGroup.title}_${idx}`}
                                   style={{pointerEvents: menuItemDisabled ? 'none' : 'unset'}}
                                   disabled={menuItemDisabled as boolean}
+                                  onMouseEnter={handleMouseEnter}
+                                  onMouseLeave={handleMouseLeave}
                               >
                                   {itemElement}
                               </Item>
@@ -189,8 +197,10 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
                                   key={`imageryMenuGroupItems_${menuItemOrGroup.groupProps.id}`}
                                   dir={direction}
                                   label={menuTitle}
+                                  onMouseOver={handleMouseEnter}
+                                  onMouseLeave={handleMouseLeave}
                               >
-                                  <MenuContent items={menuItemOrGroup.items} />
+                                  <MenuContent isSubmenuItem items={menuItemOrGroup.items} />
                               </Submenu>
                           );
                       } else {

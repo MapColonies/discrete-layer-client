@@ -51,7 +51,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   const dispatchAction = useCallback((action: IDispatchAction): void => {
     store.actionDispatcherStore.dispatchAction({
       action: action.action,
-      data: action.data,
+      data: {...action.data, coordinates, handleClose},
     } as IDispatchAction);
   }, []);
 
@@ -60,7 +60,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
 
     const actionToDispatch = useMemo(() => ({
       action: item.action.action,
-      data: { ...item.payloadData, coordinates, handleClose },
+      data: { ...item.payloadData },
     }), [item]);
 
     return (
@@ -126,6 +126,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
               {getCoordinatesDisplayText(coordinates.latitude, coordinates.longitude)}
             </Box>
           }
+          dispatchAction={dispatchAction}
           {...props}
         >
           <Box className="contextMenuFooter">

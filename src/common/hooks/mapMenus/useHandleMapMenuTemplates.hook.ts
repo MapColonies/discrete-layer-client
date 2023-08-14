@@ -8,10 +8,12 @@ import {
     MenuItemsList,
     isMenuItemGroup
 } from "../../../discrete-layer/models/mapMenusManagerStore";
-import { ContextActionGroupProps, ContextActionsGroupTemplates, ContextActionsTemplates } from "../../actions/context.actions";
+import { ContextActionGroupProps, ContextActions, ContextActionsGroupTemplates, ContextActionsTemplates } from "../../actions/context.actions";
 import { useStore } from "../../../discrete-layer/models";
 import { IContextMenuData } from "@map-colonies/react-components";
 import _ from "lodash";
+import { IDispatchAction } from "../../../discrete-layer/models/actionDispatcherStore";
+import { DEFAULT_LAYER_HUE_FACTOR } from "../../../discrete-layer/views/components/map-action-resolver.component";
 
 export const useHandleMapMenuTemplates = (
     menuProperties?: IMapMenuProperties,
@@ -76,12 +78,26 @@ export const useHandleMapMenuTemplates = (
                 const MAX_ACTIVE_LAYERS_TO_PRESENT = CONFIG.CONTEXT_MENUS.MAP.MAX_ACTIVE_LAYERS_TO_PRESENT;
                 const slicedActiveLayers = activeLayersInPosition.slice(0, MAX_ACTIVE_LAYERS_TO_PRESENT);
 
+                // Some pinkish color
+                const HOVERED_LAYER_HUE_FACTOR = 30;
+
                 slicedActiveLayers.forEach(activeLayer => {
                     const groupProp: ContextActionGroupProps = {
                         ...templateProps,
                         id: templateProps.id + 1,
                         // @ts-ignore
                         titleTranslationId: activeLayer.meta?.layerRecord?.productName as string,
+                    };
+
+
+                    const mouseEnterAction: IDispatchAction = {
+                        action: ContextActions.HIGHLIGHT_ACTIVE_LAYER,
+                        data: { ...activeLayer.meta as Record<string, unknown>, hue: HOVERED_LAYER_HUE_FACTOR }
+                    };
+
+                    const mouseLeaveAction: IDispatchAction = {
+                        action: ContextActions.HIGHLIGHT_ACTIVE_LAYER,
+                        data: { ...activeLayer.meta as Record<string, unknown>, hue: DEFAULT_LAYER_HUE_FACTOR }
                     };
 
                     const generatedGroup: MenuItemsGroup = {
@@ -94,7 +110,9 @@ export const useHandleMapMenuTemplates = (
                             }
 
                             return item;
-                        })
+                        }),
+                        mouseEnterAction,
+                        mouseLeaveAction
                     };
 
                     generatedGroups.push(generatedGroup);

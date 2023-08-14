@@ -229,7 +229,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
         billboard={{
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
           scale: 0.3,
-          image: `assets/img/${wfsFeature.config.markerIcon ? `${wfsFeature.config.markerIcon}.png` : 'map-marker.gif'}`,
+          image: wfsFeature.config.markerIcon ? `assets/img/app/${wfsFeature.config.markerIcon}.png` : 'assets/img/map-marker.gif',
         }}
         description={wfsInfoHtml}
         selected={entitySelected}

@@ -118,7 +118,7 @@ const DemHeightsFeatureComponent: React.FC = observer(() => {
         billboard={{
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
           scale: 0.3,
-          image: 'assets/img/dem-height-marker.png',
+          image: 'assets/img/app/dem-height-marker.png',
         }}
         description={demHeightInfoHtml}
         selected={entitySelected}

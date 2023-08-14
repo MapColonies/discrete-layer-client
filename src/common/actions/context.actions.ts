@@ -17,6 +17,7 @@ export enum ContextActions {
   QUERY_DEM_HEIGHT = 'QUERY_DEM_HEIGHT',
   MOVE_LAYER_UP = 'MOVE_LAYER_UP',
   MOVE_LAYER_DOWN = 'MOVE_LAYER_DOWN',
+  HIGHLIGHT_ACTIVE_LAYER = 'HIGHLIGHT_ACTIVE_LAYER',
 }
 
 export enum ContextActionsTemplates {

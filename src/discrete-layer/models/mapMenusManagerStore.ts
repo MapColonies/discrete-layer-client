@@ -9,9 +9,12 @@ import { WfsGetFeatureParams } from './RootStore.base';
 import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetchers/wfs-features-fetcher.component';
 import { PositionWithHeightModelType } from './PositionWithHeightModel';
 import { IPosition } from '../../common/hooks/useHeightFromTerrain';
+import { IDispatchAction } from './actionDispatcherStore';
 
 interface CommonMenuItem {
   templateId?: ContextActionsTemplates | ContextActionsGroupTemplates;
+  mouseEnterAction?: IDispatchAction;
+  mouseLeaveAction?: IDispatchAction;
 }
 export interface MenuItem extends CommonMenuItem {
   title: string;
