@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
+import { IContextMenuData } from "@map-colonies/react-components";
 import { useStore } from "../../../discrete-layer/models";
 import { MapMenusIds, IMapMenuProperties } from "../../../discrete-layer/models/mapMenusManagerStore";
+import { useHandleMapMenuTemplates } from "./useHandleMapMenuTemplates.hook";
 
 
-const useGetMenuProperties = (menuId: MapMenusIds): IMapMenuProperties | undefined => {
+const useGetMenuProperties = (menuId: MapMenusIds, contextProps?: IContextMenuData): IMapMenuProperties | undefined => {
     const store = useStore();
-    const [menuProperties, setMenuProperties] = useState<IMapMenuProperties>();
+    const mapMenus = store.mapMenusManagerStore.mapMenus;
+    const generatedByContextMenuProperties = useHandleMapMenuTemplates(mapMenus?.[menuId], contextProps);
     
     useEffect(() => {
-      const mapMenus = store.mapMenusManagerStore.mapMenus;
-    
-      if(mapMenus) {
-        setMenuProperties(mapMenus[menuId]);
+      if(contextProps?.coordinates) {
+        store.mapMenusManagerStore.setLastMenuCoordinate(contextProps?.coordinates);
       }
-    }, [store.mapMenusManagerStore.mapMenus])
+    }, [contextProps?.coordinates]);
 
-    return menuProperties;
+    return generatedByContextMenuProperties;
 }
 
 export default useGetMenuProperties;

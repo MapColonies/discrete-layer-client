@@ -9,10 +9,10 @@ public/env-config.js
 public/[cC]esium
 public/ua-parser
 public/fonts
-!public/assets/
-public/assets/*
 !public/assets/scripts/
 !public/assets/pages/
+public/assets/img/*
+!public/assets/img/app
 
 public/mock
 public/cookbook/*

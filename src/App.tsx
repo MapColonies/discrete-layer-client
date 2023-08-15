@@ -17,6 +17,7 @@ import '@map-colonies/react-core/dist/theme/styles';
 import '@map-colonies/react-core/dist/button/styles';
 import '@map-colonies/react-core/dist/tooltip/styles';
 import '@map-colonies/react-core/dist/menu/styles';
+import '@map-colonies/react-core/dist/context-menu/styles';
 import '@map-colonies/react-core/dist/select/styles';
 import '@map-colonies/react-core/dist/circular-progress/styles';
 import '@map-colonies/react-core/dist/typography/styles';
@@ -81,7 +82,7 @@ const App: React.FC = () => {
   }, [lang]);
 
   return (
-    <IntlProvider locale={lang} messages={MESSAGES[lang] as Record<string, string>}>
+    <IntlProvider onError={() => null} locale={lang} messages={MESSAGES[lang] as Record<string, string>}>
       <RMWCProvider
         typography={{
           body1: 'span',

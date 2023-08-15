@@ -130,6 +130,11 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: false,
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: false,
       [ContextActions.QUERY_WFS_FEATURE]: true,
+      [ContextActions.QUERY_DEM_HEIGHT]: true,
+      [ContextActions.MOVE_LAYER_UP]: true,
+      [ContextActions.MOVE_LAYER_DOWN]: true,
+      [ContextActions.MOVE_LAYER_TO_TOP]: true,
+      [ContextActions.MOVE_LAYER_TO_BOTTOM]: true,
     },
   },
   {
@@ -179,6 +184,11 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: false,
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: false,
       [ContextActions.QUERY_WFS_FEATURE]: true,
+      [ContextActions.QUERY_DEM_HEIGHT]: true,
+      [ContextActions.MOVE_LAYER_UP]: true,
+      [ContextActions.MOVE_LAYER_DOWN]: true,
+      [ContextActions.MOVE_LAYER_TO_TOP]: true,
+      [ContextActions.MOVE_LAYER_TO_BOTTOM]: true,
     },
   },
 ];
