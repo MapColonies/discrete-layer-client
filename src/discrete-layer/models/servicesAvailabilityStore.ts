@@ -13,7 +13,7 @@ const ACTIONS_TO_SERVICES_PATH_MAP: UserActionToService | ContextActionToService
       [UserAction.SYSTEM_ACTION_COREINFO]: 'serviceDiscovery',
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: 'ingestionServices.raster',
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: 'ingestionServices.3d',
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: 'ingestionServices.raster',
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: 'ingestionServices.dem',
       [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: 'ingestionServices.raster',
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: 'catalogServices.raster',
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: 'catalogServices.3d',

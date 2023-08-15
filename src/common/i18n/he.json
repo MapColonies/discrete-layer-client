@@ -646,16 +646,13 @@
   "map-context-menu.query-dem-height.title": "תשאול גובה נקודה",
   "map-context-menu.layer-up.title": "הרם למעלה",
   "map-context-menu.layer-down.title": "הורד למטה",
+  "map-context-menu.layer-to-top.title": "העלה מעל כולם",
+  "map-context-menu.layer-to-bottom.title": "הורד לתחתית",
+  
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
 
   "dem-heights-info.no-data.message": "לא נמצאו נתוני גובה במיקום המבוקש",
-  "dem-heights-info.latitude.field": "קו רוחב",
-  "dem-heights-info.longitude.field": "קו אורך",
-  "dem-heights-info.height.field": "גובה",
-  "dem-heights-info.updateDate.field": "עדכניות",
-  "dem-heights-info.resolutionMeter.field": "רזולוציה במטרים",
-  "dem-heights-info.productType.field": "סוג מוצר",
 
   "export-layer.exportSuccessContainer.title": "בקשת הייצוא נוצרה בהצלחה",
   "export-layer.exportSuccessContainer.approve": "העתקה וסיום",

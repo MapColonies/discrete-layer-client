@@ -133,6 +133,8 @@ const ROLES: IRole[] = [
       [ContextActions.QUERY_DEM_HEIGHT]: true,
       [ContextActions.MOVE_LAYER_UP]: true,
       [ContextActions.MOVE_LAYER_DOWN]: true,
+      [ContextActions.MOVE_LAYER_TO_TOP]: true,
+      [ContextActions.MOVE_LAYER_TO_BOTTOM]: true,
     },
   },
   {
@@ -185,6 +187,8 @@ const ROLES: IRole[] = [
       [ContextActions.QUERY_DEM_HEIGHT]: true,
       [ContextActions.MOVE_LAYER_UP]: true,
       [ContextActions.MOVE_LAYER_DOWN]: true,
+      [ContextActions.MOVE_LAYER_TO_TOP]: true,
+      [ContextActions.MOVE_LAYER_TO_BOTTOM]: true,
     },
   },
 ];

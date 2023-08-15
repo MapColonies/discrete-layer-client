@@ -54,6 +54,20 @@ export const MapActionResolver: React.FC = observer(() => {
         closeContextMenu();
         break;
       }
+      case ContextActions.MOVE_LAYER_TO_TOP: {
+        mapViewer.layersManager?.raiseToTop(data?.id as string);
+        
+        setHighlightedLayer(undefined);
+        closeContextMenu();
+        break;
+      }
+      case ContextActions.MOVE_LAYER_TO_BOTTOM: {
+        mapViewer.layersManager?.lowerToBottom(data?.id as string);
+        
+        setHighlightedLayer(undefined);
+        closeContextMenu();
+        break;
+      }
       case ContextActions.HIGHLIGHT_ACTIVE_LAYER: {
         const foundLayer = mapViewer.layersManager?.get(data?.id as string);
 

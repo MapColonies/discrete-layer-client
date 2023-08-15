@@ -17,6 +17,8 @@ export enum ContextActions {
   QUERY_DEM_HEIGHT = 'QUERY_DEM_HEIGHT',
   MOVE_LAYER_UP = 'MOVE_LAYER_UP',
   MOVE_LAYER_DOWN = 'MOVE_LAYER_DOWN',
+  MOVE_LAYER_TO_BOTTOM = 'MOVE_LAYER_TO_BOTTOM',
+  MOVE_LAYER_TO_TOP = 'MOVE_LAYER_TO_TOP',
   HIGHLIGHT_ACTIVE_LAYER = 'HIGHLIGHT_ACTIVE_LAYER',
 }
 
@@ -151,6 +153,17 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
                 ...defaultContextActionProps,
                 titleTranslationId: 'map-context-menu.layer-down.title',
                 action: ContextActions.MOVE_LAYER_DOWN,
+              },
+              {
+                ...defaultContextActionProps,
+                titleTranslationId: 'map-context-menu.layer-to-top.title',
+                action: ContextActions.MOVE_LAYER_TO_TOP,
+              },
+              {
+                ...defaultContextActionProps,
+                titleTranslationId: 'map-context-menu.layer-to-bottom.title',
+                action: ContextActions.MOVE_LAYER_TO_BOTTOM,
+                separator: 'AFTER'
               },
             ],
           },
