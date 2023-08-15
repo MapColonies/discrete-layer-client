@@ -1,6 +1,7 @@
-import { CesiumCartesian2, CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from "@map-colonies/react-components";
-import { useEffect, useState } from "react";
-import { isEmpty } from 'lodash';
+import { CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from "@map-colonies/react-components";
+import { useEffect, useRef, useState } from "react";
+import _, { isEmpty } from 'lodash';
+import { isArrayEqual } from "../helpers/array";
 
 
 export interface IPosition {
@@ -14,23 +15,29 @@ interface UseHeightFromTerrainProps {
 interface IHeightFromTerrain {
   newPositions?: CesiumCartographic[];
   setCoordinates: (pos: IPosition[]) => void; 
+  isLoadingData: boolean;
 }
 
 export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeightFromTerrain => {
     const mapViewer = useCesiumMap();
     const [newPositions, setNewPositions] = useState<CesiumCartographic[]>();
     const [coordinates, setCoordinates] = useState<IPosition[]>();
+    const [isLoadingData, setIsLoadingData] = useState(true);
+    const prevPositions = useRef<IPosition[]>();
+
 
     useEffect(() => {
-      if(options) {
+      if(options && (!prevPositions.current || !isArrayEqual(prevPositions.current, options.position))) {
+        prevPositions.current = options.position;
         setCoordinates(options.position);
       }
-    }, [])
+    }, [options?.position])
 
 
     useEffect(() => {
       if(coordinates) {
         const cartographicArr = coordinates.map(coord => CesiumCartographic.fromDegrees(coord.longitude, coord.latitude));
+        setIsLoadingData(true);
 
         void cesiumSampleTerrainMostDetailed(
             mapViewer.terrainProvider,
@@ -44,9 +51,11 @@ export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeig
             () => {
               setNewPositions(cartographicArr);
             }
-          );
+          ).finally(() => {
+            setIsLoadingData(false);
+          });
       }
     }, [coordinates])
 
-    return { newPositions, setCoordinates }
+    return { newPositions, setCoordinates, isLoadingData };
 }
