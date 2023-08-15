@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Feature, LineString, Polygon } from 'geojson';
 import { useIntl } from 'react-intl';
 import polygonToLine from '@turf/polygon-to-line';
-import CreateSvgIconLocationOn from '../../../icons/LocationOn';
 import {
   CesiumColor,
   CesiumConstantProperty,
@@ -16,11 +15,12 @@ import {
 } from '@map-colonies/react-components';
 import { Typography, useTheme } from '@map-colonies/react-core';
 import { useStore } from '../../models';
-import { getCoordinatesDisplayText } from '../layer-details/utils';
 import { useForceEntitySelection } from '../../../common/hooks/useForceEntitySelection.hook';
 import { CesiumInfoBoxContainer } from './cesium-infoBox-container';
 import useStaticHTML from '../../../common/hooks/useStaticHtml';
 import { IPosition, useHeightFromTerrain } from '../../../common/hooks/useHeightFromTerrain';
+import GenericInfoBoxContainer from './generic-infoBox-container.component';
+import _ from 'lodash';
 
 const NONE_OR_FIRST_ELEM = 0;
 const LONGITUDE_POSITION = 0;
@@ -37,7 +37,10 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
   const wfsFeature = store.mapMenusManagerStore.currentWfsFeatureInfo;
 
   const featureInfo =(wfsFeature?.features?.[NONE_OR_FIRST_ELEM] as Feature | undefined)?.properties ?? {};
+  const wfsFeatureFound = !_.isEmpty(featureInfo);
+  
   const {setCoordinates, newPositions} = useHeightFromTerrain();
+  const positionCartographic = newPositions?.[NONE_OR_FIRST_ELEM];
 
   useEffect(() => {
     if(wfsFeature?.pointCoordinates) {
@@ -136,43 +139,30 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
               }}                    
             />
   }
-  
-  const WfsFeatureInfoContainer: React.FC<PropsWithChildren<{ position?: IPosition }>> = ({ position, children }) => {    
-    if(!position) return null;
 
-    return (
-      <> 
-        <Typography tag="h4" style={{ 
-           margin: '0',
-           marginBottom: '10px',
-           color: theme.textPrimaryOnDark,
-           display: 'flex',
-           alignItems: 'center',
-           justifyContent: 'center',
-           fontSize: '1rem' 
-        }}>
-            <CreateSvgIconLocationOn className="glow-missing-icon" style={{stroke: 'currentColor', fill: 'currentColor', transform: 'scale(0.5)'}} height="48" width="48" />
-          {getCoordinatesDisplayText(CesiumMath.toDegrees(position.latitude), CesiumMath.toDegrees(position.longitude))}
-        </Typography>
-        {children}
-      </>
-    );
-  }
+  const WfsInfoBoxHtml: React.FC = () => {
+    const noDataStyle: CSSProperties = {
+      width: '100%',
+      height: '5rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    };
 
-  const wfsInfoHtml = useStaticHTML<{
-    children: React.ReactNode;
-    theme: Record<string, string>;
-  }>({
-    FunctionalComp: CesiumInfoBoxContainer,
-    props: {
-      children: (
-        <WfsFeatureInfoContainer position={newPositions?.[NONE_OR_FIRST_ELEM]}>
-          <table style={{
-              width: '100%',
-              padding: '0.5rem',
-              color: theme.textPrimaryOnDark,
-              backgroundColor: theme.gcAlternativeSurface,
-            }}>
+    const hasDataStyle: CSSProperties = {
+      width: '100%',
+      padding: '0.5rem',
+      color: theme.textPrimaryOnDark,
+      backgroundColor: theme.gcAlternativeSurface,
+    };
+
+    const style = useMemo(() => wfsFeatureFound ? hasDataStyle : noDataStyle, [wfsFeatureFound]);
+
+    let content: JSX.Element = <></>;
+
+    if (wfsFeatureFound) {
+      content = (
+          <table style={style}>
               <tbody>
                 {Object.entries(featureInfo as Record<string, unknown>).map(
                   ([key, val]) => {
@@ -186,32 +176,11 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
                 )}
               </tbody>
           </table>
-        </WfsFeatureInfoContainer>
-      ),
-      theme: themeObj,
-    },
-  });
-
-  const { entitySelected } = useForceEntitySelection([wfsInfoHtml]);
-
-  const noEntityDataHtml = useStaticHTML<{
-    children: React.ReactNode;
-    theme: Record<string, string>;
-  }>({
-    FunctionalComp: CesiumInfoBoxContainer,
-    props: {
-      children: (
-        wfsFeature && <WfsFeatureInfoContainer position={newPositions?.[NONE_OR_FIRST_ELEM]}>
-          <div
-            style={{
-              width: '100%',
-              height: '5rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <Typography tag='h3'
+      );
+    } else if(wfsFeature) {
+      content = (
+        <div style={style}>
+          <Typography tag='h3'
               style={{
                 color: theme.textPrimaryOnDark,
               }}
@@ -222,46 +191,48 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
               .replace("{feature}", intl.formatMessage({ id: wfsFeature.config.translationId ?? wfsFeature.typeName}))
               }
             </Typography>
-          </div>
-        </WfsFeatureInfoContainer>
+        </div>
+      );
+    } 
+
+    return (
+      <GenericInfoBoxContainer positionInRadians={positionCartographic}>
+        {content}    
+      </GenericInfoBoxContainer>
+    )
+
+  }
+
+  const wfsInfoHtml = useStaticHTML<{
+    children: React.ReactNode;
+    theme: Record<string, string>;
+  }>({
+    FunctionalComp: CesiumInfoBoxContainer,
+    props: {
+      children: (
+        <WfsInfoBoxHtml />
       ),
       theme: themeObj,
     },
   });
-  
-  if(!wfsFeature || !newPositions) return null;
-  
-  const position = newPositions[0];
 
-  if (wfsFeature.features?.length === NONE_OR_FIRST_ELEM)
-
-    return (
-      <CesiumEntity
-        name={intl.formatMessage({ id: wfsFeature.config.translationId ?? wfsFeature.typeName})}
-        position={CesiumCartesian3.fromRadians(position.longitude, position.latitude, position.height)}
-        billboard={{
-          verticalOrigin: CesiumVerticalOrigin.BOTTOM,
-          scale: 0.7,
-          image: 'assets/img/map-marker.gif',
-        }}
-        description={noEntityDataHtml}
-        selected={entitySelected}
-      />
-    );
+  const { entitySelected } = useForceEntitySelection([wfsInfoHtml]);
+  
+  if(!wfsFeature || !positionCartographic) return null;
 
   return (
     <>
       {
-        <CesiumEntity
-          name={intl.formatMessage({ id: wfsFeature.config.translationId ?? wfsFeature.typeName})}
-          position={CesiumCartesian3.fromRadians(position.longitude, position.latitude, position.height)}
-          billboard={{
-            verticalOrigin: CesiumVerticalOrigin.BOTTOM,
-            scale: 0.7,
-            image: 'assets/img/map-marker.gif',
-          }}
-          description={wfsInfoHtml}
-          selected={entitySelected}
+       <CesiumEntity
+        name={intl.formatMessage({ id: wfsFeature.config.translationId ?? wfsFeature.typeName})}
+        position={CesiumCartesian3.fromRadians(positionCartographic.longitude, positionCartographic.latitude, positionCartographic.height)}
+        billboard={{
+          verticalOrigin: CesiumVerticalOrigin.BOTTOM,
+          scale: 0.3,
+          image: wfsFeature.config.markerIcon ? `assets/img/app/${wfsFeature.config.markerIcon}.png` : 'assets/img/map-marker.gif',
+        }}
+        description={wfsInfoHtml}
+        selected={entitySelected}
         />
       }
 

@@ -13,13 +13,15 @@
 .imageryContextMenuTitle {
   color: var(--mdc-theme-primary);
   font-weight: bold;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   max-width: calc(var(--mdc-theme-gc-context-menu-width) - 52px);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  direction: ltr;
   padding: 10px;
+  width: 100%;
 }
 
 .imageryContextMenuTitleInfo {
@@ -107,4 +109,10 @@ body[dir='rtl'] .imageryMenuIcon {
 
 .imageryMenuItemAction:hover {
   background: var(--mdc-theme-gc-alternative-surface);
+}
+
+.contextMenuLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

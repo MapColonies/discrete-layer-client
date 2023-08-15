@@ -48,6 +48,7 @@
 .app-container {
   background-color: var(--mdc-theme-background);
   color: var(--mdc-theme-on-surface);
+  overflow: hidden;
 }
 
 .glow-missing-icon {
