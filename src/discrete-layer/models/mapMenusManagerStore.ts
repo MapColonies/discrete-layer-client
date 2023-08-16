@@ -5,7 +5,7 @@ import { ResponseState } from '../../common/models/response-state.enum';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 import {GetFeatureModelType} from './GetFeatureModel';
-import { WfsGetFeatureParams } from './RootStore.base';
+import { WfsGetFeatureParams, WfsPolygonPartsGetFeatureParams } from './RootStore.base';
 import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetchers/wfs-features-fetcher.component';
 import { PositionWithHeightModelType } from './PositionWithHeightModel';
 import { IPosition } from '../../common/hooks/useHeightFromTerrain';
@@ -60,6 +60,7 @@ export type MapMenus = {
 }
 
 export type WfsFeatureInfo = GetFeatureModelType & Pick<WfsGetFeatureParams, 'pointCoordinates' | 'typeName'> & { config: IFeatureConfig };
+export type PolygonPartsWfsFeatureInfo = GetFeatureModelType & Pick<WfsPolygonPartsGetFeatureParams, 'pointCoordinates'>;
 
 export const mapMenusManagerStore = ModelBase
   .props({
@@ -71,6 +72,7 @@ export const mapMenusManagerStore = ModelBase
     wfsFeatureTypes: types.maybe(types.frozen<string[]>()),
     wfsFeatureConfigs: types.maybe(types.frozen<IFeatureConfigs>()),
     currentWfsFeatureInfo: types.maybe(types.frozen<WfsFeatureInfo>()),
+    currentPolygonPartsInfo: types.maybe(types.frozen<PolygonPartsWfsFeatureInfo>()),
     currentPositionDemHeight: types.maybe(types.frozen<PositionWithHeightModelType>()),
     lastMenuCoordinate: types.maybe(types.frozen<IPosition>()),
   })
@@ -156,6 +158,10 @@ export const mapMenusManagerStore = ModelBase
       self.currentPositionDemHeight = currentPositionDemHeight;
     }
 
+    function setCurrentPolygonPartsInfo(currentPositionDemHeight: PolygonPartsWfsFeatureInfo): void {
+      self.currentPolygonPartsInfo = currentPositionDemHeight;
+    }
+
     function setLastMenuCoordinate(menuCoordinate: IPosition): void {
       self.lastMenuCoordinate = menuCoordinate;
     }
@@ -172,15 +178,21 @@ export const mapMenusManagerStore = ModelBase
       self.currentPositionDemHeight = undefined;
     }
 
+    function resetCurrentPolygonPartsInfo(): void {
+      self.currentPolygonPartsInfo = undefined;
+    }
+
     return {
       setWfsFeatureTypes,
       setCurrentWfsFeatureInfo,
       setCurrentPositionDemHeight,
+      setCurrentPolygonPartsInfo,
       setWfsFeatureConfigs,
       setLastMenuCoordinate,
       getFeatureConfig,
       resetCurrentWfsFeatureInfo,
       resetCurrentPositionDemHeight,
+      resetCurrentPolygonPartsInfo,
       initStore,
     }
   });

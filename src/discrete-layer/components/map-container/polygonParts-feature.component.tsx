@@ -17,37 +17,37 @@ import { useHeightFromTerrain } from '../../../common/hooks/useHeightFromTerrain
 import GenericInfoBoxContainer from './generic-infoBox-container.component';
 import _ from 'lodash';
 import { GeojsonFeature } from './geojson-feature.component';
+import CONFIG from '../../../common/config';
+import { IFeatureConfig } from "../../views/components/data-fetchers/wfs-features-fetcher.component";
 
 const NONE_OR_FIRST_ELEM = 0;
 const LONGITUDE_POSITION = 0;
 const LATITUDE_POSITION = 1;
 
-interface WfsFeatureProps {}
-
-export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
+export const PolygonPartsFeature: React.FC = observer(() => {
   const store = useStore();
   const themeObj = useTheme();
   const intl = useIntl();
   const theme = themeObj as Record<string, string>;
 
-  const wfsFeature = store.mapMenusManagerStore.currentWfsFeatureInfo;
+  const polygonPartsFeature = store.mapMenusManagerStore.currentPolygonPartsInfo;
 
-  const featureInfo =(wfsFeature?.features?.[NONE_OR_FIRST_ELEM] as Feature | undefined)?.properties ?? {};
-  const wfsFeatureFound = !_.isEmpty(featureInfo);
+  const featureInfo =(polygonPartsFeature?.features?.[NONE_OR_FIRST_ELEM] as Feature | undefined)?.properties ?? {};
+  const polygonPartsFeatureFound = !_.isEmpty(featureInfo);
   
   const {setCoordinates, newPositions} = useHeightFromTerrain();
   const positionCartographic = newPositions?.[NONE_OR_FIRST_ELEM];
 
   useEffect(() => {
-    if(wfsFeature?.pointCoordinates) {
-        const longitude = Number(wfsFeature.pointCoordinates[LONGITUDE_POSITION]);
-        const latitude = Number(wfsFeature.pointCoordinates[LATITUDE_POSITION]);
+    if(polygonPartsFeature?.pointCoordinates) {
+        const longitude = Number(polygonPartsFeature.pointCoordinates[LONGITUDE_POSITION]);
+        const latitude = Number(polygonPartsFeature.pointCoordinates[LATITUDE_POSITION]);
 
         setCoordinates([{ longitude, latitude }]);
       }
-  }, [wfsFeature?.pointCoordinates])
+  }, [polygonPartsFeature?.pointCoordinates])
 
-  const WfsInfoBoxHtml: React.FC = () => {
+  const PolygonPartsInfoBoxHtml: React.FC = () => {
     const noDataStyle: CSSProperties = {
       width: '100%',
       height: '5rem',
@@ -63,11 +63,11 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
       backgroundColor: theme.gcAlternativeSurface,
     };
 
-    const style = useMemo(() => wfsFeatureFound ? hasDataStyle : noDataStyle, [wfsFeatureFound]);
+    const style = useMemo(() => polygonPartsFeatureFound ? hasDataStyle : noDataStyle, [polygonPartsFeatureFound]);
 
     let content: JSX.Element = <></>;
 
-    if (wfsFeatureFound) {
+    if (polygonPartsFeatureFound) {
       content = (
           <table style={style}>
               <tbody>
@@ -84,7 +84,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
               </tbody>
           </table>
       );
-    } else if(wfsFeature) {
+    } else if(polygonPartsFeature) {
       content = (
         <div style={style}>
           <Typography tag='h3'
@@ -94,8 +94,7 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
               dir={intl.locale === 'he' ? 'rtl' : 'ltr'}
             >
               {
-              intl.formatMessage({ id: 'wfs-info.no-data.message' })
-              .replace("{feature}", intl.formatMessage({ id: wfsFeature.config.translationId ?? wfsFeature.typeName}))
+                intl.formatMessage({ id: 'polygonParts-info.no-data.message' })
               }
             </Typography>
         </div>
@@ -110,46 +109,45 @@ export const WfsFeature: React.FC<WfsFeatureProps> = observer(() => {
 
   }
 
-  const wfsInfoHtml = useStaticHTML<{
+  const polygonPartsInfoHtml = useStaticHTML<{
     children: React.ReactNode;
     theme: Record<string, string>;
   }>({
     FunctionalComp: CesiumInfoBoxContainer,
     props: {
       children: (
-        <WfsInfoBoxHtml />
+        <PolygonPartsInfoBoxHtml />
       ),
       theme: themeObj,
     },
   });
 
-  const { entitySelected } = useForceEntitySelection([wfsInfoHtml]);
+  const { entitySelected } = useForceEntitySelection([polygonPartsInfoHtml]);
   
-  if(!wfsFeature || !positionCartographic) return null;
+  if(!polygonPartsFeature || !positionCartographic) return null;
 
   return (
     <>
       {
        <CesiumEntity
-        name={intl.formatMessage({ id: wfsFeature.config.translationId ?? wfsFeature.typeName})}
+        name={intl.formatMessage({ id: 'map-context-menu.polygon-parts.title' })}
         position={CesiumCartesian3.fromRadians(positionCartographic.longitude, positionCartographic.latitude, positionCartographic.height)}
         billboard={{
           verticalOrigin: CesiumVerticalOrigin.BOTTOM,
           scale: 0.3,
-          image: wfsFeature.config.markerIcon ? `assets/img/app/${wfsFeature.config.markerIcon}.png` : 'assets/img/map-marker.gif',
+          image: 'assets/img/app/polygon-parts-marker.png',
         }}
-        description={wfsInfoHtml}
+        description={polygonPartsInfoHtml}
         selected={entitySelected}
         />
       }
 
-      {wfsFeature.features?.map((feature) => {
-        if (wfsFeature.config.isVisualized === false) return null;
-
+      {polygonPartsFeature.features?.map((feature) => {
         const geoJsonFeature = feature as Feature;
+        const polygonPartsFeatureConfig: IFeatureConfig = CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG;
 
         return (
-         <GeojsonFeature feature={geoJsonFeature as Feature<LineString | Polygon>} featureConfig={wfsFeature.config} isPolylined={true} />
+         <GeojsonFeature feature={geoJsonFeature as Feature<LineString | Polygon>} featureConfig={polygonPartsFeatureConfig} isPolylined={true} />
         );
       })}
     </>
