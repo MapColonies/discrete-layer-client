@@ -1,13 +1,19 @@
+import { useState, useEffect } from "react";
 import { CesiumMath, CesiumGeojsonLayer, CesiumConstantProperty, CesiumColor } from "@map-colonies/react-components";
 import { polygonToLine } from "@turf/polygon-to-line";
 import { Feature, LineString, Polygon } from "geojson";
-import { useState, useEffect } from "react";
-import { useHeightFromTerrain, IPosition } from "../../../common/hooks/useHeightFromTerrain";
-import { IFeatureConfig } from "../../views/components/data-fetchers/wfs-features-fetcher.component";
+import { useHeightFromTerrain, IPosition } from "../../../../common/hooks/useHeightFromTerrain";
+import { IFeatureConfig } from "../../../views/components/data-fetchers/wfs-features-fetcher.component";
 
 interface FeatureConfig extends IFeatureConfig {}
 
-export const GeojsonFeature: React.FC<{feature: Feature<LineString | Polygon>, featureConfig?: FeatureConfig ,isPolylined?: boolean}> =
+export interface GeojsonFeatureProps {
+  feature: Feature<LineString | Polygon>,
+  featureConfig?: FeatureConfig,
+  isPolylined?: boolean
+}
+
+export const GeojsonFeature: React.FC<GeojsonFeatureProps> =
  ({ feature, featureConfig, isPolylined = false }) => {
     const [featureWithHeight, setFeatureWithHeight] = useState<Feature<LineString | Polygon>>();
     const [transformedFeature, setTransformedFeature] = useState<Feature<LineString | Polygon>>();
@@ -63,7 +69,6 @@ export const GeojsonFeature: React.FC<{feature: Feature<LineString | Polygon>, f
 
     if(!featureWithHeight) return null;
 
-    console.log("featureWithHeight.geometry", featureWithHeight.geometry)
     return <CesiumGeojsonLayer
               clampToGround={true}
               key={featureWithHeight.id}

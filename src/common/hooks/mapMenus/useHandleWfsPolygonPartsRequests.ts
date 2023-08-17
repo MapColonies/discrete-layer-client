@@ -22,7 +22,7 @@ const useHandleWfsPolygonPartsRequests = (): {
 
   useEffect(() => {
     if (getPolygonPartsFeatureOptions) {
-      setQuery(store.queryGetPolygonPartsFeature({ data: { ...getPolygonPartsFeatureOptions } }));
+      setQuery(store.queryGetPolygonPartsFeature({ data: { ...getPolygonPartsFeatureOptions, count: 100 } }));
     }
   }, [getPolygonPartsFeatureOptions]);
 
@@ -30,7 +30,7 @@ const useHandleWfsPolygonPartsRequests = (): {
     if (getPolygonPartsFeatureOptions && !loading && data) {
       const featureInfo = {
         ...cloneDeep(data.getPolygonPartsFeature),
-        pointCoordinates: getPolygonPartsFeatureOptions.pointCoordinates
+        pointCoordinates: getPolygonPartsFeatureOptions.pointCoordinates,
       };
 
       store.mapMenusManagerStore.setCurrentPolygonPartsInfo(featureInfo);
