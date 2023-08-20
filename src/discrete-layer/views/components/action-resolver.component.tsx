@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { NodeData, TreeItem } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
-import { get, isEmpty } from 'lodash';
+import _, { get, isEmpty } from 'lodash';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
@@ -252,7 +252,8 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
               coordinates.longitude.toString(),
               coordinates.latitude.toString(),
             ],
-            count: 1,
+            shouldFlyToFeatures: true,
+            filterProperties: [{ propertyName: "productId", propertyValue: _.get(data?.layerRecord, 'productId') as string }],
             onDataResolved: closeMenu,
           });
           

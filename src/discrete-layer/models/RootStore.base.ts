@@ -214,6 +214,11 @@ export type WfsPolygonPartsGetFeatureParams = {
   pointCoordinates: string[]
   count?: number
   dWithin?: number
+  filterProperties?: WfsFilterPropertyParam[]
+}
+export type WfsFilterPropertyParam = {
+  propertyName: string
+  propertyValue: string
 }
 export type RecordUpdatePartial = {
   id: string

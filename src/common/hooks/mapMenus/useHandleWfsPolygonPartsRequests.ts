@@ -6,8 +6,9 @@ import {
   useStore,
 } from '../../../discrete-layer/models';
 import { WfsPolygonPartsGetFeatureParams } from '../../../discrete-layer/models/RootStore.base';
+import bbox from '@turf/bbox';
 
-type HandlerGetFeatureOptions = WfsPolygonPartsGetFeatureParams & { onDataResolved?: (data?: GetFeatureModelType) => void };
+type HandlerGetFeatureOptions = WfsPolygonPartsGetFeatureParams & { onDataResolved?: (data?: GetFeatureModelType) => void, shouldFlyToFeatures?: boolean };
 
 const useHandleWfsPolygonPartsRequests = (): {
   data: { getPolygonPartsFeature: GetFeatureModelType} | undefined;
@@ -22,7 +23,8 @@ const useHandleWfsPolygonPartsRequests = (): {
 
   useEffect(() => {
     if (getPolygonPartsFeatureOptions) {
-      setQuery(store.queryGetPolygonPartsFeature({ data: { ...getPolygonPartsFeatureOptions, count: 100 } }));
+      const {onDataResolved, shouldFlyToFeatures, ...restPPOptions} = getPolygonPartsFeatureOptions
+      setQuery(store.queryGetPolygonPartsFeature({ data: { ...restPPOptions, count: 100 } }));
     }
   }, [getPolygonPartsFeatureOptions]);
 
@@ -34,13 +36,26 @@ const useHandleWfsPolygonPartsRequests = (): {
       };
 
       store.mapMenusManagerStore.setCurrentPolygonPartsInfo(featureInfo);
-      console.log('POLYGON PARTS', featureInfo)
 
       getPolygonPartsFeatureOptions.onDataResolved?.(featureInfo);
     } 
 
     //TODO: Handle Errors, how should we deal with them?
   }, [data, loading]);
+
+  useEffect(() => {
+    // After data has been received, trigger side effect logics
+    if(store.mapMenusManagerStore.currentPolygonPartsInfo && getPolygonPartsFeatureOptions) {
+      const polygonPartsFeatures = store.mapMenusManagerStore.currentPolygonPartsInfo.features;
+      const { shouldFlyToFeatures } = getPolygonPartsFeatureOptions;
+      
+      if(polygonPartsFeatures && polygonPartsFeatures.length > 1 && shouldFlyToFeatures) {
+        const featuresBBox = bbox({ type: "FeatureCollection", features: polygonPartsFeatures });
+        store.mapMenusManagerStore.setMultiplePolygonPartsBBox(featuresBBox);
+      }
+    }
+
+  }, [store.mapMenusManagerStore.currentPolygonPartsInfo]);
 
   return { data, loading, getPolygonPartsFeatureOptions, setGetPolygonPartsFeatureOptions };
 };

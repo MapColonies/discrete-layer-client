@@ -256,10 +256,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
     }
-
-    store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();
-    store.mapMenusManagerStore.resetCurrentPositionDemHeight();
-    store.mapMenusManagerStore.resetCurrentPolygonPartsInfo();
+    
+    store.mapMenusManagerStore.resetMapMenusFeatures();
   };
 
   useEffect(() => {

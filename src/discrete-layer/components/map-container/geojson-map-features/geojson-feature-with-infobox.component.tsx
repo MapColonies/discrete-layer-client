@@ -51,6 +51,11 @@ interface GeojsonFeatureWithInfoBoxProps extends GeojsonFeatureProps {
    * Default behavior - data is considered empty if the `properties` object is empty.
    */
   noDataFoundPredicate?: (data: Record<string, unknown>) => boolean;
+
+  /**
+   * Where to present marker if no features?
+   */
+  fallbackCoordinates?: IPosition;
 }
 
 const DEFAULT_MARKER_SCALE = 0.3;
@@ -79,6 +84,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
     markerPosition,
     shouldFocusOnCreation,
     noDataFoundPredicate,
+    fallbackCoordinates,
   } = props;
 
 
@@ -93,8 +99,10 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
         latitude: featureCenter.geometry.coordinates[LATITUDE_POSITION],
       };
       setCoordinates([centerCartographic]);
+    } else if(fallbackCoordinates) {
+      setCoordinates([fallbackCoordinates])
     }
-  }, [markerPosition]);
+  }, [markerPosition, fallbackCoordinates]);
 
   const FeatureInfoBoxHtml: React.FC = () => {
   

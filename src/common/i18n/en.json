@@ -650,6 +650,8 @@
 
   "wfs-info.no-data.message": "No data found for type {feature}",
   "dem-heights-info.no-data.message": "No height data found for the selected position",
+  "polygonParts-info.no-data.message": "No polygon parts data was found for the layer in the selected position",
+
 
   "export-layer.exportSuccessContainer.title": "Export request triggered",
   "export-layer.exportSuccessContainer.approve": "Copy and exit",

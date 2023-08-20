@@ -652,8 +652,8 @@
   
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
-
   "dem-heights-info.no-data.message": "לא נמצאו נתוני גובה במיקום המבוקש",
+  "polygonParts-info.no-data.message": "לא נמצאו חלקי תיחום לשכבה במיקום המבוקש",
 
   "export-layer.exportSuccessContainer.title": "בקשת הייצוא נוצרה בהצלחה",
   "export-layer.exportSuccessContainer.approve": "העתקה וסיום",

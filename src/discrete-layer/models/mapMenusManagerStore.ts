@@ -10,6 +10,7 @@ import { IFeatureConfig, IFeatureConfigs } from '../views/components/data-fetche
 import { PositionWithHeightModelType } from './PositionWithHeightModel';
 import { IPosition } from '../../common/hooks/useHeightFromTerrain';
 import { IDispatchAction } from './actionDispatcherStore';
+import { BBox } from 'geojson';
 
 interface CommonMenuItem {
   templateId?: ContextActionsTemplates | ContextActionsGroupTemplates;
@@ -73,6 +74,7 @@ export const mapMenusManagerStore = ModelBase
     wfsFeatureConfigs: types.maybe(types.frozen<IFeatureConfigs>()),
     currentWfsFeatureInfo: types.maybe(types.frozen<WfsFeatureInfo>()),
     currentPolygonPartsInfo: types.maybe(types.frozen<PolygonPartsWfsFeatureInfo>()),
+    multiplePolygonPartsBBox: types.maybe(types.frozen<BBox>()),
     currentPositionDemHeight: types.maybe(types.frozen<PositionWithHeightModelType>()),
     lastMenuCoordinate: types.maybe(types.frozen<IPosition>()),
   })
@@ -165,21 +167,38 @@ export const mapMenusManagerStore = ModelBase
     function setLastMenuCoordinate(menuCoordinate: IPosition): void {
       self.lastMenuCoordinate = menuCoordinate;
     }
+    
+    function setMultiplePolygonPartsBBox(polygonPartsBBox: BBox): void {
+      self.multiplePolygonPartsBBox = polygonPartsBBox;
+    }
+
 
     function getFeatureConfig(typeName: string): IFeatureConfig {
       return self.wfsFeatureConfigs?.[typeName] as IFeatureConfig;
     }
 
-    function resetCurrentWfsFeatureInfo(): void {
+    function resetWfsInfo(): void {
       self.currentWfsFeatureInfo = undefined;
     }
 
-    function resetCurrentPositionDemHeight(): void {
+    function resetDemHeightInfo(): void {
       self.currentPositionDemHeight = undefined;
     }
 
-    function resetCurrentPolygonPartsInfo(): void {
+    function resetMultiplePolygonPartsBBox(): void {
+      self.multiplePolygonPartsBBox = undefined;
+    }
+
+    function resetPolygonPartsInfo(): void {
       self.currentPolygonPartsInfo = undefined;
+      resetMultiplePolygonPartsBBox();
+    }
+
+    function resetMapMenusFeatures(): void {
+      resetPolygonPartsInfo();
+      resetWfsInfo();
+      resetDemHeightInfo();
+
     }
 
     return {
@@ -189,10 +208,9 @@ export const mapMenusManagerStore = ModelBase
       setCurrentPolygonPartsInfo,
       setWfsFeatureConfigs,
       setLastMenuCoordinate,
+      setMultiplePolygonPartsBBox,
       getFeatureConfig,
-      resetCurrentWfsFeatureInfo,
-      resetCurrentPositionDemHeight,
-      resetCurrentPolygonPartsInfo,
+      resetMapMenusFeatures,
       initStore,
     }
   });
