@@ -33,4 +33,5 @@ export const VectorBestRecordModel = VectorBestRecordModelBase
     footprintShown: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
     layerImageShown: types.union(types.undefined, types.null, types.boolean),
+    layerImageInvalid: types.union(types.undefined, types.null, types.boolean),
   })
