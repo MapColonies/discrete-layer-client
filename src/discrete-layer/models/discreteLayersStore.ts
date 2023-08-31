@@ -126,7 +126,7 @@ export const discreteLayersStore = ModelBase
         })
       );
 
-      return self.layersImages ;
+      return self.layersImages;
     }
 
     function setLayersImagesData(data: ILayerImage[]): void {
@@ -239,7 +239,6 @@ export const discreteLayersStore = ModelBase
               return item;
             });
           }
-
         });
       } 
     }
@@ -263,8 +262,9 @@ export const discreteLayersStore = ModelBase
       self.previewedLayers = [];
     }
 
-    function setCapabilities(data: CapabilityModelType[]): void {
+    function setCapabilities(data: CapabilityModelType[]): CapabilityModelType[] {
       self.capabilities = cloneDeep(data);
+      return self.capabilities ;
     }
 
     function setBaseMaps(baseMaps: IBaseMaps): void {

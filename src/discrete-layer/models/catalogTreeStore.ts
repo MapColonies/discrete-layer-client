@@ -16,6 +16,7 @@ import { cloneDeep, get, isEmpty } from 'lodash';
 import CONFIG from '../../common/config';
 import { GroupBy, groupBy, KeyPredicate } from '../../common/helpers/group-by';
 import MESSAGES from '../../common/i18n';
+import { LinkType } from '../../common/models/link-type.enum';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { getLayerLink } from '../components/helpers/layersUtils';
 import { existStatus, isUnpublished } from '../../common/helpers/style';
@@ -24,7 +25,7 @@ import { CapabilityModelType } from './CapabilityModel';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
-import { RecordType } from './';
+import { LayerMetadataMixedUnion, LayerRasterRecordModelType, RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
@@ -176,15 +177,83 @@ export const catalogTreeStore = ModelBase.props({
       }
     });
 
+    const capabilitiesFetch = flow(function* capabilitiesFetchGen(): Generator<
+      Promise<{ capabilities: CapabilityModelType[] }>,
+      CapabilityModelType[],
+      CapabilityModelType[]
+    > {
+      let capabilitiesQuery;
+      let capabilitiesList;
+
+      // NOTE:
+      // Calling getCapabilities() should happen after querySearch.data
+      // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
+      // are subsets of the catalog layers list
+
+      const layersList = store.discreteLayersStore.layersImages as LayerMetadataMixedUnion[];
+
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { RECORD_ALL, RECORD_RASTER } = RecordType;
+      try {
+        const withCapabilities = [RECORD_RASTER];
+        if (
+          [RECORD_ALL, ...withCapabilities].includes(
+            store.discreteLayersStore.searchParams.recordType as RecordType
+          )
+        ) {
+          const groupBy = <T, K extends keyof any>(
+            list: T[],
+            getKey: (item: T) => K,
+            setItem: (item: T) => any
+          ): Record<K, T[]> =>
+            list.reduce((previous, currentItem) => {
+              const group = getKey(currentItem);
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              if (!previous[group]) previous[group] = [];
+              previous[group].push(setItem(currentItem));
+              return previous;
+            }, {} as Record<K, T[]>);
+          const ids = groupBy(
+            layersList,
+            (l) => l.type as RecordType,
+            (l) => getLayerLink(l).name ?? ''
+          );
+          const idList = [];
+          for (const [key, value] of Object.entries(ids)) {
+            if (withCapabilities.includes(key as RecordType)) {
+              idList.push({
+                recordType: key,
+                idList: value,
+              });
+            }
+          }
+          capabilitiesQuery = store.queryCapabilities({
+            // @ts-ignore
+            params: { data: idList },
+          });
+
+          const dataCapabilities = yield capabilitiesQuery.refetch();
+
+          capabilitiesList = get(
+            dataCapabilities,
+            'capabilities'
+          ) as CapabilityModelType[];
+        }
+        return !isEmpty(capabilitiesList) ? store.discreteLayersStore.setCapabilities(capabilitiesList as CapabilityModelType[]) : [];
+      } catch(e) {
+        setErrorCapabilities(capabilitiesQuery?.error);
+        return [];
+      }
+    });
+
     /**
      * Initial tree data, fetch new entries from server
      */
     const initTree = flow(function* initTree(): Generator<
-      Promise<ILayerImage[]> | Promise<{ capabilities: CapabilityModelType[] }>,
+      Promise<ILayerImage[]> | Promise<CapabilityModelType[]>,
       void,
       ILayerImage[]
     > {
-      let capabilitiesQuery;
       try {
         setIsDataLoading(true);
         resetCatalogTreeData();
@@ -193,82 +262,30 @@ export const catalogTreeStore = ModelBase.props({
 
         if (typeof layersList !== 'undefined' && (layersList as ILayerImage[] | null) !== null) {
 
-          //#region getCapabilities()
+          const capabilities = yield capabilitiesFetch();
 
-          // NOTE:
-          // Calling getCapabilities() should happen after querySearch.data
-          // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
-          // are subsets of the catalog layers list
-
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          const { RECORD_ALL, RECORD_RASTER } = RecordType;
-          try {
-            const withCapabilities = [RECORD_RASTER];
-            if (
-              [RECORD_ALL, ...withCapabilities].includes(
-                store.discreteLayersStore.searchParams.recordType as RecordType
-              )
-            ) {
-              const groupBy = <T, K extends keyof any>(
-                list: T[],
-                getKey: (item: T) => K,
-                setItem: (item: T) => any
-              ): Record<K, T[]> =>
-                list.reduce((previous, currentItem) => {
-                  const group = getKey(currentItem);
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                  if (!previous[group]) previous[group] = [];
-                  previous[group].push(setItem(currentItem));
-                  return previous;
-                }, {} as Record<K, T[]>);
-              const ids = groupBy(
-                layersList,
-                (l) => l.type as RecordType,
-                (l) => getLayerLink(l).name ?? ''
-              );
-              const idList = [];
-              for (const [key, value] of Object.entries(ids)) {
-                if (withCapabilities.includes(key as RecordType)) {
-                  idList.push({
-                    recordType: key,
-                    idList: value,
-                  });
-                }
-              }
-              capabilitiesQuery = store.queryCapabilities({
-                // @ts-ignore
-                params: { data: idList },
-              });
-
-              const dataCapabilities = yield capabilitiesQuery.refetch();
-
-              const capabilitiesList = get(
-                dataCapabilities,
-                'capabilities'
-              ) as CapabilityModelType[];
-
-              if (!isEmpty(capabilitiesList)) {
-                store.discreteLayersStore.setCapabilities(capabilitiesList);
+          layersList.forEach((layer) => {
+            if (layer.type === RecordType.RECORD_RASTER) {
+              const layerLink = getLayerLink(layer);
+              const hasCapabilities = capabilities?.find(item => layerLink.name === item.id);
+              const hasWMTSUrl = layerLink.protocol === LinkType.WMTS;
+              if (!hasCapabilities && hasWMTSUrl) {
+                (layer as LayerRasterRecordModelType).layerURLMissing = true;
               }
             }
-          } catch(e) {
-            // If getCapabilities request failed, show catalog tree and display relevant error message
-            setErrorCapabilities(capabilitiesQuery?.error);
-          }
-
-          //#endregion
+          });
 
           // get unlinked/new discretes shortcuts
           /*const arrUnlinked = arr.filter((item) => {
             // @ts-ignore
             const itemObjectBag = item as Record<string,unknown>;
             return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-            });
-            const parentUnlinked = buildParentTreeNode(
-              arrUnlinked,
-              intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-              {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-            );*/
+          });
+          const parentUnlinked = buildParentTreeNode(
+            arrUnlinked,
+            intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
+            {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
+          );*/
 
           // get unpublished/new discretes
           const arrUnpublished = layersList.filter((item) => {
