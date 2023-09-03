@@ -49,7 +49,7 @@ const useHandleWfsPolygonPartsRequests = (): {
       const polygonPartsFeatures = store.mapMenusManagerStore.currentPolygonPartsInfo.features;
       const { shouldFlyToFeatures } = getPolygonPartsFeatureOptions;
       
-      if(polygonPartsFeatures && polygonPartsFeatures.length > 1 && shouldFlyToFeatures) {
+      if(polygonPartsFeatures && polygonPartsFeatures.length > 0 && shouldFlyToFeatures) {
         const featuresBBox = bbox({ type: "FeatureCollection", features: polygonPartsFeatures });
         store.mapMenusManagerStore.setMultiplePolygonPartsBBox(featuresBBox);
       }
