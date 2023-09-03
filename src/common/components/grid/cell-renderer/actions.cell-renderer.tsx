@@ -124,6 +124,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
           }
         </Menu>
         {
+          !props.data.layerURLMissing &&
           !isEmpty(allFlatActions) &&
           <IconButton 
             id="allActionsIcon"
