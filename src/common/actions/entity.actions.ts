@@ -1,4 +1,10 @@
-import { TabViews } from "../../discrete-layer/views/tab-views";
+import { TabViews } from '../../discrete-layer/views/tab-views';
+
+interface DependentFieldWithValue {
+  field: string,
+  expectedValue: unknown
+}
+export type DependentField = string | DependentFieldWithValue;
 
 export interface IAction {
   action: string;
@@ -7,7 +13,7 @@ export interface IAction {
   class: string;
   titleTranslationId: string;
   views: TabViews[];
-  dependentField?: string;
+  dependentField?: DependentField;
 };
 
 export interface IActionGroup {
@@ -29,8 +35,11 @@ export enum EntityActionsTypes {
   CRUD = 'CRUD',
   JOB_ACTIONS = 'jobActions',
   EXPORT_ACTIONS = 'exportActions',
-
 }
+
+export const isDependentFieldWithValue = (dependentField?: DependentField): dependentField is DependentFieldWithValue => {
+  return typeof dependentField !== 'undefined' && typeof dependentField !== 'string' && 'expectedValue' in dependentField;
+};
 
 const GENERAL_ACTIONS_GROUP: IActionGroup = {
   id: 0,
@@ -43,6 +52,7 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       icon: '',
       class: 'mc-icon-Fly-to',
       titleTranslationId: 'action.flyTo.tooltip',
+      dependentField: {field: 'layerURLMissing', expectedValue: undefined},
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
     {
@@ -51,6 +61,7 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       icon: '',
       class: 'mc-icon-Export',
       titleTranslationId: 'action.export.tooltip',
+      dependentField: {field: 'layerURLMissing', expectedValue: undefined},
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
   ],
@@ -111,6 +122,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             icon: '',
             class: 'mc-icon-Edit1',
             titleTranslationId: 'action.edit.tooltip',
+            dependentField: {field: 'layerURLMissing', expectedValue: undefined},
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           {
@@ -119,6 +131,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             icon: '',
             class: 'mc-icon-Update',
             titleTranslationId: 'action.update.tooltip',
+            dependentField: {field: 'layerURLMissing', expectedValue: undefined},
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           },
           {
