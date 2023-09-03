@@ -16,6 +16,7 @@ import {
   ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
@@ -27,7 +28,6 @@ import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
 import { getStatusColoredText } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
-import { LayerRasterRecordModelType } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
@@ -284,7 +284,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       <LayerImageRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          if (!(data as LayerRasterRecordModelType).layerURLMissing) {
+                          if (!get(data, 'layerURLMissing')) {
                             if (value) {
                               selectedLayersRef.current++;
                             } else {

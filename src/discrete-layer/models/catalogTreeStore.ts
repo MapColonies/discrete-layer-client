@@ -16,7 +16,6 @@ import { cloneDeep, get, isEmpty } from 'lodash';
 import CONFIG from '../../common/config';
 import { GroupBy, groupBy, KeyPredicate } from '../../common/helpers/group-by';
 import MESSAGES from '../../common/i18n';
-import { LinkType } from '../../common/models/link-type.enum';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { getLayerLink } from '../components/helpers/layersUtils';
 import { existStatus, isUnpublished } from '../../common/helpers/style';
@@ -25,7 +24,7 @@ import { CapabilityModelType } from './CapabilityModel';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
-import { LayerMetadataMixedUnion, LayerRasterRecordModelType, RecordType } from './';
+import { LayerMetadataMixedUnion, RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
