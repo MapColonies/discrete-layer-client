@@ -278,7 +278,7 @@ export const discreteLayersStore = ModelBase
 
     function setCapabilities(data: CapabilityModelType[]): CapabilityModelType[] {
       self.capabilities = cloneDeep(data);
-      return self.capabilities ;
+      return self.capabilities;
     }
 
     function setBaseMaps(baseMaps: IBaseMaps): void {
