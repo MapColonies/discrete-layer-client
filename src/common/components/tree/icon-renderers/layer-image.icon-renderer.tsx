@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 
 import './layer-image.icon-renderer.css';
@@ -15,14 +16,16 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
   return (
     <Box>
       <IconButton 
-        className={layerImageShown ? 'mc-icon-Show imageChecked' : 'mc-icon-Hide'}
+        className={layerImageShown ? 'mc-icon-Show imageChecked' : (props.data as LayerRasterRecordModelType).layerURLMissing ? 'mc-icon-Hide urlMissing' : 'mc-icon-Hide'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (evt: React.MouseEvent<HTMLButtonElement>): void => {
-            const val = !layerImageShown;
-            evt.stopPropagation();
-            setLayerImageShown(val);
-            props.onClick(props.data, val);
+            if (!(props.data as LayerRasterRecordModelType).layerURLMissing) {
+              const val = !layerImageShown;
+              evt.stopPropagation();
+              setLayerImageShown(val);
+              props.onClick(props.data, val);
+            }
           }
         }
       />

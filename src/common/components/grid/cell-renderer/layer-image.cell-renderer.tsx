@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
 import { GridRowNode } from '..';
 
 import './layer-image.cell-renderer.css';
@@ -15,14 +16,16 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
   const [layerImageShown, setLayerImageShown] = useState<boolean>(props.data.layerImageShown as boolean);
   return (
     <Box style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
-      <IconButton 
-        className={layerImageShown ? 'mc-icon-Show imageChecked' : 'mc-icon-Hide'}
+      <IconButton
+        className={layerImageShown ? 'mc-icon-Show imageChecked' : (props.data as LayerRasterRecordModelType).layerURLMissing ? 'mc-icon-Hide urlMissing' : 'mc-icon-Hide'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (): void => {
-            setLayerImageShown(!layerImageShown);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            props.onClick(props.data.id, !layerImageShown, props.node);
+            if (!(props.data as LayerRasterRecordModelType).layerURLMissing) {
+              setLayerImageShown(!layerImageShown);
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              props.onClick(props.data.id, !layerImageShown, props.node);
+            }
           }
         }
       />

@@ -25,8 +25,9 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
-import { existStatus, getStatusColoredText, isUnpublished } from '../../../common/helpers/style';
+import { getStatusColoredText } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
+import { LayerRasterRecordModelType } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
@@ -283,34 +284,36 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       <LayerImageRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          if (value) {
-                            selectedLayersRef.current++;
-                          } else {
-                            const orders: number[] = [];
-                            // eslint-disable-next-line
-                            store.discreteLayersStore.layersImages?.forEach(
-                              (item: ILayerImage) => {
-                                if (
-                                  item.layerImageShown === true &&
-                                  data.id !== item.id
-                                ) {
-                                  orders.push(item.order as number);
+                          if (!(data as LayerRasterRecordModelType).layerURLMissing) {
+                            if (value) {
+                              selectedLayersRef.current++;
+                            } else {
+                              const orders: number[] = [];
+                              // eslint-disable-next-line
+                              store.discreteLayersStore.layersImages?.forEach(
+                                (item: ILayerImage) => {
+                                  if (
+                                    item.layerImageShown === true &&
+                                    data.id !== item.id
+                                  ) {
+                                    orders.push(item.order as number);
+                                  }
                                 }
-                              }
+                              );
+                              selectedLayersRef.current = orders.length
+                                ? getMax(orders)
+                                : selectedLayersRef.current - 1;
+                            }
+                            const order = value
+                              ? selectedLayersRef.current
+                              : null;
+                            store.discreteLayersStore.showLayer(
+                              data.id,
+                              value,
+                              order
                             );
-                            selectedLayersRef.current = orders.length
-                              ? getMax(orders)
-                              : selectedLayersRef.current - 1;
+                            data.layerImageShown = value;
                           }
-                          const order = value
-                            ? selectedLayersRef.current
-                            : null;
-                          store.discreteLayersStore.showLayer(
-                            data.id,
-                            value,
-                            order
-                          );
-                          data.layerImageShown = value;
                         }}
                       />,
                       <ProductTypeRenderer
@@ -323,7 +326,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     ],
                 buttons: [
                   <>
-                    {hoveredNode !== undefined &&
+                    {
+                      !rowInfo.node.layerURLMissing &&
+                      hoveredNode !== undefined &&
                       hoveredNode.id === rowInfo.node.id && 
                       hoveredNode.parentPath === rowInfo.path.slice(0, -1).toString() && (                      
                         <ActionsRenderer
@@ -336,7 +341,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           entity={rowInfo.node.__typename}
                           actionHandler={dispatchAction}
                         />
-                      )}
+                      )
+                    }
                   </>,
                 ],
               })}

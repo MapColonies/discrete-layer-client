@@ -258,22 +258,13 @@ export const catalogTreeStore = ModelBase.props({
         setIsDataLoading(true);
         resetCatalogTreeData();
 
-        const layersList = yield catalogSearch();
+        const layersListResults = yield catalogSearch();
 
-        if (typeof layersList !== 'undefined' && (layersList as ILayerImage[] | null) !== null) {
+        if (typeof layersListResults !== 'undefined' && (layersListResults as ILayerImage[] | null) !== null) {
 
-          const capabilities = yield capabilitiesFetch();
-
-          layersList.forEach((layer) => {
-            if (layer.type === RecordType.RECORD_RASTER) {
-              const layerLink = getLayerLink(layer);
-              const hasCapabilities = capabilities?.find(item => layerLink.name === item.id);
-              const hasWMTSUrl = layerLink.protocol === LinkType.WMTS;
-              if (!hasCapabilities && hasWMTSUrl) {
-                (layer as LayerRasterRecordModelType).layerURLMissing = true;
-              }
-            }
-          });
+          yield capabilitiesFetch();
+          store.discreteLayersStore.setLayersImages(layersListResults, false);
+          const layersList = store.discreteLayersStore.layersImages as ILayerImage[];
 
           // get unlinked/new discretes shortcuts
           /*const arrUnlinked = arr.filter((item) => {
