@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { get } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 
 import './layer-image.icon-renderer.css';
@@ -16,11 +16,11 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
   return (
     <Box>
       <IconButton 
-        className={layerImageShown ? 'mc-icon-Show imageChecked' : (props.data as LayerRasterRecordModelType).layerURLMissing ? 'mc-icon-Hide urlMissing' : 'mc-icon-Hide'}
+        className={layerImageShown ? 'mc-icon-Show imageChecked' : get(props.data, 'layerURLMissing') ? 'mc-icon-Hide urlMissing' : 'mc-icon-Hide'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (evt: React.MouseEvent<HTMLButtonElement>): void => {
-            if (!(props.data as LayerRasterRecordModelType).layerURLMissing) {
+            if (!get(props.data, 'layerURLMissing')) {
               const val = !layerImageShown;
               evt.stopPropagation();
               setLayerImageShown(val);

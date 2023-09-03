@@ -37,8 +37,7 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
     });
 
     return filteredActionGroups;
-
-  }
+  };
 
   const actions = useMemo(() => filterActionsByDependentFields(props.actions[entity]), [props.actions[entity]]);
   let frequentActions: IAction[] = [];

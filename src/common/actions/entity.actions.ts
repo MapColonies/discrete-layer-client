@@ -1,8 +1,8 @@
 import { TabViews } from '../../discrete-layer/views/tab-views';
 
 interface DependentFieldWithValue {
-  field: string,
-  expectedValue: unknown
+  field: string;
+  expectedValue: unknown;
 }
 export type DependentField = string | DependentFieldWithValue;
 
