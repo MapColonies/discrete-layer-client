@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
-import { get } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { isExistLayerURL } from '../../../helpers/layer-url';
