@@ -284,36 +284,34 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       <LayerImageRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          if (!get(data, 'layerURLMissing')) {
-                            if (value) {
-                              selectedLayersRef.current++;
-                            } else {
-                              const orders: number[] = [];
-                              // eslint-disable-next-line
-                              store.discreteLayersStore.layersImages?.forEach(
-                                (item: ILayerImage) => {
-                                  if (
-                                    item.layerImageShown === true &&
-                                    data.id !== item.id
-                                  ) {
-                                    orders.push(item.order as number);
-                                  }
+                          if (value) {
+                            selectedLayersRef.current++;
+                          } else {
+                            const orders: number[] = [];
+                            // eslint-disable-next-line
+                            store.discreteLayersStore.layersImages?.forEach(
+                              (item: ILayerImage) => {
+                                if (
+                                  item.layerImageShown === true &&
+                                  data.id !== item.id
+                                ) {
+                                  orders.push(item.order as number);
                                 }
-                              );
-                              selectedLayersRef.current = orders.length
-                                ? getMax(orders)
-                                : selectedLayersRef.current - 1;
-                            }
-                            const order = value
-                              ? selectedLayersRef.current
-                              : null;
-                            store.discreteLayersStore.showLayer(
-                              data.id,
-                              value,
-                              order
+                              }
                             );
-                            data.layerImageShown = value;
+                            selectedLayersRef.current = orders.length
+                              ? getMax(orders)
+                              : selectedLayersRef.current - 1;
                           }
+                          const order = value
+                            ? selectedLayersRef.current
+                            : null;
+                          store.discreteLayersStore.showLayer(
+                            data.id,
+                            value,
+                            order
+                          );
+                          data.layerImageShown = value;
                         }}
                       />,
                       <ProductTypeRenderer

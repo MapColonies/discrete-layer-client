@@ -3,6 +3,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { get } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { isExistLayerURL } from '../../../helpers/layer-url';
 import { GridRowNode } from '..';
 
 import './layer-image.cell-renderer.css';
@@ -21,7 +22,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (): void => {
-            if (!get(props.data, 'layerURLMissing')) {
+            if (isExistLayerURL(props.data)) {
               setLayerImageShown(!layerImageShown);
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               props.onClick(props.data.id, !layerImageShown, props.node);

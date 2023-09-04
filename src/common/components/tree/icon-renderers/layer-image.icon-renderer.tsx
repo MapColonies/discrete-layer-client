@@ -3,6 +3,7 @@ import { get } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
+import { isExistLayerURL } from '../../../helpers/layer-url';
 
 import './layer-image.icon-renderer.css';
 
@@ -20,7 +21,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (evt: React.MouseEvent<HTMLButtonElement>): void => {
-            if (!get(props.data, 'layerURLMissing')) {
+            if (isExistLayerURL(props.data)) {
               const val = !layerImageShown;
               evt.stopPropagation();
               setLayerImageShown(val);
