@@ -334,3 +334,37 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
   color: var(--mdc-theme-text-disabled-on-background);
   opacity: 0.3;
 }
+
+
+/* Date Range Picker */
+
+.dark-theme .pickerContainer, .dark-theme .pickerContainer-rtl {
+  --date-picker-calendar-background: var(--mdc-theme-background);
+
+  --date-picker-day-background: var(--mdc-theme-alternative-surface);
+  --date-picker-day-font-color: var(--mdc-theme-text-primary-on-background);
+  --date-picker-day-selecting-range-background: var(--mdc-theme-gc-selection-background);
+  --date-picker-day-selecting-range-font-color: var(--mdc-theme-on-primary);
+  --date-picker-day-hover-background: var(--mdc-theme-text-primary-on-dark);
+  --date-picker-day-hover-font-color: var(--mdc-theme-text-primary-on-light);
+  --date-picker-selected-day-background: var(--mdc-theme-gc-selection-background);
+  --date-picker-selected-day-hover-background: var(--mdc-theme-text-primary-on-dark);
+  --date-picker-selected-day-hover-font-color: var(--mdc-theme-text-primary-on-light);
+  --date-picker-selected-day-font-color: var(--mdc-theme-on-primary);
+
+  --date-picker-nav-icons-color: var(--mdc-theme-text-primary-on-background);
+  --date-picker-header-background: var(--mdc-theme-gc-selection-background);
+  --date-picker-header-color: var(--mdc-theme-text-primary-on-background);
+
+  --date-picker-shortcuts-hover-background: var(--mdc-theme-text-primary-on-dark);
+  --date-picker-shortcuts-background: var(--mdc-theme-alternative-surface);
+  --date-picker-shortcuts-font-color: var(--mdc-theme-text-primary-on-light);
+
+  --month-year-pickers-background: var(--mdc-theme-surface);
+  --month-year-pickers-font-color: var(--mdc-theme-on-primary);
+  --month-year-pickers-border-color: var(--mdc-theme-gc-selection-background);
+
+  --date-picker-scrollbar-track-background: var(--mdc-theme-text-primary-on-light);
+  --date-picker-scrollbar-thumb-background: var(--mdc-theme-alternative-surface);
+  --date-picker-scrollbar-thumb-hover-background: var(--mdc-theme-text-primary-on-dark);
+}
