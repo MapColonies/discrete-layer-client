@@ -18,7 +18,7 @@ export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (prop
   return (
     <Box style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
       <IconButton
-        className={layerImageShown ? 'mc-icon-Show imageChecked' : get(props.data, 'layerURLMissing') ? 'mc-icon-Hide urlMissing' : 'mc-icon-Hide'}
+        className={layerImageShown ? 'mc-icon-Show imageChecked' : !isExistLayerURL(props.data) ? 'mc-icon-Hide urlMissing' : 'mc-icon-Hide'}
         label="LAYER IMAGE SHOWN ICON"
         onClick={
           (): void => {
