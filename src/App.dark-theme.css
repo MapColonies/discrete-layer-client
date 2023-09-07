@@ -338,7 +338,7 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 
 /* Date Range Picker */
 
-.dark-theme .pickerContainer, .dark-theme .pickerContainer-rtl {
+.dark-theme .pickerContainer {
   --date-picker-calendar-background: var(--mdc-theme-background);
 
   --date-picker-day-background: var(--mdc-theme-alternative-surface);
