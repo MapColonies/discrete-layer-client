@@ -38,19 +38,6 @@ body[dir='rtl'] .searchIconBtn {
   caret-color: var(--mdc-theme-on-surface);
 }
 
-#searchContainer .filterByCatalogEntitySelect {
-  width: 130px;
-  padding: 0 6px 0 6px;
-  z-index: 2002;
-}
-
-#searchContainer .mdc-select__anchor {
-  height: 2.5rem;
-  width: 120px;
-  padding: 0 8px 0 8px;
-}
-
-#searchContainer .mdc-select .mdc-select__dropdown-icon {
-  margin-left: 0;
-  margin-right: 0;
+#searchContainer .active {
+  color: var(--mdc-theme-gc-success);
 }

@@ -14,7 +14,8 @@ import {
   MenuSurfaceAnchor,
   MenuSurface,
   Tooltip,
-  Avatar
+  Avatar,
+  Select
 } from '@map-colonies/react-core';
 import {
   BboxCorner,
@@ -474,11 +475,23 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   }, [store.userStore.user]);
 
+  const recordTypeOptions = useMemo(() => {
+    return CONFIG.SERVED_ENTITY_TYPES.map((entity) => {
+      const value = entity as keyof typeof RecordType;
+      return {
+        label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
+        value: RecordType[value]
+      };
+    });
+  
+  }, []);
+
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
     const tabView = find(tabViews, (tab) => {
       return tab.idx === tabIdx;
     });
+
 
     return (
       <div className="tabHeaderContainer">
@@ -504,10 +517,21 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             {
               tabIdx === TabViews.CATALOG && 
-              <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
-              </Tooltip>
+              <Box className="filterByCatalogEntitySelect">
+                <Select
+                  enhanced
+                  defaultValue={recordTypeOptions[0].value}
+                  options={recordTypeOptions}
+                  onChange={
+                    (evt: React.ChangeEvent<HTMLSelectElement>): void => {
+                      store.discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
+                      setCatalogRefresh(catalogRefresh + 1);
+                    }
+                  }
+                />
+              </Box>
             }
+
             {
               tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
@@ -566,6 +590,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
               </MenuSurfaceAnchor>
             }
+              
             { 
               (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
               <>
@@ -594,14 +619,14 @@ const DiscreteLayerView: React.FC = observer(() => {
                 label="DELETE"
               />
             </Tooltip>*/}
-            <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
+            {/* <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Filter"
                 disabled={!(permissions.isSystemFilterEnabled as boolean)}
                 label="FILTER"
                 onClick={ (): void => { handleFilter(); } }
               />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
               <IconButton 
                 className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
@@ -701,10 +726,11 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
+            toggleCatalogFilterPanel={handleFilter}
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
-            isSelectionEnabled={isDrawing}
+            isSelectionEnabled={Array.isArray(drawEntities[0]?.coordinates) ? drawEntities[0]?.coordinates.length > 0 : !!drawEntities[0]?.coordinates}
             isSystemFreeTextSearchEnabled={(permissions.isSystemFreeTextSearchEnabled as boolean)}
             onPolygonUpdate={onPolygonSelection}
             onPoiUpdate={onPoiSelection}

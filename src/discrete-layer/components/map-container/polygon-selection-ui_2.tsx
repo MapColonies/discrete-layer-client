@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { IconButton, Select, TextField, Tooltip, useTheme } from '@map-colonies/react-core';
@@ -32,9 +32,17 @@ export interface PolygonSelectionUiProps {
   onReset: () => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
   onPoiUpdate: (longitude: number, latitude: number) => void;
+  toggleCatalogFilterPanel: () => void;
   poi?: IPOI;
   corners?: BBoxCorners;
   disabled?: boolean;
+}
+
+enum PolygonSelectionsLabels {
+  BOX = 'BOX',
+  POLYGON = 'POLYGON',
+  BBOX = 'BBOX',
+  POI = 'POI',
 }
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
@@ -54,19 +62,27 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
   } = props;
 
   const intl = useIntl();
-  const { discreteLayersStore } = useStore();
+  // const { discreteLayersStore } = useStore();
   const [open, setOpen] = useState(false);
   const [openPoiDialog, setOpenPoiDialog] = useState(false);
-  const recordTypeOptions = useMemo(() => {
-    return CONFIG.SERVED_ENTITY_TYPES.map((entity) => {
-      const value = entity as keyof typeof RecordType;
-      return {
-        label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
-        value: RecordType[value]
-      };
-    });
-  
-  }, []);
+  const [activeSelection, setActiveSelection] = useState<PolygonSelectionsLabels | ''>('');
+  const [lastDrawingSelectionType, setLastDrawingSelectionType] = useState<PolygonSelectionsLabels | ''>('');
+
+  useEffect(() => {
+    if(poi) {
+      setActiveSelection(PolygonSelectionsLabels.POI);
+    } else if(corners) {
+      setActiveSelection(PolygonSelectionsLabels.BBOX);
+    } else if(isSelectionEnabled && lastDrawingSelectionType) {
+      setActiveSelection(lastDrawingSelectionType);
+      setLastDrawingSelectionType('');
+    }
+  }, [isSelectionEnabled, poi, corners])
+
+  const getActiveClass = (className: string, selectionLabel: PolygonSelectionsLabels) => {
+    return `${className} ${activeSelection === selectionLabel ? 'active': ''}`;
+  }
+
 
   return (
     <Box 
@@ -84,46 +100,48 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     >
       <Tooltip content={intl.formatMessage({ id: 'action.point.tooltip' })}>
         <IconButton 
-          className="mc-icon-POI"
-          label="POINT"
-          onClick={(): void => {setOpenPoiDialog(true);}}/>
+          className={getActiveClass("mc-icon-POI", PolygonSelectionsLabels.POI)}
+          label={PolygonSelectionsLabels.POI}
+          onClick={(): void => {
+            setOpenPoiDialog(true);
+          }}/>
       </Tooltip>
       <Divider/>
       <Tooltip content={intl.formatMessage({ id: 'action.box.tooltip' })}>
         <IconButton 
-          className="mc-icon-Rectangle"
-          label="BOX" 
-          onClick={(): void => {onStartDraw(DrawType.BOX);}}/>
+          className={getActiveClass("mc-icon-Rectangle", PolygonSelectionsLabels.BOX)}
+          label={PolygonSelectionsLabels.BOX}
+          onClick={(): void => {
+            setLastDrawingSelectionType(PolygonSelectionsLabels.BOX);
+            onStartDraw(DrawType.BOX);
+          }}/>
       </Tooltip>
       <Tooltip content={intl.formatMessage({ id: 'action.polygon.tooltip' })}>
         <IconButton 
-          className="mc-icon-Polygon"
-          label="POLYGON" 
-          onClick={(): void => {onStartDraw(DrawType.POLYGON);}}/>
+          className={getActiveClass("mc-icon-Polygon", PolygonSelectionsLabels.POLYGON)}
+          label={PolygonSelectionsLabels.POLYGON} 
+          onClick={(): void => {
+            setLastDrawingSelectionType(PolygonSelectionsLabels.POLYGON);
+            onStartDraw(DrawType.POLYGON);
+          }}/>
       </Tooltip>
       <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
         <IconButton 
-          className="mc-icon-Coordinates" 
-          label="BBOX CORNERS" 
-          onClick={(): void => {setOpen(true);}}/>
+          className={getActiveClass("mc-icon-Coordinates", PolygonSelectionsLabels.BBOX)} 
+          label={PolygonSelectionsLabels.BBOX}
+          onClick={(): void => {
+            setOpen(true);
+          }}/>
       </Tooltip>
       <Divider/>
       <Tooltip content={intl.formatMessage({ id: 'action.clear.tooltip' })}>
-        <IconButton className="mc-icon-Delete" label="CLEAR" onClick={onReset}/>
+        <IconButton className="mc-icon-Delete" label="CLEAR" onClick={() => {
+          setActiveSelection('');
+          onReset();
+        }}/>
       </Tooltip>
       <Divider/>
-      <Box className="filterByCatalogEntitySelect">
-        <Select
-          enhanced
-          defaultValue={recordTypeOptions[0].value}
-          options={recordTypeOptions}
-          onChange={
-            (evt: React.ChangeEvent<HTMLSelectElement>): void => {
-              discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
-            }
-          }
-        />
-      </Box>
+      
       <Box id="searchTerm">
         <TextField disabled={!isSystemFreeTextSearchEnabled} style={{padding: '0 6px 0 6px'}}/>
       </Box>
