@@ -130,7 +130,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
-  const [isFilter, setIsFilter] = useState<boolean>(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
@@ -322,10 +321,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   
   const handleSystemsCoreInfoDialogClick = (): void => {
     setSystemCoreInfoDialogOpen(!isSystemCoreInfoDialogOpen);
-  };
-
-  const handleFilter = (): void => {
-    setIsFilter(!isFilter);
   };
 
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
@@ -726,7 +721,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="headerSearchOptionsContainer">
           <PolygonSelectionUi
-            toggleCatalogFilterPanel={handleFilter}
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
@@ -917,7 +911,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <GPUInsufficiencyDetector />
         </Box>
 
-        <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
+        {/* <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/> */}
         {
           isNewRasterEntityDialogOpen &&
           <EntityDialog

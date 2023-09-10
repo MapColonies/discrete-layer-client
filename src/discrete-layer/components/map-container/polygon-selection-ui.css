@@ -12,6 +12,10 @@ body[dir='rtl'] .drawerContainer {
 body[dir='rtl'] .searchIconBtn {
   transform: rotate(90deg);
 }
+#searchContainer {
+  position: relative;
+}
+
 /* Override ICONBUTTON styling */
 #searchContainer button.rmwc-icon.rmwc-icon--ligature {
   padding: 8px 8px;

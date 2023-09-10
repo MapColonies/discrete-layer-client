@@ -1,0 +1,26 @@
+.catalogFilterPanelContainer {
+    position: absolute;
+    top: 80%;
+    left: 0;
+    width: 100%;
+    min-height: 0px;
+    display: none;
+    background-color: var(--mdc-theme-background);
+    border-radius: 0 0 20px 20px;
+    z-index: 0;
+}
+
+.catalogFilterPanelContainer.open {
+    display: block;
+    animation: slideToBottom 500ms forwards;
+}
+
+@keyframes slideToBottom {
+    from {
+        min-height: 0px
+    }
+
+    to {
+        min-height: 300px
+    }
+}
