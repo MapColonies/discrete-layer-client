@@ -16,8 +16,7 @@ export const FileModelBase = ModelBase
   .named('File')
   .props({
     __typename: types.optional(types.literal("File"), "File"),
-    //id: types.union(types.undefined, types.string),
-    id: types.identifier, //Alex change till proper deffs
+    id: types.union(types.undefined, types.string),
     name: types.union(types.undefined, types.string),
     parentId: types.union(types.undefined, types.string),
     isDir: types.union(types.undefined, types.null, types.boolean),
@@ -50,4 +49,4 @@ export function selectFromFile() {
   return new FileModelSelector()
 }
 
-export const fileModelPrimitives = selectFromFile().name.parentId.isDir.selectable.modDate.ext.size.childrenIds.childrenCount.id
+export const fileModelPrimitives = selectFromFile().name.parentId.isDir.selectable.modDate.ext.size.childrenIds.childrenCount

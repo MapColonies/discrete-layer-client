@@ -580,6 +580,12 @@ const DiscreteLayerView: React.FC = observer(() => {
                     </Tooltip>
                   */}
                 </MenuSurface>
+                {
+                  tabIdx === TabViews.CATALOG && 
+                  <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+                    <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                  </Tooltip>
+                }
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
                   <IconButton className="operationIcon mc-icon-Plus" onClick={(): void => setOpenNew(!openNew)}/>
                 </Tooltip>

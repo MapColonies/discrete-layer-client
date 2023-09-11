@@ -66,6 +66,11 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           required
           json
         }
+        isFilterable {
+          participateInFilterPanel
+          operation
+        }
+
         default
       }
       __typename
