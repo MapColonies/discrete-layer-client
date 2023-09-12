@@ -69,6 +69,15 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isFilterable {
           participateInFilterPanel
           operation
+          validation {
+            min
+            max
+            minLength
+            maxLength
+            pattern
+            valueAsNumber
+            valueAsDate
+          }
         }
 
         default

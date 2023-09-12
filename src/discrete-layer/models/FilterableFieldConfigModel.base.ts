@@ -5,6 +5,8 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
+import { FilterFieldValidationModel, FilterFieldValidationModelType } from "./FilterFieldValidationModel"
+import { FilterFieldValidationModelSelector } from "./FilterFieldValidationModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -18,6 +20,7 @@ export const FilterableFieldConfigModelBase = ModelBase
     __typename: types.optional(types.literal("FilterableFieldConfig"), "FilterableFieldConfig"),
     participateInFilterPanel: types.union(types.undefined, types.null, types.boolean),
     operation: types.union(types.undefined, types.null, types.string),
+    validation: types.union(types.undefined, types.null, types.late((): any => FilterFieldValidationModel)),
   })
   .views(self => ({
     get store() {
@@ -28,6 +31,7 @@ export const FilterableFieldConfigModelBase = ModelBase
 export class FilterableFieldConfigModelSelector extends QueryBuilder {
   get participateInFilterPanel() { return this.__attr(`participateInFilterPanel`) }
   get operation() { return this.__attr(`operation`) }
+  validation(builder?: string | FilterFieldValidationModelSelector | ((selector: FilterFieldValidationModelSelector) => FilterFieldValidationModelSelector)) { return this.__child(`validation`, FilterFieldValidationModelSelector, builder) }
 }
 export function selectFromFilterableFieldConfig() {
   return new FilterableFieldConfigModelSelector()

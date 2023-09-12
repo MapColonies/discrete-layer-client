@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { Box, DateRangePicker } from "@map-colonies/react-components";
 import { observer } from 'mobx-react-lite';
-
-import './catalog-filter-panel.css';
 import { RecordType, useStore } from "../../../models";
 import { useGetFilterableFields } from "./hooks/useGetFilterableFields";
 
+import './catalog-filter-panel.css';
+import { CatalogFilterGeneralField } from "./fields/catalog-filter-general-field.component";
+import { CatalogFilterFormFields } from "./catalog-filter-form-fields.component";
+import { Button } from "@map-colonies/react-core";
 interface CatalogFilterPanelProps {
     isOpen: boolean;
 }
@@ -18,41 +21,47 @@ interface CatalogFilterPanelProps {
  * - Mark the filter icon as the current active filter
  * - Reset everything to the normal filters on clean, and un-mark the icon
  */
-export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(({ isOpen }) => {
+export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
+  ({ isOpen }) => {
     const store = useStore();
-    const selectedProductType = store.discreteLayersStore.searchParams.recordType;
-    const filterableFields = useGetFilterableFields(selectedProductType as RecordType);
+    const formMethods = useForm({
+      mode: 'onBlur',
+      reValidateMode: 'onBlur',
+    });
 
-    console.log(filterableFields)
-    
-    return <Box className={`catalogFilterPanelContainer ${isOpen ? 'open' : 'close'}`}>
-        <Box className='catalogFilterFormContainer'>
-            <form className="catalogFiltersForm" id={'catalogFiltersForm'}>
-               {/* <CatalogFilterFormFields /> */}
-               <DateRangePicker
-                    wrapperClassName="wrapper"
-                    calendarClassName="calendar"
-                    popperClassName="popper"
-                    dayClassName={() => 'day'}
-                    monthClassName={() => 'month'}
-                    shouldCloseOnSelect={false}
-                    selectsRange
-                    locale="en"
-                    autoFocus={false}
-                    dateFormat="dd/MM/yyyy"
-                    placeholderText="Pick date and time range"
-                    maxDate={new Date()}
-                    withShortcuts={[
-                        {id: "1", label: 'היום', startDate: new Date(), endDate: new Date()},
-                    ]}
-                    onChange={(x)=>{
-                        console.log(x)
-                    }}
-                    isClearable
-                    showMonthYearDropdown
-                    dateFormatCalendar="MMMM"
-                />
-            </form>
+    const selectedProductType =
+      store.discreteLayersStore.searchParams.recordType;
+    const filterableFields = useGetFilterableFields(
+      selectedProductType as RecordType
+    );
+    console.log(filterableFields);
+
+    const handleSubmit = () => {
+      console.log(formMethods.getValues());
+    };
+
+    return (
+      <FormProvider {...formMethods}>
+        <Box
+          className={`catalogFilterPanelContainer ${isOpen ? 'open' : 'close'}`}
+        >
+          <Box className="catalogFilterFormContainer">
+            {filterableFields?.length && (
+              <form className="catalogFiltersForm" id={'catalogFiltersForm'}>
+                <CatalogFilterFormFields filterableFields={filterableFields} />
+              </form>
+            )}
+          </Box>
+          <Button
+            raised
+            type="submit"
+            form="catalogFiltersForm"
+            onClick={formMethods.handleSubmit(handleSubmit)}
+          >
+            {'filter'}
+          </Button>
         </Box>
-    </Box>
-})
+      </FormProvider>
+    );
+  }
+);
