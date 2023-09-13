@@ -529,6 +529,13 @@ const DiscreteLayerView: React.FC = observer(() => {
 
             {
               tabIdx === TabViews.CATALOG && 
+              <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
+                <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+              </Tooltip>
+            }
+
+            {
+              tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(): void => setOpenNew(false)}>
@@ -580,12 +587,6 @@ const DiscreteLayerView: React.FC = observer(() => {
                     </Tooltip>
                   */}
                 </MenuSurface>
-                {
-                  tabIdx === TabViews.CATALOG && 
-                  <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                    <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
-                  </Tooltip>
-                }
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
                   <IconButton className="operationIcon mc-icon-Plus" onClick={(): void => setOpenNew(!openNew)}/>
                 </Tooltip>

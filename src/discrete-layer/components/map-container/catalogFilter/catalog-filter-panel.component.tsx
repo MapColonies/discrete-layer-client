@@ -1,21 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Box, DateRangePicker } from "@map-colonies/react-components";
 import { observer } from 'mobx-react-lite';
+import { useIntl } from "react-intl";
+import { Box } from "@map-colonies/react-components";
+import { Button } from "@map-colonies/react-core";
 import { RecordType, useStore } from "../../../models";
 import { useGetFilterableFields } from "./hooks/useGetFilterableFields";
+import { CatalogFilterFormFields } from "./catalog-filter-form-fields.component";
 
 import './catalog-filter-panel.css';
-import { CatalogFilterGeneralField } from "./fields/catalog-filter-general-field.component";
-import { CatalogFilterFormFields } from "./catalog-filter-form-fields.component";
-import { Button } from "@map-colonies/react-core";
 interface CatalogFilterPanelProps {
     isOpen: boolean;
 }
 /**
- * Use react-hook-forms with Yup schemas for validation.
+ * Use react-hook-forms with validations.
  * - Get pycsw mapping field names from descriptors
- * - Use a declarative approach to configure the type, form control and validation for each "filterable" field. (Yup schemas)
  * - Create dynamic filter forms by the current catalog search entity(ies) type.
  * - Apply the selected filters to the store and re-fetch the search query (And its dependencies)
  * - Mark the filter icon as the current active filter
@@ -23,6 +22,7 @@ interface CatalogFilterPanelProps {
  */
 export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
   ({ isOpen }) => {
+    const intl = useIntl();
     const store = useStore();
     const formMethods = useForm({
       mode: 'onBlur',
@@ -39,6 +39,10 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
     const handleSubmit = () => {
       console.log(formMethods.getValues());
     };
+
+    const watchAllFields = formMethods.watch();
+    // If there is errors or if all field values are undefined, then submit should be disabled
+    const isSubmitFiltersDisabled = useMemo(() => !formMethods.formState.isValid || Object.values(watchAllFields).every(value => typeof value === 'undefined'), [watchAllFields]);
 
     return (
       <FormProvider {...formMethods}>
@@ -57,8 +61,9 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
             type="submit"
             form="catalogFiltersForm"
             onClick={formMethods.handleSubmit(handleSubmit)}
+            disabled={isSubmitFiltersDisabled}
           >
-            {'filter'}
+            {intl.formatMessage({id: 'catalog-filter.filterButton.text'})}
           </Button>
         </Box>
       </FormProvider>

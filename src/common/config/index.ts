@@ -83,7 +83,7 @@ const systemJobsPriorityOptions =
     },
   ];
 
-const DATE_FORMAT = 'DD/MM/YYYY';
+const DATE_FORMAT = 'dd/MM/yyyy';
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
   SERVICE_NAME: SERVICE_NAME,

@@ -25,9 +25,17 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
       for(const category of descriptor.categories ?? []) {
         for(const field of category.fields as FieldConfigModelType[]) {
           if(field.isFilterable) {
-            if((forFilterPanel && field.isFilterable.participateInFilterPanel) || (!forFilterPanel && !field.isFilterable.participateInFilterPanel)) {  
+            if((forFilterPanel && field.isFilterable.participateInFilterPanel) || (!forFilterPanel && !field.isFilterable.participateInFilterPanel)) {
+              const filterableFieldIdx = allFilterableDescriptorsFields.findIndex(filterableField => field.fieldName === filterableField.fieldName);
+              
               // Prevent fields duplications in final array
-              if(!allFilterableDescriptorsFields.some(filterableField => field.fieldName === filterableField.fieldName)){
+              if(filterableFieldIdx > -1) {
+                const isCurrentFilterableFieldQueryable = !!allFilterableDescriptorsFields[filterableFieldIdx].queryableName;
+                if(!isCurrentFilterableFieldQueryable) {
+                  // Remove not queryable field and insert the new field
+                  allFilterableDescriptorsFields.splice(filterableFieldIdx, 1, field);
+                }
+              } else {
                 allFilterableDescriptorsFields.push(field);
               }
             }

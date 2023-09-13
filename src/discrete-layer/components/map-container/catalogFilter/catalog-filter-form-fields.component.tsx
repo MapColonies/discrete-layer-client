@@ -1,4 +1,5 @@
 import { FieldConfigModelType } from "../../../models"
+import { CatalogFilterDateRangeField } from "./fields/catalog-filter-date-range-field.component";
 import { CatalogFilterGeneralField } from "./fields/catalog-filter-general-field.component";
 
 interface CatalogFilterFormFieldProps {
@@ -16,6 +17,8 @@ export const CatalogFilterFormFields: React.FC<CatalogFilterFormFieldProps> = ({
         case "like":
         case "eq":
           return <CatalogFilterGeneralField key={fieldIndex} fieldDescriptor={filterField} />
+        case "range":
+          return <CatalogFilterDateRangeField key={fieldIndex} fieldDescriptor={filterField} />
         default:
           return <CatalogFilterGeneralField key={fieldIndex} fieldDescriptor={filterField} />
       }

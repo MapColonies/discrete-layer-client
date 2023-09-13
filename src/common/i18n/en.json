@@ -177,6 +177,16 @@
 
   "best-edit.import.dialog.import-btn.text": "Import",
 
+  "catalog-filter.productName.validation-error": "Only alphabetical, numeric and underscores are allowed",
+  "catalog-filter.today.date-shortcuts": "Today",
+  "catalog-filter.startWeek.date-shortcuts": "Since Week's start",
+  "catalog-filter.lastWeek.date-shortcuts": "Last Week",
+  "catalog-filter.startMonth.date-shortcuts": "Since month's start",
+  "catalog-filter.startYear.date-shortcuts": "Since year's start",
+  "catalog-filter.dateRangeField.placeholder": "Pick Date Range",
+  "catalog-filter.filterButton.text": "Filter Catalog",
+
+
   "context-menu.title.tooltip": "Actions on topmost layer: ",
   "context-menu.sub-title.tooltip": "overlapping layers",
 

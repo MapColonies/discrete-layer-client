@@ -3,8 +3,9 @@ import { FieldConfigModelType, FilterFieldValidationModelType } from '../../../.
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import { TextField } from '@map-colonies/react-core';
 import CatalogFilterFieldLabel from './catalog-filter-field-label.component';
-import { Box } from '@material-ui/core';
 import { isEmpty } from 'lodash';
+import { useIntl } from 'react-intl';
+import { Box } from '@map-colonies/react-components';
 
 interface CatalogFilterGeneralFieldProps {
   fieldDescriptor: FieldConfigModelType;
@@ -12,18 +13,20 @@ interface CatalogFilterGeneralFieldProps {
 }
 
 export const CatalogFilterGeneralField: React.FC<CatalogFilterGeneralFieldProps> = ({ fieldDescriptor, placeholder }) => {
+  const intl = useIntl();
   const formMethods = useFormContext();
+  const fieldId = fieldDescriptor.fieldName ?? '';
+
   const fieldValidation: FilterFieldValidationModelType = {
     ...fieldDescriptor.isFilterable.validation,
     pattern: fieldDescriptor?.isFilterable?.validation?.pattern
       ? {
           value: new RegExp(fieldDescriptor.isFilterable.validation.pattern),
-          message: 'Invalid pattern',
+          message: intl.formatMessage({id: `catalog-filter.${fieldId}.validation-error`}),
         }
       : undefined,
   };
 
-  const fieldId = fieldDescriptor.fieldName ?? '';
 
   useEffect(() => {
     formMethods.register(fieldId, {...(fieldValidation as RegisterOptions)});
@@ -33,10 +36,9 @@ export const CatalogFilterGeneralField: React.FC<CatalogFilterGeneralFieldProps>
     }
   }, [fieldId])
 
-  const hasValidations = useMemo(() => Object.values(fieldValidation).some(validation => !!validation), [fieldDescriptor]);
 
   return (
-    <Box className={'catalogFilterFieldContainer' + hasValidations ? ' withErrorMessage' : ''} key={fieldId + '_fieldContainer'}>
+    <Box className={'catalogFilterFieldContainer'} key={fieldId + '_fieldContainer'}>
       <CatalogFilterFieldLabel
         fieldName={fieldId}
         labelTranslationId={fieldDescriptor.label ?? ''}
@@ -53,7 +55,8 @@ export const CatalogFilterGeneralField: React.FC<CatalogFilterGeneralFieldProps>
           formMethods.trigger(fieldId);
         }}
         onChange={(e) => {
-          formMethods.setValue(fieldId, e.currentTarget.value);
+          const value = e.currentTarget.value.length === 0 ? undefined : e.currentTarget.value;
+          formMethods.setValue(fieldId, value);
         }}
       />
       <span className="catalogFilterFieldError">{formMethods.errors[fieldId]?.message ?? undefined}</span>

@@ -1,4 +1,5 @@
 .catalogFilterPanelContainer {
+    --filter-panel-open-height: 400px;
     position: absolute;
     top: 80%;
     left: 0;
@@ -14,8 +15,8 @@
     display: block;
     animation: slideToBottom 500ms forwards;
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    gap: 20px;
+    justify-content: space-between;
     flex-direction: column;
     padding: 20px;
 }
@@ -23,22 +24,37 @@
     color: var(--mdc-theme-gc-error-medium);
 }
 
-.catalogFilterFieldContainer.withErrorMessage {
-    height: 60px;
+.catalogFilterPanelContainer.open .catalogFilterFieldContainer {
+    height: 4rem;
+}
+
+.catalogFiltersForm {
+    width: 80%;
+    align-self: center;
 }
 
 .catalogFilterFormContainer {
+    display: flex;
     padding: 20px;
-    height: 240px;
     overflow-y: auto;
+    flex: 1;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
+
+.catalogFilterFormContainer .catalogFilterFieldContainer, 
+.catalogFilterFieldContainer .catalogFilterDateRangeWrapper {
+    width: 100%;
+}
+
 
 @keyframes slideToBottom {
     from {
-        height: 0px
+        height: 0px;
     }
 
     to {
-        height: 300px
+        height: var(--filter-panel-open-height);
     }
 }

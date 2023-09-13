@@ -18,6 +18,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         lookupTable
         lookupExcludeFields
         fieldName
+        queryableName
         label
         fullWidth
         rows
