@@ -7,10 +7,14 @@ import { Button } from "@map-colonies/react-core";
 import { RecordType, useStore } from "../../../models";
 import { useGetFilterableFields } from "./hooks/useGetFilterableFields";
 import { CatalogFilterFormFields } from "./catalog-filter-form-fields.component";
+import { getCatalogFilters } from "./utils";
 
 import './catalog-filter-panel.css';
+import { FilterField } from "../../../models/RootStore.base";
 interface CatalogFilterPanelProps {
     isOpen: boolean;
+    onFiltersSubmit: (filters: FilterField[]) => void;
+    onFiltersReset: () => void;
 }
 /**
  * Use react-hook-forms with validations.
@@ -21,7 +25,7 @@ interface CatalogFilterPanelProps {
  * - Reset everything to the normal filters on clean, and un-mark the icon
  */
 export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
-  ({ isOpen }) => {
+  ({ isOpen, onFiltersSubmit, onFiltersReset }) => {
     const intl = useIntl();
     const store = useStore();
     const formMethods = useForm({
@@ -31,13 +35,17 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
 
     const selectedProductType =
       store.discreteLayersStore.searchParams.recordType;
+    
     const filterableFields = useGetFilterableFields(
       selectedProductType as RecordType
     );
-    console.log(filterableFields);
 
     const handleSubmit = () => {
-      console.log(formMethods.getValues());
+      const filterFormValues = formMethods.getValues();
+      const filters = getCatalogFilters(filterableFields ?? [], filterFormValues);
+
+      // console.log(filters);
+      onFiltersSubmit(filters);
     };
 
     const watchAllFields = formMethods.watch();
@@ -56,15 +64,29 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               </form>
             )}
           </Box>
-          <Button
-            raised
-            type="submit"
-            form="catalogFiltersForm"
-            onClick={formMethods.handleSubmit(handleSubmit)}
-            disabled={isSubmitFiltersDisabled}
-          >
-            {intl.formatMessage({id: 'catalog-filter.filterButton.text'})}
-          </Button>
+          <Box className="catalogFiltersButtonsContainer">
+            <Button
+              className="catalogFiltersSubmitBtn"
+              raised
+              type="submit"
+              form="catalogFiltersForm"
+              onClick={formMethods.handleSubmit(handleSubmit)}
+              disabled={isSubmitFiltersDisabled}
+            >
+              {intl.formatMessage({id: 'catalog-filter.filterButton.text'})}
+            </Button>
+            <Button
+              className="catalogFiltersClearBtn"
+              type="button"
+              form="catalogFiltersForm"
+              onClick={() => {
+                onFiltersReset();
+              }}
+              // disabled={isSubmitFiltersDisabled}
+            >
+              {intl.formatMessage({id: 'catalog-filter.clearFilterButton.text'})}
+            </Button>
+          </Box>
         </Box>
       </FormProvider>
     );

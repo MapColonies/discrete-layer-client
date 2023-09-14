@@ -218,42 +218,77 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const buildFilters = (): FilterField[] => {
-    const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
-    return [
-      {
-        field: 'mc:boundingBox',
-        bbox: {
-          llon: coordinates[0][0],
-          llat: coordinates[0][1],
-          ulon: coordinates[2][0],
-          ulat: coordinates[2][1],
-        },
+    const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon)?.coordinates[0];
+   
+    const boundingBoxFilter = coordinates ? [{
+      field: 'mc:boundingBox',
+      bbox: {
+        llon: coordinates[0][0],
+        llat: coordinates[0][1],
+        ulon: coordinates[2][0],
+        ulat: coordinates[2][1],
       },
+    }] : [];
+
+    return [
+      ...boundingBoxFilter,
       {
         field: 'mc:type',
         eq: store.discreteLayersStore.searchParams.recordType,
       },
+      ...store.discreteLayersStore.searchParams.catalogFilters
     ];
   };
 
+  useEffect(() => {
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      void store.discreteLayersStore.clearLayersImages();
+  
+      // TODO: build query params: FILTERS and SORTS
+      const filters = buildFilters();
+      setQuery(store.querySearch({
+        opts: {
+          filter: filters
+        },
+        end: CONFIG.RUNNING_MODE.END_RECORD,
+        start: CONFIG.RUNNING_MODE.START_RECORD,
+      }));
+    }
+
+  }, [store.discreteLayersStore.searchParams.recordType, store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
-    void store.discreteLayersStore.clearLayersImages();
+    // void store.discreteLayersStore.clearLayersImages();
 
-    // TODO: build query params: FILTERS and SORTS
-    const filters = buildFilters();
-    setQuery(store.querySearch({
-      opts: {
-        filter: filters
-      },
-      end: CONFIG.RUNNING_MODE.END_RECORD,
-      start: CONFIG.RUNNING_MODE.START_RECORD,
-    }));
+    // // TODO: build query params: FILTERS and SORTS
+    // const filters = buildFilters();
+    // setQuery(store.querySearch({
+    //   opts: {
+    //     filter: filters
+    //   },
+    //   end: CONFIG.RUNNING_MODE.END_RECORD,
+    //   start: CONFIG.RUNNING_MODE.START_RECORD,
+    // }));
+  };
+
+  const handleCatalogFiltersApply = (filters: FilterField[]): void => {
+    handleTabViewChange(TabViews.SEARCH_RESULTS);
+    // void store.discreteLayersStore.clearLayersImages();
+    store.discreteLayersStore.searchParams.setCatalogFilters(filters);
+  };
+
+  const handleCatalogFiltersReset = (): void => {
+    store.discreteLayersStore.searchParams.resetCatalogFilters();
   };
 
   const handlePolygonReset = (): void => {
     if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
+    }
+
+    if(activeTabView !== TabViews.CATALOG) {
+      setActiveTabView(TabViews.CATALOG);
     }
 
     store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();
@@ -517,6 +552,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   enhanced
                   defaultValue={recordTypeOptions[0].value}
                   options={recordTypeOptions}
+                  value={store.discreteLayersStore.searchParams.recordType}
                   onChange={
                     (evt: React.ChangeEvent<HTMLSelectElement>): void => {
                       store.discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
@@ -731,6 +767,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
+            onFiltersApply={handleCatalogFiltersApply}
+            onFiltersReset={handleCatalogFiltersReset}
             isSelectionEnabled={Array.isArray(drawEntities[0]?.coordinates) ? drawEntities[0]?.coordinates.length > 0 : !!drawEntities[0]?.coordinates}
             isSystemFreeTextSearchEnabled={(permissions.isSystemFreeTextSearchEnabled as boolean)}
             onPolygonUpdate={onPolygonSelection}

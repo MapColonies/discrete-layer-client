@@ -83,13 +83,17 @@ const systemJobsPriorityOptions =
     },
   ];
 
-const DATE_FORMAT = 'dd/MM/yyyy';
+const DATE_FORMAT = 'DD/MM/YYYY';
+const DATE_FNS_FORMAT = 'dd/MM/yyyy';
+
 const APP_CONFIG = {
   SERVICE_PROTOCOL: SERVICE_PROTOCOL,
   SERVICE_NAME: SERVICE_NAME,
   LOCALE: {
     DATE_FORMAT: DATE_FORMAT,
     DATE_TIME_FORMAT: `${DATE_FORMAT} HH:mm`,
+    DATE_FNS_FORMAT: DATE_FNS_FORMAT,
+    DATE_FNS_TIME_FORMAT: `${DATE_FNS_FORMAT} hh:mm`,
   },
   I18N: {
     DEFAULT_LANGUAGE: LANGUAGE,

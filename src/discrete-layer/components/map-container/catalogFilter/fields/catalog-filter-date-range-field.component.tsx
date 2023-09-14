@@ -59,7 +59,7 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
         shouldCloseOnSelect={false}
         selectsRange
         autoFocus={false}
-        dateFormat={getDateformatType(false)}
+        dateFormat={getDateformatType(false, true)}
         placeholderText={intl.formatMessage({ id: 'catalog-filter.dateRangeField.placeholder' })}
         maxDate={new Date()}
         inputName={fieldId}

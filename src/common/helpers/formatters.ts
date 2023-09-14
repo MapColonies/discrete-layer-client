@@ -1,7 +1,13 @@
 import moment from 'moment';
 import CONFIG from '../config';
 
-export const getDateformatType = (withTime = false): string => withTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT;
+export const getDateformatType = (withTime = false, fnsFormat = false): string => {
+  if(fnsFormat) {
+    return withTime ? CONFIG.LOCALE.DATE_FNS_TIME_FORMAT : CONFIG.LOCALE.DATE_FNS_FORMAT;
+  }
+
+  return withTime ? CONFIG.LOCALE.DATE_TIME_FORMAT : CONFIG.LOCALE.DATE_FORMAT;
+};
 
 export interface FormatterFunc {
   (

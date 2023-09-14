@@ -11,6 +11,7 @@ import { IPOI, PoiDialog } from './poi.dialog';
 
 import './polygon-selection-ui.css';
 import { CatalogFilterPanel } from './catalogFilter/catalog-filter-panel.component';
+import { FilterField } from '../../models/RootStore.base';
 
 export const Divider: React.FC = () => {
   const theme = useTheme();
@@ -33,6 +34,8 @@ export interface PolygonSelectionUiProps {
   onReset: () => void;
   onPolygonUpdate: (polygon: IDrawingEvent) => void;
   onPoiUpdate: (longitude: number, latitude: number) => void;
+  onFiltersApply: (filters: FilterField[]) => void;
+  onFiltersReset: () => void;
   poi?: IPOI;
   corners?: BBoxCorners;
   disabled?: boolean;
@@ -57,6 +60,8 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     onReset,
     onPolygonUpdate,
     onPoiUpdate,
+    onFiltersApply,
+    onFiltersReset,
     poi,
     corners,
     disabled,
@@ -177,7 +182,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             poi={poi}
           />
         }
-      <CatalogFilterPanel isOpen={isFilterPanelOpen} />
+      <CatalogFilterPanel onFiltersReset={onFiltersReset} onFiltersSubmit={onFiltersApply} isOpen={isFilterPanelOpen} />
       </Box>
     </>
   );

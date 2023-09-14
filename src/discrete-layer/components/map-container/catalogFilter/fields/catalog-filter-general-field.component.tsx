@@ -49,6 +49,7 @@ export const CatalogFilterGeneralField: React.FC<CatalogFilterGeneralFieldProps>
         maxLength={fieldValidation?.maxLength ?? undefined}
         name={fieldId}
         type={fieldValidation.valueAsNumber ? 'number': 'text'}
+        value={formMethods.watch('fieldId')}
         placeholder={placeholder}
         invalid={!isEmpty(formMethods.errors[fieldId])}
         onBlur={() => {

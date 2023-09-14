@@ -187,6 +187,7 @@
   "catalog-filter.startYear.date-shortcuts": "מתחילת השנה",
   "catalog-filter.dateRangeField.placeholder": "בחר טווח תאריכים",
   "catalog-filter.filterButton.text": "סנן קטלוג",
+  "catalog-filter.clearFilterButton.text": "נקה סינון",
 
   "context-menu.title.tooltip": "פעולות על השכבה העליונה: ",
   "context-menu.sub-title.tooltip": "שכבות חופפות בנקודה שנבחרה",
