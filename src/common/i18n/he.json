@@ -179,13 +179,14 @@
 
   "best-edit.import.dialog.import-btn.text": "הוסף",
 
-  "catalog-filter.productName.validation-error": "יש להזין שם עם אותיות, מספרים ומקף תחתון בלבד.",
+  "catalog-filter.productName.validation-error": "יש להזין שם עם אותיות, מספרים ומקף תחתון בלבד",
   "catalog-filter.today.date-shortcuts": "היום",
   "catalog-filter.startWeek.date-shortcuts": "מתחילת השבוע",
   "catalog-filter.lastWeek.date-shortcuts": "שבוע שעבר",
   "catalog-filter.startMonth.date-shortcuts": "מתחילת החודש",
   "catalog-filter.startYear.date-shortcuts": "מתחילת השנה",
   "catalog-filter.dateRangeField.placeholder": "בחר טווח תאריכים",
+  "catalog-filter.dateRangeField.validation-error": "יש לבחור בטווח תאריכים תקין",
   "catalog-filter.filterButton.text": "סנן קטלוג",
   "catalog-filter.clearFilterButton.text": "נקה סינון",
 

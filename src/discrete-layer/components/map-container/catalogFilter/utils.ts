@@ -1,6 +1,7 @@
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import { FieldConfigModelType, FilterableFieldConfigModelType } from "../../../models";
 import { FilterField } from "../../../models/RootStore.base";
+import { isDateRange } from "@map-colonies/react-components";
 
 export enum CustomFilterOperations {
   DATE_RANGE = 'dateRange',
@@ -12,6 +13,8 @@ const buildFieldFilter = (filterableField: FieldConfigModelType, fieldValue: unk
   const fieldFilterConfig = (filterableField.isFilterable ?? {}) as FilterableFieldConfigModelType;
   
   if(!CUSTOM_OPERATIONS.includes(fieldFilterConfig.operation ?? '')) {
+    if(!fieldValue) return [];
+
     // We can use the operation as is, just return the filter
     const filter: FilterField = {
       field: filterableField.queryableName ?? '',
@@ -24,17 +27,25 @@ const buildFieldFilter = (filterableField: FieldConfigModelType, fieldValue: unk
   // Custom operations handling
   switch(fieldFilterConfig.operation) {
     case CustomFilterOperations.DATE_RANGE: {
-      const filterStart: FilterField = {
-        field: filterableField.queryableName ?? '',
-        gteq: get(fieldValue,'startDate')
-      };
+      // @ts-ignore
+      if(isDateRange(fieldValue)) {
+        if(!fieldValue.startDate || !fieldValue.endDate) return [];
 
-      const filterEnd: FilterField = {
-        field: filterableField.queryableName ?? '',
-        lteq: get(fieldValue,'endDate')
-      };
+        const filterStart: FilterField = {
+          field: filterableField.queryableName ?? '',
+          gteq:  fieldValue.startDate.toUTCString()
+        };
 
-      return [filterStart, filterEnd];
+  
+        const filterEnd: FilterField = {
+          field: filterableField.queryableName ?? '',
+          lteq: fieldValue.endDate.toUTCString()
+        };
+  
+        return [filterStart, filterEnd];
+      }
+
+      return [];
     }
     default:
       return [];
@@ -47,8 +58,8 @@ export const getCatalogFilters = (filterableFields: FieldConfigModelType[], cata
   for(const field of filterableFields) {
     const fieldFilterValue = catalogFilterFormValues[field.fieldName ?? ''];
     
-    // Undefined value means that the user didn't choose to filter on this field
-    if(typeof fieldFilterValue !== 'undefined') {
+    // Empty value means that the user didn't choose to filter on this field
+    if(!isEmpty(fieldFilterValue)) {
       fieldsFilters.push(...buildFieldFilter(field, fieldFilterValue));
     }
   }

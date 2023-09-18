@@ -273,13 +273,22 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleCatalogFiltersApply = (filters: FilterField[]): void => {
-    handleTabViewChange(TabViews.SEARCH_RESULTS);
-    // void store.discreteLayersStore.clearLayersImages();
+    if(activeTabView !== TabViews.SEARCH_RESULTS) {
+      handleTabViewChange(TabViews.SEARCH_RESULTS);
+    }
+
     store.discreteLayersStore.searchParams.setCatalogFilters(filters);
   };
 
   const handleCatalogFiltersReset = (): void => {
     store.discreteLayersStore.searchParams.resetCatalogFilters();
+    
+    // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
+    // If any of the geographical filters is enabled, then we want to stay at the search results tab.
+    
+    if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
+      handleTabViewChange(TabViews.CATALOG)
+    }
   };
 
   const handlePolygonReset = (): void => {
@@ -288,7 +297,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
 
     if(activeTabView !== TabViews.CATALOG) {
-      setActiveTabView(TabViews.CATALOG);
+      // Catalog filters are being cleaned from inside the catalog filters panel.
+      // If there's any filter enabled, then we want to stay at the search results tab.
+
+      if(store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
+        setActiveTabView(TabViews.CATALOG);
+      }
     }
 
     store.mapMenusManagerStore.resetCurrentWfsFeatureInfo();

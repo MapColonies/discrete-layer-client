@@ -11,6 +11,7 @@ import { getCatalogFilters } from "./utils";
 
 import './catalog-filter-panel.css';
 import { FilterField } from "../../../models/RootStore.base";
+import { isEmpty } from "lodash";
 interface CatalogFilterPanelProps {
     isOpen: boolean;
     onFiltersSubmit: (filters: FilterField[]) => void;
@@ -28,17 +29,22 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
   ({ isOpen, onFiltersSubmit, onFiltersReset }) => {
     const intl = useIntl();
     const store = useStore();
+
+    const selectedProductType = store.discreteLayersStore.searchParams.recordType;
+    const filterableFields = useGetFilterableFields(selectedProductType as RecordType);
+
+    const defaultFormValues = useMemo(() => {
+      return filterableFields?.reduce((defaultValues, field) => {
+        return ({...defaultValues, [field.fieldName as string]: ''})
+      }, {}) ?? {}
+    }, [filterableFields])
+
+    
     const formMethods = useForm({
       mode: 'onBlur',
       reValidateMode: 'onBlur',
+      // defaultValues: defaultFormValues
     });
-
-    const selectedProductType =
-      store.discreteLayersStore.searchParams.recordType;
-    
-    const filterableFields = useGetFilterableFields(
-      selectedProductType as RecordType
-    );
 
     const handleSubmit = () => {
       const filterFormValues = formMethods.getValues();
@@ -49,8 +55,8 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
     };
 
     const watchAllFields = formMethods.watch();
-    // If there is errors or if all field values are undefined, then submit should be disabled
-    const isSubmitFiltersDisabled = useMemo(() => !formMethods.formState.isValid || Object.values(watchAllFields).every(value => typeof value === 'undefined'), [watchAllFields]);
+    // If there is errors or if all field values are empty, then submit should be disabled
+    const isSubmitFiltersDisabled = useMemo(() => !formMethods.formState.isValid || Object.values(watchAllFields).every(value => isEmpty(value)), [watchAllFields]);
 
     return (
       <FormProvider {...formMethods}>
@@ -80,9 +86,10 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               type="button"
               form="catalogFiltersForm"
               onClick={() => {
+                // formMethods.reset(defaultFormValues);
+                formMethods.reset();
                 onFiltersReset();
               }}
-              // disabled={isSubmitFiltersDisabled}
             >
               {intl.formatMessage({id: 'catalog-filter.clearFilterButton.text'})}
             </Button>

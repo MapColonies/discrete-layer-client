@@ -184,6 +184,7 @@
   "catalog-filter.startMonth.date-shortcuts": "Since month's start",
   "catalog-filter.startYear.date-shortcuts": "Since year's start",
   "catalog-filter.dateRangeField.placeholder": "Pick Date Range",
+  "catalog-filter.dateRangeField.validation-error": "Please select a valid date range",
   "catalog-filter.filterButton.text": "Filter Catalog",
   "catalog-filter.clearFilterButton.text": "Clear Filter",
 
