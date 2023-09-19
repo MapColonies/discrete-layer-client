@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo, useEffect, useRef} from 'react';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { IconButton, Select, TextField, Tooltip, useTheme } from '@map-colonies/react-core';
@@ -12,6 +12,7 @@ import { IPOI, PoiDialog } from './poi.dialog';
 import './polygon-selection-ui.css';
 import { CatalogFilterPanel } from './catalogFilter/catalog-filter-panel.component';
 import { FilterField } from '../../models/RootStore.base';
+import { FreeTextSearch } from './freeTextSearch.component';
 
 export const Divider: React.FC = () => {
   const theme = useTheme();
@@ -28,7 +29,6 @@ export const Divider: React.FC = () => {
 
 export interface PolygonSelectionUiProps {
   isSelectionEnabled: boolean;
-  isSystemFreeTextSearchEnabled: boolean;
   onStartDraw: (type: DrawType) => void;
   onCancelDraw: () => void;
   onReset: () => void;
@@ -51,7 +51,6 @@ enum PolygonSelectionsLabels {
 
 export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => {
   const {
-    isSystemFreeTextSearchEnabled,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isSelectionEnabled,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -74,6 +73,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
   const [activeSelection, setActiveSelection] = useState<PolygonSelectionsLabels | ''>('');
   const [lastDrawingSelectionType, setLastDrawingSelectionType] = useState<PolygonSelectionsLabels | ''>('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [isCatalogFiltersEnabled, setIsCatalogFiltersEnabled] = useState(false);
 
   useEffect(() => {
     if(poi) {
@@ -92,97 +92,132 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
 
   return (
     <>
-    
-      <Box 
+      <Box
         id="searchContainer"
-        position="relative" 
+        position="relative"
         style={{
           height: '100%',
           display: 'flex',
           gap: '4px',
           alignItems: 'center',
           padding: '0 16px 0 16px',
-          opacity: disabled as boolean ? '0.3' : '1',
-          pointerEvents: disabled as boolean ? 'none' : 'unset',
+          opacity: (disabled as boolean) ? '0.3' : '1',
+          pointerEvents: (disabled as boolean) ? 'none' : 'unset',
         }}
       >
         <Tooltip content={intl.formatMessage({ id: 'action.point.tooltip' })}>
-          <IconButton 
-            className={getActiveClass("mc-icon-POI", PolygonSelectionsLabels.POI)}
+          <IconButton
+            className={getActiveClass(
+              'mc-icon-POI',
+              PolygonSelectionsLabels.POI
+            )}
             label={PolygonSelectionsLabels.POI}
             onClick={(): void => {
               setOpenPoiDialog(true);
-            }}/>
+            }}
+          />
         </Tooltip>
-        <Divider/>
+        <Divider />
         <Tooltip content={intl.formatMessage({ id: 'action.box.tooltip' })}>
-          <IconButton 
-            className={getActiveClass("mc-icon-Rectangle", PolygonSelectionsLabels.BOX)}
+          <IconButton
+            className={getActiveClass(
+              'mc-icon-Rectangle',
+              PolygonSelectionsLabels.BOX
+            )}
             label={PolygonSelectionsLabels.BOX}
             onClick={(): void => {
               setLastDrawingSelectionType(PolygonSelectionsLabels.BOX);
               onStartDraw(DrawType.BOX);
-            }}/>
+            }}
+          />
         </Tooltip>
         <Tooltip content={intl.formatMessage({ id: 'action.polygon.tooltip' })}>
-          <IconButton 
-            className={getActiveClass("mc-icon-Polygon", PolygonSelectionsLabels.POLYGON)}
-            label={PolygonSelectionsLabels.POLYGON} 
+          <IconButton
+            className={getActiveClass(
+              'mc-icon-Polygon',
+              PolygonSelectionsLabels.POLYGON
+            )}
+            label={PolygonSelectionsLabels.POLYGON}
             onClick={(): void => {
               setLastDrawingSelectionType(PolygonSelectionsLabels.POLYGON);
               onStartDraw(DrawType.POLYGON);
-            }}/>
+            }}
+          />
         </Tooltip>
-        <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
-          <IconButton 
-            className={getActiveClass("mc-icon-Coordinates", PolygonSelectionsLabels.BBOX)} 
+        <Tooltip
+          content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}
+        >
+          <IconButton
+            className={getActiveClass(
+              'mc-icon-Coordinates',
+              PolygonSelectionsLabels.BBOX
+            )}
             label={PolygonSelectionsLabels.BBOX}
             onClick={(): void => {
               setOpen(true);
-            }}/>
+            }}
+          />
         </Tooltip>
-        <Divider/>
+        <Divider />
         <Tooltip content={intl.formatMessage({ id: 'action.clear.tooltip' })}>
-          <IconButton className="mc-icon-Delete" label="CLEAR" onClick={() => {
-            setActiveSelection('');
-            onReset();
-          }}/>
+          <IconButton
+            className="mc-icon-Delete"
+            label="CLEAR"
+            onClick={() => {
+              setActiveSelection('');
+              onReset();
+            }}
+          />
         </Tooltip>
-        <Divider/>
+        <Divider />
         <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
-            <IconButton 
-              className={getActiveClass("mc-icon-Filter", PolygonSelectionsLabels.FILTER)}
-              label={PolygonSelectionsLabels.FILTER}
-              onClick={() => {
-                setIsFilterPanelOpen((currFilterOpen) => !currFilterOpen)
-              }}
-            />
+          <IconButton
+            className={`mc-icon-Filter ${
+              isCatalogFiltersEnabled ? 'active' : ''
+            }`}
+            label={PolygonSelectionsLabels.FILTER}
+            onClick={() => {
+              setIsFilterPanelOpen((currFilterOpen) => !currFilterOpen);
+            }}
+          />
         </Tooltip>
-        <Box id="searchTerm">
-          <TextField disabled={!isSystemFreeTextSearchEnabled} style={{padding: '0 6px 0 6px'}}/>
-        </Box>
-        <Tooltip content={intl.formatMessage({ id: 'action.search.tooltip' })}>
-          <IconButton disabled={!isSystemFreeTextSearchEnabled} icon="search" label="SEARCH" className="searchIconBtn"/>
-        </Tooltip>
-        {
-          open &&
+        <FreeTextSearch
+          isCatalogFiltersEnabled={isCatalogFiltersEnabled}
+          onFiltersReset={onFiltersReset}
+          onFiltersApply={(filters) => {
+            setIsFilterPanelOpen(false);
+            setIsCatalogFiltersEnabled(false);
+            onFiltersApply(filters);
+          }}
+        />
+        {open && (
           <BBoxDialog
             isOpen={open}
             onSetOpen={setOpen}
             onPolygonUpdate={onPolygonUpdate}
             corners={corners}
           />
-        }
-        {
-          openPoiDialog &&
+        )}
+        {openPoiDialog && (
           <PoiDialog
             isOpen={openPoiDialog}
             onSetOpen={setOpenPoiDialog}
             onPoiUpdate={onPoiUpdate}
             poi={poi}
           />
-        }
-      <CatalogFilterPanel onFiltersReset={onFiltersReset} onFiltersSubmit={onFiltersApply} isOpen={isFilterPanelOpen} />
+        )}
+
+        <CatalogFilterPanel
+          onFiltersReset={() => {
+            setIsCatalogFiltersEnabled(false);
+            onFiltersReset();
+          }}
+          onFiltersSubmit={(filters) => {
+            setIsCatalogFiltersEnabled(true);
+            onFiltersApply(filters);
+          }}
+          isOpen={isFilterPanelOpen}
+        />
       </Box>
     </>
   );

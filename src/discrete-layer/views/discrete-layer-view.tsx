@@ -259,17 +259,6 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
-    // void store.discreteLayersStore.clearLayersImages();
-
-    // // TODO: build query params: FILTERS and SORTS
-    // const filters = buildFilters();
-    // setQuery(store.querySearch({
-    //   opts: {
-    //     filter: filters
-    //   },
-    //   end: CONFIG.RUNNING_MODE.END_RECORD,
-    //   start: CONFIG.RUNNING_MODE.START_RECORD,
-    // }));
   };
 
   const handleCatalogFiltersApply = (filters: FilterField[]): void => {
@@ -277,11 +266,16 @@ const DiscreteLayerView: React.FC = observer(() => {
       handleTabViewChange(TabViews.SEARCH_RESULTS);
     }
 
+    store.discreteLayersStore.resetSelectedLayer();
     store.discreteLayersStore.searchParams.setCatalogFilters(filters);
   };
 
   const handleCatalogFiltersReset = (): void => {
+    if(store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
+
     store.discreteLayersStore.searchParams.resetCatalogFilters();
+    void store.discreteLayersStore.clearLayersImages();
+    store.discreteLayersStore.resetSelectedLayer();
     
     // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
     // If any of the geographical filters is enabled, then we want to stay at the search results tab.
@@ -509,7 +503,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
       isWebToolsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_TOOLS),
       isSystemFilterEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FILTER),
-      isSystemFreeTextSearchEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FREETEXTSEARCH),
       isSystemSidebarCollapseEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
@@ -784,7 +777,6 @@ const DiscreteLayerView: React.FC = observer(() => {
             onFiltersApply={handleCatalogFiltersApply}
             onFiltersReset={handleCatalogFiltersReset}
             isSelectionEnabled={Array.isArray(drawEntities[0]?.coordinates) ? drawEntities[0]?.coordinates.length > 0 : !!drawEntities[0]?.coordinates}
-            isSystemFreeTextSearchEnabled={(permissions.isSystemFreeTextSearchEnabled as boolean)}
             onPolygonUpdate={onPolygonSelection}
             onPoiUpdate={onPoiSelection}
             poi={poi}
@@ -906,6 +898,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               height: detailsPanelExpanded ? '50%' : '25%',
             }}>
             <DetailsPanel
+              activeTabView={activeTabView}
               isEditEntityDialogOpen = {isEditEntityDialogOpen}
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}

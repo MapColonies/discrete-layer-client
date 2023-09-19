@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useIntl } from 'react-intl';
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form';
-import { endOfDay, endOfWeek, isDate, startOfDay, startOfMonth, startOfWeek, startOfYear, subDays, subWeeks } from 'date-fns';
+import { lastDayOfYear, startOfDay, startOfMonth, startOfWeek, startOfYear, subDays, subWeeks, subYears } from 'date-fns';
 import { Box, DateRangePicker, isDateRange } from '@map-colonies/react-components';
 import { getDateformatType } from '../../../../../common/helpers/formatters';
 import { FieldConfigModelType, FilterFieldValidationModelType } from '../../../../models';
@@ -28,14 +28,12 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
   };
 
   const shortcutsTranslations = {
-    TODAY: intl.formatMessage({id: 'catalog-filter.today.date-shortcuts'}),
-    START_WEEK: intl.formatMessage({id: 'catalog-filter.startWeek.date-shortcuts'}),
-    LAST_WEEK: intl.formatMessage({id: 'catalog-filter.lastWeek.date-shortcuts'}),
-    START_MONTH: intl.formatMessage({id: 'catalog-filter.startMonth.date-shortcuts'}),
-    START_YEAR: intl.formatMessage({id: 'catalog-filter.startYear.date-shortcuts'}),
+    SEVEN_DAYS: intl.formatMessage({id: 'catalog-filter.sevenDays.date-shortcuts'}),
+    THIRTY_DAYS: intl.formatMessage({id: 'catalog-filter.thirtyDays.date-shortcuts'}),
+    THIS_YEAR: intl.formatMessage({id: 'catalog-filter.thisYear.date-shortcuts'}),
+    LAST_YEAR: intl.formatMessage({id: 'catalog-filter.lastYear.date-shortcuts'}),
   }
 
-  console.log(formMethods.watch())
   return (
     <Box
       className={'catalogFilterFieldContainer'}
@@ -65,8 +63,7 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
               shouldCloseOnSelect={false}
               selectsRange
               autoFocus={false}
-              // dateFormat={getDateformatType(false, true)}
-              dateFormat={"EEEE, dd MMMM yyyy"}
+              dateFormat={getDateformatType(false, true, true)}
               placeholderText={intl.formatMessage({
                 id: 'catalog-filter.dateRangeField.placeholder',
               })}
@@ -75,38 +72,32 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
               withShortcuts={[
                 {
                   id: '1',
-                  label: shortcutsTranslations.TODAY,
-                  startDate: startOfDay(new Date()),
+                  label: shortcutsTranslations.SEVEN_DAYS,
+                  startDate: startOfDay(subDays(new Date(), 6)),
                   endDate: new Date(),
                 },
                 {
                   id: '2',
-                  label: shortcutsTranslations.START_WEEK,
-                  startDate: startOfWeek(new Date(), { weekStartsOn: 0 }),
+                  label: shortcutsTranslations.THIRTY_DAYS,
+                  startDate: startOfDay(subDays(new Date(), 29)),
+                  endDate: new Date(),
+                },
+                {
+                  id: '3',
+                  label: shortcutsTranslations.THIS_YEAR,
+                  startDate: startOfYear(new Date()),
                   endDate: new Date(),
                 },
                 () => {
-                  const lastWeekStart = startOfWeek(subWeeks(new Date(), 1));
-                  const lastWeekEnd = endOfWeek(lastWeekStart);
+                  const lastYearStart = startOfYear(subYears(new Date(), 1));
+                  const lastYearEnd = lastDayOfYear(lastYearStart);
 
                   return {
-                    id: '3',
-                    label: shortcutsTranslations.LAST_WEEK,
-                    startDate: lastWeekStart,
-                    endDate: lastWeekEnd,
+                    id: '4',
+                    label: shortcutsTranslations.LAST_YEAR,
+                    startDate: lastYearStart,
+                    endDate: lastYearEnd,
                   };
-                },
-                {
-                  id: '4',
-                  label: shortcutsTranslations.START_MONTH,
-                  startDate: startOfMonth(new Date()),
-                  endDate: new Date(),
-                },
-                {
-                  id: '5',
-                  label: shortcutsTranslations.START_YEAR,
-                  startDate: startOfYear(new Date()),
-                  endDate: new Date(),
                 },
               ]}
               isClearable

@@ -70,6 +70,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isFilterable {
           participateInFilterPanel
           operation
+          order
           validation {
             min
             max

@@ -20,27 +20,6 @@ body[dir='rtl'] .searchIconBtn {
 #searchContainer button.rmwc-icon.rmwc-icon--ligature {
   padding: 8px 8px;
 }
-/* Override TEXTFIELD styling */
-#searchContainer #searchTerm .mdc-text-field--fullwidth {
-  background-color: transparent !important;
-}
-
-#searchContainer #searchTerm .mdc-text-field {
-  height: 32px;
-}
-
-#searchContainer #searchTerm .mdc-line-ripple::before {
-  border-bottom-color: var(--mdc-theme-text-icon-on-dark);
-}
-
-#searchContainer #searchTerm .mdc-line-ripple::after {
-  border-bottom-color: var(--mdc-theme-text-icon-on-dark);
-}
-
-#searchContainer #searchTerm .mdc-text-field__input {
-  color: var(--mdc-theme-on-surface);
-  caret-color: var(--mdc-theme-on-surface);
-}
 
 #searchContainer .active {
   color: var(--mdc-theme-gc-success);

@@ -43,14 +43,13 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
     const formMethods = useForm({
       mode: 'onBlur',
       reValidateMode: 'onBlur',
-      // defaultValues: defaultFormValues
+      defaultValues: defaultFormValues
     });
 
     const handleSubmit = () => {
       const filterFormValues = formMethods.getValues();
       const filters = getCatalogFilters(filterableFields ?? [], filterFormValues);
 
-      // console.log(filters);
       onFiltersSubmit(filters);
     };
 
@@ -86,8 +85,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               type="button"
               form="catalogFiltersForm"
               onClick={() => {
-                // formMethods.reset(defaultFormValues);
-                formMethods.reset();
+                formMethods.reset(defaultFormValues);
                 onFiltersReset();
               }}
             >

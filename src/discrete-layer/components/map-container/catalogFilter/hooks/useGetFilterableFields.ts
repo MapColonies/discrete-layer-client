@@ -44,6 +44,9 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
       }
     }
 
+    // Sort by order
+    allFilterableDescriptorsFields.sort((a, b) => a.isFilterable.order - b.isFilterable.order);
+
     return allFilterableDescriptorsFields;
   }
 

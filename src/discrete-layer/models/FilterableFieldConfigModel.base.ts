@@ -20,6 +20,7 @@ export const FilterableFieldConfigModelBase = ModelBase
     __typename: types.optional(types.literal("FilterableFieldConfig"), "FilterableFieldConfig"),
     participateInFilterPanel: types.union(types.undefined, types.null, types.boolean),
     operation: types.union(types.undefined, types.null, types.string),
+    order: types.union(types.undefined, types.null, types.number),
     validation: types.union(types.undefined, types.null, types.late((): any => FilterFieldValidationModel)),
   })
   .views(self => ({
@@ -31,10 +32,11 @@ export const FilterableFieldConfigModelBase = ModelBase
 export class FilterableFieldConfigModelSelector extends QueryBuilder {
   get participateInFilterPanel() { return this.__attr(`participateInFilterPanel`) }
   get operation() { return this.__attr(`operation`) }
+  get order() { return this.__attr(`order`) }
   validation(builder?: string | FilterFieldValidationModelSelector | ((selector: FilterFieldValidationModelSelector) => FilterFieldValidationModelSelector)) { return this.__child(`validation`, FilterFieldValidationModelSelector, builder) }
 }
 export function selectFromFilterableFieldConfig() {
   return new FilterableFieldConfigModelSelector()
 }
 
-export const filterableFieldConfigModelPrimitives = selectFromFilterableFieldConfig().participateInFilterPanel.operation
+export const filterableFieldConfigModelPrimitives = selectFromFilterableFieldConfig().participateInFilterPanel.operation.order

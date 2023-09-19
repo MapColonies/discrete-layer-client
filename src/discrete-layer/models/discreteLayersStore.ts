@@ -314,7 +314,11 @@ export const discreteLayersStore = ModelBase
 
       self.tabViews = resetTabs;
 
-    } 
+    }
+
+    function resetSelectedLayer(): void {
+      self.selectedLayer = undefined;
+    }
 
     function getFieldConfig(
       layerRecordType: LayerRecordTypes,
@@ -339,6 +343,7 @@ export const discreteLayersStore = ModelBase
       selectLayer,
       selectLayerByID,
       setTabviewData,
+      resetSelectedLayer,
       restoreTabviewData,
       updateTabviewsData,
       showFootprint,
