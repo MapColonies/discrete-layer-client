@@ -16,6 +16,7 @@ import {
   ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
@@ -25,7 +26,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
-import { existStatus, getStatusColoredText, isUnpublished } from '../../../common/helpers/style';
+import { getStatusColoredText } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -323,7 +324,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     ],
                 buttons: [
                   <>
-                    {hoveredNode !== undefined &&
+                    {
+                      !rowInfo.node.layerURLMissing &&
+                      hoveredNode !== undefined &&
                       hoveredNode.id === rowInfo.node.id && 
                       hoveredNode.parentPath === rowInfo.path.slice(0, -1).toString() && (                      
                         <ActionsRenderer
@@ -336,7 +339,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           entity={rowInfo.node.__typename}
                           actionHandler={dispatchAction}
                         />
-                      )}
+                      )
+                    }
                   </>,
                 ],
               })}

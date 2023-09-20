@@ -3,7 +3,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { get, isEmpty } from 'lodash';
 import { IconButton, MenuSurfaceAnchor, Typography, Menu, MenuItem } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { IActionGroup, IAction } from '../../../actions/entity.actions';
+import { IActionGroup, IAction, isDependentFieldWithValue } from '../../../actions/entity.actions';
 
 import './actions.cell-renderer.css';
 
@@ -19,22 +19,25 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
   const entity = (props.data as Record<string,unknown>).__typename as string;
 
   const filterActionsByDependentFields = (actions: IActionGroup[]): IActionGroup[] => {
-    const jobData = (props.data as Record<string,unknown>);
+    const data = (props.data as Record<string,unknown>);
     const filteredActionGroups = actions.map(actionGroup => {
       return ({
         ...actionGroup,
         group: actionGroup.group.filter(action => {
           const { dependentField } = action;
           if (typeof dependentField === 'undefined') return true;
+
+          if (isDependentFieldWithValue(dependentField)) {
+            return get(data, dependentField.field) === dependentField.expectedValue;
+          }
                     
-          return get(jobData, dependentField) as boolean;
+          return get(data, dependentField) as boolean;
         })
       })
     });
 
     return filteredActionGroups;
-
-  }
+  };
 
   const actions = useMemo(() => filterActionsByDependentFields(props.actions[entity]), [props.actions[entity]]);
   let frequentActions: IAction[] = [];

@@ -17,11 +17,14 @@ import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
-import { CapabilityModelType } from './CapabilityModel';
-import { getFlatEntityDescriptors } from '../components/layer-details/utils';
 import { isUnpublished } from '../../common/helpers/style';
+import { LinkType } from '../../common/models/link-type.enum';
+import { getLayerLink } from '../components/helpers/layersUtils';
 import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../components/layer-details/entity-types-keys';
+import { getFlatEntityDescriptors } from '../components/layer-details/utils';
+import { CapabilityModelType } from './CapabilityModel';
 import { FieldConfigModelType } from './FieldConfigModel';
+import { RecordType } from './RecordTypeEnum';
 
 export type LayersImagesResponse = ILayerImage[];
 
@@ -118,15 +121,26 @@ export const discreteLayersStore = ModelBase
       const isUserAdmin = store.userStore.isUserAdmin();
       const filteredLayersImages = data.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
       
-      self.layersImages = filteredLayersImages.map(item => ({
+      self.layersImages = filteredLayersImages.map(item => {
+        let validations = {};
+        if (!isEmpty(self.capabilities) && item.type === RecordType.RECORD_RASTER) {
+          const layerLink = getLayerLink(item);
+          const hasCapabilities = self.capabilities?.find(item => layerLink.name === item.id);
+          const hasWMTSUrl = layerLink.protocol === LinkType.WMTS;
+          if (!hasCapabilities && hasWMTSUrl) {
+            validations = { layerURLMissing: true };
+          }
+        }
+        return {
           ...item,
           footprintShown: showFootprint,
           layerImageShown: false,
-          order: null
-        })
-      );
+          order: null,
+          ...validations
+        };
+      });
 
-      return self.layersImages ;
+      return self.layersImages;
     }
 
     function setLayersImagesData(data: ILayerImage[]): void {
@@ -239,7 +253,6 @@ export const discreteLayersStore = ModelBase
               return item;
             });
           }
-
         });
       } 
     }
@@ -263,8 +276,9 @@ export const discreteLayersStore = ModelBase
       self.previewedLayers = [];
     }
 
-    function setCapabilities(data: CapabilityModelType[]): void {
+    function setCapabilities(data: CapabilityModelType[]): CapabilityModelType[] {
       self.capabilities = cloneDeep(data);
+      return self.capabilities;
     }
 
     function setBaseMaps(baseMaps: IBaseMaps): void {
