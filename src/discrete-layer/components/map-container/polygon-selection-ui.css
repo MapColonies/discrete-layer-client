@@ -14,6 +14,13 @@ body[dir='rtl'] .searchIconBtn {
 }
 #searchContainer {
   position: relative;
+  height: 100%;
+  width: 620px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 0 16px 0 16px;
+  justify-content: center;
 }
 
 /* Override ICONBUTTON styling */

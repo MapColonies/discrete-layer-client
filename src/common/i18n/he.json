@@ -192,7 +192,7 @@
   "catalog-filter.filterButton.text": "סנן קטלוג",
   "catalog-filter.clearFilterButton.text": "נקה סינון",
 
-  "catalog-filter.freeText.placeholder": "שדה חיפוש חופשי בקטלוג",
+  "catalog-filter.freeText.placeholder": "חיפוש חופשי בקטלוג",
 
   "context-menu.title.tooltip": "פעולות על השכבה העליונה: ",
   "context-menu.sub-title.tooltip": "שכבות חופפות בנקודה שנבחרה",

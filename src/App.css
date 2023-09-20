@@ -49,6 +49,7 @@
   background-color: var(--mdc-theme-background);
   color: var(--mdc-theme-on-surface);
   overflow: hidden;
+  --side-panel-width: 28%;
 }
 
 .glow-missing-icon {
@@ -116,6 +117,20 @@ button.cesium-infoBox-close:hover {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.react-datepicker__close-icon {
+  padding: 0px 8px;
+}
+
+body[dir='rtl'] .react-datepicker__close-icon {
+  right: unset;
+  left: 8px;
+}
+
+body[dir='ltr'] .react-datepicker__close-icon {
+  right: 8px;
+  left: unset;
 }
 
 @keyframes glow {

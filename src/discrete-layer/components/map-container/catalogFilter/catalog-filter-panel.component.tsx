@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { observer } from 'mobx-react-lite';
 import { useIntl } from "react-intl";
@@ -45,6 +45,15 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
       reValidateMode: 'onBlur',
       defaultValues: defaultFormValues
     });
+    
+    const handleFormReset = () => {
+      formMethods.reset(defaultFormValues);
+      onFiltersReset();
+    };
+
+    useEffect(() => {
+      handleFormReset();
+    }, [store.userStore.user?.role, store.discreteLayersStore.searchParams.recordType])
 
     const handleSubmit = () => {
       const filterFormValues = formMethods.getValues();
@@ -84,10 +93,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               className="catalogFiltersClearBtn"
               type="button"
               form="catalogFiltersForm"
-              onClick={() => {
-                formMethods.reset(defaultFormValues);
-                onFiltersReset();
-              }}
+              onClick={handleFormReset}
             >
               {intl.formatMessage({id: 'catalog-filter.clearFilterButton.text'})}
             </Button>

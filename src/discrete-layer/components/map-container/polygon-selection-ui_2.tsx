@@ -67,13 +67,23 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
   } = props;
 
   const intl = useIntl();
-  // const { discreteLayersStore } = useStore();
+  const store = useStore();
   const [open, setOpen] = useState(false);
   const [openPoiDialog, setOpenPoiDialog] = useState(false);
   const [activeSelection, setActiveSelection] = useState<PolygonSelectionsLabels | ''>('');
   const [lastDrawingSelectionType, setLastDrawingSelectionType] = useState<PolygonSelectionsLabels | ''>('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isCatalogFiltersEnabled, setIsCatalogFiltersEnabled] = useState(false);
+
+  useEffect(() => {
+    setIsFilterPanelOpen(false);
+  }, [disabled]);
+
+  useEffect(() => {
+    setIsFilterPanelOpen(false);
+    setActiveSelection('');
+    setLastDrawingSelectionType('');
+  }, [store.userStore.user?.role, store.discreteLayersStore.searchParams.recordType])
 
   useEffect(() => {
     if(poi) {
@@ -96,11 +106,6 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
         id="searchContainer"
         position="relative"
         style={{
-          height: '100%',
-          display: 'flex',
-          gap: '4px',
-          alignItems: 'center',
-          padding: '0 16px 0 16px',
           opacity: (disabled as boolean) ? '0.3' : '1',
           pointerEvents: (disabled as boolean) ? 'none' : 'unset',
         }}

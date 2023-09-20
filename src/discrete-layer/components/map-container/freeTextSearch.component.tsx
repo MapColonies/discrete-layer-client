@@ -34,6 +34,11 @@ export const FreeTextSearch: React.FC<FreeTextSearchProps> = observer(({ onFilte
     }
   }, [isCatalogFiltersEnabled]);
 
+
+  useEffect(() => {
+    setValue(INITIAL_VALUE);
+  }, [store.userStore.user?.role, store.discreteLayersStore.searchParams.recordType])
+
   const getFreeTextFilter = (text: string): FilterField => ({
     field: PYCSW_ANY_TEXT_FIELD,
     like: text

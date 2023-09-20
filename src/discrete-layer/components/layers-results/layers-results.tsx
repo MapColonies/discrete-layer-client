@@ -219,7 +219,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     {
       pinned: 'right',
       headerName: '',
-      width: 20,
+      width: 0,
       cellRenderer: 'actionsRenderer',
       cellRendererParams: {
         actions: entityPermittedActions,

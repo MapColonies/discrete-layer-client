@@ -188,7 +188,7 @@
   "catalog-filter.filterButton.text": "Filter Catalog",
   "catalog-filter.clearFilterButton.text": "Clear Filter",
 
-  "catalog-filter.freeText.placeholder": "Free terms catalog search field",
+  "catalog-filter.freeText.placeholder": "Free terms catalog search",
 
   "context-menu.title.tooltip": "Actions on topmost layer: ",
   "context-menu.sub-title.tooltip": "overlapping layers",

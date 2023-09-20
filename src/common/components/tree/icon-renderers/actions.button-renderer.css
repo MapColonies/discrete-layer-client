@@ -1,7 +1,7 @@
 .actionsContainer {
   position: relative;
   display: flex;
-  right: 152px;
+  right: 110px;
   width: 124px; /*36+36+36+16*/
   justify-content: flex-end;
   padding-left: 16px;
@@ -19,7 +19,7 @@
 
 body[dir='rtl'] .actionsContainer {
   right: unset;
-  left: 152px;
+  left: 110px;
 }
 
 .actionsContainer .actionIcon {
