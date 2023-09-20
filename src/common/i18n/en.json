@@ -655,6 +655,7 @@
   "map-context-menu.title": "Presenting {maxLayersToPresent} layers out of {activeLayers}",
   "map-context-menu.service-operations.group.title": "Query Services",
   "map-context-menu.query-dem-height.title": "Query DEM point Height",
+  "map-context-menu.polygon-parts.title": "Query Polygon Parts",
   "map-context-menu.layer-up.title": "Raise Layer",
   "map-context-menu.layer-down.title": "Lower Layer",
   "map-context-menu.layer-to-top.title": "Move to top",
@@ -662,6 +663,8 @@
 
   "wfs-info.no-data.message": "No data found for type {feature}",
   "dem-heights-info.no-data.message": "No height data found for the selected position",
+  "polygonParts-info.no-data.message": "No polygon parts data was found for the layer in the selected position",
+
 
   "export-layer.exportSuccessContainer.title": "Export request triggered",
   "export-layer.exportSuccessContainer.approve": "Copy and exit",

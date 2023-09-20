@@ -85,6 +85,10 @@ export const MapActionResolver: React.FC = observer(() => {
         
         break;
       }
+      case ContextActions.QUERY_POLYGON_PARTS: {
+        setHighlightedLayer(undefined);
+        break;
+      }
       default:
         break;
     }
