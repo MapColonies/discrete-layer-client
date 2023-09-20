@@ -1,3 +1,7 @@
 .imageChecked {
   color: var(--mdc-theme-primary) !important;
 }
+
+.urlMissing {
+  color: var(--mdc-theme-gc-error-high) !important;
+}
