@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { NodeData, TreeItem } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
-import { get, isEmpty } from 'lodash';
+import _, { get, isEmpty } from 'lodash';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
@@ -28,6 +28,7 @@ import { ExportActions } from '../../components/export-layer/hooks/useDomainExpo
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 import { TabViews } from '../tab-views';
 import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
+import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
 
 const FIRST = 0;
 
@@ -42,10 +43,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
 
   const store = useStore();
 
-  const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
   const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
   
+  const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
   const { setDemHeightsOptions } = useHandleDemHeightsRequests();
+  const { setGetPolygonPartsFeatureOptions } = useHandleWfsPolygonPartsRequests();
   
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
@@ -236,6 +238,22 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             ],
             typeName,
             count: 1,
+            onDataResolved: closeMenu,
+          });
+          
+          break;
+        }
+        case ContextActions.QUERY_POLYGON_PARTS: {
+          const coordinates = data.coordinates as { longitude: number, latitude: number };
+          const closeMenu = (data.handleClose as (() => void | undefined));
+
+          setGetPolygonPartsFeatureOptions({
+            pointCoordinates: [
+              coordinates.longitude.toString(),
+              coordinates.latitude.toString(),
+            ],
+            shouldFlyToFeatures: true,
+            filterProperties: [{ propertyName: "productId", propertyValue: _.get(data?.layerRecord, 'productId') as string }],
             onDataResolved: closeMenu,
           });
           

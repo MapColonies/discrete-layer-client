@@ -169,6 +169,10 @@ const APP_CONFIG = {
   CONTEXT_MENUS: {
     MAP: {
       MAX_ACTIVE_LAYERS_TO_PRESENT: 5,
+      POLYGON_PARTS_FEATURE_CONFIG: {
+        color: '#BF40BF',
+        outlineWidth: 8
+      }
     }
   }
 };

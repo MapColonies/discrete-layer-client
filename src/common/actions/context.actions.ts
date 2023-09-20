@@ -15,6 +15,7 @@ export enum ContextActionsTypes {
 export enum ContextActions {
   QUERY_WFS_FEATURE = 'QUERY_WFS_FEATURE',
   QUERY_DEM_HEIGHT = 'QUERY_DEM_HEIGHT',
+  QUERY_POLYGON_PARTS = 'QUERY_POLYGON_PARTS',
   MOVE_LAYER_UP = 'MOVE_LAYER_UP',
   MOVE_LAYER_DOWN = 'MOVE_LAYER_DOWN',
   MOVE_LAYER_TO_BOTTOM = 'MOVE_LAYER_TO_BOTTOM',
@@ -164,6 +165,11 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
                 titleTranslationId: 'map-context-menu.layer-to-bottom.title',
                 action: ContextActions.MOVE_LAYER_TO_BOTTOM,
                 separator: 'AFTER'
+              },
+              {
+                ...defaultContextActionProps,
+                titleTranslationId: 'map-context-menu.polygon-parts.title',
+                action: ContextActions.QUERY_POLYGON_PARTS,
               },
             ],
           },
