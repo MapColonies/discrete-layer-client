@@ -253,7 +253,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
               coordinates.latitude.toString(),
             ],
             shouldFlyToFeatures: true,
-            filterProperties: [{ propertyName: "productId", propertyValue: _.get(data?.layerRecord, 'productId') as string }],
+            filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,
           });
           
