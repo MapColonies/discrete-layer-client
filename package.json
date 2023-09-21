@@ -23,7 +23,7 @@
     "postinstall": "patch-package",
     "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,LayerDemRecord,BestRecord,EntityDescriptor,VectorBestRecord,QuantizedMeshBestRecord --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
     "start": "yarn run copyassets:all && react-app-rewired start",
-    "build": "react-scripts --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
+    "build": "react-app-rewired --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
     "test": "react-scripts test --verbose",
     "test:coverage": "react-scripts test --verbose --coverage --watchAll",
     "eject": "react-scripts eject",

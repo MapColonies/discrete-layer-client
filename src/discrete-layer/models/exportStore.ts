@@ -1,6 +1,6 @@
 import { DrawType } from '@map-colonies/react-components';
 import { createIntl } from 'react-intl';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { digest } from 'jsum';
 import CONFIG from '../../common/config';
 import { Feature, FeatureCollection, Geometry } from 'geojson';
@@ -104,7 +104,7 @@ export const exportStore = ModelBase
     
     function addFeatureSelection(newSelection: Feature): void {
       const currentFeatures = self.geometrySelectionsCollection.features;
-      const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, id: uuid.v4()}}]; 
+      const newFeatures: Feature[] = [...currentFeatures, {...newSelection, properties: { ...newSelection.properties, id: uuid()}}]; 
       self.geometrySelectionsCollection = {...self.geometrySelectionsCollection, features: newFeatures};
       resetHasExportPreviewed();
       setImportedFileError(null);
