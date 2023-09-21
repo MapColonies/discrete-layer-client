@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.2...v2.0.3) (2023-09-21)
+
+
+### Bug Fixes
+
+* build script to use rewired + uuid import ([2ea45bd](https://github.com/MapColonies/discrete-layer-client/commit/2ea45bdffbad671d1a19967c5dde1b58737ca2b5))
+
 ### [2.0.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.1...v2.0.2) (2023-09-21)
 
 
