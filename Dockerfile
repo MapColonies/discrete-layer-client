@@ -1,4 +1,4 @@
-FROM node:12.18.3-alpine3.12 AS prepare
+FROM node:16.13.0-alpine3.12 AS prepare
 #download confd 
 RUN apk add --no-cache wget
 RUN mkdir /confd
