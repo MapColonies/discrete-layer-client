@@ -2392,14 +2392,14 @@
     lodash "^4.17.21"
     ngeohash "^0.6.3"
 
-"@map-colonies/react-components@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-4.1.1.tgz#e6e0b229a15df3b4d1e30d761e66014d063c5134"
-  integrity sha512-ObJTx4CEWUDOzY66x5tqTHAumqq1hYF62JxmEaMgJeXp0jPizxLQVK6wDBXuBpDPP6vNWHJH+pxwUg3T3E8VWA==
+"@map-colonies/react-components@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-components/-/react-components-4.1.2.tgz#1b80017eed85ceb1fc60534ef8c4299bcf64a14d"
+  integrity sha512-aZ3kGOMXtHEj2e1LbEvnNeZMx7BQusufY3yqhLRZKnBBeHclP9szMy7frF56pf721laTsxMBledtPw8+OAxJrw==
   dependencies:
     "@date-io/date-fns" "^1.3.13"
     "@here/quantized-mesh-decoder" "^1.2.8"
-    "@map-colonies/react-core" "^4.1.1"
+    "@map-colonies/react-core" "^4.2.0"
     "@material-ui/core" "^4.11.0"
     "@material-ui/pickers" "^3.2.10"
     "@turf/bbox" "^6.0.1"
@@ -2418,14 +2418,15 @@
     get-input-selection "^1.1.4"
     lodash "^4.17.20"
     ol "^6.4.3"
+    react-datepicker "^4.16.0"
     resium "^1.16.1"
     rimraf "3.0.2"
     textarea-caret "^3.1.0"
 
-"@map-colonies/react-core@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-4.1.1.tgz#ccb8dfa3acb01941b35b5b7ca9062050517ca380"
-  integrity sha512-ejxQvGK1de7oWSICWCFeBb4nBNGBg1jJlEIm5Fth2U4wMGsbcyvE3tVNeQrMuesuAmG2hhMRH/TD27gCKOEsRQ==
+"@map-colonies/react-core@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@map-colonies/react-core/-/react-core-4.2.0.tgz#8ceb183825e0917522c30e06af436139c4caa23a"
+  integrity sha512-XdSTblLNzVQcSzm3S04K7zXHSignDlynN9nZJyT6ZygrGaaozONKXf4WPnSXoFAMtEUBly0bKaOygbPMUTcvAw==
   dependencies:
     "@rmwc/avatar" "^8.0.8"
     "@rmwc/button" "^8.0.8"
@@ -2446,6 +2447,8 @@
     "@rmwc/theme" "^8.0.8"
     "@rmwc/tooltip" "^8.0.8"
     "@rmwc/typography" "^8.0.8"
+    date-fns "^2.30.0"
+    moment "^2.29.4"
     react-contexify "^6.0.0"
     storybook-dark-mode "^3.0.0"
     tslib "^2.5.3"
@@ -3320,6 +3323,11 @@
     loader-utils "^2.0.4"
     schema-utils "^3.0.0"
     source-map "^0.7.3"
+
+"@popperjs/core@^2.11.8":
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
+  integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -8996,7 +9004,7 @@ date-fns@^1.27.2:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
-date-fns@^2.14.0:
+date-fns@^2.14.0, date-fns@^2.30.0:
   version "2.30.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
@@ -14430,7 +14438,7 @@ moment@2.29.3:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.3.tgz#edd47411c322413999f7a5940d526de183c031f3"
   integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
 
-moment@^2.29.0:
+moment@^2.29.0, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -16366,6 +16374,18 @@ react-copy-to-clipboard@^5.0.3:
     copy-to-clipboard "^3.3.1"
     prop-types "^15.8.1"
 
+react-datepicker@^4.16.0:
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-4.18.0.tgz#d66301acc47833d31fa6f46f98781b084106da0e"
+  integrity sha512-0MYt3HmLbHVk1sw4v+RCbLAVg5TA3jWP7RyjZbo53PC+SEi+pjdgc92lB53ai/ENZaTOhbXmgni9GzvMrorMAw==
+  dependencies:
+    "@popperjs/core" "^2.11.8"
+    classnames "^2.2.6"
+    date-fns "^2.30.0"
+    prop-types "^15.7.2"
+    react-onclickoutside "^6.13.0"
+    react-popper "^2.3.0"
+
 react-dev-utils@^12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-12.0.1.tgz#ba92edb4a1f379bd46ccd6bcd4e7bc398df33e73"
@@ -16454,6 +16474,11 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
+react-fast-compare@^3.0.1:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
+  integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
+
 react-hook-form@6.15.8:
   version "6.15.8"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.15.8.tgz#725c139d308c431c4611e4b9d85a49f01cfc0e7a"
@@ -16528,6 +16553,19 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-onclickoutside@^6.13.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.13.0.tgz#e165ea4e5157f3da94f4376a3ab3e22a565f4ffc"
+  integrity sha512-ty8So6tcUpIb+ZE+1HAhbLROvAIJYyJe/1vRrrcmW+jLsaM+/powDRqxzo6hSh9CuRZGSL1Q8mvcF5WRD93a0A==
+
+react-popper@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-2.3.0.tgz#17891c620e1320dce318bad9fede46a5f71c70ba"
+  integrity sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==
+  dependencies:
+    react-fast-compare "^3.0.1"
+    warning "^4.0.2"
 
 react-redux@^7.2.2:
   version "7.2.9"
@@ -19302,6 +19340,13 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==
   dependencies:
     makeerror "1.0.12"
+
+warning@^4.0.2:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+  integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+  dependencies:
+    loose-envify "^1.0.0"
 
 watchpack@^2.4.0:
   version "2.4.0"
