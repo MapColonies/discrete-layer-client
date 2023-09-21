@@ -14,7 +14,8 @@ import {
   MenuSurfaceAnchor,
   MenuSurface,
   Tooltip,
-  Avatar
+  Avatar,
+  Select
 } from '@map-colonies/react-core';
 import {
   BboxCorner,
@@ -130,7 +131,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
-  const [isFilter, setIsFilter] = useState<boolean>(false);
   const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
@@ -219,42 +219,85 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const buildFilters = (): FilterField[] => {
-    const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon).coordinates[0];
-    return [
-      {
-        field: 'mc:boundingBox',
-        bbox: {
-          llon: coordinates[0][0],
-          llat: coordinates[0][1],
-          ulon: coordinates[2][0],
-          ulat: coordinates[2][1],
-        },
+    const coordinates = (store.discreteLayersStore.searchParams.geojson as Polygon)?.coordinates[0];
+   
+    const boundingBoxFilter = coordinates ? [{
+      field: 'mc:boundingBox',
+      bbox: {
+        llon: coordinates[0][0],
+        llat: coordinates[0][1],
+        ulon: coordinates[2][0],
+        ulat: coordinates[2][1],
       },
+    }] : [];
+
+    return [
+      ...boundingBoxFilter,
       {
         field: 'mc:type',
         eq: store.discreteLayersStore.searchParams.recordType,
       },
+      ...store.discreteLayersStore.searchParams.catalogFilters
     ];
   };
 
+  useEffect(() => {
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      void store.discreteLayersStore.clearLayersImages();
+  
+      // TODO: build query params: FILTERS and SORTS
+      const filters = buildFilters();
+      setQuery(store.querySearch({
+        opts: {
+          filter: filters
+        },
+        end: CONFIG.RUNNING_MODE.END_RECORD,
+        start: CONFIG.RUNNING_MODE.START_RECORD,
+      }));
+    }
+
+  }, [store.discreteLayersStore.searchParams.recordType, store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
-    void store.discreteLayersStore.clearLayersImages();
+  };
 
-    // TODO: build query params: FILTERS and SORTS
-    const filters = buildFilters();
-    setQuery(store.querySearch({
-      opts: {
-        filter: filters
-      },
-      end: CONFIG.RUNNING_MODE.END_RECORD,
-      start: CONFIG.RUNNING_MODE.START_RECORD,
-    }));
+  const handleCatalogFiltersApply = (filters: FilterField[]): void => {
+    if(activeTabView !== TabViews.SEARCH_RESULTS) {
+      handleTabViewChange(TabViews.SEARCH_RESULTS);
+    }
+
+    store.discreteLayersStore.resetSelectedLayer();
+    store.discreteLayersStore.searchParams.setCatalogFilters(filters);
+  };
+
+  const handleCatalogFiltersReset = (): void => {
+    if(store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
+
+    store.discreteLayersStore.searchParams.resetCatalogFilters();
+    void store.discreteLayersStore.clearLayersImages();
+    store.discreteLayersStore.resetSelectedLayer();
+    
+    // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
+    // If any of the geographical filters is enabled, then we want to stay at the search results tab.
+    
+    if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
+      handleTabViewChange(TabViews.CATALOG)
+    }
   };
 
   const handlePolygonReset = (): void => {
     if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.searchParams.resetLocation();
+    }
+
+    if(activeTabView !== TabViews.CATALOG) {
+      // Catalog filters are being cleaned from inside the catalog filters panel.
+      // If there's any filter enabled, then we want to stay at the search results tab.
+
+      if(store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
+        setActiveTabView(TabViews.CATALOG);
+      }
     }
     
     store.mapMenusManagerStore.resetMapMenusFeatures();
@@ -321,10 +364,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   
   const handleSystemsCoreInfoDialogClick = (): void => {
     setSystemCoreInfoDialogOpen(!isSystemCoreInfoDialogOpen);
-  };
-
-  const handleFilter = (): void => {
-    setIsFilter(!isFilter);
   };
 
   const createDrawPrimitive = (type: DrawType): IDrawingObject => {
@@ -464,7 +503,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       isSystemCoreInfoAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_COREINFO),
       isWebToolsAllowed: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_TOOLS),
       isSystemFilterEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FILTER),
-      isSystemFreeTextSearchEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FREETEXTSEARCH),
       isSystemSidebarCollapseEnabled: store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND),
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
@@ -474,11 +512,23 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   }, [store.userStore.user]);
 
+  const recordTypeOptions = useMemo(() => {
+    return CONFIG.SERVED_ENTITY_TYPES.map((entity) => {
+      const value = entity as keyof typeof RecordType;
+      return {
+        label: intl.formatMessage({id: `record-type.${RecordType[value].toLowerCase()}.label`}),
+        value: RecordType[value]
+      };
+    });
+  
+  }, []);
+
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
 
     const tabView = find(tabViews, (tab) => {
       return tab.idx === tabIdx;
     });
+
 
     return (
       <div className="tabHeaderContainer">
@@ -504,10 +554,29 @@ const DiscreteLayerView: React.FC = observer(() => {
           }}>
             {
               tabIdx === TabViews.CATALOG && 
+              <Box className="filterByCatalogEntitySelect">
+                <Select
+                  enhanced
+                  defaultValue={recordTypeOptions[0].value}
+                  options={recordTypeOptions}
+                  value={store.discreteLayersStore.searchParams.recordType}
+                  onChange={
+                    (evt: React.ChangeEvent<HTMLSelectElement>): void => {
+                      store.discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
+                      setCatalogRefresh(catalogRefresh + 1);
+                    }
+                  }
+                />
+              </Box>
+            }
+
+            {
+              tabIdx === TabViews.CATALOG && 
               <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
                 <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
               </Tooltip>
             }
+
             {
               tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
@@ -566,6 +635,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 </Tooltip>
               </MenuSurfaceAnchor>
             }
+              
             { 
               (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
               <>
@@ -594,14 +664,14 @@ const DiscreteLayerView: React.FC = observer(() => {
                 label="DELETE"
               />
             </Tooltip>*/}
-            <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
+            {/* <Tooltip content={intl.formatMessage({ id: 'action.filter.tooltip' })}>
               <IconButton 
                 className="operationIcon mc-icon-Filter"
                 disabled={!(permissions.isSystemFilterEnabled as boolean)}
                 label="FILTER"
                 onClick={ (): void => { handleFilter(); } }
               />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
               <IconButton 
                 className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
@@ -704,8 +774,9 @@ const DiscreteLayerView: React.FC = observer(() => {
             onCancelDraw={(): void=>{ console.log('****** onCancelDraw ****** called')}}
             onReset={handlePolygonReset}
             onStartDraw={setDrawType}
-            isSelectionEnabled={isDrawing}
-            isSystemFreeTextSearchEnabled={(permissions.isSystemFreeTextSearchEnabled as boolean)}
+            onFiltersApply={handleCatalogFiltersApply}
+            onFiltersReset={handleCatalogFiltersReset}
+            isSelectionEnabled={Array.isArray(drawEntities[0]?.coordinates) ? drawEntities[0]?.coordinates.length > 0 : !!drawEntities[0]?.coordinates}
             onPolygonUpdate={onPolygonSelection}
             onPoiUpdate={onPoiSelection}
             poi={poi}
@@ -827,6 +898,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               height: detailsPanelExpanded ? '50%' : '25%',
             }}>
             <DetailsPanel
+              activeTabView={activeTabView}
               isEditEntityDialogOpen = {isEditEntityDialogOpen}
               setEditEntityDialogOpen = {setEditEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
@@ -892,7 +964,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <GPUInsufficiencyDetector />
         </Box>
 
-        <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/>
+        {/* <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/> */}
         {
           isNewRasterEntityDialogOpen &&
           <EntityDialog

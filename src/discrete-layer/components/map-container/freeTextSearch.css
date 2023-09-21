@@ -1,0 +1,26 @@
+.freeTextSearchContainer {
+  display: flex;
+  align-items: center;
+}
+
+/* Override TEXTFIELD styling */
+.freeTextSearchContainer .mdc-text-field--fullwidth {
+  background-color: transparent !important;
+}
+
+.freeTextSearchContainer .mdc-text-field {
+  height: 32px;
+}
+
+.freeTextSearchContainer .mdc-line-ripple::before {
+  border-bottom-color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.freeTextSearchContainer .mdc-line-ripple::after {
+  border-bottom-color: var(--mdc-theme-text-icon-on-dark);
+}
+
+.freeTextSearchContainer .mdc-text-field__input {
+  color: var(--mdc-theme-on-surface);
+  caret-color: var(--mdc-theme-on-surface);
+}

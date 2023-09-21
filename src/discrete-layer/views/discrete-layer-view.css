@@ -7,7 +7,7 @@
 }
 
 .sidePanelParentContainer {
-  width: 25%;
+  width: var(--side-panel-width);
   display: flex;
   flex-direction: column;
 }
@@ -28,15 +28,15 @@ body[dir='rtl'] .sidePanelContainer {
 }
 
 .mapAppContainer {
-  left: calc(25% + 8px);
-  width: calc(75% - 8px);
+  left: calc(var(--side-panel-width) + 8px);
+  width: calc(calc(100% - var(--side-panel-width)) - 8px);
   position: absolute;
   height: calc(100% - 8px);
   padding-bottom: 8px;
 }
 
 body[dir='rtl'] .mapAppContainer {
-  right: calc(25% + 8px);
+  right: calc(var(--side-panel-width) + 8px);
   left: unset;
 }
 
@@ -195,4 +195,22 @@ body[dir='rtl'] .sideDetailsPanel {
 
 #newContainer {
   display: flex;
+}
+
+.tabHeaderContainer .filterByCatalogEntitySelect {
+  width: 130px;
+  padding: 0 6px 0 6px;
+  z-index: 2002;
+  align-self: center;
+}
+
+.tabHeaderContainer .mdc-select__anchor {
+  height: 2.5rem;
+  width: 120px;
+  padding: 0 8px 0 8px;
+}
+
+.tabHeaderContainer .mdc-select .mdc-select__dropdown-icon {
+  margin-left: 0;
+  margin-right: 0;
 }

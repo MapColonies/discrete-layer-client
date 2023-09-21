@@ -103,7 +103,7 @@ export const LayersFootprints: React.FC = observer(() => {
     if (isSameFeatureCollection(prevLayersFootprints, layersFootprints)) {
       return cache;
     } else {
-      cache = layersFootprints;
+      cache = cacheRef.current = layersFootprints;
       return cache;
     }
   };

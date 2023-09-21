@@ -18,6 +18,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         lookupTable
         lookupExcludeFields
         fieldName
+        queryableName
         label
         fullWidth
         rows
@@ -66,6 +67,21 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
           required
           json
         }
+        isFilterable {
+          participateInFilterPanel
+          operation
+          order
+          validation {
+            min
+            max
+            minLength
+            maxLength
+            pattern
+            valueAsNumber
+            valueAsDate
+          }
+        }
+
         default
       }
       __typename

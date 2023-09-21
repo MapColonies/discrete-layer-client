@@ -99,12 +99,14 @@ export const ActionsRenderer: React.FC<IActionsRendererParams> = (props) => {
                   }
                   {actionGroup.group.map((action: IAction, idx: number) => {
                     return (
-                      <MenuItem key={`menuItemAct_${action.action}_${idx}`}>
+                      <MenuItem
+                        className="actionMenuItemContainer"
+                        onClick={(evt): void => {
+                          sendAction(entity, action, props.data);
+                          setOpenActionsMenu(false); 
+                        }}
+                        key={`menuItemAct_${action.action}_${idx}`}>
                         <Box 
-                          onClick={(evt): void => {
-                            sendAction(entity, action, props.data);
-                            setOpenActionsMenu(false); 
-                          }}
                           className="actionMenuItem"
                         >
                           <IconButton

@@ -27,14 +27,14 @@ body[dir='rtl'] .ag-theme-alpine-dark .ag-header-cell[col-id="footprintShown"]{
 /* Add absolute position so that action buttons column will appear on top of other columns. pointer-events: none to pass on mousemove event to behind columns */
 #layerResults .ag-pinned-right-cols-container {
   position: absolute !important;
-  right: 45px;
+  right: 80px;
   pointer-events: none;
   padding-left: 20px;
 }
 
 body[dir='rtl'] #layerResults .ag-pinned-right-cols-container {
   right: unset;
-  left: 45px;
+  left: 80px;
   padding-left: unset;
   padding-right: 20px;
 }

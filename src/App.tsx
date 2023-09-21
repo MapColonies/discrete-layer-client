@@ -13,6 +13,7 @@ import {
 } from '@map-colonies/react-core';
 import { CssBaseline } from '@map-colonies/react-components';
 import { useMediaQuery } from '@map-colonies/react-components';
+import '@map-colonies/react-components/dist/date-range-picker-with-presets/styles';
 import '@map-colonies/react-core/dist/theme/styles';
 import '@map-colonies/react-core/dist/button/styles';
 import '@map-colonies/react-core/dist/tooltip/styles';

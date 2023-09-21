@@ -4,6 +4,7 @@
 import React, { useContext, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
+import { observer } from 'mobx-react-lite';
 import { get, isEmpty } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -18,6 +19,7 @@ import {
   FieldCategory,
   LayerMetadataMixedUnion,
   LinkModelType,
+  useStore,
 } from '../../models';
 import { getEnumKeys } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
@@ -50,6 +52,7 @@ interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
   formik?: EntityFormikHandlers;
+  isSearchTab?: boolean;
 }
 
 export const getValuePresentor = (
@@ -133,9 +136,10 @@ export const getValuePresentor = (
   }
 };
 
-export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (props: LayersDetailsComponentProps) => {
-  const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '' } = props;
+export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
+  const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false } = props;
   const { enumsMap } = useContext(EnumsMapContext);
+  const store = useStore();
   
   const maxLabelLengthCssVar = '--field-label-max-length';
   const categoryFieldsParentContainerStyle = (CONFIG.NUMBER_OF_CHARACTERS_LIMIT
@@ -164,14 +168,25 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
                  (mode === Mode.VIEW || mode === Mode.EDIT || mode === Mode.EXPORT); 
         }).map(
           (fieldInfo: IRecordFieldInfo) => {
+            let fieldClassName = fieldInfo.fullWidth === true
+            ? 'categoryFullWidthField'
+            : 'categoryField';
+
+            if(isSearchTab) {
+              // Check if catalog filter is enabled by that field
+              const isFilterParticipantField = store.discreteLayersStore.searchParams.catalogFilters.findIndex((filter) => {
+               return fieldInfo.queryableName === filter.field;
+              }) > -1;
+  
+              if(isFilterParticipantField) {
+                fieldClassName += ' filterParticipant';
+              }
+            }
+            
             return (
               <Box
                 key={fieldInfo.fieldName as string}
-                className={
-                  fieldInfo.fullWidth === true
-                    ? 'categoryFullWidthField'
-                    : 'categoryField'
-                }
+                className={fieldClassName}
               >
                 <FieldLabelComponent
                   value={fieldInfo.label}
@@ -241,4 +256,4 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = (pr
       }
     </>
   );
-};
+});

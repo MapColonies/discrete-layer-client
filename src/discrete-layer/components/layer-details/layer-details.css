@@ -122,3 +122,7 @@ body[dir='rtl'] .textFieldInfoIcon {
   width: 96%;
   margin-top: 16px;
 }
+
+.filterParticipant {
+  background: var(--mdc-theme-gc-success);
+}

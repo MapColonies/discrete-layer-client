@@ -12,45 +12,22 @@ body[dir='rtl'] .drawerContainer {
 body[dir='rtl'] .searchIconBtn {
   transform: rotate(90deg);
 }
+#searchContainer {
+  position: relative;
+  height: 100%;
+  width: 620px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 0 16px 0 16px;
+  justify-content: center;
+}
+
 /* Override ICONBUTTON styling */
 #searchContainer button.rmwc-icon.rmwc-icon--ligature {
   padding: 8px 8px;
 }
-/* Override TEXTFIELD styling */
-#searchContainer #searchTerm .mdc-text-field--fullwidth {
-  background-color: transparent !important;
-}
 
-#searchContainer #searchTerm .mdc-text-field {
-  height: 32px;
-}
-
-#searchContainer #searchTerm .mdc-line-ripple::before {
-  border-bottom-color: var(--mdc-theme-text-icon-on-dark);
-}
-
-#searchContainer #searchTerm .mdc-line-ripple::after {
-  border-bottom-color: var(--mdc-theme-text-icon-on-dark);
-}
-
-#searchContainer #searchTerm .mdc-text-field__input {
-  color: var(--mdc-theme-on-surface);
-  caret-color: var(--mdc-theme-on-surface);
-}
-
-#searchContainer .filterByCatalogEntitySelect {
-  width: 130px;
-  padding: 0 6px 0 6px;
-  z-index: 2002;
-}
-
-#searchContainer .mdc-select__anchor {
-  height: 2.5rem;
-  width: 120px;
-  padding: 0 8px 0 8px;
-}
-
-#searchContainer .mdc-select .mdc-select__dropdown-icon {
-  margin-left: 0;
-  margin-right: 0;
+#searchContainer .active {
+  color: var(--mdc-theme-gc-success);
 }

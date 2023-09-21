@@ -11,6 +11,7 @@ import { PublishButton } from '../../components/layer-details/publish-button';
 import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button';
 import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
+import { TabViews } from '../tab-views';
 
 import './details-panel.component.css';
 
@@ -19,6 +20,7 @@ interface DetailsPanelComponentProps {
   setEditEntityDialogOpen: (open: boolean) => void;
   detailsPanelExpanded: boolean;
   setDetailsPanelExpanded: (isExpanded: boolean) => void;
+  activeTabView: TabViews;
 }
 
 export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((props) => {
@@ -26,7 +28,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
     isEditEntityDialogOpen,
     setEditEntityDialogOpen,
     detailsPanelExpanded,
-    setDetailsPanelExpanded
+    setDetailsPanelExpanded,
+    activeTabView
   } = props;
   
   const store = useStore();
@@ -112,6 +115,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
       </Box>
       <Box className="detailsContent panelContent">
         <LayersDetailsComponent
+          isSearchTab={activeTabView === TabViews.SEARCH_RESULTS}
           className="detailsPanelProductView"
           entityDescriptors={store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]}
           layerRecord={layerToPresent}

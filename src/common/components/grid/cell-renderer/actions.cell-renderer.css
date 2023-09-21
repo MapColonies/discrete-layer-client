@@ -86,3 +86,7 @@ body[dir='rtl'] #gridActionsCellRenderer .actionMenuItemTitle {
   border-bottom: 1px solid;
   width: 100%;
 }
+
+.actionMenuItemContainer:hover {
+  background: var(--mdc-theme-gc-alternative-surface);
+}
