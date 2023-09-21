@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.0...v2.0.1) (2023-09-21)
+
+
+### Bug Fixes
+
+* dockerfile node version ([31c8e22](https://github.com/MapColonies/discrete-layer-client/commit/31c8e22bdea5a6981ff392939a3c98a2f61d93c9))
+
 ## [2.0.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.3...v2.0.0) (2023-09-21)
 
 
