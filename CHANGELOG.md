@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.3...v2.0.0) (2023-09-21)
+
+
+### Features
+
+* add project version to app title ([#460](https://github.com/MapColonies/discrete-layer-client/issues/460)) ([e61e5a8](https://github.com/MapColonies/discrete-layer-client/commit/e61e5a881ee789891b603d23626dbb875571a05b))
+* add query polygon parts feature to context menu (MAPCO-3275) ([#456](https://github.com/MapColonies/discrete-layer-client/issues/456)) ([fd7d4fa](https://github.com/MapColonies/discrete-layer-client/commit/fd7d4fad158a8042de6133db9b44aaa8ac9005b6))
+* improve 3d tiles visibility ([#453](https://github.com/MapColonies/discrete-layer-client/issues/453)) ([9328052](https://github.com/MapColonies/discrete-layer-client/commit/932805239f6a04a065bd32c75c36335c6a61fe2c))
+
+
+### Bug Fixes
+
+* capabilities bug ([#457](https://github.com/MapColonies/discrete-layer-client/issues/457)) ([f78ae89](https://github.com/MapColonies/discrete-layer-client/commit/f78ae8962e0b83e1a011020a49f5d6fcf5b1f6c9))
+* context menu terrain height not updating on position change ([#454](https://github.com/MapColonies/discrete-layer-client/issues/454)) ([d88bbdd](https://github.com/MapColonies/discrete-layer-client/commit/d88bbdd5066d4cf15bd8954856d588c819ea3d64))
+
 ### [1.29.3](https://github.com/MapColonies/discrete-layer-client/compare/v1.29.2...v1.29.3) (2023-07-13)
 
 
