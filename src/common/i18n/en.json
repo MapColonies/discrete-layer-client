@@ -1,6 +1,7 @@
 {
   "general.logo.text": "Catalog App",
   "general.version.tooltip": "Catalog App version",
+  "general.version.text": "{projectVersion} ({appVersion})",
   "general.ok-btn.text": "Ok",
   "general.cancel-btn.text": "Cancel",
   "general.confirm-btn.text": "Approve",

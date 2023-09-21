@@ -2,14 +2,20 @@ import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import version from '../../../../../package.json';
+import CONFIG from '../../../../common/config';
+import packageJson from '../../../../../package.json';
+
 
 const AppTitle = (): JSX.Element => {
   const intl = useIntl();
+  const projectVersion = CONFIG.PROJECT_VERSION;
+  const appVersion = packageJson.version;
 
   useEffect(() => {
-    document.title = `${intl.formatMessage({ id: 'general.logo.text' })} - V${version.version}`
-  }, [])
+    document.title = `${intl.formatMessage({ id: 'general.logo.text' })} - ${projectVersion}`;
+  }, []);
+
+  const versionText = intl.formatMessage({id: "general.version.text"}, { projectVersion, appVersion });
 
   return (
     <>
@@ -21,9 +27,9 @@ const AppTitle = (): JSX.Element => {
         <Tooltip
           content={`${intl.formatMessage({
             id: 'general.version.tooltip',
-          })} ${version.version}`}
+          })} ${projectVersion}`}
         >
-          <Box className="version">{version.version}</Box>
+          <Box className="appVersionContainer" dir='auto'>{versionText}</Box>
       </Tooltip>
       </Box>
       <Icon className="appIcon mc-icon-AppIcon" />

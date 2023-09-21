@@ -1,6 +1,7 @@
 {
   "general.logo.text": "אפליקצית קטלוג",
   "general.version.tooltip": "אפליקצית קטלוג גרסה",
+  "general.version.text": "{projectVersion} ({appVersion})",
   "general.ok-btn.text": "אישור",
   "general.cancel-btn.text": "ביטול",
   "general.confirm-btn.text": "אישור",

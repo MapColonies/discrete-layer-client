@@ -105,6 +105,7 @@ button.cesium-infoBox-close:hover {
   gap: 10px;
   margin: 20px;
   flex-direction: row-reverse;
+  width: 185px;
 }
 
 .appIcon {
@@ -117,6 +118,14 @@ button.cesium-infoBox-close:hover {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+title.rtl {
+  direction: rtl;
+}
+
+title.ltr {
+  direction: ltr;
 }
 
 .react-datepicker__close-icon {
