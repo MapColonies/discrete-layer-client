@@ -36,7 +36,7 @@
     "confd:prod": "node ./confd/generate-config.js --environment production",
     "confd:prod:indocker": "node ./confd/generate-config.js --environment production --indocker",
     "copyconf": "copyfiles ./confd/* ./build",
-    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:md-fonts && yarn run copyassets:components && yarn run copyassets:mc-fonts && yarn run copyassets:ua-parser",
+    "copyassets:all": "yarn run copyassets:cesium && yarn run copyassets:components && yarn run copyassets:mc-fonts && yarn run copyassets:ua-parser",
     "copyassets:cesium": "copyfiles -u 3 \"./node_modules/cesium/Build/Cesium/**/*\" \"./public\"",
     "copyassets:ua-parser": "copyfiles -u 3 \"./node_modules/ua-parser-js/dist/ua-parser.min.js\" \"./public/ua-parser\"",
     "copyassets:mc-fonts": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/fonts/*\" \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/style.css\" \"./public/fonts/mc-icons\"",
