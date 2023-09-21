@@ -40,4 +40,5 @@ keys = [
   "/configuration/access/token/token/value",
   "/configuration/served/entity/types",
   "/configuration/admin/password",
+  "/configuration/project/version",
 ]
