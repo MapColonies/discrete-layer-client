@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.4...v2.0.5) (2023-09-21)
+
+
+### Bug Fixes
+
+* add material-icons ([d783b4c](https://github.com/MapColonies/discrete-layer-client/commit/d783b4c49a45b852f3be33d556b260333c5a0c7b))
+* project version toml ([6dc3d6a](https://github.com/MapColonies/discrete-layer-client/commit/6dc3d6ad10234bd1749f87aeac38fcb31cd93228))
+* remove md icons copy ([98bbd14](https://github.com/MapColonies/discrete-layer-client/commit/98bbd143e390a4efc85fd40d5b7e9b636bfa967e))
+
 ### [2.0.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.3...v2.0.4) (2023-09-21)
 
 
