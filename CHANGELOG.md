@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.1...v2.0.2) (2023-09-21)
+
+
+### Bug Fixes
+
+* add uuid as dep ([7eb6501](https://github.com/MapColonies/discrete-layer-client/commit/7eb650119ad6e87089e1e9a082df09f511711741))
+
 ### [2.0.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.0...v2.0.1) (2023-09-21)
 
 
