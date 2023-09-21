@@ -8,5 +8,9 @@
       "jest",
       "webpack-env"
     ]
-  }
+  },
+  "exclude": [
+    "src/**/*.spec.tsx",
+    "src/setupTests.ts"
+  ]
 }
