@@ -113,7 +113,7 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Box dir="auto">{values[index]}</Box>
+                  <Box dir="auto" className="filesPathContainer">{values[index]}</Box>
                 }
                 {
                   index === FILES && values[index] !== '' &&

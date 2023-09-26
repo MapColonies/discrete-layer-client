@@ -13,6 +13,7 @@ import {
 } from '@map-colonies/react-components';
 import { LayerMetadataMixedUnion } from '../../../discrete-layer/models';
 import CONFIG from '../../config';
+import { flushSync } from 'react-dom';
 
 const NOT_FOUND = -1;
 const START = 0;
@@ -78,46 +79,49 @@ export const FilePickerComponent = React.forwardRef<
     }, [currentSelection, files]);
 
     const handleAction = (data: FileActionData): void => {
-      if (data.id === FilePickerActions.OpenFiles.id) {
-        const { targetFile, files } = data.payload;
-        const fileToOpen = targetFile ?? files[0];
-        if (fileToOpen.isDir === true) {
+      flushSync(() => {
+        if (data.id === FilePickerActions.OpenFiles.id) {
+          const { targetFile, files } = data.payload;
+          const fileToOpen = targetFile ?? files[0];
+          if (fileToOpen.isDir === true) {
+            setSelection((currentSelection) => {
+              const newSelection = { ...currentSelection };
+              const index = newSelection.folderChain.findIndex(
+                (file) => file.id === fileToOpen.id
+              );
+              if (index > NOT_FOUND) {
+                newSelection.folderChain = [
+                  ...newSelection.folderChain.slice(START, index + 1),
+                ];
+              } else {
+                newSelection.folderChain = [
+                  ...newSelection.folderChain,
+                  fileToOpen,
+                ];
+              }
+              return newSelection;
+            });
+          }
+        } else if (data.id === FilePickerActions.ChangeSelection.id) {
           setSelection((currentSelection) => {
-            const newSelection = { ...currentSelection };
-            const index = newSelection.folderChain.findIndex(
-              (file) => file.id === fileToOpen.id
-            );
-            if (index > NOT_FOUND) {
-              newSelection.folderChain = [
-                ...newSelection.folderChain.slice(START, index + 1),
-              ];
+            const selectedIds = fpRef.current?.getFileSelection() as Set<string>;
+  
+            if (!isMultiSelection && selectedIds.size > 1) {
+              fpRef.current?.setFileSelection(
+                new Set(currentSelection.files.map((file) => file.id))
+              );
+              return currentSelection;
             } else {
-              newSelection.folderChain = [
-                ...newSelection.folderChain,
-                fileToOpen,
-              ];
+              const newSelection = { ...currentSelection };
+              newSelection.files = files.filter((file: FileData) =>
+                selectedIds.has(get(file, 'id'))
+              );
+              return newSelection;
             }
-            return newSelection;
           });
         }
-      } else if (data.id === FilePickerActions.ChangeSelection.id) {
-        setSelection((currentSelection) => {
-          const selectedIds = fpRef.current?.getFileSelection() as Set<string>;
+      });
 
-          if (!isMultiSelection && selectedIds.size > 1) {
-            fpRef.current?.setFileSelection(
-              new Set(currentSelection.files.map((file) => file.id))
-            );
-            return currentSelection;
-          } else {
-            const newSelection = { ...currentSelection };
-            newSelection.files = files.filter((file: FileData) =>
-              selectedIds.has(get(file, 'id'))
-            );
-            return newSelection;
-          }
-        });
-      }
       if (isFunction(onFileAction)) {
         onFileAction(data);
       }
