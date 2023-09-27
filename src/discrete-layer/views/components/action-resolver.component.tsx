@@ -36,10 +36,11 @@ interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
   handleFlyTo: () => void;
   handleTabViewChange: (tabView: TabViews) => void;
+  activeTabView: TabViews;
 }
 
 export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((props) => {
-  const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange } = props;
+  const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange, activeTabView } = props;
 
   const store = useStore();
 
@@ -72,15 +73,21 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
     (isShown: boolean, selectedLayer: ILayerImage) => {
       if (!isEmpty(selectedLayer)) {
         store.discreteLayersStore.showFootprint(selectedLayer.id, isShown);
-        store.catalogTreeStore.updateNodeById(selectedLayer.id, {
-          ...selectedLayer,
-          footprintShown: isShown,
-        });
+        
+        const shouldUpdateTreeNode = activeTabView === TabViews.CATALOG;
+
+        if(shouldUpdateTreeNode) {
+          store.catalogTreeStore.updateNodeById(selectedLayer.id, {
+            ...selectedLayer,
+            footprintShown: isShown,
+          });
+        }
       }
     },
     [
       store.discreteLayersStore.showFootprint,
       store.catalogTreeStore.updateNodeById,
+      activeTabView
     ]
   );
   

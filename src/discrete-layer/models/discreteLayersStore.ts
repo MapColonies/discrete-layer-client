@@ -225,7 +225,7 @@ export const discreteLayersStore = ModelBase
       if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
-        self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer;
+        self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
         self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
       } 
     }

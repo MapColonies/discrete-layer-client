@@ -200,7 +200,7 @@ body[dir='rtl'] .sideDetailsPanel {
 .tabHeaderContainer .filterByCatalogEntitySelect {
   width: 130px;
   padding: 0 6px 0 6px;
-  z-index: 2002;
+  z-index: 5;
   align-self: center;
 }
 
@@ -213,4 +213,8 @@ body[dir='rtl'] .sideDetailsPanel {
 .tabHeaderContainer .mdc-select .mdc-select__dropdown-icon {
   margin-left: 0;
   margin-right: 0;
+}
+
+.cesium-viewer .sideToolsContainer {
+  z-index: 5;
 }

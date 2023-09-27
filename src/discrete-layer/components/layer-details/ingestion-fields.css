@@ -100,3 +100,9 @@ body[dir='rtl'] .fileNamesSpacer {
 body[dir='rtl'] .moreTooltip {
   text-align: right;
 }
+
+.filesPathContainer {
+  width: 60ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
