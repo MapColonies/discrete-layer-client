@@ -1,3 +1,5 @@
 public/*
 build/*
 src/icons/*
+src/**/*.spec.tsx
+src/setupTests.ts

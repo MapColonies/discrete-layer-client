@@ -50,18 +50,17 @@ const MenuActionPresentor: React.FC<ActionPresentorBaseProps> = ({
             {Array.from(action.menuActionOptions.items).map(
               ([actionKey, value], i) => {
                 return (
-                  <MenuItem key={`action_${actionKey}_${i}`}>
-                    <Box
-                      className="exportActionMenuItem"
-                      onClick={(): void => {
-                        const actionToDispatch = {
-                          ...action.menuActionOptions?.dispatchOnItemClick,
-                          data: value as Feature,
-                        };
+                  <MenuItem 
+                    key={`action_${actionKey}_${i}`}
+                    onClick={(): void => {
+                      const actionToDispatch = {
+                        ...action.menuActionOptions?.dispatchOnItemClick,
+                        data: value as Feature,
+                      };
 
-                        dispatchAction(actionToDispatch);
-                      }}
-                    >
+                      dispatchAction(actionToDispatch);
+                    }}>
+                    <Box className="exportActionMenuItem">
                       <Typography tag="p">{actionKey}</Typography>
                     </Box>
                   </MenuItem>
