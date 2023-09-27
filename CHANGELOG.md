@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.6...v2.0.7) (2023-09-27)
+
+
+### Bug Fixes
+
+* file picker state issues and styles + fix hot areas menu click h… ([#461](https://github.com/MapColonies/discrete-layer-client/issues/461)) ([3eb1514](https://github.com/MapColonies/discrete-layer-client/commit/3eb15148e1ec78e9f141c060d5358332d2259927))
+* file picker state issues and styles + fix hot areas menu click handling ([4a059dc](https://github.com/MapColonies/discrete-layer-client/commit/4a059dc56f31eb54d419888f91e46746946fe71e))
+* replace in mainjs caused by webpack5 ([#462](https://github.com/MapColonies/discrete-layer-client/issues/462)) ([fefd27f](https://github.com/MapColonies/discrete-layer-client/commit/fefd27fe5809c187bd9a27e6013ca6b7a9b14aac))
+
 ### [2.0.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.5...v2.0.6) (2023-09-21)
 
 
