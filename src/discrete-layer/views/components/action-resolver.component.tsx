@@ -262,6 +262,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             shouldFlyToFeatures: true,
             filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,
+            dWithin: 0
           });
           
           break;

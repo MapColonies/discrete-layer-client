@@ -18,11 +18,11 @@ export const PolygonPartsFeature: React.FC = observer(() => {
   const polygonPartsFeature = store.mapMenusManagerStore.currentPolygonPartsInfo;
   const lastMenuPosition = store.mapMenusManagerStore.lastMenuCoordinate;
 
-  const [fallbackCoordinates, setFallbackCoordinates] = useState<IPosition>();
+  const [markerPosition, setMarkerPosition] = useState<IPosition>();
 
   useEffect(() => {
       if(lastMenuPosition){
-        setFallbackCoordinates(lastMenuPosition);
+        setMarkerPosition(lastMenuPosition);
       }
   }, [polygonPartsFeature])
 
@@ -58,7 +58,7 @@ export const PolygonPartsFeature: React.FC = observer(() => {
             markerIconPath={'assets/img/app/polygon-parts-marker.png'}
             shouldFocusOnCreation={polygonPartsFeatures.length === 1}
             shouldVisualize={true}
-            fallbackCoordinates={fallbackCoordinates}
+            markerPosition={markerPosition}
           />
         );
       })}

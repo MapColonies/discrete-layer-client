@@ -218,3 +218,7 @@ body[dir='rtl'] .sideDetailsPanel {
 .cesium-viewer .sideToolsContainer {
   z-index: 5;
 }
+
+.cesium-viewer-fullscreenContainer , .cesium-viewer .toolsContainer {
+  z-index: 5;
+}
