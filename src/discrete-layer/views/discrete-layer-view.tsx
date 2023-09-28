@@ -94,6 +94,10 @@ import DemHeightsFeatureComponent from '../components/map-container/geojson-map-
 import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
+
+const EXPANDED_PANEL_WIDTH = '28%';
+const COLLAPSED_PANEL_WIDTH = '40px';
+const SIDE_PANEL_WIDTH_VARIABLE = '--side-panel-width';
 const START_IDX = 0;
 const DELTA = 0.00001;
 const DRAWING_MATERIAL_OPACITY = 0.5;
@@ -131,7 +135,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
-  const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(false);
+  const [tabsPanelExpanded, setTabsPanelExpanded] = useState<boolean>(true);
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
@@ -150,6 +154,19 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const [actionsMenuDimensions, setActionsMenuDimensions] = useState<MenuDimensions>();
   
+  useEffect(() => {
+    /**
+     * Instead of just set the width of the panel according to the state, we need to assign variable on the app container
+     * because the map container will need to resize accordingly to fill up the space.
+     * */ 
+    const appContainer = document.querySelector('.app-container') as HTMLDivElement;
+    if(!tabsPanelExpanded) {
+      appContainer?.style.setProperty(SIDE_PANEL_WIDTH_VARIABLE, COLLAPSED_PANEL_WIDTH);
+    } else {
+      appContainer?.style.setProperty(SIDE_PANEL_WIDTH_VARIABLE, EXPANDED_PANEL_WIDTH);
+    }
+  }, [tabsPanelExpanded])
+
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
     store.discreteLayersStore.clearLayersImages();
@@ -527,7 +544,33 @@ const DiscreteLayerView: React.FC = observer(() => {
   
   }, []);
 
+  const PanelExpanderButton: React.FC = () => {
+    const isRtl = intl.locale === 'he';
+    const iconClassExpand = isRtl ? 'mc-icon-Arrows-Left' : 'mc-icon-Arrows-Right';
+    const iconClassCollapse = isRtl ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left';
+    const className = `${tabsPanelExpanded ? iconClassCollapse : iconClassExpand}`;
+
+    return (
+      <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
+        <IconButton 
+          className={className}
+          label="PANEL EXPANDER"
+          disabled={!(permissions.isSystemSidebarCollapseEnabled as boolean)}
+          onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
+        />
+      </Tooltip>
+    );
+  }
+
   const getActiveTabHeader = (tabIdx: number): JSX.Element => {
+
+    if(!tabsPanelExpanded) {
+      return (
+        <div className="tabHeaderContainer">
+           <PanelExpanderButton />
+        </div>
+      );
+    }
 
     const tabView = find(tabViews, (tab) => {
       return tab.idx === tabIdx;
@@ -676,14 +719,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 onClick={ (): void => { handleFilter(); } }
               />
             </Tooltip> */}
-            <Tooltip content={intl.formatMessage({ id: `${!tabsPanelExpanded ? 'action.expand.tooltip' : 'action.collapse.tooltip'}` })}>
-              <IconButton 
-                className={`operationIcon ${!tabsPanelExpanded ? 'mc-icon-Arrows-Right' : 'mc-icon-Arrows-Left'}`}
-                label="PANEL EXPANDER"
-                disabled={!(permissions.isSystemSidebarCollapseEnabled as boolean)}
-                onClick={ (): void => {setTabsPanelExpanded(!tabsPanelExpanded);}}
-              />
-            </Tooltip>
+            <PanelExpanderButton />
           </div>
         </div>
       </div>
@@ -831,11 +867,22 @@ const DiscreteLayerView: React.FC = observer(() => {
       </Box>
       <Box className="mainViewContainer">
         <Box className="sidePanelParentContainer">
+        {!tabsPanelExpanded ? (
+            <Box
+              className="sidePanelContainer"
+              style={{
+                backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
+              }}
+            >
+              {getActiveTabHeader(activeTabView)}
+            </Box>
+          ) : null}
           <Box 
             className="sidePanelContainer"
             style={{
               backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
-              height: activeTabView !== TabViews.EXPORT_LAYER ? (detailsPanelExpanded ? '50%' : '75%') : '100%'
+              height: activeTabView !== TabViews.EXPORT_LAYER ? (detailsPanelExpanded ? '50%' : '75%') : '100%',
+              display: tabsPanelExpanded ? 'block' : 'none',
             }}
           >
             <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block' : 'none'}}>
@@ -901,6 +948,7 @@ const DiscreteLayerView: React.FC = observer(() => {
             <Box className="sidePanelContainer sideDetailsPanel" style={{
               backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
               height: detailsPanelExpanded ? '50%' : '25%',
+              display: tabsPanelExpanded ? 'block' : 'none',
             }}>
             <DetailsPanel
               activeTabView={activeTabView}

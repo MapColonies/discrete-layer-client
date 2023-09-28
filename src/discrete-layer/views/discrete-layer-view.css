@@ -4,12 +4,14 @@
   height: calc(100vh - 52px);
   margin: 0 8px 0 8px;
   padding-bottom: 8px;
+  --collapse-expand-duration: 0.5s;
 }
 
 .sidePanelParentContainer {
   width: var(--side-panel-width);
   display: flex;
   flex-direction: column;
+  transition: width ease-in-out var(--collapse-expand-duration);
 }
 
 .secondaryPanel {
@@ -33,6 +35,9 @@ body[dir='rtl'] .sidePanelContainer {
   position: absolute;
   height: calc(100% - 8px);
   padding-bottom: 8px;
+  transition: left ease-in-out var(--collapse-expand-duration),
+              right ease-in-out var(--collapse-expand-duration),
+              width ease-in-out var(--collapse-expand-duration);
 }
 
 body[dir='rtl'] .mapAppContainer {
