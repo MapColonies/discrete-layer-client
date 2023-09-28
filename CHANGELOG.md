@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.7...v2.1.0) (2023-09-28)
+
+
+### Features
+
+* catalog side panel collapse ([#463](https://github.com/MapColonies/discrete-layer-client/issues/463)) ([caa0fac](https://github.com/MapColonies/discrete-layer-client/commit/caa0facffc129c96ee6294d08557912f6b3aa753))
+
+
+### Bug Fixes
+
+* catalog filters reset state issues ([3ae2227](https://github.com/MapColonies/discrete-layer-client/commit/3ae2227588465e59561137edf867559eae089e58))
+* polygon parts marker position + cesium tools z-index ([80b543e](https://github.com/MapColonies/discrete-layer-client/commit/80b543eb48ef999dc5bd396d2fb076f8db77af13))
+
 ### [2.0.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.0.6...v2.0.7) (2023-09-27)
 
 
