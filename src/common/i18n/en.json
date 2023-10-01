@@ -178,8 +178,8 @@
 
   "best-edit.import.dialog.import-btn.text": "Import",
 
-  "catalog-filter.productName.validation-error": "Only alphabetical, numeric and underscores are allowed",
-  "catalog-filter.productId.validation-error": "Only alphabetical, numeric and underscores are allowed",
+  "catalog-filter.productName.validation-error": "Only alphabetical, numeric, commas, quotations and underscores are allowed",
+  "catalog-filter.productId.validation-error": "Only alphabetical, numeric, commas, quotations and underscores are allowed",
   "catalog-filter.sevenDays.date-shortcuts": "7 Days",
   "catalog-filter.thirtyDays.date-shortcuts": "30 Days",
   "catalog-filter.thisYear.date-shortcuts": "This Year",

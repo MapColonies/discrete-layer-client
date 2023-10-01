@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, useMemo, useRef } from 'react';
-import { Typography, Tooltip } from '@map-colonies/react-core';
+import { Typography, Tooltip, TypographyProps } from '@map-colonies/react-core';
 import useIsEllipsisActive from '../../hooks/isEllipsisActive.hook';
 
-export interface TooltippedValueProps {
+export interface TooltippedValueProps extends TypographyProps {
   tag?: string | React.ComponentType<unknown>;
   className?: string;
   disableTooltip?: boolean;
@@ -17,11 +17,12 @@ const TooltippedValue: React.FC<PropsWithChildren<TooltippedValueProps>> = ({
   alwaysTooltip = false,
   customTooltipText = '',
   children,
+  ...restTypographyProps
 }) => {
   const elementRef = useRef<HTMLElement>(null);
   const isEllipsisActive = useIsEllipsisActive(elementRef);
   const typographyElement = useMemo(() => (
-    <Typography dir="auto" ref={elementRef} className={className} tag={tag as React.ElementType<any>}>
+    <Typography  dir="auto" {...restTypographyProps} ref={elementRef} className={className} tag={tag as React.ElementType<any>}>
       {children}
     </Typography>
   ), [children]);

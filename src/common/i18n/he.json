@@ -180,8 +180,8 @@
 
   "best-edit.import.dialog.import-btn.text": "הוסף",
 
-  "catalog-filter.productName.validation-error": "יש להזין שם עם אותיות, מספרים ומקף תחתון בלבד",
-  "catalog-filter.productId.validation-error": "יש להזין שם עם אותיות, מספרים ומקף תחתון בלבד",
+  "catalog-filter.productName.validation-error": "יש להזין ערך המורכב מאותיות, מספרים, פסיקים, גרשיים ומקף תחתון בלבד",
+  "catalog-filter.productId.validation-error": "יש להזין ערך המורכב מאותיות, מספרים, פסיקים, גרשיים ומקף תחתון בלבד",
   
   "catalog-filter.sevenDays.date-shortcuts": "7 ימים",
   "catalog-filter.thirtyDays.date-shortcuts": "30 ימים",
