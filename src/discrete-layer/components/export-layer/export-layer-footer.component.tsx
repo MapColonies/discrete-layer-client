@@ -118,7 +118,7 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
     loading: isExportTriggerLoading,
   } = useExportTrigger();
 
-  const exportTriggerErrorMsg = get(exportTriggerError, 'response.errors[0].serverResponse.data.statusText') as string | undefined;
+  const exportTriggerErrorMsg = get(exportTriggerError, 'response.errors[0].serverResponse.data.message') as string | undefined;
 
   useEffect(() => {
     if(typeof exportTriggerErrorMsg !== 'undefined') {

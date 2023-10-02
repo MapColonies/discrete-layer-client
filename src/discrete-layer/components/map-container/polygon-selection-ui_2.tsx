@@ -222,6 +222,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             onFiltersApply(filters);
           }}
           isOpen={isFilterPanelOpen}
+          closePanel={() => setIsFilterPanelOpen(false)}
         />
       </Box>
     </>

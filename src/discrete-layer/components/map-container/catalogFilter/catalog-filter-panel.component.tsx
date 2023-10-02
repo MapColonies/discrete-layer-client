@@ -14,6 +14,7 @@ import { FilterField } from "../../../models/RootStore.base";
 import { isEmpty } from "lodash";
 interface CatalogFilterPanelProps {
     isOpen: boolean;
+    closePanel: () => void;
     onFiltersSubmit: (filters: FilterField[]) => void;
     onFiltersReset: () => void;
 }
@@ -26,7 +27,7 @@ interface CatalogFilterPanelProps {
  * - Reset everything to the normal filters on clean, and un-mark the icon
  */
 export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
-  ({ isOpen, onFiltersSubmit, onFiltersReset }) => {
+  ({ isOpen, closePanel, onFiltersSubmit, onFiltersReset }) => {
     const intl = useIntl();
     const store = useStore();
 
@@ -49,6 +50,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
     const handleFormReset = () => {
       formMethods.reset(defaultFormValues);
       onFiltersReset();
+      closePanel()
     };
 
     useEffect(() => {

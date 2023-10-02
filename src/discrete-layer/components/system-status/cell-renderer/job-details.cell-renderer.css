@@ -9,8 +9,8 @@
 }
 
 .jobDetailsContainer { 
-  overflow-y: scroll; 
-  height: 220px;
+  overflow-y: auto; 
+  height: 230px;
   width: 1300px;
   margin: 0px 35px;
   background:var(--ag-selected-details-row-background);

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { getDescendantCount, getDepth } from 'react-sortable-tree';
 import { Tooltip } from '@map-colonies/react-core';
 import './node-content-renderer.css';
+import TooltippedValue from '../../form/tooltipped.value';
 
 function isDescendant(older, younger) {
   return (
@@ -53,7 +54,14 @@ class FileThemeNodeContentRenderer extends Component {
       ...otherProps
     } = this.props;
     const nodeTitle = title || node.title;
-    
+    const tooltipText = typeof nodeTitle === 'function'
+    ? nodeTitle({
+        node,
+        path,
+        treeIndex,
+      })
+    : nodeTitle;
+
     const styles = {
       lineBlock: 'lineBlock',
       highlightBottomLeftCorner: 'highlightBottomLeftCorner',
@@ -199,28 +207,18 @@ class FileThemeNodeContentRenderer extends Component {
                       </div>
                     ))}
                   </div>
-                  
-                  <Tooltip content={
-                    typeof nodeTitle === 'function' ? 
-                      nodeTitle({
-                              node,
-                              path,
-                              treeIndex,
-                      }) : nodeTitle}
-                  >
-                    <div className={styles.rowLabel}>
-                      <span className={styles.rowTitle}>
-                        {typeof nodeTitle === 'function'
-                          ? nodeTitle({
-                              node,
-                              path,
-                              treeIndex,
-                            })
-                          : nodeTitle}
-                      </span>
-                    </div>
-                  </Tooltip>
 
+                    <TooltippedValue
+                      dir=''
+                      className={styles.rowLabel} 
+                      tag={"div"} 
+                      customTooltipText={tooltipText}
+                    >
+                      <span className={styles.rowTitle}>
+                       {tooltipText}
+                      </span>
+                    </TooltippedValue>                  
+                  
                   {
                     !node.children && 
                     <div className={styles.rowToolbar}>

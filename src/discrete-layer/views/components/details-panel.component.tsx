@@ -57,7 +57,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   return (
     <>
       <Box style={{ display: 'flex', paddingTop: '8px' }}>
-        <Typography use="headline6" tag="div" className="detailsTitle" style={getStatusColoredText(layerToPresent as any ?? {})}>
+        <Typography dir="auto" use="headline6" tag="div" className="detailsTitle" style={getStatusColoredText(layerToPresent as any ?? {})}>
           {layerToPresent?.productName}
         </Typography>
         {
