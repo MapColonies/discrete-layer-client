@@ -11,7 +11,7 @@ export interface GCHTMLInputElement{
   }
 };
 
-const DEFAULT_DEBOUNCE = 300;
+const DEFAULT_DEBOUNCE = 500;
 
 const useDebounceField = <T> (
   formikHandlers: EntityFormikHandlers,
