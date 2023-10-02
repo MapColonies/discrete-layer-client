@@ -143,6 +143,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
+  const [isPoiSearchActive, setIsPoiSearchActive] = useState(false);
   const [corners, setCorners] = useState<BBoxCorners | undefined>(undefined);
   const [userRole, setUserRole] = useState<UserRole>(store.userStore.user?.role ?? CONFIG.DEFAULT_USER.ROLE);
   const [drawEntities, setDrawEntities] = useState<IDrawing[]>([{
@@ -172,9 +173,9 @@ const DiscreteLayerView: React.FC = observer(() => {
     store.discreteLayersStore.clearLayersImages();
 
     store.discreteLayersStore.selectLayer(undefined);
-    setDrawEntities([]);
-    setPoi(undefined);
-    setCorners(undefined);
+    if(!isPoiSearchActive) {
+      setPoi(undefined);
+    }
   }, [store.discreteLayersStore.searchParams.geojson])
 
   const dispatchAction = (action: Record<string,unknown>): void => {
@@ -310,6 +311,9 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const handlePolygonReset = (): void => {
       store.discreteLayersStore.searchParams.resetLocation();
+      setDrawEntities([]);
+      setPoi(undefined);
+      setCorners(undefined);
 
     if(activeTabView !== TabViews.CATALOG) {
       // Catalog filters are being cleaned from inside the catalog filters panel.
@@ -404,6 +408,9 @@ const DiscreteLayerView: React.FC = observer(() => {
             type: drawing.type,
           },
         ]);
+
+        setCorners(undefined);
+        setPoi(undefined);
       },
     };
   };
@@ -442,11 +449,11 @@ const DiscreteLayerView: React.FC = observer(() => {
           }
         ]
       }
-    });
+    }, true);
     setPoi({lon, lat});
   };
 
-  const onPolygonSelection = (polygon: IDrawingEvent): void => {
+  const onPolygonSelection = (polygon: IDrawingEvent, isPoi = false): void => {
     const timeStamp = getTimeStamp();
     const bottomLeftPoint = find((polygon.geojson as FeatureCollection<Point>).features, (feat: Feature<Point>)=>{
       return feat.properties?.type === BboxCorner.BOTTOM_LEFT;
@@ -485,6 +492,8 @@ const DiscreteLayerView: React.FC = observer(() => {
         geojson: polygon.geojson,
       },
     ]);
+
+    setIsPoiSearchActive(isPoi);
   };
 
   const onFlyTo = useCallback((): void => {
