@@ -50,7 +50,7 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
     <>
       {
         !isEmpty(props.error?.response) &&
-        <Box className="errorContainer">
+        <bdi className="errorContainer">
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
             {
@@ -65,7 +65,7 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
               <li dir="auto" key={props.error.response.status as number}><FormattedMessage id="general.server.error"/></li>
             }
           </ul>
-        </Box>
+        </bdi>
       }
     </>
   );
