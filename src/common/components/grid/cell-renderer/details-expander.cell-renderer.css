@@ -9,7 +9,6 @@
 
 /* AG-Grid bug bypass */
 /* Details row expander is duplicated inside a span tag above the actual expander icon, which blocks the events targeted to it. */
-/* Issue in Jira MAPCO-3538 */
 #jobsDialog .ag-react-container > span:first-of-type {
   display: none;
   pointer-events: none;

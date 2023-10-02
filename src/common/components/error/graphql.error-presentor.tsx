@@ -6,7 +6,7 @@ import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { isEmpty } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { AutoDirectionBox } from '../auto-direction-box/auto-direction-box.component';
 
 import './error-presentor.css';
 
@@ -50,7 +50,7 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
     <>
       {
         !isEmpty(props.error?.response) &&
-        <bdi className="errorContainer">
+        <AutoDirectionBox className="errorContainer">
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
             {
@@ -65,7 +65,7 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
               <li dir="auto" key={props.error.response.status as number}><FormattedMessage id="general.server.error"/></li>
             }
           </ul>
-        </bdi>
+        </AutoDirectionBox>
       }
     </>
   );
