@@ -44,7 +44,7 @@ export const PoiEntity: React.FC<PoiEntityProps> = ({longitude, latitude}) => {
     setPosition(CesiumCartesian3.fromDegrees(longitude, latitude, height));
     mapViewer.camera.flyTo({ destination: CesiumCartesian3.fromDegrees(longitude, latitude, height + CAMERA_HEIGHT_OFFSET) }); //TODO: extract to a generic component
   
-  }, [height]);
+  }, [height, longitude, latitude]);
 
   return (
     <>

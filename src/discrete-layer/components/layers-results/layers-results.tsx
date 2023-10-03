@@ -32,6 +32,8 @@ import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
 import { ColDef, RowDataChangedEvent } from 'ag-grid-community';
+import { Loading } from '../../../common/components/tree/statuses/loading';
+import { Error } from '../../../common/components/tree/statuses/error';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -40,6 +42,8 @@ const INITIAL_ORDER = 0;
 
 interface LayersResultsComponentProps {
   style?: {[key: string]: string};
+  searchLoading: boolean;
+  searchError: any;
 }
 
 export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
@@ -227,6 +231,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       },
     }
   ];
+
   const gridOptions: GridComponentOptions = {
     enableRtl: CONFIG.I18N.DEFAULT_LANGUAGE.toUpperCase() === 'HE',
     pagination: PAGINATION,
@@ -240,6 +245,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     overlayNoRowsTemplate: intl.formatMessage({
       id: 'results.nodata',
     }),
+    loadingOverlayComponent: 'customLoadingOverlay',
     frameworkComponents: {
       // detailsRenderer: LayerDetailsRenderer,
       headerFootprintRenderer: HeaderFootprintRenderer,
@@ -249,6 +255,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       styledByDataRenderer: StyledByDataRenderer,
       customTooltip: CustomTooltip,
       actionsRenderer: ActionsRenderer,
+      customLoadingOverlay: Loading
     },
     rowDataChangeDetectionStrategy: ChangeDetectionStrategyType.IdentityCheck,
     immutableData: true,
@@ -299,13 +306,23 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     gridApi?.setColumnDefs(colDef);
   },[store.userStore.user]);
 
+  console.log(props.searchError)
   return (
     <Box id='layerResults'>
+      {props.searchError ? <Error
+        className="errorMessage"
+        message={props.searchError.response?.errors[0].message}
+        details={
+          props.searchError.response?.errors[0].extensions?.exception?.config?.url
+        }
+      /> :
       <GridComponent
         gridOptions={gridOptions}
-        rowData={getRowData()}
+        rowData={layersImages}
         style={props.style}
+        isLoading={props.searchLoading}
       />
+      }
     </Box>
   );
 });

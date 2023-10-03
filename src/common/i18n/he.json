@@ -70,7 +70,7 @@
   "action.operations.tooltip": "פעולות",
   "action.clear.tooltip": "ניקוי",
   "action.delete.tooltip": "מחיקה",
-  "action.filter.tooltip": "סינון",
+  "action.filter.tooltip": "חיפוש מתקדם",
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.system-core-info.tooltip": "צפייה במידע המערכת",
   "action.web-tools.tooltip": "פתיחת ממשק כלים",
@@ -190,8 +190,8 @@
 
   "catalog-filter.dateRangeField.placeholder": "בחר טווח תאריכים",
   "catalog-filter.dateRangeField.validation-error": "יש לבחור בטווח תאריכים תקין",
-  "catalog-filter.filterButton.text": "סנן קטלוג",
-  "catalog-filter.clearFilterButton.text": "נקה סינון",
+  "catalog-filter.filterButton.text": "חפש",
+  "catalog-filter.clearFilterButton.text": "נקה",
 
   "catalog-filter.freeText.placeholder": "חיפוש חופשי בקטלוג",
 
@@ -661,10 +661,10 @@
   "map-context-menu.service-operations.group.title": "שירותי תשאול",
   "map-context-menu.query-dem-height.title": "תשאול גובה נקודה",
   "map-context-menu.polygon-parts.title": "תשאול חלקי תיחום",
-  "map-context-menu.layer-up.title": "הרם למעלה",
-  "map-context-menu.layer-down.title": "הורד למטה",
-  "map-context-menu.layer-to-top.title": "העלה מעל כולם",
-  "map-context-menu.layer-to-bottom.title": "הורד לתחתית",
+  "map-context-menu.layer-up.title": "הצג רמה אחת למעלה",
+  "map-context-menu.layer-down.title": "הצג רמה אחת למטה",
+  "map-context-menu.layer-to-top.title": "הצג מעל כולם",
+  "map-context-menu.layer-to-bottom.title": "הצג מתחת לכולם",
   
 
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",

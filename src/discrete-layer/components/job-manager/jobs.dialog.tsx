@@ -237,6 +237,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
             rowDataChangeCB={(): void => {
               gridApi?.applyTransaction({ update: gridRowData });
             }}
+            areJobsLoading={loading}
           />
       </Box>
     );

@@ -98,7 +98,7 @@ body[dir='rtl'] .headerSystemAreaContainer{
 }
 
 .errorMessage {
-  margin: 16px;
+  /* margin: 16px; */
 }
 
 .errorDescription {

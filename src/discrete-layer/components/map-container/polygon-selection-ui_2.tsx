@@ -110,6 +110,17 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
           pointerEvents: (disabled as boolean) ? 'none' : 'unset',
         }}
       >
+         <Tooltip content={intl.formatMessage({ id: 'action.clear.tooltip' })}>
+          <IconButton
+            className="mc-icon-Delete"
+            label="CLEAR"
+            onClick={() => {
+              setActiveSelection('');
+              onReset();
+            }}
+          />
+        </Tooltip>
+        <Divider />
         <Tooltip content={intl.formatMessage({ id: 'action.point.tooltip' })}>
           <IconButton
             className={getActiveClass(
@@ -122,7 +133,6 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             }}
           />
         </Tooltip>
-        <Divider />
         <Tooltip content={intl.formatMessage({ id: 'action.box.tooltip' })}>
           <IconButton
             className={getActiveClass(
@@ -160,17 +170,6 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             label={PolygonSelectionsLabels.BBOX}
             onClick={(): void => {
               setOpen(true);
-            }}
-          />
-        </Tooltip>
-        <Divider />
-        <Tooltip content={intl.formatMessage({ id: 'action.clear.tooltip' })}>
-          <IconButton
-            className="mc-icon-Delete"
-            label="CLEAR"
-            onClick={() => {
-              setActiveSelection('');
-              onReset();
             }}
           />
         </Tooltip>
