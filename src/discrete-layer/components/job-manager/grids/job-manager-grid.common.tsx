@@ -22,6 +22,7 @@ import { DateCellRenderer } from '../../system-status/cell-renderer/date.cell-re
 import { TooltippedCellRenderer } from '../../system-status/cell-renderer/tool-tipped.cell-renderer';
 import PlaceholderCellRenderer from '../../system-status/cell-renderer/placeholder.cell-renderer';
 import moment from 'moment';
+import { Loading } from '../../../../common/components/tree/statuses/loading';
 
 export interface ICommonJobManagerGridProps {
   rowData: unknown[];
@@ -33,7 +34,8 @@ export interface ICommonJobManagerGridProps {
   gridStyleOverride?: React.CSSProperties;
   onGridReadyCB?: (params: GridReadyEvent) => void;
   customColDef?: (ColDef | ColGroupDef)[];
-  omitColDefsByRenderer?: { renderers: string[], preserveColWidth?: boolean }
+  omitColDefsByRenderer?: { renderers: string[], preserveColWidth?: boolean };
+  areJobsLoading?: boolean;
 }
 
 const pagination = true;
@@ -53,6 +55,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       return;
     },
     omitColDefsByRenderer,
+    areJobsLoading
   } = props;
 
   const intl = useIntl();
@@ -308,6 +311,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       overlayNoRowsTemplate: intl.formatMessage({
         id: 'results.nodata',
       }),
+      loadingOverlayComponent: 'customLoadingOverlay',
       frameworkComponents: {
         jobDetailsStatusFilter: JobDetailsStatusFilter,
         detailsRenderer: JobDetailsRenderer,
@@ -318,6 +322,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
         dateCellRenderer: DateCellRenderer,
         tooltippedCellRenderer: TooltippedCellRenderer,
         placeholderRenderer: PlaceholderCellRenderer,
+        customLoadingOverlay: Loading
       },
       tooltipShowDelay: 0,
       tooltipMouseTrack: false,
@@ -353,6 +358,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       gridOptions={gridOptions}
       rowData={rowData}
       style={{ ...defaultGridStyle, ...gridStyleOverride }}
+      isLoading={areJobsLoading}
     />
   );
 };
