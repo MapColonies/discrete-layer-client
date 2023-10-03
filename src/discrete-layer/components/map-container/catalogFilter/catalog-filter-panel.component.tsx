@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { observer } from 'mobx-react-lite';
 import { useIntl } from "react-intl";
@@ -12,6 +12,7 @@ import { getCatalogFilters } from "./utils";
 import './catalog-filter-panel.css';
 import { FilterField } from "../../../models/RootStore.base";
 import { isEmpty } from "lodash";
+import { useClickOutside } from "../../../../common/hooks/useClickOutside";
 interface CatalogFilterPanelProps {
     isOpen: boolean;
     closePanel: () => void;
@@ -30,6 +31,10 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
   ({ isOpen, closePanel, onFiltersSubmit, onFiltersReset }) => {
     const intl = useIntl();
     const store = useStore();
+
+    const catalogFilterPanelContainerRef = useRef<HTMLDivElement>(null);
+
+    useClickOutside(catalogFilterPanelContainerRef, closePanel, isOpen)
 
     const selectedProductType = store.discreteLayersStore.searchParams.recordType;
     const filterableFields = useGetFilterableFields(selectedProductType as RecordType);
@@ -50,7 +55,6 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
     const handleFormReset = () => {
       formMethods.reset(defaultFormValues);
       onFiltersReset();
-      closePanel()
     };
 
     useEffect(() => {
@@ -70,9 +74,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
 
     return (
       <FormProvider {...formMethods}>
-        <Box
-          className={`catalogFilterPanelContainer ${isOpen ? 'open' : 'close'}`}
-        >
+        <div ref={catalogFilterPanelContainerRef} className={`catalogFilterPanelContainer ${isOpen ? 'open' : 'close'}`}>
           <Box className="catalogFilterFormContainer">
             {filterableFields?.length && (
               <form className="catalogFiltersForm" id={'catalogFiltersForm'}>
@@ -100,7 +102,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               {intl.formatMessage({id: 'catalog-filter.clearFilterButton.text'})}
             </Button>
           </Box>
-        </Box>
+        </div>
       </FormProvider>
     );
   }

@@ -152,8 +152,12 @@ const DiscreteLayerView: React.FC = observer(() => {
     id: '',
     type: DrawType.UNKNOWN,
   }]);
-
+  const [searchResultsError, setSearchResultsError] = useState();
   const [actionsMenuDimensions, setActionsMenuDimensions] = useState<MenuDimensions>();
+
+  useEffect(() => {
+    setSearchResultsError(searchError);
+  }, [searchError])
   
   useEffect(() => {
     /**
@@ -306,6 +310,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
       handleTabViewChange(TabViews.CATALOG);
       store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
+      setSearchResultsError(undefined);
     }
   };
 
@@ -314,6 +319,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       setDrawEntities([]);
       setPoi(undefined);
       setCorners(undefined);
+      setSearchResultsError(undefined);
 
     if(activeTabView !== TabViews.CATALOG) {
       // Catalog filters are being cleaned from inside the catalog filters panel.
@@ -908,7 +914,9 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {
                   getActiveTabHeader(activeTabView)
                 }
-                <LayersResultsComponent 
+                <LayersResultsComponent
+                  searchLoading={searchLoading}
+                  searchError={searchResultsError} 
                   style={{
                     height: 'calc(100% - 50px)',
                     width: 'calc(100% - 8px)'

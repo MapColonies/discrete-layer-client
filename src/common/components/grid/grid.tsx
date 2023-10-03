@@ -33,6 +33,7 @@ interface GridComponentProps {
   gridOptions?: GridComponentOptions;
   rowData?: any[];
   style?: CSSProperties;
+  isLoading?: boolean;
 };
 
 export interface GridApi extends AgGridApi{};
@@ -168,9 +169,14 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     } else {
       result.push(...(props.rowData as []));
     }
-    setRowData(result);
+    if(typeof props.isLoading === 'undefined' || props.isLoading === false) {
+      gridApi?.hideOverlay();
+      setRowData(result);
+    } else {
+      gridApi?.showLoadingOverlay();
+    }
   
-  }, [props.rowData, props.gridOptions]);
+  }, [props.rowData, props.gridOptions, props.isLoading]);
 
   const agGridThemeOverrides = GridThemes.getTheme(theme);
 

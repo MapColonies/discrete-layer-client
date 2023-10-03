@@ -147,6 +147,12 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
             actions: [
               {
                 ...defaultContextActionProps,
+                titleTranslationId: 'map-context-menu.polygon-parts.title',
+                action: ContextActions.QUERY_POLYGON_PARTS,
+                separator: 'AFTER'
+              },
+              {
+                ...defaultContextActionProps,
                 titleTranslationId: 'map-context-menu.layer-up.title',
                 action: ContextActions.MOVE_LAYER_UP,
               },
@@ -164,12 +170,6 @@ const CONTEXT_ACTIONS_CONFIG: IContextActions[] = [
                 ...defaultContextActionProps,
                 titleTranslationId: 'map-context-menu.layer-to-bottom.title',
                 action: ContextActions.MOVE_LAYER_TO_BOTTOM,
-                separator: 'AFTER'
-              },
-              {
-                ...defaultContextActionProps,
-                titleTranslationId: 'map-context-menu.polygon-parts.title',
-                action: ContextActions.QUERY_POLYGON_PARTS,
               },
             ],
           },

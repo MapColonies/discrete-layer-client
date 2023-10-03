@@ -69,7 +69,7 @@
   "action.operations.tooltip": "Operations",
   "action.clear.tooltip": "Clear",
   "action.delete.tooltip": "Delete",
-  "action.filter.tooltip": "Filter",
+  "action.filter.tooltip": "Advanced Search",
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
   "action.web-tools.tooltip": "Go to Web Tools",
@@ -186,8 +186,8 @@
   "catalog-filter.lastYear.date-shortcuts": "Last Year",
   "catalog-filter.dateRangeField.placeholder": "Pick Date Range",
   "catalog-filter.dateRangeField.validation-error": "Please select a valid date range",
-  "catalog-filter.filterButton.text": "Filter Catalog",
-  "catalog-filter.clearFilterButton.text": "Clear Filter",
+  "catalog-filter.filterButton.text": "Search",
+  "catalog-filter.clearFilterButton.text": "Clear",
 
   "catalog-filter.freeText.placeholder": "Free terms catalog search",
 

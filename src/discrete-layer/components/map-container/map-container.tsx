@@ -208,9 +208,9 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
                     <DrawerSubtitle>Subtitle</DrawerSubtitle>
                   </DrawerHeader>
                   <DrawerContent>
-                    <LayersResultsComponent 
+                    {/* <LayersResultsComponent 
                       style={{height: '450px',width: '100%'}}
-                    />
+                    /> */}
                   </DrawerContent>
                 </Drawer>
               </Box>)
