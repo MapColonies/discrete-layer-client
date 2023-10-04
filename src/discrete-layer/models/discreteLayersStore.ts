@@ -221,12 +221,17 @@ export const discreteLayersStore = ModelBase
       self.selectedLayer =  layer ? {...layer} : undefined;
     }
 
-    function setTabviewData(tabView: TabViews): void {
+    function setTabviewData(tabView: TabViews, customLayersImages?: ILayerImage[]): void {
       if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
-        self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
-        self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
+        if(customLayersImages) {
+          self.tabViews[idxTabViewToUpdate].layersImages = [...customLayersImages];
+        } else {
+          self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
+          self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
+        }
+
       } 
     }
 
@@ -256,6 +261,8 @@ export const discreteLayersStore = ModelBase
         });
       } 
     }
+
+
 
     function addPreviewedLayer(id: string): void {
       self.previewedLayers = [

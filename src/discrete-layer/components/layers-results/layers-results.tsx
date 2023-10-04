@@ -317,7 +317,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       /> :
       <GridComponent
         gridOptions={gridOptions}
-        rowData={layersImages}
+        rowData={getRowData()}
         style={props.style}
         isLoading={props.searchLoading}
       />

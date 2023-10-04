@@ -105,7 +105,8 @@ const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
 const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
-  dashLength: 5
+  // color: CesiumColor.MAGENTA.withAlpha(1), //new CesiumColor( 116, 135, 136, 1),
+  dashLength: 10,
 });
 
 interface IDrawingObject {
@@ -217,8 +218,13 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
-    store.discreteLayersStore.setLayersImages([...layers]);
-  }, [data, store.discreteLayersStore]);
+
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      store.discreteLayersStore.setLayersImages([...layers]);
+    } else {
+      store.discreteLayersStore.setTabviewData(TabViews.SEARCH_RESULTS, layers);
+    }
+  }, [data]);
 
   
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
@@ -286,6 +292,21 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
 
   }, [store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+
+  useEffect(() => {
+    const hasFiltersEnabled = store.discreteLayersStore.searchParams.catalogFilters.length > 0 || store.discreteLayersStore.searchParams.geojson;
+    if(hasFiltersEnabled) {
+      const filters = buildFilters();
+      setQuery(store.querySearch({
+        opts: {
+          filter: filters
+        },
+        end: CONFIG.RUNNING_MODE.END_RECORD,
+        start: CONFIG.RUNNING_MODE.START_RECORD,
+      }));
+    }
+
+  }, [store.discreteLayersStore.searchParams.recordType])
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
@@ -1008,8 +1029,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                 }
               }}
             >
-                {memoizedLayers}
                 {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
+                
                   drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
                   drawingMaterial={DRAWING_MATERIAL_COLOR}
                   drawState={{
@@ -1018,9 +1039,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                     handler: drawPrimitive.handler,
                   }}
                   hollow={true}
-                  outlineWidth={2}
+                  outlineWidth={5}
                   material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
                 />}
+                {memoizedLayers}
 
                 {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
                 <Terrain/>
