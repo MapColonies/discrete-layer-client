@@ -306,7 +306,6 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     gridApi?.setColumnDefs(colDef);
   },[store.userStore.user]);
 
-  console.log(props.searchError)
   return (
     <Box id='layerResults'>
       {props.searchError ? <Error

@@ -174,9 +174,12 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
-    store.discreteLayersStore.clearLayersImages();
+    
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      store.discreteLayersStore.clearLayersImages();
+      store.discreteLayersStore.selectLayer(undefined);
+    }
 
-    store.discreteLayersStore.selectLayer(undefined);
     if(!isPoiSearchActive) {
       setPoi(undefined);
     }
@@ -282,7 +285,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       }));
     }
 
-  }, [store.discreteLayersStore.searchParams.recordType, store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+  }, [store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
@@ -301,15 +304,19 @@ const DiscreteLayerView: React.FC = observer(() => {
     if(store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
 
     store.discreteLayersStore.searchParams.resetCatalogFilters();
-    void store.discreteLayersStore.clearLayersImages();
-    store.discreteLayersStore.resetSelectedLayer();
+
+    store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
+
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      void store.discreteLayersStore.clearLayersImages();
+      store.discreteLayersStore.resetSelectedLayer();
+    }
     
     // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
     // If any of the geographical filters is enabled, then we want to stay at the search results tab.
     
     if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
       handleTabViewChange(TabViews.CATALOG);
-      store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
       setSearchResultsError(undefined);
     }
   };
@@ -326,8 +333,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       // If there's any filter enabled, then we want to stay at the search results tab.
 
       if(store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
-        setActiveTabView(TabViews.CATALOG);
-        store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
+        handleTabViewChange(TabViews.CATALOG);
       }
     }
     
