@@ -114,14 +114,14 @@ export const discreteLayersStore = ModelBase
       self.entityDescriptors = cloneDeep(data);
     }
 
-    function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
+    function getPreparedLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
 
       // Filter out Unpublished entries on User premissions.
       const isUserAdmin = store.userStore.isUserAdmin();
       const filteredLayersImages = data.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
       
-      self.layersImages = filteredLayersImages.map(item => {
+      const preparedLayersImages = filteredLayersImages.map(item => {
         let validations = {};
         if (!isEmpty(self.capabilities) && item.type === RecordType.RECORD_RASTER) {
           const layerLink = getLayerLink(item);
@@ -139,6 +139,12 @@ export const discreteLayersStore = ModelBase
           ...validations
         };
       });
+
+      return preparedLayersImages;
+    }
+
+    function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
+      self.layersImages = getPreparedLayersImages(data, showFootprint);
 
       return self.layersImages;
     }
@@ -226,7 +232,8 @@ export const discreteLayersStore = ModelBase
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
         if(customLayersImages) {
-          self.tabViews[idxTabViewToUpdate].layersImages = [...customLayersImages];
+          const preparedLayersImages = getPreparedLayersImages([...customLayersImages]);
+          self.tabViews[idxTabViewToUpdate].layersImages = preparedLayersImages;
         } else {
           self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
           self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
@@ -355,6 +362,7 @@ export const discreteLayersStore = ModelBase
 
     return {
       getLayersImages,
+      getPreparedLayersImages,
       setLayersImages,
       setLayersImagesData,
       refreshLayersImages,

@@ -17,6 +17,10 @@ body[dir='rtl'] .ag-theme-alpine-dark .ag-header-cell[col-id="footprintShown"]{
   overflow-y: overlay !important;
 }
 
+#layerResults .ag-center-cols-viewport {
+  overflow-x: hidden !important;
+}
+
 /* Hide right header and spacer */
 #layerResults .ag-pinned-right-header,
 #layerResults .ag-horizontal-right-spacer {

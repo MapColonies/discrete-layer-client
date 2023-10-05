@@ -178,7 +178,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     
     if(activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.clearLayersImages();
-      store.discreteLayersStore.selectLayer(undefined);
+      store.discreteLayersStore.resetSelectedLayer();
     }
 
     if(!isPoiSearchActive) {
@@ -733,7 +733,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     className="operationIcon mc-icon-Edit1"
                     label="EDIT"
                     onClick={(): void => {
-                      store.discreteLayersStore.selectLayer(undefined);
+                      store.discreteLayersStore.resetSelectedLayer();
                       setEditEntityDialogOpen(!isEditEntityDialogOpen);
                     }}
                   />
@@ -849,7 +849,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <TabViewsSwitcher
             handleTabViewChange = {handleTabViewChange}
             activeTabView = {activeTabView}
-            disabled={isDrawing || store.exportStore.drawingState?.drawing}
+            disabled={isDrawing || store.exportStore.drawingState?.drawing || store.catalogTreeStore.isLoading || searchLoading}
           />
         </Box>
         <Box className="headerSearchOptionsContainer">

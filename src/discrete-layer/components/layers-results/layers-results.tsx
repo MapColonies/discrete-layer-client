@@ -195,7 +195,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.name.label',
       }),
-      width: 180,
+      minWidth: 180,
+      flex: 1,
       field: 'productName',
       cellRenderer: 'styledByDataRenderer',
       suppressMovable: true,
@@ -207,7 +208,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       headerName: intl.formatMessage({
         id: 'results.fields.update-date.label',
       }),
-      width: 140,
+      minWidth: 140,
+      flex: 1,
       field: 'updateDate',
       suppressMovable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
