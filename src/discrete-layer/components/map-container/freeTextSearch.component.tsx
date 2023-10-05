@@ -11,8 +11,8 @@ import { EntityFormikHandlers } from '../layer-details/layer-datails-form';
 import './freeTextSearch.css';
 import { FilterField } from '../../models/RootStore.base';
 
+export const PYCSW_ANY_TEXT_FIELD = 'csw:AnyText';
 const FREE_TEXT_SEARCH_DEBOUNCE = 1000;
-const PYCSW_ANY_TEXT_FIELD = 'csw:AnyText';
 const INITIAL_VALUE = '';
 
 interface FreeTextSearchProps { 
