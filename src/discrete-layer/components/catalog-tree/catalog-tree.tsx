@@ -92,7 +92,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       if (refresh) {
         setIsDataLoading(true);
         void store.catalogTreeStore.initTree();
-        void store.discreteLayersStore.searchParams.resetLocation();
       }
     }, [refresh]);
 

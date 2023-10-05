@@ -105,7 +105,7 @@ const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
 const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
-  dashLength: 5
+  dashLength: 10,
 });
 
 interface IDrawingObject {
@@ -174,9 +174,12 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
-    store.discreteLayersStore.clearLayersImages();
+    
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      store.discreteLayersStore.clearLayersImages();
+      store.discreteLayersStore.resetSelectedLayer();
+    }
 
-    store.discreteLayersStore.selectLayer(undefined);
     if(!isPoiSearchActive) {
       setPoi(undefined);
     }
@@ -214,8 +217,13 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
-    store.discreteLayersStore.setLayersImages([...layers]);
-  }, [data, store.discreteLayersStore]);
+
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      store.discreteLayersStore.setLayersImages([...layers]);
+    } else {
+      store.discreteLayersStore.setTabviewData(TabViews.SEARCH_RESULTS, layers);
+    }
+  }, [data]);
 
   
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
@@ -282,7 +290,22 @@ const DiscreteLayerView: React.FC = observer(() => {
       }));
     }
 
-  }, [store.discreteLayersStore.searchParams.recordType, store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+  }, [store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+
+  useEffect(() => {
+    const hasFiltersEnabled = store.discreteLayersStore.searchParams.catalogFilters.length > 0 || store.discreteLayersStore.searchParams.geojson;
+    if(hasFiltersEnabled) {
+      const filters = buildFilters();
+      setQuery(store.querySearch({
+        opts: {
+          filter: filters
+        },
+        end: CONFIG.RUNNING_MODE.END_RECORD,
+        start: CONFIG.RUNNING_MODE.START_RECORD,
+      }));
+    }
+
+  }, [store.discreteLayersStore.searchParams.recordType])
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
@@ -301,15 +324,19 @@ const DiscreteLayerView: React.FC = observer(() => {
     if(store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
 
     store.discreteLayersStore.searchParams.resetCatalogFilters();
-    void store.discreteLayersStore.clearLayersImages();
-    store.discreteLayersStore.resetSelectedLayer();
+
+    store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
+
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      void store.discreteLayersStore.clearLayersImages();
+      store.discreteLayersStore.resetSelectedLayer();
+    }
     
     // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
     // If any of the geographical filters is enabled, then we want to stay at the search results tab.
     
     if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
       handleTabViewChange(TabViews.CATALOG);
-      store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
       setSearchResultsError(undefined);
     }
   };
@@ -326,8 +353,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       // If there's any filter enabled, then we want to stay at the search results tab.
 
       if(store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
-        setActiveTabView(TabViews.CATALOG);
-        store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
+        handleTabViewChange(TabViews.CATALOG);
       }
     }
     
@@ -706,7 +732,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     className="operationIcon mc-icon-Edit1"
                     label="EDIT"
                     onClick={(): void => {
-                      store.discreteLayersStore.selectLayer(undefined);
+                      store.discreteLayersStore.resetSelectedLayer();
                       setEditEntityDialogOpen(!isEditEntityDialogOpen);
                     }}
                   />
@@ -822,7 +848,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           <TabViewsSwitcher
             handleTabViewChange = {handleTabViewChange}
             activeTabView = {activeTabView}
-            disabled={isDrawing || store.exportStore.drawingState?.drawing}
+            disabled={isDrawing || store.exportStore.drawingState?.drawing || store.catalogTreeStore.isLoading || searchLoading}
           />
         </Box>
         <Box className="headerSearchOptionsContainer">
@@ -1002,8 +1028,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                 }
               }}
             >
-                {memoizedLayers}
                 {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
+                
                   drawings={activeTabView === TabViews.SEARCH_RESULTS ? drawEntities : []}
                   drawingMaterial={DRAWING_MATERIAL_COLOR}
                   drawState={{
@@ -1012,9 +1038,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                     handler: drawPrimitive.handler,
                   }}
                   hollow={true}
-                  outlineWidth={2}
+                  outlineWidth={5}
                   material={ (DRAWING_FINAL_MATERIAL as unknown) as CesiumColor }
                 />}
+                {memoizedLayers}
 
                 {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
                 <Terrain/>

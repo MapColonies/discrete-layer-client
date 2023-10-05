@@ -26,7 +26,13 @@ export const FreeTextSearch: React.FC<FreeTextSearchProps> = observer(({ onFilte
   const store = useStore();
   const isSystemFreeTextSearchEnabled = store.userStore.isActionAllowed(UserAction.SYSTEM_ACTION_FREETEXTSEARCH);
 
+  const catalogFilters = store.discreteLayersStore.searchParams.catalogFilters;
   const [value, setValue] = useState(INITIAL_VALUE);
+
+  const getFreeTextFilter = (text: string): FilterField => ({
+    field: PYCSW_ANY_TEXT_FIELD,
+    like: text
+  });
 
   useEffect(() => {
     if(isCatalogFiltersEnabled) {
@@ -34,15 +40,20 @@ export const FreeTextSearch: React.FC<FreeTextSearchProps> = observer(({ onFilte
     }
   }, [isCatalogFiltersEnabled]);
 
+  useEffect(() => {
+    if(catalogFilters.length === 0) {
+      if(value.trim().length > 0) {
+        const freeTextFilter = getFreeTextFilter(value);        
+        onFiltersApply([freeTextFilter]);
+      } 
+    }
+  }, [catalogFilters])
+
 
   useEffect(() => {
     setValue(INITIAL_VALUE);
-  }, [store.userStore.user?.role, store.discreteLayersStore.searchParams.recordType])
+  }, [store.userStore.user?.role])
 
-  const getFreeTextFilter = (text: string): FilterField => ({
-    field: PYCSW_ANY_TEXT_FIELD,
-    like: text
-  });
 
   const handleFreeTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const fieldValue = e.target.value;

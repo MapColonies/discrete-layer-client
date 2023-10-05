@@ -59,7 +59,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
 
     useEffect(() => {
       handleFormReset();
-    }, [store.userStore.user?.role, store.discreteLayersStore.searchParams.recordType])
+    }, [store.userStore.user?.role])
 
     const handleSubmit = () => {
       const filterFormValues = formMethods.getValues();
@@ -69,8 +69,10 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
     };
 
     const watchAllFields = formMethods.watch();
+    const isFormEmpty = useMemo(() => Object.values(watchAllFields).every(value => isEmpty(value)), [watchAllFields]);
+
     // If there is errors or if all field values are empty, then submit should be disabled
-    const isSubmitFiltersDisabled = useMemo(() => !formMethods.formState.isValid || Object.values(watchAllFields).every(value => isEmpty(value)), [watchAllFields]);
+    const isSubmitFiltersDisabled = useMemo(() => !formMethods.formState.isValid || isFormEmpty, [watchAllFields]);
 
     return (
       <FormProvider {...formMethods}>
@@ -97,6 +99,7 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               className="catalogFiltersClearBtn"
               type="button"
               form="catalogFiltersForm"
+              disabled={isFormEmpty}
               onClick={handleFormReset}
             >
               {intl.formatMessage({id: 'catalog-filter.clearFilterButton.text'})}

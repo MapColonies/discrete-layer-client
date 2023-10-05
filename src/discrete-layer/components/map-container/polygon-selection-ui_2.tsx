@@ -83,7 +83,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
     setIsFilterPanelOpen(false);
     setActiveSelection('');
     setLastDrawingSelectionType('');
-  }, [store.userStore.user?.role, store.discreteLayersStore.searchParams.recordType])
+  }, [store.userStore.user?.role])
 
   useEffect(() => {
     if(poi) {

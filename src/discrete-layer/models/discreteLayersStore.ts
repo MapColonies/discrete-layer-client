@@ -114,14 +114,14 @@ export const discreteLayersStore = ModelBase
       self.entityDescriptors = cloneDeep(data);
     }
 
-    function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
+    function getPreparedLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
       // self.layersImages = filterBySearchParams(data).map(item => ({...item, footprintShown: true, layerImageShown: false, order: null}));
 
       // Filter out Unpublished entries on User premissions.
       const isUserAdmin = store.userStore.isUserAdmin();
       const filteredLayersImages = data.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
       
-      self.layersImages = filteredLayersImages.map(item => {
+      const preparedLayersImages = filteredLayersImages.map(item => {
         let validations = {};
         if (!isEmpty(self.capabilities) && item.type === RecordType.RECORD_RASTER) {
           const layerLink = getLayerLink(item);
@@ -139,6 +139,12 @@ export const discreteLayersStore = ModelBase
           ...validations
         };
       });
+
+      return preparedLayersImages;
+    }
+
+    function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
+      self.layersImages = getPreparedLayersImages(data, showFootprint);
 
       return self.layersImages;
     }
@@ -221,12 +227,18 @@ export const discreteLayersStore = ModelBase
       self.selectedLayer =  layer ? {...layer} : undefined;
     }
 
-    function setTabviewData(tabView: TabViews): void {
+    function setTabviewData(tabView: TabViews, customLayersImages?: ILayerImage[]): void {
       if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
-        self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
-        self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
+        if(customLayersImages) {
+          const preparedLayersImages = getPreparedLayersImages([...customLayersImages]);
+          self.tabViews[idxTabViewToUpdate].layersImages = preparedLayersImages;
+        } else {
+          self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
+          self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
+        }
+
       } 
     }
 
@@ -256,6 +268,8 @@ export const discreteLayersStore = ModelBase
         });
       } 
     }
+
+
 
     function addPreviewedLayer(id: string): void {
       self.previewedLayers = [
@@ -348,6 +362,7 @@ export const discreteLayersStore = ModelBase
 
     return {
       getLayersImages,
+      getPreparedLayersImages,
       setLayersImages,
       setLayersImagesData,
       refreshLayersImages,
