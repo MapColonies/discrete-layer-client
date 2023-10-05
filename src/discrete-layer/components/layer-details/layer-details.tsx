@@ -42,6 +42,7 @@ import { getBasicType, getEntityDescriptors } from './utils';
 
 import './layer-details.css';
 import { LookupOptionsPresentorComponent } from './field-value-presentors/lookup.options-presentor';
+import { PYCSW_ANY_TEXT_FIELD } from '../map-container/freeTextSearch.component';
 
 const FOOTPRINT_FIELD_NAME = 'footprint';
 
@@ -172,13 +173,25 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
             ? 'categoryFullWidthField'
             : 'categoryField';
 
+            const fieldValue = get(layerRecord, fieldInfo.fieldName as string);
+            const getFilterFieldIdx = (fieldName: string | undefined) => {
+              return store.discreteLayersStore.searchParams.catalogFilters.findIndex((filter) => {
+                return filter.field === fieldName;
+               });
+            };
+            const stringifyFieldValue = (val: unknown) => (val + '').toLowerCase();
+
             if(isSearchTab) {
               // Check if catalog filter is enabled by that field
-              const isFilterParticipantField = store.discreteLayersStore.searchParams.catalogFilters.findIndex((filter) => {
-               return fieldInfo.queryableName === filter.field;
-              }) > -1;
+              const isFilterParticipantField = getFilterFieldIdx(fieldInfo.queryableName) > -1;
+              
+              const idxFreeTextSearchFilterField = getFilterFieldIdx(PYCSW_ANY_TEXT_FIELD);
   
-              if(isFilterParticipantField) {
+              const isByFreeTextSearch = idxFreeTextSearchFilterField > -1 &&
+                                    stringifyFieldValue(fieldValue)
+                                    .indexOf(stringifyFieldValue(store.discreteLayersStore.searchParams.catalogFilters[idxFreeTextSearchFilterField].like)) > -1;
+
+              if(isFilterParticipantField || isByFreeTextSearch) {
                 fieldClassName += ' filterParticipant';
               }
             }
@@ -200,7 +213,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                   getValuePresentor(
                     layerRecord as LayerMetadataMixedUnion,
                     fieldInfo,
-                    get(layerRecord, fieldInfo.fieldName as string),
+                    fieldValue,
                     mode,
                     formik,
                     enumsMap
