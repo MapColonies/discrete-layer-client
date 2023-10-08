@@ -220,11 +220,11 @@ body[dir='rtl'] .sideDetailsPanel {
 }
 
 .cesium-viewer .sideToolsContainer {
-  z-index: 5;
+  z-index: 0;
 }
 
 .cesium-viewer-fullscreenContainer , .cesium-viewer .toolsContainer {
-  z-index: 5;
+  z-index: 0;
 }
 
 
