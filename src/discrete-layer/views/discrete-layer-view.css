@@ -205,7 +205,6 @@ body[dir='rtl'] .sideDetailsPanel {
 .tabHeaderContainer .filterByCatalogEntitySelect {
   width: 130px;
   padding: 0 6px 0 6px;
-  z-index: 5;
   align-self: center;
 }
 
