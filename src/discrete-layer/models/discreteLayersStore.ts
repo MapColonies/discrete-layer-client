@@ -234,6 +234,7 @@ export const discreteLayersStore = ModelBase
         if(customLayersImages) {
           const preparedLayersImages = getPreparedLayersImages([...customLayersImages]);
           self.tabViews[idxTabViewToUpdate].layersImages = preparedLayersImages;
+          self.tabViews[idxTabViewToUpdate].selectedLayer = undefined;
         } else {
           self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
           self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
