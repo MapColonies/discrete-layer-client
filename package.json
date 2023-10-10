@@ -49,6 +49,7 @@
     "moduleNameMapper": {
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
       "@material+(.*)\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
+      "@map-colonies+(.*)/styles": "<rootDir>/src/__mocks__/styleMock.js",
       "\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js",
       "(map|collapsible-list|tooltip|icon|date-range-picker|date-range-picker.form-control|date-picker|autocomplete).css": "<rootDir>/src/__mocks__/styleMock.js",
       "(drawHelper|coordinates-tracker.tool|scale-tracker.tool|scene-modes|base-maps|settings|file-picker).css": "<rootDir>/src/__mocks__/styleMock.js",
@@ -84,7 +85,7 @@
     "@formatjs/icu-messageformat-parser": "^2.6.0",
     "@map-colonies/error-types": "^1.1.5",
     "@map-colonies/mc-utils": "^1.6.1",
-    "@map-colonies/react-components": "^4.3.0",
+    "@map-colonies/react-components": "^4.3.1",
     "@map-colonies/react-core": "^4.2.0",
     "@map-colonies/static-assets": "^0.5.1",
     "@material-ui/core": "^4.11.0",

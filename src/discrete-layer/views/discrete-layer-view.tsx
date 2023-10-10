@@ -1007,8 +1007,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="mapAppContainer">
         <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
-            <CesiumMap 
-              showZoomLevel={true}
+            <CesiumMap
               projection={CONFIG.MAP.PROJECTION}  
               center={CONFIG.MAP.CENTER}
               zoom={CONFIG.MAP.ZOOM}

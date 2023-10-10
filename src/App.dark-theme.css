@@ -368,3 +368,8 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
   --date-picker-scrollbar-thumb-background: var(--mdc-theme-alternative-surface);
   --date-picker-scrollbar-thumb-hover-background: var(--mdc-theme-text-primary-on-dark);
 }
+
+/* LINEAR PROGRESS CUSTOMIZATION */
+.mdc-linear-progress--indeterminate .mdc-linear-progress__secondary-bar {
+   left: unset;
+}
