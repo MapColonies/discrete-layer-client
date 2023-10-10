@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.1.4...v2.2.0) (2023-10-10)
+
+
+### Features
+
+* loading progress ([#470](https://github.com/MapColonies/discrete-layer-client/issues/470)) ([a1619b2](https://github.com/MapColonies/discrete-layer-client/commit/a1619b2d0f928785e66b9a150d4330b206e63e10))
+
+
+### Bug Fixes
+
+* reset selected layer in search tab after record change ([#469](https://github.com/MapColonies/discrete-layer-client/issues/469)) ([dacd521](https://github.com/MapColonies/discrete-layer-client/commit/dacd5213ba0ea7faa46875569ee72163ea12c1f2))
+
 ### [2.1.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.1.3...v2.1.4) (2023-10-05)
 
 
