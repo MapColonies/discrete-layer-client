@@ -154,6 +154,9 @@ const DiscreteLayerView: React.FC = observer(() => {
   }]);
   const [searchResultsError, setSearchResultsError] = useState();
   const [actionsMenuDimensions, setActionsMenuDimensions] = useState<MenuDimensions>();
+  
+  const isDrawingState = isDrawing || store.exportStore.drawingState?.drawing;
+  const disableOnDrawingClassName = isDrawingState ? 'interactionsDisabled' : ''; 
 
   useEffect(() => {
     setSearchResultsError(searchError);
@@ -840,7 +843,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         handleTabViewChange = {handleTabViewChange}
         activeTabView = {activeTabView}
       />
-      <Box className="headerContainer">
+      <Box className={`headerContainer ${disableOnDrawingClassName}`}>
         <Box className="headerViewsSwitcher">
           <Box>
            <AppTitle />
@@ -907,7 +910,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
       </Box>
       <Box className="mainViewContainer">
-        <Box className="sidePanelParentContainer">
+        <Box className={`sidePanelParentContainer ${disableOnDrawingClassName}`}>
         {!tabsPanelExpanded ? (
             <Box
               className="sidePanelContainer"
@@ -1004,8 +1007,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         </Box>
         <Box className="mapAppContainer">
         <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
-            <CesiumMap 
-              showZoomLevel={true}
+            <CesiumMap
               projection={CONFIG.MAP.PROJECTION}  
               center={CONFIG.MAP.CENTER}
               zoom={CONFIG.MAP.ZOOM}
