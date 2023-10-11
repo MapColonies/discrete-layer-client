@@ -170,6 +170,20 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
 
     if(!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
+      const searchLayers = get(data, 'search', []) as ILayerImage[];
+      
+      /**
+       * There could be a case where the catalog includes outdated data (New layers has bee added).
+       * Search results will always be updated each time new filter is applied.
+       * As a workaround we add the delta layers to the capabilities search to update the capabilities state with the added layers.
+       */
+      searchLayers.forEach(layer => {
+        const isNewLayer = !fullCatalogLayers?.some(catalogLayer => catalogLayer.id === layer.id);
+        if(isNewLayer) {
+          fullCatalogLayers?.push(layer);
+        }
+      })
+
       void store.catalogTreeStore.capabilitiesFetch(fullCatalogLayers);
     }
   }, [data]);
