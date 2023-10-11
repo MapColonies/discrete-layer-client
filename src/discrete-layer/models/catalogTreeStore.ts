@@ -176,7 +176,7 @@ export const catalogTreeStore = ModelBase.props({
       }
     });
 
-    const capabilitiesFetch = flow(function* capabilitiesFetchGen(): Generator<
+    const capabilitiesFetch = flow(function* capabilitiesFetchGen(layers?: LayerMetadataMixedUnion[]): Generator<
       Promise<{ capabilities: CapabilityModelType[] }>,
       CapabilityModelType[],
       CapabilityModelType[]
@@ -189,7 +189,7 @@ export const catalogTreeStore = ModelBase.props({
       // It is being called only here in the catalog because the other two places (bestCatalog & searchByPolygon)
       // are subsets of the catalog layers list
 
-      const layersList = store.discreteLayersStore.layersImages as LayerMetadataMixedUnion[];
+      const layersList = layers ?? store.discreteLayersStore.layersImages as LayerMetadataMixedUnion[];
 
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { RECORD_ALL, RECORD_RASTER } = RecordType;
@@ -558,6 +558,7 @@ export const catalogTreeStore = ModelBase.props({
     return {
       catalogSearch,
       initTree,
+      capabilitiesFetch,
       setCatalogTreeData,
       setIsDataLoading,
       resetCatalogTreeData,

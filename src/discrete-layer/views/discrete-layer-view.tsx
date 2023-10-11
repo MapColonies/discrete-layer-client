@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { find, get } from 'lodash';
+import { find, get, isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
@@ -157,6 +157,22 @@ const DiscreteLayerView: React.FC = observer(() => {
   
   const isDrawingState = isDrawing || store.exportStore.drawingState?.drawing;
   const disableOnDrawingClassName = isDrawingState ? 'interactionsDisabled' : ''; 
+
+  useEffect(() => {
+    // When search query changes, we need to refetch catalog capabilities as well.
+    let fullCatalogLayers: LayerMetadataMixedUnion[] | undefined;
+    
+    // Tab data is set only when switching tabs.
+    if(activeTabView === TabViews.CATALOG) {
+      fullCatalogLayers = store.discreteLayersStore.layersImages;
+    } else {
+      fullCatalogLayers = store.discreteLayersStore.tabViews?.[TabViews.CATALOG].layersImages;
+    }
+
+    if(!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
+      void store.catalogTreeStore.capabilitiesFetch(fullCatalogLayers);
+    }
+  }, [data]);
 
   useEffect(() => {
     setSearchResultsError(searchError);
