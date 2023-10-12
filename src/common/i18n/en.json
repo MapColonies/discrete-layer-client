@@ -1,4 +1,5 @@
 {
+  "general.whats-new.tooltip": "What's new?",
   "general.logo.text": "Catalog App",
   "general.version.tooltip": "Catalog App version",
   "general.version.text": "{projectVersion} ({appVersion})",

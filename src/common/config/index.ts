@@ -26,6 +26,7 @@ const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const ADMIN_PASSWORD = (window as any)._env_.ADMIN_PASSWORD;
 const PROJECT_VERSION = (window as any)._env_.PROJECT_VERSION;
+const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -182,7 +183,8 @@ const APP_CONFIG = {
         outlineWidth: 8
       }
     }
-  }
+  },
+  WHATSNEW_URL: WHATSNEW_URL
 };
 
 export default APP_CONFIG;

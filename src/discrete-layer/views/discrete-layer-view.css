@@ -247,3 +247,31 @@ body[dir='rtl'] .sideDetailsPanel {
   cursor: not-allowed;
   user-select: none;
 }
+
+/****** BADGE *****/
+/* inspired by https://codepen.io/codepenicillin/pen/eYjYmpO */
+.position {
+  position: relative;
+  cursor: pointer;
+}
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 4px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 8px;
+  height: 12px;
+  padding: 1px 6px 9px 6px;
+  border: 3px solid var(--mdc-theme-background);
+  border-radius: 500px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  z-index: 1;
+}
+.badge_primary{
+  background: var(--mdc-theme-primary);
+}
