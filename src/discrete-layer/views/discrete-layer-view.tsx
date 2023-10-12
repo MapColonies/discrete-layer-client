@@ -870,6 +870,17 @@ const DiscreteLayerView: React.FC = observer(() => {
           />
         </Box>
         <Box className="headerSystemAreaContainer">
+          <Tooltip content={'KUKU'}>
+          <Box className="position">
+            <Box className="badge badge_primary"></Box>
+            <IconButton
+                className="operationIcon mc-icon-Help"
+                style={{fontSize: '38px'}}
+                label="Whats new?"
+                onClick={ (): void => {  } }
+              />
+          </Box>
+          </Tooltip>
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
