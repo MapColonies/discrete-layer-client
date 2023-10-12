@@ -33,6 +33,7 @@ import {
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import CONFIG from '../../common/config';
+import { localStore } from '../../common/helpers/storage';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
 import { LinkType } from '../../common/models/link-type.enum';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
@@ -154,9 +155,17 @@ const DiscreteLayerView: React.FC = observer(() => {
   }]);
   const [searchResultsError, setSearchResultsError] = useState();
   const [actionsMenuDimensions, setActionsMenuDimensions] = useState<MenuDimensions>();
-  
+  const [whatsNewVisitedCnt, setWhatsNewVisitedCnt] = useState<number>(0);
+
   const isDrawingState = isDrawing || store.exportStore.drawingState?.drawing;
   const disableOnDrawingClassName = isDrawingState ? 'interactionsDisabled' : ''; 
+
+  useEffect(() => {
+    const val = localStore.get('whatsNewVisitedCnt');
+    if(val){
+      setWhatsNewVisitedCnt(parseInt(val));
+    }
+  }, [])
 
   useEffect(() => {
     setSearchResultsError(searchError);
@@ -870,16 +879,21 @@ const DiscreteLayerView: React.FC = observer(() => {
           />
         </Box>
         <Box className="headerSystemAreaContainer">
-          <Tooltip content={'KUKU'}>
-          <Box className="position">
-            <Box className="badge badge_primary"></Box>
-            <IconButton
-                className="operationIcon mc-icon-Help"
-                style={{fontSize: '38px'}}
-                label="Whats new?"
-                onClick={ (): void => {  } }
-              />
-          </Box>
+          <Tooltip content={intl.formatMessage({ id: 'general.whats-new.tooltip' })}>
+            <Box className="position">
+              {whatsNewVisitedCnt === 0 &&<Box className="badge badge_primary"></Box>}
+              <IconButton
+                  className="operationIcon mc-icon-Help"
+                  style={{fontSize: '38px'}}
+                  label="Whats new?"
+                  onClick={ (): void => { 
+                    const val = whatsNewVisitedCnt + 1;
+                    localStore.set('whatsNewVisitedCnt',val + '');
+                    setWhatsNewVisitedCnt(val);
+                    window.open(CONFIG.WHATSNEW_URL, '_blank');
+                  } }
+                />
+            </Box>
           </Tooltip>
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
