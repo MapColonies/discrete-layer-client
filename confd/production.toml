@@ -41,4 +41,5 @@ keys = [
   "/configuration/served/entity/types",
   "/configuration/admin/password",
   "/configuration/project/version",
+  "/configuration/whatsnew/url",
 ]
