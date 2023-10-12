@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { find, get } from 'lodash';
+import { find, get, isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
 import { lineString } from '@turf/helpers';
@@ -166,6 +166,36 @@ const DiscreteLayerView: React.FC = observer(() => {
       setWhatsNewVisitedCnt(parseInt(val));
     }
   }, [])
+  
+  useEffect(() => {
+    // When search query changes, we need to refetch catalog capabilities as well.
+    let fullCatalogLayers: LayerMetadataMixedUnion[] | undefined;
+    
+    // Tab data is set only when switching tabs.
+    if(activeTabView === TabViews.CATALOG) {
+      fullCatalogLayers = store.discreteLayersStore.layersImages;
+    } else {
+      fullCatalogLayers = store.discreteLayersStore.tabViews?.[TabViews.CATALOG].layersImages;
+    }
+
+    if(!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
+      const searchLayers = get(data, 'search', []) as ILayerImage[];
+      
+      /**
+       * There could be a case where the catalog includes outdated data (New layers has bee added).
+       * Search results will always be updated each time new filter is applied.
+       * As a workaround we add the delta layers to the capabilities search to update the capabilities state with the added layers.
+       */
+      searchLayers.forEach(layer => {
+        const isNewLayer = !fullCatalogLayers?.some(catalogLayer => catalogLayer.id === layer.id);
+        if(isNewLayer) {
+          fullCatalogLayers?.push(layer);
+        }
+      })
+
+      void store.catalogTreeStore.capabilitiesFetch(fullCatalogLayers);
+    }
+  }, [data]);
 
   useEffect(() => {
     setSearchResultsError(searchError);
