@@ -172,7 +172,22 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },
         ],
-      }
+      },
+      {
+        id: 2,
+        titleTranslationId: 'OperationsOnMap',
+        type: EntityActionsTypes.MAP_ACTIONS,
+        group: [
+          {
+            action: 'analyze',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Earth',
+            titleTranslationId: 'action.layer.analyze.tooltip',
+            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+          },
+        ],
+      },
     ]
   },
   {
