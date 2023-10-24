@@ -50,7 +50,7 @@ exports[`MapContainer component renders correctly 1`] = `
       </div>
     </div>
   </div>
-  <di
+  <gi
     center={
       Array [
         34.811,
@@ -95,6 +95,6 @@ exports[`MapContainer component renders correctly 1`] = `
         ]
       }
     />
-  </di>
+  </gi>
 </div>
 `;
