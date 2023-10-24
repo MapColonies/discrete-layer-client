@@ -92,6 +92,7 @@
   "action.layer.move-up.tooltip": "הזזה למעלה",
   "action.layer.move-down.tooltip": "הזזה למטה",
   "action.layer.move-to-bottom.tooltip": "הורדה לתחתית",
+  "action.analyze.tooltip": "ניתוח שטח",
   "action.job.retry": "נסה שוב",
   "action.job.abort": "בטל",
   "actions.wfs.buildings-title": "תשאול מבנה",

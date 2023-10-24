@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useEffect } from 'react';
-import { NodeData, TreeItem } from 'react-sortable-tree';
+import { NodeData } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
+import { Feature } from 'geojson';
 import _, { get, isEmpty } from 'lodash';
+import { DrawType } from '@map-colonies/react-components';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
@@ -22,13 +24,12 @@ import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 import { LayerMetadataMixedUnion } from '../../models';
-import { DrawType } from '@map-colonies/react-components';
-import { Feature } from 'geojson';
+import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
+import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
+import CONFIG from '../../../common/config';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 import { TabViews } from '../tab-views';
-import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
-import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
 
 const FIRST = 0;
 
@@ -194,6 +195,15 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           if (order !== FIRST) {
             store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
           }
+          break;
+        case 'Layer3DRecord.analyze':
+          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_ANALYZER_TOKEN_VALUE}`);
+          break;
+        case 'LayerRasterRecord.analyze':
+        case 'LayerDemRecord.analyze':
+        case 'BestRecord.analyze':
+        case 'VectorBestRecord.analyze':
+        case 'QuantizedMeshBestRecord.analyze':
           break;
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx

@@ -56,6 +56,14 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
     {
+      action: 'analyze',
+      frequent: true,
+      icon: '',
+      class: 'mc-icon-Earth',
+      titleTranslationId: 'action.analyze.tooltip',
+      views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
+    },
+    {
       action: 'export',
       frequent: false,
       icon: '',
@@ -172,7 +180,7 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
           // },
         ],
-      }
+      },
     ]
   },
   {
