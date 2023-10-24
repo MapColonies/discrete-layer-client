@@ -196,8 +196,15 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
           }
           break;
+        case 'LayerRasterRecord.analyze':
+          break;
         case 'Layer3DRecord.analyze':
-          window.open(`${CONFIG.WEB_TOOLS_URL}/simple-viewer?model_ids=${data.productId}&token=${CONFIG.ACCESS_TOKEN.TOKEN_VALUE}`);
+          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.ANALYZER_TOKEN_VALUE}`);
+          break;
+        case 'LayerDemRecord.analyze':
+        case 'BestRecord.analyze':
+        case 'VectorBestRecord.analyze':
+        case 'QuantizedMeshBestRecord.analyze':
           break;
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
