@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.3.3...v2.4.0) (2023-10-25)
+
+
+### Features
+
+* 3d analyze viewer ([#475](https://github.com/MapColonies/discrete-layer-client/issues/475)) ([853ebd2](https://github.com/MapColonies/discrete-layer-client/commit/853ebd27cdaeebf3f2f02ee90712fca1927a6440))
+
 ### [2.3.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.3.2...v2.3.3) (2023-10-17)
 
 ### [2.3.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.3.1...v2.3.2) (2023-10-15)
