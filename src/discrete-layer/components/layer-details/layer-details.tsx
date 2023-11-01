@@ -17,8 +17,10 @@ import {
   AutocompletionModelType,
   EntityDescriptorModelType,
   FieldCategory,
+  FieldConfigModelType,
   LayerMetadataMixedUnion,
   LinkModelType,
+  RecordType,
   useStore,
 } from '../../models';
 import { getEnumKeys } from '../../components/layer-details/utils';
@@ -175,8 +177,20 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
 
             const fieldValue = get(layerRecord, fieldInfo.fieldName as string);
             const getFilterFieldIdx = (fieldName: string | undefined) => {
+              // WORKAROUND to make appropriate indication on found pattern for RASTER not common filtered field
+              let aliasFilterField = fieldName;
+              if (layerRecord?.type === RecordType.RECORD_RASTER){
+                switch(fieldName){
+                  case 'mc:ingestionDate':
+                    aliasFilterField = 'mc:insertDate';
+                    break;
+                  case 'mc:insertDate':
+                    aliasFilterField = 'NO_FIELD';
+                    break;
+                }
+              }
               return store.discreteLayersStore.searchParams.catalogFilters.findIndex((filter) => {
-                return filter.field === fieldName;
+                return filter.field === aliasFilterField;
                });
             };
             const stringifyFieldValue = (val: unknown) => (val + '').toLowerCase();
@@ -237,14 +251,23 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
   }, [layerRecord, formik]);
 
   const briefInputs = useMemo(() => {
-    const briefArr = layerRecord &&
-      getEntityDescriptors(layerRecord.__typename, entityDescriptors)
-      .filter((item: unknown) => (item as IRecordCategoryFieldsInfo).category === FieldCategory.MAIN);
-    return (
-      briefArr?.map((category) => {
-        return renderCategory(category);
-      })
-    );
+    const briefCategory = {
+      __typename: 'CategoryConfig',
+      category: undefined,
+      categoryTitle: ' ',
+      fields: [] as FieldConfigModelType[],
+    };
+
+    layerRecord &&
+      getEntityDescriptors(layerRecord.__typename, entityDescriptors).forEach((category)=>{
+        const categoryBriefFields = category.fields?.filter((field) => field.isBriefField) as FieldConfigModelType[];
+        briefCategory.fields.push(...categoryBriefFields)
+      });
+    
+    briefCategory.fields = briefCategory.fields.sort((first, second) => first.isBriefField.order - second.isBriefField.order);
+    // @ts-ignore
+    return renderCategory(briefCategory);
+
   }, [layerRecord, formik]);
 
   return (
