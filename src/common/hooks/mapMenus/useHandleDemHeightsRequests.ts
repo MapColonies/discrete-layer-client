@@ -14,9 +14,6 @@ const DEM_POINTS_HEIGHTS_QUERY =
   latitude
   longitude
   height
-  updateDate
-  resolutionMeter
-  productType
 }`;
 
 const useHandleDemHeightsRequests = (): {

@@ -208,7 +208,6 @@ export type WfsGetFeatureParams = {
 export type GetDemPointsHeightsInput = {
   positions: DemHeightsPositionInput[]
   productType?: string
-  excludeFields?: string[]
 }
 export type DemHeightsPositionInput = {
   latitude: number

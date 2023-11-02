@@ -33,6 +33,8 @@ keys = [
   "/configuration/basemaps",
   "/configuration/default/terrain/provider/url",
   "/configuration/web/tools/url",
+  "/configuration/model/analyzer/route",
+  "/configuration/model/analyzer/token/value",
   "/configuration/running/mode/type",
   "/configuration/running/mode/autocomplete",
   "/configuration/access/token/attribute/name",

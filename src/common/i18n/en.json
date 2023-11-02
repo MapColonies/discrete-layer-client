@@ -91,6 +91,7 @@
   "action.layer.move-up.tooltip": "Move up",
   "action.layer.move-down.tooltip": "Move down",
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
+  "action.analyze.tooltip": "Analyze model",
   "action.job.retry": "Try again",
   "action.job.abort": "Abort",
   "actions.wfs.buildings-title": "Building info",
