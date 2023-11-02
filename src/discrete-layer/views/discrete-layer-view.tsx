@@ -241,7 +241,8 @@ const DiscreteLayerView: React.FC = observer(() => {
     MAP_SETTINGS_DIALOG_TITLE:  intl.formatMessage({ id: 'map-settings.dialog.title' }),
     MAP_SETTINGS_SCENE_MODE_TITLE: intl.formatMessage({ id: 'map-settings.base-map.scene-mode.title' }),
     MAP_SETTINGS_BASE_MAP_TITLE: intl.formatMessage({ id: 'map-settings.base-map.title' }),
-    ZOOM_LABEL: intl.formatMessage({ id: 'map.zoom.label' })
+    ZOOM_LABEL: intl.formatMessage({ id: 'map.zoom.label' }),
+    DIRECTION: intl.locale === 'he' ? 'rtl' : 'ltr',
   }), [intl]);
   /* eslint-enable */
 
