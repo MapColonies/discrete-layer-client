@@ -81,6 +81,9 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
             valueAsDate
           }
         }
+        isBriefField {
+          order
+        }
 
         default
       }

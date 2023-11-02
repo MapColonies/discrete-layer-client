@@ -36,6 +36,10 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
                   allFilterableDescriptorsFields.splice(filterableFieldIdx, 1, field);
                 }
               } else {
+                // WORKAROUND to change RASTER not common filtered field label
+                if(field.fieldName === 'insertDate') {
+                  field.label = 'filters.ingestion-date.unified.label';
+                }
                 allFilterableDescriptorsFields.push(field);
               }
             }
