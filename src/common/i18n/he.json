@@ -144,6 +144,7 @@
   "filters.date-picker.set-btn.text": "אישור",
   "filters.date-picker.start-time.label": "זמן התחלה",
   "filters.date-picker.end-time.label": "זמן סיום",
+  "filters.ingestion-date.unified.label": "תאריך גירסה",
 
   "results.fields.name.label": "שם",
   "results.fields.update-date.label": "עדכון פרטים",

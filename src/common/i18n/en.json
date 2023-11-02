@@ -142,6 +142,7 @@
   "filters.date-picker.set-btn.text": "Set",
   "filters.date-picker.start-time.label": "Start of time",
   "filters.date-picker.end-time.label": "End of time",
+  "filters.ingestion-date.unified.label": "Version Date",
 
   "results.fields.name.label": "Name",
   "results.fields.update-date.label": "Updated in catalog",
