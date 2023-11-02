@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.4.0...v2.5.0) (2023-11-02)
+
+
+### Features
+
+* add direction to map settings locale ([#477](https://github.com/MapColonies/discrete-layer-client/issues/477)) ([4bb8827](https://github.com/MapColonies/discrete-layer-client/commit/4bb8827c35d892ad0eb10ebb791fc55f90415ee5))
+
+
+### Bug Fixes
+
+* cesium workers cache nginx location config ([#476](https://github.com/MapColonies/discrete-layer-client/issues/476)) ([d0695e8](https://github.com/MapColonies/discrete-layer-client/commit/d0695e812c46a5a25930ac745abfb12393db7bea))
+* elevations new input & output format ([#478](https://github.com/MapColonies/discrete-layer-client/issues/478)) ([67408fc](https://github.com/MapColonies/discrete-layer-client/commit/67408fce4a3b131f4d41600352ebc2c0e830302b))
+
 ## [2.4.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.3.3...v2.4.0) (2023-10-25)
 
 
