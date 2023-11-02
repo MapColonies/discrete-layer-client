@@ -19,6 +19,7 @@ export const PositionsWithHeightsModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("PositionsWithHeights"), "PositionsWithHeights"),
     data: types.union(types.undefined, types.array(types.late((): any => PositionWithHeightModel))),
+    products: types.union(types.undefined, types.frozen()),
   })
   .views(self => ({
     get store() {
@@ -27,10 +28,11 @@ export const PositionsWithHeightsModelBase = ModelBase
   }))
 
 export class PositionsWithHeightsModelSelector extends QueryBuilder {
+  get products() { return this.__attr(`products`) }
   data(builder?: string | PositionWithHeightModelSelector | ((selector: PositionWithHeightModelSelector) => PositionWithHeightModelSelector)) { return this.__child(`data`, PositionWithHeightModelSelector, builder) }
 }
 export function selectFromPositionsWithHeights() {
   return new PositionsWithHeightsModelSelector()
 }
 
-export const positionsWithHeightsModelPrimitives = selectFromPositionsWithHeights()
+export const positionsWithHeightsModelPrimitives = selectFromPositionsWithHeights().products

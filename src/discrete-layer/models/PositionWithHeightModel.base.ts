@@ -19,9 +19,7 @@ export const PositionWithHeightModelBase = ModelBase
     latitude: types.union(types.undefined, types.number),
     longitude: types.union(types.undefined, types.number),
     height: types.union(types.undefined, types.null, types.number),
-    updateDate: types.union(types.undefined, types.null, types.frozen()),
-    resolutionMeter: types.union(types.undefined, types.null, types.number),
-    productType: types.union(types.undefined, types.null, types.string),
+    productId: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -33,12 +31,10 @@ export class PositionWithHeightModelSelector extends QueryBuilder {
   get latitude() { return this.__attr(`latitude`) }
   get longitude() { return this.__attr(`longitude`) }
   get height() { return this.__attr(`height`) }
-  get updateDate() { return this.__attr(`updateDate`) }
-  get resolutionMeter() { return this.__attr(`resolutionMeter`) }
-  get productType() { return this.__attr(`productType`) }
+  get productId() { return this.__attr(`productId`) }
 }
 export function selectFromPositionWithHeight() {
   return new PositionWithHeightModelSelector()
 }
 
-export const positionWithHeightModelPrimitives = selectFromPositionWithHeight().latitude.longitude.height.updateDate.resolutionMeter.productType
+export const positionWithHeightModelPrimitives = selectFromPositionWithHeight().latitude.longitude.height.productId
