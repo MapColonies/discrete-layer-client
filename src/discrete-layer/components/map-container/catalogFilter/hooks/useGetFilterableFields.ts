@@ -37,8 +37,7 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
                 }
               } else {
                 // WORKAROUND to change RASTER not common filtered field label
-                if(field.fieldName === 'insertDate')
-                {
+                if(field.fieldName === 'insertDate') {
                   field.label = 'filters.ingestion-date.unified.label';
                 }
                 allFilterableDescriptorsFields.push(field);
