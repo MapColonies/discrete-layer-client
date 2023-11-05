@@ -292,7 +292,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         event.api.refreshCells({
           force: true,
           suppressFlash: true,
-          columns:['productName', '__typename', 'updateDate', 'layerImageShown', pinnedColId], 
+          columns:['productName', '__typename', 'updateDate', pinnedColId], 
           rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
         });
     },
