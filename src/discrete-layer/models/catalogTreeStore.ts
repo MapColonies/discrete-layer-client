@@ -134,6 +134,7 @@ export const catalogTreeStore = ModelBase.props({
 
     function resetCatalogTreeData(): void {
       store.discreteLayersStore.setLayersImages([], false);
+      store.discreteLayersStore.setCapabilities([]);
       setCatalogTreeData([]);
     }
 
@@ -193,6 +194,8 @@ export const catalogTreeStore = ModelBase.props({
 
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { RECORD_ALL, RECORD_RASTER } = RecordType;
+
+      setErrorCapabilities(undefined);
       try {
         const withCapabilities = [RECORD_RASTER];
         if (
@@ -238,10 +241,10 @@ export const catalogTreeStore = ModelBase.props({
             'capabilities'
           ) as CapabilityModelType[];
         }
-        return !isEmpty(capabilitiesList) ? store.discreteLayersStore.setCapabilities(capabilitiesList as CapabilityModelType[]) : [];
+        return store.discreteLayersStore.setCapabilities(!isEmpty(capabilitiesList) ? capabilitiesList as CapabilityModelType[] : []);
       } catch(e) {
         setErrorCapabilities(capabilitiesQuery?.error);
-        return [];
+        return store.discreteLayersStore.setCapabilities([]);
       }
     });
 

@@ -166,6 +166,16 @@ const DiscreteLayerView: React.FC = observer(() => {
       setWhatsNewVisitedCnt(parseInt(val));
     }
   }, [])
+
+  useEffect(() => {
+    const layers = get(data, 'search', []) as ILayerImage[];
+
+    if(activeTabView === TabViews.SEARCH_RESULTS) {
+      store.discreteLayersStore.setLayersImages([...layers]);
+    } else {
+      store.discreteLayersStore.setTabviewData(TabViews.SEARCH_RESULTS, layers);
+    }
+  }, [data]);
   
   useEffect(() => {
     // When search query changes, we need to refetch catalog capabilities as well.
@@ -192,9 +202,9 @@ const DiscreteLayerView: React.FC = observer(() => {
           fullCatalogLayers?.push(layer);
         }
       })
-
-      void store.catalogTreeStore.capabilitiesFetch(fullCatalogLayers);
     }
+    
+    void store.catalogTreeStore.capabilitiesFetch(fullCatalogLayers);
   }, [data]);
 
   useEffect(() => {
@@ -258,15 +268,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   }, []);
 
-  useEffect(() => {
-    const layers = get(data, 'search', []) as ILayerImage[];
-
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
-      store.discreteLayersStore.setLayersImages([...layers]);
-    } else {
-      store.discreteLayersStore.setTabviewData(TabViews.SEARCH_RESULTS, layers);
-    }
-  }, [data]);
 
   
   const handleTabViewChange = (targetViewIdx: TabViews): void => {

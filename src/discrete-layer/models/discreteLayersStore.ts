@@ -123,13 +123,11 @@ export const discreteLayersStore = ModelBase
       
       const preparedLayersImages = filteredLayersImages.map(item => {
         let validations = {};
-        if (!isEmpty(self.capabilities) && item.type === RecordType.RECORD_RASTER) {
+        if (item.type === RecordType.RECORD_RASTER) {
           const layerLink = getLayerLink(item);
           const hasCapabilities = self.capabilities?.find(item => layerLink.name === item.id);
           const hasWMTSUrl = layerLink.protocol === LinkType.WMTS;
-          if (!hasCapabilities && hasWMTSUrl) {
-            validations = { layerURLMissing: true };
-          }
+          validations = { layerURLMissing: !hasCapabilities && hasWMTSUrl };
         }
         return {
           ...item,
@@ -300,7 +298,7 @@ export const discreteLayersStore = ModelBase
       self.baseMaps = cloneDeep(baseMaps);
     }
 
-    function getEditablePartialObject(layerImage: ILayerImage): Record<string, unknown> {
+    function getEditablePartialObject(layerImage: ILayerImage, extraNonDescriptorFields?: string[]): Record<string, unknown> {
       const flatDescriptors = getFlatEntityDescriptors(layerImage.__typename, self.entityDescriptors as EntityDescriptorModelType[]);
       const filteredLayer: Record<string, unknown> = {};
       
@@ -311,6 +309,10 @@ export const discreteLayersStore = ModelBase
         if(isFieldMutable) {
           set(filteredLayer, fieldConfig.fieldName as string, get(layerImage, fieldConfig.fieldName as string));
         }
+      });
+
+      extraNonDescriptorFields?.forEach(nonDescField => {
+        set(filteredLayer, nonDescField, get(layerImage, nonDescField));
       });
 
       return filteredLayer;

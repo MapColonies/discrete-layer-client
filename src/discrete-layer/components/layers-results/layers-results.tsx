@@ -62,8 +62,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       let matchesRes = true;
       source.forEach((srcFeat: ILayerImage) => { 
         const match = target.find((targetFeat: ILayerImage) => {
-          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat);
-          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat);
+          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat, ['layerURLMissing']);
+          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat, ['layerURLMissing']);          
 
           return JSON.stringify(srcOnlyEditables) === JSON.stringify(targetOnlyEditables);
         });
@@ -292,7 +292,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
         event.api.refreshCells({
           force: true,
           suppressFlash: true,
-          columns:['productName', '__typename', 'updateDate', pinnedColId], 
+          columns:['productName', '__typename', 'updateDate', 'layerImageShown', pinnedColId], 
           rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
         });
     },
