@@ -99,7 +99,6 @@ export const CatalogFilterPanel: React.FC<CatalogFilterPanelProps> = observer(
               className="catalogFiltersClearBtn"
               type="button"
               form="catalogFiltersForm"
-              disabled={isFormEmpty}
               onClick={handleFormReset}
             >
               {intl.formatMessage({id: 'catalog-filter.clearFilterButton.text'})}

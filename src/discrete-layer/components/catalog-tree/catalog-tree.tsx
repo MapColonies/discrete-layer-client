@@ -83,12 +83,12 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
             />
           ),
         });
+      } else {
+        queue.clearAll();
       }
     }, [errorCapabilities]);
 
     useEffect(() => {
-      queue.clearAll();
-
       if (refresh) {
         setIsDataLoading(true);
         void store.catalogTreeStore.initTree();
