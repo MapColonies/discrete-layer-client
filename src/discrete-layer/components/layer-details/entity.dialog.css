@@ -41,7 +41,7 @@ body[dir='rtl'] #entityDialog .closeIcon {
   position: relative;
   display: flex;
   background-color: var(--mdc-theme-text-primary-on-light);
-  padding: 20px;
+  padding: 8px;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -51,4 +51,6 @@ body[dir='rtl'] #entityDialog .closeIcon {
 #updateLayerHeaderContent {
   margin: 0 auto;
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
