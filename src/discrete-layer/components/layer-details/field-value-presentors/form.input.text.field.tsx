@@ -32,13 +32,14 @@ interface FormInputTextFieldProps {
 export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({mode, fieldInfo, value, formik, type}) => {
   const intl = useIntl();
   const isCopyable = fieldInfo.isCopyable ?? false;
+  const isPreserveNewLine = fieldInfo.rows ?? false;
   const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
         <TooltippedValue
-          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''}`}>
+          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''} ${isPreserveNewLine ? 'preserveNewline' : ''}`}>
           {innerValue}
         </TooltippedValue>
         {
