@@ -23,7 +23,8 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
     
     for(const descriptor of filteredDescriptors) {
       for(const category of descriptor.categories ?? []) {
-        for(const field of category.fields as FieldConfigModelType[]) {
+        for(const iterField of category.fields as FieldConfigModelType[]) {
+          const field = { ...iterField };
           if(field.isFilterable) {
             if((forFilterPanel && field.isFilterable.participateInFilterPanel) || (!forFilterPanel && !field.isFilterable.participateInFilterPanel)) {
               const filterableFieldIdx = allFilterableDescriptorsFields.findIndex(filterableField => field.fieldName === filterableField.fieldName);
