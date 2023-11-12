@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { get, isEmpty } from 'lodash';
 import { Geometry } from 'geojson';
 import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
 import { useDebouncedCallback } from 'use-debounce';
-import { Button, TextField } from '@map-colonies/react-core';
+import { Button, IconButton, TextField, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -18,6 +19,7 @@ import './json.value-presentor.css';
 
 const NONE = 0;
 const REMOVE_ERROR_DELAY = 300;
+const JSON_MAX_LENGTH = 100;
 
 interface JsonValuePresentorProps {
   mode: Mode;
@@ -37,6 +39,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   enableLoadFromShape = false
 }) => {
   const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
+  const isCopyable = fieldInfo.isCopyable ?? false;
   const fieldRef = useRef<HTMLInputElement | null>(null);
   const intl = useIntl();
   const currentErrors = useMemo(
@@ -178,9 +181,21 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   ) {
     const stringifiedValue = JSON.stringify(value);
     return (
-      <TooltippedValue tag="div" className="detailsFieldValue">
-        {stringifiedValue}
-      </TooltippedValue>
+      <>
+        <TooltippedValue tag="div" className="detailsFieldValue jsonValueAlign" disableTooltip>
+          {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ...`}
+        </TooltippedValue>
+        {
+          !isEmpty(value) && isCopyable &&
+          <Box className="detailsFieldCopyIcon">
+            <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+              <CopyToClipboard text={stringifiedValue}>
+                <IconButton type="button" className="mc-icon-Copy" />
+              </CopyToClipboard>
+            </Tooltip>
+          </Box>
+        }
+      </>
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {

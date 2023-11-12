@@ -3,3 +3,7 @@
     padding: 10px;
     margin: 10px 0;
 }
+
+.jsonValueAlign {
+    text-align: left !important;
+}
