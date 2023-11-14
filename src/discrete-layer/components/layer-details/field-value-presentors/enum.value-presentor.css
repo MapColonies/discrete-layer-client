@@ -27,11 +27,11 @@ body[dir='rtl'] .enumOptions .mdc-select__dropdown-icon {
 }
 
 .enumOptions .mdc-menu.mdc-select__menu.mdc-menu-surface.mdc-menu-surface--open {
-  max-height: 250px !important;
+  max-height: 130px !important;
 }
 
 .enumOptions .mdc-select__anchor {
-  height: 25px;
+  height: 24px;
 }
 
 .enumOptions .mdc-select__dropdown-icon {
@@ -42,5 +42,5 @@ body[dir='rtl'] .enumOptions .mdc-select__dropdown-icon {
 .enumOptions .mdc-select__anchor .mdc-select__selected-text {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  height: 20px;
+  height: 24px;
 }

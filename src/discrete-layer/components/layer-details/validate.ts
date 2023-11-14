@@ -59,6 +59,7 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
     switch (basicType) {
       case 'momentDateType':
         return enforce(value1).afterOrSame(value2, validateTime);
+      case 'resolution':
       case 'number':
         return enforce(value1).greaterThanOrEquals(value2 as number);
       default:
@@ -70,6 +71,7 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
     switch (basicType) {
       case 'momentDateType':
         return enforce(value1).beforeOrSame(value2, validateTime);
+      case 'resolution':
       case 'number':
         return enforce(value1).lessThanOrEquals(value2 as number);
       default:

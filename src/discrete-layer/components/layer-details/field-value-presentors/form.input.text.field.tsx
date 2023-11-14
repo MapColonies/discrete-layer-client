@@ -92,7 +92,7 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
             onChange={handleOnChange}
             // eslint-disable-next-line
             onBlur={formik?.handleBlur}
-            disabled={mode === Mode.UPDATE && ((fieldInfo.updateRules as UpdateRulesModelType | undefined | null)?.freeze) as boolean}
+            disabled={(mode === Mode.UPDATE && ((fieldInfo.updateRules as UpdateRulesModelType | undefined | null)?.freeze) as boolean) || fieldInfo.isDisabled === true }
             placeholder={placeholder}
             required={fieldInfo.isRequired === true}
             {...validationProps}

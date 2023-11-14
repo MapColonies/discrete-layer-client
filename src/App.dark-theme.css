@@ -102,7 +102,7 @@
 
 .dark-theme .mdc-select.mdc-select--outlined.mdc-select--no-label.mdc-select--disabled {
   background-color: var(--mdc-theme-text-disabled-on-light);
-  opacity: 0.2;
+  opacity: 0.3;
 }
 
 .dark-theme .mdc-list.mdc-menu__items .mdc-list-item.mdc-ripple-upgraded--background-focused {
@@ -157,6 +157,7 @@
 
 .dark-theme label.mdc-text-field.mdc-text-field--disabled {
   opacity: 0.3;
+  background-color: var(--mdc-theme-text-disabled-on-light);
 }
 
 .dark-theme .mdc-form-field > label {

@@ -45,6 +45,7 @@ import { getBasicType, getEntityDescriptors } from './utils';
 import './layer-details.css';
 import { LookupOptionsPresentorComponent } from './field-value-presentors/lookup.options-presentor';
 import { PYCSW_ANY_TEXT_FIELD } from '../map-container/freeTextSearch.component';
+import { ResolutionValuePresentorComponent } from './field-value-presentors/resolution.value-presentor';
 
 const FOOTPRINT_FIELD_NAME = 'footprint';
 
@@ -99,6 +100,10 @@ export const getValuePresentor = (
       return (
         <UrlValuePresentorComponent value={value as string} linkInfo={links[(layerRecord as LinkModelType).protocol as LinkType]}></UrlValuePresentorComponent>
       );
+    case 'resolution':
+      return (
+        <ResolutionValuePresentorComponent value={value as string} fieldInfo={fieldInfo} mode={mode} formik={formik} />
+      )
     case 'momentDateType':
       return (
         <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
