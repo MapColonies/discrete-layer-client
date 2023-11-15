@@ -9,7 +9,6 @@ import useDebounceField from '../../../../common/hooks/debounce-field.hook';
 import { Mode } from '../../../../common/models/mode.enum';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { IRecordFieldInfo } from '../layer-details.field-info';
-import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 
 import './enum.value-presentor.css';
 import './resolution.value-presentor.css';
@@ -22,7 +21,8 @@ interface ResolutionValuePresentorProps {
 }
   
 export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresentorProps> = (props) => {
-  const { mode, fieldInfo, value, formik } = props;
+  const { mode, fieldInfo, formik } = props;
+  const value = props.value?.toString();
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
@@ -64,7 +64,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
         id={fieldInfo.fieldName as string}
         name={fieldInfo.fieldName as string}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-          formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
+          formik.setFieldValue(fieldInfo.fieldName as string, Number(e.currentTarget.value));
           
           const filteredOptions = lookupOptions.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === Number(e.currentTarget.value));
           formik.setFieldValue(fieldInfo.dependentField.name as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
@@ -96,10 +96,6 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
           })
         }
       </Select>
-      {/* {
-        !(fieldInfo.infoMsgCode?.length === 1 && fieldInfo.infoMsgCode[0].includes('required')) &&
-        <FormInputInfoTooltipComponent fieldInfo={fieldInfo} />
-      } */}
     </Box>
   );
 }

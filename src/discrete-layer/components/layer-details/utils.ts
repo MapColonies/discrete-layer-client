@@ -209,10 +209,6 @@ export const transformEntityToFormFields = (
         // @ts-ignore
         transformedFields[fieldName] = transformedFields[fieldName]?.join(', ');
         break;
-      case 'resolution':
-        // @ts-ignore
-        transformedFields[fieldName] = transformedFields[fieldName]+'';
-        break;
       default:
         break;
     }
@@ -234,10 +230,6 @@ export const transformFormFieldsToEntity = (
       case 'sensors':
         // @ts-ignore
         transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
-        break;
-      case 'resolution':
-        // @ts-ignore
-        transformedFields[fieldName] = Number(transformedFields[fieldName]);
         break;
       default:
         break;
