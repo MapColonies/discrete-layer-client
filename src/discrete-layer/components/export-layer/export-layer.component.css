@@ -249,13 +249,13 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 }
 
 .exportOptionsSelect .mdc-select__anchor {
-  height: 25px;
+  height: 24px;
 }
 
 .exportOptionsSelect .mdc-select__anchor .mdc-select__selected-text {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  height: 20px;
+  height: 24px;
 }
 
 .exportFieldLabelContainer {

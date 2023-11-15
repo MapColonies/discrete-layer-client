@@ -82,7 +82,7 @@ export const getFlatEntityDescriptors = (
 
 export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupTable?: string): string => {
   let recordModel;
-  if (lookupTable != null) return 'LookupTableType';
+  if (lookupTable != null && lookupTable !== 'zoomlevelresolutions') return 'LookupTableType';
 
   switch (typename) {
     case 'LayerDemRecord':
@@ -121,6 +121,9 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     }
     else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
+    }
+    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg')) {
+      return 'resolution';
     }
     else {
       return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
@@ -199,17 +202,17 @@ export const transformEntityToFormFields = (
   const transformedFields = {...layerRecord};
   for (const fieldName of Object.keys(layerRecord)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+    /* eslint-disable */
     switch (basicType) {
       case 'string[]':
       case 'sensors':
-        /* eslint-disable */
         // @ts-ignore
         transformedFields[fieldName] = transformedFields[fieldName]?.join(', ');
-        /* eslint-enable */
         break;
       default:
         break;
     }
+    /* eslint-enable */
   }
   return transformedFields;
 };
@@ -221,17 +224,17 @@ export const transformFormFieldsToEntity = (
   const transformedFields = {...fields};
   for (const fieldName of Object.keys(fields)) {
     const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+    /* eslint-disable */
     switch (basicType) {
       case 'string[]':
       case 'sensors':
-        /* eslint-disable */
         // @ts-ignore
         transformedFields[fieldName] = transformedFields[fieldName]?.split(',')?.map(val => (val as string).trim());
-        /* eslint-enable */
         break;
       default:
         break;
     }
+    /* eslint-enable */
   }
   return transformedFields;
 };
