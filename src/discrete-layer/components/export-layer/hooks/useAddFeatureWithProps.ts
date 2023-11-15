@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import { RecordType, useStore, FieldConfigModelType } from '../../../models';
 import { LayerMetadataMixedUnionKeys } from '../../layer-details/entity-types-keys';
-import { ZOOM_LEVELS_TABLE } from '../constants';
+import useZoomLevelsTable from './useZoomLevelsTable';
 
 // Add here more fields as union of strings.
 export type AvailableProperties =
@@ -52,6 +52,7 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
   const store = useStore();
   const intl = useIntl();
   const { enumsMap } = useContext(EnumsMapContext);
+  const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const enums = enumsMap as IEnumsMapType;
 
   const [propsForDomain, setPropsForDomain] = useState<ExportEntityProp>();

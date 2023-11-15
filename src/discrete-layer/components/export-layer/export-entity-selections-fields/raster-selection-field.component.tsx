@@ -5,12 +5,13 @@ import { LayerMetadataMixedUnionKeys } from '../../layer-details/entity-types-ke
 import ExportGeneralFieldComponent from '../common/fields/export-general-field.component';
 import ExportOptionsField from '../common/fields/export-options-field.component';
 import { ExportFieldProps } from '../types/interfaces';
-import { ZOOM_LEVELS_TABLE } from '../constants';
+import useZoomLevelsTable from '../hooks/useZoomLevelsTable';
 import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 
 const RasterSelectionField: React.FC<ExportFieldProps> = (props) => {
   const { fieldName, fieldInfo, selectionIdx } = props;
   const { exportStore } = useStore();
+  const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const MAX_PADDING_LENGTH = 18;
   const MAX_VALUE_LENGTH = 10;
 

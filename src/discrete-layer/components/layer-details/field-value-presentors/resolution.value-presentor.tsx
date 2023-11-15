@@ -57,7 +57,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
   }
   
   return (
-    <Box className="detailsFieldValue selectBoxContainer">
+    <Box className="detailsFieldValue selectBoxContainer resolutionBoxContainer">
       <Select
         className="enumOptions"
         value={value}
