@@ -354,7 +354,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
             )
           ):
-          Yup.date().max(
+          Yup.date().nullable().max(
             new Date(),
             intl.formatMessage(
               { id: 'validation-general.date.future' },
