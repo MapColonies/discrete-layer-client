@@ -197,7 +197,7 @@
 
 /* DATE-TIME-PICKER CUSTOMIZATION */
 
-.MuiPickersBasePicker-container {
+.MuiGrid-align-items-xs-flex-end.MuiGrid-justify-content-xs-center.MuiGrid-grid-xs-6, .MuiPickersCalendarHeader-switchHeader {
   direction: ltr;
 }
 
