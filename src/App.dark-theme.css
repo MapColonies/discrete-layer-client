@@ -197,6 +197,10 @@
 
 /* DATE-TIME-PICKER CUSTOMIZATION */
 
+.MuiPickersBasePicker-container {
+  direction: ltr;
+}
+
 .dark-theme .datePresentor .MuiInputBase-input {
   padding: 2px 0px 2px 16px;
 }
