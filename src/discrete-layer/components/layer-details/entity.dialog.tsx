@@ -360,6 +360,11 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               { id: 'validation-general.date.future' },
               { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
             )
+          ).typeError(
+            intl.formatMessage(
+              { id: 'validation-general.required' },
+              { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
+            )
           ).required(
             intl.formatMessage(
               { id: 'validation-general.required' },
