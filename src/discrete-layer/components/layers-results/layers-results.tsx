@@ -206,11 +206,11 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     {
       headerName: intl.formatMessage({
-        id: 'results.fields.update-date.label',
+        id: 'results.fields.ingestion-date.label',
       }),
       minWidth: 140,
       flex: 1,
-      field: 'updateDate',
+      field: 'ingestionDate',
       suppressMovable: true,
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
     },

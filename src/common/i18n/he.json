@@ -148,6 +148,7 @@
   "filters.ingestion-date.unified.label": "תאריך גירסה",
 
   "results.fields.name.label": "שם",
+  "results.fields.ingestion-date.label": "תאריך גירסה",
   "results.fields.update-date.label": "עדכון פרטים",
   "results.fields.order.label": "סדר",
   "results.fields.resolution.label": "רזולוציה",

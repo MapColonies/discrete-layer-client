@@ -146,6 +146,7 @@
   "filters.ingestion-date.unified.label": "Version Date",
 
   "results.fields.name.label": "Name",
+  "results.fields.ingestion-date.label": "Version Date",
   "results.fields.update-date.label": "Updated in catalog",
   "results.fields.order.label": "Order",
   "results.fields.resolution.label": "Resolution",
