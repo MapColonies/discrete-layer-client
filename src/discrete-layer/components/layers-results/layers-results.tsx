@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { ChangeDetectionStrategyType } from 'ag-grid-react';
+import { ColDef, RowDataChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { observer } from 'mobx-react-lite';
 import { isObject, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
@@ -22,6 +23,8 @@ import { ProductTypeRenderer } from '../../../common/components/grid/cell-render
 import { StyledByDataRenderer } from '../../../common/components/grid/cell-renderer/styled-by-data.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -31,9 +34,6 @@ import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
-import { ColDef, RowDataChangedEvent } from 'ag-grid-community';
-import { Loading } from '../../../common/components/tree/statuses/loading';
-import { Error } from '../../../common/components/tree/statuses/error';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -202,7 +202,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       suppressMovable: true,
       tooltipField: 'productName',
       tooltipComponent: 'customTooltip',
-      tooltipComponentParams: { color: '#ececec' }
+      tooltipComponentParams: { color: '#ececec', displayList: undefined }
     },
     {
       headerName: intl.formatMessage({
@@ -212,6 +212,10 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       flex: 1,
       field: 'ingestionDate',
       suppressMovable: true,
+      valueGetter: (params: ValueGetterParams): string => {
+        const { data } = params;
+        return data.ingestionDate !== undefined && data.ingestionDate !== null ? data.ingestionDate : data.insertDate;
+      },
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
     },
     {
