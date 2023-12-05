@@ -200,8 +200,8 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'productName',
       cellRenderer: 'styledByDataRenderer',
       suppressMovable: true,
-      tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
+      tooltipComponent: 'customTooltip',
       tooltipComponentParams: { color: '#ececec' }
     },
     {

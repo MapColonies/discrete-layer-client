@@ -1,10 +1,7 @@
 .layers-result-custom-tooltip {
   position: absolute;
-  height: 30px;
   border: 1px solid cornflowerblue;
-  /* overflow: hidden; */
-  pointer-events: none;
-  transition: opacity 1s;
+  border-radius: 8px;
 }
 
 .layers-result-custom-tooltip.ag-tooltip-hiding {
@@ -16,6 +13,6 @@
   white-space: nowrap;
 }
 
-.layers-result-custom-tooltip p:first-of-type {
+.layers-result-custom-tooltip span {
   font-weight: bold;
 }
