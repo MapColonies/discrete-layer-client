@@ -55,7 +55,6 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(true);
   const [gridApi, setGridApi] = useState<GridApi>();
-  const [infoTooltipMap, setInfoTooltipMap] = useState<Map<LayerRecordTypes, string[]>>();
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
@@ -206,7 +205,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       suppressMovable: true,
       tooltipField: 'productName',
       tooltipComponent: 'customTooltip',
-      tooltipComponentParams: { color: '#ececec', infoTooltipMap: infoTooltipMap }
+      tooltipComponentParams: { color: '#ececec', infoTooltipMap: store.discreteLayersStore.entityTooltipFields }
     },
     {
       headerName: intl.formatMessage({
@@ -305,10 +304,6 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       });
     },
   };
-
-  useEffect(() => {
-    setInfoTooltipMap(getFieldNamesByEntityDescriptorMap('isInfoTooltip', store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]));
-  }, []);
 
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
