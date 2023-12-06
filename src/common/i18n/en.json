@@ -455,6 +455,7 @@
 
   "validation-general.required": "{fieldName} is required",
   "validation-general.number": "{fieldName} is required and numeric",
+  "validation-general.date.future": "{fieldName} cannot be future date",
   "validation-field.sourceDateEnd.min": "{fieldName} should be later than {value}",
   "validation-field.sourceDateStart.max": "{fieldName} should be earlier than {value}",
   "validation-field.productVersion.pattern": "{fieldName} does not comply with the format: major.minor",

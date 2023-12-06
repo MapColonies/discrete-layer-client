@@ -197,6 +197,10 @@
 
 /* DATE-TIME-PICKER CUSTOMIZATION */
 
+.MuiGrid-align-items-xs-flex-end.MuiGrid-justify-content-xs-center.MuiGrid-grid-xs-6, .MuiPickersCalendarHeader-switchHeader {
+  direction: ltr;
+}
+
 .dark-theme .datePresentor .MuiInputBase-input {
   padding: 2px 0px 2px 16px;
 }
