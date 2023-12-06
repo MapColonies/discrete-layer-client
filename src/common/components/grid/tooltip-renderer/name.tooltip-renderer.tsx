@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { get } from 'lodash';
 import { ITooltipParams } from 'ag-grid-community';
 import { Typography } from '@map-colonies/react-core';
+import { LayerRecordTypes } from '../../../../discrete-layer/components/layer-details/entity-types-keys';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { dateFormatter } from '../../../helpers/formatters';
 
@@ -10,8 +11,9 @@ import './name.tooltip-renderer.css';
 
 export default forwardRef((props: ITooltipParams, ref) => {
   const [data] = useState<ILayerImage>(props.api.getDisplayedRowAtIndex(props.rowIndex).data);
+  const [layerRecordTypename] = useState(data.__typename);
   const [color] = useState<string>(get(props, 'color', 'white'));
-  const [displayList] = useState<string[]>(get(props, 'displayList', ['productName']));
+  const [infoTooltipMap] = useState<Map<LayerRecordTypes, string[]>>(get(props, 'infoTooltipMap'));
 
   useImperativeHandle(ref, () => {
     return {
@@ -36,7 +38,7 @@ export default forwardRef((props: ITooltipParams, ref) => {
     <div className="layers-result-custom-tooltip" style={{ backgroundColor: color }}>
       <>
       {
-        displayList?.map((item: string, index: number) => {
+        infoTooltipMap?.get(layerRecordTypename)?.map((item: string, index: number) => {
           const value = `${get(data,item)}`;
           return (
             <Typography tag="p" key={`${item}${index}`}>

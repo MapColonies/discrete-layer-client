@@ -46,3 +46,18 @@ export const FieldConfigModelKeys: FieldConfigModelArray = Object.keys(FieldConf
 export type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
 export type LayerRecordTypes = "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord";
+
+let tempLayerRecordTypesObject:
+  | {
+    [key in LayerRecordTypes]: undefined;
+  }
+  | undefined = {
+    Layer3DRecord: undefined,
+    LayerRasterRecord: undefined,
+    BestRecord: undefined,
+    LayerDemRecord: undefined,
+    VectorBestRecord: undefined,
+    QuantizedMeshBestRecord: undefined,
+  };
+
+export const LayerRecordTypesKeys = Object.keys(tempLayerRecordTypesObject);

@@ -44,6 +44,7 @@ import {
   Layer3DRecordModelKeys,
   LayerDemRecordModelKeys,
   LayerRasterRecordModelKeys,
+  LayerRecordTypes,
 } from './entity-types-keys';
 import { LayersDetailsComponent } from './layer-details';
 import { IRecordFieldInfo } from './layer-details.field-info';
@@ -74,7 +75,7 @@ interface EntityDialogProps {
 
 const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDescriptorModelType[]): void => {
   getFlatEntityDescriptors(
-    record['__typename'] as "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+    record['__typename'] as LayerRecordTypes,
     descriptors
   ).filter(
     field => field.default

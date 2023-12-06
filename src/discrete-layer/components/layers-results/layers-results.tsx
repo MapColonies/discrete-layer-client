@@ -28,10 +28,13 @@ import { Loading } from '../../../common/components/tree/statuses/loading';
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { EntityDescriptorModelType } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
+import { LayerRecordTypes } from '../layer-details/entity-types-keys';
+import { getFieldNamesByEntityDescriptorMap } from '../layer-details/utils';
 
 import './layers-results.css';
 
@@ -52,6 +55,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(true);
   const [gridApi, setGridApi] = useState<GridApi>();
+  const [infoTooltipMap, setInfoTooltipMap] = useState<Map<LayerRecordTypes, string[]>>();
   const prevLayersImages = usePrevious<ILayerImage[]>(layersImages);
   const cacheRef = useRef({} as ILayerImage[]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
@@ -202,7 +206,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       suppressMovable: true,
       tooltipField: 'productName',
       tooltipComponent: 'customTooltip',
-      tooltipComponentParams: { color: '#ececec', displayList: undefined }
+      tooltipComponentParams: { color: '#ececec', infoTooltipMap: infoTooltipMap }
     },
     {
       headerName: intl.formatMessage({
@@ -290,17 +294,21 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     onRowDataUpdated(event: RowDataChangedEvent) {
       const rowToUpdate: GridRowNode | undefined | null = event.api.getRowNode(store.discreteLayersStore.selectedLayer?.id as string);
       
-      // Find the pinned column to update as well.
+      // Find the pinned column to update as well
       const pinnedColId = (event.api.getColumnDefs().find(colDef => (colDef as ColDef).pinned) as ColDef).colId as string;
 
-        event.api.refreshCells({
-          force: true,
-          suppressFlash: true,
-          columns:['productName', '__typename', 'updateDate', pinnedColId], 
-          rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
-        });
+      event.api.refreshCells({
+        force: true,
+        suppressFlash: true,
+        columns:['productName', '__typename', 'updateDate', pinnedColId], 
+        rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
+      });
     },
   };
+
+  useEffect(() => {
+    setInfoTooltipMap(getFieldNamesByEntityDescriptorMap('isInfoTooltip', store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]));
+  }, []);
 
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
@@ -310,23 +318,23 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
 
   useEffect(() => {
     gridApi?.setColumnDefs(colDef);
-  },[store.userStore.user]);
+  }, [store.userStore.user]);
 
   return (
-    <Box id='layerResults'>
-      {props.searchError ? <Error
-        className="errorMessage"
-        message={props.searchError.response?.errors[0].message}
-        details={
-          props.searchError.response?.errors[0].extensions?.exception?.config?.url
-        }
-      /> :
-      <GridComponent
-        gridOptions={gridOptions}
-        rowData={getRowData()}
-        style={props.style}
-        isLoading={props.searchLoading}
-      />
+    <Box id="layerResults">
+      {
+        props.searchError ?
+        <Error
+          className="errorMessage"
+          message={props.searchError.response?.errors[0].message}
+          details={props.searchError.response?.errors[0].extensions?.exception?.config?.url}
+        /> :
+        <GridComponent
+          gridOptions={gridOptions}
+          rowData={getRowData()}
+          style={props.style}
+          isLoading={props.searchLoading}
+        />
       }
     </Box>
   );
