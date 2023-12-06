@@ -264,11 +264,6 @@ export const getPartialRecord = (inputValues: Partial<ILayerImage>, descriptors:
   return partialRecordData;
 };
 
-export const extractUpdateRelatedFieldNames = (descriptors: FieldConfigModelType[]): string[] => {
-  const updateRulesFields = descriptors.filter((descriptor) => descriptor.updateRules !== null);
-  return updateRulesFields.map(field => field.fieldName) as string[];
-};
-
 export const extractDescriptorRelatedFieldNames = (descriptorName: keyof FieldConfigModelType, descriptors: FieldConfigModelType[]): string[] => {
   const fields = descriptors.filter((descriptor) => descriptor[descriptorName]);
   return fields.map(field => field.fieldName) as string[];
