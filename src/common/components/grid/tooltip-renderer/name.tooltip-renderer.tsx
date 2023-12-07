@@ -4,6 +4,7 @@ import { get } from 'lodash';
 import { ITooltipParams } from 'ag-grid-community';
 import { Typography } from '@map-colonies/react-core';
 import { LayerRecordTypes } from '../../../../discrete-layer/components/layer-details/entity-types-keys';
+import { DateGranularityType, FieldConfigModelType } from '../../../../discrete-layer/models';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { dateFormatter } from '../../../helpers/formatters';
 
@@ -13,8 +14,8 @@ export default forwardRef((props: ITooltipParams, ref) => {
   const [data] = useState<ILayerImage>(props.api.getDisplayedRowAtIndex(props.rowIndex).data);
   const [layerRecordTypename] = useState<LayerRecordTypes>(data.__typename);
   const [color] = useState<string>(get(props, 'color', 'white'));
-  const [infoTooltipMap] = useState<Map<LayerRecordTypes, Record<string, string>>>(get(props, 'infoTooltipMap'));
-  const [fieldNamesAndLabels] = useState<Record<string, string>>(infoTooltipMap.get(layerRecordTypename) as Record<string, string>);
+  const [infoTooltipMap] = useState<Map<LayerRecordTypes, FieldConfigModelType[]>>(get(props, 'infoTooltipMap'));
+  const [fields] = useState<FieldConfigModelType[]>(infoTooltipMap.get(layerRecordTypename) as FieldConfigModelType[]);
   
   useImperativeHandle(ref, () => {
     return {
@@ -25,25 +26,15 @@ export default forwardRef((props: ITooltipParams, ref) => {
     };
   });
 
-  const isDate = (value: string): boolean => {
-    const regex = /date/i;
-    return regex.test(value);
-  };
-
-  const isValidDate = (value: string) => {
-    const date = new Date(value);
-    return !isNaN(date.getTime());
-  };
-
   return (
     <div className="layers-result-custom-tooltip" style={{ backgroundColor: color }}>
       <>
       {
-        Object.keys(fieldNamesAndLabels).map((item: string, index: number) => {
-          const value = `${get(data, item)}`;
+        fields.map((field: FieldConfigModelType, index: number) => {
+          const value = `${get(data, field.fieldName as string)}`;
           return (
-            <Typography tag="p" key={`${item}${index}`}>
-              <Typography tag="span"><FormattedMessage id={`${fieldNamesAndLabels[item]}`} />: </Typography>{isDate(item) && isValidDate(value) ? dateFormatter(value) : value}
+            <Typography tag="p" key={`${field}${index}`}>
+              <Typography tag="span"><FormattedMessage id={`${field.label}`} />: </Typography>{field.dateGranularity ? dateFormatter(value, field.dateGranularity === DateGranularityType.DATE_AND_TIME) : value}
             </Typography>
           );
         })

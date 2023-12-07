@@ -69,7 +69,7 @@ export const discreteLayersStore = ModelBase
     selectedLayerIsUpdateMode: types.maybe(types.frozen<boolean>(INITIAL_STATE.selectedLayerIsUpdateMode)),
     tabViews: types.maybe(types.frozen<ITabViewData[]>(INITIAL_STATE.tabViews)),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>(INITIAL_STATE.entityDescriptors)),
-    entityTooltipFields: types.maybe(types.frozen<Map<LayerRecordTypes, Record<string, string>>>(INITIAL_STATE.entityTooltipFields)),
+    entityTooltipFields: types.maybe(types.frozen<Map<LayerRecordTypes, FieldConfigModelType[]>>(INITIAL_STATE.entityTooltipFields)),
     previewedLayers: types.maybe(types.frozen<string[]>(INITIAL_STATE.previewedLayers)),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>(INITIAL_STATE.capabilities)),
     baseMaps: types.maybe(types.frozen<IBaseMaps>(INITIAL_STATE.baseMaps)),
@@ -118,11 +118,8 @@ export const discreteLayersStore = ModelBase
       LayerRecordTypesKeys.forEach((layerRecordTypename: string) => {
         const flatEntityDescriptors = getFlatEntityDescriptors(layerRecordTypename as LayerRecordTypes, self.entityDescriptors as EntityDescriptorModelType[]);
         const fieldNames = extractDescriptorRelatedFieldNames('isInfoTooltip', flatEntityDescriptors);
-        const fieldNamesAndLabels: Record<string, string> = {};
-        fieldNames.forEach((fieldName: string) => {
-          fieldNamesAndLabels[fieldName] = flatEntityDescriptors.find((field: FieldConfigModelType) => field.fieldName === fieldName)?.label ?? '';
-        });
-        self.entityTooltipFields?.set(layerRecordTypename as LayerRecordTypes, fieldNamesAndLabels);
+        const fields: FieldConfigModelType[] = flatEntityDescriptors.filter((field: FieldConfigModelType) => fieldNames.includes(field.fieldName as string));
+        self.entityTooltipFields?.set(layerRecordTypename as LayerRecordTypes, fields);
       });
     }
 
