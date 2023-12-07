@@ -15,4 +15,5 @@
 
 .layers-result-custom-tooltip span {
   font-weight: bold;
+  padding: 0 4px;
 }

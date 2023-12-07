@@ -34,7 +34,8 @@ export default forwardRef((props: ITooltipParams, ref) => {
           const value = `${get(data, field.fieldName as string)}`;
           return (
             <Typography tag="p" key={`${field}${index}`}>
-              <Typography tag="span"><FormattedMessage id={`${field.label}`} />: </Typography>{field.dateGranularity ? dateFormatter(value, field.dateGranularity === DateGranularityType.DATE_AND_TIME) : value}
+              <Typography tag="span"><FormattedMessage id={`${field.label}`} />: </Typography>
+              <bdi>{field.dateGranularity ? dateFormatter(value, field.dateGranularity === DateGranularityType.DATE_AND_TIME) : value}</bdi>
             </Typography>
           );
         })
