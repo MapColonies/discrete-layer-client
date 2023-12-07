@@ -11,10 +11,11 @@ import './name.tooltip-renderer.css';
 
 export default forwardRef((props: ITooltipParams, ref) => {
   const [data] = useState<ILayerImage>(props.api.getDisplayedRowAtIndex(props.rowIndex).data);
-  const [layerRecordTypename] = useState(data.__typename);
+  const [layerRecordTypename] = useState<LayerRecordTypes>(data.__typename);
   const [color] = useState<string>(get(props, 'color', 'white'));
-  const [infoTooltipMap] = useState<Map<LayerRecordTypes, string[]>>(get(props, 'infoTooltipMap'));
-
+  const [infoTooltipMap] = useState<Map<LayerRecordTypes, Record<string, string>>>(get(props, 'infoTooltipMap'));
+  const [fieldNamesAndLabels] = useState<Record<string, string>>(infoTooltipMap.get(layerRecordTypename) as Record<string, string>);
+  
   useImperativeHandle(ref, () => {
     return {
       // eslint-disable-next-line
@@ -38,11 +39,11 @@ export default forwardRef((props: ITooltipParams, ref) => {
     <div className="layers-result-custom-tooltip" style={{ backgroundColor: color }}>
       <>
       {
-        infoTooltipMap?.get(layerRecordTypename)?.map((item: string, index: number) => {
-          const value = `${get(data,item)}`;
+        Object.keys(fieldNamesAndLabels).map((item: string, index: number) => {
+          const value = `${get(data, item)}`;
           return (
             <Typography tag="p" key={`${item}${index}`}>
-              <Typography tag="span"><FormattedMessage id={`field-names.raster.${item}`} />: </Typography>{isDate(item) && isValidDate(value) ? dateFormatter(value) : value}
+              <Typography tag="span"><FormattedMessage id={`${fieldNamesAndLabels[item]}`} />: </Typography>{isDate(item) && isValidDate(value) ? dateFormatter(value) : value}
             </Typography>
           );
         })
