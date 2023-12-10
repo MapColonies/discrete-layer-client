@@ -33,13 +33,15 @@ import {
   Layer3DRecordModelArray,
   LayerDemRecordModelArray,
   VectorBestRecordModelArray,
-  QuantizedMeshBestRecordModelArray
+  QuantizedMeshBestRecordModelArray,
+  LayerRecordTypes,
+  LayerRecordTypesKeys
 } from './entity-types-keys';
 
 const JSON_INDENTATION = 4;
 
 export const getEntityDescriptors = (
-  layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+  layerRecordTypename: LayerRecordTypes,
   entityDescriptors: EntityDescriptorModelType[]
 ): IRecordCategoryFieldsInfo[] => {
   let entityDesc;
@@ -67,17 +69,27 @@ export const getEntityDescriptors = (
 };
 
 export const getFlatEntityDescriptors = (
-  layerRecordTypename: "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord",
+  layerRecordTypename: LayerRecordTypes,
   entityDescriptors: EntityDescriptorModelType[]
 ): FieldConfigModelType[] => {
   const descriptors = getEntityDescriptors(layerRecordTypename, entityDescriptors);
-  const flat: FieldConfigModelType[] = [];
+  let flat: FieldConfigModelType[] = [];
   descriptors.forEach((category: CategoryConfigModelType) => {
-    category.fields?.forEach((field: FieldConfigModelType) => {
-      flat.push(field);
-    });
+    flat = [ ...flat, ...(category.fields ?? []) ];
   });
   return flat;
+};
+
+export const getFieldNamesByEntityDescriptorMap = (
+  descriptor: keyof FieldConfigModelType,
+  entityDescriptors: EntityDescriptorModelType[]
+): Map<LayerRecordTypes, string[]> => {
+  const fieldNamesMap = new Map();
+  LayerRecordTypesKeys.forEach((layerRecordTypename: string) => {
+    const fieldNames = extractDescriptorRelatedFieldNames(descriptor, getFlatEntityDescriptors(layerRecordTypename as LayerRecordTypes, entityDescriptors));
+    fieldNamesMap.set(layerRecordTypename, fieldNames);
+  });
+  return fieldNamesMap;
 };
 
 export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupTable?: string): string => {
@@ -252,9 +264,9 @@ export const getPartialRecord = (inputValues: Partial<ILayerImage>, descriptors:
   return partialRecordData;
 };
 
-export const extractUpdateRelatedFieldNames = (record: ILayerImage, descriptors: FieldConfigModelType[]): string[] => {
-  const updateRulesFields = descriptors.filter((descriptor) => descriptor.updateRules !== null);
-  return updateRulesFields.map(field => field.fieldName) as string[];
+export const extractDescriptorRelatedFieldNames = (descriptorName: keyof FieldConfigModelType, descriptors: FieldConfigModelType[]): string[] => {
+  const fields = descriptors.filter((descriptor) => descriptor[descriptorName]);
+  return fields.map(field => field.fieldName) as string[];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

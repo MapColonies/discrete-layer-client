@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { ChangeDetectionStrategyType } from 'ag-grid-react';
+import { ColDef, RowDataChangedEvent, ValueGetterParams } from 'ag-grid-community';
 import { observer } from 'mobx-react-lite';
 import { isObject, isEmpty } from 'lodash';
 import { Box } from '@map-colonies/react-components';
@@ -22,18 +23,20 @@ import { ProductTypeRenderer } from '../../../common/components/grid/cell-render
 import { StyledByDataRenderer } from '../../../common/components/grid/cell-renderer/styled-by-data.cell-renderer';
 import { HeaderFootprintRenderer } from '../../../common/components/grid/header-renderer/footprint.header-renderer';
 import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name.tooltip-renderer';
+import { Error } from '../../../common/components/tree/statuses/error';
+import { Loading } from '../../../common/components/tree/statuses/loading';
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { EntityDescriptorModelType } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
+import { LayerRecordTypes } from '../layer-details/entity-types-keys';
+import { getFieldNamesByEntityDescriptorMap } from '../layer-details/utils';
 
 import './layers-results.css';
-import { ColDef, RowDataChangedEvent } from 'ag-grid-community';
-import { Loading } from '../../../common/components/tree/statuses/loading';
-import { Error } from '../../../common/components/tree/statuses/error';
 
 const PAGINATION = true;
 const PAGE_SIZE = 10;
@@ -200,18 +203,22 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
       field: 'productName',
       cellRenderer: 'styledByDataRenderer',
       suppressMovable: true,
-      tooltipComponent: 'customTooltip',
       tooltipField: 'productName',
-      tooltipComponentParams: { color: '#ececec' }
+      tooltipComponent: 'customTooltip',
+      tooltipComponentParams: { color: '#ececec', infoTooltipMap: store.discreteLayersStore.entityTooltipFields }
     },
     {
       headerName: intl.formatMessage({
-        id: 'results.fields.update-date.label',
+        id: 'results.fields.ingestion-date.label',
       }),
       minWidth: 140,
       flex: 1,
-      field: 'updateDate',
+      field: 'ingestionDate',
       suppressMovable: true,
+      valueGetter: (params: ValueGetterParams): string => {
+        const { data } = params;
+        return data.ingestionDate !== undefined && data.ingestionDate !== null ? data.ingestionDate : data.insertDate;
+      },
       valueFormatter: (params: GridValueFormatterParams): string => dateFormatter(params.value)
     },
     {
@@ -286,15 +293,15 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     onRowDataUpdated(event: RowDataChangedEvent) {
       const rowToUpdate: GridRowNode | undefined | null = event.api.getRowNode(store.discreteLayersStore.selectedLayer?.id as string);
       
-      // Find the pinned column to update as well.
+      // Find the pinned column to update as well
       const pinnedColId = (event.api.getColumnDefs().find(colDef => (colDef as ColDef).pinned) as ColDef).colId as string;
 
-        event.api.refreshCells({
-          force: true,
-          suppressFlash: true,
-          columns:['productName', '__typename', 'updateDate', pinnedColId], 
-          rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
-        });
+      event.api.refreshCells({
+        force: true,
+        suppressFlash: true,
+        columns:['productName', '__typename', 'updateDate', pinnedColId], 
+        rowNodes: !isEmpty(rowToUpdate) ? [rowToUpdate] : undefined
+      });
     },
   };
 
@@ -306,23 +313,23 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
 
   useEffect(() => {
     gridApi?.setColumnDefs(colDef);
-  },[store.userStore.user]);
+  }, [store.userStore.user]);
 
   return (
-    <Box id='layerResults'>
-      {props.searchError ? <Error
-        className="errorMessage"
-        message={props.searchError.response?.errors[0].message}
-        details={
-          props.searchError.response?.errors[0].extensions?.exception?.config?.url
-        }
-      /> :
-      <GridComponent
-        gridOptions={gridOptions}
-        rowData={getRowData()}
-        style={props.style}
-        isLoading={props.searchLoading}
-      />
+    <Box id="layerResults">
+      {
+        props.searchError ?
+        <Error
+          className="errorMessage"
+          message={props.searchError.response?.errors[0].message}
+          details={props.searchError.response?.errors[0].extensions?.exception?.config?.url}
+        /> :
+        <GridComponent
+          gridOptions={gridOptions}
+          rowData={getRowData()}
+          style={props.style}
+          isLoading={props.searchLoading}
+        />
       }
     </Box>
   );

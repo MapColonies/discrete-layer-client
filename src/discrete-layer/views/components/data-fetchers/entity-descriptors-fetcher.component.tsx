@@ -86,6 +86,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isBriefField {
           order
         }
+        isInfoTooltip
         lookupTableBinding {
           valueFromPropertyName
         }

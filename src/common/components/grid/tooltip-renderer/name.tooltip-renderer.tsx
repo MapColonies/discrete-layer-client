@@ -1,15 +1,22 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { get } from 'lodash';
 import { ITooltipParams } from 'ag-grid-community';
+import { Typography } from '@map-colonies/react-core';
+import { LayerRecordTypes } from '../../../../discrete-layer/components/layer-details/entity-types-keys';
+import { DateGranularityType, FieldConfigModelType } from '../../../../discrete-layer/models';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
+import { dateFormatter } from '../../../helpers/formatters';
 
 import './name.tooltip-renderer.css';
 
 export default forwardRef((props: ITooltipParams, ref) => {
-  // eslint-disable-next-line 
-  const [data, setData] = useState<ILayerImage>(props.api.getDisplayedRowAtIndex(props.rowIndex).data);
-  const color = get(props, 'color', 'white') as string;
-
+  const [data] = useState<ILayerImage>(props.api.getDisplayedRowAtIndex(props.rowIndex).data);
+  const [layerRecordTypename] = useState<LayerRecordTypes>(data.__typename);
+  const [color] = useState<string>(get(props, 'color', 'white'));
+  const [infoTooltipMap] = useState<Map<LayerRecordTypes, FieldConfigModelType[]>>(get(props, 'infoTooltipMap'));
+  const [fields] = useState<FieldConfigModelType[]>(infoTooltipMap.get(layerRecordTypename) as FieldConfigModelType[]);
+  
   useImperativeHandle(ref, () => {
     return {
       // eslint-disable-next-line
@@ -20,19 +27,20 @@ export default forwardRef((props: ITooltipParams, ref) => {
   });
 
   return (
-    <div
-      className="layers-result-custom-tooltip"
-      style={{ backgroundColor: color}}
-    >
-      <p>
-        <span>{data.productName}</span>
-      </p>
-      {/* <p>
-        <span>Country: </span> {data.country}
-      </p>
-      <p>
-        <span>Total: </span> {data.total}
-      </p> */}
+    <div className="layers-result-custom-tooltip" style={{ backgroundColor: color }}>
+      <>
+      {
+        fields.map((field: FieldConfigModelType, index: number) => {
+          const value = `${get(data, field.fieldName as string)}`;
+          return (
+            <Typography tag="p" key={`${field}${index}`}>
+              <Typography tag="span"><FormattedMessage id={`${field.label}`} />: </Typography>
+              <bdi>{field.dateGranularity ? dateFormatter(value, field.dateGranularity === DateGranularityType.DATE_AND_TIME) : value}</bdi>
+            </Typography>
+          );
+        })
+      }
+      </>
     </div>
   );
 });

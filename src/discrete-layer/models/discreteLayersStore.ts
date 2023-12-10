@@ -5,7 +5,7 @@ import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
 import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
-import { cloneDeep, set, get, isEmpty } from 'lodash';
+import { cloneDeep, set, get } from 'lodash';
 import { Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
@@ -20,8 +20,8 @@ import { EntityDescriptorModelType } from './EntityDescriptorModel';
 import { isUnpublished } from '../../common/helpers/style';
 import { LinkType } from '../../common/models/link-type.enum';
 import { getLayerLink } from '../components/helpers/layersUtils';
-import { LayerMetadataMixedUnionKeys, LayerRecordTypes } from '../components/layer-details/entity-types-keys';
-import { getFlatEntityDescriptors } from '../components/layer-details/utils';
+import { LayerMetadataMixedUnionKeys, LayerRecordTypes, LayerRecordTypesKeys } from '../components/layer-details/entity-types-keys';
+import { extractDescriptorRelatedFieldNames, getFlatEntityDescriptors } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
 import { FieldConfigModelType } from './FieldConfigModel';
 import { RecordType } from './RecordTypeEnum';
@@ -50,6 +50,7 @@ const INITIAL_STATE = {
   selectedLayerIsUpdateMode: false,
   tabViews: [{idx: TabViews.CATALOG}, {idx: TabViews.SEARCH_RESULTS}, {idx: TabViews.CREATE_BEST}, {idx: TabViews.EXPORT_LAYER}],
   entityDescriptors: [],
+  entityTooltipFields: new Map(),
   previewedLayers: [],
   capabilities: [],
   baseMaps: CONFIG.BASE_MAPS,
@@ -68,6 +69,7 @@ export const discreteLayersStore = ModelBase
     selectedLayerIsUpdateMode: types.maybe(types.frozen<boolean>(INITIAL_STATE.selectedLayerIsUpdateMode)),
     tabViews: types.maybe(types.frozen<ITabViewData[]>(INITIAL_STATE.tabViews)),
     entityDescriptors: types.maybe(types.frozen<EntityDescriptorModelType[]>(INITIAL_STATE.entityDescriptors)),
+    entityTooltipFields: types.maybe(types.frozen<Map<LayerRecordTypes, FieldConfigModelType[]>>(INITIAL_STATE.entityTooltipFields)),
     previewedLayers: types.maybe(types.frozen<string[]>(INITIAL_STATE.previewedLayers)),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>(INITIAL_STATE.capabilities)),
     baseMaps: types.maybe(types.frozen<IBaseMaps>(INITIAL_STATE.baseMaps)),
@@ -112,6 +114,13 @@ export const discreteLayersStore = ModelBase
 
     function setEntityDescriptors(data: EntityDescriptorModelType[]): void {
       self.entityDescriptors = cloneDeep(data);
+
+      LayerRecordTypesKeys.forEach((layerRecordTypename: string) => {
+        const flatEntityDescriptors = getFlatEntityDescriptors(layerRecordTypename as LayerRecordTypes, self.entityDescriptors as EntityDescriptorModelType[]);
+        const fieldNames = extractDescriptorRelatedFieldNames('isInfoTooltip', flatEntityDescriptors);
+        const fields: FieldConfigModelType[] = flatEntityDescriptors.filter((field: FieldConfigModelType) => fieldNames.includes(field.fieldName as string));
+        self.entityTooltipFields?.set(layerRecordTypename as LayerRecordTypes, fields);
+      });
     }
 
     function getPreparedLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {

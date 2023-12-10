@@ -30,7 +30,7 @@ import { IngestionFields } from './ingestion-fields';
 import {
   removeEmptyObjFields,
   transformFormFieldsToEntity,
-  extractUpdateRelatedFieldNames,
+  extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
   transformEntityToFormFields,
 } from './utils';
@@ -190,7 +190,7 @@ const InnerForm = (
     setIsSelectedFiles(!!ingestionFields.fileNames);
     
     // Check update related fields in metadata obj
-    const updateFields = extractUpdateRelatedFieldNames(metadata.recordModel, getFlatEntityDescriptors(layerRecord.__typename, entityDescriptors));
+    const updateFields = extractDescriptorRelatedFieldNames('updateRules', getFlatEntityDescriptors(layerRecord.__typename, entityDescriptors));
 
     for (const [key, val] of Object.entries(metadata.recordModel)) {
       if (val === null || (updateFields.includes(key) && mode === Mode.UPDATE)) {
