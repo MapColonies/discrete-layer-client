@@ -14,6 +14,7 @@ import { IContextMenuData } from "@map-colonies/react-components";
 import _ from "lodash";
 import { IDispatchAction } from "../../../discrete-layer/models/actionDispatcherStore";
 import { DEFAULT_LAYER_HUE_FACTOR } from "../../../discrete-layer/views/components/map-action-resolver.component";
+import { useIntl } from "react-intl";
 
 export const useHandleMapMenuTemplates = (
     menuProperties?: IMapMenuProperties,
@@ -29,6 +30,7 @@ export const useHandleMapMenuTemplates = (
      */
 
     const generatedMenuRef = useRef<IMapMenuProperties>();
+    const intl = useIntl();
     const [generatedMenu, setGeneratedMenu] = useState<IMapMenuProperties>();
 
     // Gather all of the data to be used in the process to build the complete menu. store / contexts / hooks / etc.
@@ -121,7 +123,15 @@ export const useHandleMapMenuTemplates = (
                 return generatedGroups;
             }
             default:
-                return [groupTemplateMenuItem];
+                const tempGroup = {...groupTemplateMenuItem};
+                // Check if group holds WFS actions by presence at least one such item
+                const wfsFeature = groupTemplateMenuItem.items.find((item) => (item as MenuItem).action.action === ContextActions.QUERY_WFS_FEATURE)
+                if (wfsFeature) {
+                    tempGroup.groupProps.titleTranslationId = intl.formatMessage({
+                        id: tempGroup.groupProps.titleTranslationId,
+                    }, {extraInfo: `(${groupTemplateMenuItem.items.length}/${store.mapMenusManagerStore.total})`});
+                }
+                return [tempGroup];
         }
         
     }
