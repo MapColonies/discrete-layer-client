@@ -5,8 +5,9 @@ import { get, isEmpty } from 'lodash';
 import { Geometry } from 'geojson';
 import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
 import { useDebouncedCallback } from 'use-debounce';
-import { Button, IconButton, TextField, Tooltip } from '@map-colonies/react-core';
+import { Button, IconButton, TextField, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { EMPTY_JSON_STRING_VALUE, validateGeoJSONString } from '../../../../common/utils/geojson.validation';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
@@ -14,12 +15,13 @@ import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { importShapeFileFromClient } from '../utils';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
+import { GeoJsonMapValuePresentorComponent } from './geojson-map.value-presentor';
 
 import './json.value-presentor.css';
 
 const NONE = 0;
 const REMOVE_ERROR_DELAY = 300;
-const JSON_MAX_LENGTH = 100;
+const JSON_MAX_LENGTH = 300;
 
 interface JsonValuePresentorProps {
   mode: Mode;
@@ -28,6 +30,7 @@ interface JsonValuePresentorProps {
   formik?: EntityFormikHandlers;
   type?: string;
   enableLoadFromShape?: boolean;
+  enableMapPreview?: boolean;
 }
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
@@ -36,9 +39,11 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   value,
   formik,
   type,
-  enableLoadFromShape = false
+  enableLoadFromShape = false,
+  enableMapPreview = false
 }) => {
   const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
+  const [geoJsonWarning, setGeoJsonWarning] = useState('');
   const isCopyable = fieldInfo.isCopyable ?? false;
   const fieldRef = useRef<HTMLInputElement | null>(null);
   const intl = useIntl();
@@ -159,7 +164,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
                       [fieldInfo.fieldName as string]: [errorTranslation],
                     },
                   });
-                  setJsonValue('{}');
+                  setJsonValue(EMPTY_JSON_STRING_VALUE);
                 })
                 .finally(() => {
                   // Focus input after loading shape file, validations occurs on blur.
@@ -181,21 +186,26 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   ) {
     const stringifiedValue = JSON.stringify(value);
     return (
-      <>
-        <TooltippedValue tag="div" className="detailsFieldValue jsonValueAlign" disableTooltip>
-          {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ...`}
-        </TooltippedValue>
-        {
-          !isEmpty(value) && isCopyable &&
-          <Box className="detailsFieldCopyIcon">
-            <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
-              <CopyToClipboard text={stringifiedValue}>
-                <IconButton type="button" className="mc-icon-Copy" />
-              </CopyToClipboard>
-            </Tooltip>
-          </Box>
-        }
-      </>
+      <Box className="detailsFieldValue" style={{display: 'flex',gap: '10px'}}>
+        <Box style={{width: enableMapPreview ? '60%' : '100%', display: 'flex'}}>
+          <TooltippedValue tag="div" className="detailsFieldValue jsonValueAlign" disableTooltip>
+            {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ...`}
+          </TooltippedValue>
+          {
+            !isEmpty(value) && isCopyable &&
+            <Box className="detailsFieldCopyIcon detailsFieldNoMargin">
+              <Tooltip content={intl.formatMessage({ id: 'action.copy.tooltip' })}>
+                <CopyToClipboard text={stringifiedValue}>
+                  <IconButton type="button" className="mc-icon-Copy" />
+                </CopyToClipboard>
+              </Tooltip>
+            </Box>
+          }
+        </Box>
+        { enableMapPreview && 
+            <GeoJsonMapValuePresentorComponent mode={mode} jsonValue={stringifiedValue} style={{width: '40%', height: '200px'}} fitOptions={{padding:[10,20,10,20]}}/>
+          }
+      </Box>
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
@@ -204,8 +214,32 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
       let formikValue: unknown = undefined;
 
       try {
-        if (jsonValue === '{}' && (fieldInfo.isRequired as boolean)) {
+        if (jsonValue === EMPTY_JSON_STRING_VALUE && (fieldInfo.isRequired as boolean)) {
           throw new Error('Required field');
+        }
+
+        if (jsonValue !== EMPTY_JSON_STRING_VALUE){
+          const validRes = validateGeoJSONString(jsonValue);
+          
+          if (!validRes.valid){
+            setGeoJsonWarning('');
+            throw new Error(validRes.reason);
+          } else {
+            if(validRes.severity_level === 'INFO') {
+              setGeoJsonWarning('');
+            } else {
+              setGeoJsonWarning(intl.formatMessage(
+                {
+                  id: `validation-field.${fieldInfo.fieldName as string}.${validRes.reason as string}.geojson`,
+                }, 
+                {
+                  fieldName: emphasizeByHTML(
+                    `${intl.formatMessage({ id: fieldInfo.label })}`
+                  ),
+                }
+              ));
+            }
+          }
         }
 
         formikValue = JSON.parse(jsonValue) as unknown;
@@ -214,12 +248,12 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         removeStatusErrors();
       } catch (err) {
         const error = {
-          id: `validation-field.${fieldInfo.fieldName as string}.json`,
+          id: `validation-field.${fieldInfo.fieldName as string}.${get(err,'message') as string}.geojson`,
         };
         const isFieldRequired = fieldInfo.isRequired as boolean;
 
         if (isFieldRequired || jsonValue.length > NONE) {
-          if (isFieldRequired && (jsonValue.length === NONE || jsonValue === '{}')) {
+          if (isFieldRequired && (jsonValue.length === NONE || jsonValue === EMPTY_JSON_STRING_VALUE)) {
             error.id = 'validation-general.required';
           }
           const errorMsg = intl.formatMessage(error, {
@@ -247,29 +281,45 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
 
     return (
       <>
-        <Box className="detailsFieldValue">
-          <TextField
-            ref={fieldRef}
-            id={fieldInfo.fieldName as string}
-            name={fieldInfo.fieldName as string}
-            type={type}
-            value={jsonValue === '{}' ? '' : jsonValue}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-              setJsonValue(e.currentTarget.value);
-              debouncedRemoveStatusErrors();
-            }}
-            onBlur={handleBlur}
-            placeholder={'JSON'}
-            required={fieldInfo.isRequired as boolean}
-            textarea
-            rows={4}
-          />
-          {!(
-            fieldInfo.infoMsgCode?.length === 1 &&
-            fieldInfo.infoMsgCode[0].includes('required')
-          ) && <FormInputInfoTooltipComponent fieldInfo={fieldInfo} />}
+        <Box className="detailsFieldValue jsonDetailsFieldValueContainer">
+          <Box style={{width: enableMapPreview ? '60%' : '100%'}}>
+            <TextField
+              ref={fieldRef}
+              id={fieldInfo.fieldName as string}
+              name={fieldInfo.fieldName as string}
+              type={type}
+              value={jsonValue === EMPTY_JSON_STRING_VALUE ? '' : jsonValue}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                setJsonValue(e.currentTarget.value);
+                debouncedRemoveStatusErrors();
+              }}
+              onBlur={handleBlur}
+              placeholder={'JSON'}
+              required={fieldInfo.isRequired as boolean}
+              textarea
+              rows={enableMapPreview ? 8 : 4}
+              className={`jsonInput ${enableMapPreview ? 'withMapPreview':''}` }
+            />
+            {!(
+              fieldInfo.infoMsgCode?.length === 1 &&
+              fieldInfo.infoMsgCode[0].includes('required')
+            ) && <FormInputInfoTooltipComponent fieldInfo={fieldInfo} />}
 
-          { enableLoadFromShape && renderLoadShapeFileBtn() }
+            <Box className='jsonDetailsFieldTextValueContainer'>
+              { enableLoadFromShape && renderLoadShapeFileBtn() }
+              { geoJsonWarning !== '' && 
+                <Box className="warningContainer">
+                  <Typography
+                    tag="span"
+                    dangerouslySetInnerHTML={{__html: geoJsonWarning}}
+                  />
+                </Box>
+              }
+            </Box>
+          </Box>
+          { enableMapPreview && 
+            <GeoJsonMapValuePresentorComponent mode={mode} jsonValue={jsonValue} style={{width: '40%', height: '200px'}} fitOptions={{padding:[10,20,10,20], duration: 300}}/>
+          }
         </Box>
       </>
     );

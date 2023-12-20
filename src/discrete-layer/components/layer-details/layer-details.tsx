@@ -86,7 +86,7 @@ export const getValuePresentor = (
       );
     case 'json':
       return (
-        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}></JsonValuePresentorComponent>
+        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} enableMapPreview={fieldName === FOOTPRINT_FIELD_NAME} enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}></JsonValuePresentorComponent>
       );
     case 'number':
       return (

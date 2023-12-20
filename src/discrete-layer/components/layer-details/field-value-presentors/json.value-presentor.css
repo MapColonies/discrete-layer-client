@@ -4,6 +4,42 @@
     margin: 10px 0;
 }
 
+.jsonInput {
+    direction: ltr;
+}
+
 .jsonValueAlign {
     text-align: left !important;
+}
+
+.withMapPreview {
+    height: 150px !important;
+}
+
+.detailsFieldValue .ol-attribution {
+    display: none;
+}
+
+.detailsFieldValue .map {
+    border: solid var(--mdc-theme-gc-selection-background) 1px;
+}
+
+.warningContainer {
+    display: flex;
+    color: var(--mdc-theme-gc-warning-high);
+    align-items: center;
+    margin: 0 8px 0 8px;
+}
+
+.detailsFieldNoMargin {
+    margin: 0 !important;
+}
+
+.jsonDetailsFieldValueContainer {
+    display: flex;
+    gap: 10px;
+}
+
+.jsonDetailsFieldTextValueContainer {
+    display: flex;
 }
