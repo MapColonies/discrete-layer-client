@@ -669,7 +669,7 @@
   "Transparency.opaque": "Opaque",
 
   "map-context-menu.title": "Presenting {maxLayersToPresent} layers out of {activeLayers}",
-  "map-context-menu.service-operations.group.title": "Query Services",
+  "map-context-menu.service-operations.group.title": "Query Services {extraInfo}",
   "map-context-menu.query-dem-height.title": "Query DEM point Height",
   "map-context-menu.polygon-parts.title": "Query Polygon Parts",
   "map-context-menu.layer-up.title": "Raise Layer",

@@ -673,7 +673,7 @@
   "Transparency.opaque": "Opaque",
 
   "map-context-menu.title": "מציג {maxLayersToPresent} שכבות מתוך {activeLayers}",
-  "map-context-menu.service-operations.group.title": "שירותי תשאול",
+  "map-context-menu.service-operations.group.title": "שירותי תשאול {extraInfo}",
   "map-context-menu.query-dem-height.title": "תשאול גובה נקודה",
   "map-context-menu.polygon-parts.title": "תשאול חלקי תיחום",
   "map-context-menu.layer-up.title": "הצג רמה אחת למעלה",
