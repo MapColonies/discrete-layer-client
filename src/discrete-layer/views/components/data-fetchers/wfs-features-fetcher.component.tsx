@@ -10,7 +10,7 @@ export interface IFeatureConfig {
   dWithin?: number,
   translationId?: string,
   icon?: string,
-  markerIcon?:string;
+  markerIcon?: string;
   outlineWidth?: number,
 }
 
@@ -23,14 +23,16 @@ export const WfsFeaturesFetcher: React.FC = observer(() => {
   const wfsGetFeatureTypesQuery = useQuery((store) => store.queryGetFeatureTypes());
   
   useEffect(() => {
-    if(!wfsGetFeatureTypesQuery.loading && wfsGetFeatureTypesQuery.data) {
-        const featureTypes = [...(wfsGetFeatureTypesQuery.data.getFeatureTypes).typesArr as string[]];
-        const featureConfigs = {...(wfsGetFeatureTypesQuery.data.getFeatureTypes).featureConfigs as IFeatureConfigs};
-        
-         store.mapMenusManagerStore.setWfsFeatureTypes(featureTypes);
-         store.mapMenusManagerStore.setWfsFeatureConfigs(featureConfigs);
+    if (!wfsGetFeatureTypesQuery.loading && wfsGetFeatureTypesQuery.data) {
+      const featureConfigs = {...(wfsGetFeatureTypesQuery.data.getFeatureTypes).featureConfigs as IFeatureConfigs};
+      const features = Object.fromEntries(
+        Object.entries(featureConfigs)
+          .filter(([key, value]) => value?.translationId)
+      );
+      store.mapMenusManagerStore.setWfsTotal(Object.keys(featureConfigs).length);
+      store.mapMenusManagerStore.setWfsFeatureConfigs(features);
     }
-  }, [wfsGetFeatureTypesQuery.data, wfsGetFeatureTypesQuery.loading])
+  }, [wfsGetFeatureTypesQuery.data, wfsGetFeatureTypesQuery.loading]);
   
   return null;
 });

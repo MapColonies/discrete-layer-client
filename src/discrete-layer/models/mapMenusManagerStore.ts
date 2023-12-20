@@ -77,6 +77,7 @@ export const mapMenusManagerStore = ModelBase
     multiplePolygonPartsBBox: types.maybe(types.frozen<BBox>()),
     currentPositionDemHeight: types.maybe(types.frozen<PositionWithHeightModelType>()),
     lastMenuCoordinate: types.maybe(types.frozen<IPosition>()),
+    total: types.maybe(types.frozen<number>()),
   })
   .views((self) => ({
     get store(): IRootStore {
@@ -136,17 +137,18 @@ export const mapMenusManagerStore = ModelBase
   }
 
     function initStore(): void {
-        self.mapMenus = {
-            ...getActionsMenuProperties(),
-            // ...getBestMenuProperties(),
-        }
+      self.mapMenus = {
+          ...getActionsMenuProperties(),
+          // ...getBestMenuProperties(),
+      }
     }
-    
-    function setWfsFeatureTypes(wfsFeatureTypes: string[]): void {
-      self.wfsFeatureTypes = wfsFeatureTypes;
+
+    function setWfsTotal(total: number): void {
+      self.total = total;
     }
 
     function setWfsFeatureConfigs(wfsFeatureConfigs: IFeatureConfigs): void {
+      self.wfsFeatureTypes = Object.keys(wfsFeatureConfigs);
       self.wfsFeatureConfigs = wfsFeatureConfigs;
     }
 
@@ -202,7 +204,6 @@ export const mapMenusManagerStore = ModelBase
     }
 
     return {
-      setWfsFeatureTypes,
       setCurrentWfsFeatureInfo,
       setCurrentPositionDemHeight,
       setCurrentPolygonPartsInfo,
@@ -212,5 +213,6 @@ export const mapMenusManagerStore = ModelBase
       getFeatureConfig,
       resetMapMenusFeatures,
       initStore,
+      setWfsTotal,
     }
   });
