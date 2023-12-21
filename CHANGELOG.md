@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.6.0...v2.6.1) (2023-12-21)
+
+
+### Bug Fixes
+
+* invalid geojson presentation ([#491](https://github.com/MapColonies/discrete-layer-client/issues/491)) ([c89e6e3](https://github.com/MapColonies/discrete-layer-client/commit/c89e6e3f18fb5b525639ece11da18600cb55dcb3))
+
 ## [2.6.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.5.3...v2.6.0) (2023-12-21)
 
 
