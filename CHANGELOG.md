@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.5.3...v2.6.0) (2023-12-21)
+
+
+### Features
+
+* ol preview map ([#489](https://github.com/MapColonies/discrete-layer-client/issues/489)) ([56bce55](https://github.com/MapColonies/discrete-layer-client/commit/56bce552c9fbec248acbb318fb4bb0d8d3b18c38))
+* Raster resolution fields handling ( MAPCO-3631 ) ([#485](https://github.com/MapColonies/discrete-layer-client/issues/485)) ([2a5bf0e](https://github.com/MapColonies/discrete-layer-client/commit/2a5bf0ed55d054ef552a195be67192261d154367))
+
+
+### Bug Fixes
+
+* context menu wfs bug ([#490](https://github.com/MapColonies/discrete-layer-client/issues/490)) ([5eb5c0c](https://github.com/MapColonies/discrete-layer-client/commit/5eb5c0c93dde50b87a4bd30320abd3fbe012a4ad))
+* double label of raster insertdate ([#483](https://github.com/MapColonies/discrete-layer-client/issues/483)) ([8e2e92d](https://github.com/MapColonies/discrete-layer-client/commit/8e2e92dc2d98cdf50fa70fe7dd0e316b1963b3f8))
+* future dates validation ([#486](https://github.com/MapColonies/discrete-layer-client/issues/486)) ([016659e](https://github.com/MapColonies/discrete-layer-client/commit/016659efd340e0693b8c2999db5bbca1c67f7a2f))
+* json field presenation ([#484](https://github.com/MapColonies/discrete-layer-client/issues/484)) ([7e7abb4](https://github.com/MapColonies/discrete-layer-client/commit/7e7abb40b6030f3a2049ac7f4f5b80bab0ecc074))
+* only fields with rows def should preserve new line ([#482](https://github.com/MapColonies/discrete-layer-client/issues/482)) ([608241f](https://github.com/MapColonies/discrete-layer-client/commit/608241fc5177d847b7f4129c5ddc0a5d91d91d60))
+* search results actions disappeared ([#487](https://github.com/MapColonies/discrete-layer-client/issues/487)) ([2a2ea1c](https://github.com/MapColonies/discrete-layer-client/commit/2a2ea1c03926068900e550ef0f7def432986074d))
+* search results list values ([#488](https://github.com/MapColonies/discrete-layer-client/issues/488)) ([92c6ce6](https://github.com/MapColonies/discrete-layer-client/commit/92c6ce6bc599c85a71c7400799d989541ad565f4))
+
 ### [2.5.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.5.2...v2.5.3) (2023-11-05)
 
 
