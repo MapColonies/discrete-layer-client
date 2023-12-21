@@ -30,7 +30,10 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
       setTimeout(()=>{
         setGeoJsonValue(JSON.parse(jsonValue as string))
       }, [Mode.VIEW, Mode.EDIT].includes(mode) ? 300 : 0);
+    } else {
+      setGeoJsonValue(undefined);
     }
+
   }, [mode,jsonValue]);
   
   const previewBaseMap = useMemo(() => {
