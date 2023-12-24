@@ -54,7 +54,7 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
             style: get(layer.options, 'style'),
           });
           olBaseMap.push(
-            <TileLayer options={{ opacity: layer.opacity }}>
+            <TileLayer key={layer.id} options={{ opacity: layer.opacity }}>
               <TileWMTS options={wmtsOptions} />
             </TileLayer>
           )
@@ -64,7 +64,7 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
             url: layer.options.url as string,
           });
           olBaseMap.push(
-            <TileLayer options={{ opacity: layer.opacity }}>
+            <TileLayer key={layer.id} options={{ opacity: layer.opacity }}>
               <TileXYZ options={xyzOptions} />
             </TileLayer>
           )

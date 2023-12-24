@@ -499,6 +499,8 @@
   "validation-field.footprint.geo_json-geometry-not-supported.geojson": "{fieldName} לא מסוג הנתמך",
   "validation-field.footprint.geo_json-too_many_verteces.geojson": "{fieldName} מכיל יותר מדי נקודות",
   "validation-field.footprint.geo_json-has_self_intersections.geojson": "{fieldName} מכיל חיתוך עצמי",
+  "validation-field.footprint.geo_json-geometry-not-enough-points.geojson": "{fieldName} מכיל פחות מ-4 נקודות",
+  "validation-field.footprint.geo_json-geometry-not-closed-linear_ring.geojson": "{fieldName} מכיל נקודת התחלה שלא תואמת לנקודת סיום",
   "validation-field.footprint.shapeFile.multiple-features": "{fieldName} קובץ ה-Shape שטענת מכיל יותר מפוליגון אחד",
   "validation-field.footprint.shapeFile.generic": "{fieldName} יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
   "validation-field.layerPolygonParts.json": "{fieldName} לא GEOJSON",
@@ -507,6 +509,8 @@
   "validation-field.layerPolygonParts.geo_json-geometry-not-supported.geojson": "{fieldName} לא מסוג הנתמך",
   "validation-field.layerPolygonParts.geo_json-too_many_verteces.geojson": "{fieldName} מכיל יותר מדי נקודות",
   "validation-field.layerPolygonParts.geo_json-has_self_intersections.geojson": "{fieldName} מכיל חיתוך עצמי",
+  "validation-field.layerPolygonParts.geo_json-geometry-not-enough-points.geojson": "{fieldName} מכיל פחות מ-4 נקודות",
+  "validation-field.layerPolygonParts.geo_json-geometry-not-closed-linear_ring.geojson": "{fieldName} מכיל נקודת התחלה שלא תואמת לנקודת סיום",
   "validation-field.links.fileSize": "{fieldName} צריך להיות בגודל: {value}x{value}",
 
   "system-status.title": "משימות מערכת",

@@ -7,14 +7,16 @@ export type geoJSONValidation = {valid: boolean, severity_level: severityLevel, 
 export const EMPTY_JSON_STRING_VALUE = '{}';
 
 const MAX_VERTECES = 100;
+const LINEARING_MIN_POSITIONS = 4;
 
 const hasTooManyVerteces = (geom: Geometry): boolean => {
   let totalVertices = 0;
-  if (geom.type === 'Polygon' || geom.type === 'MultiPolygon') {
-    const polygons = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+  if (isValidGeometryType(geom)) {
+    //@ts-ignore
+    const polygons = (geom.type === 'Polygon') ? [geom.coordinates] : geom.coordinates;
 
-    polygons.forEach(polygon => {
-      (polygon as Position[][]).forEach(ring => {
+    polygons.forEach((polygon: Position[][]) => {
+      polygon.forEach(ring => {
         totalVertices += ring.length;
       });
     });
@@ -28,9 +30,47 @@ const hasSelfIntersections = (json: Geometry): boolean => {
 }
 
 const isValidGeometryType = (json: Geometry): boolean => {
-    return json.type === 'Polygon' ||  json.type === 'MultiPolygon';
-  }
+  return json.type === 'Polygon' ||  json.type === 'MultiPolygon';
+}
+
+const isAllGeometryLinearRingsValid = (geom: Geometry): geoJSONValidation => {
+  if (isValidGeometryType(geom)) {
+    //@ts-ignore
+    const polygons = (geom.type === 'Polygon') ? [geom.coordinates] : geom.coordinates;
     
+    for (const polygon of polygons) {
+      for (const ring of polygon as Position[][]) {
+        if (ring.length < LINEARING_MIN_POSITIONS) {
+          return {
+            valid: false,
+            severity_level: 'ERROR',
+            reason: 'geo_json-geometry-not-enough-points'
+          };
+        }
+        if (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1]) {
+           return {
+            valid: false,
+            severity_level: 'ERROR',
+            reason: 'geo_json-geometry-not-closed-linear_ring'
+          };
+        }
+      }
+    }
+
+    return  {
+      valid: true,
+      severity_level: 'INFO',
+      reason: ''
+    };
+  } else {
+    return {
+      valid: false,
+      severity_level: 'ERROR',
+      reason: 'geo_json-geometry-not-supported'
+    };
+  }
+}
+
 
 export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
   const res = {
@@ -55,6 +95,10 @@ export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
           severity_level: 'ERROR',
           reason: 'geo_json-geometry-not-supported'
         }
+      }
+      const linearRingsCheck = isAllGeometryLinearRingsValid(geoJson);
+      if(linearRingsCheck.severity_level !== 'INFO'){
+        return linearRingsCheck;
       }
       if(hasTooManyVerteces(geoJson)) {
         return {
