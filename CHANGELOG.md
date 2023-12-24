@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.6.1...v2.6.2) (2023-12-24)
+
+
+### Bug Fixes
+
+* linearrings closing check added ([#492](https://github.com/MapColonies/discrete-layer-client/issues/492)) ([17a2aed](https://github.com/MapColonies/discrete-layer-client/commit/17a2aedf1257ce90dbf147686bc8915990049659))
+
 ### [2.6.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.6.0...v2.6.1) (2023-12-21)
 
 
