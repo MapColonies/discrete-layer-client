@@ -288,6 +288,21 @@ const ACTIONS_CONFIG: IEntityActions[] = [
     entity: 'Job',
     actions: [
       {
+        id: 0,
+        titleTranslationId: 'OperationsOnJobs',
+        type: EntityActionsTypes.JOB_ACTIONS,
+        group: [
+          {
+            action: 'download_details',
+            frequent: false,
+            icon: '',
+            class: 'mc-icon-Download',
+            titleTranslationId: 'action.job.download_details',
+            views: [],
+          },
+        ],
+      },
+      {
         id: 1,
         titleTranslationId: 'OperationsOnJobs',
         type: EntityActionsTypes.JOB_ACTIONS,
