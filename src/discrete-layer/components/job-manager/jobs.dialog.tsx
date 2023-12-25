@@ -17,6 +17,7 @@ import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { JobModelType } from '../../models';
+import { downloadJSONToClient } from '../layer-details/utils';
 import { JOB_ENTITY } from './job.types';
 
 
@@ -208,6 +209,9 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           );
           break;
         }
+        case 'Job.download_details':
+          downloadJSONToClient(data, `${encodeURI(data.resourceId as string)}_job_details.json`);
+          break;
         default:
           break;
        }
