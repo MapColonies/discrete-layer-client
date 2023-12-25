@@ -40,7 +40,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,unknown>>({}); 
-  const [gridRowData, setGridRowData] = useState<JobModelType[]>([]); 
+  const [gridRowData, setGridRowData] = useState<JobModelType[] | undefined>(undefined); 
   const [gridApi, setGridApi] = useState<GridApi>();
   const [pollingCycle, setPollingCycle] = useState(START_CYCLE_ITERATION);
   const [fromDate, setFromDate] = useState<Date>(moment().subtract(CONFIG.JOB_MANAGER_END_OF_TIME, 'days').toDate());
@@ -122,9 +122,11 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // }
 
   useEffect(() => {
-    const jobsData = data ? cloneDeep(data.jobs) : [];
-    
-    setGridRowData(jobsData);
+    if(data !== undefined){
+      const jobsData = data ? cloneDeep(data.jobs) : [];
+      
+      setGridRowData(jobsData);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -233,7 +235,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           <JobManagerGrid 
             dispatchAction={dispatchAction}
             getJobActions={getJobActions}
-            rowData={gridRowData}
+            rowData={gridRowData as JobModelType[]}
             onGridReadyCB={(params): void => {
               setGridApi(params.api)
             }}
