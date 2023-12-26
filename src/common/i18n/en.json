@@ -498,6 +498,7 @@
   "validation-field.footprint.geo_json-has_self_intersections.geojson": "{fieldName} contains self-intersection",
   "validation-field.footprint.geo_json-geometry-not-enough-points.geojson": "{fieldName} contains less than 4 points",
   "validation-field.footprint.geo_json-geometry-not-closed-linear_ring.geojson": "{fieldName} contains not closed LinearRing",
+  "validation-field.footprint.geo_json-geometry-coordinates-not-wgs84.geojson": "{fieldName} contains coordinates not in WGS84",
   "validation-field.footprint.shapeFile.multiple-features": "{fieldName} The shape file you chose contains more then a single polygon",
   "validation-field.footprint.shapeFile.generic": "{fieldName} Please select zip file with only shape or related files, or a single shape file",
   "validation-field.layerPolygonParts.json": "{fieldName} is not geoJSON",
@@ -508,6 +509,7 @@
   "validation-field.layerPolygonParts.geo_json-has_self_intersections.geojson": "{fieldName} contains self-intersection",
   "validation-field.layerPolygonParts.geo_json-geometry-not-enough-points.geojson": "{fieldName} contains less than 4 points",
   "validation-field.layerPolygonParts.geo_json-geometry-not-closed-linear_ring.geojson": "{fieldName} contains not closed LinearRing",
+  "validation-field.layerPolygonParts.geo_json-geometry-coordinates-not-wgs84.geojson": "{fieldName} contains coordinates not in WGS84",
   "validation-field.links.fileSize": "{fieldName} has to be of size: {value}x{value}",
 
   "system-status.title": "System Jobs",

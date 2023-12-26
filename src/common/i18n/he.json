@@ -502,6 +502,7 @@
   "validation-field.footprint.geo_json-has_self_intersections.geojson": "{fieldName} מכיל חיתוך עצמי",
   "validation-field.footprint.geo_json-geometry-not-enough-points.geojson": "{fieldName} מכיל פחות מ-4 נקודות",
   "validation-field.footprint.geo_json-geometry-not-closed-linear_ring.geojson": "{fieldName} מכיל נקודת התחלה שלא תואמת לנקודת סיום",
+  "validation-field.footprint.geo_json-geometry-coordinates-not-wgs84.geojson": "{fieldName} מכיל נקודת לא ב-WGS84",
   "validation-field.footprint.shapeFile.multiple-features": "{fieldName} קובץ ה-Shape שטענת מכיל יותר מפוליגון אחד",
   "validation-field.footprint.shapeFile.generic": "{fieldName} יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
   "validation-field.layerPolygonParts.json": "{fieldName} לא GEOJSON",
@@ -512,6 +513,7 @@
   "validation-field.layerPolygonParts.geo_json-has_self_intersections.geojson": "{fieldName} מכיל חיתוך עצמי",
   "validation-field.layerPolygonParts.geo_json-geometry-not-enough-points.geojson": "{fieldName} מכיל פחות מ-4 נקודות",
   "validation-field.layerPolygonParts.geo_json-geometry-not-closed-linear_ring.geojson": "{fieldName} מכיל נקודת התחלה שלא תואמת לנקודת סיום",
+  "validation-field.layerPolygonParts.geo_json-geometry-coordinates-not-wgs84.geojson": "{fieldName} מכיל נקודת לא ב-WGS84",
   "validation-field.links.fileSize": "{fieldName} צריך להיות בגודל: {value}x{value}",
 
   "system-status.title": "משימות מערכת",
