@@ -71,6 +71,44 @@ const isAllGeometryLinearRingsValid = (geom: Geometry): geoJSONValidation => {
   }
 }
 
+// Validate coordinates within the WGS84 range (-180 to 180 for longitude, -90 to 90 for latitude)
+const isValidWGS84Coordinates = (geom: Geometry) => {
+  const validatePolygonCoordinates = (coordinates: Position[][]) => {
+    for (const ring of coordinates) {
+      for (const coordinate of ring) {
+        const [longitude, latitude] = coordinate;
+        if (
+          isNaN(longitude) ||
+          isNaN(latitude) ||
+          longitude < -180 ||
+          longitude > 180 ||
+          latitude < -90 ||
+          latitude > 90
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  if (geom && geom.type) {
+    if (geom.type === 'Polygon') {
+      if (!validatePolygonCoordinates(geom.coordinates)) {
+        return false;
+      }
+    } else if (geom.type === 'MultiPolygon') {
+      for (const polygonCoordinates of geom.coordinates) {
+        if (!validatePolygonCoordinates(polygonCoordinates)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true; 
+}
+
 
 export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
   const res = {
@@ -94,6 +132,13 @@ export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
           valid: false,
           severity_level: 'ERROR',
           reason: 'geo_json-geometry-not-supported'
+        }
+      }
+      if(!isValidWGS84Coordinates(geoJson)){
+        return {
+          valid: false,
+          severity_level: 'ERROR',
+          reason: 'geo_json-geometry-coordinates-not-wgs84'
         }
       }
       const linearRingsCheck = isAllGeometryLinearRingsValid(geoJson);
