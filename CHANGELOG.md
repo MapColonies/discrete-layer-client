@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.7.1...v2.7.2) (2023-12-26)
+
+
+### Bug Fixes
+
+* geometry in wgs84 format validation ([#495](https://github.com/MapColonies/discrete-layer-client/issues/495)) ([64d9622](https://github.com/MapColonies/discrete-layer-client/commit/64d96226f79b8e7bf3cb479d5ca86870cfc47013))
+
 ### [2.7.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.7.0...v2.7.1) (2023-12-25)
 
 
