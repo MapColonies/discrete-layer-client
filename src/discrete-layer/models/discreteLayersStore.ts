@@ -229,6 +229,10 @@ export const discreteLayersStore = ModelBase
       self.selectedLayerIsUpdateMode = isUpdateMode;
     }
 
+    function resetUpdateMode(): void {
+      self.selectedLayerIsUpdateMode = false;
+    }
+
     function selectLayerByID(layerID: string): void {
       const layer = self.layersImages?.find(layer => layer.id === layerID);
       self.selectedLayer =  layer ? {...layer} : undefined;
@@ -400,6 +404,7 @@ export const discreteLayersStore = ModelBase
       resetAppState,
       resetTabView,
       getFieldConfig,
+      resetUpdateMode,
     };
   });
 

@@ -461,7 +461,8 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
 
     const closeDialog = useCallback(() => {
       onSetOpen(false);
-    }, [onSetOpen]);
+      store.discreteLayersStore.resetUpdateMode();
+    }, [onSetOpen, store.discreteLayersStore]);
 
     useEffect(() => {
       const hasAnyQuerySucceeded = checkHasQueriesSucceeded();
