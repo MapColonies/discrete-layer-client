@@ -291,6 +291,7 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 
 .dark-theme ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 .dark-theme ::-webkit-scrollbar-track {
