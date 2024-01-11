@@ -180,9 +180,10 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   };
 
   if (
-    formik === undefined ||
+    (value &&
+    (formik === undefined ||
     mode === Mode.VIEW ||
-    (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true && value)
+    (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)))
   ) {
     const stringifiedValue = JSON.stringify(value);
     return (
