@@ -210,7 +210,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
-      formik.setFieldTouched(fieldInfo.fieldName as string, true, false);
+      formik?.setFieldTouched(fieldInfo.fieldName as string, true, false);
 
       let formikValue: unknown = undefined;
 
@@ -244,7 +244,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         }
 
         formikValue = JSON.parse(jsonValue) as unknown;
-        formik.setFieldValue(fieldInfo.fieldName as string, formikValue);
+        formik?.setFieldValue(fieldInfo.fieldName as string, formikValue);
 
         removeStatusErrors();
       } catch (err) {
@@ -263,7 +263,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             ),
           });
 
-          formik.setStatus({
+          formik?.setStatus({
             errors: {
               ...currentErrors,
               [fieldInfo.fieldName as string]: Array.from(
