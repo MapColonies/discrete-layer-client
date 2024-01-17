@@ -1,7 +1,9 @@
 import { Box } from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useStore } from '../../models';
+import React, { useCallback, useEffect } from 'react';
+import { Feature } from 'geojson';
+import { isPolygonContainedInLayer } from '../helpers/layersUtils';
+import { LayerMetadataMixedUnion, useStore } from '../../models';
 import ExportLayerFooter from './export-layer-footer.component';
 import ExportLayerHeader from './export-layer-header.component';
 import { useGeneralExportBehavior } from './hooks/useGeneralExportBehavior';
@@ -32,7 +34,9 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
     
     useGeneralExportBehavior(() => {
       if(isEmpty(store.exportStore.geometrySelectionsCollection.features)) {
-        handleFlyTo();
+        if(!isPolygonContainedInLayer(store.discreteLayersStore.mapViewerExtentPolygon as Feature, layerToExport as LayerMetadataMixedUnion)){
+          handleFlyTo();
+        }
       }
     });
 
