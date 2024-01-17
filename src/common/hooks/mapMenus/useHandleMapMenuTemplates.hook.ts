@@ -125,7 +125,10 @@ export const useHandleMapMenuTemplates = (
             default:
                 const tempGroup = {...groupTemplateMenuItem};
                 // Check if group holds WFS actions by presence at least one such item
-                const wfsFeature = groupTemplateMenuItem.items.find((item) => (item as MenuItem).action.action === ContextActions.QUERY_WFS_FEATURE)
+                const wfsFeature = groupTemplateMenuItem.items.find((item) => {
+                    const menuItem = item as MenuItem;
+                    return menuItem.action ? menuItem.action.action === ContextActions.QUERY_WFS_FEATURE : false;
+                });
                 if (wfsFeature) {
                     tempGroup.groupProps.titleTranslationId = intl.formatMessage({
                         id: tempGroup.groupProps.titleTranslationId,
