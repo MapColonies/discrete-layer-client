@@ -93,6 +93,7 @@ import { MapActionResolver } from './components/map-action-resolver.component';
 import { WfsFeature } from '../components/map-container/geojson-map-features/wfs-feature.component';
 import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
 import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
+import { ExtentUpdater } from '../components/map-container/extent-updater';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
@@ -1104,6 +1105,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
                 {activeTabView === TabViews.EXPORT_LAYER && <ExportDrawingHandler /> }
                 <Terrain/>
+                <ExtentUpdater/>
                 <WfsFeature />
                 <DemHeightsFeatureComponent />
                 <PolygonPartsFeature />

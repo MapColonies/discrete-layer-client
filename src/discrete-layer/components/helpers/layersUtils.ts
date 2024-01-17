@@ -1,5 +1,8 @@
 import { get, isEmpty } from 'lodash';
 import bbox from '@turf/bbox';
+import area from '@turf/area';
+import bboxPolygon from '@turf/bbox-polygon';
+import booleanContains from '@turf/boolean-contains';
 import {
   CesiumGeographicTilingScheme,
   CesiumRectangle,
@@ -18,20 +21,35 @@ import {
 } from '../../models';
 import { ILayerImage } from '../../models/layerImage';
 import { ResourceUrlModelType } from '../../models/ResourceUrlModel';
+import { Feature } from 'geojson';
 
 const DEFAULT_RECTANGLE_FACTOR = 0.2;
+const EARTH_AREA = 509000000; //whole EARTH surface, in square km
+
+export const isPolygonContainedInLayer = (polygon: Feature, layer: LayerMetadataMixedUnion): boolean => {
+  const layerFootprintBBox = bbox(layer.footprint);
+  const layerFootprintBBoxPolygon = bboxPolygon(layerFootprintBBox);
+  return booleanContains(layerFootprintBBoxPolygon, polygon);
+};
 
 export const generateLayerRectangle = (layer: LayerMetadataMixedUnion): CesiumRectangle => {
   // eslint-disable-next-line
   return CesiumRectangle.fromDegrees(...bbox(layer.footprint)) as CesiumRectangle;
 };
 
+export const applyFactor = (rect: CesiumRectangle, factor = DEFAULT_RECTANGLE_FACTOR) => {
+  rect.east = rect.east + rect.width * factor;
+  rect.west = rect.west - rect.width * factor;
+  rect.south = rect.south - rect.height * factor;
+  rect.north = rect.north + rect.height * factor;
+}
+
 export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, factor = DEFAULT_RECTANGLE_FACTOR): CesiumRectangle => {
   const rectWithBuffers = generateLayerRectangle(layer);
-  rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * factor;
-  rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * factor;
-  rectWithBuffers.south = rectWithBuffers.south - rectWithBuffers.height * factor;
-  rectWithBuffers.north = rectWithBuffers.north + rectWithBuffers.height * factor;
+  if(area({ type: 'Feature', properties:{}, geometry: layer.footprint})/1000000 > EARTH_AREA){
+    factor = 0;
+  }
+  applyFactor(rectWithBuffers, factor);
   return rectWithBuffers;
 };
 

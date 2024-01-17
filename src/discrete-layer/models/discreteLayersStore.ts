@@ -6,7 +6,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
 import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { cloneDeep, set, get } from 'lodash';
-import { Geometry, Polygon } from 'geojson';
+import { Feature, Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
@@ -54,6 +54,7 @@ const INITIAL_STATE = {
   previewedLayers: [],
   capabilities: [],
   baseMaps: CONFIG.BASE_MAPS,
+  mapViewerExtentPolygon: undefined,
 }
 
 export const discreteLayersStore = ModelBase
@@ -73,6 +74,7 @@ export const discreteLayersStore = ModelBase
     previewedLayers: types.maybe(types.frozen<string[]>(INITIAL_STATE.previewedLayers)),
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>(INITIAL_STATE.capabilities)),
     baseMaps: types.maybe(types.frozen<IBaseMaps>(INITIAL_STATE.baseMaps)),
+    mapViewerExtentPolygon: types.maybe(types.frozen<Feature|undefined>(INITIAL_STATE.mapViewerExtentPolygon)),
     
     // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
@@ -376,6 +378,10 @@ export const discreteLayersStore = ModelBase
       return layerDescriptors.find(descriptor => descriptor.fieldName === fieldName);
     }
 
+    function setMapViewerExtentPolygon(feature: Feature): void {
+      self.mapViewerExtentPolygon = cloneDeep(feature);
+    }
+
     return {
       getLayersImages,
       getPreparedLayersImages,
@@ -405,6 +411,7 @@ export const discreteLayersStore = ModelBase
       resetTabView,
       getFieldConfig,
       resetUpdateMode,
+      setMapViewerExtentPolygon,
     };
   });
 
