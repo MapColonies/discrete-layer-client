@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.7.6...v2.7.7) (2024-01-17)
+
+
+### Bug Fixes
+
+* fly-to export behavior ([#499](https://github.com/MapColonies/discrete-layer-client/issues/499)) ([f60221d](https://github.com/MapColonies/discrete-layer-client/commit/f60221d1d7556c6482e6f910453cf9bce6bcd393))
+* imagery layer context menu ([#500](https://github.com/MapColonies/discrete-layer-client/issues/500)) ([c7d9790](https://github.com/MapColonies/discrete-layer-client/commit/c7d9790f1d25adc7e598b88f22fad4d45a1c8777))
+
 ### [2.7.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.7.5...v2.7.6) (2024-01-14)
 
 
