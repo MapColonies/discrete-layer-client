@@ -180,17 +180,16 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   };
 
   if (
-    (value &&
-    (formik === undefined ||
+    formik === undefined ||
     mode === Mode.VIEW ||
-    (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)))
+    (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)
   ) {
-    const stringifiedValue = JSON.stringify(value);
+    const stringifiedValue = value ? JSON.stringify(value) : '';
     return (
       <Box className="detailsFieldValue" style={{display: 'flex',gap: '10px'}}>
         <Box style={{width: enableMapPreview ? '60%' : '100%', display: 'flex'}}>
           <TooltippedValue tag="div" className="detailsFieldValue jsonValueAlign" disableTooltip>
-            {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ...`}
+            {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ${(stringifiedValue.length > JSON_MAX_LENGTH) ? '...' : ''}`}
           </TooltippedValue>
           {
             !isEmpty(value) && isCopyable &&
