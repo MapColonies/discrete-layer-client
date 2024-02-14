@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.7.7...v2.8.0) (2024-02-14)
+
+
+### Features
+
+* login by bff ([#502](https://github.com/MapColonies/discrete-layer-client/issues/502)) ([32a6e6b](https://github.com/MapColonies/discrete-layer-client/commit/32a6e6b8fa87a5a3dd1c5d8e09f0f356757c8854))
+
+
+### Bug Fixes
+
+* layerpolygonparts field removal from api ([#501](https://github.com/MapColonies/discrete-layer-client/issues/501)) ([0e90a3f](https://github.com/MapColonies/discrete-layer-client/commit/0e90a3fd602627c7cf5415c3b930ac5818b21080))
+
 ### [2.7.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.7.6...v2.7.7) (2024-01-17)
 
 
