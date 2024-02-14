@@ -61,7 +61,6 @@ if (!window._env_) {
         tokenValue: 'TOKEN'
       },
       SERVED_ENTITY_TYPES: 'RECORD_ALL,RECORD_RASTER,RECORD_3D,RECORD_DEM',
-      ADMIN_PASSWORD: '123456',
       WHATSNEW_URL: 'http://whatsnew-URL'
     };
   })(void 0);
