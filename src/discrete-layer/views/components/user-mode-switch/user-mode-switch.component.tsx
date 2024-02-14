@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { observer } from 'mobx-react';
 import { Switch } from '@material-ui/core';
 import {
   Button,
@@ -12,23 +13,24 @@ import {
   Typography,
 } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import CONFIG from '../../../../common/config'
 import { UserRole } from '../../../models/userStore';
+import { useQuery, useStore } from '../../../models/RootStore';
+import { UserLoginModelType } from '../../../models/UserLoginModel';
 
 import './user-mode-switch.component.css';
-
-const ADMIN_PASSWORD = CONFIG.ADMIN_PASSWORD as string;
 
 interface UserModeSwitchProps {
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
 }
 
-const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }) => {
+const UserModeSwitch: React.FC<UserModeSwitchProps> = observer(({ userRole, setUserRole }) => {
   const intl = useIntl();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const store = useStore();
+  const { data, loading, setQuery } = useQuery<{login: UserLoginModelType}>();
 
   const resetDialogState = useCallback((): void => {
     setPassword('');
@@ -53,14 +55,23 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
   }, []);
 
   const validatePassword = useCallback((): void => {
-    const isValid = password === ADMIN_PASSWORD;
-    setIsPasswordValid(isValid);
-    if (isValid) {
-      setUserRole(UserRole.ADMIN);
-      closeDialog();
-    }
+    setQuery(store.queryLogin({
+      data:{
+        userName:'NOT_USED',
+        userPassword: password
+      }
+    }));
   }, [password]);
-
+  
+  useEffect(() => {
+    if (!loading && data) {
+      setIsPasswordValid(data.login.isValid as boolean);
+      if (data.login.isValid) {
+        setUserRole(UserRole.ADMIN);
+        closeDialog();
+      }
+    } 
+  }, [data, loading]);
 
   const renderInputErrorMsg = useCallback((): JSX.Element => {
     return (
@@ -143,6 +154,6 @@ const UserModeSwitch: React.FC<UserModeSwitchProps> = ({ userRole, setUserRole }
       </Dialog>
     </Box>
   );
-};
+});
 
 export default UserModeSwitch;
