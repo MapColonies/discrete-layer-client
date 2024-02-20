@@ -1,7 +1,7 @@
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
-const exec = require('child_process').execFile;
+const exec = require('child_process').exec;
 
 let confdUrl =
   'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-windows-amd64.exe';
@@ -141,8 +141,7 @@ const replacePlaceHolders = () => {
 const runConfd = () => {
   console.log('Running confd');
   exec(
-    `${confdPath}`,
-    ['-backend', 'env', '-onetime', '-confdir', confdDevBasePath],
+    `${confdPath} -backend env -onetime -confdir ${confdDevBasePath}`,
     (error, stdout, stderr) => {
       console.log(stdout);
       console.error(stderr);
