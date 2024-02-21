@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.8.4...v2.8.5) (2024-02-21)
+
+
+### Bug Fixes
+
+* add sleep to entrypoint ([#507](https://github.com/MapColonies/discrete-layer-client/issues/507)) ([241b145](https://github.com/MapColonies/discrete-layer-client/commit/241b1454aa6957d76f1d834dc8e509e733d1b330))
+
 ### [2.8.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.8.3...v2.8.4) (2024-02-20)
 
 
