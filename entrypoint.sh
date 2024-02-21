@@ -1,3 +1,5 @@
+echo "Sleeping for 2 secs ..."  && \
+sleep(2)  && \
 echo "Running CONFD ..."  && \
 node ../confd/generate-config.js --indocker && \
 echo "Preparing SED command -->" 's/{PUBLIC_URL_PLACEHOLDER}/'"$(echo "$CONFIGURATION_PUBLIC_URL" | sed 's/[^a-zA-Z0-9.]/\\&/g')"'/g'  && \
