@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
@@ -154,12 +154,13 @@ const IngestionInputs: React.FC<{
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
+export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> = observer(({
   recordType,
   fields,
   values,
   reloadFormMetadata,
   formik,
+  children,
 }) => {
   const store = useStore();
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
@@ -325,6 +326,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
                 <FormattedMessage id="ingestion.button.import-metadata" />
               )}
             </Button>
+          </Box>
+          <Box>
+            {children}
           </Box>
         </Box>
       </Box>

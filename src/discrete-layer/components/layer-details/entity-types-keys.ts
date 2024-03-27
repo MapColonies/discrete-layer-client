@@ -45,7 +45,7 @@ export const FieldConfigModelKeys: FieldConfigModelArray = Object.keys(FieldConf
 // All fields from all entities.
 export type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
-export type LayerRecordTypes = "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord";
+export type LayerRecordTypes = "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord" | "PolygonPartRecord";
 
 let tempLayerRecordTypesObject:
   | {
@@ -58,6 +58,7 @@ let tempLayerRecordTypesObject:
     LayerDemRecord: undefined,
     VectorBestRecord: undefined,
     QuantizedMeshBestRecord: undefined,
+    PolygonPartRecord: undefined,
   };
 
 export const LayerRecordTypesKeys = Object.keys(tempLayerRecordTypesObject);

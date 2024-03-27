@@ -31,6 +31,7 @@ interface JsonValuePresentorProps {
   type?: string;
   enableLoadFromShape?: boolean;
   enableMapPreview?: boolean;
+  fieldNamePrefix?: string;
 }
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
@@ -40,7 +41,8 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   formik,
   type,
   enableLoadFromShape = false,
-  enableMapPreview = false
+  enableMapPreview = false,
+  fieldNamePrefix
 }) => {
   const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
   const [geoJsonWarning, setGeoJsonWarning] = useState('');
@@ -51,6 +53,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     () => get(formik?.status, 'errors') as { [fieldName: string]: string[] } | null | undefined,
     [formik?.status]
   );
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
   const multipleFeaturesError = useMemo(() => new Error(`validation-field.${fieldInfo.fieldName as string}.shapeFile.multiple-features`), [fieldInfo.fieldName]);
   const shapeFileGenericError = useMemo(() => new Error(`validation-field.${fieldInfo.fieldName as string}.shapeFile.generic`), [fieldInfo.fieldName]);
 
@@ -62,7 +65,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     setTimeout(() => {
       if (typeof currentErrors !== 'undefined') {
         // Remove valid field from errors obj if exists
-        delete currentErrors?.[fieldInfo.fieldName as string];
+        delete currentErrors?.[fieldName];
         formik?.setStatus({ errors: currentErrors });
       } else {
         formik?.setStatus({});
@@ -161,7 +164,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
                   formik?.setStatus({
                     errors: {
                       ...currentErrors,
-                      [fieldInfo.fieldName as string]: [errorTranslation],
+                      [fieldName]: [errorTranslation],
                     },
                   });
                   setJsonValue(EMPTY_JSON_STRING_VALUE);
@@ -209,7 +212,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
-      formik?.setFieldTouched(fieldInfo.fieldName as string, true, false);
+      formik?.setFieldTouched(fieldName, true, false);
 
       let formikValue: unknown = undefined;
 
@@ -243,7 +246,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         }
 
         formikValue = JSON.parse(jsonValue) as unknown;
-        formik?.setFieldValue(fieldInfo.fieldName as string, formikValue);
+        formik?.setFieldValue(fieldName, formikValue);
 
         removeStatusErrors();
       } catch (err) {
@@ -265,9 +268,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           formik?.setStatus({
             errors: {
               ...currentErrors,
-              [fieldInfo.fieldName as string]: Array.from(
+              [fieldName]: Array.from(
                 new Set([
-                  ...(currentErrors?.[fieldInfo.fieldName as string] ?? []),
+                  ...(currentErrors?.[fieldName] ?? []),
                   errorMsg,
                 ])
               ),
@@ -285,8 +288,8 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           <Box style={{width: enableMapPreview ? '60%' : '100%'}}>
             <TextField
               ref={fieldRef}
-              id={fieldInfo.fieldName as string}
-              name={fieldInfo.fieldName as string}
+              id={fieldName}
+              name={fieldName}
               type={type}
               value={jsonValue === EMPTY_JSON_STRING_VALUE ? '' : jsonValue}
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {

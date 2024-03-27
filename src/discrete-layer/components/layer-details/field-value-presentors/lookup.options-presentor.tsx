@@ -17,10 +17,12 @@ interface LookupTablesPresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
 
 export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = (props) => {
-  const { mode, fieldInfo, value, formik } = props;
+  const { mode, fieldInfo, value, formik, fieldNamePrefix } = props;
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
@@ -51,10 +53,10 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
       <Select
         className="enumOptions"
         value={value}
-        id={fieldInfo.fieldName as string}
-        name={fieldInfo.fieldName as string}
+        id={fieldName}
+        name={fieldName}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-          formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
+          formik.setFieldValue(fieldName, e.currentTarget.value);
         }}
         onBlur={formik.handleBlur}
         outlined

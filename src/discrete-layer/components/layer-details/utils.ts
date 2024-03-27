@@ -17,6 +17,7 @@ import {
   LinkModel,
   LinkModelType,
   OperationType,
+  PolygonPartRecordModel,
   ProductType,
   QuantizedMeshBestRecordModel,
   RecordType,
@@ -37,6 +38,7 @@ import {
   LayerRecordTypes,
   LayerRecordTypesKeys
 } from './entity-types-keys';
+import { Mode } from 'fs';
 
 const JSON_INDENTATION = 4;
 
@@ -60,6 +62,9 @@ export const getEntityDescriptors = (
       break;
     case 'QuantizedMeshBestRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswQuantizedMeshBestCatalogRecord')
+      break;
+    case 'PolygonPartRecord':
+      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PolygonPartRecord')
       break;
     default:
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
@@ -112,6 +117,9 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     case 'QuantizedMeshBestRecord':
       recordModel = QuantizedMeshBestRecordModel;
       break;
+    case 'PolygonPartRecord':
+      recordModel = PolygonPartRecordModel;
+      break;
     case 'Link':
       recordModel = LinkModel;
       break;
@@ -131,10 +139,10 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     else if (fieldNameStr.toLowerCase().includes('sensors')) {
       return 'sensors';
     }
-    else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
+    else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('geometry') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
     }
-    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg')) {
+    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg') || fieldNameStr.toLowerCase().includes('resolutiondegree')) {
       return 'resolution';
     }
     else {
@@ -459,3 +467,12 @@ export const getCoordinatesDisplayText = (latitude: number, longitude: number): 
 }
 
 export const getTimeStamp = (): string => new Date().getTime().toString();
+
+export const filerModeDescriptors = (mode: Mode, descriptors: EntityDescriptorModelType[]): EntityDescriptorModelType[] => {
+  return descriptors.map(desc => { 
+    return {
+      ...desc,
+      categories: desc.categories?.filter(cat => cat.category === 'MAIN') // THE FILTERING MUST BE CHANGED, WHEN FIELD DEFS ARE FINALIZED
+    };
+  })
+}

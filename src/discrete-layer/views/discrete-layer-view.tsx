@@ -94,6 +94,7 @@ import { WfsFeature } from '../components/map-container/geojson-map-features/wfs
 import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
 import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
 import { ExtentUpdater } from '../components/map-container/extent-updater';
+import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
@@ -1125,7 +1126,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         {/* <Filters isFiltersOpened={isFilter} filtersView={activeTabView}/> */}
         {
           isNewRasterEntityDialogOpen &&
-          <EntityDialog
+          <EntityRasterDialog
             isOpen={isNewRasterEntityDialogOpen}
             onSetOpen={setNewRasterEntityDialogOpen}
             recordType={RecordType.RECORD_RASTER}

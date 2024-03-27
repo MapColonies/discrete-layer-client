@@ -61,6 +61,8 @@ import { DependentFieldModel, DependentFieldModelType } from "./DependentFieldMo
 import { dependentFieldModelPrimitives, DependentFieldModelSelector } from "./DependentFieldModel.base"
 import { McEnumsModel, McEnumsModelType } from "./McEnumsModel"
 import { mcEnumsModelPrimitives, McEnumsModelSelector } from "./McEnumsModel.base"
+import { PolygonPartRecordModel, PolygonPartRecordModelType } from "./PolygonPartRecordModel"
+import { polygonPartRecordModelPrimitives, PolygonPartRecordModelSelector } from "./PolygonPartRecordModel.base"
 import { EstimatedSizeModel, EstimatedSizeModelType } from "./EstimatedSizeModel"
 import { estimatedSizeModelPrimitives, EstimatedSizeModelSelector } from "./EstimatedSizeModel.base"
 import { FreeDiskSpaceModel, FreeDiskSpaceModelType } from "./FreeDiskSpaceModel"
@@ -392,7 +394,8 @@ type Refs = {
   bestRecords: ObservableMap<string, BestRecordModelType>,
   entityDescriptors: ObservableMap<string, EntityDescriptorModelType>,
   vectorBestRecords: ObservableMap<string, VectorBestRecordModelType>,
-  quantizedMeshBestRecords: ObservableMap<string, QuantizedMeshBestRecordModelType>
+  quantizedMeshBestRecords: ObservableMap<string, QuantizedMeshBestRecordModelType>,
+  polygonPartRecords: ObservableMap<string, PolygonPartRecordModelType>
 }
 
 
@@ -406,6 +409,7 @@ querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
 queryEntityDescriptors="queryEntityDescriptors",
 queryGetMcEnums="queryGetMcEnums",
+queryGetPolygonPartsDUMMY="queryGetPolygonPartsDUMMY",
 queryGetEstimatedSize="queryGetEstimatedSize",
 queryGetFreeDiskSpace="queryGetFreeDiskSpace",
 queryTriggerExportTask="queryTriggerExportTask",
@@ -444,7 +448,7 @@ mutateJobAbort="mutateJobAbort"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['FilterableFieldConfig', () => FilterableFieldConfigModel], ['FilterFieldValidation', () => FilterFieldValidationModel], ['BriefFieldConfig', () => BriefFieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['LookupTableBinding', () => LookupTableBindingModel], ['DependentField', () => DependentFieldModel], ['MCEnums', () => McEnumsModel], ['EstimatedSize', () => EstimatedSizeModel], ['FreeDiskSpace', () => FreeDiskSpaceModel], ['TriggerExportTask', () => TriggerExportTaskModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['AvailableActions', () => AvailableActionsModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel], ['PositionsWithHeights', () => PositionsWithHeightsModel], ['PositionWithHeight', () => PositionWithHeightModel], ['UserLogin', () => UserLoginModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord'], "js"))
+  .extend(configureStoreMixin([['Capability', () => CapabilityModel], ['Style', () => StyleModel], ['TileMatrixSet', () => TileMatrixSetModel], ['ResourceURL', () => ResourceUrlModel], ['Layer3DRecord', () => Layer3DRecordModel], ['Link', () => LinkModel], ['LayerRasterRecord', () => LayerRasterRecordModel], ['BestRecord', () => BestRecordModel], ['DiscreteOrder', () => DiscreteOrderModel], ['LayerDemRecord', () => LayerDemRecordModel], ['VectorBestRecord', () => VectorBestRecordModel], ['QuantizedMeshBestRecord', () => QuantizedMeshBestRecordModel], ['StringArrayObjectType', () => StringArrayObjectTypeModel], ['EntityDescriptor', () => EntityDescriptorModel], ['CategoryConfig', () => CategoryConfigModel], ['FieldConfig', () => FieldConfigModel], ['FilterableFieldConfig', () => FilterableFieldConfigModel], ['FilterFieldValidation', () => FilterFieldValidationModel], ['BriefFieldConfig', () => BriefFieldConfigModel], ['Autocompletion', () => AutocompletionModel], ['ValidationConfig', () => ValidationConfigModel], ['EnumAspects', () => EnumAspectsModel], ['UpdateRules', () => UpdateRulesModel], ['UpdateRulesValue', () => UpdateRulesValueModel], ['UpdateRulesOperation', () => UpdateRulesOperationModel], ['LookupTableBinding', () => LookupTableBindingModel], ['DependentField', () => DependentFieldModel], ['MCEnums', () => McEnumsModel], ['PolygonPartRecord', () => PolygonPartRecordModel], ['EstimatedSize', () => EstimatedSizeModel], ['FreeDiskSpace', () => FreeDiskSpaceModel], ['TriggerExportTask', () => TriggerExportTaskModel], ['ExternalService', () => ExternalServiceModel], ['Job', () => JobModel], ['AvailableActions', () => AvailableActionsModel], ['LookupTableData', () => LookupTableDataModel], ['DeploymentWithServices', () => DeploymentWithServicesModel], ['K8sService', () => K8SServiceModel], ['File', () => FileModel], ['DecryptedId', () => DecryptedIdModel], ['TasksGroup', () => TasksGroupModel], ['GetFeature', () => GetFeatureModel], ['WfsFeature', () => WfsFeatureModel], ['GetFeatureTypes', () => GetFeatureTypesModel], ['PositionsWithHeights', () => PositionsWithHeightsModel], ['PositionWithHeight', () => PositionWithHeightModel], ['UserLogin', () => UserLoginModel]], ['LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'BestRecord', 'EntityDescriptor', 'VectorBestRecord', 'QuantizedMeshBestRecord', 'PolygonPartRecord'], "js"))
   .props({
     layerRasterRecords: types.optional(types.map(types.late((): any => LayerRasterRecordModel)), {}),
     layer3DRecords: types.optional(types.map(types.late((): any => Layer3DRecordModel)), {}),
@@ -452,7 +456,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     bestRecords: types.optional(types.map(types.late((): any => BestRecordModel)), {}),
     entityDescriptors: types.optional(types.map(types.late((): any => EntityDescriptorModel)), {}),
     vectorBestRecords: types.optional(types.map(types.late((): any => VectorBestRecordModel)), {}),
-    quantizedMeshBestRecords: types.optional(types.map(types.late((): any => QuantizedMeshBestRecordModel)), {})
+    quantizedMeshBestRecords: types.optional(types.map(types.late((): any => QuantizedMeshBestRecordModel)), {}),
+    polygonPartRecords: types.optional(types.map(types.late((): any => PolygonPartRecordModel)), {})
   })
   .actions(self => ({
     queryCapabilities(variables: { params: CapabilitiesLayersSearchParams }, resultSelector: string | ((qb: CapabilityModelSelector) => CapabilityModelSelector) = capabilityModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -483,6 +488,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryGetMcEnums(variables?: {  }, resultSelector: string | ((qb: McEnumsModelSelector) => McEnumsModelSelector) = mcEnumsModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getMcEnums: McEnumsModelType}>(`query getMcEnums { getMcEnums {
         ${typeof resultSelector === "function" ? resultSelector(new McEnumsModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryGetPolygonPartsDUMMY(variables?: {  }, resultSelector: string | ((qb: PolygonPartRecordModelSelector) => PolygonPartRecordModelSelector) = polygonPartRecordModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getPolygonPartsDUMMY: PolygonPartRecordModelType[]}>(`query getPolygonPartsDUMMY { getPolygonPartsDUMMY {
+        ${typeof resultSelector === "function" ? resultSelector(new PolygonPartRecordModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryGetEstimatedSize(variables: { data: GetExportEstimatedSizeInput }, resultSelector: string | ((qb: EstimatedSizeModelSelector) => EstimatedSizeModelSelector) = estimatedSizeModelPrimitives.toString(), options: QueryOptions = {}) {

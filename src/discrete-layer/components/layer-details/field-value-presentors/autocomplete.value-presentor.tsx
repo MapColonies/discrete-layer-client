@@ -18,9 +18,10 @@ interface AutocompleteValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
 
-export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, formik }) => {
+export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePresentorProps> = observer(({ mode, fieldInfo, value, formik, fieldNamePrefix }) => {
   const { data }  = useQuery((store) =>
     store.queryGetDomain({
       recordType: RecordType.RECORD_RASTER, 
@@ -41,6 +42,7 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
   }, [data]);
 
   const controlValue = {value: value ?? ''};
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
@@ -54,13 +56,14 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
             ...{
               Component: <TextField/>,
               ComponentProps: {
-                name: fieldInfo.fieldName,
+                name: fieldName,
+                id: fieldName,
                 autoComplete: 'off',
                 ...required
               },
               ...controlValue,
               onBlur: (e: React.FocusEvent<HTMLInputElement>): void => {
-                formik?.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
+                formik?.setFieldValue(fieldName, e.currentTarget.value);
               },
               mode: 'autocomplete',
               options: autocompleteValues,

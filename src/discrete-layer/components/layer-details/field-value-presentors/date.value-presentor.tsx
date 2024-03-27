@@ -16,9 +16,12 @@ interface DateValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: moment.Moment;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
 
-export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
+export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik, fieldNamePrefix }) => {
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
+
   const [innerValue, handleOnChange] = useDebounceField(
     formik as EntityFormikHandlers,
     value ?? null
@@ -68,7 +71,8 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     return (
       <Box className="detailsFieldValue datePresentor">
         <DateTimePicker
-          name={fieldInfo.fieldName}
+          name={fieldName}
+          id={fieldName}
           showTime={shouldShowTime}
           value={getDate()}
           inputValue={inputValue()}
@@ -83,7 +87,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
                 // @ts-ignore
                 currentTarget: {
                   value: momentVal,
-                  name: fieldInfo.fieldName,
+                  name: fieldName,
                 } as GCHTMLInputElement
                 /* eslint-enable */
               });

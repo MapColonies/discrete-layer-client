@@ -18,16 +18,18 @@ interface ResolutionValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
   
 export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresentorProps> = (props) => {
-  const { mode, fieldInfo, formik } = props;
+  const { mode, fieldInfo, formik, fieldNamePrefix } = props;
   const value = props.value?.toString();
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
   const MAX_PADDING_LENGTH = 17;
   const MAX_VALUE_LENGTH = 10;
+  const fieldName =`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
 
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
@@ -61,13 +63,13 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
       <Select
         className="enumOptions"
         value={value}
-        id={fieldInfo.fieldName as string}
-        name={fieldInfo.fieldName as string}
+        id={fieldName}
+        name={fieldName}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-          formik.setFieldValue(fieldInfo.fieldName as string, Number(e.currentTarget.value));
+          formik.setFieldValue(fieldName, Number(e.currentTarget.value));
           
           const filteredOptions = lookupOptions.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === Number(e.currentTarget.value));
-          formik.setFieldValue(fieldInfo.dependentField.name as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
+          formik.setFieldValue(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}` as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
         }}
         onBlur={formik.handleBlur}
         outlined

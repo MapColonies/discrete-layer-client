@@ -11,12 +11,13 @@ import { LayerDemRecordModelType } from "./LayerDemRecordModel"
 import { LayerDemRecordModelSelector, layerDemRecordModelPrimitives } from "./LayerDemRecordModel.base"
 import { LayerRasterRecordModelType } from "./LayerRasterRecordModel"
 import { LayerRasterRecordModelSelector, layerRasterRecordModelPrimitives } from "./LayerRasterRecordModel.base"
+import { PolygonPartRecordModelType } from "./PolygonPartRecordModel"
 import { QuantizedMeshBestRecordModelType } from "./QuantizedMeshBestRecordModel"
 import { QuantizedMeshBestRecordModelSelector, quantizedMeshBestRecordModelPrimitives } from "./QuantizedMeshBestRecordModel.base"
 import { VectorBestRecordModelType } from "./VectorBestRecordModel"
 import { VectorBestRecordModelSelector, vectorBestRecordModelPrimitives } from "./VectorBestRecordModel.base"
 
-export type LayerMetadataMixedUnion = Layer3DRecordModelType | LayerRasterRecordModelType | BestRecordModelType | LayerDemRecordModelType | VectorBestRecordModelType | QuantizedMeshBestRecordModelType
+export type LayerMetadataMixedUnion = Layer3DRecordModelType | LayerRasterRecordModelType | BestRecordModelType | LayerDemRecordModelType | VectorBestRecordModelType | QuantizedMeshBestRecordModelType | PolygonPartRecordModelType
 
 export class LayerMetadataMixedModelSelector extends QueryBuilder {
   layer3DRecord(builder?: string | Layer3DRecordModelSelector | ((selector: Layer3DRecordModelSelector) => Layer3DRecordModelSelector)) { return this.__inlineFragment(`Layer3DRecord`, Layer3DRecordModelSelector, builder) }

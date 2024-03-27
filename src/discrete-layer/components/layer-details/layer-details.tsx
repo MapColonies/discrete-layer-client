@@ -57,6 +57,9 @@ interface LayersDetailsComponentProps {
   layerRecord?: ILayerImage | null;
   formik?: EntityFormikHandlers;
   isSearchTab?: boolean;
+  enableMapPreview?: boolean;
+  fieldNamePrefix?: string;
+  showFiedlsCategory?: boolean;
 }
 
 export const getValuePresentor = (
@@ -65,48 +68,87 @@ export const getValuePresentor = (
   fieldValue: unknown,
   mode: Mode,
   formik?: EntityFormikHandlers,
-  enumsMap?: IEnumsMapType | null
+  enumsMap?: IEnumsMapType | null,
+  enableMapPreview = true,
+  fieldNamePrefix?: string
 ): JSX.Element => {
   const { fieldName, lookupTable } = fieldInfo;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupTable as string);
-  const value = formik?.getFieldProps(fieldInfo.fieldName).value as unknown ?? fieldValue;
+  const value = fieldValue ?? formik?.getFieldProps(`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`).value as unknown;
   
   switch (basicType) {
     case 'string':
     case 'identifier':
     case 'sensors':
       return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
-        // eslint-disable-next-line
-        <AutocompleteValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></AutocompleteValuePresentorComponent> :
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+        <AutocompleteValuePresentorComponent 
+          mode={mode}
+          fieldInfo={fieldInfo}
+          value={value as string}
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix}
+        /> :
+        <StringValuePresentorComponent
+          mode={mode}
+          fieldInfo={fieldInfo}
+          value={value as string}
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix}/>
       );
     case 'string[]':
       return (
-        <StringValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></StringValuePresentorComponent>
+        <StringValuePresentorComponent 
+          mode={mode}
+          fieldInfo={fieldInfo}
+          value={value as string}
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix}/>
       );
     case 'json':
       return (
-        <JsonValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik} enableMapPreview={fieldName === FOOTPRINT_FIELD_NAME} enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}></JsonValuePresentorComponent>
+        <JsonValuePresentorComponent 
+          mode={mode}
+          fieldInfo={fieldInfo}
+          value={value as string}
+          formik={formik}
+          enableMapPreview={enableMapPreview && fieldName === FOOTPRINT_FIELD_NAME}
+          enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}
+          fieldNamePrefix={fieldNamePrefix}/>
       );
     case 'number':
       return (
-        <NumberValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></NumberValuePresentorComponent>
+        <NumberValuePresentorComponent 
+          mode={mode}
+          fieldInfo={fieldInfo}
+          value={value as string}
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix}/>
       );
     case 'links':
       return (
-        <LinksValuePresentorComponent value={value as LinkModelType[]} fieldInfo={fieldInfo}></LinksValuePresentorComponent>
+        <LinksValuePresentorComponent value={value as LinkModelType[]} fieldInfo={fieldInfo}/>
       );
     case 'url':
       return (
-        <UrlValuePresentorComponent value={value as string} linkInfo={links[(layerRecord as LinkModelType).protocol as LinkType]}></UrlValuePresentorComponent>
+        <UrlValuePresentorComponent value={value as string} linkInfo={links[(layerRecord as LinkModelType).protocol as LinkType]}/>
       );
     case 'resolution':
       return (
-        <ResolutionValuePresentorComponent value={value as string} fieldInfo={fieldInfo} mode={mode} formik={formik} />
+        <ResolutionValuePresentorComponent 
+          value={value as string}
+          fieldInfo={fieldInfo}
+          mode={mode}
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix} />
       )
     case 'momentDateType':
       return (
-        <DateValuePresentorComponent mode={mode} fieldInfo={fieldInfo} value={value as moment.Moment} formik={formik}></DateValuePresentorComponent>
+        <DateValuePresentorComponent 
+          mode={mode} 
+          fieldInfo={fieldInfo} 
+          value={value as moment.Moment} 
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix}/>
       );
     case 'DemDataType':
     case 'NoDataValue':
@@ -122,7 +164,13 @@ export const getValuePresentor = (
         options = getEnumKeys(enumsMap as IEnumsMapType, basicType);
       }
       return (
-        <EnumValuePresentorComponent options={['',...options]} mode={mode} fieldInfo={fieldInfo} value={value as string} formik={formik}></EnumValuePresentorComponent>
+        <EnumValuePresentorComponent 
+          options={['',...options]} 
+          mode={mode} 
+          fieldInfo={fieldInfo} 
+          value={value as string} 
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix}/>
       );
     }
     case 'RecordType':
@@ -135,7 +183,12 @@ export const getValuePresentor = (
       );
     case 'LookupTableType':
       return (
-        <LookupOptionsPresentorComponent value={value as string} fieldInfo={fieldInfo} mode={mode} formik={formik} />
+        <LookupOptionsPresentorComponent 
+          value={value as string} 
+          fieldInfo={fieldInfo} 
+          mode={mode} 
+          formik={formik}
+          fieldNamePrefix={fieldNamePrefix} />
       );
     default:
       return (
@@ -145,7 +198,7 @@ export const getValuePresentor = (
 };
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
-  const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false } = props;
+  const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false, enableMapPreview=true, fieldNamePrefix, showFiedlsCategory=true } = props;
   const { enumsMap } = useContext(EnumsMapContext);
   const store = useStore();
   
@@ -161,13 +214,13 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
       className={`categoryFieldsParentContainer ${className}`}
       style={categoryFieldsParentContainerStyle}
     >
-      <Typography
+      {showFiedlsCategory && <Typography
         use="headline6"
         tag="div"
         className="categoryFieldsTitle"
       >
         <FormattedMessage id={category.categoryTitle} />
-      </Typography>
+      </Typography>}
       <Box className="categoryFieldsContainer">
         {category.fields?.filter((fieldInfo)=>{
           // eslint-disable-next-line
@@ -235,7 +288,9 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                     fieldValue,
                     mode,
                     formik,
-                    enumsMap
+                    enumsMap,
+                    enableMapPreview,
+                    fieldNamePrefix
                   )
                 }
               </Box>
