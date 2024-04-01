@@ -188,10 +188,11 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)
   ) {
     const stringifiedValue = value ? JSON.stringify(value) : '';
+    const isDataError = fieldInfo.isRequired && !value;
     return (
       <Box className="detailsFieldValue" style={{display: 'flex',gap: '10px'}}>
         <Box style={{width: enableMapPreview ? '60%' : '100%', display: 'flex'}}>
-          <TooltippedValue tag="div" className="detailsFieldValue jsonValueAlign" disableTooltip>
+          <TooltippedValue tag="div" className={`detailsFieldValue jsonValueAlign ${isDataError ? 'detailFieldDataError' : ''}`} disableTooltip>
             {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ${(stringifiedValue.length > JSON_MAX_LENGTH) ? '...' : ''}`}
           </TooltippedValue>
           {

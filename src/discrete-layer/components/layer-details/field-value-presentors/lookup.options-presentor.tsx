@@ -26,6 +26,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
+  const isDataError = fieldInfo.isRequired && !value;
 
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
@@ -42,7 +43,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <TooltippedValue className="detailsFieldValue">
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>
         {getDisplayValue()}
       </TooltippedValue>
     );

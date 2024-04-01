@@ -30,6 +30,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
   const MAX_PADDING_LENGTH = 17;
   const MAX_VALUE_LENGTH = 10;
   const fieldName =`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
+  const isDataError = fieldInfo.isRequired && !value;
 
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
@@ -52,7 +53,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
   
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <TooltippedValue className="detailsFieldValue">
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>
         {getDisplayValue()}
       </TooltippedValue>
     );

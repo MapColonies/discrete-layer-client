@@ -2,6 +2,8 @@
 import { get, isEmpty, omit } from 'lodash';
 import moment, { unitOfTime } from 'moment';
 import { $enum } from 'ts-enum-util';
+import { Feature } from 'geojson';
+import rewind from '@turf/rewind';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import {
@@ -17,7 +19,9 @@ import {
   LinkModel,
   LinkModelType,
   OperationType,
+  ParsedPolygonPart,
   PolygonPartRecordModel,
+  PolygonPartRecordModelType,
   ProductType,
   QuantizedMeshBestRecordModel,
   RecordType,
@@ -216,6 +220,37 @@ export const removeEmptyObjFields = (
   return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
 };
 
+export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature): ParsedPolygonPart => {
+  const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
+  const errors: Record<string,string[]> = {};
+  desciptors.forEach((desc) => {
+    const shapeFieldValue = get(feature, desc.shapeFileMapping as string);
+
+    if(!shapeFieldValue && desc.isRequired){
+      errors[desc.fieldName as string] = ['validation-general.required'];
+    }
+    
+    if(desc.shapeFileMapping) {
+      switch(desc.fieldName){
+        case 'imagingTimeBeginUTC':
+        case 'imagingTimeEndUTC':
+          poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
+          break;
+        case 'geometry':
+          poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
+          break;
+        default:
+          poygonPartData[desc.fieldName as string] = shapeFieldValue;
+          break;
+      }
+    } 
+  });
+  return {
+    polygonPart: {...poygonPartData as unknown as PolygonPartRecordModelType},
+    errors: {...errors}
+  };
+};
+
 export const transformEntityToFormFields = (
   layerRecord: LayerMetadataMixedUnion | LinkModelType
 ): Record<string, unknown> => {
@@ -307,9 +342,9 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
   input.click();
 }  
 
-export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void, allowGeojson = false): void {
+export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void, allowGeojson = false, allowSingleSHP = true): void {
   const input = document.createElement('input');
-  const supportedExtensions = ['.shp', '.zip', ...(allowGeojson ? ['.geojson'] : [])];
+  const supportedExtensions = [allowSingleSHP ? '.shp': '', '.zip', ...(allowGeojson ? ['.geojson'] : [])];
   input.setAttribute('type', 'file');
   input.setAttribute('accept', supportedExtensions.join(','));
   input.addEventListener('change',(e): void => {

@@ -35,6 +35,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
   const intl = useIntl();
   const { enumsMap } = useContext(EnumsMapContext);
   const enums = enumsMap as IEnumsMapType;
+  const isDataError = fieldInfo.isRequired && !value;
 
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
@@ -50,7 +51,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <TooltippedValue className="detailsFieldValue">
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>
         {getDisplayValue()}
       </TooltippedValue>
     );

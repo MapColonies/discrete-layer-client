@@ -43,10 +43,11 @@ export const AutocompleteValuePresentorComponent: React.FC<AutocompleteValuePres
 
   const controlValue = {value: value ?? ''};
   const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
+  const isDataError = fieldInfo.isRequired && !value;
 
   if (mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <TooltippedValue className="detailsFieldValue">{value}</TooltippedValue>
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>{value}</TooltippedValue>
     );
   } else {
     return(

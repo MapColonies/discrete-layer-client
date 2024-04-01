@@ -5,6 +5,10 @@ import { momentDateType } from "./moment-date.type"
 /* The TypeScript type of an instance of PolygonPartRecordModel */
 export interface PolygonPartRecordModelType extends Instance<typeof PolygonPartRecordModel.Type> {}
 
+export interface ParsedPolygonPart {
+  polygonPart: PolygonPartRecordModelType;
+  errors: Record<string,string[]>;
+}
 /* A graphql query fragment builders for PolygonPartRecordModel */
 export { selectFromPolygonPartRecord, polygonPartRecordModelPrimitives, PolygonPartRecordModelSelector } from "./PolygonPartRecordModel.base"
 
@@ -27,4 +31,7 @@ export const PolygonPartRecordModel = PolygonPartRecordModelBase
     imagingTimeEndUTC: types.maybe(momentDateType),
     /* tslint:enable */
     /* eslint-enable */
+    footprintShown: types.union(types.undefined, types.null, types.boolean),
+    order: types.union(types.undefined, types.null, types.number),
+    layerImageShown: types.union(types.undefined, types.null, types.boolean),
   })

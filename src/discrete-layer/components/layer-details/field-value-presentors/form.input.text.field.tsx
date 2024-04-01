@@ -34,13 +34,14 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
   const intl = useIntl();
   const isCopyable = fieldInfo.isCopyable ?? false;
   const isPreserveNewLine = fieldInfo.rows ?? false;
+  const isDataError = fieldInfo.isRequired && !value;
   const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
         <TooltippedValue
-          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''} ${isPreserveNewLine ? 'preserveNewline' : ''}`}>
+          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''} ${isPreserveNewLine ? 'preserveNewline' : ''} ${isDataError ? 'detailFieldDataError' : ''}`}>
           {innerValue}
         </TooltippedValue>
         {

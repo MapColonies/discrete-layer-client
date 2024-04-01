@@ -30,6 +30,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isCopyable
         isDisabled
         dateGranularity
+        shapeFileMapping
         updateRules {
           freeze
           value {

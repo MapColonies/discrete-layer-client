@@ -464,6 +464,8 @@
   "validation-general.required": "{fieldName} הוא שדה חובה",
   "validation-general.number": "{fieldName} הוא שדה חובה ומספרי",
   "validation-general.date.future": "{fieldName} לא יכול להיות תאריך עתידי",
+  "validation-general.shapeFile.too-many-features": " Shape מכיל יותר מידי features",
+  "validation-general.shapeFile.generic": "יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",
