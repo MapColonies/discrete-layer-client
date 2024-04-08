@@ -6,12 +6,15 @@ import { validateGeoJSONString } from '../../../../common/utils/geojson.validati
 import { Mode } from '../../../../common/models/mode.enum';
 import { useStore } from '../../../models/RootStore';
 import { get } from 'lodash';
+import { Style, Stroke, Fill } from 'ol/style';
 
 interface GeoFeaturesPresentorProps {
   mode: Mode;
   geoFeatures?: Feature[];
   style?: CSSProperties | undefined,
   fitOptions?: FitOptions | undefined,
+  selectedFeatureKey?: string;
+  selectionStyle?: Style;
 }
 
 const  DEFAULT_PROJECTION = 'EPSG:4326';
@@ -21,6 +24,8 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   geoFeatures,
   style,
   fitOptions,
+  selectedFeatureKey,
+  selectionStyle
 }) => {
   // const [geoJsonValue, setGeoJsonValue] = useState();
   const store = useStore();
@@ -78,17 +83,45 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
     <Box style={{...style}}>
       <Map>
         {previewBaseMap}
-        {geoFeatures?.map((feat) => 
-          <VectorLayer>
-            <VectorSource>
-              <GeoJSONFeature 
-                geometry={feat.geometry} 
-                fitOptions={{...fitOptions}}
-                fit={true}
-              />
-            </VectorSource>
-          </VectorLayer>
-        )}
+        <VectorLayer>
+          <VectorSource>
+            {geoFeatures?.map((feat, idx) => {
+                let featureStyle: Style | undefined;
+                if(idx === 0){
+                  featureStyle  = new Style({
+                    stroke: new Stroke({
+                      width: 4,
+                      color: "#000000"
+                    }),
+                  });
+                }
+                else {
+                  const redStyle = new Style({
+                    stroke: new Stroke({
+                      width: 2,
+                      color: "#ff0000"
+                    }),
+                    fill: new Fill({
+                      color: "#aa2727"
+                    })
+                  });
+                  
+
+                  if( feat.properties?.key === selectedFeatureKey){
+                    featureStyle = selectionStyle;
+                  }
+                }
+
+                return feat ? <GeoJSONFeature 
+                  geometry={{...feat.geometry}} 
+                  fitOptions={{...fitOptions}}
+                  fit={idx === 0}
+                  featureStyle={featureStyle}
+                /> : <></>
+              }
+            )}
+          </VectorSource>
+        </VectorLayer>
       </Map>
     </Box>
     )}

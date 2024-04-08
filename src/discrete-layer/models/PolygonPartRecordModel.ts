@@ -35,6 +35,9 @@ export const PolygonPartRecordModel = PolygonPartRecordModelBase
     /* tslint:enable */
     /* eslint-enable */
 
+    // *** CLIENT FIELD
+    uniquePartId: types.string,
+
     // **** DUMMY FIELDS(ENTITY LEVEL) TO NORMALIZE POLYGON PARTS RECORD (WILL BE ALWAYS EMPTY)
     id: types.identifier, //Alex change till proper deffs
     productType: types.union(types.undefined, ProductTypeEnumType),

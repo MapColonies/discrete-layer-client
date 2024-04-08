@@ -204,6 +204,7 @@
   "context-menu.sub-title.tooltip": "שכבות חופפות בנקודה שנבחרה",
 
   "details-panel.no-selection": "לא נבחר פריט",
+  "polygon-parts-data.empty-list": "הוסיפו חלקי תיחום",
 
   "field.actions.edit-draft": "ערוך טיוטה",
   "field.actions.more": "פעולות נוספות",
@@ -466,6 +467,7 @@
   "validation-general.date.future": "{fieldName} לא יכול להיות תאריך עתידי",
   "validation-general.shapeFile.too-many-features": " Shape מכיל יותר מידי features",
   "validation-general.shapeFile.generic": "יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
+  "validation-general.shapeFile.polygonParts.hasErrors": "קובץ shape מכיל שגיות, נדרש להשלים מידה על חלקי תיחום",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",

@@ -200,6 +200,7 @@
   "context-menu.sub-title.tooltip": "overlapping layers",
 
   "details-panel.no-selection": "No selection",
+  "polygon-parts-data.empty-list": "Add polygon parts",
 
   "field.actions.edit-draft": "Edit draft",
   "field.actions.more": "More options",
@@ -462,6 +463,7 @@
   "validation-general.date.future": "{fieldName} cannot be future date",
   "validation-general.shapeFile.too-many-features": "Shape file contains too many features",
   "validation-general.shapeFile.generic": "Please select zip file with only shape or related files, or a single shape file",
+  "validation-general.shapeFile.polygonParts.hasErrors": "Shape file contains error(s), some data is missing for Poygon Parts",
   "validation-field.sourceDateEnd.min": "{fieldName} should be later than {value}",
   "validation-field.sourceDateStart.max": "{fieldName} should be earlier than {value}",
   "validation-field.productVersion.pattern": "{fieldName} does not comply with the format: major.minor",

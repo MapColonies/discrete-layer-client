@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, MouseEventHandler } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {
   withFormik,
@@ -14,8 +14,9 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty, isObject } from 'lodash';
+import { Style, Stroke, Fill } from 'ol/style';
 import shp, { FeatureCollectionWithFilename, getShapeFile, parseDbf, parseShp } from 'shpjs';
-import { Button, CollapsibleList, SimpleListItem } from '@map-colonies/react-core';
+import { Button, CircularProgress, CollapsibleList, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
@@ -45,9 +46,11 @@ import {
 
 import './layer-details-form.raster.css';
 import { GeoFeaturesPresentorComponent } from './pp-map';
-import moment from 'moment';
-import { Feature } from 'geojson';
+import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
+import { Loading } from '../../../../common/components/tree/statuses/loading';
+import { getOutlinedFeature } from '../../../../common/utils/geo.tools';
+import { Properties } from '@turf/helpers';
 
 const NONE = 0;
 
@@ -68,6 +71,7 @@ interface LayerDetailsFormCustomProps {
   mutationQueryLoading: boolean;
   closeDialog: () => void;
   schemaUpdater: (parts:number) => void;
+  removePolygonPart: (polygonPartKey: string) => void;
 }
 
 export interface StatusError {
@@ -114,7 +118,8 @@ export const InnerRasterForm = (
     mutationQueryError,
     mutationQueryLoading,
     closeDialog,
-    schemaUpdater
+    schemaUpdater,
+    removePolygonPart
   } = props;
 
   const status = props.status as StatusError | Record<string, unknown>;
@@ -127,6 +132,9 @@ export const InnerRasterForm = (
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
   const [ppFeatures, setPPFeatures] = useState<Feature[]>([]);
   const [parsingErrors, setParsingErrors] = useState<Record<string, unknown>[]>([]);
+  const [loadingPolygonParts, setLoadingPolygonParts] = useState<boolean>(false);
+  const [outlinedPerimeter, setOutlinedPerimeter] = useState<Feature | undefined>();
+  const [selectedFeature, setSelectedFeature] = useState<string | undefined>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -179,7 +187,7 @@ export const InnerRasterForm = (
     Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
       features.push({
         type: "Feature",
-        properties: {},
+        properties: {key},
         // @ts-ignore
         geometry: values[key].geometry
       })
@@ -203,10 +211,14 @@ export const InnerRasterForm = (
       {}
     );
 
+    if(parsingErrors.length){
+      stattusErrors['shape'] = [intl.formatMessage({ id: 'validation-general.shapeFile.polygonParts.hasErrors' })];
+    }
+
     setStatus({
       errors: {
         // ...currentErrors,
-        ...stattusErrors
+        ...stattusErrors,
       },
     });
     
@@ -319,12 +331,16 @@ export const InnerRasterForm = (
               }
 
               (data as FeatureCollectionWithFilename).features.forEach((feature, idx) => {
-                /*if(idx < 10)*/ {
+                /*if(idx < 20)*/ {
                   const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
                   const parsedPolygonPartData = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature);
+                  parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
                   parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
                 }
-              })
+              });
+
+              const outlinedPolygon = getOutlinedFeature((data as FeatureCollectionWithFilename).features as Feature<Polygon | MultiPolygon, Properties>[]);
+              setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
 
               return resolve(parsedPolygonParts);
             })
@@ -353,6 +369,54 @@ export const InnerRasterForm = (
     }
   });
 
+  interface HandleProps {
+    text?: string;
+    onClick?:  MouseEventHandler | undefined
+    isErrorInPolygonPart?: boolean
+    handleClick?: ()=>void;
+    handleSelection?: ()=>void;
+    handleClearSelection?: ()=>void;
+  }
+
+  const Handler: React.FC<HandleProps> = ({text, onClick, isErrorInPolygonPart, handleClick, handleSelection, handleClearSelection}) => {
+    const [deletingPart, setDeletingPart] = useState<boolean>(false);
+    const [showActions, setShowActions] = useState<boolean>(false);
+    return  <Box onClick={onClick} style={{ height: '48px'}}>
+    <SimpleListItem
+      text={text}
+      // graphic="help"
+      metaIcon="chevron_right"
+      className={isErrorInPolygonPart ? 'polygonPartDataError' : ''}
+      onMouseOver={(e): void => { handleSelection && handleSelection();}}
+      onMouseOut={(e): void => { handleClearSelection && handleClearSelection();}}
+    />
+    <Box style={{ position: 'relative', top: '-44px', left: '-550px', display: "flex", width: "160px", alignItems: "center"}}
+     onMouseOver={(e): void => { handleSelection && handleSelection();}}
+     onMouseOut={(e): void => { handleClearSelection && handleClearSelection();}}
+    >
+      <Box style={{width: "100px"}}>
+        {deletingPart && <Box style={{display: "flex", gap: "4px"}}>Deleting <CircularProgress/></Box>}
+      </Box>
+      <IconButton
+        className="operationIcon mc-icon-Delete"
+        label="DELETE PART"
+        onClick={ (e): void => {
+          if(handleClick){
+            setDeletingPart(true);
+            
+            setTimeout(() => {
+              handleClick();
+            }, 200);
+
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        } }
+      />
+    </Box>
+    </Box>
+  }
+
   return (
     <Box id="layerDetailsFormRaster">
       <Form
@@ -374,18 +438,23 @@ export const InnerRasterForm = (
               outlined
               type="button"
               onClick={(): void => {
+                setLoadingPolygonParts(true);
+
                 importShapeFileFromClient((ev, fileType) => {
                   const shpFile = (ev.target?.result as unknown) as ArrayBuffer;
                   void proccessShapeFile(shpFile, fileType)
                     .then((parsedPPData) => {
+                      setLoadingPolygonParts(false);
                       // setJsonValue(JSON.stringify(geometryPolygon));
                       // removeStatusErrors();
 
-                      // alert('kuku');
-                      schemaUpdater(Object.keys(parsedPPData).length);``
+                      schemaUpdater(Object.keys(parsedPPData).length);
                       /// ?reloadFormMetadata()
-                      const polygonsData = Object.keys(parsedPPData).map((key)=>{let {errors, polygonPart} = parsedPPData[key]; return {[key]: polygonPart} })
-                                          .reduce((acc,curr)=> (acc={...acc,...curr},acc),{});
+                      const polygonsData = Object.keys(parsedPPData).map((key)=>{
+                                                let {errors, polygonPart} = parsedPPData[key]; 
+                                                return {[key]: polygonPart} 
+                                            })
+                                            .reduce((acc,curr)=> (acc={...acc,...curr},acc),{});
 
                       setParsingErrors(Object.keys(parsedPPData).map((key)=>{let {errors, polygonPart} = parsedPPData[key]; return {[key]: errors} }));
 
@@ -394,7 +463,6 @@ export const InnerRasterForm = (
                         ...transformEntityToFormFields(layerRecord),
                         ...ingestionFields,
                         ...polygonsData
-                        
                       });
                       //@ts-ignore
                       layerRecord.layerPolygonParts = {...polygonsData};
@@ -421,48 +489,6 @@ export const InnerRasterForm = (
                     //   fieldRef.current?.focus();
                     // });
                 },false,false);
-
-                // alert('kuku');
-                // schemaUpdater(2);
-                // /// ?reloadFormMetadata()
-                // setValues({
-                //   ...values,
-                //   ...transformEntityToFormFields(layerRecord),
-                //   ...ingestionFields,
-                //   ...{
-                //     // layerPolygonParts: {
-                //       polygonPart_0: {
-                //         "__typename": "PolygonPartRecord",
-                //         id: '11111',
-                //       },
-                //       polygonPart_1: {
-                //         "__typename": "PolygonPartRecord",
-                //         id: '22222',
-                //       },
-                //       // polygonPart_2: {
-                //       //   "__typename": "PolygonPartRecord",
-                //       //   id: '33333',
-                //       // }
-
-                //     }
-                //   // }
-                // });
-                // //@ts-ignore
-                // layerRecord.layerPolygonParts = {
-                //   polygonPart_0: {
-                //     "__typename": "PolygonPartRecord",
-                //     id: '11111',
-                //   },
-                //   polygonPart_1: {
-                //     "__typename": "PolygonPartRecord",
-                //     id: '22222',
-                //   },
-                //   // polygonPart_2: {
-                //   //   "__typename": "PolygonPartRecord",
-                //   //   id: '33333',
-                //   // }
-
-                // }
               }}
             >
               Load SHP
@@ -500,25 +526,54 @@ export const InnerRasterForm = (
             <Box className="polygonPartsData">
               {
                 // @ts-ignore
+                !loadingPolygonParts && !layerRecord.layerPolygonParts && <Typography
+                    use="headline2"
+                    tag="div"
+                    className="noSelection"
+                  >
+                    <FormattedMessage id="polygon-parts-data.empty-list" />
+                  </Typography>
+              }
+              
+              {
+                loadingPolygonParts && <Loading />
+              }
+
+              {
+                // @ts-ignore
                 layerRecord.layerPolygonParts && Object.values(layerRecord.layerPolygonParts).map((val,idx) => {
-                                        const currentFormKey = `${NESTED_FORMS_PRFIX}${idx}`;
-                                        let polygon_part = val as unknown as LayerMetadataMixedUnion;
+                                        // const currentFormKey = `${NESTED_FORMS_PRFIX}${idx}`;
+                                        let polygon_part = val as unknown as PolygonPartRecordModelType;
+                                        const currentFormKey = polygon_part.uniquePartId;
                                         let isErrorInPolygonPart = firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE;
 
                                         // @ts-ignore
                                         if(values.layerPolygonParts && Object.keys(values.layerPolygonParts).length > NONE){
                                           // @ts-ignore    
-                                          polygon_part = values.layerPolygonParts[currentFormKey] as unknown as LayerMetadataMixedUnion
+                                          polygon_part = values.layerPolygonParts[currentFormKey];
                                         }
 
                                         return <CollapsibleList
                                                   key={currentFormKey}
                                                   handle={
-                                                    <SimpleListItem
-                                                      text={currentFormKey}
-                                                      // graphic="help"
-                                                      metaIcon="chevron_right"
-                                                      className={isErrorInPolygonPart ? 'polygonPartDataError' : ''}
+                                                    <Handler text={currentFormKey} isErrorInPolygonPart 
+                                                      handleClick={()=>{
+                                                        removePolygonPart(currentFormKey);
+                                                        
+                                                        //@ts-ignore
+                                                        delete values[currentFormKey];
+                                                        setValues({
+                                                          ...values
+                                                        });
+                                                        //@ts-ignore
+                                                        delete layerRecord.layerPolygonParts[currentFormKey];
+                                                      }}
+                                                      handleSelection={()=>{
+                                                        setSelectedFeature(currentFormKey);
+                                                      }}
+                                                      handleClearSelection={()=>{
+                                                        setSelectedFeature(undefined);
+                                                      }}
                                                     />
                                                   }>
                                         <Box className="polygonPartFormContainer"> 
@@ -555,7 +610,23 @@ export const InnerRasterForm = (
             {
               
             // @ts-ignore 
-            <GeoFeaturesPresentorComponent mode={mode} geoFeatures={ppFeatures} style={{width: '520px'}} fitOptions={{padding:[10,20,10,20]}}/>
+            <GeoFeaturesPresentorComponent 
+              mode={mode} 
+              geoFeatures={[outlinedPerimeter as Feature<Geometry, GeoJsonProperties>,...ppFeatures]} 
+              selectedFeatureKey={selectedFeature}
+              selectionStyle={ new Style({
+                                    stroke: new Stroke({
+                                      width: 2,
+                                      color: "#ff0000"
+                                    }),
+                                    fill: new Fill({
+                                      color: "#aa2727"
+                                    })
+                                  })
+              } 
+              style={{width: '520px'}} 
+              fitOptions={{padding:[10,20,10,20]}}
+            />
             }
           </Box>
         </Box>
@@ -604,6 +675,7 @@ interface LayerDetailsFormProps {
   entityDescriptors: EntityDescriptorModelType[];
   layerRecord: LayerMetadataMixedUnion;
   schemaUpdater: (parts:number) => void;
+  removePolygonPart: (polygonPartKey: string) => void;
   yupSchema: OptionalObjectSchema<
     { [x: string]: Yup.AnySchema<unknown, unknown, unknown> },
     AnyObject,

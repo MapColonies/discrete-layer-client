@@ -450,6 +450,11 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       }
       setSchema(newSchema);
     }
+
+    const removePolygonPart = (polygonPartKey: string) => {
+      delete schema[polygonPartKey];
+      setSchema({...schema});
+    };
           
     useEffect(() => {
       const descriptors = getFlatEntityDescriptors(
@@ -723,6 +728,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
                       mutationQueryError={mutationQuery.error}
                       mutationQueryLoading={mutationQuery.loading}
                       closeDialog={closeDialog}
+                      removePolygonPart={removePolygonPart}
                     />
                   )}
               {/* </div> */}
