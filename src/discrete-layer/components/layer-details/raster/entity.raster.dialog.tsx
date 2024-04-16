@@ -416,8 +416,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
           );
       };
 
-    const schemaUpdater = (partsNumber: number)=>{
-      // JUST TRY - SHOULD BE DYNAMIC
+    const schemaUpdater = (partsNumber: number, startIndex = 0)=>{
       const nestedFormdescriptors = getFlatEntityDescriptors(
         'PolygonPartRecord',
         store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
@@ -446,7 +445,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       
       const newSchema = {...schema};
       for(let i=0; i < partsNumber; i++ ){
-        newSchema[`${NESTED_FORMS_PRFIX}${i}`] = Yup.object().shape({...nestedYupSchema});
+        newSchema[`${NESTED_FORMS_PRFIX}${i+startIndex}`] = Yup.object().shape({...nestedYupSchema});
       }
       setSchema(newSchema);
     }

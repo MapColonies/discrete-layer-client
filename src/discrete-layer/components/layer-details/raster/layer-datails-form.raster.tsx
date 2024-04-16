@@ -9,6 +9,7 @@ import {
   FormikBag,
   Field,
 } from 'formik';
+import { List, ListRowRenderer } from "react-virtualized";
 import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
@@ -16,7 +17,7 @@ import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty, isObject } from 'lodash';
 import { Style, Stroke, Fill } from 'ol/style';
 import shp, { FeatureCollectionWithFilename, getShapeFile, parseDbf, parseShp } from 'shpjs';
-import { Button, CircularProgress, CollapsibleList, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
+import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
@@ -44,13 +45,16 @@ import {
   transformSynergyShapeFeatureToEntity,
 } from '../utils';
 
-import './layer-details-form.raster.css';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { getOutlinedFeature } from '../../../../common/utils/geo.tools';
+import { mergeRecursive } from '../../../../common/helpers/object';
 import { Properties } from '@turf/helpers';
+
+import './layer-details-form.raster.css';
+import 'react-virtualized/styles.css';
 
 const NONE = 0;
 
@@ -70,7 +74,7 @@ interface LayerDetailsFormCustomProps {
   mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
-  schemaUpdater: (parts:number) => void;
+  schemaUpdater: (parts:number, startIndex?: number) => void;
   removePolygonPart: (polygonPartKey: string) => void;
 }
 
@@ -124,6 +128,7 @@ export const InnerRasterForm = (
 
   const status = props.status as StatusError | Record<string, unknown>;
   const NESTED_FORMS_PRFIX = 'polygonPart_';
+  type POLYGON_PARTS_MODE = 'FROM_SHAPE' | 'MANUAL';
   
   const intl = useIntl();
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
@@ -135,6 +140,10 @@ export const InnerRasterForm = (
   const [loadingPolygonParts, setLoadingPolygonParts] = useState<boolean>(false);
   const [outlinedPerimeter, setOutlinedPerimeter] = useState<Feature | undefined>();
   const [selectedFeature, setSelectedFeature] = useState<string | undefined>();
+  const [expandedParts, setExpandedParts] = useState<boolean[]>([]);
+  const [showPolygonPartsOnMap, setShowPolygonPartsOnMap] = useState<boolean>(true);
+  const [showExisitngLayerPartsOnMap, setShowExisitngLayerPartsOnMap] = useState<boolean>(false);
+  const [polygonPartsMode, setPolygonPartsMode] = useState<POLYGON_PARTS_MODE>('MANUAL');
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -176,10 +185,10 @@ export const InnerRasterForm = (
   }, [mutationQueryError]);
 
   useEffect(() => {
-    setFirstPhaseErrors({
-      ...getYupErrors(),
-      ...getStatusErrors() as { [fieldName: string]: string[]; },
-    })
+    // @ts-ignore
+    setFirstPhaseErrors(mergeRecursive(getYupErrors(), getStatusErrors()));
+
+    setTimeout(()=>(ppList && updateListRowHeights()), 100);
   }, [errors, getYupErrors, getStatusErrors]);
 
   useEffect(() => {
@@ -194,6 +203,16 @@ export const InnerRasterForm = (
     });
     setPPFeatures(features);
   }, [values]);
+
+  useEffect(() => {
+    if(polygonPartsMode === 'MANUAL' && ppFeatures.length){
+      const definedPPGeometries = ppFeatures.filter((item) => !isEmpty(item.geometry));
+      if(definedPPGeometries.length){
+        const outlinedPolygon = getOutlinedFeature(definedPPGeometries as Feature<Polygon | MultiPolygon, Properties>[]);
+        setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
+      }
+    }
+  }, [ppFeatures, polygonPartsMode]);
 
   useEffect(() => {
     const stattusErrors = parsingErrors.reduce(
@@ -212,7 +231,12 @@ export const InnerRasterForm = (
     );
 
     if(parsingErrors.length){
-      stattusErrors['shape'] = [intl.formatMessage({ id: 'validation-general.shapeFile.polygonParts.hasErrors' })];
+      stattusErrors['shape'] = [
+        intl.formatMessage(
+          {id: 'validation-general.shapeFile.polygonParts.hasErrors'}, 
+          {numErrorParts: emphasizeByHTML(`${parsingErrors.length}`)}
+        )
+      ];
     }
 
     setStatus({
@@ -221,15 +245,7 @@ export const InnerRasterForm = (
         ...stattusErrors,
       },
     });
-    
-    // setStatus({
-    //   errors: {
-    //     // ...currentErrors,
-    //     ['polygonPart_0']: {
-    //       ['horizontalAccuracyCE90']: ['kuku']},
-    //   },
-    // });
-  }, [parsingErrors]);
+   }, [parsingErrors]);
 
   const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
@@ -335,6 +351,8 @@ export const InnerRasterForm = (
                   const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
                   const parsedPolygonPartData = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature);
                   parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
+                  // parsedPolygonPartData.polygonPart.resolutionDegree = 0.0439453125;
+                  // parsedPolygonPartData.errors={};
                   parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
                 }
               });
@@ -370,6 +388,7 @@ export const InnerRasterForm = (
   });
 
   interface HandleProps {
+    partIndex: number;
     text?: string;
     onClick?:  MouseEventHandler | undefined
     isErrorInPolygonPart?: boolean
@@ -378,21 +397,28 @@ export const InnerRasterForm = (
     handleClearSelection?: ()=>void;
   }
 
-  const Handler: React.FC<HandleProps> = ({text, onClick, isErrorInPolygonPart, handleClick, handleSelection, handleClearSelection}) => {
+  const Handler: React.FC<HandleProps> = ({partIndex, text, onClick, isErrorInPolygonPart, handleClick, handleSelection, handleClearSelection}) => {
     const [deletingPart, setDeletingPart] = useState<boolean>(false);
     const [showActions, setShowActions] = useState<boolean>(false);
-    return  <Box onClick={onClick} style={{ height: '48px'}}>
+    return  <Box 
+      onClick={(e) => {
+        onClick ? onClick(e) : (()=>{})();
+        expandedParts[partIndex] = !expandedParts[partIndex];
+        updateListRowHeights(partIndex);
+      }} 
+      style={{ height: '48px'}}
+    >
     <SimpleListItem
       text={text}
       // graphic="help"
       metaIcon="chevron_right"
       className={isErrorInPolygonPart ? 'polygonPartDataError' : ''}
-      onMouseOver={(e): void => { handleSelection && handleSelection();}}
-      onMouseOut={(e): void => { handleClearSelection && handleClearSelection();}}
+      onMouseOver={(e: any): void => { handleSelection && handleSelection();}}
+      onMouseOut={(e: any): void => { handleClearSelection && handleClearSelection();}}
     />
     <Box style={{ position: 'relative', top: '-44px', left: '-550px', display: "flex", width: "160px", alignItems: "center"}}
-     onMouseOver={(e): void => { handleSelection && handleSelection();}}
-     onMouseOut={(e): void => { handleClearSelection && handleClearSelection();}}
+     onMouseOver={(e: any): void => { handleSelection && handleSelection();}}
+     onMouseOut={(e: any): void => { handleClearSelection && handleClearSelection();}}
     >
       <Box style={{width: "100px"}}>
         {deletingPart && <Box style={{display: "flex", gap: "4px"}}>Deleting <CircularProgress/></Box>}
@@ -414,8 +440,96 @@ export const InnerRasterForm = (
         } }
       />
     </Box>
-    </Box>
+  </Box>
   }
+
+  let ppList:List;
+  const setRef = (ref:List) => {
+    ppList = ref;
+  }
+  const updateListRowHeights = (idx=0) => {
+    ppList.recomputeRowHeights(idx);
+    ppList.forceUpdate();
+  }
+    
+  const renderRow: ListRowRenderer = ({ index, key, style }) => {
+    const data = Object.values((layerRecord as unknown as LayerRasterRecordModelType).layerPolygonParts);
+    console.log('***** RENDERROW *****', index);
+
+    let polygon_part = data[index] as unknown as PolygonPartRecordModelType;
+    if(!polygon_part){
+      return <></>;
+    }
+
+    const currentFormKey = polygon_part.uniquePartId;
+    let isFirstPhaseErrorInPolygonPart = (firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE);
+    let isVestPhaseErrorInPolygonPart = (vestValidationResults[currentFormKey] && vestValidationResults[currentFormKey]?.errorCount > NONE);
+
+    // @ts-ignore
+    if(values.layerPolygonParts && Object.keys(values.layerPolygonParts).length > NONE){
+      // @ts-ignore    
+      polygon_part = values.layerPolygonParts[currentFormKey];
+    }
+    return (
+      <CollapsibleList
+                  key={currentFormKey}
+                  style={style}
+                  open={expandedParts[index]}
+                  handle={
+                    <Handler partIndex={index} text={currentFormKey} 
+                      isErrorInPolygonPart={isFirstPhaseErrorInPolygonPart || isVestPhaseErrorInPolygonPart}
+                      handleClick={()=>{
+                        removePolygonPart(currentFormKey);
+
+                        expandedParts?.splice(index, 1);
+                        setExpandedParts([...expandedParts]);
+                        updateListRowHeights(index);
+                        
+                        //@ts-ignore
+                        delete values[currentFormKey];
+                        setValues({
+                          ...values
+                        });
+                        //@ts-ignore
+                        delete layerRecord.layerPolygonParts[currentFormKey];
+                      }}
+                      handleSelection={()=>{
+                        setSelectedFeature(currentFormKey);
+                      }}
+                      handleClearSelection={()=>{
+                        setSelectedFeature(undefined);
+                      }}
+                    />
+                  }>
+        <Box className="polygonPartFormContainer"> 
+          <Field key={currentFormKey} name={currentFormKey}>
+            {(props: any) => <LayersDetailsComponent
+                                entityDescriptors={entityDescriptors}
+                                layerRecord={polygon_part}
+                                // mode={mode}
+                                mode={polygonPartsMode === 'FROM_SHAPE' ? Mode.VIEW : mode}
+                                formik={entityFormikHandlers}
+                                enableMapPreview={false}
+                                fieldNamePrefix={`${currentFormKey}.`}
+                                showFiedlsCategory={false}
+            />}
+          </Field>
+        </Box>
+        <Box className="footer">
+          <Box className="messages">
+          {
+            isFirstPhaseErrorInPolygonPart &&
+            <ValidationsError errors={firstPhaseErrors[currentFormKey] as unknown as Record<string,string[]>} />
+          }
+          {
+            !isFirstPhaseErrorInPolygonPart && isVestPhaseErrorInPolygonPart &&
+            <ValidationsError errors={vestValidationResults[currentFormKey].getErrors()} />
+          }
+          </Box>
+        </Box>
+      </CollapsibleList>
+    );
+  };
 
   return (
     <Box id="layerDetailsFormRaster">
@@ -444,19 +558,33 @@ export const InnerRasterForm = (
                   const shpFile = (ev.target?.result as unknown) as ArrayBuffer;
                   void proccessShapeFile(shpFile, fileType)
                     .then((parsedPPData) => {
+                      
+                      setPolygonPartsMode('FROM_SHAPE');
+                      
                       setLoadingPolygonParts(false);
                       // setJsonValue(JSON.stringify(geometryPolygon));
                       // removeStatusErrors();
 
-                      schemaUpdater(Object.keys(parsedPPData).length);
+                      const ppDataKeys = Object.keys(parsedPPData);
+                      
+                      schemaUpdater(ppDataKeys.length);
+                      
+                      setExpandedParts(new Array(ppDataKeys.length).fill(false));
+                      
                       /// ?reloadFormMetadata()
-                      const polygonsData = Object.keys(parsedPPData).map((key)=>{
+                      const polygonsData = ppDataKeys.map((key)=>{
                                                 let {errors, polygonPart} = parsedPPData[key]; 
                                                 return {[key]: polygonPart} 
                                             })
                                             .reduce((acc,curr)=> (acc={...acc,...curr},acc),{});
 
-                      setParsingErrors(Object.keys(parsedPPData).map((key)=>{let {errors, polygonPart} = parsedPPData[key]; return {[key]: errors} }));
+                      setParsingErrors(
+                        ppDataKeys.map((key)=>{
+                          let {errors, polygonPart} = parsedPPData[key];
+                          return (!isEmpty(errors) ? {[key]: errors} : undefined)
+                        }).
+                        filter((item)=>item !== undefined) as Record<string, unknown>[]
+                      );
 
                       setValues({
                         ...values,
@@ -464,6 +592,7 @@ export const InnerRasterForm = (
                         ...ingestionFields,
                         ...polygonsData
                       });
+
                       //@ts-ignore
                       layerRecord.layerPolygonParts = {...polygonsData};
                     })
@@ -488,7 +617,12 @@ export const InnerRasterForm = (
                     //   // Focus input after loading shape file, validations occurs on blur.
                     //   fieldRef.current?.focus();
                     // });
-                },false,false);
+                },
+                false,
+                false,
+                ()=>{
+                  setLoadingPolygonParts(false);
+                });
               }}
             >
               Load SHP
@@ -509,129 +643,136 @@ export const InnerRasterForm = (
               mode={mode}
               formik={entityFormikHandlers}
               enableMapPreview={false}/>
-          <Box className="footer">
-            <Box className="messages">
-            {
-                topLevelFieldsErrors && Object.keys(topLevelFieldsErrors).length > NONE &&
-                <ValidationsError errors={topLevelFieldsErrors} />
-            }
-            {
-              Object.keys(topLevelFieldsErrors).length === NONE &&
-              vestValidationResults.topLevelEntityVestErrors?.errorCount > NONE &&
-              <ValidationsError errors={vestValidationResults.topLevelEntityVestErrors.getErrors()} />
-            }
-            </Box>
+          <Box style={{height: '20px'}}>
+            <Checkbox 
+              className='polygonPartsData showOnMapContainer'
+              label={intl.formatMessage({id: 'polygon-parts.show-parts-on-map.label'})}
+              checked={showPolygonPartsOnMap}
+              onClick={
+                (evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowPolygonPartsOnMap(evt.currentTarget.checked);
+                }}
+            />
+            <Checkbox 
+                className='showOnMapContainer'
+                label={intl.formatMessage({id: 'polygon-parts.show-exisitng-parts-on-map.label'})}
+                checked={showExisitngLayerPartsOnMap}
+                onClick={
+                  (evt: React.MouseEvent<HTMLInputElement>): void => {
+                    setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
+                  }}
+              />
           </Box>
           <Box className="polygonPartsContainer">
             <Box className="polygonPartsData">
+              
               {
                 // @ts-ignore
-                !loadingPolygonParts && !layerRecord.layerPolygonParts && <Typography
+                !loadingPolygonParts && isEmpty(layerRecord.layerPolygonParts) && <Typography
                     use="headline2"
                     tag="div"
                     className="noSelection"
+                    style={{paddingTop: '120px', height: (polygonPartsMode === 'MANUAL') ? '370px' : '410px'}}
                   >
-                    <FormattedMessage id="polygon-parts-data.empty-list" />
+                    <FormattedMessage id="polygon-parts.empty-list" />
                   </Typography>
               }
               
               {
                 loadingPolygonParts && <Loading />
               }
-
               {
                 // @ts-ignore
-                layerRecord.layerPolygonParts && Object.values(layerRecord.layerPolygonParts).map((val,idx) => {
-                                        // const currentFormKey = `${NESTED_FORMS_PRFIX}${idx}`;
-                                        let polygon_part = val as unknown as PolygonPartRecordModelType;
-                                        const currentFormKey = polygon_part.uniquePartId;
-                                        let isErrorInPolygonPart = firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE;
+                !loadingPolygonParts && !isEmpty(layerRecord.layerPolygonParts) && 
+                  <List
+                    width={740}
+                    ref={setRef}
+                    height={(polygonPartsMode === 'MANUAL') ? 370 : 410}
+                    rowRenderer={renderRow}
+                    rowCount={expandedParts.length}
+                    overscanRowCount={3}
+                    rowHeight={(idx)=> ( expandedParts[idx.index] ? 316 : 48 )}
+                  />
+              }
+              {
+                !loadingPolygonParts && (polygonPartsMode === 'MANUAL') && <Box className="addPolygonPart">
+                  <Button
+                    outlined
+                    type="button"
+                    onClick={(): void => {
+                      setLoadingPolygonParts(false);
 
-                                        // @ts-ignore
-                                        if(values.layerPolygonParts && Object.keys(values.layerPolygonParts).length > NONE){
-                                          // @ts-ignore    
-                                          polygon_part = values.layerPolygonParts[currentFormKey];
-                                        }
+                      //Sort exisitng pp keys in descending order
+                      //@ts-ignore
+                      const exisitngParts = layerRecord.layerPolygonParts ? Object.keys(layerRecord.layerPolygonParts)
+                                            .map(key => parseInt(key.replace(NESTED_FORMS_PRFIX,'')))
+                                            .sort((a, b) => b - a) : [];
+                      const lastPartIdx = exisitngParts.length ? exisitngParts[0] + 1 : 0;
 
-                                        return <CollapsibleList
-                                                  key={currentFormKey}
-                                                  handle={
-                                                    <Handler text={currentFormKey} isErrorInPolygonPart 
-                                                      handleClick={()=>{
-                                                        removePolygonPart(currentFormKey);
-                                                        
-                                                        //@ts-ignore
-                                                        delete values[currentFormKey];
-                                                        setValues({
-                                                          ...values
-                                                        });
-                                                        //@ts-ignore
-                                                        delete layerRecord.layerPolygonParts[currentFormKey];
-                                                      }}
-                                                      handleSelection={()=>{
-                                                        setSelectedFeature(currentFormKey);
-                                                      }}
-                                                      handleClearSelection={()=>{
-                                                        setSelectedFeature(undefined);
-                                                      }}
-                                                    />
-                                                  }>
-                                        <Box className="polygonPartFormContainer"> 
-                                          <Field key={currentFormKey} name={currentFormKey}>
-                                            {(props: any) => <LayersDetailsComponent
-                                                                entityDescriptors={entityDescriptors}
-                                                                layerRecord={polygon_part}
-                                                                // mode={mode}
-                                                                mode={Mode.VIEW}
-                                                                formik={entityFormikHandlers}
-                                                                enableMapPreview={false}
-                                                                fieldNamePrefix={`${currentFormKey}.`}
-                                                                showFiedlsCategory={false}
-                                                /> /*JSON.stringify(polygon_part)*/}
-                                          </Field>
-                                        </Box>
-                                        <Box className="footer">
-                                          <Box className="messages">
-                                          {
-                                            isErrorInPolygonPart &&
-                                            <ValidationsError errors={firstPhaseErrors[currentFormKey] as unknown as Record<string,string[]>} />
-                                          }
-                                          {
-                                            !isErrorInPolygonPart &&
-                                            vestValidationResults[currentFormKey]?.errorCount > NONE &&
-                                            <ValidationsError errors={vestValidationResults[currentFormKey].getErrors()} />
-                                          }
-                                          </Box>
-                                        </Box>
-                                      </CollapsibleList>})
-                
+                      schemaUpdater(1, lastPartIdx);
+                   
+                      setExpandedParts([...expandedParts, false]);
+
+                      const polygonData = {
+                        uniquePartId: NESTED_FORMS_PRFIX + lastPartIdx,
+                        __typename: "PolygonPartRecord",
+                      }
+                      
+                      //@ts-ignore
+                      layerRecord.layerPolygonParts = {
+                        //@ts-ignore
+                        ...(layerRecord.layerPolygonParts ? layerRecord.layerPolygonParts: {}),
+                        ...{[polygonData.uniquePartId]: polygonData}
+                      };
+                      
+                      setValues({
+                        ...values,
+                        ...transformEntityToFormFields(layerRecord),
+                        ...ingestionFields,
+                        ...{[polygonData.uniquePartId]: polygonData}
+                      });
+                      
+                    }}>
+                      <Icon className="mc-icon-Plus" />
+                    </Button>
+                </Box>
               }
             </Box>
             {
-              
-            // @ts-ignore 
-            <GeoFeaturesPresentorComponent 
-              mode={mode} 
-              geoFeatures={[outlinedPerimeter as Feature<Geometry, GeoJsonProperties>,...ppFeatures]} 
-              selectedFeatureKey={selectedFeature}
-              selectionStyle={ new Style({
-                                    stroke: new Stroke({
-                                      width: 2,
-                                      color: "#ff0000"
-                                    }),
-                                    fill: new Fill({
-                                      color: "#aa2727"
+            <>
+              <GeoFeaturesPresentorComponent 
+                mode={mode} 
+                geoFeatures={showPolygonPartsOnMap ? [outlinedPerimeter as Feature<Geometry, GeoJsonProperties>,...ppFeatures] : []} 
+                selectedFeatureKey={selectedFeature}
+                selectionStyle={ new Style({
+                                      stroke: new Stroke({
+                                        width: 2,
+                                        color: "#ff0000"
+                                      }),
+                                      fill: new Fill({
+                                        color: "#aa2727"
+                                      })
                                     })
-                                  })
-              } 
-              style={{width: '520px'}} 
-              fitOptions={{padding:[10,20,10,20]}}
-            />
+                } 
+                style={{width: '520px'}} 
+                fitOptions={{padding:[10,20,10,20]}}
+                showExisitngPolygonParts={showExisitngLayerPartsOnMap}
+              />
+            </>
             }
           </Box>
         </Box>
         <Box className="footer">
           <Box className="messages">
+            {
+              topLevelFieldsErrors && Object.keys(topLevelFieldsErrors).length > NONE &&
+              <ValidationsError errors={topLevelFieldsErrors} />
+            }
+            {
+              Object.keys(topLevelFieldsErrors).length === NONE &&
+              vestValidationResults.topLevelEntityVestErrors?.errorCount > NONE &&
+              <ValidationsError errors={vestValidationResults.topLevelEntityVestErrors.getErrors()} />
+            }
             { 
               graphQLError !== undefined && (
                 // eslint-disable-next-line

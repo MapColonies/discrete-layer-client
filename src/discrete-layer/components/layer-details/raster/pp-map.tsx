@@ -5,8 +5,9 @@ import { FitOptions } from 'ol/View';
 import { validateGeoJSONString } from '../../../../common/utils/geojson.validation';
 import { Mode } from '../../../../common/models/mode.enum';
 import { useStore } from '../../../models/RootStore';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { Style, Stroke, Fill } from 'ol/style';
+import { PolygonPartsVectorLayer } from './pp-vector-layer';
 
 interface GeoFeaturesPresentorProps {
   mode: Mode;
@@ -15,6 +16,7 @@ interface GeoFeaturesPresentorProps {
   fitOptions?: FitOptions | undefined,
   selectedFeatureKey?: string;
   selectionStyle?: Style;
+  showExisitngPolygonParts?: boolean;
 }
 
 const  DEFAULT_PROJECTION = 'EPSG:4326';
@@ -25,7 +27,8 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   style,
   fitOptions,
   selectedFeatureKey,
-  selectionStyle
+  selectionStyle,
+  showExisitngPolygonParts
 }) => {
   // const [geoJsonValue, setGeoJsonValue] = useState();
   const store = useStore();
@@ -83,6 +86,9 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
     <Box style={{...style}}>
       <Map>
         {previewBaseMap}
+        {
+          showExisitngPolygonParts && <PolygonPartsVectorLayer/>
+        }
         <VectorLayer>
           <VectorSource>
             {geoFeatures?.map((feat, idx) => {
@@ -112,7 +118,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
                   }
                 }
 
-                return feat ? <GeoJSONFeature 
+                return (feat && !isEmpty(feat.geometry))? <GeoJSONFeature 
                   geometry={{...feat.geometry}} 
                   fitOptions={{...fitOptions}}
                   fit={idx === 0}

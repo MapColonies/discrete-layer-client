@@ -342,7 +342,11 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
   input.click();
 }  
 
-export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void, allowGeojson = false, allowSingleSHP = true): void {
+export function importShapeFileFromClient(
+  fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void,
+  allowGeojson = false,
+  allowSingleSHP = true,
+  cancelLoadCB = ()=>{}): void {
   const input = document.createElement('input');
   const supportedExtensions = [allowSingleSHP ? '.shp': '', '.zip', ...(allowGeojson ? ['.geojson'] : [])];
   input.setAttribute('type', 'file');
@@ -359,6 +363,10 @@ export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRea
         input.remove();
       });
     }
+  });
+  input.addEventListener('cancel',(e): void => {
+    cancelLoadCB();
+    input.remove();
   });
   input.click();
 }  

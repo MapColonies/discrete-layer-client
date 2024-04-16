@@ -47,7 +47,7 @@ import { LookupOptionsPresentorComponent } from './field-value-presentors/lookup
 import { PYCSW_ANY_TEXT_FIELD } from '../map-container/freeTextSearch.component';
 import { ResolutionValuePresentorComponent } from './field-value-presentors/resolution.value-presentor';
 
-const FOOTPRINT_FIELD_NAME = 'footprint';
+const FOOTPRINT_FIELD_NAMES = ['footprint', 'geometry'];
 
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
@@ -111,8 +111,8 @@ export const getValuePresentor = (
           fieldInfo={fieldInfo}
           value={value as string}
           formik={formik}
-          enableMapPreview={enableMapPreview && fieldName === FOOTPRINT_FIELD_NAME}
-          enableLoadFromShape={fieldName === FOOTPRINT_FIELD_NAME}
+          enableMapPreview={enableMapPreview && FOOTPRINT_FIELD_NAMES.includes(fieldName as string)}
+          enableLoadFromShape={FOOTPRINT_FIELD_NAMES.includes(fieldName as string)}
           fieldNamePrefix={fieldNamePrefix}/>
       );
     case 'number':

@@ -200,7 +200,9 @@
   "context-menu.sub-title.tooltip": "overlapping layers",
 
   "details-panel.no-selection": "No selection",
-  "polygon-parts-data.empty-list": "Add polygon parts",
+  "polygon-parts.empty-list": "Add polygon parts",
+  "polygon-parts.show-parts-on-map.label": "Show polygon parts on map",
+  "polygon-parts.show-exisitng-parts-on-map.label": "Show existing polygon parts",
 
   "field.actions.edit-draft": "Edit draft",
   "field.actions.more": "More options",
