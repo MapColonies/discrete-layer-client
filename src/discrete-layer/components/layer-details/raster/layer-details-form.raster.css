@@ -29,6 +29,7 @@
 #layerDetailsFormRaster .section {
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 10px;
+  overflow-y: hidden;
 }
 
 #layerDetailsFormRaster .header.section {

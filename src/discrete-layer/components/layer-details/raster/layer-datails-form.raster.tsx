@@ -144,6 +144,7 @@ export const InnerRasterForm = (
   const [showPolygonPartsOnMap, setShowPolygonPartsOnMap] = useState<boolean>(true);
   const [showExisitngLayerPartsOnMap, setShowExisitngLayerPartsOnMap] = useState<boolean>(false);
   const [polygonPartsMode, setPolygonPartsMode] = useState<POLYGON_PARTS_MODE>('MANUAL');
+  const [layerPolygonParts, setLayerPolygonParts] = useState<Record<string, PolygonPartRecordModelType>>({});
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -193,15 +194,21 @@ export const InnerRasterForm = (
 
   useEffect(() => {
     const features: Feature[] = [];
+    const polygonParts: Record<string,PolygonPartRecordModelType> = {};
+
     Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
       features.push({
         type: "Feature",
         properties: {key},
         // @ts-ignore
         geometry: values[key].geometry
-      })
+      });
+
+       // @ts-ignore
+      polygonParts[key] = {...values[key]};
     });
     setPPFeatures(features);
+    setLayerPolygonParts(polygonParts);
   }, [values]);
 
   useEffect(() => {
@@ -210,6 +217,8 @@ export const InnerRasterForm = (
       if(definedPPGeometries.length){
         const outlinedPolygon = getOutlinedFeature(definedPPGeometries as Feature<Polygon | MultiPolygon, Properties>[]);
         setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
+      } else {
+        setOutlinedPerimeter(undefined);
       }
     }
   }, [ppFeatures, polygonPartsMode]);
@@ -324,6 +333,15 @@ export const InnerRasterForm = (
     //   return excidedFeaturesNumberError;
     // }
     return true;
+  }
+
+  const isIngestedSourceSelected = () => {
+    let res = true;
+    ingestionFields.forEach((curr) => {
+      // @ts-ignore
+      res = res && !isEmpty(values[curr?.fieldName]);
+    }, true);
+    return res;
   }
 
   const proccessShapeFile = async (
@@ -453,10 +471,10 @@ export const InnerRasterForm = (
   }
     
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
-    const data = Object.values((layerRecord as unknown as LayerRasterRecordModelType).layerPolygonParts);
+    const data = Object.values(layerPolygonParts);
     console.log('***** RENDERROW *****', index);
 
-    let polygon_part = data[index] as unknown as PolygonPartRecordModelType;
+    let polygon_part = data[index];
     if(!polygon_part){
       return <></>;
     }
@@ -465,10 +483,8 @@ export const InnerRasterForm = (
     let isFirstPhaseErrorInPolygonPart = (firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE);
     let isVestPhaseErrorInPolygonPart = (vestValidationResults[currentFormKey] && vestValidationResults[currentFormKey]?.errorCount > NONE);
 
-    // @ts-ignore
-    if(values.layerPolygonParts && Object.keys(values.layerPolygonParts).length > NONE){
-      // @ts-ignore    
-      polygon_part = values.layerPolygonParts[currentFormKey];
+    if(layerPolygonParts && Object.keys(layerPolygonParts).length > NONE){
+      polygon_part = layerPolygonParts[currentFormKey];
     }
     return (
       <CollapsibleList
@@ -490,8 +506,6 @@ export const InnerRasterForm = (
                         setValues({
                           ...values
                         });
-                        //@ts-ignore
-                        delete layerRecord.layerPolygonParts[currentFormKey];
                       }}
                       handleSelection={()=>{
                         setSelectedFeature(currentFormKey);
@@ -551,6 +565,7 @@ export const InnerRasterForm = (
             <Button
               outlined
               type="button"
+              disabled={!isIngestedSourceSelected()}
               onClick={(): void => {
                 setLoadingPolygonParts(true);
 
@@ -562,11 +577,8 @@ export const InnerRasterForm = (
                       setPolygonPartsMode('FROM_SHAPE');
                       
                       setLoadingPolygonParts(false);
-                      // setJsonValue(JSON.stringify(geometryPolygon));
-                      // removeStatusErrors();
 
                       const ppDataKeys = Object.keys(parsedPPData);
-                      
                       schemaUpdater(ppDataKeys.length);
                       
                       setExpandedParts(new Array(ppDataKeys.length).fill(false));
@@ -592,20 +604,8 @@ export const InnerRasterForm = (
                         ...ingestionFields,
                         ...polygonsData
                       });
-
-                      //@ts-ignore
-                      layerRecord.layerPolygonParts = {...polygonsData};
                     })
                     .catch((e) => {
-                      // const errorTranslation = intl.formatMessage(
-                      //   { id: (e as Error).message },
-                      //   {
-                      //     fieldName: emphasizeByHTML(
-                      //       `${intl.formatMessage({ id: fieldInfo.label })}`
-                      //     ),
-                      //   }
-                      // );
-    
                       setStatus({
                         errors: {
                           // ...currentErrors,
@@ -613,10 +613,6 @@ export const InnerRasterForm = (
                         },
                       });
                     })
-                    // .finally(() => {
-                    //   // Focus input after loading shape file, validations occurs on blur.
-                    //   fieldRef.current?.focus();
-                    // });
                 },
                 false,
                 false,
@@ -667,8 +663,7 @@ export const InnerRasterForm = (
             <Box className="polygonPartsData">
               
               {
-                // @ts-ignore
-                !loadingPolygonParts && isEmpty(layerRecord.layerPolygonParts) && <Typography
+                !loadingPolygonParts && isEmpty(layerPolygonParts) && <Typography
                     use="headline2"
                     tag="div"
                     className="noSelection"
@@ -682,8 +677,7 @@ export const InnerRasterForm = (
                 loadingPolygonParts && <Loading />
               }
               {
-                // @ts-ignore
-                !loadingPolygonParts && !isEmpty(layerRecord.layerPolygonParts) && 
+                !loadingPolygonParts && !isEmpty(layerPolygonParts) && 
                   <List
                     width={740}
                     ref={setRef}
@@ -703,8 +697,7 @@ export const InnerRasterForm = (
                       setLoadingPolygonParts(false);
 
                       //Sort exisitng pp keys in descending order
-                      //@ts-ignore
-                      const exisitngParts = layerRecord.layerPolygonParts ? Object.keys(layerRecord.layerPolygonParts)
+                      const exisitngParts = layerPolygonParts ? Object.keys(layerPolygonParts)
                                             .map(key => parseInt(key.replace(NESTED_FORMS_PRFIX,'')))
                                             .sort((a, b) => b - a) : [];
                       const lastPartIdx = exisitngParts.length ? exisitngParts[0] + 1 : 0;
@@ -718,16 +711,8 @@ export const InnerRasterForm = (
                         __typename: "PolygonPartRecord",
                       }
                       
-                      //@ts-ignore
-                      layerRecord.layerPolygonParts = {
-                        //@ts-ignore
-                        ...(layerRecord.layerPolygonParts ? layerRecord.layerPolygonParts: {}),
-                        ...{[polygonData.uniquePartId]: polygonData}
-                      };
-                      
                       setValues({
                         ...values,
-                        ...transformEntityToFormFields(layerRecord),
                         ...ingestionFields,
                         ...{[polygonData.uniquePartId]: polygonData}
                       });
@@ -754,7 +739,7 @@ export const InnerRasterForm = (
                                       })
                                     })
                 } 
-                style={{width: '520px'}} 
+                style={{width: '520px', position: 'relative'}} 
                 fitOptions={{padding:[10,20,10,20]}}
                 showExisitngPolygonParts={showExisitngLayerPartsOnMap}
               />
@@ -775,7 +760,6 @@ export const InnerRasterForm = (
             }
             { 
               graphQLError !== undefined && (
-                // eslint-disable-next-line
                 <GraphQLError error={graphQLError} />
               )
             } 
@@ -786,7 +770,8 @@ export const InnerRasterForm = (
               type="submit"
               disabled={
                 mutationQueryLoading ||
-                (layerRecord.__typename !== 'BestRecord' && !dirty) ||
+                !dirty ||
+                ppFeatures.length === NONE ||
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
                 !isEmpty(graphQLError)

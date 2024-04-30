@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty, set, unset } from 'lodash';
 import { Geometry } from 'geojson';
 import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
 import { useDebouncedCallback } from 'use-debounce';
@@ -65,7 +65,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     setTimeout(() => {
       if (typeof currentErrors !== 'undefined') {
         // Remove valid field from errors obj if exists
-        delete currentErrors?.[fieldName];
+        unset(currentErrors,fieldName);
         formik?.setStatus({ errors: currentErrors });
       } else {
         formik?.setStatus({});
@@ -161,11 +161,10 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
                     }
                   );
 
+                  const errs = {...currentErrors};
+                  set(errs, fieldName, [errorTranslation]);
                   formik?.setStatus({
-                    errors: {
-                      ...currentErrors,
-                      [fieldName]: [errorTranslation],
-                    },
+                    errors: errs,
                   });
                   setJsonValue(EMPTY_JSON_STRING_VALUE);
                 })
@@ -256,6 +255,8 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         };
         const isFieldRequired = fieldInfo.isRequired as boolean;
 
+        formik?.setFieldValue(fieldName, undefined);
+
         if (isFieldRequired || jsonValue.length > NONE) {
           if (isFieldRequired && (jsonValue.length === NONE || jsonValue === EMPTY_JSON_STRING_VALUE)) {
             error.id = 'validation-general.required';
@@ -266,16 +267,15 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             ),
           });
 
+          const errs = {...currentErrors};
+          set(errs, fieldName, Array.from(
+            new Set([
+              ...(get(currentErrors, fieldName) ?? []),
+              errorMsg,
+            ])
+          ));
           formik?.setStatus({
-            errors: {
-              ...currentErrors,
-              [fieldName]: Array.from(
-                new Set([
-                  ...(currentErrors?.[fieldName] ?? []),
-                  errorMsg,
-                ])
-              ),
-            },
+            errors: errs,
           });
         } else {
           removeStatusErrors();

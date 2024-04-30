@@ -8,6 +8,7 @@ import { useStore } from '../../../models/RootStore';
 import { get, isEmpty } from 'lodash';
 import { Style, Stroke, Fill } from 'ol/style';
 import { PolygonPartsVectorLayer } from './pp-vector-layer';
+import { MapLoadingIndicator } from '../../../../common/components/map/ol-map.loader';
 
 interface GeoFeaturesPresentorProps {
   mode: Mode;
@@ -85,6 +86,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   return (
     <Box style={{...style}}>
       <Map>
+        <MapLoadingIndicator/>
         {previewBaseMap}
         {
           showExisitngPolygonParts && <PolygonPartsVectorLayer/>

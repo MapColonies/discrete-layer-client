@@ -5,19 +5,13 @@ import { MapEvent } from 'ol';
 import bboxPolygon from '@turf/bbox-polygon';
 import squareGrid from '@turf/square-grid';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
-import { useStore } from '../../../models/RootStore';
 import { Fill, Stroke, Style, Text } from 'ol/style';
 
 interface PolygonPartsVectorLayerProps {
   
 }
 
-
-
-export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = ({
-  
-}) => {
-  const store = useStore();
+export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = ({ }) => {
   const mapOl = useMap();
 
   const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
@@ -30,6 +24,13 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
     };
 
     mapOl.on('moveend', handleMoveEndEvent);
+
+    mapOl.on('loadstart', function () {
+      mapOl.getTargetElement().classList.add('spinner');
+    });
+    mapOl.on('loadend', function () {
+      mapOl.getTargetElement().classList.remove('spinner');
+    });
 
     return (): void => {
       try {
@@ -104,7 +105,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
     },
   };
   
-  function stringDivider(str:string, width:number, spaceReplacer: string):string {
+  const stringDivider = (str:string, width:number, spaceReplacer: string):string  => {
     if (str.length > width) {
       let p = width;
       while (p > 0 && str[p] != ' ' && str[p] != '-') {
@@ -124,9 +125,9 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
     return str;
   }
 
-  const getText = function (feature, resolution, dom) {
-    const type = dom.text;
-    const maxResolution = dom.maxreso;
+  const getText = (feature: Feature, resolution: number, featureConfig: Record<string,string>) => {
+    const type = featureConfig.text;
+    const maxResolution = parseInt(featureConfig.maxreso);
     let text = '14 21/04/2023'; //feature.get('name');
   
     if (resolution > maxResolution) {
@@ -137,7 +138,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
       text = text.substring(12); //text.trunc(12);
     } else if (
       type == 'wrap' &&
-      (!dom.placement || dom.placement != 'line')
+      (!featureConfig.placement || featureConfig.placement != 'line')
     ) {
       text = stringDivider(text, 16, '\n');
     }
@@ -145,18 +146,18 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
     return text;
   };
 
-  const createTextStyle = function (feature, resolution, dom) {
-    const align = dom.align;
-    const baseline = dom.baseline;
-    const size = dom.size;
-    const height = dom.height;
-    const offsetX = parseInt(dom.offsetX, 10);
-    const offsetY = parseInt(dom.offsetY, 10);
-    const weight = dom.weight;
-    const placement = dom.placement ? dom.placement : undefined;
-    const maxAngle = dom.maxangle ? parseFloat(dom.maxangle) : undefined;
-    const overflow = dom.overflow ? dom.overflow == 'true' : undefined;
-    const rotation = parseFloat(dom.rotation);
+  const createTextStyle = function (feature: Feature, resolution: number, featureConfig: Record<string,string>) {
+    const align = featureConfig.align;
+    const baseline = featureConfig.baseline;
+    const size = featureConfig.size;
+    const height = featureConfig.height;
+    const offsetX = parseInt(featureConfig.offsetX, 10);
+    const offsetY = parseInt(featureConfig.offsetY, 10);
+    const weight = featureConfig.weight;
+    const placement = featureConfig.placement ? featureConfig.placement : undefined;
+    const maxAngle = featureConfig.maxangle ? parseFloat(featureConfig.maxangle) : undefined;
+    const overflow = featureConfig.overflow ? featureConfig.overflow == 'true' : undefined;
+    const rotation = parseFloat(featureConfig.rotation);
     // if (dom.font == "'Open Sans'" && !openSansAdded) {
     //   const openSans = document.createElement('link');
     //   openSans.href = 'https://fonts.googleapis.com/css?family=Open+Sans';
@@ -164,15 +165,15 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
     //   document.head.appendChild(openSans);
     //   openSansAdded = true;
     // }
-    const font = weight + ' ' + size + '/' + height + ' ' + dom.font;
-    const fillColor = dom.color;
-    const outlineColor = dom.outline;
-    const outlineWidth = parseInt(dom.outlineWidth, 10);
+    const font = weight + ' ' + size + '/' + height + ' ' + featureConfig.font;
+    const fillColor = featureConfig.color;
+    const outlineColor = featureConfig.outline;
+    const outlineWidth = parseInt(featureConfig.outlineWidth, 10);
     console.log({
       textAlign: align == '' ? undefined : align,
       textBaseline: baseline,
       font: font,
-      text: getText(feature, resolution, dom),
+      text: getText(feature, resolution, featureConfig),
       fill: new Fill({color: fillColor}),
       stroke: new Stroke({color: outlineColor, width: outlineWidth}),
       offsetX: offsetX,
@@ -186,7 +187,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
       textAlign: align == '' ? undefined : align,
       textBaseline: baseline,
       font: font,
-      text: getText(feature, resolution, dom),
+      text: getText(feature, resolution, featureConfig),
       fill: new Fill({color: fillColor}),
       stroke: new Stroke({color: outlineColor, width: outlineWidth}),
       offsetX: offsetX,
@@ -196,19 +197,6 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
       overflow: overflow,
       rotation: rotation,
     });
-    // return new Text({
-    //   font: "bold 10px/1 Roboto",
-    //   "rotation": 0,
-    //   "text": "Parc de la Colline",
-    //   "textBaseline": "middle",
-    //   "fill": new Fill({color: '#0000ff'}),
-    //   "maxAngle": 0.7853981633974483,
-    //   "placement": "point",
-    //   "overflow": false,
-    //   "stroke": new Stroke({color: "#ffffff", width: 3}),
-    //   "offsetX": 0,
-    //   "offsetY": 0,
-    // });
   };
 
   return (
@@ -221,9 +209,6 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
                 width: 2,
                 color: "#00ff00"
               }),
-              // fill: new Fill({
-              //   color: "#aa2727"
-              // })
             });
 
             return feat ? <GeoJSONFeature 
