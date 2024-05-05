@@ -29,6 +29,8 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isLifecycleEnvolved
         isCopyable
         isDisabled
+        isCreateEssential
+        isUpdateEssential
         dateGranularity
         shapeFileMapping
         updateRules {

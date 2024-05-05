@@ -29,7 +29,7 @@
 #layerDetailsFormRaster .section {
   border: 1px solid var(--mdc-theme-gc-selection-background, #fff);
   border-radius: 10px;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 #layerDetailsFormRaster .header.section {
@@ -90,6 +90,7 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   display: flex;
   height: 410px;
   margin-bottom: 4px;
+  border-bottom: 1px dashed var(--mdc-theme-gc-selection-background);
 }
 
 #layerDetailsFormRaster .polygonPartsData {
@@ -106,6 +107,7 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   height: 200px;
   overflow-y: auto;
   margin-left: 4px;
+  border-bottom: 1px dashed var(--mdc-theme-gc-selection-background);
 }
 
 #layerDetailsFormRaster .ReactVirtualized__Grid.ReactVirtualized__List{

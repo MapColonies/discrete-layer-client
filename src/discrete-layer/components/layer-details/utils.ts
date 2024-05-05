@@ -6,6 +6,7 @@ import { Feature } from 'geojson';
 import rewind from '@turf/rewind';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
+import { Mode } from '../../../common/models/mode.enum';
 import {
   BestRecordModel,
   CategoryConfigModelType,
@@ -42,7 +43,6 @@ import {
   LayerRecordTypes,
   LayerRecordTypesKeys
 } from './entity-types-keys';
-import { Mode } from 'fs';
 
 const JSON_INDENTATION = 4;
 
@@ -146,7 +146,7 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('geometry') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
     }
-    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg')) {
+    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg') || fieldNameStr.toLowerCase().includes('resolutiondegree') ) {
       return 'resolution';
     }
     else {
@@ -511,11 +511,23 @@ export const getCoordinatesDisplayText = (latitude: number, longitude: number): 
 
 export const getTimeStamp = (): string => new Date().getTime().toString();
 
-export const filerModeDescriptors = (mode: Mode, descriptors: EntityDescriptorModelType[]): EntityDescriptorModelType[] => {
-  return descriptors.map(desc => { 
+export const filterModeDescriptors = (mode: Mode, descriptors: EntityDescriptorModelType[]): EntityDescriptorModelType[] => {
+  return descriptors.map((desc)=>{
     return {
-      ...desc,
-      categories: desc.categories?.filter(cat => cat.category === 'MAIN') // THE FILTERING MUST BE CHANGED, WHEN FIELD DEFS ARE FINALIZED
-    };
-  })
+      ...desc, 
+      categories: desc.categories?.map(cat=>{
+        return {
+          ...cat,
+          fields: cat.fields.filter((field: FieldConfigModelType) => {
+            if(mode === Mode.NEW){
+              return field.isCreateEssential;
+            } else if (mode === Mode.UPDATE){
+              return field.isUpdateEssential;
+            } else{
+              return true;
+            }
+          })
+        }})
+      }
+  });
 }

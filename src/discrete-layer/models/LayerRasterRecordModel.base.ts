@@ -27,7 +27,7 @@ export const LayerRasterRecordModelBase = ModelBase
     classification: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
-    srsId: types.union(types.undefined, types.string),
+    srs: types.union(types.undefined, types.string),
     producerName: types.union(types.undefined, types.string),
     creationDate: types.union(types.undefined, types.null, types.frozen()),
     ingestionDate: types.union(types.undefined, types.null, types.frozen()),
@@ -67,7 +67,7 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get classification() { return this.__attr(`classification`) }
   get productName() { return this.__attr(`productName`) }
   get description() { return this.__attr(`description`) }
-  get srsId() { return this.__attr(`srsId`) }
+  get srs() { return this.__attr(`srs`) }
   get producerName() { return this.__attr(`producerName`) }
   get creationDate() { return this.__attr(`creationDate`) }
   get ingestionDate() { return this.__attr(`ingestionDate`) }
@@ -99,4 +99,4 @@ export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.transparency.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srs.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.transparency.insertDate.keywords.id.links(linkModelPrimitives)

@@ -17,7 +17,6 @@ export const PolygonPartRecordModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("PolygonPartRecord"), "PolygonPartRecord"),
     id: types.union(types.undefined, types.string),
-    classification: types.union(types.undefined, types.string),
     name: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
     imagingTimeBeginUTC: types.union(types.undefined, types.frozen()),
@@ -28,9 +27,10 @@ export const PolygonPartRecordModelBase = ModelBase
     cities: types.union(types.undefined, types.null, types.array(types.string)),
     resolutionDegree: types.union(types.undefined, types.number),
     resolutionMeter: types.union(types.undefined, types.number),
+    sourceResolutionMeter: types.union(types.undefined, types.number),
     geometry: types.union(types.undefined, types.frozen()),
     recordId: types.union(types.undefined, types.string),
-    version: types.union(types.undefined, types.null, types.string),
+    updatedInVersion: types.union(types.undefined, types.null, types.string),
     ingestionDateUTC: types.union(types.undefined, types.frozen()),
   })
   .views(self => ({
@@ -41,7 +41,6 @@ export const PolygonPartRecordModelBase = ModelBase
 
 export class PolygonPartRecordModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
-  get classification() { return this.__attr(`classification`) }
   get name() { return this.__attr(`name`) }
   get description() { return this.__attr(`description`) }
   get imagingTimeBeginUTC() { return this.__attr(`imagingTimeBeginUTC`) }
@@ -52,13 +51,14 @@ export class PolygonPartRecordModelSelector extends QueryBuilder {
   get cities() { return this.__attr(`cities`) }
   get resolutionDegree() { return this.__attr(`resolutionDegree`) }
   get resolutionMeter() { return this.__attr(`resolutionMeter`) }
+  get sourceResolutionMeter() { return this.__attr(`sourceResolutionMeter`) }
   get geometry() { return this.__attr(`geometry`) }
   get recordId() { return this.__attr(`recordId`) }
-  get version() { return this.__attr(`version`) }
+  get updatedInVersion() { return this.__attr(`updatedInVersion`) }
   get ingestionDateUTC() { return this.__attr(`ingestionDateUTC`) }
 }
 export function selectFromPolygonPartRecord() {
   return new PolygonPartRecordModelSelector()
 }
 
-export const polygonPartRecordModelPrimitives = selectFromPolygonPartRecord().classification.name.description.imagingTimeBeginUTC.imagingTimeEndUTC.horizontalAccuracyCE90.sensors.countries.cities.resolutionDegree.resolutionMeter.geometry.recordId.version.ingestionDateUTC
+export const polygonPartRecordModelPrimitives = selectFromPolygonPartRecord().name.description.imagingTimeBeginUTC.imagingTimeEndUTC.horizontalAccuracyCE90.sensors.countries.cities.resolutionDegree.resolutionMeter.sourceResolutionMeter.geometry.recordId.updatedInVersion.ingestionDateUTC

@@ -6,6 +6,7 @@ import { Box } from '@map-colonies/react-components';
 import { existStatus, getStatusColoredText } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
+import { EntityRasterDialog } from '../../components/layer-details/raster/entity.raster.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
 import { PublishButton } from '../../components/layer-details/publish-button';
 import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button';
@@ -79,7 +80,17 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           </Tooltip>
         }
         {
-          isEditEntityDialogOpen &&
+          isEditEntityDialogOpen && layerToPresent?.__typename === 'LayerRasterRecord' && isSelectedLayerUpdateMode &&
+          <EntityRasterDialog
+            isOpen={isEditEntityDialogOpen}
+            onSetOpen={setEditEntityDialogOpen}
+            layerRecord={layerToPresent ?? editingBest}
+            isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
+          />
+        }
+        {
+          isEditEntityDialogOpen && 
+          (layerToPresent?.__typename !== 'LayerRasterRecord' || (layerToPresent?.__typename === 'LayerRasterRecord' && !isSelectedLayerUpdateMode)) &&
           <EntityDialog
             isOpen={isEditEntityDialogOpen}
             onSetOpen={setEditEntityDialogOpen}

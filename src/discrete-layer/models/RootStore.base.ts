@@ -254,7 +254,7 @@ export type LayerRasterRecordInput = {
   classification: string
   productName: string
   description?: string
-  srsId: string
+  srs: string
   producerName: string
   creationDate?: any
   ingestionDate?: any

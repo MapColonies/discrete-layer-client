@@ -49,7 +49,7 @@ import { LayersDetailsComponent } from '../layer-details';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import EntityRasterForm from './layer-datails-form.raster';
 import {
-  filerModeDescriptors,
+  filterModeDescriptors,
   getFlatEntityDescriptors,
   getPartialRecord,
   getRecordForUpdate,
@@ -57,6 +57,7 @@ import {
 } from '../utils';
 import suite from '../validate';
 import { GeoJsonMapValuePresentorComponent } from '../field-value-presentors/geojson-map.value-presentor';
+import { getUIIngestionFieldDescriptors } from './ingestion.utils';
 
 import './entity.raster.dialog.css';
 
@@ -458,13 +459,16 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     useEffect(() => {
       const descriptors = getFlatEntityDescriptors(
         layerRecord.__typename,
-        filerModeDescriptors(mode, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[])
+        filterModeDescriptors(mode, store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[])
       );
+
+      const uiIngestionFieldDescriptors = getUIIngestionFieldDescriptors(store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const yupSchema: Record<string, any> = {};
       [
         ...ingestionFields,
+        ...uiIngestionFieldDescriptors,
         ...descriptors
       ].forEach((field) => {
         const fieldName: string = field.fieldName as string;
