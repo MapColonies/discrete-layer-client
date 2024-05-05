@@ -16,20 +16,24 @@ import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty, isObject } from 'lodash';
 import { Style, Stroke, Fill } from 'ol/style';
-import shp, { FeatureCollectionWithFilename, getShapeFile, parseDbf, parseShp } from 'shpjs';
+import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
+import { Properties } from '@turf/helpers';
+import shp, { FeatureCollectionWithFilename } from 'shpjs';
 import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../../common/components/file-picker';
+import { emphasizeByHTML } from '../../../../common/helpers/formatters';
+import { Loading } from '../../../../common/components/tree/statuses/loading';
+import { getOutlinedFeature } from '../../../../common/utils/geo.tools';
+import { mergeRecursive } from '../../../../common/helpers/object';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
   LayerMetadataMixedUnion,
-  LayerRasterRecordModelType,
   ParsedPolygonPart,
-  PolygonPartRecordModel,
   PolygonPartRecordModelType,
   RecordType,
 } from '../../../models';
@@ -45,18 +49,11 @@ import {
   importShapeFileFromClient,
   transformSynergyShapeFeatureToEntity,
 } from '../utils';
-
 import { GeoFeaturesPresentorComponent } from './pp-map';
-import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
-import { emphasizeByHTML } from '../../../../common/helpers/formatters';
-import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { getOutlinedFeature } from '../../../../common/utils/geo.tools';
-import { mergeRecursive } from '../../../../common/helpers/object';
-import { Properties } from '@turf/helpers';
+import { getUIIngestionFieldDescriptors } from './ingestion.utils';
 
 import './layer-details-form.raster.css';
 import 'react-virtualized/styles.css';
-import { getUIIngestionFieldDescriptors } from './ingestion.utils';
 
 const NONE = 0;
 

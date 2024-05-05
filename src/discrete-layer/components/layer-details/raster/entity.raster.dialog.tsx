@@ -2,7 +2,7 @@
 import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
-import { ErrorMessage, Field, Form, Formik, FormikValues, getIn } from 'formik';
+import { FormikValues } from 'formik';
 import { cloneDeep, get, isEmpty } from 'lodash';
 import moment from 'moment';
 import * as Yup from 'yup';
@@ -15,9 +15,7 @@ import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { getStatusColoredBackground } from '../../../../common/helpers/style';
 import { Mode } from '../../../../common/models/mode.enum';
 import {
-  BestRecordModelType,
   EntityDescriptorModelType,
-  Layer3DRecordModel,
   LayerMetadataMixedUnion,
   LayerRasterRecordModel,
   RecordType,
@@ -26,22 +24,14 @@ import {
   ValidationConfigModelType,
   FieldConfigModelType,
   ProductType,
-  RecordStatus,
   ValidationValueType,
-  LayerDemRecordModel
 } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { ILayerImage } from '../../../models/layerImage';
-import {
-  Layer3DRecordInput,
-  LayerDemRecordInput,
-  LayerRasterRecordInput,
-} from '../../../models/RootStore.base';
+import { LayerRasterRecordInput } from '../../../models/RootStore.base';
 import { UserAction } from '../../../models/userStore';
 import {
   FieldConfigModelKeys,
-  Layer3DRecordModelKeys,
-  LayerDemRecordModelKeys,
   LayerRasterRecordModelKeys,
   LayerRecordTypes,
 } from '../entity-types-keys';
@@ -56,7 +46,6 @@ import {
   getValidationType
 } from '../utils';
 import suite from '../validate';
-import { GeoJsonMapValuePresentorComponent } from '../field-value-presentors/geojson-map.value-presentor';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
 
 import './entity.raster.dialog.css';
@@ -91,21 +80,6 @@ const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDe
 export const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
   const record = {} as Record<string, unknown>;
   switch (recordType) {
-    case RecordType.RECORD_DEM:
-      LayerDemRecordModelKeys.forEach((key) => {
-        record[key as string] = undefined;
-      });
-      record.productType = ProductType.DTM;
-      record['__typename'] = LayerDemRecordModel.properties['__typename'].name.replaceAll('"','');
-      break;
-    case RecordType.RECORD_3D:
-      Layer3DRecordModelKeys.forEach((key) => {
-        record[key as string] = undefined;
-      });
-      record.productType = ProductType.PHOTO_REALISTIC_3D;
-      record.productStatus = RecordStatus.UNPUBLISHED;
-      record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
-      break;
     case RecordType.RECORD_RASTER:
       LayerRasterRecordModelKeys.forEach((key) => {
         record[key as string] = undefined;
@@ -242,30 +216,6 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { directory, fileNames, __typename, ...metadata } = inputValues;
       switch (recordType) {
-        case RecordType.RECORD_DEM:
-          mutationQuery.setQuery(
-            store.mutateStartDemIngestion({
-              data: {
-                directory: directory as string,
-                fileNames: (fileNames as string).split(','),
-                metadata: metadata as LayerDemRecordInput,
-                type: RecordType.RECORD_DEM,
-              },
-            })
-          );
-          break;
-        case RecordType.RECORD_3D:
-          mutationQuery.setQuery(
-            store.mutateStart3DIngestion({
-              data: {
-                directory: directory as string,
-                fileNames: [fileNames as string],
-                metadata: metadata as Layer3DRecordInput,
-                type: RecordType.RECORD_3D,
-              },
-            })
-          );
-          break;
         case RecordType.RECORD_RASTER:
           mutationQuery.setQuery(
             store.mutateStartRasterIngestion({
@@ -284,31 +234,15 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     };
 
     const handleEditQueries = (): void => {
-      if (inputValues.__typename !== 'BestRecord') {
-        mutationQuery.setQuery(
-          store.mutateUpdateMetadata({
-            data: {
-              id: inputValues.id as string,
-              type: inputValues.type as RecordType,
-              partialRecordData: getPartialRecord(inputValues as Record<string, unknown> as Partial<ILayerImage>, descriptors as FieldConfigModelType[], IS_EDITABLE),
-            },
-          })
-        );
-      } else {
-        setTimeout(() => {
-          store.bestStore.editBest({
-            ...(inputValues as BestRecordModelType),
-            // @ts-ignore
-            sensors:
-              inputValues.sensors !== undefined
-                ? (JSON.parse(
-                    '[' + (inputValues.sensors as string) + ']'
-                  ) as string[])
-                : [],
-          });
-        }, IMMEDIATE_EXECUTION);
-        closeDialog();
-      }
+      mutationQuery.setQuery(
+        store.mutateUpdateMetadata({
+          data: {
+            id: inputValues.id as string,
+            type: inputValues.type as RecordType,
+            partialRecordData: getPartialRecord(inputValues as Record<string, unknown> as Partial<ILayerImage>, descriptors as FieldConfigModelType[], IS_EDITABLE),
+          },
+        })
+      );
     };
 
     const handleUpdateQueries = (): void => {
@@ -331,7 +265,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const checkHasQueriesSucceeded = (): boolean => {
       const SUCCESS_RESPONSE_VAL = 'ok';
 
-      const mutationServices = ['updateMetadata', 'start3DIngestion', 'startRasterIngestion', 'startRasterUpdateGeopkg'];
+      const mutationServices = ['updateMetadata', 'startRasterIngestion', 'startRasterUpdateGeopkg'];
       const hasAnyQuerySucceeded = Object.entries(mutationQuery.data ?? {})
       .some(([key, val]) => mutationServices.includes(key) && val === SUCCESS_RESPONSE_VAL);
       
@@ -366,27 +300,24 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       }
     }, [mode, dialogContainerRef.current]);
 
-    const ingestionFields =
-      layerRecord.__typename !== 'BestRecord'
-        ? [
-            {
-              ...buildFieldInfo(),
-              fieldName: 'directory',
-              label: 'field-names.ingestion.directory',
-              isRequired: true,
-              isAutoGenerated: false,
-              infoMsgCode: ['info-general-tooltip.required'],
-            },
-            {
-              ...buildFieldInfo(),
-              fieldName: 'fileNames',
-              label: getLabel(recordType),
-              isRequired: true,
-              isAutoGenerated: false,
-              infoMsgCode: ['info-general-tooltip.required'],
-            },
-          ]
-        : [];
+    const ingestionFields = [
+      {
+        ...buildFieldInfo(),
+        fieldName: 'directory',
+        label: 'field-names.ingestion.directory',
+        isRequired: true,
+        isAutoGenerated: false,
+        infoMsgCode: ['info-general-tooltip.required'],
+      },
+      {
+        ...buildFieldInfo(),
+        fieldName: 'fileNames',
+        label: getLabel(recordType),
+        isRequired: true,
+        isAutoGenerated: false,
+        infoMsgCode: ['info-general-tooltip.required'],
+      },
+    ];
 
     const getYupFieldConfig = (
         field: FieldConfigModelType
@@ -558,60 +489,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       );
     };
 
-    // ENSPIRED BY https://stackblitz.com/edit/react-formik-yup-example-uhdg-x7c85z?file=Form.js,Registration.js
-    const MyForm = (props: any) => {
-      const {
-        field: { name },
-        form: { touched, errors },
-      } = props;
-      const firstNameFieldName = `${name}.firstName`;
-      const lastNameFieldName = `${name}.lastName`;
-      console.log(touched, errors);
-      return (
-        <Form style={{border: "1px solid red"}}>
-          <div className="form-group" >
-            <label htmlFor="firstName">First Name</label>
-            <Field
-              name={firstNameFieldName}
-              type="text"
-              className={
-                'form-control' +
-                (getIn(errors, firstNameFieldName) &&
-                getIn(touched, firstNameFieldName)
-                  ? ' is-invalid'
-                  : '')
-              }
-            />
-            <ErrorMessage
-              name={firstNameFieldName}
-              component="div"
-              className="invalid-feedback"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Last Name</label>
-            <Field
-              name={lastNameFieldName}
-              type="text"
-              className={
-                'form-control' +
-                (getIn(errors, lastNameFieldName) &&
-                getIn(touched, lastNameFieldName)
-                  ? ' is-invalid'
-                  : '')
-              }
-            />
-            <ErrorMessage
-              name={lastNameFieldName}
-              component="div"
-              className="invalid-feedback"
-            />
-          </div>
-        </Form>
-      );
-    }
-    
-
+    // ENSPIRED BY NESTED FORMS FROM https://stackblitz.com/edit/react-formik-yup-example-uhdg-x7c85z?file=Form.js,Registration.js
     return (
       <div id="entityRasterDialog" ref={dialogContainerRef}>
         <Dialog open={isOpen} preventOutsideDismiss={true}>
@@ -626,118 +504,68 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
             />
           </DialogTitle>
           <DialogContent className="dialogBody">
-            {/* <div style={{display: 'flex'}}> */}
-              {/* <div style={{display: 'flex', width: '600px', height: '400px'}}> */}
-                {/* <Formik
-               initialValues={{
-                mother_1: {
-                  firstName: 'Sonia',
-                  lastName: 'Gandhi',
-                },
-                mother_2: {
-                  firstName: 'Rajiv',
-                  lastName: 'Gandhi',
-                },
-              }}
-              // validationSchema={Yup.object().shape({
-              //   mother: personValidation,
-              //   father: personValidation,
-              // })}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                // toastr.options = {
-                //   positionClass: 'toast-bottom-left',
-                //   hideDuration: 300,
-                //   timeOut: 60000,
-                // };
-                // toastr.clear();
-                // // When button submits form and form is in the process of submitting, submit button is disabled
-                // setSubmitting(true);
-                // setTimeout(function () {
-                //   console.log('SUCCESS: ', JSON.stringify(values, null, 4));
-                //   toastr.success('Success! Registration has occured.');
-                // }, 3000);
-      
-                // // Resets form after submission is complete
-                // resetForm();
-                // // Sets setSubmitting to false after form is reset
-                // setSubmitting(false);
-              }}
-              >
-                {({ errors, status, touched, isSubmitting, values }) => (
-                  <>
-                    {
-                      [1,2,3].map((val) => <Field name={`mother_${val}`}>{(props: any) => <MyForm {...props} />}</Field>)
+            {mode === Mode.UPDATE && <UpdateLayerHeader />}
+              {isAllInfoReady && (
+                <EntityRasterForm
+                  mode={mode}
+                  entityDescriptors={
+                    store.discreteLayersStore
+                      .entityDescriptors as EntityDescriptorModelType[]
+                  }
+                  ingestionFields={ingestionFields}
+                  recordType={recordType}
+                  layerRecord={
+                    mode === Mode.UPDATE
+                      ? getRecordForUpdate(
+                          props.layerRecord as LayerMetadataMixedUnion,
+                          layerRecord,
+                          descriptors as FieldConfigModelType[]
+                        )
+                      : layerRecord
+                  }
+                  schemaUpdater = {schemaUpdater}
+                  yupSchema={Yup.object({
+                    ...schema,
+                  })}
+                  onSubmit={(values): void => {
+                    setInputValues(values);
+                    // eslint-disable-next-line
+                    const vestSuiteTopLevel = suite(
+                      descriptors as FieldConfigModelType[],
+                      values
+                    );
+
+                    const vestSuite: Record<string,DraftResult> = {
+                      topLevelEntityVestErrors: get(vestSuiteTopLevel, "get")(),
                     }
-                    
-                  </>
-                )}
-                </Formik> */}
-                {mode === Mode.UPDATE && <UpdateLayerHeader />}
-                  {isAllInfoReady && (
-                    <EntityRasterForm
-                      mode={mode}
-                      entityDescriptors={
-                        store.discreteLayersStore
-                          .entityDescriptors as EntityDescriptorModelType[]
-                      }
-                      ingestionFields={ingestionFields}
-                      recordType={recordType}
-                      layerRecord={
-                        mode === Mode.UPDATE
-                          ? getRecordForUpdate(
-                              props.layerRecord as LayerMetadataMixedUnion,
-                              layerRecord,
-                              descriptors as FieldConfigModelType[]
-                            )
-                          : layerRecord
-                      }
-                      schemaUpdater = {schemaUpdater}
-                      yupSchema={Yup.object({
-                        ...schema,
-                      })}
-                      onSubmit={(values): void => {
-                        setInputValues(values);
-                        // eslint-disable-next-line
-                        const vestSuiteTopLevel = suite(
-                          descriptors as FieldConfigModelType[],
-                          values
-                        );
 
-                        const vestSuite: Record<string,DraftResult> = {
-                          topLevelEntityVestErrors: get(vestSuiteTopLevel, "get")(),
-                        }
-
-                        const nestedFormdescriptors = addDescriptorValidations(
-                          getFlatEntityDescriptors(
-                          'PolygonPartRecord',
-                          store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[])
+                    const nestedFormdescriptors = addDescriptorValidations(
+                      getFlatEntityDescriptors(
+                      'PolygonPartRecord',
+                      store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[])
+                    );
+                    Object.keys(values)
+                      .filter((fieldName) => fieldName.includes(NESTED_FORMS_PRFIX))
+                      .forEach((nestedFieldName)=>{
+                        const vestSuiteNested = suite(
+                          nestedFormdescriptors,
+                          values[nestedFieldName] as Record<string,unknown>
                         );
-                        Object.keys(values)
-                          .filter((fieldName) => fieldName.includes(NESTED_FORMS_PRFIX))
-                          .forEach((nestedFieldName)=>{
-                            const vestSuiteNested = suite(
-                              nestedFormdescriptors,
-                              values[nestedFieldName] as Record<string,unknown>
-                            );
-                            
-                            vestSuite[nestedFieldName] = get(vestSuiteNested, "get")();
-                          });
                         
-                        setVestValidationResults(vestSuite) ;
-                        // setVestValidationResults(get(vestSuiteTopLevel, "get")()) ;
-                      }}
-                      vestValidationResults={vestValidationResults}
-                      // eslint-disable-next-line
-                      mutationQueryError={mutationQuery.error}
-                      mutationQueryLoading={mutationQuery.loading}
-                      closeDialog={closeDialog}
-                      removePolygonPart={removePolygonPart}
-                    />
-                  )}
-              {/* </div> */}
-              {/* jsonValue={stringifiedValue} */}
-              {/* <GeoJsonMapValuePresentorComponent mode={mode}  style={{width: '400px', height: '400px'}} fitOptions={{padding:[10,20,10,20]}}/> */}
-            {/* </div> */}
+                        vestSuite[nestedFieldName] = get(vestSuiteNested, "get")();
+                      });
+                    
+                    setVestValidationResults(vestSuite) ;
+                    // setVestValidationResults(get(vestSuiteTopLevel, "get")()) ;
+                  }}
+                  vestValidationResults={vestValidationResults}
+                  // eslint-disable-next-line
+                  mutationQueryError={mutationQuery.error}
+                  mutationQueryLoading={mutationQuery.loading}
+                  closeDialog={closeDialog}
+                  removePolygonPart={removePolygonPart}
+                />
+              )}
           </DialogContent>
         </Dialog>
       </div>
