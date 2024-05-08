@@ -251,6 +251,7 @@
   "field-names.raster.transparency": "שקיפות",
   "field-names.polygon-parts.countries": "מדינות",
   "field-names.polygon-parts.cities": "ערים",
+  "field-names.polygon-parts.sourceResolutionMeter": "רזולוציה מקור (מ`)",
 
   "field-names.3d.fileNames": "שם הקובץ",
   "field-names.3d.id": "מזהה",

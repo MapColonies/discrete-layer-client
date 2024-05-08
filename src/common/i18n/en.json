@@ -247,6 +247,7 @@
   "field-names.raster.transparency": "Transparency",
   "field-names.polygon-parts.countries": "Counties",
   "field-names.polygon-parts.cities": "Cities",
+  "field-names.polygon-parts.sourceResolutionMeter": "Source res (m)",
 
   "field-names.3d.fileNames": "File name",
   "field-names.3d.id": "ID",
