@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
-import { get, isEmpty, isObject } from 'lodash';
+import { get, set, isEmpty, isObject } from 'lodash';
 import { Style, Stroke, Fill } from 'ol/style';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { Properties } from '@turf/helpers';
@@ -36,6 +36,7 @@ import {
   ParsedPolygonPart,
   PolygonPartRecordModelType,
   RecordType,
+  SourceValidationModelType
 } from '../../../models';
 import { LayersDetailsComponent } from '../layer-details';
 import { IngestionFields } from '../ingestion-fields';
@@ -54,6 +55,8 @@ import { getUIIngestionFieldDescriptors } from './ingestion.utils';
 
 import './layer-details-form.raster.css';
 import 'react-virtualized/styles.css';
+import { SourceValidationParams } from '../../../models/RootStore.base';
+import { FeatureType, PPMapStyles } from './pp-map.utils';
 
 const NONE = 0;
 
@@ -138,6 +141,7 @@ export const InnerRasterForm = (
   const [parsingErrors, setParsingErrors] = useState<Record<string, unknown>[]>([]);
   const [loadingPolygonParts, setLoadingPolygonParts] = useState<boolean>(false);
   const [outlinedPerimeter, setOutlinedPerimeter] = useState<Feature | undefined>();
+  const [sourceExtent, setSourceExtent] = useState<Feature | undefined>();
   const [selectedFeature, setSelectedFeature] = useState<string | undefined>();
   const [expandedParts, setExpandedParts] = useState<boolean[]>([]);
   const [showPolygonPartsOnMap, setShowPolygonPartsOnMap] = useState<boolean>(true);
@@ -215,6 +219,7 @@ export const InnerRasterForm = (
       const definedPPGeometries = ppFeatures.filter((item) => !isEmpty(item.geometry));
       if(definedPPGeometries.length){
         const outlinedPolygon = getOutlinedFeature(definedPPGeometries as Feature<Polygon | MultiPolygon, Properties>[]);
+        set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
         setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
       } else {
         setOutlinedPerimeter(undefined);
@@ -338,13 +343,31 @@ export const InnerRasterForm = (
     // Check update related fields in metadata obj
     const updateFields = extractDescriptorRelatedFieldNames('updateRules', getFlatEntityDescriptors(layerRecord.__typename, entityDescriptors));
 
+    // Delete __typename prop to avoid collision
+    delete ((metadata.recordModel as unknown) as Record<string, unknown>)['__typename'];
+
     for (const [key, val] of Object.entries(metadata.recordModel)) {
       if (val === null || (updateFields.includes(key) && mode === Mode.UPDATE)) {
         delete ((metadata.recordModel as unknown) as Record<string, unknown>)[key];
       }
     }
 
+    // Synch entity with loaded values
+    for (const [key, val] of Object.entries(metadata.recordModel)) {
+      // @ts-ignore
+      layerRecord[key] = metadata.recordModel[key];
+    }
+
+    setSourceExtent({
+      type: "Feature",
+      properties: {
+        featureType: FeatureType.SOURCE_EXTENT
+      },
+      geometry: (metadata.recordModel as unknown as SourceValidationModelType).extentPolygon,
+    })
+
     resetForm();
+
     setValues({
       ...values,
       ...transformEntityToFormFields((isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel)),
@@ -405,6 +428,7 @@ export const InnerRasterForm = (
               });
 
               const outlinedPolygon = getOutlinedFeature((data as FeatureCollectionWithFilename).features as Feature<Polygon | MultiPolygon, Properties>[]);
+              set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
               setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
 
               return resolve(parsedPolygonParts);
@@ -587,10 +611,12 @@ export const InnerRasterForm = (
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
+            validateSources={true}
             recordType={recordType}
             fields={ingestionFields}
             values={values}
           >
+            <Box className="uploadShapeButton">
             <Button
               outlined
               type="button"
@@ -650,9 +676,9 @@ export const InnerRasterForm = (
                 });
               }}
             >
-              Load SHP
-              {/* <FormattedMessage id="general.choose-btn.text" /> */}
+              <FormattedMessage id="polygon-parts.button.load-from-shapeFile" />
             </Button>
+            </Box>
           </IngestionFields>
         }
         <Box
@@ -750,18 +776,9 @@ export const InnerRasterForm = (
             <>
               <GeoFeaturesPresentorComponent 
                 mode={mode} 
-                geoFeatures={showPolygonPartsOnMap ? [outlinedPerimeter as Feature<Geometry, GeoJsonProperties>,...ppFeatures] : []} 
+                geoFeatures={showPolygonPartsOnMap ? [sourceExtent as Feature<Geometry, GeoJsonProperties>,outlinedPerimeter as Feature<Geometry, GeoJsonProperties>, ...ppFeatures] : []} 
                 selectedFeatureKey={selectedFeature}
-                selectionStyle={ new Style({
-                                      stroke: new Stroke({
-                                        width: 2,
-                                        color: "#ff0000"
-                                      }),
-                                      fill: new Fill({
-                                        color: "#aa2727"
-                                      })
-                                    })
-                } 
+                selectionStyle={ PPMapStyles.get(FeatureType.SELECTED)} 
                 style={{width: '520px', position: 'relative'}} 
                 fitOptions={{padding:[10,20,10,20]}}
                 showExisitngPolygonParts={showExisitngLayerPartsOnMap}

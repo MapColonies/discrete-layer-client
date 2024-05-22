@@ -1,7 +1,7 @@
 import { Box } from '@map-colonies/react-components';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { isEmpty } from 'lodash';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import lookupTablesContext from '../../../../common/contexts/lookupTables.context';
@@ -47,6 +47,15 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
       }
     }
   }, [innerValue]);
+
+  useEffect(() => {
+    if(!formik?.getFieldProps(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}`).value){
+      const filteredOptions = lookupOptions.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === Number(value));
+      if(filteredOptions.length){
+        formik?.setFieldValue(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}` as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
+      }
+    }
+  }, [value])
 
   if (!lookupTablesData || !lookupTablesData.dictionary || fieldInfo.lookupTable == null) return null;
   const lookupOptions = lookupTablesData.dictionary[fieldInfo.lookupTable];

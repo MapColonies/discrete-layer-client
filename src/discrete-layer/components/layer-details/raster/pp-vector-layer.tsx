@@ -6,6 +6,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import squareGrid from '@turf/square-grid';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Fill, Stroke, Style, Text } from 'ol/style';
+import { FeatureType, PPMapStyles } from './pp-map.utils';
 
 interface PolygonPartsVectorLayerProps {
   
@@ -32,6 +33,8 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
       mapOl.getTargetElement().classList.remove('spinner');
     });
 
+    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox);
+    
     return (): void => {
       try {
         mapOl.un('moveend', handleMoveEndEvent);
@@ -205,10 +208,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = (
         {existingPolygoParts.map((feat, idx) => {
             const greenStyle = new Style({
               text: createTextStyle(feat, 4, featureLabelConfig.polygons),
-              stroke: new Stroke({
-                width: 2,
-                color: "#00ff00"
-              }),
+              stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),
             });
 
             return feat ? <GeoJSONFeature 

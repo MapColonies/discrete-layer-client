@@ -145,3 +145,8 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
 #layerDetailsFormRaster .polygonPartsContainer .mdc-button--outlined:not(:disabled) {
   border-color: unset;
 }
+
+#layerDetailsFormRaster .uploadShapeButton .mdc-button--outlined:not(:disabled){
+  border-color: currentColor;
+  padding: 20px;
+}

@@ -18,7 +18,7 @@ import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
-import { RecordType, LayerMetadataMixedUnion, useQuery, useStore } from '../../models';
+import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import {
   Layer3DRecordModelKeys,
@@ -40,6 +40,7 @@ interface IngestionFieldsProps {
   recordType: RecordType;
   fields: IRecordFieldInfo[];
   values: FormikValues;
+  validateSources?: boolean;
   reloadFormMetadata?: (
     ingestionFields: FormValues,
     metadata: MetadataFile
@@ -159,6 +160,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   fields,
   values,
   reloadFormMetadata,
+  validateSources=false,
   formik,
   children,
 }) => {
@@ -174,6 +176,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
 
   const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
+  const queryValidateSource = useQuery<{validateSource: SourceValidationModelType[]}>();
 
   useEffect(() => {
     if(chosenMetadataFile !== null) {
@@ -224,21 +227,60 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
     setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
   }, [selection, queryResolveMetadataAsModel.loading]);
 
+  useEffect(() => {
+    if(!queryValidateSource.loading){
+      if (reloadFormMetadata) {
+        const directory = selection.files.length ? 
+        selection.folderChain
+            .map((folder: FileData) => folder.name)
+            .join('/')
+        : '';
+        const fileNames = selection.files.map((file: FileData) => file.name).join(',');
+        reloadFormMetadata(
+          {
+            directory: directory,
+            fileNames: fileNames,
+          },
+          {
+            recordModel:{
+              ...selection.metadata?.recordModel,
+              ...queryValidateSource.data?.validateSource[0]
+            },
+            error: selection.metadata?.error
+          }  as MetadataFile
+        );
+      }
+    }
+  }, [selection, queryValidateSource.loading]);
+
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
       setSelection({ ...selected });
     }
+    const directory = selected.files.length ? 
+                        selected.folderChain
+                            .map((folder: FileData) => folder.name)
+                            .join('/')
+                        : '';
+    const fileNames = selected.files.map((file: FileData) => file.name);
+
+    if(validateSources){
+      queryValidateSource.setQuery(
+        store.queryValidateSource(
+          {
+            data: {
+              originDirectory: directory,
+              fileNames: fileNames,
+            }
+          }
+        )
+      )
+    }
     if (reloadFormMetadata) {
       reloadFormMetadata(
         {
-          directory: selected.files.length
-            ? selected.folderChain
-                .map((folder: FileData) => folder.name)
-                .join('/')
-            : '',
-          fileNames: selected.files
-            .map((file: FileData) => file.name)
-            .join(','),
+          directory: directory,
+          fileNames: fileNames.join(','),
         },
         selected.metadata as MetadataFile
       );

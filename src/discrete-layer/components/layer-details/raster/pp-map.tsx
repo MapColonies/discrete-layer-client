@@ -1,14 +1,17 @@
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
-import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Map, TileLayer, TileOsm, TileWMTS, TileXYZ, VectorLayer, VectorSource } from '@map-colonies/react-components';
+import { useIntl } from 'react-intl';
+import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Legend, LegendItem, Map, TileLayer, TileOsm, TileWMTS, TileXYZ, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Feature, Geometry } from 'geojson';
+import { get, isEmpty } from 'lodash';
+import { Vector } from 'ol/layer';
 import { FitOptions } from 'ol/View';
+import { Style, Stroke, Fill } from 'ol/style';
 import { validateGeoJSONString } from '../../../../common/utils/geojson.validation';
 import { Mode } from '../../../../common/models/mode.enum';
-import { useStore } from '../../../models/RootStore';
-import { get, isEmpty } from 'lodash';
-import { Style, Stroke, Fill } from 'ol/style';
-import { PolygonPartsVectorLayer } from './pp-vector-layer';
 import { MapLoadingIndicator } from '../../../../common/components/map/ol-map.loader';
+import { useStore } from '../../../models/RootStore';
+import { PolygonPartsVectorLayer } from './pp-vector-layer';
+import { PPMapStyles } from './pp-map.utils';
 
 interface GeoFeaturesPresentorProps {
   mode: Mode;
@@ -33,6 +36,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
 }) => {
   // const [geoJsonValue, setGeoJsonValue] = useState();
   const store = useStore();
+  const intl = useIntl();
   // useEffect(() => {
   //   if(jsonValue && validateGeoJSONString(jsonValue).valid){
   //     //Postpone feature generation till OL-viewer present in DOM
@@ -82,7 +86,20 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
     }
     return olBaseMap;
   }, []);
+  
 
+  const LegendsArray = useMemo(() => {
+    const res:LegendItem[] = [];
+    PPMapStyles.forEach((value, key)=>{
+      res.push({
+        title: intl.formatMessage({id: `polygon-parts.map-preview-legend.${key}`}) as string,
+        style: value as Style
+      })
+    });
+    return res;
+  },[]);
+
+  
   return (
     <Box style={{...style}}>
       <Map>
@@ -94,30 +111,10 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
         <VectorLayer>
           <VectorSource>
             {geoFeatures?.map((feat, idx) => {
-                let featureStyle: Style | undefined;
-                if(idx === 0){
-                  featureStyle  = new Style({
-                    stroke: new Stroke({
-                      width: 4,
-                      color: "#000000"
-                    }),
-                  });
-                }
-                else {
-                  const redStyle = new Style({
-                    stroke: new Stroke({
-                      width: 2,
-                      color: "#ff0000"
-                    }),
-                    fill: new Fill({
-                      color: "#aa2727"
-                    })
-                  });
-                  
+                let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
 
-                  if( feat.properties?.key === selectedFeatureKey){
-                    featureStyle = selectionStyle;
-                  }
+                if( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey){
+                  featureStyle = selectionStyle;
                 }
 
                 return (feat && !isEmpty(feat.geometry))? <GeoJSONFeature 
@@ -130,6 +127,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
             )}
           </VectorSource>
         </VectorLayer>
+        <Legend legendItems={LegendsArray} title={intl.formatMessage({id: 'polygon-parts.map-preview-legend.title'})}/>
       </Map>
     </Box>
     )}

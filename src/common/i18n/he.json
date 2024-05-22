@@ -204,9 +204,16 @@
   "context-menu.sub-title.tooltip": "שכבות חופפות בנקודה שנבחרה",
 
   "details-panel.no-selection": "לא נבחר פריט",
+  "polygon-parts.button.load-from-shapeFile": "טען Shape",
   "polygon-parts.empty-list": "הוסיפו חלקי תיחום",
   "polygon-parts.show-parts-on-map.label": "הצג חלקי תיחום על המפה",
   "polygon-parts.show-exisitng-parts-on-map.label": "הצג חלקי תיחום הקיימים",
+  "polygon-parts.map-preview-legend.title": "מקרא",
+  "polygon-parts.map-preview-legend.DEFAULT": "חלקי תיחום",
+  "polygon-parts.map-preview-legend.PP_PERIMETER": "הקף של חלקי תיחום",
+  "polygon-parts.map-preview-legend.SOURCE_EXTENT": "שטח המקור",
+  "polygon-parts.map-preview-legend.EXISTING_PP": "חלקי תיחום הקיימים",
+  "polygon-parts.map-preview-legend.SELECTED": "חלק הנבחר",
 
   "field.actions.edit-draft": "ערוך טיוטה",
   "field.actions.more": "פעולות נוספות",
