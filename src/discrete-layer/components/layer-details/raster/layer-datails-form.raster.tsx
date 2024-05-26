@@ -470,7 +470,7 @@ export const InnerRasterForm = (
 
   const Handler: React.FC<HandleProps> = ({partIndex, text, onClick, isErrorInPolygonPart, handleClick, handleSelection, handleClearSelection}) => {
     const [deletingPart, setDeletingPart] = useState<boolean>(false);
-    const [showActions, setShowActions] = useState<boolean>(false);
+    
     return  <Box 
       onClick={(e) => {
         onClick ? onClick(e) : (()=>{})();
@@ -492,9 +492,13 @@ export const InnerRasterForm = (
      onMouseOut={(e: any): void => { handleClearSelection && handleClearSelection();}}
     >
       <Box style={{width: "100px"}}>
-        {deletingPart && <Box style={{display: "flex", gap: "4px"}}>Deleting <CircularProgress/></Box>}
+        {
+          deletingPart && <Box style={{display: "flex", gap: "4px"}}>
+            <FormattedMessage id="polygon-parts.deleting.label" />
+            <CircularProgress/>
+          </Box>}
       </Box>
-      <IconButton
+      {(polygonPartsMode === 'MANUAL') && <IconButton
         className="operationIcon mc-icon-Delete"
         label="DELETE PART"
         onClick={ (e): void => {
@@ -509,7 +513,7 @@ export const InnerRasterForm = (
             e.stopPropagation();
           }
         } }
-      />
+      />}
     </Box>
   </Box>
   }
