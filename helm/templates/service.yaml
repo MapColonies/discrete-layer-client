@@ -1,0 +1,29 @@
+{{- if .Values.ui.enabled -}}
+{{- $environment := include "app.environment" . -}}
+{{- $cloudProviderFlavor := include "app.cloudProviderFlavor" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "app.fullname" . }}-ui
+  labels:
+    app: {{ template "app.name" . }}
+    component: ui-service
+    environment: {{ $environment }}
+    release: {{ .Release.Name }}
+spec:
+  {{- if eq $cloudProviderFlavor "minikube" }}
+  type: NodePort
+  {{- end }}
+  ports:
+    - port: {{ .Values.ui.servicePort }}
+      targetPort: 8080 # DO NOT CHANGE, AS IT'S HARDCODED IN APPLICATION.
+      protocol: TCP
+      name: http
+      {{- if eq $cloudProviderFlavor "minikube" }}
+      nodePort: {{ .Values.ui.nodePort }}
+      {{- end }}
+  selector:
+    app: {{ template "app.name" . }}
+    release: {{ .Release.Name }}
+    run: {{ .Release.Name }}-ui
+{{- end }}

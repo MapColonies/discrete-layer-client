@@ -1,0 +1,28 @@
+{{- if .Values.route.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ template "app.fullname" . }}-ui-route
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
+spec:
+  {{- if .Values.route.host }}
+  host: {{ .Values.route.host }}
+  {{- end }}
+  path:  {{ .Values.route.path }}
+  to:
+    kind: Service
+    name: {{ template "app.fullname" . }}-ui
+  port:
+    targetPort: http
+  {{- if .Values.route.tls.enabled }}
+  tls:
+    termination: edge
+    {{- if .Values.route.tls.useCert }}
+    certificate: {{ .Values.route.tls.certificate | quote }}
+    key: {{ .Values.route.tls.key | quote }}
+    caCertificate: {{ .Values.route.tls.caCertificate | quote }}
+    insecureEdgeTerminationPolicy: Redirect
+    {{- end }}
+  {{- end }}
+{{- end -}}

@@ -1,0 +1,7 @@
+{
+  "mapServices": {
+    "raster": {
+      "exposureType": "SERVICE"
+    }
+  }
+}

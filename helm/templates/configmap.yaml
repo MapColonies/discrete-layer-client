@@ -1,0 +1,60 @@
+{{- if .Values.ui.enabled -}}
+{{- $environment := include "app.environment" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "app.fullname" . }}-ui-configmap
+  labels:
+    app: {{ template "app.name" . }}
+    component: ui-configmap
+    environment: {{ $environment }}
+    release: {{ .Release.Name }}
+data:
+  {{- if .Values.sso.enabled }}
+  default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
+  {{- end }}
+  CONFIGURATION_SERVED_ENTITY_TYPES: {{ quote .Values.shared.servedEntityTypes }}
+  CONFIGURATION_ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.shared.accessToken.attributeName }}
+  CONFIGURATION_ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.shared.accessToken.injectionType }}
+  CONFIGURATION_ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.shared.accessToken.tokenValue }}
+  CONFIGURATION_IMAGE_TAG: {{ quote .Values.ui.imageTag }}
+  CONFIGURATION_PUBLIC_URL: {{ quote .Values.ui.env.publicUrl }}
+  CONFIGURATION_SERVICE_URL: {{ quote .Values.ui.env.serviceUrl }}
+  CONFIGURATION_SERVICE_PROTOCOL: {{ quote .Values.ui.env.serviceProtocol }}
+  CONFIGURATION_MAPSERVER_PUBLISH_POINT: {{ quote .Values.ui.env.mapServerPublishPoint }}
+  CONFIGURATION_MAPSERVER_URL: {{ quote .Values.ui.env.mapServerUrl }}
+  CONFIGURATION_MAPSERVER_CHANNEL: {{ quote .Values.ui.env.mapServerChannel }}
+  CONFIGURATION_MAPSERVER_VERSION: {{ quote .Values.ui.env.mapServerVersion }}
+  CONFIGURATION_MAPSERVER_REQUEST: {{ quote .Values.ui.env.mapServerRequest }}
+  CONFIGURATION_ACTIVE_LAYER: {{ quote .Values.ui.env.activeLayer }}
+  CONFIGURATION_LOGGER_HTTP_HOST: {{ quote .Values.ui.env.loggerHttpHost }}
+  CONFIGURATION_LOGGER_HTTP_PORT: {{ quote .Values.ui.env.loggerHttpPort }}
+  CONFIGURATION_LOGGER_HTTP_PATH: {{ quote .Values.ui.env.loggerHttpPath }}
+  CONFIGURATION_LOGGER_LEVEL: {{ quote .Values.ui.env.loggerLevel }}
+  CONFIGURATION_BBOX_AREA_SQUARE_KM_LIMIT: {{ quote .Values.ui.env.bboxAreaSquareKmLimit }}
+  CONFIGURATION_UI_LANGUAGE: {{ quote .Values.ui.env.language }}
+  CONFIGURATION_JOB_STATUS_POLLING_CYCLE_INTERVAL: {{ quote .Values.ui.env.jobStatus.pollingCycleInterval }}
+  CONFIGURATION_DEFAULT_USER_ROLE: {{ quote .Values.ui.env.defaultUser.role }}
+  CONFIGURATION_RUNNING_MODE_TYPE: {{ quote .Values.ui.env.runningMode.type }}
+  CONFIGURATION_RUNNING_MODE_AUTOCOMPLETE: {{ quote .Values.ui.env.runningMode.autoComplete }}
+  CONFIGURATION_EXPORT_DEFAULT_ZOOM_LEVEL: {{ quote .Values.ui.env.export.defaultZoomLevel }}
+  CONFIGURATION_EXPORT_MAX_ZOOM_LEVEL: {{ quote .Values.ui.env.export.maxZoomLevel }}
+  CONFIGURATION_MAP_CENTER: {{ quote .Values.ui.env.map.center }}
+  CONFIGURATION_MAP_ZOOM: {{ quote .Values.ui.env.map.zoom }}
+  CONFIGURATION_MAP_USE_OPTIMIZED_TILE_REQUESTS: {{ quote .Values.ui.env.map.useOptimizedTileRequests }}
+  CONFIGURATION_BASEMAPS: {{ quote .Values.ui.env.baseMaps }}
+  CONFIGURATION_DEFAULT_TERRAIN_PROVIDER_URL: {{ quote .Values.ui.env.defaultTerrainProviderUrl }}
+  CONFIGURATION_WEB_TOOLS_URL: {{ quote .Values.ui.env.webToolsUrl }}
+  CONFIGURATION_MODEL_ANALYZER_ROUTE: {{ quote .Values.ui.env.modelAnalyzerRoute }}
+  CONFIGURATION_MODEL_ANALYZER_TOKEN_VALUE: {{ quote .Values.ui.env.modelAnalyzerTokenValue }}
+  CONFIGURATION_PROJECT_VERSION: {{ quote .Values.ui.env.projectVersion }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_MAPURLPATH: {{ quote .Values.ui.env.activeLayerPropeties.mapUrlPath }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_EXPORTPATH: {{ quote .Values.ui.env.activeLayerPropeties.exportPath }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_SERVICE: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.service }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_LAYERS: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.layers }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_TILED: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.tiled }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_MATRIXSET: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.matrixSet }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_STYLE: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.style }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_PROJECTION: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.projection }}
+  CONFIGURATION_WHATSNEW_URL: {{ quote .Values.ui.env.whatsnewUrl }}
+{{- end }}
