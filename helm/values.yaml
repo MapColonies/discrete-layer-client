@@ -2,7 +2,7 @@ global:
   cloudProvider: {}
   environment: development
 environment: development
-runAsUser: 1001050000
+runAsUser: 1000720000
 cloudProvider:
   dockerRegistryUrl: acrarolibotnonprod.azurecr.io
   imagePullSecretName: acr-registry
