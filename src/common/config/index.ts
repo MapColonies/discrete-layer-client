@@ -2,6 +2,7 @@ import { CesiumGeographicTilingScheme, Proj } from '@map-colonies/react-componen
 import { IRasterLayer } from '@map-colonies/react-components/dist/cesium-map/layers-manager';
 import { IBaseMaps, IBaseMap } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { LinkType } from '../models/link-type.enum';
+import { site } from '../../discrete-layer/models/userStore';
 
 /*eslint-disable */
 const LANGUAGE = (window as any)._env_.LANGUAGE as string;
@@ -28,6 +29,7 @@ const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
 const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const PROJECT_VERSION = (window as any)._env_.PROJECT_VERSION;
 const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
+const SITES_CONFIG = (window as any)._env_.SITES_CONFIG;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -186,7 +188,12 @@ const APP_CONFIG = {
       }
     }
   },
-  WHATSNEW_URL: WHATSNEW_URL
+  WHATSNEW_URL: WHATSNEW_URL,
+  SITES_CONFIG: {
+    masters: SITES_CONFIG.masters?.map((master:site)=>{return {dns: master.dns, isAlias: master.isAlias}}),
+    slaves: SITES_CONFIG.slaves?.map((slave:site)=>{return {dns: slave.dns, isAlias: slave.isAlias}}),
+    generics: SITES_CONFIG.generics?.map((generic:site)=>{return {dns: generic.dns, isAlias: generic.isAlias}}),
+  },
 };
 
 export default APP_CONFIG;
