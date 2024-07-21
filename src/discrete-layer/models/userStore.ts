@@ -79,8 +79,7 @@ export type siteName = 'master'|'slave'| 'generic';
 
 type permissionRule = {
   sites?: siteName[],
-  // syncSlaves?: boolean,  // FOR FEATURE USE WHEN WILL BE DECIDED TO PERFORM APPLICATION LIKE SYNCH
-  enabled:boolean
+  enabled:boolean,
 }
 
 type UserActionKeys = { [K in UserAction]?: permissionRule};

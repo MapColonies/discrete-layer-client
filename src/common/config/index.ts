@@ -190,9 +190,9 @@ const APP_CONFIG = {
   },
   WHATSNEW_URL: WHATSNEW_URL,
   SITES_CONFIG: {
-    masters: SITES_CONFIG.masters?.map((master:site)=>{return {dns: master.dns, isAlias: master.isAlias}}),
-    slaves: SITES_CONFIG.slaves?.map((slave:site)=>{return {dns: slave.dns, isAlias: slave.isAlias}}),
-    generics: SITES_CONFIG.generics?.map((generic:site)=>{return {dns: generic.dns, isAlias: generic.isAlias}}),
+    masters: SITES_CONFIG.masters,
+    slaves: SITES_CONFIG.slaves,
+    generics: SITES_CONFIG.generics,
   },
 };
 
