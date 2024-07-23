@@ -10,14 +10,20 @@ import { StoreProvider, rootStore } from './discrete-layer/models/RootStore';
 import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
 import { site } from './discrete-layer/models/userStore';
+import { sessionStore } from './common/helpers/storage';
 
 import './index.css';
 
+export let isEqual: boolean;
+
 const createLoggingHttpClient = () => {
-  const SYNC_QUERIES = [
-    'mutation updateMetadata',
-    'mutation startRasterIngestion',
-    'mutation startRasterUpdateGeopkg',
+  type SYNC_QUERY = { queryName: string; equalCheck: boolean };
+  const syncQueries: SYNC_QUERY[] = [
+    { queryName: 'mutation updateMetadata', equalCheck: false },
+    { queryName: 'mutation startRasterIngestion', equalCheck: false },
+    { queryName: 'mutation startRasterUpdateGeopkg', equalCheck: false },
+    { queryName: 'query validateSource', equalCheck: false },
+    { queryName: 'query getDirectory', equalCheck: true },
   ];
 
   const slavesDns: string[] = CONFIG.SITES_CONFIG.slaves?.map(
@@ -30,12 +36,13 @@ const createLoggingHttpClient = () => {
 
   const originalClient = createHttpClient(currentClient);
 
-  let slavesClient: GraphQLClient[]
+  let slavesClient: GraphQLClient[] = [];
 
   if (!slavesDns.includes(currentClient)) {
-     slavesClient= CONFIG.SITES_CONFIG.slaves.map(
-      (slave: site) => slave.isAlias || createHttpClient(slave.dns)
-    );
+    (CONFIG.SITES_CONFIG.slaves as site[]).forEach((slave: site) => {
+      if (slave.isAlias === false)
+        slavesClient.push(createHttpClient(slave.dns));
+    });
   }
 
   // Override the rawRequest method
@@ -46,38 +53,50 @@ const createLoggingHttpClient = () => {
         query,
         variables,
       });
-
       const response = originalClient.request(query, variables);
 
-      if(SYNC_QUERIES.find((syncQuery: string)=>query.includes(syncQuery))){
+      const foundQuery: SYNC_QUERY | undefined = syncQueries.find(
+        (syncQuery: SYNC_QUERY) => query.includes(syncQuery.queryName)
+      );
+      if (foundQuery) {
         response.then(() => {
-          slavesClient?.map((slaveClient: GraphQLClient) =>
+          slavesClient?.forEach((slaveClient: GraphQLClient) =>
             slaveClient
-              .rawRequest(query, variables)
-              .then(({ data, extensions, headers, status, errors }) => {
-                return errors;
+              .request(query, variables)
+              .then(() => {
+                if (
+                  foundQuery.equalCheck &&
+                  JSON.stringify(response).localeCompare(
+                    JSON.stringify(response)
+                  ) !== 0
+                ) {
+                  sessionStore.set(
+                    foundQuery.queryName,
+                    JSON.stringify({
+                      equalCheck: 'false',
+                      response: response,
+                    })
+                  );
+                }
               })
-              .catch(() => {
-                console.log(' **** ERROR WHILE executing slaveClient');
+              .catch((error) => {
+                throw error;
               })
           );
           return response;
         });
-      };
-      
+      }
       return response;
     },
 
-    rawRequest: (query: string, variables?: any) => {
+    rawRequest: async (query: string, variables?: any) => {
       const body = JSON.stringify({
         query,
         variables,
       });
-
       const response = originalClient.rawRequest(query, variables);
       return response;
     },
-    
   };
 
   return loggingClient;
@@ -134,3 +153,24 @@ root.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 /* eslint-enable */
+
+// try {
+//   const response = await originalClient.rawRequest(query, variables);
+//   if(syncQueries.find((syncQuery: SYNC_QUERY)=>query.includes(syncQuery.queryName) && syncQuery.equalCheck)){
+//     slavesClient?.map(async (slaveClient: GraphQLClient) =>{
+//       try {
+//         const slaveResponse = await slaveClient.rawRequest(query, variables)
+//         if (JSON.stringify(slaveResponse.data).localeCompare( JSON.stringify(response.data)) === 0){
+//           return slaveResponse.data
+//         }else{
+//           return 'warning: Different hierarchy in DR';
+//         }
+//       } catch (error) {
+//         console.log(' **** ERROR WHILE executing slaveClient');
+//       }
+//       return response;
+//     })
+//   }
+
+// } catch (error) {
+// }
