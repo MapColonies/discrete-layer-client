@@ -251,7 +251,7 @@ export const userStore = ModelBase
       const permissionRules = role && role.permissions[(action as keyof (UserActionKeys | ContextActionKeys))] as permissionRule;
       const mastersDns: string[] = CONFIG.SITES_CONFIG.masters?.map((master:{dns: string, isAlias: boolean})=>master.dns);
       const slavesDns: string[] = CONFIG.SITES_CONFIG.slaves?.map((slave:{dns: string, isAlias: boolean})=>slave.dns);
-      const currentDns = window.location.hostname;
+      const currentDns = window.location.origin;
       const currentSite: siteName = mastersDns.includes(currentDns)? 'master': slavesDns.includes(currentDns)? 'slave': 'generic';
 
       if(permissionRules){
