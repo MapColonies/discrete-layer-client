@@ -16,18 +16,21 @@ import './index.css';
 
 export let isEqual: boolean;
 
+
+type SYNC_QUERY = { queryName: string; equalCheck: boolean };
+const syncQueries: SYNC_QUERY[] = [
+  { queryName: 'mutation updateMetadata', equalCheck: false },
+  { queryName: 'mutation startRasterIngestion', equalCheck: false },
+  { queryName: 'mutation startRasterUpdateGeopkg', equalCheck: false },
+  { queryName: 'query validateSource', equalCheck: false },
+  { queryName: 'query getDirectory', equalCheck: true },
+];
+const BFF_PATH = '/bff/graphql';
+
 const createLoggingHttpClient = () => {
-  type SYNC_QUERY = { queryName: string; equalCheck: boolean };
-  const syncQueries: SYNC_QUERY[] = [
-    { queryName: 'mutation updateMetadata', equalCheck: false },
-    { queryName: 'mutation startRasterIngestion', equalCheck: false },
-    { queryName: 'mutation startRasterUpdateGeopkg', equalCheck: false },
-    { queryName: 'query validateSource', equalCheck: false },
-    { queryName: 'query getDirectory', equalCheck: true },
-  ];
 
   const slavesDns: string[] = CONFIG.SITES_CONFIG.slaves?.map(
-    (slave: { dns: string; isAlias: boolean }) => slave.dns
+    (slave: { dns: string; isAlias: boolean }) => slave.dns + BFF_PATH
   );
 
   const currentClient = `${CONFIG.SERVICE_PROTOCOL as string}${
