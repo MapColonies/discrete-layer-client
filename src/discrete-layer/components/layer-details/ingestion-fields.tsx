@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
@@ -18,7 +18,7 @@ import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
-import { RecordType, LayerMetadataMixedUnion, useQuery, useStore } from '../../models';
+import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import {
   Layer3DRecordModelKeys,
@@ -40,6 +40,7 @@ interface IngestionFieldsProps {
   recordType: RecordType;
   fields: IRecordFieldInfo[];
   values: FormikValues;
+  validateSources?: boolean;
   reloadFormMetadata?: (
     ingestionFields: FormValues,
     metadata: MetadataFile
@@ -154,12 +155,14 @@ const IngestionInputs: React.FC<{
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
+export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> = observer(({
   recordType,
   fields,
   values,
   reloadFormMetadata,
+  validateSources=false,
   formik,
+  children,
 }) => {
   const store = useStore();
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
@@ -172,7 +175,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
 
-  const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
+  const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
+  const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
 
   useEffect(() => {
     if(chosenMetadataFile !== null) {
@@ -223,21 +227,41 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
   }, [selection, queryResolveMetadataAsModel.loading]);
 
+  useEffect(() => {
+    if (queryValidateSource.data) {
+      if (queryValidateSource.data.validateSource.isValid === false) {
+      }
+    }
+  }, [queryValidateSource.data]);
+
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
       setSelection({ ...selected });
     }
+    const directory = selected.files.length ? 
+                        selected.folderChain
+                            .map((folder: FileData) => folder.name)
+                            .join('/')
+                        : '';
+    const fileNames = selected.files.map((file: FileData) => file.name);
+
+    if (validateSources) {
+      queryValidateSource.setQuery(
+        store.queryValidateSource(
+          {
+            data: {
+              originDirectory: directory,
+              fileNames: fileNames,
+            }
+          }
+        )
+      );
+    }
     if (reloadFormMetadata) {
       reloadFormMetadata(
         {
-          directory: selected.files.length
-            ? selected.folderChain
-                .map((folder: FileData) => folder.name)
-                .join('/')
-            : '',
-          fileNames: selected.files
-            .map((file: FileData) => file.name)
-            .join(','),
+          directory: directory,
+          fileNames: fileNames.join(','),
         },
         selected.metadata as MetadataFile
       );
@@ -325,6 +349,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
                 <FormattedMessage id="ingestion.button.import-metadata" />
               )}
             </Button>
+          </Box>
+          <Box>
+            {children}
           </Box>
         </Box>
       </Box>
