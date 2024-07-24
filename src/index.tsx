@@ -153,24 +153,3 @@ root.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 /* eslint-enable */
-
-// try {
-//   const response = await originalClient.rawRequest(query, variables);
-//   if(syncQueries.find((syncQuery: SYNC_QUERY)=>query.includes(syncQuery.queryName) && syncQuery.equalCheck)){
-//     slavesClient?.map(async (slaveClient: GraphQLClient) =>{
-//       try {
-//         const slaveResponse = await slaveClient.rawRequest(query, variables)
-//         if (JSON.stringify(slaveResponse.data).localeCompare( JSON.stringify(response.data)) === 0){
-//           return slaveResponse.data
-//         }else{
-//           return 'warning: Different hierarchy in DR';
-//         }
-//       } catch (error) {
-//         console.log(' **** ERROR WHILE executing slaveClient');
-//       }
-//       return response;
-//     })
-//   }
-
-// } catch (error) {
-// }

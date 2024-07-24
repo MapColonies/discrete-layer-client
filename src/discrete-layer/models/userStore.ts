@@ -255,10 +255,14 @@ export const userStore = ModelBase
       const currentSite: siteName = mastersDns.includes(currentDns)? 'master': slavesDns.includes(currentDns)? 'slave': 'generic';
 
       if(permissionRules){
-        if(!permissionRules.sites)
-          return permissionRules.enabled;
-        return permissionRules.sites.includes(currentSite);
-      }else return false;
+        if(permissionRules.enabled && permissionRules.sites){
+            return permissionRules.sites.includes(currentSite);
+        };
+        return permissionRules.enabled;
+      } else{
+        return false;
+      };
+      
     }
 
     function changeUserRole(role: UserRole): void {
