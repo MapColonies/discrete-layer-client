@@ -164,6 +164,8 @@
 
   "tab-views.search-results": "Search results",
   "tab-views.catalog": "Catalog",
+  "tab-views.catalog.site.master": "Main Website",
+  "tab-views.catalog.site.slave": "Secondary Website",
   "tab-views.create-best": "BEST edit",
   "tab-views.export-layer": "Export Layer",
 

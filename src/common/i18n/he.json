@@ -166,6 +166,8 @@
 
   "tab-views.search-results": "תוצאות חיפוש",
   "tab-views.catalog": "קטלוג",
+  "tab-views.catalog.site.master": "אתר ראשי",
+  "tab-views.catalog.site.slave": "אתר משני",
   "tab-views.create-best": "עריכת טיוטת BEST",
   "tab-views.export-layer": "ייצוא שכבה",
 

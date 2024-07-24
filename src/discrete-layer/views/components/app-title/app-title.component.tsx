@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
-import { currentClientSite } from '../../../../common/helpers/siteUrl';
+import { currentSite } from '../../../../common/helpers/siteUrl';
 import packageJson from '../../../../../package.json';
 
 const AppTitle = (): JSX.Element => {
@@ -29,7 +29,7 @@ const AppTitle = (): JSX.Element => {
               id: 'general.version.tooltip',
             })} ${projectVersion}`}
           >
-            <Box className={`appVersionContainer-${currentClientSite()}`}> {versionText} </Box>
+            <Box className={`appVersionContainer-${currentSite()}`}> {versionText} </Box>
           </Tooltip>
         </Box>
         <Icon className="appIcon mc-icon-AppIcon" />
