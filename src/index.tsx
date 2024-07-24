@@ -11,6 +11,7 @@ import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
 import { site } from './discrete-layer/models/userStore';
 import { sessionStore } from './common/helpers/storage';
+import { currentClient } from './common/helpers/siteUrl';
 
 import './index.css';
 
@@ -29,10 +30,6 @@ const createLoggingHttpClient = () => {
   const slavesDns: string[] = CONFIG.SITES_CONFIG.slaves?.map(
     (slave: { dns: string; isAlias: boolean }) => slave.dns
   );
-
-  const currentClient = `${CONFIG.SERVICE_PROTOCOL as string}${
-    CONFIG.SERVICE_NAME as string
-  }`;
 
   const originalClient = createHttpClient(currentClient);
 

@@ -120,6 +120,14 @@ button.cesium-infoBox-close:hover {
   text-align: center;
 }
 
+.appVersionContainer-master {
+  color: #01ff11;
+}
+
+.appVersionContainer-slave {
+  color: #ff9a99;
+}
+
 title.rtl {
   direction: rtl;
 }

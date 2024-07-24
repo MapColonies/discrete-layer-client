@@ -94,6 +94,7 @@ import { WfsFeature } from '../components/map-container/geojson-map-features/wfs
 import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
 import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
 import { ExtentUpdater } from '../components/map-container/extent-updater';
+import { currentClientSite } from '../../common/helpers/siteUrl';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
@@ -675,9 +676,12 @@ const DiscreteLayerView: React.FC = observer(() => {
               className={`operationIcon ${tabView?.iconClassName as string}`}
               label="TAB ICON"
             />
-            <Typography use="headline6" tag="span">
-              <FormattedMessage id={tabView?.title}></FormattedMessage>
-            </Typography>
+            <div className='tab-title'>
+              <Typography use="headline6" tag="span">
+                <FormattedMessage id={tabView?.title}></FormattedMessage>
+              </Typography>
+              <div className={`current-client-site-${currentClientSite()}`}>{`אתר ${currentClientSite()==='slave'? 'משני': 'ראשי'}`}</div>
+            </div>
           </div>
         </div>
 
