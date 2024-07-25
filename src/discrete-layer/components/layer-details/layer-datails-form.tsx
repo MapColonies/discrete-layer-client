@@ -219,12 +219,13 @@ const InnerForm = (
         {
           (mode === Mode.NEW || mode === Mode.UPDATE) &&
           <IngestionFields
-            formik={entityFormikHandlers}
-            reloadFormMetadata={reloadFormMetadata}
-            validateSources={recordType === RecordType.RECORD_RASTER}
             recordType={recordType}
             fields={ingestionFields}
             values={values}
+            onSetCurtainOpen={setShowCurtain}
+            validateSources={recordType === RecordType.RECORD_RASTER}
+            reloadFormMetadata={reloadFormMetadata}
+            formik={entityFormikHandlers}
           />
         }
         <Box

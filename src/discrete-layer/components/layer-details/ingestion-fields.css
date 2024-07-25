@@ -107,7 +107,7 @@ body[dir='rtl'] .moreTooltip {
   text-overflow: ellipsis;
 }
 
-.ingestionErrors {
+/* .ingestionErrors {
   position: absolute;
   top: 120px;
-}
+} */

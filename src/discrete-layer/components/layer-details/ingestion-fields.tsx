@@ -4,13 +4,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
 import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
-import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
+// import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
@@ -33,6 +33,7 @@ interface IngestionFieldsProps {
   recordType: RecordType;
   fields: IRecordFieldInfo[];
   values: FormikValues;
+  onSetCurtainOpen: (open: boolean) => void;
   validateSources?: boolean;
   reloadFormMetadata?: (
     ingestionFields: FormValues,
@@ -152,11 +153,13 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   recordType,
   fields,
   values,
+  onSetCurtainOpen,
+  validateSources = false,
   reloadFormMetadata,
-  validateSources=false,
   formik,
   children,
 }) => {
+  const intl = useIntl();
   const store = useStore();
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
   const [isImportDisabled, setIsImportDisabled] = useState(true);
@@ -169,10 +172,14 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
   const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
-  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+  // const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+
+  const closeCurtain = useCallback(() => {
+    onSetCurtainOpen(true);
+  }, [onSetCurtainOpen]);
 
   useEffect(() => {
-    if(chosenMetadataFile !== null) {
+    if (chosenMetadataFile !== null) {
       queryResolveMetadataAsModel.setQuery(
         store.queryResolveMetadataAsModel(
           {
@@ -223,7 +230,31 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   useEffect(() => {
     if (queryValidateSource.data) {
       if (queryValidateSource.data.validateSource.isValid === false) {
-        setValidationErrors({ error: [ queryValidateSource.data.validateSource.message ?? '' ] });
+        if (reloadFormMetadata) {
+          reloadFormMetadata(
+            {
+              directory: values.directory as string,
+              fileNames: values.fileNames as string,
+            },
+            {
+              recordModel: {},
+              error: {
+                response: {
+                  errors: [
+                    {
+                      message: intl.formatMessage(
+                        { id: 'ingestion.error.invalid-source-file' },
+                        { value: queryValidateSource.data.validateSource.message }
+                      ),
+                    },
+                  ],
+                },
+              }
+            } as MetadataFile
+          );
+        }
+        // setValidationErrors({ error: [ queryValidateSource.data.validateSource.message ?? '' ] });
+        closeCurtain();
       }
     }
   }, [queryValidateSource.data]);
@@ -348,9 +379,9 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
             {children}
           </Box>
         </Box>
-        <Box className="ingestionErrors">
+        {/* <Box className="ingestionErrors">
           <ValidationsError errors={validationErrors} />
-        </Box>
+        </Box> */}
       </Box>
       {
         isFilePickerDialogOpen &&
