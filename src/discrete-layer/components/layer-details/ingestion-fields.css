@@ -106,3 +106,8 @@ body[dir='rtl'] .moreTooltip {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.ingestionErrors {
+  position: absolute;
+  top: 120px;
+}

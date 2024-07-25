@@ -9,22 +9,15 @@ import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
 import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
-import {
-  Box,
-  defaultFormatters,
-  FileData,
-} from '@map-colonies/react-components';
+import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
+import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
-import {
-  Layer3DRecordModelKeys,
-  LayerDemRecordModelKeys,
-  LayerRasterRecordModelKeys,
-} from './entity-types-keys';
+import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './entity-types-keys';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
@@ -174,9 +167,9 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   });
   const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
-
   const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
+  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     if(chosenMetadataFile !== null) {
@@ -230,6 +223,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   useEffect(() => {
     if (queryValidateSource.data) {
       if (queryValidateSource.data.validateSource.isValid === false) {
+        setValidationErrors({ error: [ queryValidateSource.data.validateSource.message ?? '' ] });
       }
     }
   }, [queryValidateSource.data]);
@@ -353,6 +347,9 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
           <Box>
             {children}
           </Box>
+        </Box>
+        <Box className="ingestionErrors">
+          <ValidationsError errors={validationErrors} />
         </Box>
       </Box>
       {
