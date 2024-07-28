@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   withFormik,
   FormikProps,
@@ -13,7 +13,7 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty } from 'lodash';
-import { Button } from '@map-colonies/react-core';
+import { Button, Checkbox } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
@@ -104,11 +104,12 @@ const InnerForm = (
   } = props;
 
   const status = props.status as StatusError | Record<string, unknown>;
-
+  const intl = useIntl();
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
+  const [checked, setChecked] = useState<boolean>(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -259,6 +260,16 @@ const InnerForm = (
                 <GraphQLError error={graphQLError} />
               )
             }
+            {
+              <Checkbox
+                label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
+                checked={checked}
+                onClick={
+                  (evt: React.MouseEvent<HTMLInputElement>): void => {
+                    setChecked(evt.currentTarget.checked);
+                  }}
+              />
+            }
           </Box>
           <Box className="buttons">
             <Button
@@ -269,7 +280,8 @@ const InnerForm = (
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
-                !isEmpty(graphQLError)
+                !isEmpty(graphQLError) // ||
+                // (!isEmpty(graphQLWarning) && !checked)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

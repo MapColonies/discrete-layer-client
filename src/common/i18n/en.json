@@ -211,7 +211,7 @@
   "ingestion.error.invalid-source-file": "Selected file error: {value}",
   "ingestion.error.invalid-metadata": "Metadata file format is not valid",
   "ingestion.button.import-metadata": "Import Metadata",
-  "ingestion.checkbox.disclaimer": "Operation failed on secondary site, please click to continue with operation on main site only",
+  "ingestion.checkbox.label": "Operation failed on secondary site, please click to continue with operation on main site only",
 
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
@@ -149,7 +149,7 @@ const IngestionInputs: React.FC<{
   );
 };
 
-export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> = observer(({
+export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   recordType,
   fields,
   values,
@@ -157,7 +157,6 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   validateSources = false,
   reloadFormMetadata,
   formik,
-  children,
 }) => {
   const intl = useIntl();
   const store = useStore();
@@ -177,6 +176,23 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   const closeCurtain = useCallback(() => {
     onSetCurtainOpen(true);
   }, [onSetCurtainOpen]);
+
+  useEffect(() => {
+    // Function to handle changes in sessionStorage
+    const handleSessionStorageChange = () => {
+      const data = sessionStorage.getItem('equalCheck');
+      console.log('#######################', data);
+      // setValidationErrors(data);
+    };
+
+    // Add event listener for storage changes
+    window.addEventListener('storage', handleSessionStorageChange);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('storage', handleSessionStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (chosenMetadataFile !== null) {
@@ -374,9 +390,6 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
                 <FormattedMessage id="ingestion.button.import-metadata" />
               )}
             </Button>
-          </Box>
-          <Box>
-            {children}
           </Box>
         </Box>
         {/* <Box className="ingestionErrors">

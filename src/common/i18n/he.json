@@ -215,7 +215,7 @@
   "ingestion.error.invalid-source-file": "שגיאה בקובץ הנבחר: {value}",
   "ingestion.error.invalid-metadata": "קובץ מטא-דאטה בפורמט לא תקין",
   "ingestion.button.import-metadata": "בחר מטא-דאטה",
-  "ingestion.checkbox.disclaimer": "לא ניתן לבצע את הפעולה באתר המשני, יש ללחוץ להמשך הפעולה באתר הראשי בלבד",
+  "ingestion.checkbox.label": "לא ניתן לבצע את הפעולה באתר המשני, יש ללחוץ להמשך הפעולה באתר הראשי בלבד",
 
   "field-names.raster.id": "מזהה",
   "field-names.raster.productId": "מזהה חיצוני",
