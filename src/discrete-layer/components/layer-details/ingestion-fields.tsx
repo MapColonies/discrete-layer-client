@@ -282,10 +282,10 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     const directory = selected.files.length ? 
                         selected.folderChain
                             .map((folder: FileData) => folder.name)
+                            .slice(1)
                             .join('/')
                         : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
-
     if (validateSources) {
       queryValidateSource.setQuery(
         store.queryValidateSource(
