@@ -591,7 +591,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       } }`, variables, options)
     },
     queryValidateSource(variables: { data: SourceValidationParams }, resultSelector: string | ((qb: SourceValidationModelSelector) => SourceValidationModelSelector) = sourceValidationModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ validateSource: SourceValidationModelType[]}>(`query validateSource($data: SourceValidationParams!) { validateSource(data: $data) {
+      return self.query<{ validateSource: SourceValidationModelType}>(`query validateSource($data: SourceValidationParams!) { validateSource(data: $data) {
         ${typeof resultSelector === "function" ? resultSelector(new SourceValidationModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
