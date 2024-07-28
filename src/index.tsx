@@ -11,12 +11,12 @@ import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
 import { site } from './discrete-layer/models/userStore';
 import { sessionStore } from './common/helpers/storage';
-import { currentClient } from './common/helpers/siteUrl';
+import { currentClientUrl } from './common/helpers/siteUrl';
 
 import './index.css';
+import { request } from 'http';
 
 export let isEqual: boolean;
-
 
 type SYNC_QUERY = { queryName: string; equalCheck: boolean };
 const syncQueries: SYNC_QUERY[] = [
@@ -30,76 +30,48 @@ const BFF_PATH = '/bff/graphql';
 
 const createLoggingHttpClient = () => {
 
-  const slavesDns: string[] = CONFIG.SITES_CONFIG.slaves?.map(
-    (slave: { dns: string; isAlias: boolean }) => slave.dns + BFF_PATH
+  const client = createHttpClient(currentClientUrl);
+
+  const currentQuery = (query:string) => {
+    return syncQueries.find(
+    (syncQuery: SYNC_QUERY) => query.includes(syncQuery.queryName)
+  );};
+
+  const slavesDns: GraphQLClient[] = CONFIG.SITES_CONFIG.slaves?.map(
+    (slave: { dns: string; isAlias: boolean }) => createHttpClient(slave.dns + BFF_PATH)
   );
 
-  const originalClient = createHttpClient(currentClient);
+  let masterResponse: any;
 
-  let slavesClient: GraphQLClient[] = [];
+  const loggingClient= (url: GraphQLClient) => {
 
-  if (!slavesDns.includes(currentClient)) {
-    (CONFIG.SITES_CONFIG.slaves as site[]).forEach((slave: site) => {
-      if (slave.isAlias === false)
-        slavesClient.push(createHttpClient(slave.dns));
-    });
-  }
+    const request = async (isRawRequest: boolean, query: string, variables: any) => {
+      masterResponse = isRawRequest? await url.rawRequest(query, variables): await url.request(query, variables);
+      if(currentQuery(query) && !slavesDns.includes(url)){
+          slavesDns.forEach(async (slaveUrl:GraphQLClient)=> {
+            const slaveResponse = isRawRequest? await slaveUrl.rawRequest(query, variables): await slaveUrl.request(query, variables);
+              if((currentQuery(query) as SYNC_QUERY).equalCheck && masterResponse && slaveResponse !== masterResponse){
+                sessionStore.set((currentQuery(query) as SYNC_QUERY).queryName, JSON.stringify({equalCheck: 'false', slaveResponse}));
+              };
+          });
+      };
+      return masterResponse;
+    };
 
-  // Override the rawRequest method
-  const loggingClient = {
-    ...originalClient,
-    request: (query: string, variables?: any) => {
-      const body = JSON.stringify({
-        query,
-        variables,
-      });
-      const response = originalClient.request(query, variables);
+    const client= {
+      ...url,
+      request: async (query: string, variables?:any) => {
+        return request(false, query, variables);
+      },
 
-      const foundQuery: SYNC_QUERY | undefined = syncQueries.find(
-        (syncQuery: SYNC_QUERY) => query.includes(syncQuery.queryName)
-      );
-      if (foundQuery) {
-        response.then(() => {
-          slavesClient?.forEach((slaveClient: GraphQLClient) =>
-            slaveClient
-              .request(query, variables)
-              .then(() => {
-                if (
-                  foundQuery.equalCheck &&
-                  JSON.stringify(response).localeCompare(
-                    JSON.stringify(response)
-                  ) !== 0
-                ) {
-                  sessionStore.set(
-                    foundQuery.queryName,
-                    JSON.stringify({
-                      equalCheck: 'false',
-                      response: response,
-                    })
-                  );
-                }
-              })
-              .catch((error) => {
-                throw error;
-              })
-          );
-          return response;
-        });
-      }
-      return response;
-    },
-
-    rawRequest: async (query: string, variables?: any) => {
-      const body = JSON.stringify({
-        query,
-        variables,
-      });
-      const response = originalClient.rawRequest(query, variables);
-      return response;
-    },
+      rawRequest: async (query: string, variables?: any) => {
+        return request(true, query, variables);
+      },
+    }
+    return client;
   };
 
-  return loggingClient;
+  return loggingClient(client);
 };
 
 /* eslint-disable */
