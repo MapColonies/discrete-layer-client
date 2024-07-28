@@ -214,7 +214,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: {enabled: false},
-      [UserAction.FEATURE_SWITCH_USER_ROLE]: {enabled: false},
+      [UserAction.FEATURE_SWITCH_USER_ROLE]: {sites:['master','slave'], enabled: true},
       [ContextActions.QUERY_WFS_FEATURE]: {enabled: true},
       [ContextActions.QUERY_DEM_HEIGHT]: {enabled: true},
       [ContextActions.QUERY_POLYGON_PARTS]: {enabled: true},
@@ -254,14 +254,14 @@ export const userStore = ModelBase
       const currentDns = window.location.origin;
       const currentSite: siteName = mastersDns.includes(currentDns)? 'master': slavesDns.includes(currentDns)? 'slave': 'generic';
 
-      if(permissionRules){
-        if(permissionRules.enabled && permissionRules.sites){
-            return permissionRules.sites.includes(currentSite);
-        };
+      if (permissionRules) {
+        if (permissionRules.enabled && permissionRules.sites) {
+          return permissionRules.sites.includes(currentSite);
+        }
         return permissionRules.enabled;
-      } else{
+      } else {
         return false;
-      };
+      }
       
     }
 
