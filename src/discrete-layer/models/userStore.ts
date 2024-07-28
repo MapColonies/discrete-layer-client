@@ -214,7 +214,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: {enabled: false},
-      [UserAction.FEATURE_SWITCH_USER_ROLE]: {sites:['master','slave'], enabled: true},
+      [UserAction.FEATURE_SWITCH_USER_ROLE]: {enabled: false},
       [ContextActions.QUERY_WFS_FEATURE]: {enabled: true},
       [ContextActions.QUERY_DEM_HEIGHT]: {enabled: true},
       [ContextActions.QUERY_POLYGON_PARTS]: {enabled: true},
