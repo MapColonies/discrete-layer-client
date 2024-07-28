@@ -3,18 +3,17 @@ import { createRoot } from 'react-dom/client';
 // import 'mobx-react-lite/batchingForReactDom';
 import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
+import { request } from 'http';
 import Axios, { Method } from 'axios';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { StoreProvider, rootStore } from './discrete-layer/models/RootStore';
 import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
-import { site } from './discrete-layer/models/userStore';
 import { sessionStore } from './common/helpers/storage';
-import { currentClientUrl } from './common/helpers/siteUrl';
+import { currentUrl } from './common/helpers/siteUrl';
 
 import './index.css';
-import { request } from 'http';
 
 export let isEqual: boolean;
 
@@ -30,7 +29,7 @@ const BFF_PATH = '/bff/graphql';
 
 const createLoggingHttpClient = () => {
 
-  const client = createHttpClient(currentClientUrl);
+  const client = createHttpClient(currentUrl);
 
   const currentQuery = (query:string) => {
     return syncQueries.find(
