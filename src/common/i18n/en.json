@@ -209,6 +209,7 @@
   "field-names.ingestion.directory": "Directory",
   "field-names.ingestion.fileNames": "File names",
   "ingestion.error.invalid-source-file": "Selected file error: {value}",
+  "ingestion.error.source-file-exception": "Cannot run validation api: {value}",
   "ingestion.error.invalid-metadata": "Metadata file format is not valid",
   "ingestion.button.import-metadata": "Import Metadata",
   "ingestion.checkbox.label": "Operation failed on secondary site, please click to continue with operation on main site only",

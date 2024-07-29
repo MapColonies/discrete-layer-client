@@ -275,6 +275,35 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     }
   }, [queryValidateSource.data]);
 
+  useEffect(() => {
+    if (queryValidateSource.error) {
+      if (reloadFormMetadata) {
+        reloadFormMetadata(
+          {
+            directory: values.directory as string,
+            fileNames: values.fileNames as string,
+          },
+          {
+            recordModel: {},
+            error: {
+              response: {
+                errors: [
+                  {
+                    message: intl.formatMessage(
+                      { id: 'ingestion.error.source-file-exception' },
+                      { value: queryValidateSource.error.message }
+                    ),
+                  },
+                ],
+              },
+            }
+          } as MetadataFile
+        );
+      }
+      closeCurtain();
+    }
+  }, [queryValidateSource.error]);
+
   const onFilesSelection = (selected: Selection): void => {
     if (selected.files.length) {
       setSelection({ ...selected });
@@ -282,10 +311,10 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     const directory = selected.files.length ? 
                         selected.folderChain
                             .map((folder: FileData) => folder.name)
+                            .slice(1)
                             .join('/')
                         : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
-
     if (validateSources) {
       queryValidateSource.setQuery(
         store.queryValidateSource(

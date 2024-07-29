@@ -261,6 +261,7 @@ const InnerForm = (
               )
             }
             {
+              graphQLError === undefined &&
               <Checkbox
                 label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
                 checked={checked}
