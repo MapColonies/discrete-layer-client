@@ -8,13 +8,14 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
-import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
+import { Button, CircularProgress, Icon, IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
-// import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
+import { SYNC_QUERY_NAME } from '../../..';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
+import { sessionStore } from '../../../common/helpers/storage';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './entity-types-keys';
@@ -85,7 +86,8 @@ const IngestionInputs: React.FC<{
   values: string[];
   selection: Selection;
   formik: EntityFormikHandlers;
-}> = ({ recordType, fields, values, selection, formik }) => {
+  markForWarning?: boolean;
+}> = ({ recordType, fields, values, selection, formik, markForWarning }) => {
   return (
     <>
       {
@@ -108,7 +110,12 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Box dir="auto" className="filesPathContainer">{values[index]}</Box>
+                  <Box dir="auto" className={`filesPathContainer ${markForWarning ? 'warning' : ''}`}>
+                    {
+                      markForWarning && <IconButton className={`mc-icon-Status-Warnings ${markForWarning ? 'warning' : ''}`} />
+                    }
+                    {values[index]}
+                  </Box>
                 }
                 {
                   index === FILES && values[index] !== '' &&
@@ -171,26 +178,29 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
   const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
-  // const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+  const [unSynchDir, setUnSynchDir] = useState<boolean>(false);
 
   const closeCurtain = useCallback(() => {
     onSetCurtainOpen(true);
   }, [onSetCurtainOpen]);
 
   useEffect(() => {
-    // Function to handle changes in sessionStorage
-    const handleSessionStorageChange = () => {
-      const data = sessionStorage.getItem('equalCheck');
-      console.log('#######################', data);
-      // setValidationErrors(data);
-    };
+    // Add method wathers for storage changes
+    sessionStore.watchMethods(
+      ['setItem'],
+      // @ts-ignore
+      (method, key, ...args) => {
+        // console.log(`**** call ${method} with key ${key} and args ${args}`);
+        const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
+        if (dirComparison) {
+          setUnSynchDir(true);
+        }
+      }
+    );
 
-    // Add event listener for storage changes
-    window.addEventListener('storage', handleSessionStorageChange);
-
-    // Clean up the event listener when the component unmounts
+    // Clean up the method watchers when the component unmounts
     return () => {
-      window.removeEventListener('storage', handleSessionStorageChange);
+      sessionStore.unWatchMethods();
     };
   }, []);
 
@@ -269,7 +279,6 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
             } as MetadataFile
           );
         }
-        // setValidationErrors({ error: [ queryValidateSource.data.validateSource.message ?? '' ] });
         closeCurtain();
       }
     }
@@ -370,6 +379,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
             values={[values.directory, values.fileNames]}
             selection={selection}
             formik={formik as EntityFormikHandlers}
+            markForWarning={unSynchDir}
           />
         </Box>
         <Box className="ingestionButtonsContainer">
@@ -421,9 +431,6 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
             </Button>
           </Box>
         </Box>
-        {/* <Box className="ingestionErrors">
-          <ValidationsError errors={validationErrors} />
-        </Box> */}
       </Box>
       {
         isFilePickerDialogOpen &&

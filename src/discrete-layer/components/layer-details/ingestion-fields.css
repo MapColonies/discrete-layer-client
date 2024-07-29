@@ -105,9 +105,6 @@ body[dir='rtl'] .moreTooltip {
   width: 60ch;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  flex-direction: row-reverse;
 }
-
-/* .ingestionErrors {
-  position: absolute;
-  top: 120px;
-} */

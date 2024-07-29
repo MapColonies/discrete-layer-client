@@ -13,8 +13,11 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty } from 'lodash';
-import { Button, Checkbox } from '@map-colonies/react-core';
+import { Button, Checkbox, IconButton, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { SYNC_QUERY_NAME } from '../../..';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
+import { sessionStore } from '../../../common/helpers/storage';
 import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
@@ -109,7 +112,8 @@ const InnerForm = (
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
-  const [checked, setChecked] = useState<boolean>(false);
+  const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
+  const [validationSourceWarn, setValidationSourceWarn] = useState<string>('');
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -142,6 +146,27 @@ const InnerForm = (
       ...getStatusErrors() as { [fieldName: string]: string[]; },
     })
   }, [errors, getYupErrors, getStatusErrors]);
+
+  useEffect(() => {
+    // Add method wathers for storage changes
+    sessionStore.watchMethods(
+      ['setItem'],
+      // @ts-ignore
+      (method, key, ...args) => {
+        console.log(`**** call ${method} with key ${key} and args ${args}`);
+        const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
+        if(validSource) {
+          setValidationSourceWarn((validSource as Record<string,any>)[SYNC_QUERY_NAME.VALIDATE_SOURCE].message)
+        }
+        console.log('**** FORM #######################', validSource);
+      }
+    );
+
+    // Clean up the method wathers when the component unmounts
+    return () => {
+      sessionStore.unWatchMethods();
+    };
+  }, []);
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
@@ -261,15 +286,29 @@ const InnerForm = (
               )
             }
             {
-              graphQLError === undefined &&
-              <Checkbox
-                label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
-                checked={checked}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setChecked(evt.currentTarget.checked);
-                  }}
-              />
+              validationSourceWarn &&
+              <Box className="ingestionWarning">
+                <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
+                <Box>
+                  <Typography tag="div" className="warningMessage warning"
+                    dangerouslySetInnerHTML={{__html:
+                      intl.formatMessage(
+                        {id: 'ingestion.warning.invalid-secondary-file'},
+                        {title: emphasizeByHTML(`${intl.formatMessage({ id: 'ingestion.warning.title' })}`), value: validationSourceWarn}
+                      )
+                    }}
+                  />
+                  <Checkbox
+                    className="warning"
+                    label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
+                    checked={syncAnywayChecked}
+                    onClick={
+                      (evt: React.MouseEvent<HTMLInputElement>): void => {
+                        setSyncAnywayChecked(evt.currentTarget.checked);
+                      }}
+                  />
+                </Box>
+              </Box>
             }
           </Box>
           <Box className="buttons">
@@ -281,8 +320,8 @@ const InnerForm = (
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
-                !isEmpty(graphQLError) // ||
-                // (!isEmpty(graphQLWarning) && !checked)
+                !isEmpty(graphQLError) ||
+                (!isEmpty(validationSourceWarn) && !syncAnywayChecked)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

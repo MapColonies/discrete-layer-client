@@ -17,7 +17,7 @@ import './index.css';
 
 export let isEqual: boolean;
 
-const enum SYNC_QUERY_NAME {
+export const enum SYNC_QUERY_NAME {
   UPDATE_META_DATA = 'updateMetadata',
   RASTER_INGESTION = 'startRasterIngestion',
   RASTER_UPDATE_GEOPKG = 'startRasterUpdateGeopkg',
@@ -68,7 +68,7 @@ const syncQueries: SYNC_QUERY[] = [
   },
 ];
 
-const BFF_PATH = '/bff/graphql'; //'/graphql'; 
+const BFF_PATH = '/graphql';//'/bff/graphql';
 
 const createLoggingHttpClient = () => {
   const client = createHttpClient(currentUrl);
@@ -95,14 +95,14 @@ const createLoggingHttpClient = () => {
         masterResponse = isRawRequest
           ? await url.rawRequest(query, variables)
           : await url.request(query, variables);
-        if (currentQuery(query) && !slavesDns.includes(url) && masterResponse.errors.length>0) {
+        if (currentQuery(query) && !slavesDns.includes(url) /*&& masterResponse.errors.length>0*/) {
           slavesDns.forEach(async (slaveUrl: GraphQLClient) => {
             try {
               let slaveResponse: any = isRawRequest
                 ? await slaveUrl.rawRequest(query, variables)
                 : await slaveUrl.request(query, variables);
   
-              if(currentQuery(query)?.omitProperties){
+              if(currentQuery(query)?.omitProperties?.length as number > 0){
                 masterResponse[currentQuery(query)?.queryName as unknown as string].forEach((element:any) => {
                   currentQuery(query)?.omitProperties.forEach((prop: string)=> {
                     delete element[prop]})
@@ -126,7 +126,7 @@ const createLoggingHttpClient = () => {
               if (currentQuery(query)?.isResponseStore) {
                 sessionStore.setObject(
                   (currentQuery(query) as SYNC_QUERY).queryName,
-                  masterResponse
+                  slaveResponse
                 );
               };
             } catch (error) {

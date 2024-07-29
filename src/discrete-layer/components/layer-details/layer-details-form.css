@@ -64,3 +64,17 @@ body[dir='rtl'] #layerDetailsForm .buttons {
   height: 60px;
   overflow-y: auto;
 }
+
+#layerDetailsForm .ingestionWarning {
+  display: flex;
+  flex-direction: row;
+}
+
+.warningIcon {
+  font-size: 32px;
+  padding: 8px 0;
+}
+
+.warningMessage {
+  padding: 0 12px;
+}
