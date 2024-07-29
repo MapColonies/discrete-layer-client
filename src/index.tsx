@@ -46,16 +46,20 @@ const createLoggingHttpClient = () => {
   const loggingClient= (url: GraphQLClient) => {
 
     const request = async (isRawRequest: boolean, query: string, variables: any) => {
-      masterResponse = isRawRequest? await url.rawRequest(query, variables): await url.request(query, variables);
-      if(currentQuery(query) && !slavesDns.includes(url)){
-          slavesDns.forEach(async (slaveUrl:GraphQLClient)=> {
-            const slaveResponse = isRawRequest? await slaveUrl.rawRequest(query, variables): await slaveUrl.request(query, variables);
-              if((currentQuery(query) as SYNC_QUERY).equalCheck && masterResponse && slaveResponse !== masterResponse){
-                sessionStore.set((currentQuery(query) as SYNC_QUERY).queryName, JSON.stringify({equalCheck: 'false', slaveResponse}));
-              };
-          });
-      };
-      return masterResponse;
+      try {
+        masterResponse = isRawRequest? await url.rawRequest(query, variables): await url.request(query, variables);
+        if(currentQuery(query) && !slavesDns.includes(url)){
+            slavesDns.forEach(async (slaveUrl:GraphQLClient)=> {
+              const slaveResponse = isRawRequest? await slaveUrl.rawRequest(query, variables): await slaveUrl.request(query, variables);
+                if((currentQuery(query) as SYNC_QUERY).equalCheck && masterResponse && slaveResponse !== masterResponse){
+                  sessionStore.set((currentQuery(query) as SYNC_QUERY).queryName, JSON.stringify({equalCheck: 'false', slaveResponse}));
+                };
+            });
+        };
+        return masterResponse;
+      } catch (error) {
+        console.error(`Error during ${query}: ${error}`);
+      }
     };
 
     const client= {
