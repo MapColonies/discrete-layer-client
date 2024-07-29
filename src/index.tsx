@@ -17,48 +17,130 @@ import './index.css';
 
 export let isEqual: boolean;
 
-type SYNC_QUERY = { queryName: string; equalCheck: boolean };
+const enum SYNC_QUERY_NAME {
+  UPDATE_META_DATA = 'updateMetadata',
+  RASTER_INGESTION = 'startRasterIngestion',
+  RASTER_UPDATE_GEOPKG = 'startRasterUpdateGeopkg',
+  VALIDATE_SOURCE = 'validateSource',
+  GET_DIRECTORY = 'getDirectory',
+};
+
+type SYNC_QUERY = {
+  queryName: string;
+  equalCheck: boolean;
+  isResponseStore: boolean;
+  omitProperties: string[];
+};
 const syncQueries: SYNC_QUERY[] = [
-  { queryName: 'mutation updateMetadata', equalCheck: false },
-  { queryName: 'mutation startRasterIngestion', equalCheck: false },
-  { queryName: 'mutation startRasterUpdateGeopkg', equalCheck: false },
-  { queryName: 'query validateSource', equalCheck: false },
-  { queryName: 'query getDirectory', equalCheck: true },
+  {
+    queryName: SYNC_QUERY_NAME.UPDATE_META_DATA,
+    equalCheck: false,
+    isResponseStore: false,
+    omitProperties: [],
+
+  },
+  {
+    queryName: SYNC_QUERY_NAME.RASTER_INGESTION,
+    equalCheck: false,
+    isResponseStore: false,
+    omitProperties: [],
+
+  },
+  {
+    queryName: SYNC_QUERY_NAME.RASTER_UPDATE_GEOPKG,
+    equalCheck: false,
+    isResponseStore: false,
+    omitProperties: [],
+
+  },
+  {
+    queryName: SYNC_QUERY_NAME.VALIDATE_SOURCE,
+    equalCheck: false,
+    isResponseStore: true,
+    omitProperties: [],
+
+  },
+  {
+    queryName: SYNC_QUERY_NAME.GET_DIRECTORY,
+    equalCheck: true,
+    isResponseStore: false,
+    omitProperties: ['modDate', 'id', 'parentId', 'selectable', 'childrenIds'],
+  },
 ];
-const BFF_PATH = '/bff/graphql';
+
+const BFF_PATH = '/bff/graphql'; //'/graphql'; 
 
 const createLoggingHttpClient = () => {
-
   const client = createHttpClient(currentUrl);
 
-  const currentQuery = (query:string) => {
-    return syncQueries.find(
-    (syncQuery: SYNC_QUERY) => query.includes(syncQuery.queryName)
-  );};
+  const currentQuery = (query: string) => {
+    return syncQueries.find((syncQuery: SYNC_QUERY) =>
+      query.includes(syncQuery.queryName)
+    );
+  };
 
   const slavesDns: GraphQLClient[] = CONFIG.SITES_CONFIG.slaves?.map(
-    (slave: { dns: string; isAlias: boolean }) => createHttpClient(slave.dns + BFF_PATH)
+    (slave: { dns: string; isAlias: boolean }) =>
+      createHttpClient(slave.dns + BFF_PATH)
   );
 
-  let masterResponse: any;
-
-  const loggingClient= (url: GraphQLClient) => {
-
-    const request = async (isRawRequest: boolean, query: string, variables: any) => {
+  const loggingClient = (url: GraphQLClient) => {
+    const request = async (
+      isRawRequest: boolean,
+      query: string,
+      variables: any
+    ) => {
       try {
-        masterResponse = isRawRequest? await url.rawRequest(query, variables): await url.request(query, variables);
-        if(currentQuery(query) && !slavesDns.includes(url)){
-            slavesDns.forEach(async (slaveUrl:GraphQLClient)=> {
-              const slaveResponse = isRawRequest? await slaveUrl.rawRequest(query, variables): await slaveUrl.request(query, variables);
-                if((currentQuery(query) as SYNC_QUERY).equalCheck && masterResponse && slaveResponse !== masterResponse){
-                  sessionStore.set((currentQuery(query) as SYNC_QUERY).queryName, JSON.stringify({equalCheck: 'false', slaveResponse}));
-                };
-            });
+        let masterResponse: any;
+        masterResponse = isRawRequest
+          ? await url.rawRequest(query, variables)
+          : await url.request(query, variables);
+        if (currentQuery(query) && !slavesDns.includes(url) && masterResponse.errors.length>0) {
+          slavesDns.forEach(async (slaveUrl: GraphQLClient) => {
+            try {
+              let slaveResponse: any = isRawRequest
+                ? await slaveUrl.rawRequest(query, variables)
+                : await slaveUrl.request(query, variables);
+  
+              if(currentQuery(query)?.omitProperties){
+                masterResponse[currentQuery(query)?.queryName as unknown as string].forEach((element:any) => {
+                  currentQuery(query)?.omitProperties.forEach((prop: string)=> {
+                    delete element[prop]})
+                });
+                slaveResponse[currentQuery(query)?.queryName as unknown as string].forEach((element:any) => {
+                  currentQuery(query)?.omitProperties.forEach((prop: string)=> {
+                    delete element[prop]})
+                });
+              };
+              
+              if (
+                currentQuery(query)?.equalCheck &&
+                masterResponse &&
+                JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)
+              ) {
+                sessionStore.setObject(
+                  (currentQuery(query) as SYNC_QUERY).queryName,
+                  { equalCheck: 'false', slaveResponse }
+                );
+              }
+              if (currentQuery(query)?.isResponseStore) {
+                sessionStore.setObject(
+                  (currentQuery(query) as SYNC_QUERY).queryName,
+                  masterResponse
+                );
+              };
+            } catch (error) {
+              sessionStore.setObject(
+                (currentQuery(query) as SYNC_QUERY).queryName,
+                error as Record<string,unknown>);
+            };
+          });
         };
         return masterResponse;
       } catch (error) {
-        console.error(`Error during ${query}: ${error}`);
-      }
+        console.error(`Error during ${query}: ${JSON.stringify(error)}`);
+        throw error;
+      };
     };
 
     const client= {
