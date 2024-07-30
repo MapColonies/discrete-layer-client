@@ -16,6 +16,7 @@ type SYNC_QUERY = {
   equalCheck: boolean;
   isResponseStore: boolean;
   omitProperties?: string[];
+  sessionStorageMessage?: string;
 };
 
 const syncQueries: SYNC_QUERY[] = [
@@ -44,6 +45,7 @@ const syncQueries: SYNC_QUERY[] = [
     equalCheck: true,
     isResponseStore: false,
     omitProperties: ['modDate', 'id', 'parentId', 'selectable', 'childrenIds'],
+    sessionStorageMessage: '',
   },
 ];
 
@@ -77,7 +79,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
 
           // For Now: we don't store response from multiple slaves, setObject squash the last value.
           if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, { equalCheck: 'false', slaveResponse } );
+            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, relevantQuery?.sessionStorageMessage || slaveResponse );
           };
 
           if (relevantQuery?.isResponseStore) {
