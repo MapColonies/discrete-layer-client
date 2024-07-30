@@ -75,6 +75,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
             omitPropertiesFromResponse(slaveResponse, relevantQuery);
           };
 
+          // For Now: we don't store response from multiple slaves, setObject squash the last value.
           if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
             sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, { equalCheck: 'false', slaveResponse } );
           };
