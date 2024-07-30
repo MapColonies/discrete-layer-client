@@ -5,6 +5,7 @@ import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ContextActions } from '../../common/actions/context.actions';
+import { currentSite } from '../../common/helpers/siteUrl';
 
 export enum UserRole {
   USER = 'USER',
@@ -249,14 +250,10 @@ export const userStore = ModelBase
     function isActionAllowed(action: UserActionKeys | ContextActionKeys | string): boolean{
       const role = ROLES.find(item => item.role === self.user?.role);
       const permissionRules = role && role.permissions[(action as keyof (UserActionKeys | ContextActionKeys))] as permissionRule;
-      const mastersDns: string[] = CONFIG.SITES_CONFIG.masters?.map((master:{dns: string, isAlias: boolean})=>master.dns);
-      const slavesDns: string[] = CONFIG.SITES_CONFIG.slaves?.map((slave:{dns: string, isAlias: boolean})=>slave.dns);
-      const currentDns = window.location.origin;
-      const currentSite: siteName = mastersDns.includes(currentDns)? 'master': slavesDns.includes(currentDns)? 'slave': 'generic';
 
       if (permissionRules) {
         if (permissionRules.enabled && permissionRules.sites) {
-          return permissionRules.sites.includes(currentSite);
+          return permissionRules.sites.includes(currentSite());
         }
         return permissionRules.enabled;
       } else {

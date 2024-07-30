@@ -681,7 +681,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 <FormattedMessage id={tabView?.title}></FormattedMessage>
               </Typography>
               <Typography use="headline6" tag="span" className={`current-client-site-${currentSite()}`}>
-                {intl.formatMessage({ id: `tab-views.catalog.site.${currentSite()}` })}
+                {currentSite()!=='generic' && intl.formatMessage({ id: `tab-views.catalog.site.${currentSite()}` })}
               </Typography>
             </div>
           </div>
