@@ -10,7 +10,7 @@ import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
 import { Button, CircularProgress, Icon, IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
-import { SYNC_QUERY_NAME } from '../../..';
+import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';

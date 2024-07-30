@@ -15,7 +15,7 @@ import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty } from 'lodash';
 import { Button, Checkbox, IconButton, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { SYNC_QUERY_NAME } from '../../..';
+import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
 import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import { sessionStore } from '../../../common/helpers/storage';
 import { Mode } from '../../../common/models/mode.enum';
