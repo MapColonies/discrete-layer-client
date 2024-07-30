@@ -74,9 +74,9 @@ export enum UserAction {
   // ENTITY_FIELD_ACTION_BESTRECORD_PRODUCTNAME_VIEW = 'entity_action.BestRecord.productName.view',
 }
 
-export type site= {dns: string, isAlias: boolean};
+export type site = {dns: string, isAlias: boolean};
 
-export type siteName = 'master'|'slave'| 'generic';
+export type siteName = 'master'|'slave'|'generic';
 
 type permissionRule = {
   sites?: siteName[],
