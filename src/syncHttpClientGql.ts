@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
 import { currentBffUrl, syncSlavesDns } from './common/helpers/siteUrl';
@@ -75,20 +76,20 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
           if (relevantQuery?.omitProperties) {
             omitPropertiesFromResponse(masterResponse, relevantQuery);
             omitPropertiesFromResponse(slaveResponse, relevantQuery);
-          };
+          }
 
           // For Now: we don't store response from multiple slaves, setObject squash the last value.
           if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
             sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, relevantQuery?.sessionStorageMessage ? { message:relevantQuery?.sessionStorageMessage } : slaveResponse );
-          };
+          }
 
           if (relevantQuery?.isResponseStore) {
-            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, slaveResponse );
-          };
+            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, slaveResponse[relevantQuery.queryName] );
+          }
 
         } catch (error) {
-          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {message: `Invalid DR ${slaveUrl}`, error: error as Record<string, unknown>} );
-        };
+          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {message: `Invalid DR url ${get(slaveUrl,'url')}`, error: error as Record<string, unknown>} );
+        }
     });
 };
 
@@ -104,13 +105,13 @@ export const syncHttpClientGql = () => {
 
         if (relevantQuery && !syncSlavesDns.includes(url)) {
             syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
-        };
+        }
 
         return masterResponse;
       } catch (error) {
         console.error(`Error during ${query}: ${JSON.stringify(error)}`);
         throw error;
-      };
+      }
     };
 
     const gqlClientObject = {

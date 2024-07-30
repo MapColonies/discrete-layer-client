@@ -3,8 +3,6 @@ import { createHttpClient } from 'mst-gql';
 import CONFIG from '../config';
 import { site } from '../../discrete-layer/models/userStore';
 
-const BFF_PATH = '/bff/graphql'; //'/graphql';
-
 export const currentBffUrl = `${CONFIG.SERVICE_PROTOCOL as string}${
   CONFIG.SERVICE_NAME as string
 }`;
@@ -22,5 +20,5 @@ export const currentSite = () => {
 };
 
 export const syncSlavesDns: GraphQLClient[] = CONFIG.SITES_CONFIG.slaves?.map(
-  (slave: site) => !slave.isAlias && createHttpClient(slave.dns + BFF_PATH)
+  (slave: site) => !slave.isAlias && createHttpClient(slave.dns + CONFIG.BFF_PATH)
 );

@@ -209,7 +209,7 @@
   "field-names.ingestion.directory": "Directory",
   "field-names.ingestion.fileNames": "File names",
   "ingestion.warning.title": "Warning:",
-  "ingestion.warning.invalid-secondary-file": "{title} file error on secondary site - {value}",
+  "ingestion.warning.invalid-secondary-file": "{title} error occured during file validation on secondary site - {value}",
   "ingestion.error.invalid-source-file": "Selected file error: {value}",
   "ingestion.error.source-file-exception": "Cannot run validation api: {value}",
   "ingestion.error.directory-comparison": "Warning: directory content is not the same between current and secondary sites",

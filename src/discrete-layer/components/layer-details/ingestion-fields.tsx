@@ -192,7 +192,6 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
       ['setItem'],
       (method, key, ...args) => {},
       (method, key, ...args) => {
-        //console.log(`**** call ${method} with key ${key} and args ${args}`);
         if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
           const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
           if (dirComparison) {

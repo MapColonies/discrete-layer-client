@@ -30,6 +30,7 @@ const SERVED_ENTITY_TYPES = (window as any)._env_.SERVED_ENTITY_TYPES;
 const PROJECT_VERSION = (window as any)._env_.PROJECT_VERSION;
 const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 const SITES_CONFIG = (window as any)._env_.SITES_CONFIG;
+const BFF_PATH = (window as any)._env_.BFF_PATH;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -194,6 +195,7 @@ const APP_CONFIG = {
     slaves: SITES_CONFIG.slaves,
     generics: SITES_CONFIG.generics,
   },
+  BFF_PATH: BFF_PATH
 };
 
 export default APP_CONFIG;
