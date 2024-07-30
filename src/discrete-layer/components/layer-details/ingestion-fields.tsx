@@ -110,7 +110,7 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Tooltip content={<FormattedMessage id="ingestion.error.directory-comparison" />}>
+                  <Tooltip content={!isEmpty(notSynchedDirWarning) ? <FormattedMessage id={notSynchedDirWarning} /> : values[index]}>
                     <Box dir="auto" className={`filesPathContainer ${!isEmpty(notSynchedDirWarning) ? 'warning' : ''}`}>
                       {
                         !isEmpty(notSynchedDirWarning) && <IconButton className={`mc-icon-Status-Warnings ${!isEmpty(notSynchedDirWarning) ? 'warning' : ''}`} />
@@ -192,10 +192,12 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
       ['setItem'],
       (method, key, ...args) => {},
       (method, key, ...args) => {
-        // console.log(`**** call ${method} with key ${key} and args ${args}`);
-        const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
-        if (dirComparison?.message) {
-          setDirectoryComparisonWarn(dirComparison.message as string);
+        //console.log(`**** call ${method} with key ${key} and args ${args}`);
+        if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
+          const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
+          if (dirComparison) {
+            setDirectoryComparisonWarn(dirComparison.message as string);
+          }
         }
       }
     );
@@ -321,9 +323,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     }
     const directory = selected.files.length ? 
                         selected.folderChain
-                            .map((folder: FileData) => folder.name)
-                            .slice(1)
-                            .join('/')
+                          .map((folder: FileData) => folder.name)
+                          .join('/')
                         : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
     if (validateSources) {
@@ -331,7 +332,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
         store.queryValidateSource(
           {
             data: {
-              originDirectory: directory,
+              originDirectory: directory.substring(directory.indexOf('/')),
               fileNames: fileNames,
             }
           }
