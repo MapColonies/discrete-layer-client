@@ -153,12 +153,14 @@ const InnerForm = (
       ['setItem'],
       (method, key, ...args) => {},
       (method, key, ...args) => {
-        console.log(`**** call ${method} with key ${key} and args ${args}`);
-        const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
-        if (validSource) {
-          setValidationSourceWarn((validSource as Record<string,any>)[SYNC_QUERY_NAME.VALIDATE_SOURCE]?.message)
+        // console.log(`**** call ${method} with key ${key} and args ${args}`);
+        if (key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE)) {
+          const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
+          if (validSource) {
+            setValidationSourceWarn((validSource as Record<string,any>)[SYNC_QUERY_NAME.VALIDATE_SOURCE]?.message)
+          }
+          // console.log('**** FORM #######################', validSource);
         }
-        console.log('**** FORM #######################', validSource);
       }
     );
 
