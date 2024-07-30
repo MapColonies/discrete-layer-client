@@ -1,6 +1,6 @@
 import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
-import { currentUrl, slavesDns } from './common/helpers/siteUrl';
+import { currentBffUrl, syncSlavesDns } from './common/helpers/siteUrl';
 import { sessionStore } from './common/helpers/storage';
 
 export const enum SYNC_QUERY_NAME {
@@ -67,7 +67,7 @@ const omitPropertiesFromResponse = (
 };
 
 const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
-    slavesDns.forEach(async (slaveUrl: GraphQLClient) => {
+    syncSlavesDns.forEach(async (slaveUrl: GraphQLClient) => {
         try {
           let slaveResponse: any = isRawRequest? await slaveUrl.rawRequest(query, variables):
             await slaveUrl.request(query, variables);
@@ -93,7 +93,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
 };
 
 export const syncHttpClientGql = () => {
-  const clientGql = createHttpClient(currentUrl);
+  const clientGql = createHttpClient(currentBffUrl);
 
   const createClientGql = (url: GraphQLClient) => {
     const syncRequest = async ( isRawRequest: boolean, query: string, variables: any) => {
@@ -102,7 +102,7 @@ export const syncHttpClientGql = () => {
         let masterResponse: any = isRawRequest? await url.rawRequest(query, variables):
             await url.request(query, variables);
 
-        if (relevantQuery && !slavesDns.includes(url) /*&& masterResponse.errors.length>0*/) {
+        if (relevantQuery && !syncSlavesDns.includes(url) /*&& masterResponse.errors.length>0*/) {
             syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         };
 
