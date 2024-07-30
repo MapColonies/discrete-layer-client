@@ -87,7 +87,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
           };
 
         } catch (error) {
-          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, error as Record<string, unknown> );
+          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {message: `Invalid DR ${slaveUrl}`, error: error as Record<string, unknown>} );
         };
     });
 };
