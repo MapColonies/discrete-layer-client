@@ -29,6 +29,7 @@ import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/use
 import CONFIG from '../../../common/config';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
+import { getTypeName } from '../../components/layer-details/raster/pp-map.utils';
 import { TabViews } from '../tab-views';
 
 const FIRST = 0;
@@ -265,12 +266,20 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           const closeMenu = (data.handleClose as (() => void | undefined));
 
           setGetPolygonPartsFeatureOptions({
-            pointCoordinates: [
-              coordinates.longitude.toString(),
-              coordinates.latitude.toString(),
-            ],
+            feature: {
+              "type": "Feature",
+              "properties": {},
+              "geometry": {
+                "coordinates": [
+                  coordinates.longitude.toString(),
+                  coordinates.latitude.toString()
+                ],
+                "type": "Point"
+              }
+            },
+            typeName: getTypeName(data?.layerRecord as LayerRasterRecordModelType),
             shouldFlyToFeatures: true,
-            filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
+            // filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,
             dWithin: 0
           });

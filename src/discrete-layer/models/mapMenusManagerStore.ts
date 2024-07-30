@@ -61,7 +61,7 @@ export type MapMenus = {
 }
 
 export type WfsFeatureInfo = GetFeatureModelType & Pick<WfsGetFeatureParams, 'pointCoordinates' | 'typeName'> & { config: IFeatureConfig };
-export type PolygonPartsWfsFeatureInfo = GetFeatureModelType & Pick<WfsPolygonPartsGetFeatureParams, 'pointCoordinates'>;
+export type PolygonPartsWfsFeatureInfo = GetFeatureModelType & Pick<WfsPolygonPartsGetFeatureParams, 'feature'>;
 
 export const mapMenusManagerStore = ModelBase
   .props({

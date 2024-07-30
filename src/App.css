@@ -98,6 +98,10 @@ button.cesium-infoBox-close:hover {
   justify-content: space-evenly;
 }
 
+[dir=rtl] .cesium-infoBox-title {
+  direction: ltr;
+}
+
 .appLogoContainer {
   display: flex;
   justify-content: center;

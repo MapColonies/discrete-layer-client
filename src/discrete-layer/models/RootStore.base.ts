@@ -226,7 +226,8 @@ export type DemHeightsPositionInput = {
   longitude: number
 }
 export type WfsPolygonPartsGetFeatureParams = {
-  pointCoordinates: string[]
+  feature: GeojsonFeatureInput
+  typeName: string
   count?: number
   dWithin?: number
   filterProperties?: WfsFilterPropertyParam[]

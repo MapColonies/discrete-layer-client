@@ -1,5 +1,8 @@
 import { Vector } from 'ol/layer';
 import { Style, Stroke, Fill } from 'ol/style';
+import CONFIG from '../../../../common/config';
+import { LayerRasterRecordModelType } from '../../../models';
+import { ILayerImage } from '../../../models/layerImage';
 
 export enum FeatureType {
   DEFAULT = 'DEFAULT',
@@ -29,8 +32,11 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
   [FeatureType.EXISTING_PP, new Style({
                               stroke: new Stroke({
                                 width: 2,
-                                color: "#00ff00"
+                                color: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.outlineColor
                               }),
+                              fill: new Fill({
+                                color: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.color
+                              })
                             })
   ],
   [FeatureType.SELECTED, new Style({
@@ -45,4 +51,12 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
 ]
 ])
 
-//PPMapStyles.get(FeatureType.PP_PERIMETER)?.getF
+const POLYGON_PARTS_PREFIX = 'polygon_parts:';
+const POLYGON_PARTS_SUFFIX = '_polygon_parts';
+export const getTypeName = (layerRecord?: LayerRasterRecordModelType) => {
+  // Naming convension of polygon parts feature typeName
+  // polygon_parts:{lowercase(productId)}_{lowercase(productType)}_polygon_parts
+  return layerRecord ? 
+    `${POLYGON_PARTS_PREFIX}${layerRecord.productId?.toLowerCase()}_${layerRecord.productType?.toLowerCase()}${POLYGON_PARTS_SUFFIX}` :
+    'SHOULD_BE_CALCULATED_FROM_UPDATED_LAYER';
+}

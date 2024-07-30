@@ -181,7 +181,8 @@ const APP_CONFIG = {
     MAP: {
       MAX_ACTIVE_LAYERS_TO_PRESENT: 5,
       POLYGON_PARTS_FEATURE_CONFIG: {
-        color: '#BF40BF',
+        color: '#00ff0030',//'#BF40BF',
+        outlineColor: '#00FF00',
         outlineWidth: 8
       }
     }

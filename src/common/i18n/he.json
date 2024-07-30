@@ -710,7 +710,7 @@
   "map-context-menu.title": "מציג {maxLayersToPresent} שכבות מתוך {activeLayers}",
   "map-context-menu.service-operations.group.title": "שירותי תשאול {extraInfo}",
   "map-context-menu.query-dem-height.title": "תשאול גובה נקודה",
-  "map-context-menu.polygon-parts.title": "תשאול חלקי תיחום",
+  "map-context-menu.polygon-parts.title": "(2D) תשאול חלקי תיחום",
   "map-context-menu.layer-up.title": "הצג רמה אחת למעלה",
   "map-context-menu.layer-down.title": "הצג רמה אחת למטה",
   "map-context-menu.layer-to-top.title": "הצג מעל כולם",
@@ -720,6 +720,7 @@
   "wfs-info.no-data.message": "לא נמצאו נתונים עבור שירות מידע {feature}",
   "dem-heights-info.no-data.message": "לא נמצאו נתוני גובה במיקום המבוקש",
   "polygonParts-info.no-data.message": "לא נמצאו חלקי תיחום לשכבה במיקום המבוקש",
+  "polygonParts-info.part-to-large.message": "חלק תיחום גדול מדי לתצוגה",
 
   "export-layer.exportSuccessContainer.title": "בקשת הייצוא נוצרה בהצלחה",
   "export-layer.exportSuccessContainer.approve": "העתקה וסיום",

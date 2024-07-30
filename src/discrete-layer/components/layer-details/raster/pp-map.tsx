@@ -12,6 +12,7 @@ import { MapLoadingIndicator } from '../../../../common/components/map/ol-map.lo
 import { useStore } from '../../../models/RootStore';
 import { PolygonPartsVectorLayer } from './pp-vector-layer';
 import { PPMapStyles } from './pp-map.utils';
+import { ILayerImage } from '../../../models/layerImage';
 
 interface GeoFeaturesPresentorProps {
   mode: Mode;
@@ -21,6 +22,7 @@ interface GeoFeaturesPresentorProps {
   selectedFeatureKey?: string;
   selectionStyle?: Style;
   showExisitngPolygonParts?: boolean;
+  layerRecord?: ILayerImage | null;
 }
 
 const  DEFAULT_PROJECTION = 'EPSG:4326';
@@ -32,7 +34,8 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   fitOptions,
   selectedFeatureKey,
   selectionStyle,
-  showExisitngPolygonParts
+  showExisitngPolygonParts,
+  layerRecord
 }) => {
   // const [geoJsonValue, setGeoJsonValue] = useState();
   const store = useStore();
@@ -106,7 +109,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
         <MapLoadingIndicator/>
         {previewBaseMap}
         {
-          showExisitngPolygonParts && <PolygonPartsVectorLayer/>
+          showExisitngPolygonParts && <PolygonPartsVectorLayer layerRecord={layerRecord}/>
         }
         <VectorLayer>
           <VectorSource>

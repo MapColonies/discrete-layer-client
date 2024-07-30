@@ -702,7 +702,7 @@ export const InnerRasterForm = (
                   setShowPolygonPartsOnMap(evt.currentTarget.checked);
                 }}
             />
-            <Checkbox 
+            { mode === Mode.UPDATE && <Checkbox 
                 className='showOnMapContainer'
                 label={intl.formatMessage({id: 'polygon-parts.show-exisitng-parts-on-map.label'})}
                 checked={showExisitngLayerPartsOnMap}
@@ -711,6 +711,7 @@ export const InnerRasterForm = (
                     setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
                   }}
               />
+            }
           </Box>
           <Box className="polygonPartsContainer">
             <Box className="polygonPartsData">
@@ -783,7 +784,7 @@ export const InnerRasterForm = (
                 geoFeatures={showPolygonPartsOnMap ? [sourceExtent as Feature<Geometry, GeoJsonProperties>,outlinedPerimeter as Feature<Geometry, GeoJsonProperties>, ...ppFeatures] : []} 
                 selectedFeatureKey={selectedFeature}
                 selectionStyle={ PPMapStyles.get(FeatureType.SELECTED)} 
-                style={{width: '520px', position: 'relative'}} 
+                style={{width: '520px', position: 'relative', direction: 'ltr'}} 
                 fitOptions={{padding:[10,20,10,20]}}
                 showExisitngPolygonParts={showExisitngLayerPartsOnMap}
               />
