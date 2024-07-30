@@ -86,8 +86,8 @@ const IngestionInputs: React.FC<{
   values: string[];
   selection: Selection;
   formik: EntityFormikHandlers;
-  markForWarning?: boolean;
-}> = ({ recordType, fields, values, selection, formik, markForWarning }) => {
+  notSynchedDirWarning?: string;
+}> = ({ recordType, fields, values, selection, formik, notSynchedDirWarning }) => {
   return (
     <>
       {
@@ -110,12 +110,14 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Box dir="auto" className={`filesPathContainer ${markForWarning ? 'warning' : ''}`}>
-                    {
-                      markForWarning && <IconButton className={`mc-icon-Status-Warnings ${markForWarning ? 'warning' : ''}`} />
-                    }
-                    {values[index]}
-                  </Box>
+                  <Tooltip content={<FormattedMessage id="ingestion.error.directory-comparison" />}>
+                    <Box dir="auto" className={`filesPathContainer ${!isEmpty(notSynchedDirWarning) ? 'warning' : ''}`}>
+                      {
+                        !isEmpty(notSynchedDirWarning) && <IconButton className={`mc-icon-Status-Warnings ${!isEmpty(notSynchedDirWarning) ? 'warning' : ''}`} />
+                      }
+                      {values[index]}
+                    </Box>
+                  </Tooltip>
                 }
                 {
                   index === FILES && values[index] !== '' &&
@@ -178,7 +180,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
   const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
-  const [unSynchDir, setUnSynchDir] = useState<boolean>(false);
+  const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<string>('');
 
   const closeCurtain = useCallback(() => {
     onSetCurtainOpen(true);
@@ -188,12 +190,12 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     // Add method wathers for storage changes
     sessionStore.watchMethods(
       ['setItem'],
-      // @ts-ignore
+      (method, key, ...args) => {},
       (method, key, ...args) => {
         // console.log(`**** call ${method} with key ${key} and args ${args}`);
         const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
-        if (dirComparison) {
-          setUnSynchDir(true);
+        if (dirComparison?.message) {
+          setDirectoryComparisonWarn(dirComparison.message as string);
         }
       }
     );
@@ -379,7 +381,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
             values={[values.directory, values.fileNames]}
             selection={selection}
             formik={formik as EntityFormikHandlers}
-            markForWarning={unSynchDir}
+            notSynchedDirWarning={directoryComparisonWarn}
           />
         </Box>
         <Box className="ingestionButtonsContainer">

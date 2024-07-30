@@ -212,6 +212,7 @@
   "ingestion.warning.invalid-secondary-file": "{title} file error on secondary site - {value}",
   "ingestion.error.invalid-source-file": "Selected file error: {value}",
   "ingestion.error.source-file-exception": "Cannot run validation api: {value}",
+  "ingestion.error.directory-comparison": "Warning: directory content is not the same between current and secondary sites",
   "ingestion.error.invalid-metadata": "Metadata file format is not valid",
   "ingestion.button.import-metadata": "Import Metadata",
   "ingestion.checkbox.label": "Operation failed on secondary site, please check to continue with operation on main site only",

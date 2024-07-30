@@ -78,3 +78,7 @@ body[dir='rtl'] #layerDetailsForm .buttons {
 .warningMessage {
   padding: 0 12px;
 }
+
+.warning.mdc-form-field label {
+  color: var(--mdc-theme-gc-warning-high);
+}

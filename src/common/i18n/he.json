@@ -216,6 +216,7 @@
   "ingestion.warning.invalid-secondary-file": "{title} אירעה שגיאה בקובץ באתר המשני - {value}",
   "ingestion.error.invalid-source-file": "שגיאה בקובץ הנבחר: {value}",
   "ingestion.error.source-file-exception": "שירות ולידציה אינו תקין: {value}",
+  "ingestion.error.directory-comparison": "אזהרה: תוכן הסיפרייה אינו זהה בין האתר הראשי והאתר המשני",
   "ingestion.error.invalid-metadata": "קובץ מטא-דאטה בפורמט לא תקין",
   "ingestion.button.import-metadata": "בחר מטא-דאטה",
   "ingestion.checkbox.label": "לא ניתן לבצע את הפעולה באתר המשני, יש לסמן כדי להמשיך ולבצע את הפעולה באתר הראשי בלבד",

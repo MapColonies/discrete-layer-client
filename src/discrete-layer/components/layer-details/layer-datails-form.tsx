@@ -151,12 +151,12 @@ const InnerForm = (
     // Add method wathers for storage changes
     sessionStore.watchMethods(
       ['setItem'],
-      // @ts-ignore
+      (method, key, ...args) => {},
       (method, key, ...args) => {
         console.log(`**** call ${method} with key ${key} and args ${args}`);
         const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
-        if(validSource) {
-          setValidationSourceWarn((validSource as Record<string,any>)[SYNC_QUERY_NAME.VALIDATE_SOURCE].message)
+        if (validSource) {
+          setValidationSourceWarn((validSource as Record<string,any>)[SYNC_QUERY_NAME.VALIDATE_SOURCE]?.message)
         }
         console.log('**** FORM #######################', validSource);
       }
