@@ -272,25 +272,23 @@ const InnerForm = (
         <Box className="footer">
           <Box className="messages">
             {
-              Object.keys(firstPhaseErrors).length > NONE &&
+              !isEmpty(firstPhaseErrors) &&
               <ValidationsError errors={firstPhaseErrors} />
             }
             {
-              Object.keys(errors).length === NONE &&
+              isEmpty(errors) &&
               vestValidationResults.errorCount > NONE &&
               <ValidationsError errors={vestValidationResults.getErrors()} />
             }
             {
-              graphQLError !== undefined && (
-                // eslint-disable-next-line
-                <GraphQLError error={graphQLError} />
-              )
+              !isEmpty(graphQLError) &&
+              <GraphQLError error={graphQLError} />
             }
             {
               validationSourceWarn?.message &&
-              // Object.keys(firstPhaseErrors).length === NONE &&
-              // (Object.keys(errors).length > NONE || !vestValidationResults.errorCount) &&
-              // graphQLError === undefined &&
+              isEmpty(firstPhaseErrors) &&
+              (!isEmpty(errors) || !vestValidationResults.errorCount) &&
+              isEmpty(graphQLError) &&
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
                 <Box>
