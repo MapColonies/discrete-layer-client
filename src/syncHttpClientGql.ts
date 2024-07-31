@@ -68,6 +68,11 @@ const omitPropertiesFromResponse = (
         });
 };
 
+const isRaster = (variables: any): boolean => {
+  return (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER) &&
+         (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER);
+};
+
 const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
     syncSlavesDns.forEach(async (slaveUrl: GraphQLClient) => {
         try {
@@ -89,7 +94,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
           }
 
         } catch (error) {
-          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {message: `Invalid DR url ${get(slaveUrl,'url')}`, error: error as Record<string, unknown>} );
+          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {message: `Not available ${get(slaveUrl,'url')}`, error: error as Record<string, unknown>} );
         }
     });
 };
@@ -104,11 +109,9 @@ export const syncHttpClientGql = () => {
         let masterResponse: any = isRawRequest? await client.rawRequest(query, variables):
             await client.request(query, variables);
 
-        if (relevantQuery && !syncSlavesDns.includes(client) &&
-            (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER) &&
-            (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER)) {
-              syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
-        }
+          if (relevantQuery && !syncSlavesDns.includes(client) && isRaster(variables)) {
+            syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
+          };
 
         return masterResponse;
       } catch (error) {
