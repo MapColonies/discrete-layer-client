@@ -13,7 +13,7 @@ export const enum SYNC_QUERY_NAME {
   GET_DIRECTORY = 'getDirectory',
 };
 
-type SYNC_QUERY = {
+export type SYNC_QUERY = {
   queryName: SYNC_QUERY_NAME;
   equalCheck: boolean;
   isResponseStore: boolean;
@@ -21,7 +21,7 @@ type SYNC_QUERY = {
   sessionStorageMessageCode?: string;
 };
 
-const syncQueries: SYNC_QUERY[] = [
+export const syncQueries: SYNC_QUERY[] = [
   {
     queryName: SYNC_QUERY_NAME.UPDATE_META_DATA,
     equalCheck: false,
