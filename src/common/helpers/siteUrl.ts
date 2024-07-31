@@ -12,7 +12,9 @@ export const currentSite = (): siteName => {
     ? 'slave'
     : CONFIG.SITES_CONFIG.masters.map((master: site) => master.dns).includes(currentClientUrl)
     ? 'master'
-    : 'generic';
+    : CONFIG.SITES_CONFIG.generics.map((generic: site) => generic.dns).includes(currentClientUrl)
+    ? 'generic'
+    : 'undefined';
 };
 
 export const syncSlavesDns: GraphQLClient[] = CONFIG.SITES_CONFIG.slaves?.filter((slave: site) => !slave.isAlias)

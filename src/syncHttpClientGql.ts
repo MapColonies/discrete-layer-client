@@ -3,6 +3,7 @@ import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
 import { currentBffUrl, syncSlavesDns } from './common/helpers/siteUrl';
 import { sessionStore } from './common/helpers/storage';
+import { RecordType } from './discrete-layer/models';
 
 export const enum SYNC_QUERY_NAME {
   UPDATE_META_DATA = 'updateMetadata',
@@ -103,7 +104,7 @@ export const syncHttpClientGql = () => {
         let masterResponse: any = isRawRequest? await url.rawRequest(query, variables):
             await url.request(query, variables);
 
-        if (relevantQuery && !syncSlavesDns.includes(url)) {
+        if (relevantQuery && !syncSlavesDns.includes(url) && (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER)) {
             syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         }
 

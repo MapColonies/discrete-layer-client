@@ -76,7 +76,7 @@ export enum UserAction {
 
 export type site = {dns: string, isAlias: boolean};
 
-export type siteName = 'master'|'slave'|'generic';
+export type siteName = 'master'|'slave'|'generic'|'undefined';
 
 type permissionRule = {
   sites?: siteName[],
