@@ -287,6 +287,9 @@ const InnerForm = (
             }
             {
               validationSourceWarn &&
+              Object.keys(firstPhaseErrors).length === NONE &&
+              (Object.keys(errors).length > NONE || !vestValidationResults.errorCount) &&
+              graphQLError === undefined &&
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
                 <Box>

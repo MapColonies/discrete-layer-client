@@ -104,7 +104,9 @@ export const syncHttpClientGql = () => {
         let masterResponse: any = isRawRequest? await url.rawRequest(query, variables):
             await url.request(query, variables);
 
-        if (relevantQuery && !syncSlavesDns.includes(url) && (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER)) {
+        if (relevantQuery && !syncSlavesDns.includes(url) &&
+            (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER) &&
+            (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER)) {console.log('*************', relevantQuery.queryName, variables?.data?.type, variables?.data?.recordType)
             syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         }
 
