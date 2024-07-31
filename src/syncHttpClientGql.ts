@@ -18,7 +18,7 @@ type SYNC_QUERY = {
   equalCheck: boolean;
   isResponseStore: boolean;
   omitProperties?: string[];
-  sessionStorageMessage?: string;
+  sessionStorageMessageCode?: string;
 };
 
 const syncQueries: SYNC_QUERY[] = [
@@ -47,7 +47,7 @@ const syncQueries: SYNC_QUERY[] = [
     equalCheck: true,
     isResponseStore: false,
     omitProperties: ['modDate', 'id', 'parentId', 'selectable', 'childrenIds'],
-    sessionStorageMessage: 'ingestion.error.directory-comparison',
+    sessionStorageMessageCode: 'ingestion.error.directory-comparison',
   },
 ];
 
@@ -58,14 +58,15 @@ const currentQuery = (query: string) => {
 };
 
 const omitPropertiesFromResponse = (
-    response: any,
-    relevantQuery?: SYNC_QUERY
+  response: any,
+  relevantQuery?: SYNC_QUERY
 ) => {
-    response[relevantQuery?.queryName as unknown as SYNC_QUERY_NAME]
+  response[relevantQuery?.queryName as unknown as SYNC_QUERY_NAME]
     .forEach((element: any) => {
-        relevantQuery?.omitProperties?.forEach(
-            (prop: string) => {delete element[prop]})
-        });
+      relevantQuery?.omitProperties?.forEach(
+        (prop: string) => {delete element[prop]}
+      )
+    });
 };
 
 const isRaster = (variables: any): boolean => {
@@ -74,29 +75,29 @@ const isRaster = (variables: any): boolean => {
 };
 
 const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
-    syncSlavesDns.forEach(async (slaveUrl: GraphQLClient) => {
-        try {
-          let slaveResponse: any = isRawRequest? await slaveUrl.rawRequest(query, variables):
-            await slaveUrl.request(query, variables);
+  syncSlavesDns.forEach(async (slaveUrl: GraphQLClient) => {
+    try {
+      let slaveResponse: any = isRawRequest? await slaveUrl.rawRequest(query, variables):
+        await slaveUrl.request(query, variables);
 
-          if (relevantQuery?.omitProperties) {
-            omitPropertiesFromResponse(masterResponse, relevantQuery);
-            omitPropertiesFromResponse(slaveResponse, relevantQuery);
-          }
+      if (relevantQuery?.omitProperties) {
+        omitPropertiesFromResponse(masterResponse, relevantQuery);
+        omitPropertiesFromResponse(slaveResponse, relevantQuery);
+      }
 
-          // For Now: we don't store response from multiple slaves, setObject squash the last value.
-          if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, relevantQuery?.sessionStorageMessage ? { message:relevantQuery?.sessionStorageMessage } : slaveResponse );
-          }
+      // For Now: we don't store response from multiple slaves, setObject squash the last value.
+      if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
+        sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, relevantQuery?.sessionStorageMessageCode ? { code: relevantQuery?.sessionStorageMessageCode } : slaveResponse );
+      }
 
-          if (relevantQuery?.isResponseStore) {
-            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, slaveResponse[relevantQuery.queryName] );
-          }
+      if (relevantQuery?.isResponseStore) {
+        sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, slaveResponse[relevantQuery.queryName] );
+      }
 
-        } catch (error) {
-          sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {message: `Not available ${get(slaveUrl,'url')}`, error: error as Record<string, unknown>} );
-        }
-    });
+    } catch (error) {
+      sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, { code: 'ingestion.error.not-available', url: `${get(slaveUrl,'url')}`, severity: 'error'/*, error*/ } );
+    }
+  });
 };
 
 export const syncHttpClientGql = () => {
@@ -107,12 +108,12 @@ export const syncHttpClientGql = () => {
       try {
         const relevantQuery = currentQuery(query);
         let masterResponse: any = isRawRequest? await url.rawRequest(query, variables):
-            await url.request(query, variables);
+          await url.request(query, variables);
 
-        if (relevantQuery && !syncSlavesDns.includes(url) && isRaster(variables)) {console.log('*************', relevantQuery.queryName, variables?.data?.type, variables?.data?.recordType)
-            syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
+        if (relevantQuery && !syncSlavesDns.includes(url) && isRaster(variables)) {
+          // console.log('*************', relevantQuery.queryName, variables?.data?.type, variables?.data?.recordType)
+          syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         }
-
         return masterResponse;
       } catch (error) {
         console.error(`Error during ${query}: ${JSON.stringify(error)}`);
@@ -129,7 +130,6 @@ export const syncHttpClientGql = () => {
         return syncRequest(true, query, variables);
       },
     };
-    
     return gqlClientObject;
   };
 

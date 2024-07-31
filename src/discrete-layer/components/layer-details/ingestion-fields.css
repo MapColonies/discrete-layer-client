@@ -107,4 +107,9 @@ body[dir='rtl'] .moreTooltip {
   text-overflow: ellipsis;
   display: flex;
   flex-direction: row-reverse;
+  direction: rtl;
+}
+
+body[dir='rtl'] .filesPathContainer {
+  direction: ltr;
 }

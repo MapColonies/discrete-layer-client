@@ -166,8 +166,8 @@
 
   "tab-views.search-results": "תוצאות חיפוש",
   "tab-views.catalog": "קטלוג",
-  "tab-views.catalog.site.master": "אתר ראשי",
-  "tab-views.catalog.site.slave": "אתר משני",
+  "tab-views.catalog.site.master": "ראשי",
+  "tab-views.catalog.site.slave": "משני",
   "tab-views.create-best": "עריכת טיוטת BEST",
   "tab-views.export-layer": "ייצוא שכבה",
 
@@ -213,11 +213,12 @@
   "field-names.ingestion.directory": "נתיב מלא",
   "field-names.ingestion.fileNames": "שמות הקבצים",
   "ingestion.warning.title": "אזהרה:",
-  "ingestion.warning.invalid-secondary-file": "{title} אירעה שגיאה בוולידציה של הקובץ באתר המשני - {value}",
+  "ingestion.warning.invalid-secondary-file": "{title} אירעה שגיאה בוולידציה של הקובץ באתר המשני",
   "ingestion.error.invalid-source-file": "שגיאה בקובץ הנבחר: {value}",
   "ingestion.error.source-file-exception": "שירות ולידציה אינו תקין: {value}",
   "ingestion.error.directory-comparison": "אזהרה: תוכן הסיפרייה אינו זהה בין האתר הראשי והאתר המשני",
   "ingestion.error.invalid-metadata": "קובץ מטא-דאטה בפורמט לא תקין",
+  "ingestion.error.not-available": "לא זמין",
   "ingestion.button.import-metadata": "בחר מטא-דאטה",
   "ingestion.checkbox.label": "לא ניתן לבצע את הפעולה באתר המשני, יש לסמן כדי להמשיך ולבצע את הפעולה באתר הראשי בלבד",
 

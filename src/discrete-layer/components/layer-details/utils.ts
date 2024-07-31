@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, isEmpty, omit } from 'lodash';
 import moment, { unitOfTime } from 'moment';
+import { IntlShape } from 'react-intl';
 import { $enum } from 'ts-enum-util';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
@@ -142,6 +143,24 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     }
   }
   return 'string';
+};
+
+export interface ValidationMessage {
+  message: string;
+  severity: string;
+}
+
+export const getValidationMessage = (data: Record<string, unknown>, intl: IntlShape): ValidationMessage => {
+  const severity: string = data.severity as string ?? 'warning';
+  let message: string = data.message
+    ? data.message as string
+    : data.code
+    ? intl.formatMessage({ id: data.code as string })
+    : '';
+  if (data.url) {
+    message = data.url as string + ' ' + message;
+  }
+  return { message, severity };
 };
 
 export const getValidationType = (validation: ValidationConfigModelType): ValidationTypeName | undefined => {

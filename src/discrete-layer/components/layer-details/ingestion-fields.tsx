@@ -22,7 +22,7 @@ import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModel
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { importJSONFileFromClient } from './utils';
+import { getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
 
 import './ingestion-fields.css';
 
@@ -86,7 +86,7 @@ const IngestionInputs: React.FC<{
   values: string[];
   selection: Selection;
   formik: EntityFormikHandlers;
-  notSynchedDirWarning?: string;
+  notSynchedDirWarning?: ValidationMessage;
 }> = ({ recordType, fields, values, selection, formik, notSynchedDirWarning }) => {
   return (
     <>
@@ -110,13 +110,11 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Tooltip content={!isEmpty(notSynchedDirWarning) ? <FormattedMessage id={notSynchedDirWarning} /> : values[index]}>
-                    <Box dir="auto" className={`filesPathContainer ${!isEmpty(notSynchedDirWarning) ? 'warning' : ''}`}>
-                      {
-                        !isEmpty(notSynchedDirWarning) && <IconButton className={`mc-icon-Status-Warnings ${!isEmpty(notSynchedDirWarning) ? 'warning' : ''}`} />
-                      }
-                      {values[index]}
-                    </Box>
+                  <Tooltip content={notSynchedDirWarning?.message ? notSynchedDirWarning?.message : values[index]}>
+                    <Typography tag="div" dir="auto" className={`filesPathContainer ${notSynchedDirWarning?.severity}`}>
+                      { notSynchedDirWarning?.message && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
+                      { values[index] }
+                    </Typography>
                   </Tooltip>
                 }
                 {
@@ -180,7 +178,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
   const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
-  const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<string>('');
+  const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<ValidationMessage>();
 
   const closeCurtain = useCallback(() => {
     onSetCurtainOpen(true);
@@ -195,7 +193,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
         if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
           const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
           if (dirComparison) {
-            setDirectoryComparisonWarn(dirComparison.message as string);
+            setDirectoryComparisonWarn(getValidationMessage(dirComparison, intl));
           }
         }
       }

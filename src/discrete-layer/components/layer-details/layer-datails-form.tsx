@@ -36,6 +36,8 @@ import {
   extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
   transformEntityToFormFields,
+  getValidationMessage,
+  ValidationMessage,
 } from './utils';
 
 import './layer-details-form.css';
@@ -48,6 +50,12 @@ export interface FormValues {
   fileNames: string;
 }
 
+export interface StatusError {
+  errors: {
+    [fieldName: string]: string[];
+  }
+}
+
 interface LayerDetailsFormCustomProps {
   recordType: RecordType;
   ingestionFields: FieldConfigModelType[];
@@ -58,12 +66,6 @@ interface LayerDetailsFormCustomProps {
   mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
-}
-
-export interface StatusError {
-  errors: {
-    [fieldName: string]: string[];
-  }
 }
 
 export interface EntityFormikHandlers extends FormikHandlers {
@@ -113,7 +115,7 @@ const InnerForm = (
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
-  const [validationSourceWarn, setValidationSourceWarn] = useState<string>('');
+  const [validationSourceWarn, setValidationSourceWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -156,12 +158,11 @@ const InnerForm = (
         if (key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE)) {
           const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
           if (validSource && !validSource.isValid) {
-            setValidationSourceWarn(validSource.message as string);
+            setValidationSourceWarn(getValidationMessage(validSource, intl));
           }
         }
       }
     );
-
     // Clean up the method wathers when the component unmounts
     return () => {
       sessionStore.unWatchMethods();
@@ -286,21 +287,24 @@ const InnerForm = (
               )
             }
             {
-              validationSourceWarn &&
+              validationSourceWarn?.message &&
               // Object.keys(firstPhaseErrors).length === NONE &&
               // (Object.keys(errors).length > NONE || !vestValidationResults.errorCount) &&
               // graphQLError === undefined &&
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
                 <Box>
-                  <Typography tag="div" className="warningMessage warning"
-                    dangerouslySetInnerHTML={{__html:
-                      intl.formatMessage(
-                        {id: 'ingestion.warning.invalid-secondary-file'},
-                        {title: emphasizeByHTML(`${intl.formatMessage({ id: 'ingestion.warning.title' })}`), value: validationSourceWarn}
-                      )
-                    }}
-                  />
+                  <Typography tag="div">
+                    <Typography tag="span" className="warningMessage warning"
+                      dangerouslySetInnerHTML={{__html:
+                        intl.formatMessage(
+                          { id: 'ingestion.warning.invalid-secondary-file' },
+                          { title: emphasizeByHTML(`${intl.formatMessage({ id: 'ingestion.warning.title' })}`) }
+                        )
+                      }}
+                    />
+                    <Typography tag="span" className={validationSourceWarn?.severity}>{validationSourceWarn?.message}</Typography>
+                  </Typography>
                   <Checkbox
                     className="warning"
                     label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
@@ -324,7 +328,7 @@ const InnerForm = (
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
                 !isEmpty(graphQLError) ||
-                (!isEmpty(validationSourceWarn) && !syncAnywayChecked)
+                (!isEmpty(validationSourceWarn?.message) && !syncAnywayChecked)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />
