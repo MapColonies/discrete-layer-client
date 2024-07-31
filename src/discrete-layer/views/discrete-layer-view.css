@@ -146,12 +146,12 @@ body[dir='rtl'] .tabTitle {
 
 .current-client-site-master {
   font-size: 20px;
-  color: var(--mdc-theme-gc-priority-normal);
+  color: var(--mdc-theme-gc-site-master);
 }
 
 .current-client-site-slave {
   font-size: 20px;
-  color: var(--mdc-theme-error);
+  color: var(--mdc-theme-gc-site-slave);
 }
 
 .tabOperationsContainer {
