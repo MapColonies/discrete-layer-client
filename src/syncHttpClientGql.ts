@@ -81,11 +81,11 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
 
           // For Now: we don't store response from multiple slaves, setObject squash the last value.
           if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, relevantQuery?.sessionStorageMessage ? { message:relevantQuery?.sessionStorageMessage } : slaveResponse );
+            sessionStore.setObject( relevantQuery.queryName, relevantQuery?.sessionStorageMessage ? { message:relevantQuery?.sessionStorageMessage } : slaveResponse );
           }
 
           if (relevantQuery?.isResponseStore) {
-            sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, slaveResponse[relevantQuery.queryName] );
+            sessionStore.setObject( relevantQuery.queryName, slaveResponse[relevantQuery.queryName] );
           }
 
         } catch (error) {
@@ -97,17 +97,17 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
 export const syncHttpClientGql = () => {
   const clientGql = createHttpClient(currentBffUrl);
 
-  const createClientGql = (url: GraphQLClient) => {
+  const createClientGql = (client: GraphQLClient) => {
     const syncRequest = async ( isRawRequest: boolean, query: string, variables: any) => {
       try {
         const relevantQuery = currentQuery(query);
-        let masterResponse: any = isRawRequest? await url.rawRequest(query, variables):
-            await url.request(query, variables);
+        let masterResponse: any = isRawRequest? await client.rawRequest(query, variables):
+            await client.request(query, variables);
 
-        if (relevantQuery && !syncSlavesDns.includes(url) &&
+        if (relevantQuery && !syncSlavesDns.includes(client) &&
             (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER) &&
-            (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER)) {console.log('*************', relevantQuery.queryName, variables?.data?.type, variables?.data?.recordType)
-            syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
+            (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER)) {
+              syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         }
 
         return masterResponse;
@@ -118,7 +118,7 @@ export const syncHttpClientGql = () => {
     };
 
     const gqlClientObject = {
-      ...url,
+      ...client,
       request: async (query: string, variables?: any) => {
         return syncRequest(false, query, variables);
       },

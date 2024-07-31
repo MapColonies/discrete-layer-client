@@ -23,6 +23,9 @@ export const CustomTheme = {
     GC_PRIORITY_LOW: '#FFB932', /* Yellow */
     GC_PRIORITY_LOWEST: '#00B6EE', /* Light Blue */
 
+    GC_SITE_MASTER: '#01FF1F',
+    GC_SITE_SLAVE: '#FF9A99',
+
     GC_MENU_ITEM_HEIGHT: '32px',
     GC_CONTEXT_MENU_WIDTH: '260px',
   },

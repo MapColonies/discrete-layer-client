@@ -121,11 +121,11 @@ button.cesium-infoBox-close:hover {
 }
 
 .appVersionContainer-master {
-  color: var(--mdc-theme-gc-priority-normal);
+  color: var(--mdc-theme-gc-site-master);
 }
 
 .appVersionContainer-slave {
-  color:  var(--mdc-theme-error);
+  color:  var(--mdc-theme-gc-site-slave);
 }
 
 title.rtl {
