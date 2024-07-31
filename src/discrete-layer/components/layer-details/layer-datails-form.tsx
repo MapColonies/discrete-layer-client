@@ -155,7 +155,7 @@ const InnerForm = (
       (method, key, ...args) => {
         if (key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE)) {
           const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
-          if (validSource) {
+          if (validSource && !validSource.isValid) {
             setValidationSourceWarn(validSource.message as string);
           }
         }
@@ -287,9 +287,9 @@ const InnerForm = (
             }
             {
               validationSourceWarn &&
-              Object.keys(firstPhaseErrors).length === NONE &&
-              (Object.keys(errors).length > NONE || !vestValidationResults.errorCount) &&
-              graphQLError === undefined &&
+              // Object.keys(firstPhaseErrors).length === NONE &&
+              // (Object.keys(errors).length > NONE || !vestValidationResults.errorCount) &&
+              // graphQLError === undefined &&
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
                 <Box>
