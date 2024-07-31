@@ -276,7 +276,6 @@ body[dir='rtl'] .exportOptionsSelect .mdc-select__dropdown-icon {
 
 .exportFieldLabelContainer .requiredAsterisk {
   color: var(--mdc-theme-gc-error-high);
-
 }
 
 .exportActionMenu {

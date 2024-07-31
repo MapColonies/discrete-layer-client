@@ -5,6 +5,7 @@ import CONFIG from '../../common/config';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ContextActions } from '../../common/actions/context.actions';
+import { currentSite } from '../../common/helpers/siteUrl';
 
 export enum UserRole {
   USER = 'USER',
@@ -63,6 +64,7 @@ export enum UserAction {
   ENTITY_ACTION_VECTORBESTRECORD_EXPORT = 'entity_action.VectorBestRecord.export',
   ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT= 'entity_action.QuantizedMeshBestRecord.export',
 
+  FEATURE_SWITCH_USER_ROLE = "featureSwitchUserRole",
 
   SYSTEM_CALLBACK_EDIT = 'system_callback.editEntity',
   SYSTEM_CALLBACK_PUBLISH = 'system_callback.publish',
@@ -72,8 +74,18 @@ export enum UserAction {
   // ENTITY_FIELD_ACTION_BESTRECORD_PRODUCTNAME_VIEW = 'entity_action.BestRecord.productName.view',
 }
 
-type UserActionKeys = { [K in UserAction]?: boolean; }
-type ContextActionKeys = { [K in ContextActions]?: boolean; }
+export type site = {dns: string, isAlias: boolean};
+
+export type siteName = 'master'|'slave'|'generic'|'undefined';
+
+type permissionRule = {
+  sites?: siteName[],
+  enabled:boolean,
+}
+
+type UserActionKeys = { [K in UserAction]?: permissionRule};
+
+type ContextActionKeys = { [K in ContextActions]?: permissionRule};
 
 interface IUser {
   userName: string;
@@ -92,123 +104,125 @@ const ROLES: IRole[] = [
   {
     role: UserRole.ADMIN,
     permissions: {
-      [UserAction.SYSTEM_ACTION_JOBS]: true,
-      [UserAction.SYSTEM_ACTION_COREINFO]: true,
-      [UserAction.SYSTEM_ACTION_TOOLS]: true,
-      [UserAction.SYSTEM_ACTION_FILTER]: false,
-      [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: true,
-      [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: true,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: true,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: true,
-      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_ANALYZE]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_BESTRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_BESTRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: true,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: false,
-      [ContextActions.QUERY_WFS_FEATURE]: true,
-      [ContextActions.QUERY_DEM_HEIGHT]: true,
-      [ContextActions.QUERY_POLYGON_PARTS]: true,
-      [ContextActions.MOVE_LAYER_UP]: true,
-      [ContextActions.MOVE_LAYER_DOWN]: true,
-      [ContextActions.MOVE_LAYER_TO_TOP]: true,
-      [ContextActions.MOVE_LAYER_TO_BOTTOM]: true,
+      [UserAction.SYSTEM_ACTION_JOBS]: {enabled: true},
+      [UserAction.SYSTEM_ACTION_COREINFO]: {enabled: true},
+      [UserAction.SYSTEM_ACTION_TOOLS]: {enabled: true},
+      [UserAction.SYSTEM_ACTION_FILTER]: {enabled: false},
+      [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: {enabled: true},
+      [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_ANALYZE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_BESTRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_BESTRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: {enabled: true},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: {enabled: false},
+      [UserAction.FEATURE_SWITCH_USER_ROLE]: {sites:['master','slave'], enabled: true},
+      [ContextActions.QUERY_WFS_FEATURE]: {enabled: true},
+      [ContextActions.QUERY_DEM_HEIGHT]: {enabled: true},
+      [ContextActions.QUERY_POLYGON_PARTS]: {enabled: true},
+      [ContextActions.MOVE_LAYER_UP]: {enabled: true},
+      [ContextActions.MOVE_LAYER_DOWN]: {enabled: true},
+      [ContextActions.MOVE_LAYER_TO_TOP]: {enabled: true},
+      [ContextActions.MOVE_LAYER_TO_BOTTOM]: {enabled: true},
     },
   },
   {
     role: UserRole.USER,
     permissions: {
-      [UserAction.SYSTEM_ACTION_JOBS]: false,
-      [UserAction.SYSTEM_ACTION_COREINFO]: false,
-      [UserAction.SYSTEM_ACTION_TOOLS]: true,
-      [UserAction.SYSTEM_ACTION_FILTER]: false,
-      [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: true,
-      [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: false,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: false,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_ANALYZE]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_BESTRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_BESTRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO]: true,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: false,
-      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: false,
-      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: false,
-      [ContextActions.QUERY_WFS_FEATURE]: true,
-      [ContextActions.QUERY_DEM_HEIGHT]: true,
-      [ContextActions.QUERY_POLYGON_PARTS]: true,
-      [ContextActions.MOVE_LAYER_UP]: true,
-      [ContextActions.MOVE_LAYER_DOWN]: true,
-      [ContextActions.MOVE_LAYER_TO_TOP]: true,
-      [ContextActions.MOVE_LAYER_TO_BOTTOM]: true,
+      [UserAction.SYSTEM_ACTION_JOBS]: {enabled: false},
+      [UserAction.SYSTEM_ACTION_COREINFO]: {enabled: false},
+      [UserAction.SYSTEM_ACTION_TOOLS]: {enabled: true},
+      [UserAction.SYSTEM_ACTION_FILTER]: {enabled: false},
+      [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: {enabled: true},
+      [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_ANALYZE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_BESTRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_BESTRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEUP]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVEDOWN]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOBOTTOM]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: {enabled: false},
+      [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: {enabled: false},
+      [UserAction.FEATURE_SWITCH_USER_ROLE]: {sites:['master','slave'], enabled: true},
+      [ContextActions.QUERY_WFS_FEATURE]: {enabled: true},
+      [ContextActions.QUERY_DEM_HEIGHT]: {enabled: true},
+      [ContextActions.QUERY_POLYGON_PARTS]: {enabled: true},
+      [ContextActions.MOVE_LAYER_UP]: {enabled: true},
+      [ContextActions.MOVE_LAYER_DOWN]: {enabled: true},
+      [ContextActions.MOVE_LAYER_TO_TOP]: {enabled: true},
+      [ContextActions.MOVE_LAYER_TO_BOTTOM]: {enabled: true},
     },
   },
 ];
@@ -233,9 +247,19 @@ export const userStore = ModelBase
     const store = self.root;
 
 
-    function isActionAllowed(action: UserActionKeys | ContextActionKeys | string): boolean | undefined {
+    function isActionAllowed(action: UserActionKeys | ContextActionKeys | string): boolean{
       const role = ROLES.find(item => item.role === self.user?.role);
-      return role ? role.permissions[(action as keyof (UserActionKeys | ContextActionKeys))] : false;
+      const permissionRules = role && role.permissions[(action as keyof (UserActionKeys | ContextActionKeys))] as permissionRule;
+
+      if (permissionRules) {
+        if (permissionRules.enabled && permissionRules.sites) {
+          return permissionRules.sites.includes(currentSite());
+        }
+        return permissionRules.enabled;
+      } else {
+        return false;
+      }
+      
     }
 
     function changeUserRole(role: UserRole): void {
@@ -256,3 +280,4 @@ export const userStore = ModelBase
       isUserAdmin,
     };
   });
+  

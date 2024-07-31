@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   withFormik,
   FormikProps,
@@ -13,8 +13,11 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty } from 'lodash';
-import { Button } from '@map-colonies/react-core';
+import { Button, Checkbox, IconButton, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
+import { sessionStore } from '../../../common/helpers/storage';
 import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
@@ -33,6 +36,8 @@ import {
   extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
   transformEntityToFormFields,
+  getValidationMessage,
+  ValidationMessage,
 } from './utils';
 
 import './layer-details-form.css';
@@ -45,6 +50,12 @@ export interface FormValues {
   fileNames: string;
 }
 
+export interface StatusError {
+  errors: {
+    [fieldName: string]: string[];
+  }
+}
+
 interface LayerDetailsFormCustomProps {
   recordType: RecordType;
   ingestionFields: FieldConfigModelType[];
@@ -55,12 +66,6 @@ interface LayerDetailsFormCustomProps {
   mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
-}
-
-export interface StatusError {
-  errors: {
-    [fieldName: string]: string[];
-  }
 }
 
 export interface EntityFormikHandlers extends FormikHandlers {
@@ -104,11 +109,13 @@ const InnerForm = (
   } = props;
 
   const status = props.status as StatusError | Record<string, unknown>;
-
+  const intl = useIntl();
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
+  const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
+  const [validationSourceWarn, setValidationSourceWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -141,6 +148,26 @@ const InnerForm = (
       ...getStatusErrors() as { [fieldName: string]: string[]; },
     })
   }, [errors, getYupErrors, getStatusErrors]);
+
+  useEffect(() => {
+    // Add method wathers for storage changes
+    sessionStore.watchMethods(
+      ['setItem'],
+      (method, key, ...args) => {},
+      (method, key, ...args) => {
+        if (key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE)) {
+          const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
+          if (validSource && !validSource.isValid) {
+            setValidationSourceWarn(getValidationMessage(validSource, intl));
+          }
+        }
+      }
+    );
+    // Clean up the method wathers when the component unmounts
+    return () => {
+      sessionStore.unWatchMethods();
+    };
+  }, []);
 
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
@@ -219,11 +246,13 @@ const InnerForm = (
         {
           (mode === Mode.NEW || mode === Mode.UPDATE) &&
           <IngestionFields
-            formik={entityFormikHandlers}
-            reloadFormMetadata={reloadFormMetadata}
             recordType={recordType}
             fields={ingestionFields}
             values={values}
+            onSetCurtainOpen={setShowCurtain}
+            validateSources={recordType === RecordType.RECORD_RASTER}
+            reloadFormMetadata={reloadFormMetadata}
+            formik={entityFormikHandlers}
           />
         }
         <Box
@@ -244,18 +273,52 @@ const InnerForm = (
           <Box className="messages">
             {
               Object.keys(firstPhaseErrors).length > NONE &&
+              JSON.stringify(firstPhaseErrors) !== '{}' &&
               <ValidationsError errors={firstPhaseErrors} />
             }
             {
-              Object.keys(errors).length === NONE &&
+              (Object.keys(errors).length === NONE || JSON.stringify(errors) === '{}') &&
               vestValidationResults.errorCount > NONE &&
               <ValidationsError errors={vestValidationResults.getErrors()} />
             }
             {
-              graphQLError !== undefined && (
-                // eslint-disable-next-line
-                <GraphQLError error={graphQLError} />
-              )
+              graphQLError !== undefined &&
+              graphQLError !== null &&
+              graphQLError &&
+              JSON.stringify(graphQLError) !== '{}' &&
+              Object.keys(graphQLError).length > NONE &&
+              <GraphQLError error={graphQLError} />
+            }
+            {
+              validationSourceWarn?.message &&
+              isEmpty(firstPhaseErrors) &&
+              (!isEmpty(errors) || !vestValidationResults.errorCount) &&
+              isEmpty(graphQLError) &&
+              <Box className="ingestionWarning">
+                <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
+                <Box>
+                  <Typography tag="div">
+                    <Typography tag="span" className="warningMessage warning"
+                      dangerouslySetInnerHTML={{__html:
+                        intl.formatMessage(
+                          { id: 'ingestion.warning.invalid-secondary-file' },
+                          { title: emphasizeByHTML(`${intl.formatMessage({ id: 'ingestion.warning.title' })}`) }
+                        )
+                      }}
+                    />
+                    <Typography tag="span" className={validationSourceWarn?.severity}>{validationSourceWarn?.message}</Typography>
+                  </Typography>
+                  <Checkbox
+                    className="warning"
+                    label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
+                    checked={syncAnywayChecked}
+                    onClick={
+                      (evt: React.MouseEvent<HTMLInputElement>): void => {
+                        setSyncAnywayChecked(evt.currentTarget.checked);
+                      }}
+                  />
+                </Box>
+              </Box>
             }
           </Box>
           <Box className="buttons">
@@ -267,7 +330,8 @@ const InnerForm = (
                 (layerRecord.__typename !== 'BestRecord' && !dirty) ||
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
-                !isEmpty(graphQLError)
+                !isEmpty(graphQLError) ||
+                (!isEmpty(validationSourceWarn?.message) && !syncAnywayChecked)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />

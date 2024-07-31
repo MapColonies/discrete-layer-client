@@ -3,8 +3,8 @@ import { useIntl } from 'react-intl';
 import { Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
+import { currentSite } from '../../../../common/helpers/siteUrl';
 import packageJson from '../../../../../package.json';
-
 
 const AppTitle = (): JSX.Element => {
   const intl = useIntl();
@@ -21,20 +21,19 @@ const AppTitle = (): JSX.Element => {
     <>
     <Box className='appLogoContainer'>
       <Box className='appTitleVersionContainer'>
-        <Typography tag="b">
+          <Typography tag="b">
             {intl.formatMessage({ id: 'general.logo.text' })}
-        </Typography>
-        <Tooltip
-          content={`${intl.formatMessage({
-            id: 'general.version.tooltip',
-          })} ${projectVersion}`}
-        >
-          <Box className="appVersionContainer" dir='auto'>{versionText}</Box>
-      </Tooltip>
+          </Typography>
+          <Tooltip
+            content={`${intl.formatMessage({
+              id: 'general.version.tooltip',
+            })} ${projectVersion}`}
+          >
+            <Box className={`appVersionContainer-${currentSite()}`}> {versionText} </Box>
+          </Tooltip>
+        </Box>
+        <Icon className="appIcon mc-icon-AppIcon" />
       </Box>
-      <Icon className="appIcon mc-icon-AppIcon" />
-    </Box>
-     
     </>
   );
 };

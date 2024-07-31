@@ -120,6 +120,14 @@ button.cesium-infoBox-close:hover {
   text-align: center;
 }
 
+.appVersionContainer-master {
+  color: var(--mdc-theme-gc-site-master);
+}
+
+.appVersionContainer-slave {
+  color:  var(--mdc-theme-gc-site-slave);
+}
+
 title.rtl {
   direction: rtl;
 }

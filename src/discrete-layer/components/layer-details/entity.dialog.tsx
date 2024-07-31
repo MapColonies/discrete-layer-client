@@ -12,8 +12,10 @@ import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../common/helpers/formatters';
+import { sessionStore } from '../../../common/helpers/storage';
 import { getStatusColoredBackground } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
+import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
 import {
   BestRecordModelType,
   EntityDescriptorModelType,
@@ -462,6 +464,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const closeDialog = useCallback(() => {
       onSetOpen(false);
       store.discreteLayersStore.resetUpdateMode();
+      syncQueries.map((query: SYNC_QUERY) => query.queryName).forEach((key: string) => sessionStore.remove(key));
     }, [onSetOpen, store.discreteLayersStore]);
 
     useEffect(() => {
