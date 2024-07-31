@@ -272,16 +272,21 @@ const InnerForm = (
         <Box className="footer">
           <Box className="messages">
             {
-              !isEmpty(firstPhaseErrors) &&
+              Object.keys(firstPhaseErrors).length > NONE &&
+              JSON.stringify(firstPhaseErrors) !== '{}' &&
               <ValidationsError errors={firstPhaseErrors} />
             }
             {
-              isEmpty(errors) &&
+              (Object.keys(errors).length === NONE || JSON.stringify(errors) === '{}') &&
               vestValidationResults.errorCount > NONE &&
               <ValidationsError errors={vestValidationResults.getErrors()} />
             }
             {
-              !isEmpty(graphQLError) &&
+              graphQLError !== undefined &&
+              graphQLError !== null &&
+              graphQLError &&
+              JSON.stringify(graphQLError) !== '{}' &&
+              Object.keys(graphQLError).length > NONE &&
               <GraphQLError error={graphQLError} />
             }
             {

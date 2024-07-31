@@ -29,7 +29,7 @@ interface IServerErrorResponse {
   statusText?: string;
 }
 
-export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
+export const GraphQLError: React.FC<IGpaphQLError> = ({ error }) => {
 
   const intl = useIntl();
 
@@ -49,20 +49,20 @@ export const GraphQLError: React.FC<IGpaphQLError> = (props) => {
   return (
     <>
       {
-        !isEmpty(props.error?.response) &&
+        !isEmpty(error?.response) &&
         <AutoDirectionBox className="errorContainer">
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
             {
-              props.error.response.errors?.map((error: IServerError, index: number) => {
+              error.response.errors?.map((error: IServerError, index: number) => {
                 return (
                   <li dir="auto" key={index} dangerouslySetInnerHTML={{__html: formatMessage(error)}}></li>
                 );
               })
             }
             {
-              props.error.response.status >= SERVER_ERROR_RESPONSE_CODE &&
-              <li dir="auto" key={props.error.response.status as number}><FormattedMessage id="general.server.error"/></li>
+              error.response.status >= SERVER_ERROR_RESPONSE_CODE &&
+              <li dir="auto" key={error.response.status as number}><FormattedMessage id="general.server.error"/></li>
             }
           </ul>
         </AutoDirectionBox>
