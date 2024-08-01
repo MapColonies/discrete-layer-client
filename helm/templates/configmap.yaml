@@ -57,8 +57,6 @@ data:
   CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_STYLE: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.style }}
   CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_PROJECTION: {{ quote .Values.ui.env.activeLayerPropeties.urlPattern.projection }}
   CONFIGURATION_WHATSNEW_URL: {{ quote .Values.ui.env.whatsnewUrl }}
-  CONFIGURATION_SITES_CONFIG_MASTERS: {{ quote .Values.ui.env.sitesConfig.masters }}
-  CONFIGURATION_SITES_CONFIG_SLAVES: {{ quote .Values.ui.env.sitesConfig.slaves }}
-  CONFIGURATION_SITES_CONFIG_GENERICS: {{ quote .Values.ui.env.sitesConfig.generics }}
+  CONFIGURATION_SITES_CONFIG: {{ quote .Values.ui.env.sitesConfig }}
   CONFIGURATION_BFF_PATH: {{ quote .Values.ui.env.bffPath }}
 {{- end }}

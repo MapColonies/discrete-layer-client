@@ -62,11 +62,7 @@ if (!window._env_) {
       },
       SERVED_ENTITY_TYPES: 'RECORD_ALL,RECORD_RASTER,RECORD_3D,RECORD_DEM',
       WHATSNEW_URL: 'http://whatsnew-URL',
-      SITES_CONFIG: {
-        masters: [{ dns: 'http://localhost:3000', isAlias: false }],
-        slaves: [{ dns: 'http://localhost:8090', isAlias: false }],
-        generics: [{ dns: 'https://catalog.mapcolonies.net', isAlias: false }],
-      },
+      SITES_CONFIG: '{"masters": [{ "dns": "http://localhost:3000", "isAlias": "false" }], "slaves": [{ "dns": "http://localhost:8090", "isAlias": "false" }], "generics": [{ "dns": "https://catalog.mapcolonies.net", "isAlias": "false" }]}',
       BFF_PATH: '/graphql'
     };
   })(void 0);

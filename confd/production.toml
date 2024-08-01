@@ -44,8 +44,6 @@ keys = [
   "/configuration/admin/password",
   "/configuration/project/version",
   "/configuration/whatsnew/url",
-  "/configuration/sites/config/masters",
-  "/configuration/sites/config/slaves",
-  "/configuration/sites/config/generics",
+  "/configuration/sites/config",
   "/configuration/bff/path"
 ]
