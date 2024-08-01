@@ -92,6 +92,11 @@ ui:
         matrixSet: ''
         style: ''
         projection: ''
+    sitesConfig:
+      masters: '[]'
+      slaves: '[]'
+      generics: '[]'
+    bffPath: ''
   resources:
     enabled: true
     limits:
