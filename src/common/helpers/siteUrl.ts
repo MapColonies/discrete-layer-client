@@ -17,6 +17,4 @@ export const currentSite = (): siteName => {
     : 'undefined';
 };
 
-export const syncSlavesDns: GraphQLClient[] = CONFIG.SITES_CONFIG.slaves?.filter((slave: site) => !slave.isAlias)
-  .map((slave: site) => createHttpClient(slave.dns + CONFIG.BFF_PATH)
-);
+export const syncSlavesDns: GraphQLClient[] = CONFIG.SITES_CONFIG.slaves?.map((slave: site) => createHttpClient(slave.dns + CONFIG.BFF_PATH));
