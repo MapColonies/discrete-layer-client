@@ -82,9 +82,11 @@ const pickPropertiesFromResponse = (
   response: any,
   relevantQuery?: SYNC_QUERY
 ) => {
-  return relevantQuery?.pickProperties?.map(
-    (prop: string) => response[relevantQuery?.queryName as SYNC_QUERY_NAME][0][prop]
+  let partialResponse = {};
+  relevantQuery?.pickProperties?.forEach(
+    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][0][prop]}
   );
+  return partialResponse;
 };
 
 const isRasterRequest = (variables: any): boolean => {
