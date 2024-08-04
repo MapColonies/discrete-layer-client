@@ -94,12 +94,12 @@ const isRasterRequest = (variables: any): boolean => {
          (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER);
 };
 
-const isProductVersionEqual = () => {
+const isSameVersion = () => {
   return !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
 };
 
 const shouldUpdateSlaves = (queryName: string) => {
-  return queryName !== SYNC_QUERY_NAME.RASTER_UPDATE_GEOPKG || isProductVersionEqual();
+  return queryName !== SYNC_QUERY_NAME.RASTER_UPDATE_GEOPKG || isSameVersion();
 };
 
 const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
@@ -118,9 +118,11 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
         slaveResponse = pickPropertiesFromResponse(slaveResponse, relevantQuery);
       }
 
-      // For Now: we don't store response from multiple slaves, setObject squash the last value.
+      // For Now: we don't store response from multiple slaves, setObject will override with the last value
       if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-        sessionStore.setObject( relevantQuery.queryName, relevantQuery?.sessionStorageMessageCode ? { code: relevantQuery?.sessionStorageMessageCode } : slaveResponse );
+        sessionStore.setObject( relevantQuery.queryName, relevantQuery?.sessionStorageMessageCode
+          ? { code: relevantQuery?.sessionStorageMessageCode }
+          : slaveResponse );
       }
 
       if (relevantQuery?.isResponseStore) {
@@ -128,7 +130,11 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
       }
 
     } catch (error) {
-      sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, { code: 'ingestion.error.not-available', additionalInfo: `${get(slaveClient,'url')}`, severity: 'error'/*, error*/ } );
+      sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {
+        code: 'ingestion.error.not-available',
+        additionalInfo: `${get(slaveClient,'url')}`,
+        severity: 'error'
+      } );
     }
   });
 };
