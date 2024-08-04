@@ -11,6 +11,7 @@ export const enum SYNC_QUERY_NAME {
   RASTER_UPDATE_GEOPKG = 'startRasterUpdateGeopkg',
   VALIDATE_SOURCE = 'validateSource',
   GET_DIRECTORY = 'getDirectory',
+  SEARCH_BY_ID = 'searchById',
 };
 
 export type SYNC_QUERY = {
@@ -18,6 +19,7 @@ export type SYNC_QUERY = {
   equalCheck: boolean;
   isResponseStore: boolean;
   omitProperties?: string[];
+  pickProperties?: string[];
   sessionStorageMessageCode?: string;
 };
 
@@ -49,6 +51,13 @@ export const syncQueries: SYNC_QUERY[] = [
     omitProperties: ['modDate', 'id', 'parentId', 'selectable', 'childrenIds'],
     sessionStorageMessageCode: 'ingestion.error.directory-comparison',
   },
+  {
+    queryName: SYNC_QUERY_NAME.SEARCH_BY_ID,
+    equalCheck: true,
+    isResponseStore: false,
+    pickProperties: ['productVersion'],
+    sessionStorageMessageCode: 'ingestion.warning.unsynched',
+  },
 ];
 
 const currentQuery = (query: string) => {
@@ -69,12 +78,31 @@ const omitPropertiesFromResponse = (
     });
 };
 
+const pickPropertiesFromResponse = (
+  response: any,
+  relevantQuery?: SYNC_QUERY
+) => {
+  let partialResponse = {};
+  relevantQuery?.pickProperties?.forEach(
+    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][0][prop]}
+  );
+  return partialResponse;
+};
+
 const isRasterRequest = (variables: any): boolean => {
   return (!variables?.data?.type || variables?.data?.type === RecordType.RECORD_RASTER) &&
          (!variables?.data?.recordType || variables?.data?.recordType === RecordType.RECORD_RASTER);
 };
 
-const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
+const isSameVersion = () => {
+  return !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
+};
+
+const shouldUpdateSlaves = (queryName: string) => {
+  return queryName !== SYNC_QUERY_NAME.RASTER_UPDATE_GEOPKG || isSameVersion();
+};
+
+const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
   syncSlavesDns.forEach(async (slaveClient: GraphQLClient) => {
     try {
       let slaveResponse: any = isRawRequest? await slaveClient.rawRequest(query, variables):
@@ -85,9 +113,16 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
         omitPropertiesFromResponse(slaveResponse, relevantQuery);
       }
 
-      // For Now: we don't store response from multiple slaves, setObject squash the last value.
+      if (relevantQuery?.pickProperties) {
+        masterResponse = pickPropertiesFromResponse(masterResponse, relevantQuery);
+        slaveResponse = pickPropertiesFromResponse(slaveResponse, relevantQuery);
+      }
+
+      // For Now: we don't store response from multiple slaves, setObject will override with the last value
       if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-        sessionStore.setObject( relevantQuery.queryName, relevantQuery?.sessionStorageMessageCode ? { code: relevantQuery?.sessionStorageMessageCode } : slaveResponse );
+        sessionStore.setObject( relevantQuery.queryName, relevantQuery?.sessionStorageMessageCode
+          ? { code: relevantQuery?.sessionStorageMessageCode }
+          : slaveResponse );
       }
 
       if (relevantQuery?.isResponseStore) {
@@ -95,7 +130,11 @@ const syncSlaves = (isRawRequest: boolean, masterResponse:any, query: string, va
       }
 
     } catch (error) {
-      sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, { code: 'ingestion.error.not-available', url: `${get(slaveClient,'url')}`, severity: 'error'/*, error*/ } );
+      sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {
+        code: 'ingestion.error.not-available',
+        additionalInfo: `${get(slaveClient,'url')}`,
+        severity: 'error'
+      } );
     }
   });
 };
@@ -110,7 +149,7 @@ export const syncHttpClientGql = () => {
         let masterResponse: any = isRawRequest? await client.rawRequest(query, variables):
           await client.request(query, variables);
 
-        if (relevantQuery && !syncSlavesDns.includes(client) && isRasterRequest(variables)) {
+        if (relevantQuery && !syncSlavesDns.includes(client) && isRasterRequest(variables) && shouldUpdateSlaves(relevantQuery.queryName)) {
           syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         }
         return masterResponse;

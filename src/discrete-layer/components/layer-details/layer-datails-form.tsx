@@ -115,7 +115,7 @@ const InnerForm = (
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
-  const [validationSourceWarn, setValidationSourceWarn] = useState<ValidationMessage>();
+  const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return get(status, 'errors') as Record<string, string[]> | null ?? {};
@@ -155,10 +155,16 @@ const InnerForm = (
       ['setItem'],
       (method, key, ...args) => {},
       (method, key, ...args) => {
+        if (key.includes(SYNC_QUERY_NAME.SEARCH_BY_ID)) {
+          const invalidVersion = sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
+          if (invalidVersion) {
+            setValidationWarn(getValidationMessage(invalidVersion, intl));
+          }
+        }
         if (key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE)) {
-          const validSource = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
-          if (validSource && !validSource.isValid) {
-            setValidationSourceWarn(getValidationMessage(validSource, intl));
+          const sourceValidation = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
+          if (sourceValidation && !sourceValidation.isValid && !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID)) {
+            setValidationWarn(getValidationMessage(sourceValidation, intl));
           }
         }
       }
@@ -290,7 +296,7 @@ const InnerForm = (
               <GraphQLError error={graphQLError} />
             }
             {
-              validationSourceWarn?.message &&
+              validationWarn?.message &&
               isEmpty(firstPhaseErrors) &&
               (!isEmpty(errors) || !vestValidationResults.errorCount) &&
               isEmpty(graphQLError) &&
@@ -306,8 +312,9 @@ const InnerForm = (
                         )
                       }}
                     />
-                    <Tooltip content={validationSourceWarn?.message}>
-                      <Typography tag="span" className={validationSourceWarn?.severity}>{validationSourceWarn?.message}</Typography>
+                    <Typography tag="span" className="warning">{'-'}</Typography>
+                    <Tooltip content={validationWarn?.message}>
+                      <Typography tag="span" className={['warningMessage',validationWarn?.severity].join(' ')}>{validationWarn?.message}</Typography>
                     </Tooltip>
                   </Typography>
                   <Checkbox
@@ -333,7 +340,7 @@ const InnerForm = (
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
                 !isEmpty(graphQLError) ||
-                (!isEmpty(validationSourceWarn?.message) && !syncAnywayChecked)
+                (!isEmpty(validationWarn?.message) && !syncAnywayChecked)
               }
             >
               <FormattedMessage id="general.ok-btn.text" />
