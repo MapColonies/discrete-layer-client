@@ -70,6 +70,13 @@ body[dir='rtl'] #layerDetailsForm .buttons {
   flex-direction: row;
 }
 
+#layerDetailsForm .ingestionWarningMessage {
+  width: 652px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .warningIcon {
   font-size: 32px;
   padding: 8px 0;

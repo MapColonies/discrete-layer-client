@@ -13,7 +13,7 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, isEmpty } from 'lodash';
-import { Button, Checkbox, IconButton, Typography } from '@map-colonies/react-core';
+import { Button, Checkbox, IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
 import { emphasizeByHTML } from '../../../common/helpers/formatters';
@@ -297,7 +297,7 @@ const InnerForm = (
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
                 <Box>
-                  <Typography tag="div">
+                  <Typography tag="div" className="ingestionWarningMessage">
                     <Typography tag="span" className="warningMessage warning"
                       dangerouslySetInnerHTML={{__html:
                         intl.formatMessage(
@@ -306,7 +306,9 @@ const InnerForm = (
                         )
                       }}
                     />
-                    <Typography tag="span" className={validationSourceWarn?.severity}>{validationSourceWarn?.message}</Typography>
+                    <Tooltip content={validationSourceWarn?.message}>
+                      <Typography tag="span" className={validationSourceWarn?.severity}>{validationSourceWarn?.message}</Typography>
+                    </Tooltip>
                   </Typography>
                   <Checkbox
                     className="warning"
