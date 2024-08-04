@@ -157,8 +157,8 @@ export const getValidationMessage = (data: Record<string, unknown>, intl: IntlSh
     : data.code
     ? intl.formatMessage({ id: data.code as string })
     : '';
-  if (data.url) {
-    message = data.url as string + ' ' + message;
+  if (data.additionalInfo) {
+    message = data.additionalInfo as string + ' ' + message;
   }
   return { message, severity };
 };
