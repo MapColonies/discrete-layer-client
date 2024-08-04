@@ -312,8 +312,9 @@ const InnerForm = (
                         )
                       }}
                     />
+                    <Typography tag="span" className="warning">{'-'}</Typography>
                     <Tooltip content={validationWarn?.message}>
-                      <Typography tag="span" className={validationWarn?.severity}>{validationWarn?.message}</Typography>
+                      <Typography tag="span" className={['warningMessage',validationWarn?.severity].join(' ')}>{validationWarn?.message}</Typography>
                     </Tooltip>
                   </Typography>
                   <Checkbox
