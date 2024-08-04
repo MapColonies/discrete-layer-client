@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.1...v2.10.2) (2024-08-04)
+
+
+### Bug Fixes
+
+* validation api warning should not overflow and use ellipsis instead ([0f668b0](https://github.com/MapColonies/discrete-layer-client/commit/0f668b005641e6d8246bd8ca2e7031f76e6efc61))
+* version validation ([#510](https://github.com/MapColonies/discrete-layer-client/issues/510)) ([aee507b](https://github.com/MapColonies/discrete-layer-client/commit/aee507b5600d5f10f28a0883c308a897a189b664))
+
 ### [2.10.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.0...v2.10.1) (2024-08-01)
 
 
