@@ -184,6 +184,10 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     onSetCurtainOpen(true);
   }, [onSetCurtainOpen]);
 
+  const openCurtain = useCallback(() => {
+    onSetCurtainOpen(false);
+  }, [onSetCurtainOpen]);
+
   useEffect(() => {
     // Add method wathers for storage changes
     sessionStore.watchMethods(
@@ -281,6 +285,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           );
         }
         closeCurtain();
+      } else {
+        openCurtain();
       }
     }
   }, [queryValidateSource.data]);
