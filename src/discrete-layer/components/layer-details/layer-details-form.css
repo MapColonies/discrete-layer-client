@@ -83,7 +83,13 @@ body[dir='rtl'] #layerDetailsForm .buttons {
 }
 
 .warningMessage {
-  padding: 0 12px;
+  padding-left: 12px;
+  padding-right: unset;
+}
+
+body[dir='rtl'] .warningMessage {
+  padding-left: unset;
+  padding-right: 12px;
 }
 
 .warning.mdc-form-field label {

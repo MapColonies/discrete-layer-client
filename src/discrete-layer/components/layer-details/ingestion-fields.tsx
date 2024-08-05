@@ -22,7 +22,7 @@ import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModel
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
+import { clearSelectedFileSyncWarnings, getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
 
 import './ingestion-fields.css';
 
@@ -187,13 +187,25 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   useEffect(() => {
     // Add method wathers for storage changes
     sessionStore.watchMethods(
-      ['setItem'],
+      ['setItem', 'removeItem'],
       (method, key, ...args) => {},
       (method, key, ...args) => {
         if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
-          const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
-          if (dirComparison) {
-            setDirectoryComparisonWarn(getValidationMessage(dirComparison, intl));
+          switch (method) {
+            case 'setItem': {
+              const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
+              if (dirComparison) {
+                setDirectoryComparisonWarn(getValidationMessage(dirComparison, intl));
+              }
+              break;
+            }
+            case 'removeItem': {
+              setDirectoryComparisonWarn(undefined);
+              break;
+            }
+            default: {
+              break;
+            }
           }
         }
       }
@@ -315,14 +327,13 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   }, [queryValidateSource.error]);
 
   const onFilesSelection = (selected: Selection): void => {
+    clearSelectedFileSyncWarnings();
     if (selected.files.length) {
       setSelection({ ...selected });
     }
-    const directory = selected.files.length ? 
-                        selected.folderChain
-                          .map((folder: FileData) => folder.name)
-                          .join('/')
-                        : '';
+    const directory = selected.files.length
+      ? selected.folderChain.map((folder: FileData) => folder.name).join('/')
+      : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
     if (validateSources) {
       queryValidateSource.setQuery(

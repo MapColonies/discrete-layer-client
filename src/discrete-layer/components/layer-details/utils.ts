@@ -4,7 +4,9 @@ import moment, { unitOfTime } from 'moment';
 import { IntlShape } from 'react-intl';
 import { $enum } from 'ts-enum-util';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
+import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
+import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
 import {
   BestRecordModel,
   CategoryConfigModelType,
@@ -469,12 +471,16 @@ export const getEnumKeys = (enumsMap: IEnumsMapType, enumName: string, parent?: 
 
 export const getProductDomain = (productType: ProductType, enumsMap?: IEnumsMapType): string => {
   return enumsMap?.[productType as string]?.parentDomain as string;
-}
+};
 
 export const getCoordinatesDisplayText = (latitude: number, longitude: number): string => {
   const COORDS_DISPLAY_PRECISION = 5;
   
-  return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`
-}
+  return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`;
+};
 
 export const getTimeStamp = (): string => new Date().getTime().toString();
+
+export const clearSelectedFileSyncWarnings = () => {
+  syncQueries.map((query: SYNC_QUERY) => query.queryName).forEach((key: string) => sessionStore.remove(key));
+};

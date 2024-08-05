@@ -152,19 +152,41 @@ const InnerForm = (
   useEffect(() => {
     // Add method wathers for storage changes
     sessionStore.watchMethods(
-      ['setItem'],
+      ['setItem', 'removeItem'],
       (method, key, ...args) => {},
       (method, key, ...args) => {
-        if (key.includes(SYNC_QUERY_NAME.SEARCH_BY_ID)) {
-          const invalidVersion = sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
-          if (invalidVersion) {
-            setValidationWarn(getValidationMessage(invalidVersion, intl));
+        switch (true) {
+          case key.includes(SYNC_QUERY_NAME.SEARCH_BY_ID): {
+            switch (method) {
+              case 'setItem': {
+                const invalidVersion = sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
+                if (invalidVersion) {
+                  setValidationWarn(getValidationMessage(invalidVersion, intl));
+                }
+                break;
+              }
+              case 'removeItem': {
+                setValidationWarn(undefined);
+                break;
+              }
+            }
+            break;
           }
-        }
-        if (key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE)) {
-          const sourceValidation = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
-          if (sourceValidation && !sourceValidation.isValid && !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID)) {
-            setValidationWarn(getValidationMessage(sourceValidation, intl));
+          case key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE): {
+            switch (method) {
+              case 'setItem': {
+                const sourceValidation = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
+                if (sourceValidation && !sourceValidation.isValid && !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID)) {
+                  setValidationWarn(getValidationMessage(sourceValidation, intl));
+                }
+                break;
+              }
+              case 'removeItem': {
+                setValidationWarn(undefined);
+                break;
+              }
+            }
+            break;
           }
         }
       }
@@ -312,9 +334,9 @@ const InnerForm = (
                         )
                       }}
                     />
-                    <Typography tag="span" className="warning">{'-'}</Typography>
+                    <Typography tag="span" className="warning">{' - '}</Typography>
                     <Tooltip content={validationWarn?.message}>
-                      <Typography tag="span" className={['warningMessage',validationWarn?.severity].join(' ')}>{validationWarn?.message}</Typography>
+                      <Typography tag="span" className={validationWarn?.severity}>{validationWarn?.message}</Typography>
                     </Tooltip>
                   </Typography>
                   <Checkbox
