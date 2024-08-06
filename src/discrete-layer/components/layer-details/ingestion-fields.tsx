@@ -22,7 +22,7 @@ import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModel
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { clearSelectedFileSyncWarnings, getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
+import { clearSyncWarnings, getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
 
 import './ingestion-fields.css';
 
@@ -333,7 +333,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   }, [queryValidateSource.error]);
 
   const onFilesSelection = (selected: Selection): void => {
-    clearSelectedFileSyncWarnings();
+    clearSyncWarnings(true);
     if (selected.files.length) {
       setSelection({ ...selected });
     }

@@ -19,7 +19,7 @@
 }
 
 body[dir='rtl'] .errorContainer {
-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
 
 .error {

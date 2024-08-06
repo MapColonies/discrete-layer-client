@@ -292,8 +292,12 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                 setJsonValue(e.currentTarget.value);
                 debouncedRemoveStatusErrors();
+                formik?.handleChange({});
               }}
-              onBlur={handleBlur}
+              onBlur={(e) => {
+                handleBlur(e);
+                formik?.handleBlur({});
+              }}
               placeholder={'JSON'}
               required={fieldInfo.isRequired as boolean}
               textarea

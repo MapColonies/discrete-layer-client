@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { IconButton } from '@map-colonies/react-core';
-import { Box } from '@map-colonies/react-components';
+import { AutoDirectionBox } from '../auto-direction-box/auto-direction-box.component';
 
 import './error-presentor.css';
 
@@ -18,20 +18,20 @@ export const ValidationsError: React.FC<IValidationsError> = ({ errors })=> {
     <>
       {
         Object.keys(errors).length > NONE &&
-        <Box className="errorContainer">
+        <AutoDirectionBox className="errorContainer">
           <IconButton className="errorIcon mc-icon-Status-Warnings" />
           <ul className="errorsList">
             {
               Object.keys(errors).map((key: string) => {
                 return errors[key].map((errorMessage: string, index: number) => {
                   return (
-                    <li key={`${key}${index}`} dangerouslySetInnerHTML={{__html: errorMessage}}></li>
+                    <li dir="auto" key={`${key}${index}`} dangerouslySetInnerHTML={{__html: errorMessage}}></li>
                   );
                 })
               })
             }
           </ul>
-        </Box>
+        </AutoDirectionBox>
       }
     </>
   );
