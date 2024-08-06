@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.2...v2.10.3) (2024-08-06)
+
+
+### Bug Fixes
+
+* clear old validations ([0da8951](https://github.com/MapColonies/discrete-layer-client/commit/0da89511bb355e531685a674fd5752e1f5a2abd8))
+* curtain is closed when a new file is valid ([#511](https://github.com/MapColonies/discrete-layer-client/issues/511)) ([1183fba](https://github.com/MapColonies/discrete-layer-client/commit/1183fba61bb83448e07b9438ced7d212ec6f8e75))
+* error list direction ([#512](https://github.com/MapColonies/discrete-layer-client/issues/512)) ([95bf063](https://github.com/MapColonies/discrete-layer-client/commit/95bf063f36da5acdb0c74167abbe8da83b31150e))
+* footprint bug ([79bc1d9](https://github.com/MapColonies/discrete-layer-client/commit/79bc1d9b1c4af62cb80462fd2885c1c06fdcd3a4))
+
 ### [2.10.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.1...v2.10.2) (2024-08-04)
 
 
