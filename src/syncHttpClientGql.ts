@@ -5,8 +5,6 @@ import { currentBffUrl, syncSlavesDns } from './common/helpers/siteUrl';
 import { sessionStore } from './common/helpers/storage';
 import { RecordType } from './discrete-layer/models';
 
-const FIRST = 0;
-
 export const enum SYNC_QUERY_NAME {
   UPDATE_META_DATA = 'updateMetadata',
   RASTER_INGESTION = 'startRasterIngestion',
