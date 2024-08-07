@@ -11,7 +11,7 @@ export const enum SYNC_QUERY_NAME {
   RASTER_UPDATE_GEOPKG = 'startRasterUpdateGeopkg',
   VALIDATE_SOURCE = 'validateSource',
   GET_DIRECTORY = 'getDirectory',
-  SEARCH_BY_ID = 'searchById',
+  GET_PRODUCT = 'getProduct'
 };
 
 export type SYNC_QUERY = {
@@ -52,7 +52,7 @@ export const syncQueries: SYNC_QUERY[] = [
     sessionStorageMessageCode: 'ingestion.error.directory-comparison',
   },
   {
-    queryName: SYNC_QUERY_NAME.SEARCH_BY_ID,
+    queryName: SYNC_QUERY_NAME.GET_PRODUCT,
     equalCheck: true,
     isResponseStore: false,
     pickProperties: ['productVersion'],
@@ -95,7 +95,7 @@ const isRasterRequest = (variables: any): boolean => {
 };
 
 const isSameVersion = () => {
-  return !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
+  return !sessionStore.getObject(SYNC_QUERY_NAME.GET_PRODUCT);
 };
 
 const shouldUpdateSlaves = (queryName: string) => {
