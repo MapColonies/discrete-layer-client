@@ -451,7 +451,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         queryGetProduct.setQuery(
           store.queryGetProduct(
             {
-              productVersion: (props.layerRecord as LayerRasterRecordModelType).productVersion as string,
               productType: props.layerRecord?.productType as ProductType,
               productId: (props.layerRecord as LayerRasterRecordModelType).productId as string
             }
