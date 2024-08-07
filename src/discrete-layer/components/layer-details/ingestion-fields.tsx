@@ -112,7 +112,7 @@ const IngestionInputs: React.FC<{
                   index === DIRECTORY && values[index] !== '' &&
                   <Tooltip content={notSynchedDirWarning?.message ? notSynchedDirWarning?.message : values[index]}>
                     <Typography tag="div" dir="auto" className={`filesPathContainer ${notSynchedDirWarning?.severity}`}>
-                      { notSynchedDirWarning?.message && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
+                      { notSynchedDirWarning?.message && values[index] && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
                       { values[index] }
                     </Typography>
                   </Tooltip>
