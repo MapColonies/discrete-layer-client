@@ -86,7 +86,7 @@ const pickPropertiesFromResponse = (
 ) => {
   let partialResponse = {};
   relevantQuery?.pickProperties?.forEach(
-    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][FIRST][prop]}
+    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][prop]}
   );
   return partialResponse;
 };
