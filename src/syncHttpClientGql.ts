@@ -5,6 +5,8 @@ import { currentBffUrl, syncSlavesDns } from './common/helpers/siteUrl';
 import { sessionStore } from './common/helpers/storage';
 import { RecordType } from './discrete-layer/models';
 
+const FIRST = 0;
+
 export const enum SYNC_QUERY_NAME {
   UPDATE_META_DATA = 'updateMetadata',
   RASTER_INGESTION = 'startRasterIngestion',
@@ -20,7 +22,7 @@ export type SYNC_QUERY = {
   isResponseStore: boolean;
   omitProperties?: string[];
   pickProperties?: string[];
-  sessionStorageMessageCode?: string;
+  messageCode?: string;
 };
 
 export const syncQueries: SYNC_QUERY[] = [
@@ -49,14 +51,14 @@ export const syncQueries: SYNC_QUERY[] = [
     equalCheck: true,
     isResponseStore: false,
     omitProperties: ['modDate', 'id', 'parentId', 'selectable', 'childrenIds'],
-    sessionStorageMessageCode: 'ingestion.error.directory-comparison',
+    messageCode: 'ingestion.error.directory-comparison',
   },
   {
     queryName: SYNC_QUERY_NAME.GET_PRODUCT,
     equalCheck: true,
     isResponseStore: false,
     pickProperties: ['productVersion'],
-    sessionStorageMessageCode: 'ingestion.warning.unsynched',
+    messageCode: 'ingestion.warning.unsynched',
   },
 ];
 
@@ -84,7 +86,7 @@ const pickPropertiesFromResponse = (
 ) => {
   let partialResponse = {};
   relevantQuery?.pickProperties?.forEach(
-    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][0][prop]}
+    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][FIRST][prop]}
   );
   return partialResponse;
 };
@@ -119,10 +121,14 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
       }
 
       // For Now: we don't store response from multiple slaves, setObject will override with the last value
-      if (relevantQuery?.equalCheck && masterResponse && JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-        sessionStore.setObject( relevantQuery.queryName, relevantQuery?.sessionStorageMessageCode
-          ? { code: relevantQuery?.sessionStorageMessageCode }
-          : slaveResponse );
+      if (relevantQuery?.equalCheck && masterResponse) {
+        if (JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
+          sessionStore.setObject( relevantQuery.queryName, relevantQuery?.messageCode
+            ? { code: relevantQuery?.messageCode }
+            : slaveResponse );
+        } else {
+          sessionStore.remove(relevantQuery.queryName);
+        }
       }
 
       if (relevantQuery?.isResponseStore) {
@@ -146,10 +152,13 @@ export const syncHttpClientGql = () => {
     const syncRequest = async ( isRawRequest: boolean, query: string, variables: any) => {
       try {
         const relevantQuery = currentQuery(query);
-        let masterResponse: any = isRawRequest? await client.rawRequest(query, variables):
-          await client.request(query, variables);
-
-        if (relevantQuery && !syncSlavesDns.includes(client) && isRasterRequest(variables) && shouldUpdateSlaves(relevantQuery.queryName)) {
+        let masterResponse: any = isRawRequest
+          ? await client.rawRequest(query, variables)
+          : await client.request(query, variables);
+        if (relevantQuery
+          && !syncSlavesDns.includes(client)
+          && isRasterRequest(variables)
+          && shouldUpdateSlaves(relevantQuery.queryName)) {
           syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
         }
         return masterResponse;

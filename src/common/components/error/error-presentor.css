@@ -18,8 +18,12 @@
   overflow-y: auto;
 }
 
+body[dir='rtl'] .errorsList {
+  direction: rtl;
+}
+
 body[dir='rtl'] .errorContainer {
-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
 
 .error {

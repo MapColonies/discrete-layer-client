@@ -481,6 +481,9 @@ export const getCoordinatesDisplayText = (latitude: number, longitude: number): 
 
 export const getTimeStamp = (): string => new Date().getTime().toString();
 
-export const clearSelectedFileSyncWarnings = () => {
-  syncQueries.map((query: SYNC_QUERY) => query.queryName).forEach((key: string) => sessionStore.remove(key));
+export const clearSyncWarnings = (selectedFileWarningsOnly: boolean = false) => {
+  syncQueries
+    .filter((query: SYNC_QUERY) => selectedFileWarningsOnly ? !query.equalCheck : true)
+    .map((query: SYNC_QUERY) => query.queryName)
+    .forEach((key: string) => sessionStore.remove(key));
 };

@@ -52,7 +52,7 @@ import { LayersDetailsComponent } from './layer-details';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import EntityForm from './layer-datails-form';
 import {
-  clearSelectedFileSyncWarnings,
+  clearSyncWarnings,
   getFlatEntityDescriptors,
   getPartialRecord,
   getRecordForUpdate,
@@ -482,7 +482,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const closeDialog = useCallback(() => {
       onSetOpen(false);
       store.discreteLayersStore.resetUpdateMode();
-      clearSelectedFileSyncWarnings();
+      clearSyncWarnings();
     }, [onSetOpen, store.discreteLayersStore]);
 
     useEffect(() => {
