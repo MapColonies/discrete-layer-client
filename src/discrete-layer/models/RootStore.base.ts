@@ -483,8 +483,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new StringArrayObjectTypeModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryGetProduct(variables: { productVersion: string, productType: string, productId: string }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getProduct: LayerMetadataMixedUnion}>(`query getProduct($productVersion: String!, $productType: String!, $productId: String!) { getProduct(productVersion: $productVersion, productType: $productType, productId: $productId) {
+    queryGetProduct(variables: { productType: string, productId: string }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getProduct: LayerMetadataMixedUnion}>(`query getProduct($productType: String!, $productId: String!) { getProduct(productType: $productType, productId: $productId) {
         ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
