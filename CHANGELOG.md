@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.3...v2.10.4) (2024-08-08)
+
+
+### Bug Fixes
+
+* use new getProduct query instead of searchById query ([#513](https://github.com/MapColonies/discrete-layer-client/issues/513)) ([d910de3](https://github.com/MapColonies/discrete-layer-client/commit/d910de35a412e684c1cf79f64a4286eb9eba5018))
+
 ### [2.10.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.2...v2.10.3) (2024-08-06)
 
 
