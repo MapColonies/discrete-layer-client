@@ -156,10 +156,10 @@ const InnerForm = (
       (method, key, ...args) => {},
       (method, key, ...args) => {
         switch (true) {
-          case key.includes(SYNC_QUERY_NAME.SEARCH_BY_ID): {
+          case key.includes(SYNC_QUERY_NAME.GET_PRODUCT): {
             switch (method) {
               case 'setItem': {
-                const invalidVersion = sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID);
+                const invalidVersion = sessionStore.getObject(SYNC_QUERY_NAME.GET_PRODUCT);
                 if (invalidVersion) {
                   setValidationWarn(getValidationMessage(invalidVersion, intl));
                 }
@@ -176,7 +176,7 @@ const InnerForm = (
             switch (method) {
               case 'setItem': {
                 const sourceValidation = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
-                if (sourceValidation && !sourceValidation.isValid && !sessionStore.getObject(SYNC_QUERY_NAME.SEARCH_BY_ID)) {
+                if (sourceValidation && !sourceValidation.isValid && !sessionStore.getObject(SYNC_QUERY_NAME.GET_PRODUCT)) {
                   setValidationWarn(getValidationMessage(sourceValidation, intl));
                 }
                 break;

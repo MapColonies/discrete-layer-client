@@ -215,6 +215,7 @@
   "ingestion.warning.title": "אזהרה:",
   "ingestion.warning.invalid-secondary-file": "{title} אירעה שגיאת וולידציה באתר המשני",
   "ingestion.warning.unsynched": "מספר גרסה שונה",
+  "ingestion.error.unsynched": "שכבה לא קיימת באתר המשני",
   "ingestion.error.invalid-source-file": "שגיאה בקובץ הנבחר: {value}",
   "ingestion.error.source-file-exception": "שירות ולידציה אינו תקין: {value}",
   "ingestion.error.directory-comparison": "אזהרה: תוכן הסיפרייה אינו זהה בין האתר הראשי והאתר המשני",

@@ -12,10 +12,8 @@ import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../common/helpers/formatters';
-import { sessionStore } from '../../../common/helpers/storage';
 import { getStatusColoredBackground } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
-import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
 import {
   BestRecordModelType,
   EntityDescriptorModelType,
@@ -173,7 +171,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
     const [isAllInfoReady, setIsAllInfoReady] = useState<boolean>(false);
-    const querySearchById = useQuery<{searchById: LayerMetadataMixedUnion[]}>();
+    const queryGetProduct = useQuery<{getProduct: LayerMetadataMixedUnion | null}>();
 
     const dialogTitleParam = recordType;
     const dialogTitleParamTranslation = intl.formatMessage({
@@ -447,27 +445,21 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       );
       setDescriptors(desc as any[]);
 
-      if (mode === Mode.UPDATE && recordType === RecordType.RECORD_RASTER) {
-        querySearchById.setQuery(
-          store.querySearchById(
+      if ([Mode.UPDATE, Mode.EDIT].includes(mode) && recordType === RecordType.RECORD_RASTER) {
+        queryGetProduct.setQuery(
+          store.queryGetProduct(
             {
-              idList: {
-                value: [props.layerRecord?.id as string]
-              }
+              productType: props.layerRecord?.productType as ProductType,
+              productId: (props.layerRecord as LayerRasterRecordModelType).productId as string
             }
           )
         );
       }
     }, []);
 
-    useEffect(() => {
-      if (querySearchById.data) {
-        const layersList = get(querySearchById.data, 'searchById') as LayerRasterRecordModelType[];
-        if (!isEmpty(layersList)) {
-          const layer = cloneDeep(layersList[0]);
-        }
-      }
-    }, [querySearchById.data]);
+    // TODO: For future use in order to work with fresh data from PYCSW
+    // useEffect(() => {
+    // }, [queryGetProduct.data]);
 
     useEffect(() => {
       if (vestValidationResults.errorCount === NONE) {
