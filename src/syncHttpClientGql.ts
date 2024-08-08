@@ -20,7 +20,8 @@ export type SYNC_QUERY = {
   isResponseStore: boolean;
   omitProperties?: string[];
   pickProperties?: string[];
-  messageCode?: string;
+  warningMessageCode?: string;
+  errorMessageCode?: string;
 };
 
 export const syncQueries: SYNC_QUERY[] = [
@@ -49,14 +50,15 @@ export const syncQueries: SYNC_QUERY[] = [
     equalCheck: true,
     isResponseStore: false,
     omitProperties: ['modDate', 'id', 'parentId', 'selectable', 'childrenIds'],
-    messageCode: 'ingestion.error.directory-comparison',
+    warningMessageCode: 'ingestion.error.directory-comparison',
   },
   {
     queryName: SYNC_QUERY_NAME.GET_PRODUCT,
     equalCheck: true,
     isResponseStore: false,
     pickProperties: ['productVersion'],
-    messageCode: 'ingestion.warning.unsynched',
+    warningMessageCode: 'ingestion.warning.unsynched',
+    errorMessageCode: 'ingestion.error.unsynched',
   },
 ];
 
@@ -82,9 +84,16 @@ const pickPropertiesFromResponse = (
   response: any,
   relevantQuery?: SYNC_QUERY
 ) => {
-  let partialResponse = {};
+  let partialResponse: Record<string, unknown> | undefined = {};
   relevantQuery?.pickProperties?.forEach(
-    (prop: string) => partialResponse = {...partialResponse, [prop]: response[relevantQuery?.queryName as SYNC_QUERY_NAME][prop]}
+    (prop: string) => {
+      if (partialResponse !== undefined && get(response,`${relevantQuery?.queryName}.${prop}`) !== undefined) {
+        partialResponse[prop] = get(response,`${relevantQuery?.queryName}.${prop}`);
+      }
+      else {
+        partialResponse = undefined;
+      }
+    }
   );
   return partialResponse;
 };
@@ -99,7 +108,7 @@ const isSameVersion = () => {
 };
 
 const shouldUpdateSlaves = (queryName: string) => {
-  return queryName !== SYNC_QUERY_NAME.RASTER_UPDATE_GEOPKG || isSameVersion();
+  return (queryName !== SYNC_QUERY_NAME.RASTER_UPDATE_GEOPKG && queryName !== SYNC_QUERY_NAME.UPDATE_META_DATA) || isSameVersion();
 };
 
 const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
@@ -120,12 +129,17 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
 
       // For Now: we don't store response from multiple slaves, setObject will override with the last value
       if (relevantQuery?.equalCheck && masterResponse) {
-        if (JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
-          sessionStore.setObject( relevantQuery.queryName, relevantQuery?.messageCode
-            ? { code: relevantQuery?.messageCode }
-            : slaveResponse );
-        } else {
-          sessionStore.remove(relevantQuery.queryName);
+        if (!slaveResponse) {
+          sessionStore.setObject( relevantQuery.queryName, { code: relevantQuery?.errorMessageCode, severity: 'error' } );
+        }
+        else {
+          if (JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
+            sessionStore.setObject( relevantQuery.queryName, relevantQuery?.warningMessageCode
+              ? { code: relevantQuery?.warningMessageCode }
+              : slaveResponse );
+          } else {
+            sessionStore.remove(relevantQuery.queryName);
+          }
         }
       }
 
