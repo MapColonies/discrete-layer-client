@@ -148,11 +148,13 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
       }
 
     } catch (error) {
-      sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {
-        code: 'ingestion.error.not-available',
-        additionalInfo: `${get(slaveClient,'url')}`,
-        severity: 'error'
-      } );
+      if ((relevantQuery as SYNC_QUERY).queryName !== SYNC_QUERY_NAME.GET_DIRECTORY) {
+        sessionStore.setObject( (relevantQuery as SYNC_QUERY).queryName, {
+          code: 'ingestion.error.not-available',
+          additionalInfo: `${get(slaveClient,'url')}`,
+          severity: 'error'
+        } );
+      }
     }
   });
 };
