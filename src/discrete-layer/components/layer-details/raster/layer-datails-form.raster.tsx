@@ -38,6 +38,7 @@ import {
   RecordType,
   SourceValidationModelType
 } from '../../../models';
+import { SourceValidationParams } from '../../../models/RootStore.base';
 import { LayersDetailsComponent } from '../layer-details';
 import { IngestionFields } from '../ingestion-fields';
 import {
@@ -52,11 +53,10 @@ import {
 } from '../utils';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
+import { FeatureType, PPMapStyles } from './pp-map.utils';
 
 import './layer-details-form.raster.css';
 import 'react-virtualized/styles.css';
-import { SourceValidationParams } from '../../../models/RootStore.base';
-import { FeatureType, PPMapStyles } from './pp-map.utils';
 
 const NONE = 0;
 
@@ -78,6 +78,8 @@ interface LayerDetailsFormCustomProps {
   closeDialog: () => void;
   schemaUpdater: (parts:number, startIndex?: number) => void;
   removePolygonPart: (polygonPartKey: string) => void;
+  customError?: Record<string,string[]> | undefined;
+  ppCollisionCheckInProgress?: boolean | undefined;
 }
 
 export interface StatusError {
@@ -125,7 +127,9 @@ export const InnerRasterForm = (
     mutationQueryLoading,
     closeDialog,
     schemaUpdater,
-    removePolygonPart
+    removePolygonPart,
+    customError,
+    ppCollisionCheckInProgress,
   } = props;
 
   const status = props.status as StatusError | Record<string, unknown>;
@@ -148,10 +152,14 @@ export const InnerRasterForm = (
   const [showExisitngLayerPartsOnMap, setShowExisitngLayerPartsOnMap] = useState<boolean>(false);
   const [polygonPartsMode, setPolygonPartsMode] = useState<POLYGON_PARTS_MODE>('MANUAL');
   const [layerPolygonParts, setLayerPolygonParts] = useState<Record<string, PolygonPartRecordModelType>>({});
+  const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
-    return get(status, 'errors') as Record<string, string[]> | null ?? {};
-  }, [status]);
+    return {
+      ...get(status, 'errors') as Record<string, string[]>,
+      ...(ppCheckPerformed ? customError : {})
+    }
+  }, [status, customError, ppCheckPerformed]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -260,6 +268,12 @@ export const InnerRasterForm = (
     });
    }, [parsingErrors]);
 
+   useEffect(() => {
+    if(ppCollisionCheckInProgress !== undefined) {
+      setShowCurtain(ppCollisionCheckInProgress);
+    }
+   }, [ppCollisionCheckInProgress]);
+
   const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
 
@@ -297,10 +311,12 @@ export const InnerRasterForm = (
     () => ({
       handleChange: (e: React.ChangeEvent<unknown>): void => {
         setGraphQLError(undefined);
+        setPPCheckPerformed(false);
         handleChange(e);
       },
       handleBlur: (e: React.FocusEvent<unknown>): void => {
         setGraphQLError(undefined);
+        setPPCheckPerformed(false);
         handleBlur(e);
       },
       handleSubmit,
@@ -659,8 +675,6 @@ export const InnerRasterForm = (
 
                       setValues({
                         ...values,
-                        ...transformEntityToFormFields(layerRecord),
-                        ...ingestionFields,
                         ...polygonsData
                       });
                     })
@@ -767,7 +781,6 @@ export const InnerRasterForm = (
                       
                       setValues({
                         ...values,
-                        ...ingestionFields,
                         ...{[polygonData.uniquePartId]: polygonData}
                       });
                       
@@ -787,6 +800,8 @@ export const InnerRasterForm = (
                 style={{width: '520px', position: 'relative', direction: 'ltr'}} 
                 fitOptions={{padding:[10,20,10,20]}}
                 showExisitngPolygonParts={showExisitngLayerPartsOnMap}
+                ingestionResolutionMeter={getFieldMeta('resolutionMeter').value as number}
+                ppCheck={ppCheckPerformed}
               />
             </>
             }
@@ -825,20 +840,41 @@ export const InnerRasterForm = (
             } 
           </Box>
           <Box className="buttons">
-            <Button
-              raised
-              type="submit"
-              disabled={
-                mutationQueryLoading ||
-                !dirty ||
-                ppFeatures.length === NONE ||
-                Object.keys(errors).length > NONE ||
-                (Object.keys(getStatusErrors()).length > NONE) ||
-                !isEmpty(graphQLError)
-              }
-            >
-              <FormattedMessage id="general.ok-btn.text" />
-            </Button>
+            {
+              (mode === Mode.NEW || (ppCheckPerformed && ppCollisionCheckInProgress === false && customError === undefined)) ?
+              <Button
+                raised
+                type="submit"
+                disabled={
+                  mutationQueryLoading ||
+                  !dirty ||
+                  ppFeatures.length === NONE ||
+                  Object.keys(errors).length > NONE ||
+                  (Object.keys(getStatusErrors()).length > NONE) ||
+                  !isEmpty(graphQLError)
+                }
+              >
+                <FormattedMessage id="general.ok-btn.text" />
+              </Button> :
+              <Button
+                type="button"
+                raised
+                disabled={
+                  ppCollisionCheckInProgress ||
+                  ppFeatures.length === NONE ||
+                  Object.keys(errors).length > NONE ||
+                  (Object.keys(getStatusErrors()).length > NONE)
+                }
+                onClick={(e): void => {
+                  setPPCheckPerformed(true);
+
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <FormattedMessage id="general.check-btn.text" />
+              </Button>
+            }
             <Button
               type="button"
               onClick={(): void => {
@@ -872,6 +908,8 @@ interface LayerDetailsFormProps {
   mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
+  customError?: Record<string,string[]> | undefined;
+  ppCollisionCheckInProgress?: boolean | undefined;
 }
 
 export default withFormik<LayerDetailsFormProps, FormValues>({

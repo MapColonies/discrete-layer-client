@@ -4,6 +4,7 @@
   "general.version.tooltip": "אפליקצית קטלוג גרסה",
   "general.version.text": "{projectVersion} ({appVersion})",
   "general.ok-btn.text": "אישור",
+  "general.check-btn.text": "בדוק",
   "general.cancel-btn.text": "ביטול",
   "general.confirm-btn.text": "אישור",
   "general.save-btn.text": "שמירה",
@@ -215,6 +216,7 @@
   "polygon-parts.map-preview-legend.SOURCE_EXTENT": "שטח המקור",
   "polygon-parts.map-preview-legend.EXISTING_PP": "חלקי תיחום הקיימים",
   "polygon-parts.map-preview-legend.SELECTED": "חלק הנבחר",
+  "polygon-parts.map-preview-legend.ILLEGAL_PP": "חלק תיחום עם רזולוציה קטנה מהקיים",
 
   "field.actions.edit-draft": "ערוך טיוטה",
   "field.actions.more": "פעולות נוספות",
@@ -479,6 +481,7 @@
   "validation-general.shapeFile.too-many-features": " Shape מכיל יותר מידי features",
   "validation-general.shapeFile.generic": "יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
   "validation-general.shapeFile.polygonParts.hasErrors": "קובץ shape מכיל שגיות ב{numErrorParts} חלקי תיחום, נדרש להשלים מידה על חלקי תיחום",
+  "validation-general.polygonParts.resolutionCollision": "רזולוציה של {numErrorParts} חלקי תיחום מסומנים מתנגשת עם חלקים קיימים באותו אזור!",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",

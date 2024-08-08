@@ -92,6 +92,13 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
       activeTabView
     ]
   );
+
+  const basePPUpdateErrorShow = useCallback(
+    (ppResolutionsUpdateError: Record<string,string[]>) => {
+      store.discreteLayersStore.setCustomValidationError(ppResolutionsUpdateError);
+    },
+    []
+  );
   
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {
@@ -389,6 +396,10 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT: {
           const selectedLayer = data.selectedLayer as ILayerImage;
           baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE: {
+          basePPUpdateErrorShow(data as Record<string,string[]>);
           break;
         }
         default:

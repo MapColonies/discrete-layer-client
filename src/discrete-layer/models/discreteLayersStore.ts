@@ -55,6 +55,8 @@ const INITIAL_STATE = {
   capabilities: [],
   baseMaps: CONFIG.BASE_MAPS,
   mapViewerExtentPolygon: undefined,
+  customValidationError: undefined,
+  ppCollisionCheckInProgress: undefined,
 }
 
 export const discreteLayersStore = ModelBase
@@ -75,6 +77,8 @@ export const discreteLayersStore = ModelBase
     capabilities: types.maybe(types.frozen<CapabilityModelType[]>(INITIAL_STATE.capabilities)),
     baseMaps: types.maybe(types.frozen<IBaseMaps>(INITIAL_STATE.baseMaps)),
     mapViewerExtentPolygon: types.maybe(types.frozen<Feature|undefined>(INITIAL_STATE.mapViewerExtentPolygon)),
+    customValidationError: types.maybe(types.frozen<Record<string,string[]>|undefined>(INITIAL_STATE.customValidationError)),
+    ppCollisionCheckInProgress: types.maybe(types.frozen<boolean|undefined>(INITIAL_STATE.ppCollisionCheckInProgress)),
     
     // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
@@ -233,6 +237,8 @@ export const discreteLayersStore = ModelBase
 
     function resetUpdateMode(): void {
       self.selectedLayerIsUpdateMode = false;
+      self.ppCollisionCheckInProgress = undefined;
+      self.customValidationError = undefined;
     }
 
     function selectLayerByID(layerID: string): void {
@@ -382,6 +388,15 @@ export const discreteLayersStore = ModelBase
       self.mapViewerExtentPolygon = cloneDeep(feature);
     }
 
+    function setCustomValidationError(err: Record<string, string[]> | undefined): void {
+      self.customValidationError = cloneDeep(err);
+    }
+
+    function setPPCollisionCheckInProgress(val: boolean | undefined): void {
+      self.ppCollisionCheckInProgress = val;
+    }
+
+
     return {
       getLayersImages,
       getPreparedLayersImages,
@@ -412,6 +427,8 @@ export const discreteLayersStore = ModelBase
       getFieldConfig,
       resetUpdateMode,
       setMapViewerExtentPolygon,
+      setCustomValidationError,
+      setPPCollisionCheckInProgress
     };
   });
 

@@ -68,6 +68,7 @@ export enum UserAction {
   SYSTEM_CALLBACK_PUBLISH = 'system_callback.publish',
   SYSTEM_CALLBACK_FLYTO = 'system_callback.flyToEntity',
   SYSTEM_CALLBACK_SHOWFOOTPRINT = 'system_callback.showFootprint',
+  SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE = 'system_callback.showPPErrorOnUpdate',
   /***  FOR FUTURE USE, ENTITY FIELD PERMISSION PATTERN EXAMPLE ***/
   // ENTITY_FIELD_ACTION_BESTRECORD_PRODUCTNAME_VIEW = 'entity_action.BestRecord.productName.view',
 }
@@ -98,6 +99,7 @@ const ROLES: IRole[] = [
       [UserAction.SYSTEM_ACTION_FILTER]: false,
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: true,
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: true,
+      [UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE]: true,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: true,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: true,
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,
@@ -159,6 +161,7 @@ const ROLES: IRole[] = [
       [UserAction.SYSTEM_ACTION_FILTER]: false,
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: true,
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: true,
+      [UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE]: false,
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: false,
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: false,
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: false,

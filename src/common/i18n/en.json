@@ -4,6 +4,7 @@
   "general.version.tooltip": "Catalog App version",
   "general.version.text": "{projectVersion} ({appVersion})",
   "general.ok-btn.text": "Ok",
+  "general.check-btn.text": "Check",
   "general.cancel-btn.text": "Cancel",
   "general.confirm-btn.text": "Approve",
   "general.save-btn.text": "Save",
@@ -211,6 +212,7 @@
   "polygon-parts.map-preview-legend.SOURCE_EXTENT": "Source Extent",
   "polygon-parts.map-preview-legend.EXISTING_PP": "Existing polygon part",
   "polygon-parts.map-preview-legend.SELECTED": "Selected polygon part",
+  "polygon-parts.map-preview-legend.ILLEGAL_PP": "Polygon part with illegal resolution",
 
   "field.actions.edit-draft": "Edit draft",
   "field.actions.more": "More options",
@@ -475,6 +477,7 @@
   "validation-general.shapeFile.too-many-features": "Shape file contains too many features",
   "validation-general.shapeFile.generic": "Please select zip file with only shape or related files, or a single shape file",
   "validation-general.shapeFile.polygonParts.hasErrors": "Shape file contains error(s), some data is missing for Poygon Parts",
+  "validation-general.polygonParts.resolutionCollision": "Marked {numErrorParts} Plygon Parts has resolution collision with parts already existing in that area",
   "validation-field.sourceDateEnd.min": "{fieldName} should be later than {value}",
   "validation-field.sourceDateStart.max": "{fieldName} should be earlier than {value}",
   "validation-field.productVersion.pattern": "{fieldName} does not comply with the format: major.minor",

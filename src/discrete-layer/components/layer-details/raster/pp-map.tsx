@@ -10,9 +10,10 @@ import { validateGeoJSONString } from '../../../../common/utils/geojson.validati
 import { Mode } from '../../../../common/models/mode.enum';
 import { MapLoadingIndicator } from '../../../../common/components/map/ol-map.loader';
 import { useStore } from '../../../models/RootStore';
-import { PolygonPartsVectorLayer } from './pp-vector-layer';
-import { PPMapStyles } from './pp-map.utils';
+import { PolygonPartsVectorLayer as PolygonPartsExtentVectorLayer } from './pp-extent-vector-layer';
+import { FeatureType, PPMapStyles } from './pp-map.utils';
 import { ILayerImage } from '../../../models/layerImage';
+import { PolygonPartsByPolygonVectorLayer } from './pp-polygon-vector-layer';
 
 interface GeoFeaturesPresentorProps {
   mode: Mode;
@@ -23,6 +24,8 @@ interface GeoFeaturesPresentorProps {
   selectionStyle?: Style;
   showExisitngPolygonParts?: boolean;
   layerRecord?: ILayerImage | null;
+  ingestionResolutionMeter?: number | null;
+  ppCheck?: boolean | null;
 }
 
 const  DEFAULT_PROJECTION = 'EPSG:4326';
@@ -35,7 +38,9 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   selectedFeatureKey,
   selectionStyle,
   showExisitngPolygonParts,
-  layerRecord
+  layerRecord,
+  ingestionResolutionMeter,
+  ppCheck
 }) => {
   // const [geoJsonValue, setGeoJsonValue] = useState();
   const store = useStore();
@@ -108,9 +113,6 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       <Map>
         <MapLoadingIndicator/>
         {previewBaseMap}
-        {
-          showExisitngPolygonParts && <PolygonPartsVectorLayer layerRecord={layerRecord}/>
-        }
         <VectorLayer>
           <VectorSource>
             {geoFeatures?.map((feat, idx) => {
@@ -121,15 +123,28 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
                 }
 
                 return (feat && !isEmpty(feat.geometry))? <GeoJSONFeature 
-                  geometry={{...feat.geometry}} 
-                  fitOptions={{...fitOptions}}
-                  fit={idx === 0}
-                  featureStyle={featureStyle}
+                geometry={{...feat.geometry}} 
+                fitOptions={{...fitOptions}}
+                fit={idx === 0}
+                featureStyle={featureStyle}
                 /> : <></>
               }
             )}
           </VectorSource>
         </VectorLayer>
+        {
+          showExisitngPolygonParts && <PolygonPartsExtentVectorLayer layerRecord={layerRecord}/>
+        }
+        {
+          ppCheck && <PolygonPartsByPolygonVectorLayer 
+            layerRecord={layerRecord} 
+            maskFeature={geoFeatures?.find((feat)=>{
+              return get(feat,'properties.featureType') === FeatureType.PP_PERIMETER;
+            })}
+            partsToCheck={geoFeatures?.filter((part) => [FeatureType.DEFAULT, undefined].includes(part?.properties?.featureType))}
+            ingestionResolutionMeter={ingestionResolutionMeter}
+          />
+        }
         <Legend legendItems={LegendsArray} title={intl.formatMessage({id: 'polygon-parts.map-preview-legend.title'})}/>
       </Map>
     </Box>
