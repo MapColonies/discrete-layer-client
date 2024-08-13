@@ -35,7 +35,7 @@ const devConfigPath = path.join(confdDevBasePath, 'conf.d/development.toml');
 
 const indexTmplRelPath = 'index.html';
 const indexConfigPath = path.join(confdBasePath, 'index.toml');
-const indexTmplPath = path.join(confdBasePath, !isInDocker ? '/../public/' : '/../html/',indexTmplRelPath);
+const indexTmplPath = path.join(confdBasePath, !isInDocker ? '/../public/' : '/../html/', indexTmplRelPath);
 const devIndexTmplPath = path.join(confdDevBasePath, '/templates/', indexTmplRelPath);
 const devIndexConfigPath = path.join(confdDevBasePath, 'conf.d/index.toml');
 
@@ -67,15 +67,14 @@ const download = (uri, filename) => {
 };
 
 const downloadIfNotExists = (uri, filename) => {
-  console.log(`Checking if ${filename} exists.`);
+  console.log(`Checking if ${filename} exists`);
   return new Promise(resolve => {
     if (fs.existsSync(filename)) {
-      console.log(`${filename} exists, proceeding to the next stage.`);
+      console.log(`${filename} exists, proceeding to the next stage`);
       resolve();
       return;
     }
-
-    console.log(`${filename} does not exist.`);
+    console.log(`${filename} does not exist`);
     resolve(download(uri, filename));
   });
 };
@@ -100,19 +99,17 @@ const createDevConfdConfigFile = (env, isInDocker) => {
   if (!env) {
     env = 'default';
   }
-  console.log('Creating a development toml and tmpl files.');
-  const tmplCopy = copyFile(confdTmplPath, devTmplPath);
-  const tomlCopy = copyFile(confdConfigPath, devConfigPath, data => {
+  console.log('Get toml and tmpl files');
+  copyFile(confdTmplPath, devTmplPath);
+  copyFile(confdConfigPath, devConfigPath, data => {
     const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
     return !isInDocker ? data : data.replace('dest = "public/', target);
   });
-  const indexTmplCopy = copyFile(indexTmplPath, devIndexTmplPath);
-  const indexTomlCopy = copyFile(indexConfigPath, devIndexConfigPath, data => {
+  copyFile(indexTmplPath, devIndexTmplPath);
+  copyFile(indexConfigPath, devIndexConfigPath, data => {
     const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
     return !isInDocker ? data : data.replace('dest = "public/', target);
   });
-
-  return Promise.all([tmplCopy, tomlCopy]);
 };
 
 const replacePlaceHolders = () => {
@@ -138,9 +135,9 @@ const runConfd = () => {
   );
 };
 
-const createTargetDir = () => {
-  createDirIfNotExists('config');
-};
+// const createTargetDir = () => {
+//   createDirIfNotExists('config');
+// };
 
 const help = () => {
   console.log('usage: "node <path to this script> [options]\n');
@@ -155,6 +152,7 @@ const help = () => {
   console.log();
   process.exit(0);
 };
+
 const main = () => {
   if (process.argv.indexOf('--help') != -1) {
     help();
