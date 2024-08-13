@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.4...v2.10.5) (2024-08-13)
+
+
+### Bug Fixes
+
+* config generation ([#516](https://github.com/MapColonies/discrete-layer-client/issues/516)) ([952619a](https://github.com/MapColonies/discrete-layer-client/commit/952619a6f85ea1902556accde97e9a8c9b608e81))
+* import button state with new DR sync ([#517](https://github.com/MapColonies/discrete-layer-client/issues/517)) ([27cc883](https://github.com/MapColonies/discrete-layer-client/commit/27cc883f2ce52eaaeda3cec075678618dcc1b0ba))
+
 ### [2.10.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.3...v2.10.4) (2024-08-08)
 
 
