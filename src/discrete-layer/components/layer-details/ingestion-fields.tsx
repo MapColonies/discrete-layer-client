@@ -34,7 +34,8 @@ interface IngestionFieldsProps {
   recordType: RecordType;
   fields: IRecordFieldInfo[];
   values: FormikValues;
-  onSetCurtainOpen: (open: boolean) => void;
+  isError: boolean;
+  onErrorCallback: (open: boolean) => void;
   validateSources?: boolean;
   reloadFormMetadata?: (
     ingestionFields: FormValues,
@@ -160,7 +161,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   recordType,
   fields,
   values,
-  onSetCurtainOpen,
+  isError,
+  onErrorCallback,
   validateSources = false,
   reloadFormMetadata,
   formik,
@@ -180,13 +182,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
   const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<ValidationMessage>();
 
-  const closeCurtain = useCallback(() => {
-    onSetCurtainOpen(true);
-  }, [onSetCurtainOpen]);
-
-  const openCurtain = useCallback(() => {
-    onSetCurtainOpen(false);
-  }, [onSetCurtainOpen]);
+  const handleError = useCallback((error: boolean) => {
+    onErrorCallback(error);
+  }, [onErrorCallback]);
 
   useEffect(() => {
     // Add method wathers for storage changes
@@ -267,8 +265,8 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   }, [queryResolveMetadataAsModel.error, chosenMetadataError]);
 
   useEffect(() => {
-    setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
-  }, [selection, queryResolveMetadataAsModel.loading]);
+    setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading || isError);
+  }, [selection, queryResolveMetadataAsModel.loading, isError]);
 
   useEffect(() => {
     if (queryValidateSource.data) {
@@ -296,9 +294,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
             } as MetadataFile
           );
         }
-        closeCurtain();
+        handleError(true);
       } else {
-        openCurtain();
+        handleError(false);
       }
     }
   }, [queryValidateSource.data]);
@@ -328,7 +326,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           } as MetadataFile
         );
       }
-      closeCurtain();
+      handleError(true);
     }
   }, [queryValidateSource.error]);
 
