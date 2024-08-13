@@ -277,7 +277,8 @@ const InnerForm = (
             recordType={recordType}
             fields={ingestionFields}
             values={values}
-            onSetCurtainOpen={setShowCurtain}
+            isError={showCurtain}
+            onErrorCallback={setShowCurtain}
             validateSources={recordType === RecordType.RECORD_RASTER}
             reloadFormMetadata={reloadFormMetadata}
             formik={entityFormikHandlers}
