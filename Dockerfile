@@ -39,4 +39,4 @@ RUN chgrp -R 0 /var/cache/nginx/ && \
 RUN adduser -S user -G root  
 USER user
 
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

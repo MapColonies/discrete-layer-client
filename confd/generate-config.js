@@ -81,23 +81,9 @@ const downloadIfNotExists = (uri, filename) => {
 };
 
 const copyFile = (src, dest, mutationFunc) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(src, 'utf8', function(err, data) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      const result = mutationFunc ? mutationFunc(data) : data;
-
-      fs.writeFile(dest, result, 'utf8', function(err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
-  });
+  const data = fs.readFileSync(src, 'utf8');
+  const result = mutationFunc ? mutationFunc(data) : data;
+  fs.writeFileSync(dest, result, {encoding: 'utf8'});
 };
 
 const createDirIfNotExists = dir => {
@@ -177,9 +163,8 @@ const main = () => {
   const env = envIdx !== -1 ? process.argv[envIdx + 1] : null;
   downloadIfNotExists(confdUrl, confdPath)
     .then(() => {
-      replacePlaceHolders().then(()=>{
-        createDevConfdConfigFile(env, isInDocker);
-      });
+      replacePlaceHolders();
+      createDevConfdConfigFile(env, isInDocker);
     })
     // .then(createTargetDir())
     .then(() => runConfd())
