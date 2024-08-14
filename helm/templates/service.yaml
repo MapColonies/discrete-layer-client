@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "app.fullname" . }}-ui
+  name: {{ template "app.fullname" . }}
   labels:
     app: {{ template "app.name" . }}
     component: ui-service

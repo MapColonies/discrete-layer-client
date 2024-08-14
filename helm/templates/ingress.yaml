@@ -9,7 +9,7 @@ metadata:
     {{- end }}
     {{- if eq .Values.ingress.type "nginx-org" }}
     nginx.org/mergeable-ingress-type: "minion"
-    nginx.org/rewrites: 'ServiceName={{ template "app.fullname" . }}-ui rewrite=/;ServiceName={{ template "app.fullname" . }}-bff rewrite=/;ServiceName={{ template "app.fullname" . }}-tools rewrite=/'
+    nginx.org/rewrites: 'ServiceName={{ template "app.fullname" . }} rewrite=/'
     {{- end }}
     #nginx.org/redirect-to-https: "True" #dont work in minion, should be set in master
     #nginx.org/hsts-behind-proxy: "True" #dont work in minion or master despite documentation
@@ -21,7 +21,7 @@ spec:
         paths:
           - backend:
               service:
-                name: {{ template "app.fullname" . }}-ui
+                name: {{ template "app.fullname" . }}
                 port:
                   number: {{ .Values.ui.servicePort }}
             path: {{ .Values.ingress.path }}{{- if eq .Values.ingress.type "nginx-kubernetes" }}(/|$)(.*){{- end }}
