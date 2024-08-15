@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.10](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.9...v2.10.10) (2024-08-15)
+
+
+### Bug Fixes
+
+* sso volumes ([4313808](https://github.com/MapColonies/discrete-layer-client/commit/431380854c5b6191b10abfcfd7b89f9aa44589a8))
+
 ### [2.10.9](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.8...v2.10.9) (2024-08-15)
 
 
