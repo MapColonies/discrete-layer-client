@@ -10,9 +10,7 @@ metadata:
     environment: {{ $environment }}
     release: {{ .Release.Name }}
 data:
-  {{- if .Values.sso.enabled }}
   default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
-  {{- end }}
   CONFIGURATION_SERVED_ENTITY_TYPES: {{ quote .Values.shared.servedEntityTypes }}
   CONFIGURATION_ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.shared.accessToken.attributeName }}
   CONFIGURATION_ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.shared.accessToken.injectionType }}

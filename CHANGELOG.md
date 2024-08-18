@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.10](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.9...v2.10.10) (2024-08-15)
+
+
+### Bug Fixes
+
+* sso volumes ([4313808](https://github.com/MapColonies/discrete-layer-client/commit/431380854c5b6191b10abfcfd7b89f9aa44589a8))
+
+### [2.10.9](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.8...v2.10.9) (2024-08-15)
+
+
+### Bug Fixes
+
+* for index.html ([16d2f87](https://github.com/MapColonies/discrete-layer-client/commit/16d2f87cbaff1d4ddc839e99d19a656923723fc4))
+
+### [2.10.8](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.7...v2.10.8) (2024-08-15)
+
+
+### Bug Fixes
+
+* add header Cache-Control to index.html location ([#514](https://github.com/MapColonies/discrete-layer-client/issues/514)) ([e4ff2e1](https://github.com/MapColonies/discrete-layer-client/commit/e4ff2e1d021ff48ff6e00b0a9391d55a46b52f4e))
+
 ### [2.10.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.6...v2.10.7) (2024-08-14)
 
 ### [2.10.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.5...v2.10.6) (2024-08-13)
