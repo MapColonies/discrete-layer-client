@@ -50,7 +50,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
     <Box className="detailsFieldValue selectBoxContainer">
       <Select
         className="enumOptions"
-        value={value}
+        value={innerValue}
         id={fieldInfo.fieldName as string}
         name={fieldInfo.fieldName as string}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
@@ -61,14 +61,14 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
         enhanced>
         {
           lookupOptions.map(({ translationCode, value }, index) => {
-            const translation = intl.formatMessage({ id: translationCode });
+              const translation = intl.formatMessage({ id: translationCode });
 
-            return (
-              <MenuItem key={index} value={value}>
-                <Typography tag="span"></Typography>
-                {translation}
-              </MenuItem>
-            );
+              return (
+                <MenuItem key={index} value={value}>
+                  <Typography tag="span"></Typography>
+                  {translation}
+                </MenuItem>
+              );
           })
         }
       </Select>
