@@ -61,14 +61,14 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
         enhanced>
         {
           lookupOptions.map(({ translationCode, value }, index) => {
-              const translation = intl.formatMessage({ id: translationCode });
+            const translation = intl.formatMessage({ id: translationCode });
 
-              return (
-                <MenuItem key={index} value={value}>
-                  <Typography tag="span"></Typography>
-                  {translation}
-                </MenuItem>
-              );
+            return (
+              <MenuItem key={index} value={value}>
+                <Typography tag="span"></Typography>
+                {translation}
+              </MenuItem>
+            );
           })
         }
       </Select>
