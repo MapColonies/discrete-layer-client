@@ -3,3 +3,7 @@ description: Helm chart to deploy Catalog App
 name: discrete-layer-client
 version: 2.10.10
 appVersion: 2.10.10
+dependencies:
+  - name: common
+    version: 1.0.1
+    repository: file://../../helm-common

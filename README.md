@@ -1,78 +1,67 @@
-# discrete-layers-client
+# Discrete Layer Client
 
-React app written in typescript to define manage and browse discrete layers image catalog.<br />
+React app created in typescript that defines manages and displays discrete layers image catalog
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).<br />
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
 
-<br />
 
-## Bring all dependencies
+## Installation
 
-```
+Install deps with yarn
+
+```bash
 yarn
 ```
-<br />
 
-## Available Scripts
+Run confd
 
-In the project directory, you can run:
-
-### `yarn run confd:prod`
-
-Generates (MUST)
-
-```
-public/env-config.js
+```bash
+yarn run confd:prod
 ```
 
-due to env variables or use defaults if not defined.
-```
-public/index.html
-```
-due to PUBLIC_URL, to support non-root URL.
+To generate:  
+public/env-config.js  <- For env variables  
+public/index.html  <- For PUBLIC_URL, to support non-root URL  
+  
+Start app
 
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-**Make sure to build all the dependencies before running this command (react-components).**
-
-Any relative request is proxied to the backend.<br />
-You can control the host by editing the package.json file.
-
-```json
-{
-  "proxy": "http://localhost:8000"
-}
+```bash
+yarn start
 ```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Open [http://localhost:3000](http://localhost:3000)
 
-### `yarn test`
+## Running Tests
 
-Launches the test runner in an interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To run tests, run the following command
 
-### `yarn run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-<br />
-
-## Update configuration inside the docker
-
-In Docker run the following in order to propagate env variables to clients:
-
+```bash
+yarn test
 ```
+
+It will run in an interactive mode  
+See [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
+
+## Preparing for deployment
+
+To prepare the code for deployment, run the following command
+
+```bash
+yarn build
+```
+
+It bundles react app with production mode and optimizes performance
+
+See [deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+## Init configuration inside a docker
+
+To use app env variables inside a docker, run the following command
+
+```bash
 node ./confd/generate-config.js --environment production --indocker
 ```
 
-Make sure that it runs from this location: /usr/share/nginx/html
+## Deployment
+
+See [helm values](https://github.com/MapColonies/helm-common/blob/c352a2453117895ec0f9df0267a66d6f5b9c2da2/README.md)
