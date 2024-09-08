@@ -58,13 +58,13 @@ configValues:
     enabled: false
   tracing:
     enabled: false
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: zone
-      whenUnsatisfiable: DoNotSchedule
-      labelSelector:
-        matchLabels:
-          foo: bar
+  # topologySpreadConstraints:
+  #   - maxSkew: 1
+  #     topologyKey: zone
+  #     whenUnsatisfiable: DoNotSchedule
+  #     labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: '{{ include "common.names.name" . }}'
   # ----------- containers ------------
   image:
     repository: discrete-layer-client
