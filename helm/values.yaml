@@ -30,7 +30,6 @@ sso:
   enabled: false
   redirectUrl:
 
-kubeVersion:
 commonLabels:
 commonAnnotations:
 # ----------- initContainers ----------
@@ -47,8 +46,7 @@ configValues:
   deploymentAnnotations:
     # collectord.io/index: '' # PROVIDE SPLUNK INDEX
   autoscaling:
-    hpa:
-      enabled: false
+    enabled: false
   replicaCount: 1
   podAnnotations:
     enabled: true
@@ -216,5 +214,3 @@ service:
   protocol: TCP
 serviceAccount:
   create: false
-  name: ""
-  annotations: {}
