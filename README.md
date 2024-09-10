@@ -16,7 +16,7 @@ yarn
 Run confd
 
 ```bash
-yarn run confd:prod
+yarn confd
 ```
 
 To generate:  
