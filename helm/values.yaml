@@ -18,17 +18,17 @@ global:
   environment: development
   releaseVersion: DUMMY_releaseVersion
   currentSubChart: DUMMY_currentSubChart
-
-shared:
-  servedEntityTypes: RECORD_ALL,RECORD_RASTER,RECORD_3D,RECORD_DEM
-  accessToken:
-    attributeName: token
-    injectionType: queryParam
-    tokenValue: TOKEN
-
-sso:
-  enabled: false
-  redirectUrl:
+  shared:
+    servedEntityTypes: RECORD_ALL,RECORD_RASTER,RECORD_3D,RECORD_DEM
+    accessToken:
+      attributeName: token
+      injectionType: queryParam
+      tokenValue: TOKEN
+    sso:
+      enabled: false
+      redirectUrl:
+        ui:
+        tools:
 
 commonLabels:
 commonAnnotations:

@@ -9,10 +9,10 @@
   RESPONSE_COMPRESSION_ENABLED: {{ .Values.env.responseCompressionEnabled | quote }}
 {{- end }}
   default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
-  CONFIGURATION_SERVED_ENTITY_TYPES: {{ quote .Values.shared.servedEntityTypes }}
-  CONFIGURATION_ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.shared.accessToken.attributeName }}
-  CONFIGURATION_ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.shared.accessToken.injectionType }}
-  CONFIGURATION_ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.shared.accessToken.tokenValue }}
+  CONFIGURATION_SERVED_ENTITY_TYPES: {{ quote .Values.global.shared.servedEntityTypes }}
+  CONFIGURATION_ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.global.shared.accessToken.attributeName }}
+  CONFIGURATION_ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.global.shared.accessToken.injectionType }}
+  CONFIGURATION_ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.global.shared.accessToken.tokenValue }}
   CONFIGURATION_IMAGE_TAG: {{ quote .Values.configValues.image.tag }}
   CONFIGURATION_PUBLIC_URL: {{ quote .Values.env.publicUrl }}
   CONFIGURATION_SERVICE_URL: {{ quote .Values.env.serviceUrl }}
