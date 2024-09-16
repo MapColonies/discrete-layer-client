@@ -6,9 +6,10 @@ global:
     - my-registry
   deploymentFlavor: openshift
   tlsCertificates:
-    certificate:
-    key:
-    caCertificate:
+    - hostname: catalog-dem-dev.mapcolonies.net
+      certificate:
+      key:
+      caCertificate:
   tracing:
     enabled: false
     url: http://localhost:55681/v1/traces
