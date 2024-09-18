@@ -31,6 +31,9 @@ global:
         ui:
         tools:
 
+nameOverride:
+fullnameOverride:
+# --------------- common --------------
 commonLabels:
 commonAnnotations:
 # ----------- initContainers ----------
