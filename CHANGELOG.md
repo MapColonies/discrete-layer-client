@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.10...v2.11.0) (2024-09-19)
+
+
+### Features
+
+* use helm common ([#520](https://github.com/MapColonies/discrete-layer-client/issues/520)) ([47af458](https://github.com/MapColonies/discrete-layer-client/commit/47af4580599ebe94c1c46f4c85da7e36f0013841))
+
 ### [2.10.10](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.9...v2.10.10) (2024-08-15)
 
 
