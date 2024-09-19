@@ -4,6 +4,6 @@ name: discrete-layer-client
 version: 2.11.0
 appVersion: 2.11.0
 dependencies:
-  - name: common
+  - name: helm-common
     version: 1.0.1
-    repository: file://../../helm-common
+    repository: oci://acrarolibotnonprod.azurecr.io/helm/common
