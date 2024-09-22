@@ -196,21 +196,21 @@ route:
   extraRules:
 ingress:
   enabled: false
-  # apiVersion: ""
-  # type: nginx-kubernetes
-  # annotations: {}
-  # pathType: Prefix
-  # hostname: COMPONENT_NAME.local
-  # extraHosts: []
-  # extraPaths: []
-  # path: /ui
-  # extraRules: []
-  # extraTls: []
-  # selfSigned: false
-  # tls: true
-  # cors:
-  #   enabled: true
-  #   origin: '*'
+  apiVersion:
+  type: nginx-kubernetes
+  annotations: {}
+  pathType: Prefix
+  hostname: libot.wwest.local
+  extraHosts: []
+  extraPaths: []
+  path: /ui
+  extraRules: []
+  extraTls: []
+  selfSigned: false
+  tls: true
+  cors:
+    enabled: true
+    origin: '*'
 service:
   annotations: {}
   ports:
