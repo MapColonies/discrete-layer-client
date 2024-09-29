@@ -36,6 +36,8 @@ configValues:
   #     labelSelector:
   #       matchLabels:
   #         app.kubernetes.io/name: '{{ include "common.names.name" . }}'
+  podSecurityContext:
+    enabled: false
   # ----------- containers ------------
   image:
     repository: discrete-layer-client
