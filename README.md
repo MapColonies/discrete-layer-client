@@ -65,17 +65,17 @@ node ./confd/generate-config.js --environment production --indocker
 ## Deployment
 To update helm dependencies
 ```bash
-npm run helm-update
+yarn helm-update
 ```
 
 In order to create/renew values schemas 
 ```bash
-npm run helm-assets
+yarn helm-assets
 ```
 
 To deploy: helm values **MUST** be combined from global.yaml and values.yaml (use npm script!)
 ```bash
-npm run helm-install
+yarn helm-install
 ```
 
 See [helm values](https://github.com/MapColonies/helm-common/blob/c352a2453117895ec0f9df0267a66d6f5b9c2da2/README.md)
