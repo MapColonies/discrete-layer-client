@@ -40,7 +40,10 @@
     "copyassets:cesium": "copyfiles -u 3 \"./node_modules/cesium/Build/Cesium/**/*\" \"./public\"",
     "copyassets:ua-parser": "copyfiles -u 3 \"./node_modules/ua-parser-js/dist/ua-parser.min.js\" \"./public/ua-parser\"",
     "copyassets:mc-fonts": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/fonts/*\" \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/style.css\" \"./public/fonts/mc-icons\"",
-    "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\""
+    "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\"",
+    "helm-update": "helm dependency update helm",
+    "helm-assets": "npm run helm-update && tar -xzvf ./helm/charts/helm-common*.tgz --strip-components=1 helm-common/schemas",
+    "helm-install": "npm run helm-update && helm install -f 'helm/global.yaml' -f 'helm/values.yaml' lookup-tables helm"
   },
   "jest": {
     "transformIgnorePatterns": [
