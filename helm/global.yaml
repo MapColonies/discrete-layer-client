@@ -1,0 +1,33 @@
+global:
+  configManagment:
+    enabled: false
+    url:
+  imageRegistry: acrarolibotnonprod.azurecr.io
+  imagePullSecrets:
+    - my-registry
+  deploymentFlavor: openshift
+  tlsCertificates:
+    - hostname: catalog-dem-dev.mapcolonies.net
+      certificate:
+      key:
+      caCertificate:
+  tracing:
+    enabled: false
+    url: http://localhost:55681/v1/traces
+  metrics:
+    enabled: false
+    url: http://localhost:55681/v1/metrics
+  environment: development
+  releaseVersion: DUMMY_releaseVersion
+  currentSubChart: DUMMY_currentSubChart
+  shared:
+    servedEntityTypes: RECORD_ALL,RECORD_RASTER,RECORD_3D,RECORD_DEM
+    accessToken:
+      attributeName: token
+      injectionType: queryParam
+      tokenValue: TOKEN
+    sso:
+      enabled: false
+      redirectUrl:
+        ui:
+        tools:
