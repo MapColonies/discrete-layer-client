@@ -1,7 +1,6 @@
 global:
   configManagment:
     enabled: false
-    url:
   imageRegistry: acrarolibotnonprod.azurecr.io
   imagePullSecrets:
     - my-registry
