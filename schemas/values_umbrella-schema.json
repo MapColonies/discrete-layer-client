@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "Umbrella Services deployment manifest transfered via global values object",
+    "properties": {
+        "global": {
+            "properties": {
+                "enable-services": {
+                    "additionalProperties": {
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean"
+                          }
+                        },
+                        "additionalProperties": { "type": "boolean" },
+                        "type": "object"
+
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "additionalProperties": {
+      "type": "object",
+      "additionalProperties": {"$ref": "./values-schema.json"}
+    }
+  }
