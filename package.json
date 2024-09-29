@@ -43,7 +43,7 @@
     "copyassets:components": "copyfiles -u 4 \"./node_modules/@map-colonies/react-components/dist/assets/**/*\" \"./public\"",
     "helm-update": "helm dependency update helm",
     "helm-assets": "npm run helm-update && tar -xzvf ./helm/charts/helm-common*.tgz --strip-components=1 helm-common/schemas",
-    "helm-install": "npm run helm-update && helm install -f 'helm/global.yaml' -f 'helm/values.yaml' lookup-tables helm"
+    "helm-install": "npm run helm-update && helm install -f 'helm/global.yaml' -f 'helm/values.yaml' discrete-layer-client helm"
   },
   "jest": {
     "transformIgnorePatterns": [
