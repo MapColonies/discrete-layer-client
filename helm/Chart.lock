@@ -3,4 +3,4 @@ dependencies:
   repository: oci://acrarolibotnonprod.azurecr.io/helm/library
   version: 1.0.1
 digest: sha256:4b4fca8d7ed00f35da89a6eaf4937a81f0c7949b44ae8f6dca497d26dad30576
-generated: "2024-09-29T12:26:53.760670394+03:00"
+generated: "2024-09-30T16:51:07.806598923+03:00"
