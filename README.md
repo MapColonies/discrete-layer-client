@@ -46,6 +46,7 @@ yarn test
 ```
 
 It will run in an interactive mode  
+
 See [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 
 ## Preparing for deployment
