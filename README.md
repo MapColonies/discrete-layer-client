@@ -65,8 +65,8 @@ node ./confd/generate-config.js --environment production --indocker
 ## Deployment
 
 > [!IMPORTANT] 
-> We depend on `Red-Hat Yaml Extention` for validating the values files against the relevant schemas from helm-common.
-> That means, you should install the extention from vscode in order to be able to edit values files according to our schemas.
+> We depend on `Red-Hat Yaml Extension` for validating the values files against the relevant schemas from helm-common.
+> That means, you should install the extension from vscode in order to be able to edit values files according to our schemas.
 
 To update helm dependencies
 ```bash
