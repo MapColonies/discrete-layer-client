@@ -8,7 +8,6 @@ import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import {
-  BestRecordModel,
   CategoryConfigModelType,
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -34,7 +33,6 @@ import {
 import { ILayerImage } from '../../models/layerImage';
 import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-info';
 import {
-  BestRecordModelArray,
   LayerRasterRecordModelArray,
   Layer3DRecordModelArray,
   LayerDemRecordModelArray,
@@ -57,9 +55,6 @@ export const getEntityDescriptors = (
       break;
     case 'Layer3DRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
-      break;
-    case 'BestRecord':
-      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswBestCatalogRecord')
       break;
     case 'VectorBestRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswVectorBestCatalogRecord')
@@ -111,9 +106,6 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
       break;
     case 'Layer3DRecord':
       recordModel = Layer3DRecordModel;
-      break;
-    case 'BestRecord':
-      recordModel = BestRecordModel;
       break;
     case 'VectorBestRecord':
       recordModel = VectorBestRecordModel;
@@ -171,7 +163,7 @@ export const getInfoMsgValidationType = (msgCode: string): ValidationTypeName =>
 
 export const cleanUpEntity = (
   data: Record<string,unknown>,
-  entityKeys: LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | BestRecordModelArray | VectorBestRecordModelArray | QuantizedMeshBestRecordModelArray
+  entityKeys: LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | VectorBestRecordModelArray | QuantizedMeshBestRecordModelArray
 ): Record<string,unknown> => {
   const keysNotInModel = Object.keys(data).filter(key => {
     // @ts-ignore

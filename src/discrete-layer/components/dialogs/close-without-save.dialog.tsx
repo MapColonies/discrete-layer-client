@@ -22,8 +22,6 @@ export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = obs
 
   const closeWithoutSaving = useCallback(() => {
     onSetOpen(false);
-    store.bestStore.editBest(undefined);
-    store.bestStore.setLayersList([]);
   }, [onSetOpen]);
   
   return (

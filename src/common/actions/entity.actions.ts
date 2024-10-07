@@ -82,45 +82,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
       GENERAL_ACTIONS_GROUP,
       {
         id: 1,
-        titleTranslationId: 'OperationsOnMap',
-        type: EntityActionsTypes.MAP_ACTIONS,
-        group: [
-          {
-            action: 'moveToTop',
-            frequent: false,
-            icon: 'vertical_align_top',
-            class: '',
-            titleTranslationId: 'action.layer.move-to-top.tooltip',
-            views: [TabViews.CREATE_BEST]
-          },
-          {
-            action: 'moveUp',
-            frequent: false,
-            icon: 'keyboard_arrow_up',
-            class: '',
-            titleTranslationId: 'action.layer.move-up.tooltip',
-            views: [TabViews.CREATE_BEST]
-          },
-          {
-            action: 'moveDown',
-            frequent: false,
-            icon: 'keyboard_arrow_down',
-            class: '',
-            titleTranslationId: 'action.layer.move-down.tooltip',
-            views: [TabViews.CREATE_BEST]
-          },
-          {
-            action: 'moveToBottom',
-            frequent: false,
-            icon: 'vertical_align_bottom',
-            class: '',
-            titleTranslationId: 'action.layer.move-to-bottom.tooltip',
-            views: [TabViews.CREATE_BEST]
-          },
-        ],
-      },
-      {
-        id: 2,
         titleTranslationId: 'CRUD',
         type: EntityActionsTypes.CRUD,
         group: [
@@ -141,14 +102,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
             titleTranslationId: 'action.update.tooltip',
             dependentField: {field: 'layerURLMissing', expectedValue: false},
             views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-          {
-            action: 'delete',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Delete',
-            titleTranslationId: 'action.delete.tooltip',
-            views: [/*TabViews.CATALOG, TabViews.SEARCH_RESULTS, */TabViews.CREATE_BEST]
           },
         ],
       }
@@ -181,36 +134,6 @@ const ACTIONS_CONFIG: IEntityActions[] = [
           // },
         ],
       },
-    ]
-  },
-  {
-    entity: 'BestRecord',
-    childEntity: 'LayerRasterRecord',
-    actions: [
-      GENERAL_ACTIONS_GROUP,
-      {
-        id: 1,
-        titleTranslationId: 'CRUD',
-        type: EntityActionsTypes.CRUD,
-        group: [
-          {
-            action: 'edit',
-            frequent: true,
-            icon: '',
-            class: 'mc-icon-Edit1',
-            titleTranslationId: 'action.edit.tooltip',
-            views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          },
-          // {
-          //   action: 'delete',
-          //   frequent: false,
-          //   icon: '',
-          //   class: 'mc-icon-Delete',
-          //   titleTranslationId: 'action.delete.tooltip',
-          //   views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
-          // },
-        ],
-      }
     ]
   },
   {

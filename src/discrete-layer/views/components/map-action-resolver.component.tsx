@@ -96,7 +96,6 @@ export const MapActionResolver: React.FC = observer(() => {
   }, [
     store.actionDispatcherStore.action,
     store.discreteLayersStore,
-    store.bestStore,
   ]);
 
   return <></>;

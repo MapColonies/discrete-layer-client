@@ -264,7 +264,7 @@ const InnerForm = (
               type="submit"
               disabled={
                 mutationQueryLoading ||
-                (layerRecord.__typename !== 'BestRecord' && !dirty) ||
+                !dirty ||
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
                 !isEmpty(graphQLError)

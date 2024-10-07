@@ -6,7 +6,6 @@ import { useContext } from 'react';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { discreteLayersStore, SearchResponse } from './discreteLayersStore';
 import { RootStoreBase } from './RootStore.base';
-import { bestStore } from './bestStore';
 import { userStore } from './userStore';
 import { actionDispatcherStore } from './actionDispatcherStore';
 import { catalogTreeStore } from './catalogTreeStore';
@@ -25,9 +24,6 @@ export const baseRootStore = RootStoreBase
     discreteLayersStore: types.optional(discreteLayersStore, {
       state: ResponseState.IDLE,
       searchParams: {},
-    }),
-    bestStore: types.optional(bestStore, {
-      state: ResponseState.IDLE,
     }),
     userStore: types.optional(userStore, {
       state: ResponseState.IDLE,

@@ -6,9 +6,7 @@ import { Feature } from 'geojson';
 import _, { get, isEmpty } from 'lodash';
 import { DrawType } from '@map-colonies/react-components';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
-import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
-  BestRecordModelKeys,
   LayerRasterRecordModelKeys,
   LayerDemRecordModelKeys,
   Layer3DRecordModelKeys,
@@ -123,10 +121,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           handleOpenEntityDialog(true);
           break;
-        case 'BestRecord.edit':
-          // @ts-ignore
-          store.bestStore.editBest(cleanUpEntity(data, BestRecordModelKeys) as BestRecordModelType);
-          break;
         case 'VectorBestRecord.edit':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
@@ -152,11 +146,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           handleFlyTo();
           break;
-        case 'BestRecord.flyTo':
-          // @ts-ignore
-          store.discreteLayersStore.selectLayer(cleanUpEntity(data, BestRecordModelKeys) as LayerMetadataMixedUnion);
-          handleFlyTo();
-          break;
         case 'VectorBestRecord.flyTo':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
@@ -172,44 +161,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
           handleOpenEntityDialog(true);
           break;
-        case 'LayerRasterRecord.delete':
-          // @ts-ignore
-          store.bestStore.deleteLayerFromBest(data as LayerRasterRecordModelType);
-          break;
-        case 'LayerRasterRecord.moveToTop':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== numOfLayers) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: 0 } as MovedLayer);
-          }
-          break;
-        case 'LayerRasterRecord.moveUp':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== numOfLayers) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order - 1 } as MovedLayer);
-          }
-          break;
-        case 'LayerRasterRecord.moveDown':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== FIRST) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order + 1 } as MovedLayer);
-          }
-          break;
-        case 'LayerRasterRecord.moveToBottom':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== FIRST) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
-          }
-          break;
         case 'Layer3DRecord.analyze':
           window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_ANALYZER_TOKEN_VALUE}`);
           break;
         case 'LayerRasterRecord.analyze':
         case 'LayerDemRecord.analyze':
-        case 'BestRecord.analyze':
         case 'VectorBestRecord.analyze':
         case 'QuantizedMeshBestRecord.analyze':
           break;
@@ -219,7 +175,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerRasterRecord.saveMetadata':
         case 'Layer3DRecord.saveMetadata':
         case 'LayerDemRecord.saveMetadata':
-        case 'BestRecord.saveMetadata':
         case 'VectorBestRecord.saveMetadata':
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
@@ -245,8 +200,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.exportStore.setLayerToExport(selectedLayerToExport);
           break;
         }
-        case 'BestRecord.export':
-          break;
         case 'VectorBestRecord.export':
           break;
         case 'QuantizedMeshBestRecord.export':
@@ -406,7 +359,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           break;
       }
     }
-  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore]);
+  }, [store.actionDispatcherStore.action, store.discreteLayersStore]);
 
   return (
     <></>

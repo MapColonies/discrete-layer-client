@@ -21,7 +21,7 @@
   },
   "scripts": {
     "postinstall": "patch-package",
-    "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,LayerDemRecord,BestRecord,EntityDescriptor,VectorBestRecord,QuantizedMeshBestRecord,PolygonPartRecord --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
+    "scaffold:client": "node ./node_modules/mst-gql/generator/mst-gql-scaffold.js --roots LayerRasterRecord,Layer3DRecord,LayerDemRecord,EntityDescriptor,VectorBestRecord,QuantizedMeshBestRecord,PolygonPartRecord --outDir src/discrete-layer/models/ --format ts http://localhost:8080/graphql",
     "start": "yarn run copyassets:all && react-app-rewired start",
     "build": "react-app-rewired --max_old_space_size=4096 build && yarn run copyconf && yarn run copyassets:all",
     "test": "react-scripts test --verbose",
@@ -85,7 +85,7 @@
     "@formatjs/icu-messageformat-parser": "^2.6.0",
     "@map-colonies/error-types": "^1.1.5",
     "@map-colonies/mc-utils": "^1.6.1",
-    "@map-colonies/react-components": "file:../shared-components/packages/react-components",
+    "@map-colonies/react-components": "^4.7.0",
     "@map-colonies/react-core": "^4.2.0",
     "@map-colonies/static-assets": "^0.5.1",
     "@material-ui/core": "^4.11.0",

@@ -44,24 +44,17 @@ import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
 import { LayersResultsComponent } from '../components/layers-results/layers-results';
 import { EntityDialog } from '../components/layer-details/entity.dialog';
-// import { BestRecordModelKeys } from '../components/layer-details/entity-types-keys';
 import { JobsDialog } from '../components/job-manager/jobs.dialog';
-import { BestEditComponent } from '../components/best-management/best-edit';
-import { BestLayersPresentor } from '../components/best-management/best-layers-presentor';
 import {
-  // BestRecordModel,
   LayerMetadataMixedUnion,
   LinkModelType,
   // ProductType,
   RecordType
 } from '../models';
-// import { BestRecordModelType } from '../models/BestRecordModel';
-// import { DiscreteOrder } from '../models/DiscreteOrder';
 import { ILayerImage } from '../models/layerImage';
 import { useQuery, useStore } from '../models/RootStore';
 import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
-import { BestMapContextMenu } from '../components/map-container/contextMenus/best-map-context-menu';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
 import { ActionResolver } from './components/action-resolver.component';
@@ -265,7 +258,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         <SelectedLayersContainer/>
         <HighlightedLayer/>
         <LayersFootprints/>
-        <BestLayersPresentor/>
       </>
     );
   }, []);
@@ -277,15 +269,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       store.discreteLayersStore.setTabviewData(activeTabView);
       store.discreteLayersStore.restoreTabviewData(targetViewIdx);
   
-      if (activeTabView === TabViews.CREATE_BEST) {
-        store.bestStore.preserveData();
-        store.bestStore.resetData();
-      }
-  
-      if (targetViewIdx === TabViews.CREATE_BEST) {
-        store.bestStore.restoreData();
-      }
-
       if(activeTabView === TabViews.EXPORT_LAYER) {
         store.exportStore.setHasExportPreviewed(false);
       }
@@ -432,35 +415,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   };
 
-  /*const handleCreateBestDraft = (): void => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const record = {} as Record<string, any>;
-    BestRecordModelKeys.forEach(key => {
-      record[key as string] = undefined;
-    });
-    const timestamp = new Date().getTime().toString();
-    record.id = 'DEFAULT_BEST_ID_' + timestamp;
-    record.type = RecordType.RECORD_RASTER;
-    record.productName = 'DRAFT_OF_BEST_' + timestamp;
-    record.productType = ProductType.ORTHOPHOTO_BEST;
-    record.isDraft = true;
-    record['__typename'] = BestRecordModel.properties['__typename'].name.replaceAll('"','');
-    record.discretes = [
-      {
-        id: '6ac605c4-da38-11eb-8d19-0242ac130003',
-        zOrder: 0
-      },
-      {
-        id: '7c6dfeb2-da38-11eb-8d19-0242ac130003',
-        zOrder: 1
-      }
-    ] as DiscreteOrder[];
-    store.bestStore.editBest(record as BestRecordModelType);
-    // @ts-ignore
-    store.discreteLayersStore.selectLayer(record as LayerMetadataMixedUnion);
-    setEditEntityDialogOpen(!isEditEntityDialogOpen);
-  };*/
-
   const handleSystemsJobsDialogClick = (): void => {
     setSystemsJobsDialogOpen(!isSystemsJobsDialogOpen);
   };
@@ -594,11 +548,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       iconClassName: 'mc-icon-Search-History',
     },
     {
-      idx: TabViews.CREATE_BEST,
-      title: 'tab-views.create-best',
-      iconClassName: 'mc-icon-Bests',
-    },
-    {
       idx: TabViews.EXPORT_LAYER,
       title: 'tab-views.export-layer',
       iconClassName: intl.locale === 'en' ? 'mc-icon-Export' : 'mc-icon-Export-Left',
@@ -615,8 +564,6 @@ const DiscreteLayerView: React.FC = observer(() => {
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
-      isBestRecordCreateAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_CREATE),
-      isBestRecordEditAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_BESTRECORD_EDIT),
     }
   }, [store.userStore.user]);
 
@@ -713,7 +660,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
             {
               tabIdx === TabViews.CATALOG && 
-              (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed || permissions.isBestRecordCreateAllowed) && 
+              (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed) && 
               <MenuSurfaceAnchor id="newContainer">
                 <MenuSurface open={openNew} onClose={(): void => setOpenNew(false)}>
                   {
@@ -749,48 +696,11 @@ const DiscreteLayerView: React.FC = observer(() => {
                       />
                     </Tooltip>
                   }
-                  {/*
-                    CONFIG.SERVED_ENTITY_TYPES.includes('RECORD_RASTER') &&
-                    permissions.isBestRecordCreateAllowed &&
-                    <Tooltip content={intl.formatMessage({ id: 'tab-views.catalog.actions.new_best' })}>
-                      <IconButton
-                        className="operationIcon mc-icon-Bests"
-                        label="NEW BEST"
-                        onClick={ (): void => {
-                          setOpenNew(false);
-                          handleCreateBestDraft();
-                        } }
-                      />
-                    </Tooltip>
-                  */}
                 </MenuSurface>
                 <Tooltip content={intl.formatMessage({ id: 'action.operations.tooltip' })}>
                   <IconButton className="operationIcon mc-icon-Plus" onClick={(): void => setOpenNew(!openNew)}/>
                 </Tooltip>
               </MenuSurfaceAnchor>
-            }
-              
-            { 
-              (tabIdx === TabViews.CREATE_BEST) && permissions.isBestRecordEditAllowed && 
-              <>
-                <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.edit' })}>
-                  <IconButton
-                    className="operationIcon mc-icon-Edit1"
-                    label="EDIT"
-                    onClick={(): void => {
-                      store.discreteLayersStore.resetSelectedLayer();
-                      setEditEntityDialogOpen(!isEditEntityDialogOpen);
-                    }}
-                  />
-                </Tooltip>
-                <Tooltip content={intl.formatMessage({ id: 'tab-views.best-edit.actions.import' })}>
-                  <IconButton
-                    className="operationIcon mc-icon-Plus"
-                    label="ADD TO BEST"
-                    onClick={ (): void => { setOpenImportFromCatalog(!openImportFromCatalog); } }
-                  />
-                </Tooltip>
-              </>
             }
             {/*<Tooltip content={intl.formatMessage({ id: 'action.delete.tooltip' })}>
               <IconButton 
@@ -863,18 +773,11 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, [store.userStore.user]);
 
   const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
-    if (activeTabView === TabViews.CREATE_BEST) {
-      return <BestMapContextMenu {...props} entityTypeName="BestRecord" />;
-    }
     // Should add global flag or find the proper condition to whether show the context menu or not.
     return <ActionsContextMenu {...props} />;
   };
 
   const contextMenuSizeByTab = useMemo((): MenuDimensions => {
-    if (activeTabView === TabViews.CREATE_BEST) {
-      return { height: 212, width: 260, dynamicHeightIncrement: 120 };
-    }
-
     return actionsMenuDimensions as MenuDimensions;
   }, [activeTabView, actionsMenuDimensions]);
  
@@ -1027,25 +930,6 @@ const DiscreteLayerView: React.FC = observer(() => {
                     display: 'flex'
                   }}
                 />
-              </Box>
-            }
-            {
-              activeTabView === TabViews.CREATE_BEST &&
-              <Box className="tabContentContainer">
-                {
-                  getActiveTabHeader(activeTabView)
-                }
-                <Box 
-                  style={{
-                    height: 'calc(100% - 50px)',
-                    width: 'calc(100% - 8px)',
-                    position: 'relative'
-                  }}
-                >
-                  <BestEditComponent 
-                    openImport={openImportFromCatalog} 
-                    handleCloseImport={setOpenImportFromCatalog}/>
-                </Box>
               </Box>
             }
           </Box>

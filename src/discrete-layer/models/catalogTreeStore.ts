@@ -308,34 +308,12 @@ export const catalogTreeStore = ModelBase.props({
 
           // get BESTs shortcuts
           const arrBests = layersList.filter(isBest);
-          const drafts = store.bestStore.getDrafts();
-          const draftNode =
-            drafts.length > NONE
-              ? [
-                  {
-                    title: intl.formatMessage({
-                      id: 'tab-views.catalog.top-categories.drafts',
-                    }),
-                    isGroup: true,
-                    children: [
-                      ...store.bestStore.getDrafts().map((draft) => {
-                        return {
-                          ...draft,
-                          title: getLayerTitle(draft),
-                          isSelected: false,
-                        };
-                      }),
-                    ],
-                  },
-                ]
-              : [];
           const parentBests = {
             title: intl.formatMessage({
               id: 'tab-views.catalog.top-categories.bests',
             }),
             isGroup: true,
             children: [
-              ...draftNode,
               ...arrBests.map((item) => {
                 return {
                   ...item,

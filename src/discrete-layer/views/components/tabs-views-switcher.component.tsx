@@ -30,7 +30,6 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
   const theme = useTheme();
   const { handleTabViewChange, activeTabView } = props;
 
-  const editingBest = store.bestStore.editingBest;
   const layerToExport =  store.exportStore.layerToExport;
 
   const tabViews: ITabView[] = useMemo(() => [
@@ -45,18 +44,12 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
       iconClassName: 'mc-icon-Search-History',
     },
     {
-      idx: TabViews.CREATE_BEST,
-      title: 'tab-views.create-best',
-      iconClassName: 'mc-icon-Bests',
-      dependentValue: store.bestStore.editingBest,
-    },
-    {
       idx: TabViews.EXPORT_LAYER,
       title: 'tab-views.export-layer',
       iconClassName: intl.locale === 'en' ? 'mc-icon-Export' : 'mc-icon-Export-Left',
       dependentValue: store.exportStore.layerToExport,
     }
-  ], [editingBest, layerToExport]);
+  ], [layerToExport]);
 
   const [availableTabs, setAvailableTabs] = useState<ITabView[]>(tabViews);
 
@@ -73,14 +66,12 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
   }, [tabViews])
   
   useEffect(() => {
-    if (editingBest !== undefined) {
-      handleTabViewChange(TabViews.CREATE_BEST);
-    } else if(layerToExport !== undefined) {
+    if(layerToExport !== undefined) {
       handleTabViewChange(TabViews.EXPORT_LAYER);
     } else { 
       handleTabViewChange(TabViews.CATALOG);
     }
-  }, [editingBest, layerToExport]);
+  }, [layerToExport]);
   
   return (
     <>
@@ -104,9 +95,6 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
           })
         }
       </Box>
-      {
-        store.bestStore.isDirty === true && <Box className="dirty-best-indicator"/>
-      }
     </>
   );
 
