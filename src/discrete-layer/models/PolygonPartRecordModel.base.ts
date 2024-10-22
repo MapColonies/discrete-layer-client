@@ -16,22 +16,20 @@ export const PolygonPartRecordModelBase = ModelBase
   .named('PolygonPartRecord')
   .props({
     __typename: types.optional(types.literal("PolygonPartRecord"), "PolygonPartRecord"),
-    id: types.union(types.undefined, types.string),
-    name: types.union(types.undefined, types.string),
+    partId: types.union(types.undefined, types.string),
+    sourceId: types.union(types.undefined, types.string),
+    sourceName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
-    imagingTimeBeginUTC: types.union(types.undefined, types.frozen()),
-    imagingTimeEndUTC: types.union(types.undefined, types.frozen()),
-    horizontalAccuracyCE90: types.union(types.undefined, types.number),
-    sensors: types.union(types.undefined, types.array(types.string)),
-    countries: types.union(types.undefined, types.null, types.array(types.string)),
-    cities: types.union(types.undefined, types.null, types.array(types.string)),
     resolutionDegree: types.union(types.undefined, types.number),
     resolutionMeter: types.union(types.undefined, types.number),
     sourceResolutionMeter: types.union(types.undefined, types.number),
-    geometry: types.union(types.undefined, types.frozen()),
-    recordId: types.union(types.undefined, types.string),
-    updatedInVersion: types.union(types.undefined, types.null, types.string),
-    ingestionDateUTC: types.union(types.undefined, types.frozen()),
+    horizontalAccuracyCE90: types.union(types.undefined, types.number),
+    countries: types.union(types.undefined, types.null, types.array(types.string)),
+    cities: types.union(types.undefined, types.null, types.array(types.string)),
+    sensors: types.union(types.undefined, types.array(types.string)),
+    imagingTimeBeginUTC: types.union(types.undefined, types.frozen()),
+    imagingTimeEndUTC: types.union(types.undefined, types.frozen()),
+    footprint: types.union(types.undefined, types.frozen()),
   })
   .views(self => ({
     get store() {
@@ -40,25 +38,23 @@ export const PolygonPartRecordModelBase = ModelBase
   }))
 
 export class PolygonPartRecordModelSelector extends QueryBuilder {
-  get id() { return this.__attr(`id`) }
-  get name() { return this.__attr(`name`) }
+  get partId() { return this.__attr(`partId`) }
+  get sourceId() { return this.__attr(`sourceId`) }
+  get sourceName() { return this.__attr(`sourceName`) }
   get description() { return this.__attr(`description`) }
-  get imagingTimeBeginUTC() { return this.__attr(`imagingTimeBeginUTC`) }
-  get imagingTimeEndUTC() { return this.__attr(`imagingTimeEndUTC`) }
-  get horizontalAccuracyCE90() { return this.__attr(`horizontalAccuracyCE90`) }
-  get sensors() { return this.__attr(`sensors`) }
-  get countries() { return this.__attr(`countries`) }
-  get cities() { return this.__attr(`cities`) }
   get resolutionDegree() { return this.__attr(`resolutionDegree`) }
   get resolutionMeter() { return this.__attr(`resolutionMeter`) }
   get sourceResolutionMeter() { return this.__attr(`sourceResolutionMeter`) }
-  get geometry() { return this.__attr(`geometry`) }
-  get recordId() { return this.__attr(`recordId`) }
-  get updatedInVersion() { return this.__attr(`updatedInVersion`) }
-  get ingestionDateUTC() { return this.__attr(`ingestionDateUTC`) }
+  get horizontalAccuracyCE90() { return this.__attr(`horizontalAccuracyCE90`) }
+  get countries() { return this.__attr(`countries`) }
+  get cities() { return this.__attr(`cities`) }
+  get sensors() { return this.__attr(`sensors`) }
+  get imagingTimeBeginUTC() { return this.__attr(`imagingTimeBeginUTC`) }
+  get imagingTimeEndUTC() { return this.__attr(`imagingTimeEndUTC`) }
+  get footprint() { return this.__attr(`footprint`) }
 }
 export function selectFromPolygonPartRecord() {
   return new PolygonPartRecordModelSelector()
 }
 
-export const polygonPartRecordModelPrimitives = selectFromPolygonPartRecord().name.description.imagingTimeBeginUTC.imagingTimeEndUTC.horizontalAccuracyCE90.sensors.countries.cities.resolutionDegree.resolutionMeter.sourceResolutionMeter.geometry.recordId.updatedInVersion.ingestionDateUTC
+export const polygonPartRecordModelPrimitives = selectFromPolygonPartRecord().partId.sourceId.sourceName.description.resolutionDegree.resolutionMeter.sourceResolutionMeter.horizontalAccuracyCE90.countries.cities.sensors.imagingTimeBeginUTC.imagingTimeEndUTC.footprint

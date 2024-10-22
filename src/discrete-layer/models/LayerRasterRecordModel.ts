@@ -23,11 +23,11 @@ export const LayerRasterRecordModel = LayerRasterRecordModelBase
     /* eslint-disable */
     /* tslint:disable */
     insertDate: types.maybe(momentDateType),
-    creationDate: types.maybe(momentDateType),
-    updateDate: types.maybe(momentDateType),
+    creationDateUTC: types.maybe(momentDateType),
+    updateDateUTC: types.maybe(momentDateType),
     ingestionDate: types.maybe(momentDateType),
-    sourceDateStart: types.maybe(momentDateType),
-    sourceDateEnd: types.maybe(momentDateType),
+    imagingTimeBeginUTC: types.maybe(momentDateType),
+    imagingTimeEndUTC: types.maybe(momentDateType),
     /* tslint:enable */
     /* eslint-enable */
     footprintShown: types.union(types.undefined, types.null, types.boolean),

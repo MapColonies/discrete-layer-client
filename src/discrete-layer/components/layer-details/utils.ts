@@ -228,7 +228,7 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
           break;
-        case 'geometry':
+        case 'footprint':
           poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
           break;
         default:

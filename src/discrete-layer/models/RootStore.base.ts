@@ -19,8 +19,6 @@ import { LinkModel, LinkModelType } from "./LinkModel"
 import { linkModelPrimitives, LinkModelSelector } from "./LinkModel.base"
 import { LayerRasterRecordModel, LayerRasterRecordModelType } from "./LayerRasterRecordModel"
 import { layerRasterRecordModelPrimitives, LayerRasterRecordModelSelector } from "./LayerRasterRecordModel.base"
-import { DiscreteOrderModel, DiscreteOrderModelType } from "./DiscreteOrderModel"
-import { discreteOrderModelPrimitives, DiscreteOrderModelSelector } from "./DiscreteOrderModel.base"
 import { LayerDemRecordModel, LayerDemRecordModelType } from "./LayerDemRecordModel"
 import { layerDemRecordModelPrimitives, LayerDemRecordModelSelector } from "./LayerDemRecordModel.base"
 import { VectorBestRecordModel, VectorBestRecordModelType } from "./VectorBestRecordModel"
@@ -261,11 +259,12 @@ export type LayerRasterRecordInput = {
   description?: string
   srs: string
   producerName: string
-  creationDate?: any
+  creationDateUTC?: any
   ingestionDate?: any
-  updateDate?: any
-  sourceDateStart: any
-  sourceDateEnd: any
+  updateDateUTC?: any
+  imagingTimeBeginUTC: any
+  imagingTimeEndUTC: any
+  maxHorizontalAccuracyCE90: number
   minHorizontalAccuracyCE90?: number
   sensors: string[]
   region: string[]
@@ -275,12 +274,12 @@ export type LayerRasterRecordInput = {
   productSubType?: string
   srsName: string
   maxResolutionDeg?: number
+  minResolutionDeg: number
   maxResolutionMeter?: number
+  minResolutionMeter: number
   rms?: number
   scale?: number
   footprint: any
-  layerPolygonParts?: any
-  includedInBests?: string[]
   productBoundingBox?: string
   transparency: Transparency
   insertDate?: any

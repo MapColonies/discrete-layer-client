@@ -212,7 +212,7 @@ export const InnerRasterForm = (
         type: "Feature",
         properties: {key},
         // @ts-ignore
-        geometry: values[key].geometry
+        geometry: values[key].footprint
       });
 
        // @ts-ignore
