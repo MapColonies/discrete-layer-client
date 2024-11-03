@@ -24,6 +24,7 @@ import {
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   RecordType,
+  SourceValidationModelType,
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
@@ -109,10 +110,16 @@ const InnerForm = (
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
+  const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
-    return get(status, 'errors') as Record<string, string[]> | null ?? {};
-  }, [status]);
+    return {
+      ...get(status, 'errors') as Record<string, string[]>,
+      ...(gpkgValidationError ? {
+            error: [gpkgValidationError]
+          } : {})
+    }
+  }, [status, gpkgValidationError]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -130,6 +137,13 @@ const InnerForm = (
   useEffect(() => {
     setShowCurtain((mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles);
   }, [mode, isSelectedFiles])
+
+  useEffect(() => {
+    setShowCurtain(
+      !isSelectedFiles || (isSelectedFiles && 
+      gpkgValidationError !== undefined)
+    );
+  }, [isSelectedFiles, gpkgValidationError]);
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -205,6 +219,10 @@ const InnerForm = (
       ...ingestionFields,
     });
 
+    setGpkgValidationError(
+      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
+    );
+
     setGraphQLError(metadata.error);
   };
 
@@ -221,6 +239,7 @@ const InnerForm = (
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
+            validateSources={true}
             recordType={recordType}
             fields={ingestionFields}
             values={values}

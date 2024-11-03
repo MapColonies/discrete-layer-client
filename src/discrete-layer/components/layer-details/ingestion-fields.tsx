@@ -224,8 +224,12 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   }, [queryResolveMetadataAsModel.error, chosenMetadataError]);
 
   useEffect(() => {
-    setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading);
-  }, [selection, queryResolveMetadataAsModel.loading]);
+    setIsImportDisabled(
+      !selection.files.length || 
+      queryResolveMetadataAsModel.loading || 
+      queryValidateSource.loading || 
+      (!queryValidateSource.loading && queryValidateSource.data?.validateSource[0].isValid === false));
+  }, [selection, queryResolveMetadataAsModel.loading, queryValidateSource.loading]);
 
   useEffect(() => {
     if(!queryValidateSource.loading){
@@ -234,7 +238,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
         selection.folderChain
             .map((folder: FileData) => folder.name)
             .join('/')
-        : '';
+        : '';          
         const fileNames = selection.files.map((file: FileData) => file.name).join(',');
         reloadFormMetadata(
           {
@@ -271,6 +275,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
             data: {
               originDirectory: directory,
               fileNames: fileNames,
+              type: recordType,
             }
           }
         )

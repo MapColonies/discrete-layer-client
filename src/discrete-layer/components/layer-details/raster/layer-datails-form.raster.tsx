@@ -15,7 +15,6 @@ import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, set, isEmpty, isObject } from 'lodash';
-import { Style, Stroke, Fill } from 'ol/style';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
@@ -38,7 +37,6 @@ import {
   RecordType,
   SourceValidationModelType
 } from '../../../models';
-import { SourceValidationParams } from '../../../models/RootStore.base';
 import { LayersDetailsComponent } from '../layer-details';
 import { IngestionFields } from '../ingestion-fields';
 import {
@@ -153,13 +151,17 @@ export const InnerRasterForm = (
   const [polygonPartsMode, setPolygonPartsMode] = useState<POLYGON_PARTS_MODE>('MANUAL');
   const [layerPolygonParts, setLayerPolygonParts] = useState<Record<string, PolygonPartRecordModelType>>({});
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
+  const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
       ...get(status, 'errors') as Record<string, string[]>,
-      ...(ppCheckPerformed ? customError : {})
+      ...(ppCheckPerformed ? customError : {}),
+      ...(gpkgValidationError ? {
+        error: [gpkgValidationError]
+      } : {})
     }
-  }, [status, customError, ppCheckPerformed]);
+  }, [status, customError, ppCheckPerformed, gpkgValidationError]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -189,8 +191,15 @@ export const InnerRasterForm = (
   );
 
   useEffect(() => {
-    setShowCurtain((mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles);
-  }, [mode, isSelectedFiles])
+    setShowCurtain(!isSelectedFiles);
+  }, [isSelectedFiles])
+
+  useEffect(() => {
+    setShowCurtain(
+      !isSelectedFiles || (isSelectedFiles && 
+      gpkgValidationError !== undefined)
+    );
+  }, [isSelectedFiles, gpkgValidationError])
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -381,6 +390,10 @@ export const InnerRasterForm = (
       },
       geometry: (metadata.recordModel as unknown as SourceValidationModelType).extentPolygon,
     })
+
+    setGpkgValidationError(
+      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
+    );
 
     resetForm();
 
@@ -640,7 +653,7 @@ export const InnerRasterForm = (
             <Button
               outlined
               type="button"
-              disabled={!isIngestedSourceSelected()}
+              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain}
               onClick={(): void => {
                 setLoadingPolygonParts(true);
 

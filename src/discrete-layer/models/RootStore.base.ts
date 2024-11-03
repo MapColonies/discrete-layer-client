@@ -239,6 +239,7 @@ export type UserLoginParams = {
 export type SourceValidationParams = {
   originDirectory: string
   fileNames: string[]
+  type: RecordType
 }
 export type RecordUpdatePartial = {
   id: string
