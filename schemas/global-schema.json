@@ -480,7 +480,7 @@
                     ]
                 },
                 "tlsCertificates": {
-                    "description": "Secrets for TLS certificates per hostname to be \"used in deployment\"/\"created\"",
+                    "description": "TLS certificates to be \"used in deployment\"/\"created\" (one of the following values must be defined: 'name', 'hostname')",
                     "items": {
                         "properties": {
                             "caCertificate": {
@@ -493,8 +493,8 @@
                             },
                             "certificate": {
                                 "default": "DUMMY_certificate_VALUE_OR_ALIAS",
-                                "description": "hostname(dns) of certificate",
-                                "title": "tlsCertificates.hostname",
+                                "description": "certificate value or aliased value",
+                                "title": "tlsCertificates.certificate",
                                 "type": [
                                     "string"
                                 ]
@@ -514,13 +514,19 @@
                                 "type": [
                                     "string"
                                 ]
+                            },
+                            "name": {
+                                "default": "wildcard.mapcolonies.net",
+                                "description": "name of certificate",
+                                "title": "tlsCertificates.name",
+                                "type": [
+                                    "string"
+                                ]
                             }
                         },
                         "required": [
-                            "hostname",
                             "certificate",
-                            "key",
-                            "caCertificate"
+                            "key"
                         ],
                         "type": "object"
                     },
