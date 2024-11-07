@@ -23,6 +23,6 @@
     },
     "additionalProperties": {
       "type": "object",
-      "additionalProperties": {"$ref": "./values-schema.json"}
+      "additionalProperties": {"$ref": "./values.schema.json"}
     }
   }

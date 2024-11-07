@@ -2,7 +2,7 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "files.eol": "\n",
     "yaml.schemas": {
-        "./schemas/values-schema.json": [ "helm/values.yaml" ],
-        "./schemas/global-schema.json": [ "helm/global.yaml" ]
+        "./schemas/values.schema.json": [ "helm/values.yaml" ],
+        "./schemas/global.schema.json": [ "helm/global.yaml" ]
     },
 }
