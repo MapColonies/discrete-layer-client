@@ -1202,22 +1202,11 @@
                         "object"
                     ]
                 },
-                "hostname": {
-                    "default": "",
-                    "description": "Additional custom annotations for route",
-                    "title": "route.hostname",
+                "routesMapping": {
+                    "description": "routesMapping for routes creation, hostname(s) should be a subset of hostnames used in GLOBAL TLS certificates",
+                    "title": "route.routesMapping",
                     "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "path": {
-                    "default": "/api/YOUR_SERVICE_NAME/YOUR_SERVICE_VER",
-                    "description": "Route path",
-                    "title": "route.path",
-                    "type": [
-                        "string",
-                        "null"
+                        "array"
                     ]
                 },
                 "targetPort": {
@@ -1311,8 +1300,6 @@
             "required": [
                 "enabled",
                 "annotations",
-                "hostname",
-                "path",
                 "targetPort",
                 "tls",
                 "timeout"

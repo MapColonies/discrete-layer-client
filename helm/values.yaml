@@ -154,8 +154,10 @@ route:
   timeout:
     enabled: false
     duration: 60s
-  hostname:
-  path: /
+  routesMapping:
+    - hostname:
+      path: /
+      suffix: specific
   targetPort: http
   tls: 
     enabled: true
