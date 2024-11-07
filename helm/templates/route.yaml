@@ -1,11 +1,11 @@
 {{- $COMPONENT_NAME := "backend" -}}
 {{- $ROUTES := .Values.route.routesMapping -}}
 {{- $CONTEXT := . -}}
-{{- if not $ROUTES -}}
-  {{ include "mc-chart.route" (dict "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
+{{- if $ROUTES -}}
+{{- range $ROUTES -}}
+{{ include "mc-chart.route" (dict "COMPONENT_NAME" $COMPONENT_NAME "ROUTE" . "context" $CONTEXT) }}
+---
+{{- end -}}
 {{- else -}}
-  {{- range $ROUTES -}}
-  {{ include "mc-chart.route" (dict "COMPONENT_NAME" $COMPONENT_NAME "ROUTE" . "context" $CONTEXT) }}
-  ---
-  {{- end -}}
+{{ include "mc-chart.route" (dict "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
 {{- end -}}
