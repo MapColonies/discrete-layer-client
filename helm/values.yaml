@@ -157,7 +157,7 @@ route:
   routesMapping:
     - hostname:
       path: /
-      suffix: specific
+      suffix:
   targetPort: http
   tls: 
     enabled: true
