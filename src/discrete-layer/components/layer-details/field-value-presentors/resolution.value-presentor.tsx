@@ -60,7 +60,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
     <Box className="detailsFieldValue selectBoxContainer resolutionBoxContainer">
       <Select
         className="enumOptions"
-        value={value}
+        value={innerValue}
         id={fieldInfo.fieldName as string}
         name={fieldInfo.fieldName as string}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {

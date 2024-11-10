@@ -50,7 +50,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
     <Box className="detailsFieldValue selectBoxContainer">
       <Select
         className="enumOptions"
-        value={value}
+        value={innerValue}
         id={fieldInfo.fieldName as string}
         name={fieldInfo.fieldName as string}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
