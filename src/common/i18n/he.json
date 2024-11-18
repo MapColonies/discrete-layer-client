@@ -481,6 +481,7 @@
   "validation-general.shapeFile.too-many-features": " Shape מכיל יותר מידי features",
   "validation-general.shapeFile.generic": "יש לוודא שבחרת בקובץ zip המכיל קבצי shape ונלווים בלבד, או קובץ shape בודד",
   "validation-general.shapeFile.polygonParts.hasErrors": "קובץ shape מכיל שגיות ב{numErrorParts} חלקי תיחום, נדרש להשלים מידה על חלקי תיחום",
+  "validation-general.shapeFile.polygonParts.not-in-gpkg-extent": "חלקי תיחום מחוץ לGPKG", 
   "validation-general.polygonParts.resolutionCollision": "רזולוציה של {numErrorParts} חלקי תיחום מסומנים מתנגשת עם חלקים קיימים באותו אזור!",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",

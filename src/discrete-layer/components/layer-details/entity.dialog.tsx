@@ -215,18 +215,6 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
             })
           );
           break;
-        case RecordType.RECORD_RASTER:
-          mutationQuery.setQuery(
-            store.mutateStartRasterIngestion({
-              data: {
-                directory: directory as string,
-                fileNames: (fileNames as string).split(','),
-                metadata: metadata as LayerRasterRecordInput,
-                type: RecordType.RECORD_RASTER,
-              },
-            })
-          );
-          break;
         default:
           break;
       }
@@ -245,20 +233,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     };
 
     const handleUpdateQueries = (): void => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { directory, fileNames, __typename, ...metadata } = inputValues;
-      if(recordType === RecordType.RECORD_RASTER) {
-        mutationQuery.setQuery(
-          store.mutateStartRasterUpdateGeopkg({
-            data: {
-              directory: directory as string,
-              fileNames: (fileNames as string).split(','),
-              metadata: metadata as LayerRasterRecordInput,
-              type: RecordType.RECORD_RASTER,
-            },
-          })
-        );
-      }
+      
     };
 
     const checkHasQueriesSucceeded = (): boolean => {

@@ -27,8 +27,9 @@ import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/use
 import CONFIG from '../../../common/config';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
-import { getTypeName } from '../../components/layer-details/raster/pp-map.utils';
+import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
 import { TabViews } from '../tab-views';
+import { useEnums } from '../../../common/hooks/useEnum.hook';
 
 const FIRST = 0;
 
@@ -43,6 +44,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange, activeTabView } = props;
 
   const store = useStore();
+  const ENUMS = useEnums();
 
   const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
   
@@ -237,7 +239,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
                 "type": "Point"
               }
             },
-            typeName: getTypeName(data?.layerRecord as LayerRasterRecordModelType),
+            typeName: getWFSFeatureTypeName(data?.layerRecord as LayerRasterRecordModelType, ENUMS),
             shouldFlyToFeatures: true,
             // filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,

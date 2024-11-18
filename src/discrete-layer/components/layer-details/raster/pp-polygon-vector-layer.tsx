@@ -8,7 +8,7 @@ import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
-import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getTypeName, PPMapStyles } from './pp-map.utils';
+import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
 import { GetFeatureModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../../models';
 import { GeojsonFeatureInput } from '../../../models/RootStore.base';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
@@ -18,6 +18,7 @@ import { UserAction } from '../../../models/userStore';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { useIntl } from 'react-intl';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
+import { useEnums } from '../../../../common/hooks/useEnum.hook';
 
 interface PolygonPartsVectorLayerProps {
   layerRecord?: ILayerImage | null;
@@ -35,6 +36,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
   const { data, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
+  const ENUMS = useEnums();
 
   const convertFeatureToPolygon = (feature: Feature) => {
     switch(feature.geometry.type){
@@ -51,7 +53,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     setQuery(store.queryGetPolygonPartsFeature({ 
       data: {
         feature:  feature as GeojsonFeatureInput,
-        typeName: getTypeName(layerRecord as LayerRasterRecordModelType),
+        typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
         count: 100 
       } 
     }));

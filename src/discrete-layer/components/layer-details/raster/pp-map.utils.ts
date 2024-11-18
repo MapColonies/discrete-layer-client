@@ -1,15 +1,18 @@
 import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { Vector } from 'ol/layer';
-import { Style, Stroke, Fill, Text } from 'ol/style';
+import { Style, Stroke, Fill, Text, Icon } from 'ol/style';
 import CONFIG from '../../../../common/config';
 import { LayerRasterRecordModelType } from '../../../models';
 import { dateFormatter } from '../../../../common/helpers/formatters';
+import { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 
 export enum FeatureType {
   DEFAULT = 'DEFAULT',
   PP_PERIMETER = 'PP_PERIMETER',
+  PP_PERIMETER_MARKER = 'PP_PERIMETER_MARKER',
   SOURCE_EXTENT ='SOURCE_EXTENT',
+  SOURCE_EXTENT_MARKER='SOURCE_EXTENT_MARKER',
   EXISTING_PP='EXISTING_PP',
   SELECTED='SELECTED',
   ILLEGAL_PP='ILLEGAL_PP',
@@ -25,12 +28,28 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
                                 }),
                               })
   ],
+  [FeatureType.PP_PERIMETER_MARKER, new Style({
+    image: new Icon({
+      scale: 0.2,
+      anchor: [0.5, 1],
+      src: 'assets/img/map-marker.gif'
+    })
+  })
+  ],
   [FeatureType.SOURCE_EXTENT, new Style({
                                 stroke: new Stroke({
                                   width: 4,
                                   color: "#7F00FF"
                                 }),
                               })
+  ],
+  [FeatureType.SOURCE_EXTENT_MARKER, new Style({
+                                      image: new Icon({
+                                        scale: 0.2,
+                                        anchor: [0.5, 1],
+                                        src: 'assets/img/map-marker.gif'
+                                      })
+                                    })
   ],
   [FeatureType.EXISTING_PP, new Style({
                               stroke: new Stroke({
@@ -64,13 +83,13 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
 ]
 ])
 
-const POLYGON_PARTS_PREFIX = 'polygon_parts:';
-const POLYGON_PARTS_SUFFIX = '_polygon_parts';
-export const getTypeName = (layerRecord?: LayerRasterRecordModelType) => {
+//TODO: THIS PARAMETER MUST BE TAKEN FROM CONFIG
+const POLYGON_PARTS_PREFIX = 'polygonParts:';
+export const getWFSFeatureTypeName = (layerRecord: LayerRasterRecordModelType | null, enums: IEnumsMapType) => {
   // Naming convension of polygon parts feature typeName
-  // polygon_parts:{lowercase(productId)}_{lowercase(productType)}_polygon_parts
+  // polygonParts:{productId}-{productType}
   return layerRecord ? 
-    `${POLYGON_PARTS_PREFIX}${layerRecord.productId?.toLowerCase()}_${layerRecord.productType?.toLowerCase()}${POLYGON_PARTS_SUFFIX}` :
+    `${POLYGON_PARTS_PREFIX}${layerRecord.productId}-${enums[layerRecord.productType as string].realValue}` :
     'SHOULD_BE_CALCULATED_FROM_UPDATED_LAYER';
 }
 

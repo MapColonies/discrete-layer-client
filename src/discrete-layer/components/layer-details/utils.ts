@@ -172,6 +172,16 @@ export const cleanUpEntity = (
   return omit(data, keysNotInModel);
 };
 
+export const cleanUpEntityPayload = (
+  data: Record<string,unknown>,
+  entityKeys: string[]
+): Record<string,unknown> => {
+  const keysNotInModel = Object.keys(data).filter(key => {
+    return !entityKeys.includes(key);
+  });
+  return omit(data, keysNotInModel);
+};
+
 const checkIsBest = (entity: ILayerImage): boolean => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST } = ProductType;
@@ -230,6 +240,10 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
           break;
         case 'footprint':
           poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
+          break;
+        case 'horizontalAccuracyCE90':
+        case 'sourceResolutionMeter':
+          poygonPartData[desc.fieldName as string] = parseFloat(shapeFieldValue);
           break;
         default:
           poygonPartData[desc.fieldName as string] = shapeFieldValue;

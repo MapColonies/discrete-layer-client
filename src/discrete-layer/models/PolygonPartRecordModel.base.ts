@@ -17,6 +17,7 @@ export const PolygonPartRecordModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("PolygonPartRecord"), "PolygonPartRecord"),
     partId: types.union(types.undefined, types.string),
+    productId: types.union(types.undefined, types.string),
     sourceId: types.union(types.undefined, types.string),
     sourceName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
@@ -39,6 +40,7 @@ export const PolygonPartRecordModelBase = ModelBase
 
 export class PolygonPartRecordModelSelector extends QueryBuilder {
   get partId() { return this.__attr(`partId`) }
+  get productId() { return this.__attr(`productId`) }
   get sourceId() { return this.__attr(`sourceId`) }
   get sourceName() { return this.__attr(`sourceName`) }
   get description() { return this.__attr(`description`) }
@@ -57,4 +59,4 @@ export function selectFromPolygonPartRecord() {
   return new PolygonPartRecordModelSelector()
 }
 
-export const polygonPartRecordModelPrimitives = selectFromPolygonPartRecord().partId.sourceId.sourceName.description.resolutionDegree.resolutionMeter.sourceResolutionMeter.horizontalAccuracyCE90.countries.cities.sensors.imagingTimeBeginUTC.imagingTimeEndUTC.footprint
+export const polygonPartRecordModelPrimitives = selectFromPolygonPartRecord().partId.productId.sourceId.sourceName.description.resolutionDegree.resolutionMeter.sourceResolutionMeter.horizontalAccuracyCE90.countries.cities.sensors.imagingTimeBeginUTC.imagingTimeEndUTC.footprint

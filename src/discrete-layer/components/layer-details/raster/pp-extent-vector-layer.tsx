@@ -7,11 +7,12 @@ import { observer } from 'mobx-react';
 import squareGrid from '@turf/square-grid';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
-import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getTypeName, PPMapStyles } from './pp-map.utils';
+import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
 import { GetFeatureModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../../models';
 import { GeojsonFeatureInput } from '../../../models/RootStore.base';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
 import { ILayerImage } from '../../../models/layerImage';
+import { useEnums } from '../../../../common/hooks/useEnum.hook';
 
 interface PolygonPartsVectorLayerProps {
   layerRecord?: ILayerImage | null;
@@ -24,6 +25,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
   const { data, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
+  const ENUMS = useEnums();
   
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
@@ -59,7 +61,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     setQuery(store.queryGetPolygonPartsFeature({ 
       data: {
         feature:  bboxPolygon(mapOl.getView().calculateExtent() as BBox) as GeojsonFeatureInput,
-        typeName: getTypeName(layerRecord as LayerRasterRecordModelType),
+        typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
         count: 100 
       } 
     }));

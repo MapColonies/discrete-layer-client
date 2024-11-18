@@ -101,44 +101,46 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
       const shouldValidateTime = field.dateGranularity === DateGranularityType.DATE_AND_TIME;
 
       field.validation?.forEach((validation: ValidationConfigModelType): void => {
-        /* eslint-disable */
-        test(fieldName, validation.errorMsgTranslation as string, () => {
-          if (data[fieldName]) {
-            const validationType = getValidationType(validation);
-            if (validationType !== undefined) {
-              switch (validationType) {
-                case ValidationTypeName.required:
-                  enforce(data[fieldName]).extIsNotEmpty();
-                  break;
-                case ValidationTypeName.pattern:
-                  enforce(data[fieldName]).matches(validation.pattern as string);
-                  break;
-                case ValidationTypeName.min:
-                  value2Compare = getValueToCompare(validation, data);
-                  if (value2Compare !== undefined) {
-                    greaterThanOrEquals(basicType, data[fieldName], value2Compare, shouldValidateTime);
-                  }
-                  break;
-                case ValidationTypeName.max:
-                  value2Compare = getValueToCompare(validation, data);
-                  if (value2Compare !== undefined) {
-                    lessThanOrEquals(basicType, data[fieldName], value2Compare, shouldValidateTime);
-                  }
-                  break;
-                case ValidationTypeName.minLength:
-                  enforce(data[fieldName]).longerThanOrEquals(validation.minLength as number);
-                  break;
-                case ValidationTypeName.maxLength:
-                  enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
-                  break;
-                case ValidationTypeName.json:
-                  enforce(data[fieldName]).isJson();
-                  break;
+        if(validation){
+          /* eslint-disable */
+          test(fieldName, validation.errorMsgTranslation as string, () => {
+            if (data[fieldName]) {
+              const validationType = getValidationType(validation);
+              if (validationType !== undefined) {
+                switch (validationType) {
+                  case ValidationTypeName.required:
+                    enforce(data[fieldName]).extIsNotEmpty();
+                    break;
+                  case ValidationTypeName.pattern:
+                    enforce(data[fieldName]).matches(validation.pattern as string);
+                    break;
+                  case ValidationTypeName.min:
+                    value2Compare = getValueToCompare(validation, data);
+                    if (value2Compare !== undefined) {
+                      greaterThanOrEquals(basicType, data[fieldName], value2Compare, shouldValidateTime);
+                    }
+                    break;
+                  case ValidationTypeName.max:
+                    value2Compare = getValueToCompare(validation, data);
+                    if (value2Compare !== undefined) {
+                      lessThanOrEquals(basicType, data[fieldName], value2Compare, shouldValidateTime);
+                    }
+                    break;
+                  case ValidationTypeName.minLength:
+                    enforce(data[fieldName]).longerThanOrEquals(validation.minLength as number);
+                    break;
+                  case ValidationTypeName.maxLength:
+                    enforce(data[fieldName]).shorterThanOrEquals(validation.maxLength as number);
+                    break;
+                  case ValidationTypeName.json:
+                    enforce(data[fieldName]).isJson();
+                    break;
+                }
               }
             }
-          }
-        });
-        /* eslint-enable */
+          });
+          /* eslint-enable */
+        }
       });
       
     });
