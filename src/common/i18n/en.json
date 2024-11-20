@@ -165,6 +165,8 @@
 
   "tab-views.search-results": "Search results",
   "tab-views.catalog": "Catalog",
+  "tab-views.catalog.site.master": "Main",
+  "tab-views.catalog.site.slave": "Secondary",
   "tab-views.create-best": "BEST edit",
   "tab-views.export-layer": "Export Layer",
 
@@ -219,8 +221,17 @@
 
   "field-names.ingestion.directory": "Directory",
   "field-names.ingestion.fileNames": "File names",
+  "ingestion.warning.title": "Warning:",
+  "ingestion.warning.invalid-secondary-file": "{title} validation error on secondary site",
+  "ingestion.warning.unsynched": "Invalid product version",
+  "ingestion.error.unsynched": "Layer does not exist on secondary site",
+  "ingestion.error.invalid-source-file": "Selected file error: {value}",
+  "ingestion.error.source-file-exception": "Cannot run validation api: {value}",
+  "ingestion.error.directory-comparison": "Warning: directory content is not the same between current and secondary sites",
   "ingestion.error.invalid-metadata": "Metadata file format is not valid",
+  "ingestion.error.not-available": "is not available",
   "ingestion.button.import-metadata": "Import Metadata",
+  "ingestion.checkbox.label": "Operation failed on secondary site, please check to continue with operation on main site only",
 
   "field-names.raster.id": "ID",
   "field-names.raster.productId": "Ext. ID",

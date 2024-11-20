@@ -64,3 +64,34 @@ body[dir='rtl'] #layerDetailsForm .buttons {
   height: 60px;
   overflow-y: auto;
 }
+
+#layerDetailsForm .ingestionWarning {
+  display: flex;
+  flex-direction: row;
+}
+
+#layerDetailsForm .ingestionWarningMessage {
+  width: 652px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.warningIcon {
+  font-size: 32px;
+  padding: 8px 0;
+}
+
+.warningMessage {
+  padding-left: 12px;
+  padding-right: unset;
+}
+
+body[dir='rtl'] .warningMessage {
+  padding-left: unset;
+  padding-right: 12px;
+}
+
+.warning.mdc-form-field label {
+  color: var(--mdc-theme-gc-warning-high);
+}

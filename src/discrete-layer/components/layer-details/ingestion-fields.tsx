@@ -4,20 +4,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
-import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
-import {
-  Box,
-  defaultFormatters,
-  FileData,
-} from '@map-colonies/react-components';
+import { Button, CircularProgress, Icon, IconButton, Tooltip, Typography } from '@map-colonies/react-core';
+import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
+import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
+import { sessionStore } from '../../../common/helpers/storage';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import {
@@ -28,7 +26,7 @@ import {
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { importJSONFileFromClient } from './utils';
+import { clearSyncWarnings, getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
 
 import './ingestion-fields.css';
 
@@ -40,6 +38,8 @@ interface IngestionFieldsProps {
   recordType: RecordType;
   fields: IRecordFieldInfo[];
   values: FormikValues;
+  isError: boolean;
+  onErrorCallback: (open: boolean) => void;
   validateSources?: boolean;
   reloadFormMetadata?: (
     ingestionFields: FormValues,
@@ -91,7 +91,8 @@ const IngestionInputs: React.FC<{
   values: string[];
   selection: Selection;
   formik: EntityFormikHandlers;
-}> = ({ recordType, fields, values, selection, formik }) => {
+  notSynchedDirWarning?: ValidationMessage;
+}> = ({ recordType, fields, values, selection, formik, notSynchedDirWarning }) => {
   return (
     <>
       {
@@ -114,7 +115,12 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Box dir="auto" className="filesPathContainer">{values[index]}</Box>
+                  <Tooltip content={notSynchedDirWarning?.message ? notSynchedDirWarning?.message : values[index]}>
+                  <Typography tag="div" dir="auto" className={`filesPathContainer ${notSynchedDirWarning?.severity}`}>
+                    { notSynchedDirWarning?.message && values[index] && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
+                    { values[index] }
+                  </Typography>
+                </Tooltip>
                 }
                 {
                   index === FILES && values[index] !== '' &&
@@ -159,11 +165,14 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   recordType,
   fields,
   values,
-  reloadFormMetadata,
+  isError,
+  onErrorCallback,
   validateSources=false,
+  reloadFormMetadata,
   formik,
   children,
 }) => {
+  const intl = useIntl();
   const store = useStore();
   const [isFilePickerDialogOpen, setFilePickerDialogOpen] = useState<boolean>(false);
   const [isImportDisabled, setIsImportDisabled] = useState(true);
@@ -177,6 +186,44 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
 
   const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType[]}>();
+  const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<ValidationMessage>();
+
+  const handleError = useCallback((error: boolean) => {
+    onErrorCallback(error);
+  }, [onErrorCallback]);
+
+  useEffect(() => {
+    // Add method wathers for storage changes
+    sessionStore.watchMethods(
+      ['setItem', 'removeItem'],
+      (method, key, ...args) => {},
+      (method, key, ...args) => {
+        if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
+          switch (method) {
+            case 'setItem': {
+              const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
+              if (dirComparison) {
+                setDirectoryComparisonWarn(getValidationMessage(dirComparison, intl));
+              }
+              break;
+            }
+            case 'removeItem': {
+              setDirectoryComparisonWarn(undefined);
+              break;
+            }
+            default: {
+              break;
+            }
+          }
+        }
+      }
+    );
+
+    // Clean up the method watchers when the component unmounts
+    return () => {
+      sessionStore.unWatchMethods();
+    };
+  }, []);
 
   useEffect(() => {
     if(chosenMetadataFile !== null) {
@@ -223,18 +270,75 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
     }
   }, [queryResolveMetadataAsModel.error, chosenMetadataError]);
 
+  const ONLY_ONE_SOURCE = 0;
   useEffect(() => {
     setIsImportDisabled(
       !selection.files.length || 
       queryResolveMetadataAsModel.loading || 
       queryValidateSource.loading || 
-      (!queryValidateSource.loading && queryValidateSource.data?.validateSource[0].isValid === false));
-  }, [selection, queryResolveMetadataAsModel.loading, queryValidateSource.loading]);
+      isError ||
+      (!queryValidateSource.loading && queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE].isValid === false));
+  }, [selection, queryResolveMetadataAsModel.loading, queryValidateSource.loading, isError]);
 
   useEffect(() => {
-    if(!queryValidateSource.loading){
+    if(queryValidateSource.data){
+      const  directory= selection.files.length ? 
+      selection.folderChain
+          .map((folder: FileData) => folder.name)
+          .join('/')
+      : '';          
+      const fileNames = selection.files.map((file: FileData) => file.name).join(',');
+      if (queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE].isValid === false) {
+        if (reloadFormMetadata) {
+          reloadFormMetadata(
+            {
+              directory: values.directory as string,
+              fileNames: values.fileNames as string,
+            },
+            {
+              recordModel: {},
+              error: {
+                response: {
+                  errors: [
+                    {
+                      message: intl.formatMessage(
+                        { id: 'ingestion.error.invalid-source-file' },
+                        { value: queryValidateSource.data.validateSource[ONLY_ONE_SOURCE].message }
+                      ),
+                    },
+                  ],
+                },
+              }
+            } as MetadataFile
+          );
+        }
+        handleError(true);
+      }
+      else {
+        if (reloadFormMetadata) {
+          reloadFormMetadata(
+            {
+              directory: directory,
+              fileNames: fileNames,
+            },
+            {
+              recordModel:{
+                ...selection.metadata?.recordModel,
+                ...queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE]
+              },
+              error: selection.metadata?.error
+            }  as unknown as MetadataFile
+          );
+        }
+        handleError(false);
+      }
+    }
+  }, [selection, queryValidateSource.data]);
+
+  useEffect(() => {
+    if (queryValidateSource.error) {
       if (reloadFormMetadata) {
-        const directory = selection.files.length ? 
+        const  directory= selection.files.length ? 
         selection.folderChain
             .map((folder: FileData) => folder.name)
             .join('/')
@@ -242,22 +346,32 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
         const fileNames = selection.files.map((file: FileData) => file.name).join(',');
         reloadFormMetadata(
           {
-            directory: directory,
-            fileNames: fileNames,
+            directory: directory as string,
+            fileNames: fileNames as string,
           },
           {
-            recordModel:{
-              ...selection.metadata?.recordModel,
-              ...queryValidateSource.data?.validateSource[0]
-            },
-            error: selection.metadata?.error
-          }  as MetadataFile
+            recordModel: {},
+            error: {
+              response: {
+                errors: [
+                  {
+                    message: intl.formatMessage(
+                      { id: 'ingestion.error.source-file-exception' },
+                      { value: queryValidateSource.error.message }
+                    ),
+                  },
+                ],
+              },
+            }
+          } as MetadataFile
         );
       }
+      handleError(true);
     }
-  }, [selection, queryValidateSource.loading]);
+  }, [queryValidateSource.error]);
 
   const onFilesSelection = (selected: Selection): void => {
+    clearSyncWarnings(true);
     if (selected.files.length) {
       setSelection({ ...selected });
     }
@@ -324,6 +438,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
             values={[values.directory, values.fileNames]}
             selection={selection}
             formik={formik as EntityFormikHandlers}
+            notSynchedDirWarning={directoryComparisonWarn}
           />
         </Box>
         <Box className="ingestionButtonsContainer">

@@ -429,6 +429,7 @@ queryCapabilities="queryCapabilities",
 querySearch="querySearch",
 querySearchById="querySearchById",
 queryGetDomain="queryGetDomain",
+queryGetProduct="queryGetProduct",
 queryEntityDescriptors="queryEntityDescriptors",
 queryGetMcEnums="queryGetMcEnums",
 queryGetPolygonPartsDUMMY="queryGetPolygonPartsDUMMY",
@@ -500,6 +501,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryGetDomain(variables: { recordType: string, domain: string }, resultSelector: string | ((qb: StringArrayObjectTypeModelSelector) => StringArrayObjectTypeModelSelector) = stringArrayObjectTypeModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getDomain: StringArrayObjectTypeModelType}>(`query getDomain($recordType: String!, $domain: String!) { getDomain(recordType: $recordType, domain: $domain) {
         ${typeof resultSelector === "function" ? resultSelector(new StringArrayObjectTypeModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryGetProduct(variables: { productType: string, productId: string }, resultSelector: string | ((qb: LayerMetadataMixedModelSelector) => LayerMetadataMixedModelSelector) = layerMetadataMixedModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getProduct: LayerMetadataMixedUnion}>(`query getProduct($productType: String!, $productId: String!) { getProduct(productType: $productType, productId: $productId) {
+        ${typeof resultSelector === "function" ? resultSelector(new LayerMetadataMixedModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryEntityDescriptors(variables?: {  }, resultSelector: string | ((qb: EntityDescriptorModelSelector) => EntityDescriptorModelSelector) = entityDescriptorModelPrimitives.toString(), options: QueryOptions = {}) {

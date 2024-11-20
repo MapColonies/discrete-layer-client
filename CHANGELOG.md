@@ -2,6 +2,92 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.10...v2.11.0) (2024-09-19)
+
+
+### Features
+
+* use helm common ([#520](https://github.com/MapColonies/discrete-layer-client/issues/520)) ([47af458](https://github.com/MapColonies/discrete-layer-client/commit/47af4580599ebe94c1c46f4c85da7e36f0013841))
+
+### [2.10.10](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.9...v2.10.10) (2024-08-15)
+
+
+### Bug Fixes
+
+* sso volumes ([4313808](https://github.com/MapColonies/discrete-layer-client/commit/431380854c5b6191b10abfcfd7b89f9aa44589a8))
+
+### [2.10.9](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.8...v2.10.9) (2024-08-15)
+
+
+### Bug Fixes
+
+* for index.html ([16d2f87](https://github.com/MapColonies/discrete-layer-client/commit/16d2f87cbaff1d4ddc839e99d19a656923723fc4))
+
+### [2.10.8](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.7...v2.10.8) (2024-08-15)
+
+
+### Bug Fixes
+
+* add header Cache-Control to index.html location ([#514](https://github.com/MapColonies/discrete-layer-client/issues/514)) ([e4ff2e1](https://github.com/MapColonies/discrete-layer-client/commit/e4ff2e1d021ff48ff6e00b0a9391d55a46b52f4e))
+
+### [2.10.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.6...v2.10.7) (2024-08-14)
+
+### [2.10.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.5...v2.10.6) (2024-08-13)
+
+### [2.10.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.4...v2.10.5) (2024-08-13)
+
+
+### Bug Fixes
+
+* config generation ([#516](https://github.com/MapColonies/discrete-layer-client/issues/516)) ([952619a](https://github.com/MapColonies/discrete-layer-client/commit/952619a6f85ea1902556accde97e9a8c9b608e81))
+* import button state with new DR sync ([#517](https://github.com/MapColonies/discrete-layer-client/issues/517)) ([27cc883](https://github.com/MapColonies/discrete-layer-client/commit/27cc883f2ce52eaaeda3cec075678618dcc1b0ba))
+
+### [2.10.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.3...v2.10.4) (2024-08-08)
+
+
+### Bug Fixes
+
+* use new getProduct query instead of searchById query ([#513](https://github.com/MapColonies/discrete-layer-client/issues/513)) ([d910de3](https://github.com/MapColonies/discrete-layer-client/commit/d910de35a412e684c1cf79f64a4286eb9eba5018))
+
+### [2.10.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.2...v2.10.3) (2024-08-06)
+
+
+### Bug Fixes
+
+* clear old validations ([0da8951](https://github.com/MapColonies/discrete-layer-client/commit/0da89511bb355e531685a674fd5752e1f5a2abd8))
+* curtain is closed when a new file is valid ([#511](https://github.com/MapColonies/discrete-layer-client/issues/511)) ([1183fba](https://github.com/MapColonies/discrete-layer-client/commit/1183fba61bb83448e07b9438ced7d212ec6f8e75))
+* error list direction ([#512](https://github.com/MapColonies/discrete-layer-client/issues/512)) ([95bf063](https://github.com/MapColonies/discrete-layer-client/commit/95bf063f36da5acdb0c74167abbe8da83b31150e))
+* footprint bug ([79bc1d9](https://github.com/MapColonies/discrete-layer-client/commit/79bc1d9b1c4af62cb80462fd2885c1c06fdcd3a4))
+
+### [2.10.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.1...v2.10.2) (2024-08-04)
+
+
+### Bug Fixes
+
+* validation api warning should not overflow and use ellipsis instead ([0f668b0](https://github.com/MapColonies/discrete-layer-client/commit/0f668b005641e6d8246bd8ca2e7031f76e6efc61))
+* version validation ([#510](https://github.com/MapColonies/discrete-layer-client/issues/510)) ([aee507b](https://github.com/MapColonies/discrete-layer-client/commit/aee507b5600d5f10f28a0883c308a897a189b664))
+
+### [2.10.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.0...v2.10.1) (2024-08-01)
+
+
+### Bug Fixes
+
+* sites config env var ([4c94795](https://github.com/MapColonies/discrete-layer-client/commit/4c94795233f4d22ada7de1f641027079be288fc3))
+
+## [2.10.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.8.6...v2.10.0) (2024-08-01)
+
+
+### Features
+
+* sync DR ([#509](https://github.com/MapColonies/discrete-layer-client/issues/509)) ([eb5a920](https://github.com/MapColonies/discrete-layer-client/commit/eb5a920ee1dcf2a0b83565455b85bc51195a773a))
+
+## [2.9.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.8.6...v2.9.0) (2024-08-01)
+
+
+### Features
+
+* sync DR ([#509](https://github.com/MapColonies/discrete-layer-client/issues/509)) ([eb5a920](https://github.com/MapColonies/discrete-layer-client/commit/eb5a920ee1dcf2a0b83565455b85bc51195a773a))
+
 ### [2.8.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.8.5...v2.8.6) (2024-02-21)
 
 

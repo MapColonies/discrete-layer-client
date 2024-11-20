@@ -8,6 +8,7 @@ import * as serviceWorker from './serviceWorker';
 import { StoreProvider, rootStore } from './discrete-layer/models/RootStore';
 import { SearchResponse } from './discrete-layer/models/discreteLayersStore';
 import CONFIG from './common/config';
+import { syncHttpClientGql } from './syncHttpClientGql';
 
 import './index.css';
 
@@ -29,7 +30,7 @@ const store = rootStore.create(
         }`,
       }).then((res) => res.data as SearchResponse),
     
-    gqlHttpClient: createHttpClient(`${CONFIG.SERVICE_PROTOCOL as string}${CONFIG.SERVICE_NAME as string}`),
+    gqlHttpClient: syncHttpClientGql(),
     // gqlHttpClient: createHttpClient("http://localhost:8080/graphql")
   }
 );

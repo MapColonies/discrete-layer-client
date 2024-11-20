@@ -27,7 +27,8 @@ import {
   ProductType,
   RecordStatus,
   ValidationValueType,
-  LayerDemRecordModel
+  LayerDemRecordModel,
+  LayerRasterRecordModelType
 } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -48,6 +49,7 @@ import { LayersDetailsComponent } from './layer-details';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import EntityForm from './layer-datails-form';
 import {
+  clearSyncWarnings,
   getFlatEntityDescriptors,
   getPartialRecord,
   getRecordForUpdate,
@@ -168,6 +170,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
     const [isAllInfoReady, setIsAllInfoReady] = useState<boolean>(false);
+    const queryGetProduct = useQuery<{getProduct: LayerMetadataMixedUnion | null}>();
 
     const dialogTitleParam = recordType;
     const dialogTitleParamTranslation = intl.formatMessage({
@@ -397,6 +400,17 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
         }
       );
       setDescriptors(desc as any[]);
+
+      if ([Mode.EDIT].includes(mode) && recordType === RecordType.RECORD_RASTER) {
+        queryGetProduct.setQuery(
+          store.queryGetProduct(
+            {
+              productType: props.layerRecord?.productType as ProductType,
+              productId: (props.layerRecord as LayerRasterRecordModelType).productId as string
+            }
+          )
+        );
+      }
     }, []);
 
     useEffect(() => {
@@ -418,6 +432,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const closeDialog = useCallback(() => {
       onSetOpen(false);
       store.discreteLayersStore.resetUpdateMode();
+      clearSyncWarnings();
     }, [onSetOpen, store.discreteLayersStore]);
 
     useEffect(() => {

@@ -25,6 +25,7 @@ import {
   FieldConfigModelType,
   ProductType,
   ValidationValueType,
+  LayerRasterRecordModelType
 } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { ILayerImage } from '../../../models/layerImage';
@@ -39,6 +40,7 @@ import { LayersDetailsComponent } from '../layer-details';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import EntityRasterForm from './layer-datails-form.raster';
 import {
+  clearSyncWarnings,
   cleanUpEntityPayload,
   filterModeDescriptors,
   getFlatEntityDescriptors,
@@ -150,6 +152,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
     const [isAllInfoReady, setIsAllInfoReady] = useState<boolean>(false);
+    const queryGetProduct = useQuery<{getProduct: LayerMetadataMixedUnion | null}>();
     const polygonPartsPayloadKeys = useMemo(
       () => {
         return getFlatEntityDescriptors(
@@ -465,6 +468,17 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       const desc = addDescriptorValidations([...ingestionFields, ...descriptors]);
 
       setDescriptors(desc as any[]);
+
+      if ([Mode.UPDATE].includes(mode)) {
+        queryGetProduct.setQuery(
+          store.queryGetProduct(
+            {
+              productType: props.layerRecord?.productType as ProductType,
+              productId: (props.layerRecord as LayerRasterRecordModelType).productId as string
+            }
+          )
+        );
+      }
     }, []);
 
     useEffect(() => {
@@ -495,6 +509,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const closeDialog = useCallback(() => {
       onSetOpen(false);
       store.discreteLayersStore.resetUpdateMode();
+      clearSyncWarnings();
     }, [onSetOpen, store.discreteLayersStore]);
 
     useEffect(() => {

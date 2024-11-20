@@ -83,13 +83,11 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
 ]
 ])
 
-//TODO: THIS PARAMETER MUST BE TAKEN FROM CONFIG
-const POLYGON_PARTS_PREFIX = 'polygonParts:';
 export const getWFSFeatureTypeName = (layerRecord: LayerRasterRecordModelType | null, enums: IEnumsMapType) => {
   // Naming convension of polygon parts feature typeName
   // polygonParts:{productId}-{productType}
   return layerRecord ? 
-    `${POLYGON_PARTS_PREFIX}${layerRecord.productId}-${enums[layerRecord.productType as string].realValue}` :
+    `${CONFIG.POLYGON_PARTS_FEATURE_TYPE_PREFIX}${layerRecord.productId}-${enums[layerRecord.productType as string].realValue}` :
     'SHOULD_BE_CALCULATED_FROM_UPDATED_LAYER';
 }
 

@@ -1,0 +1,191 @@
+nameOverride:
+fullnameOverride:
+# --------------- common --------------
+commonLabels:
+commonAnnotations:
+# ----------- initContainers ----------
+volumePermissions:
+  enabled: false
+# ------ volumes and volumeMounts -----
+persistence:
+  enabled: false
+# ----------- command/debug -----------
+diagnosticMode:
+  enabled: false
+# --------- MAIN_OBJECT_BLOCK ---------
+configValues:
+  deploymentAnnotations:
+    # collectord.io/index: '' # PROVIDE SPLUNK INDEX
+  autoscaling:
+    enabled: false
+  replicaCount: 1
+  podAnnotations:
+    enabled: true
+    resetOnConfigChange: true
+    annotations:
+  prometheus:
+    scrape: false
+  metrics:
+    enabled: false
+  tracing:
+    enabled: false
+  # topologySpreadConstraints:
+  #   - maxSkew: 1
+  #     topologyKey: zone
+  #     whenUnsatisfiable: DoNotSchedule
+  #     labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: '{{ include "common.names.name" . }}'
+  podSecurityContext:
+    enabled: false
+  # ----------- containers ------------
+  image:
+    repository: discrete-layer-client
+    tag: v1.1.1
+    pullPolicy: Always
+    debug: false
+  containerSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    # runAsUser: 0
+  extraEnvVars:
+    - name: SERVER_PORT
+      value: '{{ .Values.configValues.containerPorts.http }}'
+  extraEnvVarsCM: '{{ template "common.names.fullname" . }}'
+  extraEnvVarsSecret:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 50m
+      memory: 500Mi
+  containerPorts:
+    http: 8080
+    https: 443
+  customLivenessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+    httpGet:
+      path: /env-config.js
+      port: http
+  customReadinessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+    httpGet:
+      path: /env-config.js
+      port: http
+  startupProbe:
+    enabled: false
+  extraVolumeMounts:
+    - name: nginx-config
+      mountPath: /etc/nginx/conf.d/default.conf
+      subPath: default.conf
+  extraVolumes:
+    - name: nginx-config
+      configMap:
+        name: '{{ template "common.names.fullname" . }}'
+        items:
+          - key: default.conf
+            path: default.conf
+env:
+  logLevel: info
+  logPrettyPrintEnabled: false
+  responseCompressionEnabled: true
+  requestPayloadLimit: 1mb
+  publicUrl: ''
+  serviceUrl: ''
+  serviceProtocol: http://
+  mapServerPublishPoint: ''
+  mapServerUrl: ''
+  mapServerChannel: ''
+  mapServerVersion: ''
+  mapServerRequest: ''
+  activeLayer: OSM_LAYER
+  loggerHttpHost: ''
+  loggerHttpPort: ''
+  loggerHttpPath: ''
+  loggerLevel: warn
+  bboxAreaSquareKmLimit: 10000
+  language: he
+  jobStatus:
+    pollingCycleInterval: 60000
+  defaultUser:
+    role: USER
+  runningMode:
+    type: PRODUCTION
+    autoComplete: false
+  export:
+    defaultZoomLevel: '' #todo
+    maxZoomLevel: '' #todo
+  map:
+    center: '[34.811, 31.908]'
+    zoom: 7
+    useOptimizedTileRequests: false
+  baseMaps: '{"maps":[{"id":"1st","title":"1st Map","thumbnail":"https://nsw.digitaltwin.terria.io/build/3456d1802ab2ef330ae2732387726771.png","baseRasteLayers":[{"id":"GOOGLE_TERRAIN","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}","layers":"","credit":"GOOGLE"}},{"id":"INFRARED_RASTER","type":"WMS_LAYER","opacity":0.6,"zIndex":1,"options":{"url":"https://mesonet.agron.iastate.edu/cgi-bin/wms/goes/conus_ir.cgi?","layers":"goes_conus_ir","credit":"Infrared data courtesy Iowa Environmental Mesonet","parameters":{"transparent":"true","format":"image/png"}}}],"baseVectorLayers":[]},{"id":"2nd","title":"2nd Map","thumbnail":"https://nsw.digitaltwin.terria.io/build/efa2f6c408eb790753a9b5fb2f3dc678.png","baseRasteLayers":[{"id":"RADAR_RASTER","type":"WMS_LAYER","opacity":0.6,"zIndex":1,"options":{"url":"https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?","layers":"nexrad-n0r","credit":"Radar data courtesy Iowa Environmental Mesonet","parameters":{"transparent":"true","format":"image/png"}}},{"id":"GOOGLE_TERRAIN","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}","layers":"","credit":"GOOGLE"}},{"id":"VECTOR_TILES_GPS","type":"XYZ_LAYER","opacity":1,"zIndex":2,"options":{"url":"https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png","layers":"","credit":"openstreetmap"}}],"baseVectorLayers":[]},{"id":"3rd","title":"3rd Map","isCurrent":true,"thumbnail":"https://nsw.digitaltwin.terria.io/build/d8b97d3e38a0d43e5a06dea9aae17a3e.png","baseRasteLayers":[{"id":"VECTOR_TILES","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38","layers":"","credit":"thunderforest"}},{"id":"VECTOR_TILES_GPS_1","type":"XYZ_LAYER","opacity":1,"zIndex":1,"options":{"url":"https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png","layers":"","credit":"openstreetmap"}}],"baseVectorLayers":[]},{"id":"4th","title":"4th MapProxy","isCurrent":false,"thumbnail":"","baseRasteLayers":[{"id":"AZURE_RASTER_WMTS_BLUE_MARBLE_2","type":"WMTS_LAYER","opacity":1,"zIndex":0,"options":{"url":"http://mapproxy-dev-map-proxy-map-proxy-route-raster-dev.apps.v0h0bdx6.eastus.aroapp.io/wmts/blue_marb_2/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png","format":"image/png","layer":"blue_marb_2","style":"default","tileMatrixSetID":"newGrids"}},{"id":"AZURE_RASTER_WMTS_BLUEMARBEL_IL","type":"WMTS_LAYER","opacity":1,"zIndex":0,"options":{"url":"http://map-raster.apps.v0h0bdx6.eastus.aroapp.io/wmts/bluemarble_il/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png","layer":"bluemarble_il","style":"default","format":"image/png","tileMatrixSetID":"newGrids"}}],"baseVectorLayers":[]}]}'
+  defaultTerrainProviderUrl: ''
+  webToolsUrl: ''
+  modelAnalyzerRoute: ''
+  modelAnalyzerTokenValue: ''
+  whatsnewUrl: ''
+  projectVersion: ''
+  activeLayerPropeties:
+    mapUrlPath: '' #todo
+    exportPath: '' #todo
+    urlPattern:
+      service: ''
+      layers: ''
+      tiled: true
+      matrixSet: ''
+      style: ''
+      projection: ''
+  sitesConfig: '{"masters": [{ "dns": "http://localhost:3000", "isAlias": "false" }], "slaves": [{ "dns": "http://localhost:8090", "isAlias": "false" }], "generics": []}'
+  bffPath: ''
+route:
+  enabled: true
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
+  timeout:
+    enabled: false
+    duration: 60s
+  routesMapping:
+    - hostname:
+      path: /
+      suffix:
+  targetPort: http
+  tls: 
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+    useCerts: false
+  extraRules:
+ingress:
+  enabled: false
+  apiVersion:
+  type: nginx-kubernetes
+  annotations:
+  pathType: Prefix
+  hostname: libot.wwest.local
+  extraHosts: []
+  extraPaths: []
+  path: /ui
+  extraRules: []
+  extraTls: []
+  selfSigned: false
+  tls: true
+  cors:
+    enabled: true
+    origin: '*'
+service:
+  annotations:
+  ports:
+    http: 80
+  protocol: TCP
+serviceAccount:
+  create: false

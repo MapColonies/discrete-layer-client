@@ -35,7 +35,7 @@ const devConfigPath = path.join(confdDevBasePath, 'conf.d/development.toml');
 
 const indexTmplRelPath = 'index.html';
 const indexConfigPath = path.join(confdBasePath, 'index.toml');
-const indexTmplPath = path.join(confdBasePath, !isInDocker ? '/../public/' : '/../html/',indexTmplRelPath);
+const indexTmplPath = path.join(confdBasePath, !isInDocker ? '/../public/' : '/../html/', indexTmplRelPath);
 const devIndexTmplPath = path.join(confdDevBasePath, '/templates/', indexTmplRelPath);
 const devIndexConfigPath = path.join(confdDevBasePath, 'conf.d/index.toml');
 
@@ -67,37 +67,22 @@ const download = (uri, filename) => {
 };
 
 const downloadIfNotExists = (uri, filename) => {
-  console.log(`Checking if ${filename} exists.`);
+  console.log(`Checking if ${filename} exists`);
   return new Promise(resolve => {
     if (fs.existsSync(filename)) {
-      console.log(`${filename} exists, proceeding to the next stage.`);
+      console.log(`${filename} exists, proceeding to the next stage`);
       resolve();
       return;
     }
-
-    console.log(`${filename} does not exist.`);
+    console.log(`${filename} does not exist`);
     resolve(download(uri, filename));
   });
 };
 
 const copyFile = (src, dest, mutationFunc) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(src, 'utf8', function(err, data) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      const result = mutationFunc ? mutationFunc(data) : data;
-
-      fs.writeFile(dest, result, 'utf8', function(err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
-  });
+  const data = fs.readFileSync(src, 'utf8');
+  const result = mutationFunc ? mutationFunc(data) : data;
+  fs.writeFileSync(dest, result, {encoding: 'utf8'});
 };
 
 const createDirIfNotExists = dir => {
@@ -114,24 +99,22 @@ const createDevConfdConfigFile = (env, isInDocker) => {
   if (!env) {
     env = 'default';
   }
-  console.log('Creating a development toml and tmpl files.');
-  const tmplCopy = copyFile(confdTmplPath, devTmplPath);
-  const tomlCopy = copyFile(confdConfigPath, devConfigPath, data => {
+  console.log('Get toml and tmpl files');
+  copyFile(confdTmplPath, devTmplPath);
+  copyFile(confdConfigPath, devConfigPath, data => {
     const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
     return !isInDocker ? data : data.replace('dest = "public/', target);
   });
-  const indexTmplCopy = copyFile(indexTmplPath, devIndexTmplPath);
-  const indexTomlCopy = copyFile(indexConfigPath, devIndexConfigPath, data => {
+  copyFile(indexTmplPath, devIndexTmplPath);
+  copyFile(indexConfigPath, devIndexConfigPath, data => {
     const target = 'dest = "' + path.join(confdBasePath, '..', 'html') + '/'; 
     return !isInDocker ? data : data.replace('dest = "public/', target);
   });
-
-  return Promise.all([tmplCopy, tomlCopy]);
 };
 
 const replacePlaceHolders = () => {
   return copyFile(indexTmplPath, indexTmplPath, (content) => {
-    console.log('**** Replace PLACEHOLDERS by CONFD syntax ****')
+    console.log('**** Replace PLACEHOLDERS by CONFD syntax ****');
     return content
           .replace(/{PUBLIC_URL_PLACEHOLDER}/g, '{{ getv "/configuration/public/url" "." }}')
           .replace(/{APP_VERSION_PLACEHOLDER}/g, '{{ getv "/configuration/image/tag" "vUnknown" }}');
@@ -152,9 +135,9 @@ const runConfd = () => {
   );
 };
 
-const createTargetDir = () => {
-  createDirIfNotExists('config');
-};
+// const createTargetDir = () => {
+//   createDirIfNotExists('config');
+// };
 
 const help = () => {
   console.log('usage: "node <path to this script> [options]\n');
@@ -169,6 +152,7 @@ const help = () => {
   console.log();
   process.exit(0);
 };
+
 const main = () => {
   if (process.argv.indexOf('--help') != -1) {
     help();
@@ -177,9 +161,8 @@ const main = () => {
   const env = envIdx !== -1 ? process.argv[envIdx + 1] : null;
   downloadIfNotExists(confdUrl, confdPath)
     .then(() => {
-      replacePlaceHolders().then(()=>{
-        createDevConfdConfigFile(env, isInDocker);
-      });
+      replacePlaceHolders();
+      createDevConfdConfigFile(env, isInDocker);
     })
     // .then(createTargetDir())
     .then(() => runConfd())

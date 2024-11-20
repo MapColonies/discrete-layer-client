@@ -18,8 +18,10 @@ import { get, set, isEmpty, isObject } from 'lodash';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
-import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
+import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography, Tooltip } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import { SYNC_QUERY_NAME } from '../../../../syncHttpClientGql';
+import { sessionStore } from '../../../../common/helpers/storage';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
@@ -48,6 +50,8 @@ import {
   filterModeDescriptors,
   importShapeFileFromClient,
   transformSynergyShapeFeatureToEntity,
+  getValidationMessage,
+  ValidationMessage,
 } from '../utils';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
@@ -155,6 +159,8 @@ export const InnerRasterForm = (
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
+  const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
+  const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
@@ -217,6 +223,54 @@ export const InnerRasterForm = (
 
     setTimeout(()=>(ppList && updateListRowHeights()), 100);
   }, [errors, getYupErrors, getStatusErrors]);
+
+  useEffect(() => {
+    // Add method wathers for storage changes
+    sessionStore.watchMethods(
+      ['setItem', 'removeItem'],
+      (method, key, ...args) => {},
+      (method, key, ...args) => {
+        switch (true) {
+          case key.includes(SYNC_QUERY_NAME.GET_PRODUCT): {
+            switch (method) {
+              case 'setItem': {
+                const invalidVersion = sessionStore.getObject(SYNC_QUERY_NAME.GET_PRODUCT);
+                if (invalidVersion) {
+                  setValidationWarn(getValidationMessage(invalidVersion, intl));
+                }
+                break;
+              }
+              case 'removeItem': {
+                setValidationWarn(undefined);
+                break;
+              }
+            }
+            break;
+          }
+          case key.includes(SYNC_QUERY_NAME.VALIDATE_SOURCE): {
+            switch (method) {
+              case 'setItem': {
+                const sourceValidation = sessionStore.getObject(SYNC_QUERY_NAME.VALIDATE_SOURCE);
+                if (sourceValidation && !sourceValidation.isValid && !sessionStore.getObject(SYNC_QUERY_NAME.GET_PRODUCT)) {
+                  setValidationWarn(getValidationMessage(sourceValidation, intl));
+                }
+                break;
+              }
+              case 'removeItem': {
+                setValidationWarn(undefined);
+                break;
+              }
+            }
+            break;
+          }
+        }
+      }
+    );
+    // Clean up the method wathers when the component unmounts
+    return () => {
+      sessionStore.unWatchMethods();
+    };
+  }, []);
 
   useEffect(() => {
     const features: Feature[] = [];
@@ -691,6 +745,8 @@ export const InnerRasterForm = (
             recordType={recordType}
             fields={ingestionFields}
             values={values}
+            isError={showCurtain}
+            onErrorCallback={setShowCurtain}
           >
             <Box className="uploadShapeButton">
             <Button
@@ -893,17 +949,55 @@ export const InnerRasterForm = (
           <Box className="messages">
             {
               topLevelFieldsErrors && Object.keys(topLevelFieldsErrors).length > NONE &&
+              JSON.stringify(topLevelFieldsErrors) !== '{}' &&
               <ValidationsError errors={topLevelFieldsErrors} />
             }
             {
-              Object.keys(topLevelFieldsErrors).length === NONE &&
+              (Object.keys(topLevelFieldsErrors).length === NONE || JSON.stringify(errors) === '{}') &&
               vestValidationResults.topLevelEntityVestErrors?.errorCount > NONE &&
               <ValidationsError errors={vestValidationResults.topLevelEntityVestErrors.getErrors()} />
             }
             { 
-              graphQLError !== undefined && (
-                <GraphQLError error={graphQLError} />
-              )
+              graphQLError !== undefined &&
+              graphQLError !== null &&
+              graphQLError &&
+              JSON.stringify(graphQLError) !== '{}' &&
+              Object.keys(graphQLError).length > NONE &&
+              <GraphQLError error={graphQLError} />
+            }
+            {
+              validationWarn?.message &&
+              isEmpty(firstPhaseErrors) &&
+              (!isEmpty(errors) || !vestValidationResults.errorCount) &&
+              isEmpty(graphQLError) &&
+              <Box className="ingestionWarning">
+                <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
+                <Box>
+                  <Typography tag="div" className="ingestionWarningMessage">
+                    <Typography tag="span" className="warningMessage warning"
+                      dangerouslySetInnerHTML={{__html:
+                        intl.formatMessage(
+                          { id: 'ingestion.warning.invalid-secondary-file' },
+                          { title: emphasizeByHTML(`${intl.formatMessage({ id: 'ingestion.warning.title' })}`) }
+                        )
+                      }}
+                    />
+                    <Typography tag="span" className="warning">{' - '}</Typography>
+                    <Tooltip content={validationWarn?.message}>
+                      <Typography tag="span" className={validationWarn?.severity}>{validationWarn?.message}</Typography>
+                    </Tooltip>
+                  </Typography>
+                  <Checkbox
+                    className="warning"
+                    label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
+                    checked={syncAnywayChecked}
+                    onClick={
+                      (evt: React.MouseEvent<HTMLInputElement>): void => {
+                        setSyncAnywayChecked(evt.currentTarget.checked);
+                      }}
+                  />
+                </Box>
+              </Box>
             } 
           </Box>
           <Box className="buttons">
@@ -918,7 +1012,8 @@ export const InnerRasterForm = (
                   ppFeatures.length === NONE ||
                   Object.keys(errors).length > NONE ||
                   (Object.keys(getStatusErrors()).length > NONE) ||
-                  !isEmpty(graphQLError)
+                  !isEmpty(graphQLError) ||
+                  (!isEmpty(validationWarn?.message) && !syncAnywayChecked)
                 }
               >
                 <FormattedMessage id="general.ok-btn.text" />

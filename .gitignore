@@ -22,6 +22,8 @@ public/cookbook/*
 /node_modules
 /.pnp
 .pnp.js
+# Output of 'npm pack' or 'helm package helm'
+*.tgz
 
 # testing
 /coverage

@@ -1,0 +1,60 @@
+{{- $MAIN_OBJECT_BLOCK := "configValues" -}}
+{{- $COMPONENT_NAME := "backend" -}}
+{{- $DATA := include "discreteLayerClientData" . -}}
+
+{{- define "discreteLayerClientData" -}}
+{{- $CONFIG_MANAGER_OBJECT := include "common.tplvalues.getGlobalObject" (dict "objName" "configManagment" "context" .) | fromYaml }}
+{{- if not $CONFIG_MANAGER_OBJECT.enabled -}}
+  REQUEST_PAYLOAD_LIMIT: {{ .Values.env.requestPayloadLimit | quote }}
+  RESPONSE_COMPRESSION_ENABLED: {{ .Values.env.responseCompressionEnabled | quote }}
+{{- end }}
+  default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
+  CONFIGURATION_SERVED_ENTITY_TYPES: {{ quote .Values.global.shared.servedEntityTypes }}
+  CONFIGURATION_ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.global.shared.accessToken.attributeName }}
+  CONFIGURATION_ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.global.shared.accessToken.injectionType }}
+  CONFIGURATION_ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.global.shared.accessToken.tokenValue }}
+  CONFIGURATION_IMAGE_TAG: {{ quote .Values.configValues.image.tag }}
+  CONFIGURATION_PUBLIC_URL: {{ quote .Values.env.publicUrl }}
+  CONFIGURATION_SERVICE_URL: {{ quote .Values.env.serviceUrl }}
+  CONFIGURATION_SERVICE_PROTOCOL: {{ quote .Values.env.serviceProtocol }}
+  CONFIGURATION_MAPSERVER_PUBLISH_POINT: {{ quote .Values.env.mapServerPublishPoint }}
+  CONFIGURATION_MAPSERVER_URL: {{ quote .Values.env.mapServerUrl }}
+  CONFIGURATION_MAPSERVER_CHANNEL: {{ quote .Values.env.mapServerChannel }}
+  CONFIGURATION_MAPSERVER_VERSION: {{ quote .Values.env.mapServerVersion }}
+  CONFIGURATION_MAPSERVER_REQUEST: {{ quote .Values.env.mapServerRequest }}
+  CONFIGURATION_ACTIVE_LAYER: {{ quote .Values.env.activeLayer }}
+  CONFIGURATION_LOGGER_HTTP_HOST: {{ quote .Values.env.loggerHttpHost }}
+  CONFIGURATION_LOGGER_HTTP_PORT: {{ quote .Values.env.loggerHttpPort }}
+  CONFIGURATION_LOGGER_HTTP_PATH: {{ quote .Values.env.loggerHttpPath }}
+  CONFIGURATION_LOGGER_LEVEL: {{ quote .Values.env.loggerLevel }}
+  CONFIGURATION_BBOX_AREA_SQUARE_KM_LIMIT: {{ quote .Values.env.bboxAreaSquareKmLimit }}
+  CONFIGURATION_UI_LANGUAGE: {{ quote .Values.env.language }}
+  CONFIGURATION_JOB_STATUS_POLLING_CYCLE_INTERVAL: {{ quote .Values.env.jobStatus.pollingCycleInterval }}
+  CONFIGURATION_DEFAULT_USER_ROLE: {{ quote .Values.env.defaultUser.role }}
+  CONFIGURATION_RUNNING_MODE_TYPE: {{ quote .Values.env.runningMode.type }}
+  CONFIGURATION_RUNNING_MODE_AUTOCOMPLETE: {{ quote .Values.env.runningMode.autoComplete }}
+  CONFIGURATION_EXPORT_DEFAULT_ZOOM_LEVEL: {{ quote .Values.env.export.defaultZoomLevel }}
+  CONFIGURATION_EXPORT_MAX_ZOOM_LEVEL: {{ quote .Values.env.export.maxZoomLevel }}
+  CONFIGURATION_MAP_CENTER: {{ quote .Values.env.map.center }}
+  CONFIGURATION_MAP_ZOOM: {{ quote .Values.env.map.zoom }}
+  CONFIGURATION_MAP_USE_OPTIMIZED_TILE_REQUESTS: {{ quote .Values.env.map.useOptimizedTileRequests }}
+  CONFIGURATION_BASEMAPS: {{ quote .Values.env.baseMaps }}
+  CONFIGURATION_DEFAULT_TERRAIN_PROVIDER_URL: {{ quote .Values.env.defaultTerrainProviderUrl }}
+  CONFIGURATION_WEB_TOOLS_URL: {{ quote .Values.env.webToolsUrl }}
+  CONFIGURATION_MODEL_ANALYZER_ROUTE: {{ quote .Values.env.modelAnalyzerRoute }}
+  CONFIGURATION_MODEL_ANALYZER_TOKEN_VALUE: {{ quote .Values.env.modelAnalyzerTokenValue }}
+  CONFIGURATION_PROJECT_VERSION: {{ quote .Values.env.projectVersion }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_MAPURLPATH: {{ quote .Values.env.activeLayerPropeties.mapUrlPath }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_EXPORTPATH: {{ quote .Values.env.activeLayerPropeties.exportPath }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_SERVICE: {{ quote .Values.env.activeLayerPropeties.urlPattern.service }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_LAYERS: {{ quote .Values.env.activeLayerPropeties.urlPattern.layers }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_TILED: {{ quote .Values.env.activeLayerPropeties.urlPattern.tiled }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_MATRIXSET: {{ quote .Values.env.activeLayerPropeties.urlPattern.matrixSet }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_STYLE: {{ quote .Values.env.activeLayerPropeties.urlPattern.style }}
+  CONFIGURATION_ACTIVE_LAYER_PROPERTIES_URL_PATTERN_PARAMS_PROJECTION: {{ quote .Values.env.activeLayerPropeties.urlPattern.projection }}
+  CONFIGURATION_WHATSNEW_URL: {{ quote .Values.env.whatsnewUrl }}
+  CONFIGURATION_SITES_CONFIG: {{ quote .Values.env.sitesConfig }}
+  CONFIGURATION_BFF_PATH: {{ quote .Values.env.bffPath }}
+{{- end -}}
+
+{{ include "mc-chart.configmap" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "DATA" $DATA "WITH_TELEMETRY_TRACING" false "WITH_TELEMETRY_METRICS" false "context" .)}}

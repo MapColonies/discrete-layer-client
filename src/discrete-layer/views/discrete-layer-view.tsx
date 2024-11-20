@@ -88,6 +88,7 @@ import DemHeightsFeatureComponent from '../components/map-container/geojson-map-
 import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
 import { ExtentUpdater } from '../components/map-container/extent-updater';
 import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
+import { currentSite } from '../../common/helpers/siteUrl';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
@@ -564,6 +565,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       isLayerRasterRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE),
       isLayer3DRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE),
       isLayerDemRecordIngestAllowed: store.userStore.isActionAllowed(UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE),
+      isSwitchUserRoleAllowed: store.userStore.isActionAllowed(UserAction.FEATURE_SWITCH_USER_ROLE),
     }
   }, [store.userStore.user]);
 
@@ -622,9 +624,14 @@ const DiscreteLayerView: React.FC = observer(() => {
               className={`operationIcon ${tabView?.iconClassName as string}`}
               label="TAB ICON"
             />
-            <Typography use="headline6" tag="span">
-              <FormattedMessage id={tabView?.title}></FormattedMessage>
-            </Typography>
+            <div className='tab-title'>
+              <Typography use="headline6" tag="span">
+                <FormattedMessage id={tabView?.title}></FormattedMessage>
+              </Typography>
+              <Typography use="headline6" tag="span" className={`current-client-site-${currentSite()}`}>
+                {currentSite()!=='generic' && intl.formatMessage({ id: `tab-views.catalog.site.${currentSite()}` })}
+              </Typography>
+            </div>
           </div>
         </div>
 
@@ -835,9 +842,11 @@ const DiscreteLayerView: React.FC = observer(() => {
           <Tooltip content={intl.formatMessage({ id: 'general.login-user.tooltip' }, { user: store.userStore.user?.role })}>
             <Avatar className="avatar" name={store.userStore.user?.role} size="large" />
           </Tooltip>
+          {permissions.isSwitchUserRoleAllowed &&
           <Box className="headerUserModeSwitchContainer">
             <UserModeSwitch userRole={userRole} setUserRole={store.userStore.changeUserRole}/>
           </Box>
+          }
           {
             permissions.isSystemJobsAllowed as boolean &&
             <Tooltip content={intl.formatMessage({ id: 'action.system-jobs.tooltip' })}>

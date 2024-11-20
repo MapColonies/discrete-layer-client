@@ -150,3 +150,34 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   border-color: currentColor;
   padding: 20px;
 }
+
+#layerDetailsFormRaster .ingestionWarning {
+  display: flex;
+  flex-direction: row;
+}
+
+#layerDetailsFormRaster .ingestionWarningMessage {
+  width: 652px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.warningIcon {
+  font-size: 32px;
+  padding: 8px 0;
+}
+
+.warningMessage {
+  padding-left: 12px;
+  padding-right: unset;
+}
+
+body[dir='rtl'] .warningMessage {
+  padding-left: unset;
+  padding-right: 12px;
+}
+
+.warning.mdc-form-field label {
+  color: var(--mdc-theme-gc-warning-high);
+}

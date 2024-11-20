@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get, isEmpty, omit } from 'lodash';
 import moment, { unitOfTime } from 'moment';
+import { IntlShape } from 'react-intl';
 import { $enum } from 'ts-enum-util';
 import { Feature } from 'geojson';
 import rewind from '@turf/rewind';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
+import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
+import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   CategoryConfigModelType,
@@ -146,6 +149,24 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     }
   }
   return 'string';
+};
+
+export interface ValidationMessage {
+  message: string;
+  severity: string;
+};
+
+export const getValidationMessage = (data: Record<string, unknown>, intl: IntlShape): ValidationMessage => {
+  const severity: string = data.severity as string ?? 'warning';
+  let message: string = data.message
+    ? data.message as string
+    : data.code
+    ? intl.formatMessage({ id: data.code as string })
+    : '';
+  if (data.additionalInfo) {
+    message = data.additionalInfo as string + ' ' + message;
+  }
+  return { message, severity };
 };
 
 export const getValidationType = (validation: ValidationConfigModelType): ValidationTypeName | undefined => {
@@ -507,15 +528,22 @@ export const getEnumKeys = (enumsMap: IEnumsMapType, enumName: string, parent?: 
 
 export const getProductDomain = (productType: ProductType, enumsMap?: IEnumsMapType): string => {
   return enumsMap?.[productType as string]?.parentDomain as string;
-}
+};
 
 export const getCoordinatesDisplayText = (latitude: number, longitude: number): string => {
   const COORDS_DISPLAY_PRECISION = 5;
   
-  return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`
-}
+  return `${latitude.toFixed(COORDS_DISPLAY_PRECISION)}°N ${longitude.toFixed(COORDS_DISPLAY_PRECISION)}°E`;
+};
 
 export const getTimeStamp = (): string => new Date().getTime().toString();
+
+export const clearSyncWarnings = (selectedFileWarningsOnly: boolean = false) => {
+  syncQueries
+    .filter((query: SYNC_QUERY) => selectedFileWarningsOnly ? !query.equalCheck : true)
+    .map((query: SYNC_QUERY) => query.queryName)
+    .forEach((key: string) => sessionStore.remove(key));
+};
 
 export const filterModeDescriptors = (mode: Mode, descriptors: EntityDescriptorModelType[]): EntityDescriptorModelType[] => {
   return descriptors.map((desc)=>{

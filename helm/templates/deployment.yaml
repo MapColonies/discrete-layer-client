@@ -1,0 +1,3 @@
+{{- $MAIN_OBJECT_BLOCK := "configValues" -}}
+{{- $COMPONENT_NAME := "backend" -}}
+{{ include "mc-chart.deployment" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
