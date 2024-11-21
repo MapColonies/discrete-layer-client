@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.11.0...v2.12.0) (2024-11-21)
+
+
+### Features
+
+* show resolution colliiding parts ([88a7d47](https://github.com/MapColonies/discrete-layer-client/commit/88a7d47d93d3573b0aa75467db7a8949719e45f5))
+* source balidation api integration ([d345bc6](https://github.com/MapColonies/discrete-layer-client/commit/d345bc6a324f4c6c781e8e0632438f896b7f4baa))
+* values schema integration ([#521](https://github.com/MapColonies/discrete-layer-client/issues/521)) ([0a9d9d6](https://github.com/MapColonies/discrete-layer-client/commit/0a9d9d64b49f3d7ffbf1bfd2e29aa321d04c7900))
+* wfs and pp visualization in cesium an ol ([e149d96](https://github.com/MapColonies/discrete-layer-client/commit/e149d967e563f806623a1eace8625206cba5d0d0))
+
+
+### Bug Fixes
+
+* cleanup from unsupported entities ([2a271be](https://github.com/MapColonies/discrete-layer-client/commit/2a271be13c69d0aba0029175e2680709f97f56b6))
+* deleting status i18n ([8d561df](https://github.com/MapColonies/discrete-layer-client/commit/8d561dfd18deb6f16fac30ab8e08e6e908836f38))
+* form layout and errors ([d3d8f5f](https://github.com/MapColonies/discrete-layer-client/commit/d3d8f5fea11085b6073e0f08671ea3cca09e3eb7))
+* helm artifacts ([3615873](https://github.com/MapColonies/discrete-layer-client/commit/3615873db9480c4c8bf1d3a9230c850a5cfcb478))
+* master merged to the branch manually ([fd727db](https://github.com/MapColonies/discrete-layer-client/commit/fd727dbd939814651109dc14dfee97d21ee8475c))
+* normilize pp entity for client ([921a0bf](https://github.com/MapColonies/discrete-layer-client/commit/921a0bf0c0dd6106bfe7d9ff1e99fefa3e242685))
+* polygon parts from zip in readonly mode ([dad390c](https://github.com/MapColonies/discrete-layer-client/commit/dad390c3cf3a8e1391824dba50f169c7113a343f))
+* pp in state not in live object ([31b652e](https://github.com/MapColonies/discrete-layer-client/commit/31b652e28747c89ea1d9e57e9d0857a48e35d827))
+* pp outlined and selection on map ([6672099](https://github.com/MapColonies/discrete-layer-client/commit/6672099d14a2fb4bb7a82f21b54092feb6b97798))
+* pp sourceresolution transaltion ([0f78f1a](https://github.com/MapColonies/discrete-layer-client/commit/0f78f1a662ebd5ba536885230bbcb621e37483ec))
+* remove bestrecord entity discrete style best management ([e08e0cd](https://github.com/MapColonies/discrete-layer-client/commit/e08e0cd3f0eb065b7a97906ecf22bbbb65e08bdd))
+* source validation added and ol legend ([e751d06](https://github.com/MapColonies/discrete-layer-client/commit/e751d062cfa88a39d343d92a671bbdced3d81a4a))
+* support empty value ([df1cd11](https://github.com/MapColonies/discrete-layer-client/commit/df1cd1147b3dc0f6a9180e114840e41da67c3f24))
+* support specific and official route ([94a76b0](https://github.com/MapColonies/discrete-layer-client/commit/94a76b0413ed03ca7bbe52e5eb32ecd144f7bbbd))
+* sync ([ef8fab7](https://github.com/MapColonies/discrete-layer-client/commit/ef8fab7889eef8baca352c56606797d53079e529))
+* sync with mc-models ([f5c8353](https://github.com/MapColonies/discrete-layer-client/commit/f5c8353d19d4b6461d7b667b31cd6d806c971ff9))
+* synch models and all api calls ([6a8920e](https://github.com/MapColonies/discrete-layer-client/commit/6a8920e1fe479995dd5052ce0cb49703edb45927))
+* synch pp renaming changes ([9bd9c44](https://github.com/MapColonies/discrete-layer-client/commit/9bd9c4410ca05ec0ff631cf675626f1de0e355a6))
+* ui almost working before working with values only ([1d6f25d](https://github.com/MapColonies/discrete-layer-client/commit/1d6f25d6d20e55b00ba30749a59eb6778a8ac789))
+* v2 ([ec9b316](https://github.com/MapColonies/discrete-layer-client/commit/ec9b316b50f8b403768ad35a2c8af5608b47e725))
+
 ## [2.11.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.10...v2.11.0) (2024-09-19)
 
 
