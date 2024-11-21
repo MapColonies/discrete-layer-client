@@ -2466,6 +2466,20 @@
     storybook-dark-mode "^3.0.0"
     tslib "^2.5.3"
 
+"@map-colonies/standard-version-update-helm-version@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@map-colonies/standard-version-update-helm-version/-/standard-version-update-helm-version-2.0.1.tgz#fb44c961e77e8366cdd8a9a471f764673d071da6"
+  integrity sha512-sMwTdRjdT9lToT9m+Xdm6K6cTBIbT5dDgZvXuNj3hSueF/tObrSQOJUqfvSBNClfDZqBeEN8A4rSe7ooVJ5qbw==
+  dependencies:
+    js-yaml "^4.1.0"
+
+"@map-colonies/standard-version-update-openapi3-version@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@map-colonies/standard-version-update-openapi3-version/-/standard-version-update-openapi3-version-0.0.2.tgz#40d9d26c1a70555c591121e9edcfad5fbd84a4c1"
+  integrity sha512-JxQ37caj94cSoU/i9Nka6lokfGKxTpFILq+OSkTWdslukT37iYpPLfnFFjLpBjFO3ooKLywKe46CXls7RqHPKw==
+  dependencies:
+    js-yaml "^4.1.0"
+
 "@map-colonies/static-assets@^0.5.1":
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/@map-colonies/static-assets/-/static-assets-0.5.1.tgz#a602ddc98cbaf95f63179c9c37f2e11018255877"

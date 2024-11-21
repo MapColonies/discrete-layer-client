@@ -175,6 +175,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@map-colonies/standard-version-update-helm-version": "^2.0.1",
+    "@map-colonies/standard-version-update-openapi3-version": "^0.0.2",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/ol": "^6.3.1",
