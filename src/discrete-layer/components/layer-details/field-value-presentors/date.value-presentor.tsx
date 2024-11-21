@@ -16,9 +16,12 @@ interface DateValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: moment.Moment;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
 
-export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik }) => {
+export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({ mode, fieldInfo, value, formik, fieldNamePrefix }) => {
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
+
   const [innerValue, handleOnChange] = useDebounceField(
     formik as EntityFormikHandlers,
     value ?? null
@@ -52,6 +55,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
   };
 
   const isReadOnlyMode = mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true) || mode === Mode.EXPORT;
+  const isDataError = fieldInfo.isRequired && !value;
 
   // Render empty field for null dates
   if(isReadOnlyMode && isInvalidDate()) {
@@ -60,7 +64,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
 
   if (isReadOnlyMode) {
     return (
-      <TooltippedValue className="detailsFieldValue">
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>
         {dateFormatter(value, shouldShowTime)}
       </TooltippedValue>
     );
@@ -68,7 +72,8 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
     return (
       <Box className="detailsFieldValue datePresentor">
         <DateTimePicker
-          name={fieldInfo.fieldName}
+          name={fieldName}
+          id={fieldName}
           showTime={shouldShowTime}
           value={getDate()}
           inputValue={inputValue()}
@@ -83,7 +88,7 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
                 // @ts-ignore
                 currentTarget: {
                   value: momentVal,
-                  name: fieldInfo.fieldName,
+                  name: fieldName,
                 } as GCHTMLInputElement
                 /* eslint-enable */
               });

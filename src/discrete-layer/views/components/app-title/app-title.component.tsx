@@ -19,8 +19,8 @@ const AppTitle = (): JSX.Element => {
 
   return (
     <>
-    <Box className='appLogoContainer'>
-      <Box className='appTitleVersionContainer'>
+      <Box className='appLogoContainer'>
+        <Box className='appTitleVersionContainer'>
           <Typography tag="b">
             {intl.formatMessage({ id: 'general.logo.text' })}
           </Typography>

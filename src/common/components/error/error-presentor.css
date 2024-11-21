@@ -22,9 +22,9 @@ body[dir='rtl'] .errorsList {
   direction: rtl;
 }
 
-body[dir='rtl'] .errorContainer {
+/* body[dir='rtl'] .errorContainer {
   flex-direction: row-reverse;
-}
+} */
 
 .error {
   color: var(--mdc-theme-gc-error-high) !important;

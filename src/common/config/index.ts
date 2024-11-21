@@ -179,11 +179,13 @@ const APP_CONFIG = {
   JOB_MANAGER_END_OF_TIME: 21, // Days
   MINIMUM_SUPPORTED_BROWSER_VERSION: 84,
   PROJECT_VERSION: PROJECT_VERSION,
+  POLYGON_PARTS_FEATURE_TYPE_PREFIX: 'polygonParts:',
   CONTEXT_MENUS: {
     MAP: {
       MAX_ACTIVE_LAYERS_TO_PRESENT: 5,
       POLYGON_PARTS_FEATURE_CONFIG: {
-        color: '#BF40BF',
+        color: '#00ff0030',//'#BF40BF',
+        outlineColor: '#00FF00',
         outlineWidth: 8
       }
     }

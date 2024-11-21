@@ -26,7 +26,6 @@ const store = rootStore.create(
           CONFIG.SERVICE_NAME as string
         }`,
       }).then((res) => res.data as SearchResponse),
-
     gqlHttpClient: syncHttpClientGql(),
     // gqlHttpClient: createHttpClient("http://localhost:8080/graphql")
   }

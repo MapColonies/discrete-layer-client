@@ -17,7 +17,11 @@ export const SourceValidationModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("SourceValidation"), "SourceValidation"),
     isValid: types.union(types.undefined, types.boolean),
-    message: types.union(types.undefined, types.string),
+    message: types.union(types.undefined, types.null, types.string),
+    srs: types.union(types.undefined, types.null, types.string),
+    fileFormat: types.union(types.undefined, types.null, types.string),
+    resolutionDegree: types.union(types.undefined, types.null, types.number),
+    extentPolygon: types.union(types.undefined, types.null, types.frozen()),
   })
   .views(self => ({
     get store() {
@@ -28,9 +32,13 @@ export const SourceValidationModelBase = ModelBase
 export class SourceValidationModelSelector extends QueryBuilder {
   get isValid() { return this.__attr(`isValid`) }
   get message() { return this.__attr(`message`) }
+  get srs() { return this.__attr(`srs`) }
+  get fileFormat() { return this.__attr(`fileFormat`) }
+  get resolutionDegree() { return this.__attr(`resolutionDegree`) }
+  get extentPolygon() { return this.__attr(`extentPolygon`) }
 }
 export function selectFromSourceValidation() {
   return new SourceValidationModelSelector()
 }
 
-export const sourceValidationModelPrimitives = selectFromSourceValidation().isValid.message
+export const sourceValidationModelPrimitives = selectFromSourceValidation().isValid.message.srs.fileFormat.resolutionDegree.extentPolygon

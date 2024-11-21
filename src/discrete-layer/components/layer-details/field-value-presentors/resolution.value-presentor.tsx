@@ -1,7 +1,7 @@
 import { Box } from '@map-colonies/react-components';
 import { MenuItem, Select, Typography } from '@map-colonies/react-core';
 import { isEmpty } from 'lodash';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
 import lookupTablesContext from '../../../../common/contexts/lookupTables.context';
@@ -18,16 +18,19 @@ interface ResolutionValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
   
 export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresentorProps> = (props) => {
-  const { mode, fieldInfo, formik } = props;
+  const { mode, fieldInfo, formik, fieldNamePrefix } = props;
   const value = props.value?.toString();
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
   const MAX_PADDING_LENGTH = 17;
   const MAX_VALUE_LENGTH = 10;
+  const fieldName =`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
+  const isDataError = fieldInfo.isRequired && !value;
 
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
@@ -45,12 +48,21 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
     }
   }, [innerValue]);
 
+  useEffect(() => {
+    if(!formik?.getFieldProps(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}`).value){
+      const filteredOptions = lookupOptions.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === Number(value));
+      if(filteredOptions.length){
+        formik?.setFieldValue(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}` as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
+      }
+    }
+  }, [value])
+
   if (!lookupTablesData || !lookupTablesData.dictionary || fieldInfo.lookupTable == null) return null;
   const lookupOptions = lookupTablesData.dictionary[fieldInfo.lookupTable];
   
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <TooltippedValue className="detailsFieldValue">
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>
         {getDisplayValue()}
       </TooltippedValue>
     );
@@ -60,14 +72,14 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
     <Box className="detailsFieldValue selectBoxContainer resolutionBoxContainer">
       <Select
         className="enumOptions"
-        value={innerValue}
-        id={fieldInfo.fieldName as string}
-        name={fieldInfo.fieldName as string}
+        value={value}
+        id={fieldName}
+        name={fieldName}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-          formik.setFieldValue(fieldInfo.fieldName as string, Number(e.currentTarget.value));
+          formik.setFieldValue(fieldName, Number(e.currentTarget.value));
           
           const filteredOptions = lookupOptions.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === Number(e.currentTarget.value));
-          formik.setFieldValue(fieldInfo.dependentField.name as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
+          formik.setFieldValue(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}` as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);
         }}
         onBlur={formik.handleBlur}
         outlined

@@ -27,6 +27,7 @@ import {
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   RecordType,
+  SourceValidationModelType,
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
@@ -114,12 +115,18 @@ const InnerForm = (
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
+  const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
   const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
-    return get(status, 'errors') as Record<string, string[]> | null ?? {};
-  }, [status]);
+    return {
+      ...get(status, 'errors') as Record<string, string[]>,
+      ...(gpkgValidationError ? {
+            error: [gpkgValidationError]
+          } : {})
+    }
+  }, [status, gpkgValidationError]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -137,6 +144,13 @@ const InnerForm = (
   useEffect(() => {
     setShowCurtain((mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles);
   }, [mode, isSelectedFiles])
+
+  useEffect(() => {
+    setShowCurtain(
+      !isSelectedFiles || (isSelectedFiles && 
+      gpkgValidationError !== undefined)
+    );
+  }, [isSelectedFiles, gpkgValidationError]);
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -260,6 +274,10 @@ const InnerForm = (
       ...ingestionFields,
     });
 
+    setGpkgValidationError(
+      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
+    );
+
     setGraphQLError(metadata.error);
   };
 
@@ -274,14 +292,14 @@ const InnerForm = (
         {
           (mode === Mode.NEW || mode === Mode.UPDATE) &&
           <IngestionFields
+            formik={entityFormikHandlers}
+            reloadFormMetadata={reloadFormMetadata}
+            validateSources={false}
             recordType={recordType}
             fields={ingestionFields}
             values={values}
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
-            validateSources={recordType === RecordType.RECORD_RASTER}
-            reloadFormMetadata={reloadFormMetadata}
-            formik={entityFormikHandlers}
           />
         }
         <Box
@@ -359,10 +377,10 @@ const InnerForm = (
               type="submit"
               disabled={
                 mutationQueryLoading ||
-                (layerRecord.__typename !== 'BestRecord' && !dirty) ||
+                !dirty ||
                 Object.keys(errors).length > NONE ||
                 (Object.keys(getStatusErrors()).length > NONE) ||
-                !isEmpty(graphQLError) ||
+                !isEmpty(graphQLError)  ||
                 (!isEmpty(validationWarn?.message) && !syncAnywayChecked)
               }
             >

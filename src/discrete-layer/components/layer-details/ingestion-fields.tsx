@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
@@ -18,7 +18,11 @@ import { MetadataFile } from '../../../common/components/file-picker';
 import { sessionStore } from '../../../common/helpers/storage';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
-import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys } from './entity-types-keys';
+import {
+  Layer3DRecordModelKeys,
+  LayerDemRecordModelKeys,
+  LayerRasterRecordModelKeys,
+} from './entity-types-keys';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
@@ -112,11 +116,11 @@ const IngestionInputs: React.FC<{
                 {
                   index === DIRECTORY && values[index] !== '' &&
                   <Tooltip content={notSynchedDirWarning?.message ? notSynchedDirWarning?.message : values[index]}>
-                    <Typography tag="div" dir="auto" className={`filesPathContainer ${notSynchedDirWarning?.severity}`}>
-                      { notSynchedDirWarning?.message && values[index] && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
-                      { values[index] }
-                    </Typography>
-                  </Tooltip>
+                  <Typography tag="div" dir="auto" className={`filesPathContainer ${notSynchedDirWarning?.severity}`}>
+                    { notSynchedDirWarning?.message && values[index] && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
+                    { values[index] }
+                  </Typography>
+                </Tooltip>
                 }
                 {
                   index === FILES && values[index] !== '' &&
@@ -157,15 +161,16 @@ const IngestionInputs: React.FC<{
   );
 };
 
-export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
+export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> = observer(({
   recordType,
   fields,
   values,
   isError,
   onErrorCallback,
-  validateSources = false,
+  validateSources=false,
   reloadFormMetadata,
   formik,
+  children,
 }) => {
   const intl = useIntl();
   const store = useStore();
@@ -178,8 +183,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
   });
   const [chosenMetadataFile, setChosenMetadataFile] = useState<string | null>(null); 
   const [chosenMetadataError, setChosenMetadataError] = useState<{response: { errors: { message: string }[] }} | null>(null); 
-  const queryResolveMetadataAsModel = useQuery<{resolveMetadataAsModel: LayerMetadataMixedUnion}>();
-  const queryValidateSource = useQuery<{validateSource: SourceValidationModelType}>();
+
+  const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
+  const queryValidateSource = useQuery<{validateSource: SourceValidationModelType[]}>();
   const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<ValidationMessage>();
 
   const handleError = useCallback((error: boolean) => {
@@ -264,13 +270,25 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     }
   }, [queryResolveMetadataAsModel.error, chosenMetadataError]);
 
+  const ONLY_ONE_SOURCE = 0;
   useEffect(() => {
-    setIsImportDisabled(!selection.files.length || queryResolveMetadataAsModel.loading || isError);
-  }, [selection, queryResolveMetadataAsModel.loading, isError]);
+    setIsImportDisabled(
+      !selection.files.length || 
+      queryResolveMetadataAsModel.loading || 
+      queryValidateSource.loading || 
+      isError ||
+      (!queryValidateSource.loading && queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE].isValid === false));
+  }, [selection, queryResolveMetadataAsModel.loading, queryValidateSource.loading, isError]);
 
   useEffect(() => {
-    if (queryValidateSource.data) {
-      if (queryValidateSource.data.validateSource.isValid === false) {
+    if(queryValidateSource.data){
+      const  directory= selection.files.length ? 
+      selection.folderChain
+          .map((folder: FileData) => folder.name)
+          .join('/')
+      : '';          
+      const fileNames = selection.files.map((file: FileData) => file.name).join(',');
+      if (queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE].isValid === false) {
         if (reloadFormMetadata) {
           reloadFormMetadata(
             {
@@ -285,7 +303,7 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
                     {
                       message: intl.formatMessage(
                         { id: 'ingestion.error.invalid-source-file' },
-                        { value: queryValidateSource.data.validateSource.message }
+                        { value: queryValidateSource.data.validateSource[ONLY_ONE_SOURCE].message }
                       ),
                     },
                   ],
@@ -295,19 +313,41 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
           );
         }
         handleError(true);
-      } else {
+      }
+      else {
+        if (reloadFormMetadata) {
+          reloadFormMetadata(
+            {
+              directory: directory,
+              fileNames: fileNames,
+            },
+            {
+              recordModel:{
+                ...selection.metadata?.recordModel,
+                ...queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE]
+              },
+              error: selection.metadata?.error
+            }  as unknown as MetadataFile
+          );
+        }
         handleError(false);
       }
     }
-  }, [queryValidateSource.data]);
+  }, [selection, queryValidateSource.data]);
 
   useEffect(() => {
     if (queryValidateSource.error) {
       if (reloadFormMetadata) {
+        const  directory= selection.files.length ? 
+        selection.folderChain
+            .map((folder: FileData) => folder.name)
+            .join('/')
+        : '';          
+        const fileNames = selection.files.map((file: FileData) => file.name).join(',');
         reloadFormMetadata(
           {
-            directory: values.directory as string,
-            fileNames: values.fileNames as string,
+            directory: directory as string,
+            fileNames: fileNames as string,
           },
           {
             recordModel: {},
@@ -335,21 +375,25 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
     if (selected.files.length) {
       setSelection({ ...selected });
     }
-    const directory = selected.files.length
-      ? selected.folderChain.map((folder: FileData) => folder.name).join('/')
-      : '';
+    const directory = selected.files.length ? 
+                        selected.folderChain
+                            .map((folder: FileData) => folder.name)
+                            .join('/')
+                        : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
-    if (validateSources) {
+
+    if(validateSources){
       queryValidateSource.setQuery(
         store.queryValidateSource(
           {
             data: {
-              originDirectory: directory.substring(directory.indexOf('/')),
+              originDirectory: directory,
               fileNames: fileNames,
+              type: recordType,
             }
           }
         )
-      );
+      )
     }
     if (reloadFormMetadata) {
       reloadFormMetadata(
@@ -444,6 +488,9 @@ export const IngestionFields: React.FC<IngestionFieldsProps> = observer(({
                 <FormattedMessage id="ingestion.button.import-metadata" />
               )}
             </Button>
+          </Box>
+          <Box>
+            {children}
           </Box>
         </Box>
       </Box>

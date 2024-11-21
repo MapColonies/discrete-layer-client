@@ -27,13 +27,14 @@ export const LayerRasterRecordModelBase = ModelBase
     classification: types.union(types.undefined, types.string),
     productName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
-    srsId: types.union(types.undefined, types.string),
+    srs: types.union(types.undefined, types.string),
     producerName: types.union(types.undefined, types.string),
-    creationDate: types.union(types.undefined, types.null, types.frozen()),
+    creationDateUTC: types.union(types.undefined, types.null, types.frozen()),
     ingestionDate: types.union(types.undefined, types.null, types.frozen()),
-    updateDate: types.union(types.undefined, types.null, types.frozen()),
-    sourceDateStart: types.union(types.undefined, types.frozen()),
-    sourceDateEnd: types.union(types.undefined, types.frozen()),
+    updateDateUTC: types.union(types.undefined, types.null, types.frozen()),
+    imagingTimeBeginUTC: types.union(types.undefined, types.frozen()),
+    imagingTimeEndUTC: types.union(types.undefined, types.frozen()),
+    maxHorizontalAccuracyCE90: types.union(types.undefined, types.number),
     minHorizontalAccuracyCE90: types.union(types.undefined, types.null, types.number),
     sensors: types.union(types.undefined, types.array(types.string)),
     region: types.union(types.undefined, types.array(types.string)),
@@ -43,12 +44,12 @@ export const LayerRasterRecordModelBase = ModelBase
     productSubType: types.union(types.undefined, types.null, types.string),
     srsName: types.union(types.undefined, types.string),
     maxResolutionDeg: types.union(types.undefined, types.null, types.number),
+    minResolutionDeg: types.union(types.undefined, types.number),
     maxResolutionMeter: types.union(types.undefined, types.null, types.number),
+    minResolutionMeter: types.union(types.undefined, types.null, types.number),
     rms: types.union(types.undefined, types.null, types.number),
     scale: types.union(types.undefined, types.null, types.number),
     footprint: types.union(types.undefined, types.frozen()),
-    layerPolygonParts: types.union(types.undefined, types.null, types.frozen()),
-    includedInBests: types.union(types.undefined, types.null, types.array(types.string)),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
     transparency: types.union(types.undefined, TransparencyEnumType),
     insertDate: types.union(types.undefined, types.null, types.frozen()),
@@ -67,13 +68,14 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get classification() { return this.__attr(`classification`) }
   get productName() { return this.__attr(`productName`) }
   get description() { return this.__attr(`description`) }
-  get srsId() { return this.__attr(`srsId`) }
+  get srs() { return this.__attr(`srs`) }
   get producerName() { return this.__attr(`producerName`) }
-  get creationDate() { return this.__attr(`creationDate`) }
+  get creationDateUTC() { return this.__attr(`creationDateUTC`) }
   get ingestionDate() { return this.__attr(`ingestionDate`) }
-  get updateDate() { return this.__attr(`updateDate`) }
-  get sourceDateStart() { return this.__attr(`sourceDateStart`) }
-  get sourceDateEnd() { return this.__attr(`sourceDateEnd`) }
+  get updateDateUTC() { return this.__attr(`updateDateUTC`) }
+  get imagingTimeBeginUTC() { return this.__attr(`imagingTimeBeginUTC`) }
+  get imagingTimeEndUTC() { return this.__attr(`imagingTimeEndUTC`) }
+  get maxHorizontalAccuracyCE90() { return this.__attr(`maxHorizontalAccuracyCE90`) }
   get minHorizontalAccuracyCE90() { return this.__attr(`minHorizontalAccuracyCE90`) }
   get sensors() { return this.__attr(`sensors`) }
   get region() { return this.__attr(`region`) }
@@ -83,12 +85,12 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get productSubType() { return this.__attr(`productSubType`) }
   get srsName() { return this.__attr(`srsName`) }
   get maxResolutionDeg() { return this.__attr(`maxResolutionDeg`) }
+  get minResolutionDeg() { return this.__attr(`minResolutionDeg`) }
   get maxResolutionMeter() { return this.__attr(`maxResolutionMeter`) }
+  get minResolutionMeter() { return this.__attr(`minResolutionMeter`) }
   get rms() { return this.__attr(`rms`) }
   get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
-  get layerPolygonParts() { return this.__attr(`layerPolygonParts`) }
-  get includedInBests() { return this.__attr(`includedInBests`) }
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
   get transparency() { return this.__attr(`transparency`) }
   get insertDate() { return this.__attr(`insertDate`) }
@@ -99,4 +101,4 @@ export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srsId.producerName.creationDate.ingestionDate.updateDate.sourceDateStart.sourceDateEnd.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.maxResolutionMeter.rms.scale.footprint.layerPolygonParts.includedInBests.productBoundingBox.transparency.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srs.producerName.creationDateUTC.ingestionDate.updateDateUTC.imagingTimeBeginUTC.imagingTimeEndUTC.maxHorizontalAccuracyCE90.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.minResolutionDeg.maxResolutionMeter.minResolutionMeter.rms.scale.footprint.productBoundingBox.transparency.insertDate.keywords.id.links(linkModelPrimitives)

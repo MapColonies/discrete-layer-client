@@ -17,13 +17,16 @@ interface LookupTablesPresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
 
 export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = (props) => {
-  const { mode, fieldInfo, value, formik } = props;
+  const { mode, fieldInfo, value, formik, fieldNamePrefix } = props;
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
   const [innerValue] = useDebounceField(formik as EntityFormikHandlers, value ?? '');
+  const isDataError = fieldInfo.isRequired && !value;
 
   const getDisplayValue = useCallback((): string => {
     if (isEmpty(innerValue)) {
@@ -40,7 +43,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
-      <TooltippedValue className="detailsFieldValue">
+      <TooltippedValue className={`detailsFieldValue  ${isDataError ? 'detailFieldDataError' : ''}`}>
         {getDisplayValue()}
       </TooltippedValue>
     );
@@ -50,11 +53,11 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
     <Box className="detailsFieldValue selectBoxContainer">
       <Select
         className="enumOptions"
-        value={innerValue}
-        id={fieldInfo.fieldName as string}
-        name={fieldInfo.fieldName as string}
+        value={value}
+        id={fieldName}
+        name={fieldName}
         onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-          formik.setFieldValue(fieldInfo.fieldName as string, e.currentTarget.value);
+          formik.setFieldValue(fieldName, e.currentTarget.value);
         }}
         onBlur={formik.handleBlur}
         outlined

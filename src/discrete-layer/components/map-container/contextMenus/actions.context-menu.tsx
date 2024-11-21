@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { IContextMenuData, Box } from '@map-colonies/react-components';
+import { IContextMenuData, Box, CesiumCartographic } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
 import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
 import useGetMenuProperties from '../../../../common/hooks/mapMenus/useGetMenuProperties.hook';
@@ -84,7 +84,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   };
 
   const getHeightText = (): string => {
-    const coordinateHeight = heightsAtCoordinates.newPositions?.[FIRST].height;
+    const coordinateHeight = (heightsAtCoordinates.newPositions?.[FIRST] as CesiumCartographic).height;
 
     if(typeof coordinateHeight !== 'undefined' && !isNaN(coordinateHeight)) {
       return `${coordinateHeight.toFixed(COORDS_DISPLAY_PRECISION)} ${intl.formatMessage({ id: 'actions.meter.sign' })}`;

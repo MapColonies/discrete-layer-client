@@ -6,10 +6,11 @@ import { Box } from '@map-colonies/react-components';
 import { existStatus, getStatusColoredText } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
+import { EntityRasterDialog } from '../../components/layer-details/raster/entity.raster.dialog';
 import { LayersDetailsComponent } from '../../components/layer-details/layer-details';
 import { PublishButton } from '../../components/layer-details/publish-button';
 import { SaveMetadataButton } from '../../components/layer-details/save-metadata-button';
-import { BestRecordModelType, EntityDescriptorModelType } from '../../models';
+import { EntityDescriptorModelType } from '../../models';
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../tab-views';
 
@@ -36,8 +37,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   const intl = useIntl();
   const layerToPresent = store.discreteLayersStore.selectedLayer;
   const isSelectedLayerUpdateMode = store.discreteLayersStore.selectedLayerIsUpdateMode ?? false;
-  const editingBest = store.bestStore.editingBest;
-
+  
   const permissions = useMemo(() => {
     return {
      isEditAllowed: layerToPresent && store.userStore.isActionAllowed(`entity_action.${layerToPresent.__typename}.edit`),
@@ -47,11 +47,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   }, [store.userStore.user, layerToPresent]);
 
   const handleEditEntityDialogClick = (): void => {
-    if (typeof layerToPresent !== 'undefined' && 'isDraft' in layerToPresent) {
-      store.bestStore.editBest(layerToPresent as BestRecordModelType);
-    } else {
-      setEditEntityDialogOpen(!isEditEntityDialogOpen);
-    }
+    setEditEntityDialogOpen(!isEditEntityDialogOpen);
   };
 
   return (
@@ -79,11 +75,21 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           </Tooltip>
         }
         {
-          isEditEntityDialogOpen &&
+          isEditEntityDialogOpen && layerToPresent?.__typename === 'LayerRasterRecord' && isSelectedLayerUpdateMode &&
+          <EntityRasterDialog
+            isOpen={isEditEntityDialogOpen}
+            onSetOpen={setEditEntityDialogOpen}
+            layerRecord={layerToPresent}
+            isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
+          />
+        }
+        {
+          isEditEntityDialogOpen && 
+          (layerToPresent?.__typename !== 'LayerRasterRecord' || (layerToPresent?.__typename === 'LayerRasterRecord' && !isSelectedLayerUpdateMode)) &&
           <EntityDialog
             isOpen={isEditEntityDialogOpen}
             onSetOpen={setEditEntityDialogOpen}
-            layerRecord={layerToPresent ?? editingBest}
+            layerRecord={layerToPresent}
             isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         }

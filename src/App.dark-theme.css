@@ -379,3 +379,9 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 .mdc-linear-progress--indeterminate .mdc-linear-progress__secondary-bar {
    left: unset;
 }
+
+/* COLLAPSABLE PANEL*/
+.dark-theme .rmwc-collapsible-list__children-inner{
+  border: 1px solid var(--mdc-theme-gc-selection-background); 
+  margin-bottom: 2px;
+}

@@ -1,8 +1,9 @@
 import { CSSProperties, useEffect, useMemo } from "react";
-import { CesiumCartesian3, CesiumEntity, CesiumVerticalOrigin } from "@map-colonies/react-components";
+import { CesiumCartesian3, CesiumCartographic, CesiumEntity, CesiumVerticalOrigin } from "@map-colonies/react-components";
 import { Typography, useTheme } from "@map-colonies/react-core";
 import center from "@turf/center";
 import { AllGeoJSON } from "@turf/helpers";
+import { Polygon, MultiPolygon } from "geojson";
 import _ from "lodash";
 import { useIntl } from "react-intl";
 import { IPosition, useHeightFromTerrain } from "../../../../common/hooks/useHeightFromTerrain";
@@ -11,6 +12,7 @@ import { useForceEntitySelection } from "../../../../common/hooks/useForceEntity
 import { CesiumInfoBoxContainer } from "./cesium-infoBox-container";
 import GenericInfoBoxContainer from "./generic-infoBox-container.component";
 import { GeojsonFeature, GeojsonFeatureProps } from "./geojson-feature.component";
+import { crossesMeridian, ZERO_MERIDIAN } from "../../../../common/utils/geo.tools";
 
 interface GeojsonFeatureWithInfoBoxProps extends GeojsonFeatureProps {
   noInfoMessage: string;
@@ -69,7 +71,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
   const intl = useIntl();
 
   const { setCoordinates, newPositions } = useHeightFromTerrain();
-  const markerPositionWithHeight = newPositions?.[0];
+  const markerPositionWithHeight = newPositions?.[0] as IPosition;
 
   // Geojson feature props
   const { feature, isPolylined, featureConfig } = props;
@@ -129,7 +131,20 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
     let content: JSX.Element = <></>;
 
     if (featureHasData) {
+      const isCrossesMeridian = crossesMeridian(feature.geometry as Polygon | MultiPolygon, ZERO_MERIDIAN);
       content = (
+        <>
+          {
+          isCrossesMeridian && <Typography tag='h3'
+              style={{
+                color: (theme.custom as unknown as Record<string,string>).GC_WARNING_MEDIUM,
+                textAlign: 'center'
+              }}
+              dir={intl.locale === 'he' ? 'rtl' : 'ltr'}
+            >
+              {intl.formatMessage({ id: 'polygonParts-info.part-to-large.message' })}
+            </Typography>
+          }
           <table style={style}>
               <tbody>
                 {Object.entries(featureInfo).map(
@@ -144,6 +159,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
                 )}
               </tbody>
           </table>
+        </>
       );
     } else {
       content = (
@@ -189,9 +205,9 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
         <CesiumEntity
           name={infoBoxTitle}
           position={CesiumCartesian3.fromRadians(
-            markerPositionWithHeight.longitude,
-            markerPositionWithHeight.latitude,
-            markerPositionWithHeight.height
+            (markerPositionWithHeight as  CesiumCartographic).longitude,
+            (markerPositionWithHeight as  CesiumCartographic).latitude,
+            (markerPositionWithHeight as  CesiumCartographic).height
           )}
           billboard={{
             verticalOrigin: CesiumVerticalOrigin.BOTTOM,

@@ -9,6 +9,7 @@ interface StringValuePresentorProps {
   fieldInfo: IRecordFieldInfo;
   value?: string;
   formik?: EntityFormikHandlers;
+  fieldNamePrefix?: string;
 }
 
 export const StringValuePresentorComponent: React.FC<StringValuePresentorProps> = (props) => {

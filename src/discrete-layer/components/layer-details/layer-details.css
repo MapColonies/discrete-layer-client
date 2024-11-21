@@ -79,6 +79,9 @@ body[dir='rtl'] .detailsFieldValue {
   text-align: right;
 }
 
+.detailFieldDataError {
+  border: 1px solid var(--mdc-theme-gc-error-high);
+}
 .detailFieldCopyable {
   overflow: hidden;
   white-space: nowrap;

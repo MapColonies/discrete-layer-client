@@ -27,19 +27,21 @@ interface FormInputTextFieldProps {
   value?: string;
   formik?: EntityFormikHandlers;
   type?: string;
+  fieldNamePrefix?: string;
 }
 
-export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({mode, fieldInfo, value, formik, type}) => {
+export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({mode, fieldInfo, value, formik, type, fieldNamePrefix}) => {
   const intl = useIntl();
   const isCopyable = fieldInfo.isCopyable ?? false;
   const isPreserveNewLine = fieldInfo.rows ?? false;
+  const isDataError = fieldInfo.isRequired && !value;
   const [innerValue, handleOnChange] = useDebounceField(formik as EntityFormikHandlers , value ?? '');
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
       <>
         <TooltippedValue
-          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''} ${isPreserveNewLine ? 'preserveNewline' : ''}`}>
+          className={`detailsFieldValue ${isCopyable ? 'detailFieldCopyable' : ''} ${isPreserveNewLine ? 'preserveNewline' : ''} ${isDataError ? 'detailFieldDataError' : ''}`}>
           {innerValue}
         </TooltippedValue>
         {
@@ -84,8 +86,8 @@ export const FormInputTextFieldComponent: React.FC<FormInputTextFieldProps> = ({
           <TextField
             value={innerValue}
             // @ts-ignore
-            id={fieldInfo.fieldName as string}
-            name={fieldInfo.fieldName as string}
+            id={`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`}
+            name={`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`}
             type={type}
             // eslint-disable-next-line
             // @ts-ignore

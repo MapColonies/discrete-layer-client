@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Feature, LineString, Polygon } from 'geojson';
+import { Feature, LineString, MultiPolygon, Polygon } from 'geojson';
 import { useIntl } from 'react-intl';
+import { CesiumRectangle, useCesiumMap } from '@map-colonies/react-components';
+import bboxPolygon from '@turf/bbox-polygon';
 import CONFIG from '../../../../common/config';
 import { useStore } from '../../../models';
 import { IFeatureConfig } from "../../../views/components/data-fetchers/wfs-features-fetcher.component";
 import { GeojsonFeatureWithInfoBox } from './geojson-feature-with-infobox.component';
 import { IPosition } from '../../../../common/hooks/useHeightFromTerrain';
-import { CesiumRectangle, useCesiumMap } from '@map-colonies/react-components';
+import { crossesMeridian, ZERO_MERIDIAN } from '../../../../common/utils/geo.tools';
 
 
 export const PolygonPartsFeature: React.FC = observer(() => {
@@ -29,11 +31,16 @@ export const PolygonPartsFeature: React.FC = observer(() => {
   useEffect(() => {
     // Fly to polygon parts features after data received.
     if(store.mapMenusManagerStore.multiplePolygonPartsBBox) {
-      const polygonPartsFeaturesRect = CesiumRectangle.fromDegrees(
-        ...store.mapMenusManagerStore.multiplePolygonPartsBBox
-      ) as CesiumRectangle;
+      const ppPolygon = bboxPolygon(store.mapMenusManagerStore.multiplePolygonPartsBBox);
+      const isCrossesMeridian = crossesMeridian(ppPolygon.geometry as Polygon, ZERO_MERIDIAN);
 
-      cesiumViewer.camera.flyTo({ destination: polygonPartsFeaturesRect });
+      if(!isCrossesMeridian){
+        const polygonPartsFeaturesRect = CesiumRectangle.fromDegrees(
+          ...store.mapMenusManagerStore.multiplePolygonPartsBBox
+        ) as CesiumRectangle;
+  
+        cesiumViewer.camera.flyTo({ destination: polygonPartsFeaturesRect });
+      }
     }
   }, [store.mapMenusManagerStore.multiplePolygonPartsBBox]);
 
@@ -47,17 +54,18 @@ export const PolygonPartsFeature: React.FC = observer(() => {
       {polygonPartsFeatures?.map((feature) => {
         const geoJsonFeature = feature as Feature;
         const polygonPartsFeatureConfig: IFeatureConfig = CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG;
+        const isCrossesMeridian = crossesMeridian(geoJsonFeature.geometry as Polygon | MultiPolygon, ZERO_MERIDIAN);
 
         return ( 
          <GeojsonFeatureWithInfoBox
             feature={geoJsonFeature as Feature<LineString | Polygon>}
             featureConfig={polygonPartsFeatureConfig}
-            isPolylined={true}
+            isPolylined={false} // Polygon parts will be displayed as 2D polygon, meaning that optimal is a Cesium 2D mode
             infoBoxTitle={intl.formatMessage({ id: 'map-context-menu.polygon-parts.title' })}
             noInfoMessage={intl.formatMessage({ id: 'polygonParts-info.no-data.message' })}
             markerIconPath={'assets/img/app/polygon-parts-marker.png'}
             shouldFocusOnCreation={polygonPartsFeatures.length === 1}
-            shouldVisualize={true}
+            shouldVisualize={!isCrossesMeridian}
             markerPosition={markerPosition}
           />
         );

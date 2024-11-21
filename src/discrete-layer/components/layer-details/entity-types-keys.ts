@@ -7,8 +7,6 @@ import {
     LayerRasterRecordModel,
     Layer3DRecordModelType,
     LayerRasterRecordModelType,
-    BestRecordModelType,
-    BestRecordModel,
     LayerDemRecordModelType,
     LayerDemRecordModel,
     VectorBestRecordModelType,
@@ -23,7 +21,6 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type LayerDemRecordModelArray = Array<keyof LayerDemRecordModelType>;
 export type Layer3DRecordModelArray = Array<keyof Layer3DRecordModelType>;
 export type LayerRasterRecordModelArray = Array<keyof LayerRasterRecordModelType>;
-export type BestRecordModelArray = Array<keyof BestRecordModelType>;
 export type VectorBestRecordModelArray = Array<keyof VectorBestRecordModelType>;
 export type QuantizedMeshBestRecordModelArray = Array<keyof QuantizedMeshBestRecordModelType>;
 export type FieldConfigModelArray = Array<keyof FieldConfigModelType>;
@@ -34,8 +31,6 @@ export const Layer3DRecordModelKeys: Layer3DRecordModelArray = Object.keys(Layer
 
 export const LayerRasterRecordModelKeys: LayerRasterRecordModelArray = Object.keys(LayerRasterRecordModel.properties) as LayerRasterRecordModelArray;
 
-export const BestRecordModelKeys: BestRecordModelArray = Object.keys(BestRecordModel.properties) as BestRecordModelArray;
-
 export const VectorBestRecordModelKeys: VectorBestRecordModelArray = Object.keys(VectorBestRecordModel.properties) as VectorBestRecordModelArray;
 
 export const QuantizedMeshBestRecordModelKeys: QuantizedMeshBestRecordModelArray = Object.keys(QuantizedMeshBestRecordModel.properties) as QuantizedMeshBestRecordModelArray;
@@ -45,7 +40,7 @@ export const FieldConfigModelKeys: FieldConfigModelArray = Object.keys(FieldConf
 // All fields from all entities.
 export type LayerMetadataMixedUnionKeys = KeysOfUnion<LayerMetadataMixedUnion>;
 
-export type LayerRecordTypes = "Layer3DRecord" | "LayerRasterRecord" | "BestRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord";
+export type LayerRecordTypes = "Layer3DRecord" | "LayerRasterRecord" | "LayerDemRecord" | "VectorBestRecord" | "QuantizedMeshBestRecord" | "PolygonPartRecord";
 
 let tempLayerRecordTypesObject:
   | {
@@ -54,10 +49,10 @@ let tempLayerRecordTypesObject:
   | undefined = {
     Layer3DRecord: undefined,
     LayerRasterRecord: undefined,
-    BestRecord: undefined,
     LayerDemRecord: undefined,
     VectorBestRecord: undefined,
     QuantizedMeshBestRecord: undefined,
+    PolygonPartRecord: undefined,
   };
 
 export const LayerRecordTypesKeys = Object.keys(tempLayerRecordTypesObject);

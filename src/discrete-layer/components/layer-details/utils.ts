@@ -3,12 +3,14 @@ import { get, isEmpty, omit } from 'lodash';
 import moment, { unitOfTime } from 'moment';
 import { IntlShape } from 'react-intl';
 import { $enum } from 'ts-enum-util';
+import { Feature } from 'geojson';
+import rewind from '@turf/rewind';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
+import { Mode } from '../../../common/models/mode.enum';
 import {
-  BestRecordModel,
   CategoryConfigModelType,
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -20,6 +22,9 @@ import {
   LinkModel,
   LinkModelType,
   OperationType,
+  ParsedPolygonPart,
+  PolygonPartRecordModel,
+  PolygonPartRecordModelType,
   ProductType,
   QuantizedMeshBestRecordModel,
   RecordType,
@@ -31,7 +36,6 @@ import {
 import { ILayerImage } from '../../models/layerImage';
 import { FieldInfoName, IRecordCategoryFieldsInfo } from './layer-details.field-info';
 import {
-  BestRecordModelArray,
   LayerRasterRecordModelArray,
   Layer3DRecordModelArray,
   LayerDemRecordModelArray,
@@ -55,14 +59,14 @@ export const getEntityDescriptors = (
     case 'Layer3DRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
       break;
-    case 'BestRecord':
-      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswBestCatalogRecord')
-      break;
     case 'VectorBestRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswVectorBestCatalogRecord')
       break;
     case 'QuantizedMeshBestRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswQuantizedMeshBestCatalogRecord')
+      break;
+    case 'PolygonPartRecord':
+      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PolygonPartRecord')
       break;
     default:
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswLayerCatalogRecord')
@@ -106,14 +110,14 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     case 'Layer3DRecord':
       recordModel = Layer3DRecordModel;
       break;
-    case 'BestRecord':
-      recordModel = BestRecordModel;
-      break;
     case 'VectorBestRecord':
       recordModel = VectorBestRecordModel;
       break;
     case 'QuantizedMeshBestRecord':
       recordModel = QuantizedMeshBestRecordModel;
+      break;
+    case 'PolygonPartRecord':
+      recordModel = PolygonPartRecordModel;
       break;
     case 'Link':
       recordModel = LinkModel;
@@ -134,10 +138,10 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     else if (fieldNameStr.toLowerCase().includes('sensors')) {
       return 'sensors';
     }
-    else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
+    else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('geometry') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
     }
-    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg')) {
+    else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg') || fieldNameStr.toLowerCase().includes('resolutiondegree') ) {
       return 'resolution';
     }
     else {
@@ -150,7 +154,7 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
 export interface ValidationMessage {
   message: string;
   severity: string;
-}
+};
 
 export const getValidationMessage = (data: Record<string, unknown>, intl: IntlShape): ValidationMessage => {
   const severity: string = data.severity as string ?? 'warning';
@@ -180,10 +184,20 @@ export const getInfoMsgValidationType = (msgCode: string): ValidationTypeName =>
 
 export const cleanUpEntity = (
   data: Record<string,unknown>,
-  entityKeys: LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | BestRecordModelArray | VectorBestRecordModelArray | QuantizedMeshBestRecordModelArray
+  entityKeys: LayerRasterRecordModelArray | Layer3DRecordModelArray | LayerDemRecordModelArray | VectorBestRecordModelArray | QuantizedMeshBestRecordModelArray
 ): Record<string,unknown> => {
   const keysNotInModel = Object.keys(data).filter(key => {
     // @ts-ignore
+    return !entityKeys.includes(key);
+  });
+  return omit(data, keysNotInModel);
+};
+
+export const cleanUpEntityPayload = (
+  data: Record<string,unknown>,
+  entityKeys: string[]
+): Record<string,unknown> => {
+  const keysNotInModel = Object.keys(data).filter(key => {
     return !entityKeys.includes(key);
   });
   return omit(data, keysNotInModel);
@@ -227,6 +241,41 @@ export const removeEmptyObjFields = (
   obj: Record<string, unknown>
 ): Record<string, unknown> => {
   return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
+};
+
+export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature): ParsedPolygonPart => {
+  const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
+  const errors: Record<string,string[]> = {};
+  desciptors.forEach((desc) => {
+    const shapeFieldValue = get(feature, desc.shapeFileMapping as string);
+
+    if(!shapeFieldValue && desc.isRequired){
+      errors[desc.fieldName as string] = ['validation-general.required'];
+    }
+    
+    if(desc.shapeFileMapping) {
+      switch(desc.fieldName){
+        case 'imagingTimeBeginUTC':
+        case 'imagingTimeEndUTC':
+          poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
+          break;
+        case 'footprint':
+          poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
+          break;
+        case 'horizontalAccuracyCE90':
+        case 'sourceResolutionMeter':
+          poygonPartData[desc.fieldName as string] = parseFloat(shapeFieldValue);
+          break;
+        default:
+          poygonPartData[desc.fieldName as string] = shapeFieldValue;
+          break;
+      }
+    } 
+  });
+  return {
+    polygonPart: {...poygonPartData as unknown as PolygonPartRecordModelType},
+    errors: {...errors}
+  };
 };
 
 export const transformEntityToFormFields = (
@@ -320,9 +369,13 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
   input.click();
 }  
 
-export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void, allowGeojson = false): void {
+export function importShapeFileFromClient(
+  fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void,
+  allowGeojson = false,
+  allowSingleSHP = true,
+  cancelLoadCB = ()=>{}): void {
   const input = document.createElement('input');
-  const supportedExtensions = ['.shp', '.zip', ...(allowGeojson ? ['.geojson'] : [])];
+  const supportedExtensions = [allowSingleSHP ? '.shp': '', '.zip', ...(allowGeojson ? ['.geojson'] : [])];
   input.setAttribute('type', 'file');
   input.setAttribute('accept', supportedExtensions.join(','));
   input.addEventListener('change',(e): void => {
@@ -337,6 +390,10 @@ export function importShapeFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRea
         input.remove();
       });
     }
+  });
+  input.addEventListener('cancel',(e): void => {
+    cancelLoadCB();
+    input.remove();
   });
   input.click();
 }  
@@ -487,3 +544,24 @@ export const clearSyncWarnings = (selectedFileWarningsOnly: boolean = false) => 
     .map((query: SYNC_QUERY) => query.queryName)
     .forEach((key: string) => sessionStore.remove(key));
 };
+
+export const filterModeDescriptors = (mode: Mode, descriptors: EntityDescriptorModelType[]): EntityDescriptorModelType[] => {
+  return descriptors.map((desc)=>{
+    return {
+      ...desc, 
+      categories: desc.categories?.map(cat=>{
+        return {
+          ...cat,
+          fields: cat.fields.filter((field: FieldConfigModelType) => {
+            if(mode === Mode.NEW){
+              return field.isCreateEssential;
+            } else if (mode === Mode.UPDATE){
+              return field.isUpdateEssential;
+            } else{
+              return true;
+            }
+          })
+        }})
+      }
+  });
+}

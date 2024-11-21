@@ -104,7 +104,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       [
         'LayerRasterRecord',
         'Layer3DRecord',
-        'BestRecord',
         'LayerDemRecord',
         'VectorBestRecord',
         'QuantizedMeshBestRecord',
@@ -199,14 +198,10 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     }, [treeRawData]);
 
     const dispatchAction = (action: Record<string, unknown>): void => {
-      if (!store.bestStore.isBestLoad()) {
-        store.actionDispatcherStore.dispatchAction({
-          action: action.action,
-          data: action.data,
-        } as IDispatchAction);
-      } else {
-        setBestInEditDialogOpen(true);
-      }
+      store.actionDispatcherStore.dispatchAction({
+        action: action.action,
+        data: action.data,
+      } as IDispatchAction);
     };
 
     if (errorSearch) {

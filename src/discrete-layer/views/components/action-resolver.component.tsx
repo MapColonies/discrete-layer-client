@@ -6,9 +6,7 @@ import { Feature } from 'geojson';
 import _, { get, isEmpty } from 'lodash';
 import { DrawType } from '@map-colonies/react-components';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
-import { MovedLayer } from '../../components/best-management/interfaces/MovedLayer';
 import {
-  BestRecordModelKeys,
   LayerRasterRecordModelKeys,
   LayerDemRecordModelKeys,
   Layer3DRecordModelKeys,
@@ -29,7 +27,9 @@ import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/use
 import CONFIG from '../../../common/config';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
+import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
 import { TabViews } from '../tab-views';
+import { useEnums } from '../../../common/hooks/useEnum.hook';
 
 const FIRST = 0;
 
@@ -44,6 +44,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange, activeTabView } = props;
 
   const store = useStore();
+  const ENUMS = useEnums();
 
   const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
   
@@ -91,6 +92,13 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
       activeTabView
     ]
   );
+
+  const basePPUpdateErrorShow = useCallback(
+    (ppResolutionsUpdateError: Record<string,string[]>) => {
+      store.discreteLayersStore.setCustomValidationError(ppResolutionsUpdateError);
+    },
+    []
+  );
   
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {
@@ -114,10 +122,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           handleOpenEntityDialog(true);
-          break;
-        case 'BestRecord.edit':
-          // @ts-ignore
-          store.bestStore.editBest(cleanUpEntity(data, BestRecordModelKeys) as BestRecordModelType);
           break;
         case 'VectorBestRecord.edit':
           // @ts-ignore
@@ -144,11 +148,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerDemRecordModelKeys) as LayerMetadataMixedUnion);
           handleFlyTo();
           break;
-        case 'BestRecord.flyTo':
-          // @ts-ignore
-          store.discreteLayersStore.selectLayer(cleanUpEntity(data, BestRecordModelKeys) as LayerMetadataMixedUnion);
-          handleFlyTo();
-          break;
         case 'VectorBestRecord.flyTo':
           // @ts-ignore
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, VectorBestRecordModelKeys) as LayerMetadataMixedUnion);
@@ -164,44 +163,11 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
           handleOpenEntityDialog(true);
           break;
-        case 'LayerRasterRecord.delete':
-          // @ts-ignore
-          store.bestStore.deleteLayerFromBest(data as LayerRasterRecordModelType);
-          break;
-        case 'LayerRasterRecord.moveToTop':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== numOfLayers) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: 0 } as MovedLayer);
-          }
-          break;
-        case 'LayerRasterRecord.moveUp':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== numOfLayers) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order - 1 } as MovedLayer);
-          }
-          break;
-        case 'LayerRasterRecord.moveDown':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== FIRST) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers - order + 1 } as MovedLayer);
-          }
-          break;
-        case 'LayerRasterRecord.moveToBottom':
-          numOfLayers = (store.bestStore.layersList as LayerRasterRecordModelType[]).length - 1;
-          order = store.bestStore.getLayerOrder(data.id as string);
-          if (order !== FIRST) {
-            store.bestStore.updateMovedLayer({ id: data.id, from: numOfLayers - order, to: numOfLayers } as MovedLayer);
-          }
-          break;
         case 'Layer3DRecord.analyze':
           window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_ANALYZER_TOKEN_VALUE}`);
           break;
         case 'LayerRasterRecord.analyze':
         case 'LayerDemRecord.analyze':
-        case 'BestRecord.analyze':
         case 'VectorBestRecord.analyze':
         case 'QuantizedMeshBestRecord.analyze':
           break;
@@ -211,7 +177,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case 'LayerRasterRecord.saveMetadata':
         case 'Layer3DRecord.saveMetadata':
         case 'LayerDemRecord.saveMetadata':
-        case 'BestRecord.saveMetadata':
         case 'VectorBestRecord.saveMetadata':
         case 'QuantizedMeshBestRecord.saveMetadata':
           downloadJSONToClient(data, 'metadata.json');
@@ -237,8 +202,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.exportStore.setLayerToExport(selectedLayerToExport);
           break;
         }
-        case 'BestRecord.export':
-          break;
         case 'VectorBestRecord.export':
           break;
         case 'QuantizedMeshBestRecord.export':
@@ -265,12 +228,20 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           const closeMenu = (data.handleClose as (() => void | undefined));
 
           setGetPolygonPartsFeatureOptions({
-            pointCoordinates: [
-              coordinates.longitude.toString(),
-              coordinates.latitude.toString(),
-            ],
+            feature: {
+              "type": "Feature",
+              "properties": {},
+              "geometry": {
+                "coordinates": [
+                  coordinates.longitude.toString(),
+                  coordinates.latitude.toString()
+                ],
+                "type": "Point"
+              }
+            },
+            typeName: getWFSFeatureTypeName(data?.layerRecord as LayerRasterRecordModelType, ENUMS),
             shouldFlyToFeatures: true,
-            filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
+            // filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,
             dWithin: 0
           });
@@ -382,11 +353,15 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
           break;
         }
+        case UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE: {
+          basePPUpdateErrorShow(data as Record<string,string[]>);
+          break;
+        }
         default:
           break;
       }
     }
-  }, [store.actionDispatcherStore.action, store.discreteLayersStore, store.bestStore]);
+  }, [store.actionDispatcherStore.action, store.discreteLayersStore]);
 
   return (
     <></>

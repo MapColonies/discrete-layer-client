@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty, set, unset } from 'lodash';
 import { Geometry } from 'geojson';
 import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
 import { useDebouncedCallback } from 'use-debounce';
@@ -31,6 +31,7 @@ interface JsonValuePresentorProps {
   type?: string;
   enableLoadFromShape?: boolean;
   enableMapPreview?: boolean;
+  fieldNamePrefix?: string;
 }
 
 export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
@@ -40,7 +41,8 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   formik,
   type,
   enableLoadFromShape = false,
-  enableMapPreview = false
+  enableMapPreview = false,
+  fieldNamePrefix
 }) => {
   const [jsonValue, setJsonValue] = useState(JSON.stringify(value ?? {}));
   const [geoJsonWarning, setGeoJsonWarning] = useState('');
@@ -51,6 +53,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     () => get(formik?.status, 'errors') as { [fieldName: string]: string[] } | null | undefined,
     [formik?.status]
   );
+  const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
   const multipleFeaturesError = useMemo(() => new Error(`validation-field.${fieldInfo.fieldName as string}.shapeFile.multiple-features`), [fieldInfo.fieldName]);
   const shapeFileGenericError = useMemo(() => new Error(`validation-field.${fieldInfo.fieldName as string}.shapeFile.generic`), [fieldInfo.fieldName]);
 
@@ -62,7 +65,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     setTimeout(() => {
       if (typeof currentErrors !== 'undefined') {
         // Remove valid field from errors obj if exists
-        delete currentErrors?.[fieldInfo.fieldName as string];
+        unset(currentErrors,fieldName);
         formik?.setStatus({ errors: currentErrors });
       } else {
         formik?.setStatus({});
@@ -158,11 +161,10 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
                     }
                   );
 
+                  const errs = {...currentErrors};
+                  set(errs, fieldName, [errorTranslation]);
                   formik?.setStatus({
-                    errors: {
-                      ...currentErrors,
-                      [fieldInfo.fieldName as string]: [errorTranslation],
-                    },
+                    errors: errs,
                   });
                   setJsonValue(EMPTY_JSON_STRING_VALUE);
                 })
@@ -185,10 +187,11 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)
   ) {
     const stringifiedValue = value ? JSON.stringify(value) : '';
+    const isDataError = fieldInfo.isRequired && !value;
     return (
       <Box className="detailsFieldValue" style={{display: 'flex',gap: '10px'}}>
         <Box style={{width: enableMapPreview ? '60%' : '100%', display: 'flex'}}>
-          <TooltippedValue tag="div" className="detailsFieldValue jsonValueAlign" disableTooltip>
+          <TooltippedValue tag="div" className={`detailsFieldValue jsonValueAlign ${isDataError ? 'detailFieldDataError' : ''}`} disableTooltip>
             {`${stringifiedValue.substring(0, JSON_MAX_LENGTH)} ${(stringifiedValue.length > JSON_MAX_LENGTH) ? '...' : ''}`}
           </TooltippedValue>
           {
@@ -209,7 +212,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
     );
   } else {
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
-      formik?.setFieldTouched(fieldInfo.fieldName as string, true, false);
+      formik?.setFieldTouched(fieldName, true, false);
 
       let formikValue: unknown = undefined;
 
@@ -243,7 +246,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         }
 
         formikValue = JSON.parse(jsonValue) as unknown;
-        formik?.setFieldValue(fieldInfo.fieldName as string, formikValue);
+        formik?.setFieldValue(fieldName, formikValue);
 
         removeStatusErrors();
       } catch (err) {
@@ -251,6 +254,8 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           id: `validation-field.${fieldInfo.fieldName as string}.${get(err,'message') as string}.geojson`,
         };
         const isFieldRequired = fieldInfo.isRequired as boolean;
+
+        formik?.setFieldValue(fieldName, undefined);
 
         if (isFieldRequired || jsonValue.length > NONE) {
           if (isFieldRequired && (jsonValue.length === NONE || jsonValue === EMPTY_JSON_STRING_VALUE)) {
@@ -262,16 +267,15 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             ),
           });
 
+          const errs = {...currentErrors};
+          set(errs, fieldName, Array.from(
+            new Set([
+              ...(get(currentErrors, fieldName) ?? []),
+              errorMsg,
+            ])
+          ));
           formik?.setStatus({
-            errors: {
-              ...currentErrors,
-              [fieldInfo.fieldName as string]: Array.from(
-                new Set([
-                  ...(currentErrors?.[fieldInfo.fieldName as string] ?? []),
-                  errorMsg,
-                ])
-              ),
-            },
+            errors: errs,
           });
         } else {
           removeStatusErrors();
@@ -285,8 +289,8 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
           <Box style={{width: enableMapPreview ? '60%' : '100%'}}>
             <TextField
               ref={fieldRef}
-              id={fieldInfo.fieldName as string}
-              name={fieldInfo.fieldName as string}
+              id={fieldName}
+              name={fieldName}
               type={type}
               value={jsonValue === EMPTY_JSON_STRING_VALUE ? '' : jsonValue}
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {

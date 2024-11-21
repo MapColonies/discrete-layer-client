@@ -23,34 +23,28 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_CREATE = 'entity_action.LayerRasterRecord.create',
   ENTITY_ACTION_LAYER3DRECORD_CREATE = 'entity_action.Layer3DRecord.create',
   ENTITY_ACTION_LAYERDEMRECORD_CREATE = 'entity_action.LayerDemRecord.create',
-  ENTITY_ACTION_BESTRECORD_CREATE = 'entity_action.BestRecord.create',
   ENTITY_ACTION_LAYERRASTERRECORD_EDIT = 'entity_action.LayerRasterRecord.edit',
   ENTITY_ACTION_LAYER3DRECORD_EDIT = 'entity_action.Layer3DRecord.edit',
   ENTITY_ACTION_LAYERDEMRECORD_EDIT = 'entity_action.LayerDemRecord.edit',
-  ENTITY_ACTION_BESTRECORD_EDIT = 'entity_action.BestRecord.edit',
   ENTITY_ACTION_VECTORBESTRECORD_EDIT = 'entity_action.VectorBestRecord.edit',
   ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT = 'entity_action.QuantizedMeshBestRecord.edit',
   ENTITY_ACTION_LAYERRASTERRECORD_UPDATE = 'entity_action.LayerRasterRecord.update',
   ENTITY_ACTION_LAYERRASTERRECORD_DELETE = 'entity_action.LayerRasterRecord.delete',
   ENTITY_ACTION_LAYER3DRECORD_DELETE = 'entity_action.Layer3DRecord.delete',
   ENTITY_ACTION_LAYERDEMRECORD_DELETE = 'entity_action.LayerDemRecord.delete',
-  ENTITY_ACTION_BESTRECORD_DELETE = 'entity_action.BestRecord.delete',
   ENTITY_ACTION_LAYER3DRECORD_PUBLISH = 'entity_action.Layer3DRecord.publish',
   ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE = 'entity_action.LayerRasterRecord.analyze',
   ENTITY_ACTION_LAYER3DRECORD_ANALYZE = 'entity_action.Layer3DRecord.analyze',
   ENTITY_ACTION_LAYERDEMRECORD_ANALYZE = 'entity_action.LayerDemRecord.analyze',
-  ENTITY_ACTION_BESTRECORD_ANALYZE = 'entity_action.BestRecord.analyze',
   ENTITY_ACTION_VECTORBESTRECORD_ANALYZE = 'entity_action.VectorBestRecord.analyze',
   ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE = 'entity_action.QuantizedMeshBestRecord.analyze',
   ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA = 'entity_action.LayerRasterRecord.saveMetadata',
   ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA = 'entity_action.Layer3DRecord.saveMetadata',
   ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA = 'entity_action.LayerDemRecord.saveMetadata',
-  ENTITY_ACTION_BESTRECORD_SAVEMETADATA = 'entity_action.BestRecord.saveMetadata',
   ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA = 'entity_action.VectorBestRecord.saveMetadata',
   ENTITY_ACTION_LAYERRASTERRECORD_FLYTO = 'entity_action.LayerRasterRecord.flyTo',
   ENTITY_ACTION_LAYER3DRECORD_FLYTO = 'entity_action.Layer3DRecord.flyTo',
   ENTITY_ACTION_LAYERDEMRECORD_FLYTO = 'entity_action.LayerDemRecord.flyTo',
-  ENTITY_ACTION_BESTRECORD_FLYTO = 'entity_action.BestRecord.flyTo',
   ENTITY_ACTION_VECTORBESTRECORD_FLYTO = 'entity_action.VectorBestRecord.flyTo',
   ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO = 'entity_action.QuantizedMeshBestRecord.flyTo',
   ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP = 'entity_action.LayerRasterRecord.moveToTop',
@@ -60,7 +54,6 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_EXPORT = 'entity_action.LayerRasterRecord.export',
   ENTITY_ACTION_LAYER3DRECORD_EXPORT = 'entity_action.Layer3DRecord.export',
   ENTITY_ACTION_LAYERDEMRECORD_EXPORT = 'entity_action.LayerDemRecord.export',
-  ENTITY_ACTION_BESTRECORD_EXPORT = 'entity_action.BestRecord.export',
   ENTITY_ACTION_VECTORBESTRECORD_EXPORT = 'entity_action.VectorBestRecord.export',
   ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT= 'entity_action.QuantizedMeshBestRecord.export',
 
@@ -70,10 +63,8 @@ export enum UserAction {
   SYSTEM_CALLBACK_PUBLISH = 'system_callback.publish',
   SYSTEM_CALLBACK_FLYTO = 'system_callback.flyToEntity',
   SYSTEM_CALLBACK_SHOWFOOTPRINT = 'system_callback.showFootprint',
-  /***  FOR FUTURE USE, ENTITY FIELD PERMISSION PATTERN EXAMPLE ***/
-  // ENTITY_FIELD_ACTION_BESTRECORD_PRODUCTNAME_VIEW = 'entity_action.BestRecord.productName.view',
+  SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE = 'system_callback.showPPErrorOnUpdate',
 }
-
 export type site = {dns: string, isAlias: boolean};
 
 export type siteName = 'master'|'slave'|'generic'|'undefined';
@@ -83,9 +74,8 @@ type permissionRule = {
   enabled:boolean,
 }
 
-type UserActionKeys = { [K in UserAction]?: permissionRule};
-
-type ContextActionKeys = { [K in ContextActions]?: permissionRule};
+type UserActionKeys = { [K in UserAction]?: permissionRule; }
+type ContextActionKeys = { [K in ContextActions]?: permissionRule; }
 
 interface IUser {
   userName: string;
@@ -110,37 +100,32 @@ const ROLES: IRole[] = [
       [UserAction.SYSTEM_ACTION_FILTER]: {enabled: false},
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: {enabled: true},
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: {enabled: true},
+      [UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: {enabled: true},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: {enabled: true},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: {enabled: true},
-      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_ANALYZE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_ANALYZE]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA]: {enabled: true},
-      [UserAction.ENTITY_ACTION_BESTRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_FLYTO]: {enabled: true},
-      [UserAction.ENTITY_ACTION_BESTRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: {enabled: true},
@@ -150,7 +135,6 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EXPORT]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: {enabled: true},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: {enabled: false},
       [UserAction.FEATURE_SWITCH_USER_ROLE]: {sites:['master','slave'], enabled: true},
@@ -172,37 +156,32 @@ const ROLES: IRole[] = [
       [UserAction.SYSTEM_ACTION_FILTER]: {enabled: false},
       [UserAction.SYSTEM_ACTION_FREETEXTSEARCH]: {enabled: true},
       [UserAction.SYSTEM_ACTION_SIDEBARCOLLAPSEEXPAND]: {enabled: true},
+      [UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_CREATE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_CREATE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_CREATE]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_CREATE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EDIT]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_EDIT]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EDIT]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_EDIT]: {enabled: false},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EDIT]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EDIT]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_UPDATE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_DELETE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_ANALYZE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_ANALYZE]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_ANALYZE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_SAVEMETADATA]: {enabled: true},
-      [UserAction.ENTITY_ACTION_BESTRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_SAVEMETADATA]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_FLYTO]: {enabled: true},
-      [UserAction.ENTITY_ACTION_BESTRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_FLYTO]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_MOVETOTOP]: {enabled: false},
@@ -212,7 +191,6 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_EXPORT]: {enabled: false},
-      [UserAction.ENTITY_ACTION_BESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_VECTORBESTRECORD_EXPORT]: {enabled: false},
       [UserAction.ENTITY_ACTION_QUANTIZEDMESHBESTRECORD_EXPORT]: {enabled: false},
       [UserAction.FEATURE_SWITCH_USER_ROLE]: {sites:['master','slave'], enabled: true},
@@ -259,7 +237,6 @@ export const userStore = ModelBase
       } else {
         return false;
       }
-      
     }
 
     function changeUserRole(role: UserRole): void {
