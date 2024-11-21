@@ -69,12 +69,6 @@ interface LayerDetailsFormCustomProps {
   closeDialog: () => void;
 }
 
-export interface StatusError {
-  errors: {
-    [fieldName: string]: string[];
-  }
-}
-
 export interface EntityFormikHandlers extends FormikHandlers {
   setFieldValue: (field: string, value: unknown, shouldValidate?: boolean) => void;
   setFieldError: (field: string, message: string) => void;

@@ -7,9 +7,9 @@ export interface IStorage {
   clear: () => void;
   key: (index: number) => string | null;
   watchMethods: ( methods: string[], 
-    callbackBefore?: (method: string, key: string, ...args: any[]) => void,
-    callbackAfter?: (method: string, key: string, ...args: any[]) => void
-  ) => void,
+                  callbackBefore?: (method: string, key: string, ...args: any[]) => void,
+                  callbackAfter?: (method: string, key: string, ...args: any[]) => void
+                ) => void,
   unWatchMethods: () => void,
   length: number;
 }
@@ -93,7 +93,7 @@ function storageFactory(storage: Storage, prefix = ''): IStorage {
   }
 
   let originalMethods: Record<string, () => void> = {};
-
+  
   function watchMethods (
     methods: string[] = [],
     callbackBefore: (method: string, key: string, ...args: any[]) => void = function () {},
@@ -120,6 +120,7 @@ function storageFactory(storage: Storage, prefix = ''): IStorage {
     });
     originalMethods={};
   }
+  
 
   return {
     get,

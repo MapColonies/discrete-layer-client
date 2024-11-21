@@ -413,6 +413,10 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       }
     }, []);
 
+    // TODO: For future use in order to work with fresh data from PYCSW
+    // useEffect(() => {
+    // }, [queryGetProduct.data]);
+
     useEffect(() => {
       if (vestValidationResults.errorCount === NONE) {
         switch(mode) {

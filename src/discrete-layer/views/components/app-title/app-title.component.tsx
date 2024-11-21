@@ -6,7 +6,6 @@ import CONFIG from '../../../../common/config';
 import { currentSite } from '../../../../common/helpers/siteUrl';
 import packageJson from '../../../../../package.json';
 
-
 const AppTitle = (): JSX.Element => {
   const intl = useIntl();
   const projectVersion = CONFIG.PROJECT_VERSION;

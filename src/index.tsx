@@ -1,7 +1,4 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
-// import 'mobx-react-lite/batchingForReactDom';
-import { createHttpClient } from 'mst-gql';
 import Axios, { Method } from 'axios';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -29,7 +26,6 @@ const store = rootStore.create(
           CONFIG.SERVICE_NAME as string
         }`,
       }).then((res) => res.data as SearchResponse),
-    
     gqlHttpClient: syncHttpClientGql(),
     // gqlHttpClient: createHttpClient("http://localhost:8080/graphql")
   }
@@ -53,7 +49,7 @@ root.render(
   <StoreProvider value={store}>
     {/* Problematic. TODO: Investigate why. */}
     {/* <React.StrictMode> */}
-      <App />
+    <App />
     {/* </React.StrictMode> */}
   </StoreProvider>
 );

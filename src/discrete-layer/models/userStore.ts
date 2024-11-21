@@ -237,7 +237,6 @@ export const userStore = ModelBase
       } else {
         return false;
       }
-
     }
 
     function changeUserRole(role: UserRole): void {
@@ -258,3 +257,4 @@ export const userStore = ModelBase
       isUserAdmin,
     };
   });
+  
