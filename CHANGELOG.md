@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.11.0...v2.12.0) (2024-11-21)
+
+
+### Features
+
+* values schema integration ([#521](https://github.com/MapColonies/discrete-layer-client/issues/521)) ([0a9d9d6](https://github.com/MapColonies/discrete-layer-client/commit/0a9d9d64b49f3d7ffbf1bfd2e29aa321d04c7900))
+
+
+### Bug Fixes
+
+* helm artifacts ([3615873](https://github.com/MapColonies/discrete-layer-client/commit/3615873db9480c4c8bf1d3a9230c850a5cfcb478))
+* support empty value ([df1cd11](https://github.com/MapColonies/discrete-layer-client/commit/df1cd1147b3dc0f6a9180e114840e41da67c3f24))
+* support specific and official route ([94a76b0](https://github.com/MapColonies/discrete-layer-client/commit/94a76b0413ed03ca7bbe52e5eb32ecd144f7bbbd))
+* sync ([ef8fab7](https://github.com/MapColonies/discrete-layer-client/commit/ef8fab7889eef8baca352c56606797d53079e529))
+* v2 ([ec9b316](https://github.com/MapColonies/discrete-layer-client/commit/ec9b316b50f8b403768ad35a2c8af5608b47e725))
+
 ## [2.11.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.10.10...v2.11.0) (2024-09-19)
 
 
