@@ -20,7 +20,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../common/components/file-picker';
-import useSessionStoreWatcher from '../../../common/hooks/useSessionStoreWatcher';
+import useSessionStoreWatcherForm from '../../../common/hooks/useSessionStoreWatcherForm';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -114,7 +114,7 @@ const InnerForm = (
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
-  const validationWarn = useSessionStoreWatcher();
+  const validationWarn = useSessionStoreWatcherForm();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {

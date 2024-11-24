@@ -28,7 +28,7 @@ import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
 import { mergeRecursive } from '../../../../common/helpers/object';
-import useSessionStoreWatcher from '../../../../common/hooks/useSessionStoreWatcher';
+import useSessionStoreWatcherForm from '../../../../common/hooks/useSessionStoreWatcherForm';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -157,7 +157,7 @@ export const InnerRasterForm = (
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
-  const validationWarn = useSessionStoreWatcher();
+  const validationWarn = useSessionStoreWatcherForm();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {

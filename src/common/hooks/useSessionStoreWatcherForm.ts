@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { getValidationMessage, ValidationMessage } from '../../discrete-layer/components/layer-details/utils';
-import { sessionStore } from '../../common/helpers/storage';
+import { sessionStore } from '../helpers/storage';
 import { SYNC_QUERY_NAME } from '../../syncHttpClientGql';
 
-const useSessionStoreWatcher = (): ValidationMessage | undefined => {
+const useSessionStoreWatcherForm = (): ValidationMessage | undefined => {
   const intl = useIntl();
   const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
 
@@ -48,4 +48,4 @@ const useSessionStoreWatcher = (): ValidationMessage | undefined => {
   return validationWarn;
 };
 
-export default useSessionStoreWatcher;
+export default useSessionStoreWatcherForm;
