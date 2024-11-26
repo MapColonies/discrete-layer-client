@@ -229,7 +229,6 @@ export const InnerRasterForm = (
   useEffect(() => {
     // @ts-ignore
     setFirstPhaseErrors(mergeRecursive(getYupErrors(), getStatusErrors()));
-
     setTimeout(()=>(ppList && updateListRowHeights()), 100);
   }, [errors, getYupErrors, getStatusErrors]);
 

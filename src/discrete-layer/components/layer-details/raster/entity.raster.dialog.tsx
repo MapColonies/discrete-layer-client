@@ -358,7 +358,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       });
       
       const newSchema = {...schema};
-      for(let i=0; i < partsNumber; i++ ){
+      for(let i=0; i < partsNumber; i++){
         newSchema[`${NESTED_FORMS_PRFIX}${i+startIndex}`] = Yup.object().shape({...nestedYupSchema});
       }
       setSchema(newSchema);

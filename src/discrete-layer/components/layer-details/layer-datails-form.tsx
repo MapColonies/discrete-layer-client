@@ -119,9 +119,7 @@ const InnerForm = (
   const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
-    return {
-      ...get(status, 'errors') as Record<string, string[]>,
-    }
+    return get(status, 'errors') as Record<string, string[]> | null ?? {};
   }, [status]);
 
   const getYupErrors = useCallback(
@@ -139,11 +137,7 @@ const InnerForm = (
 
   useEffect(() => {
     setShowCurtain((mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles);
-  }, [mode, isSelectedFiles])
-
-  useEffect(() => {
-    setShowCurtain(!isSelectedFiles);
-  }, [isSelectedFiles]);
+  }, [mode, isSelectedFiles]);
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
