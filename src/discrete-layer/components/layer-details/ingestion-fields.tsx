@@ -30,6 +30,7 @@ import { clearSyncWarnings, getValidationMessage, importJSONFileFromClient, Vali
 
 import './ingestion-fields.css';
 
+const ONLY_ONE_SOURCE = 0;
 const DIRECTORY = 0;
 const FILES = 1;
 const NUM_OF_ROWS = 3;
@@ -272,7 +273,6 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
     }
   }, [queryResolveMetadataAsModel.error, chosenMetadataError]);
 
-  const ONLY_ONE_SOURCE = 0;
   useEffect(() => {
     setIsImportDisabled(
       !selection.files.length || 
@@ -283,19 +283,17 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   }, [selection, queryResolveMetadataAsModel.loading, queryValidateSource.loading, isError]);
 
   useEffect(() => {
-    if(queryValidateSource.data){
-      const  directory= selection.files.length ? 
-      selection.folderChain
-          .map((folder: FileData) => folder.name)
-          .join('/')
-      : '';          
+    if (queryValidateSource.data) {
+      const directory = selection.files.length
+        ? selection.folderChain.map((folder: FileData) => folder.name).join('/')
+        : '';          
       const fileNames = selection.files.map((file: FileData) => file.name).join(',');
       if (queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE].isValid === false) {
         if (reloadFormMetadata) {
           reloadFormMetadata(
             {
-              directory: values.directory as string,
-              fileNames: values.fileNames as string,
+              directory: directory,
+              fileNames: fileNames,
             },
             {
               recordModel: {},
@@ -315,23 +313,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
           );
         }
         handleError(true);
-      }
-      else {
-        if (reloadFormMetadata) {
-          reloadFormMetadata(
-            {
-              directory: directory,
-              fileNames: fileNames,
-            },
-            {
-              recordModel:{
-                ...selection.metadata?.recordModel,
-                ...queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE]
-              },
-              error: selection.metadata?.error
-            }  as unknown as MetadataFile
-          );
-        }
+      } else {
         handleError(false);
       }
     }
@@ -340,11 +322,9 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   useEffect(() => {
     if (queryValidateSource.error) {
       if (reloadFormMetadata) {
-        const  directory= selection.files.length ? 
-        selection.folderChain
-            .map((folder: FileData) => folder.name)
-            .join('/')
-        : '';          
+        const directory= selection.files.length
+          ? selection.folderChain.map((folder: FileData) => folder.name).join('/')
+          : '';          
         const fileNames = selection.files.map((file: FileData) => file.name).join(',');
         reloadFormMetadata(
           {
@@ -377,25 +357,23 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
     if (selected.files.length) {
       setSelection({ ...selected });
     }
-    const directory = selected.files.length ? 
-                        selected.folderChain
-                            .map((folder: FileData) => folder.name)
-                            .join('/')
-                        : '';
+    const directory = selected.files.length
+      ? selected.folderChain.map((folder: FileData) => folder.name).join('/')
+      : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
 
-    if(validateSources){
+    if (validateSources) {
       queryValidateSource.setQuery(
         store.queryValidateSource(
           {
             data: {
-              originDirectory: directory,
+              originDirectory: directory.substring(directory.indexOf('/')),
               fileNames: fileNames,
               type: recordType,
             }
           }
         )
-      )
+      );
     }
     if (reloadFormMetadata) {
       reloadFormMetadata(

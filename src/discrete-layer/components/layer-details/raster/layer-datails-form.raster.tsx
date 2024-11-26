@@ -176,32 +176,47 @@ export const InnerRasterForm = (
     }
   }, [status, customError, ppCheckPerformed, gpkgValidationError, clientCustomValidationError]);
 
-  const getYupErrors = useCallback(
-    (): Record<string, string[]> => {
-      const validationResults: Record<string, string[]> = {};
-      Object.entries(errors).forEach(([key, value]) => {
-        if(isObject(value)){
-          Object.entries(value).forEach(([keyNested, valueNested]) => {
-            if (getFieldMeta(key+'.'+keyNested).touched) {
-              if(!validationResults[key]){
-                // @ts-ignore
-                validationResults[key] = {};
-              }
+  const getYupErrors = useCallback((): Record<string, string[]> => {
+    const validationResults: Record<string, string[]> = {};
+    Object.entries(errors).forEach(([key, value]) => {
+      if(isObject(value)){
+        Object.entries(value).forEach(([keyNested, valueNested]) => {
+          if (getFieldMeta(key+'.'+keyNested).touched) {
+            if(!validationResults[key]){
               // @ts-ignore
-              validationResults[key][keyNested] = [valueNested as string];
+              validationResults[key] = {};
             }
-          });
-        }
-        else{
-          if (getFieldMeta(key).touched) {
-            validationResults[key] = [value];
+            // @ts-ignore
+            validationResults[key][keyNested] = [valueNested as string];
           }
+        });
+      }
+      else{
+        if (getFieldMeta(key).touched) {
+          validationResults[key] = [value];
+        }
+      }
+    });
+    return validationResults;
+  }, [errors, getFieldMeta]);
+
+  const vestValidationHasErrors = useMemo<boolean>(() => {
+    let vestHasErrors = false;
+    Object.keys(vestValidationResults).forEach((key) => vestHasErrors ||= vestValidationResults[key].errorCount > NONE);
+    if (vestHasErrors) {
+      setStatus({
+        errors: {
+          'shape': [
+            intl.formatMessage(
+              {id: 'validation-general.shapeFile.polygonParts.hasErrors'},
+              {numErrorParts: emphasizeByHTML(`${1}`)}
+            )
+          ]
         }
       });
-      return validationResults;
-    },
-    [errors, getFieldMeta],
-  );
+    }
+    return vestHasErrors;
+  }, [vestValidationResults]);
 
   useEffect(() => {
     setShowCurtain(!isSelectedFiles);
@@ -358,10 +373,12 @@ export const InnerRasterForm = (
   useEffect(() => {
     if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
       setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
+    } else {
+      setClientCustomValidationError(undefined);
     }
   }, [sourceExtent, outlinedPerimeter]);
 
-  const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
+  // const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
   const shapeFilePerimeterVSGpkgExtentError = useMemo(() => new Error(`validation-general.shapeFile.polygonParts.not-in-gpkg-extent`), []);
 
@@ -400,6 +417,11 @@ export const InnerRasterForm = (
       handleChange: (e: React.ChangeEvent<unknown>): void => {
         setGraphQLError(undefined);
         setPPCheckPerformed(false);
+        if (status && status.errors) {
+          const newStatus = {...status};
+          delete (newStatus.errors as Record<string, unknown>)['shape'];
+          setStatus(newStatus);
+        }
         handleChange(e);
       },
       handleBlur: (e: React.FocusEvent<unknown>): void => {
@@ -457,7 +479,7 @@ export const InnerRasterForm = (
     }
 
     // Synch entity with loaded values
-    for (const [key, val] of Object.entries(metadata.recordModel)) {
+    for (const [key] of Object.entries(metadata.recordModel)) {
       // @ts-ignore
       layerRecord[key] = metadata.recordModel[key];
     }
@@ -483,10 +505,6 @@ export const InnerRasterForm = (
       });
     }
 
-    setGpkgValidationError(
-      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
-    );
-
     resetForm();
 
     setValues({
@@ -508,14 +526,14 @@ export const InnerRasterForm = (
     return true;
   }
 
-  const isIngestedSourceSelected = () => {
-    let res = true;
-    ingestionFields.forEach((curr) => {
-      // @ts-ignore
-      res = res && !isEmpty(values[curr?.fieldName]);
-    }, true);
-    return res;
-  }
+  // const isIngestedSourceSelected = () => {
+  //   let res = true;
+  //   ingestionFields.forEach((curr) => {
+  //     // @ts-ignore
+  //     res = res && !isEmpty(values[curr?.fieldName]);
+  //   }, true);
+  //   return res;
+  // }
 
   const proccessShapeFile = async (
     shapeArrayBuffer: ArrayBuffer,
@@ -538,12 +556,10 @@ export const InnerRasterForm = (
               }
 
               (data as FeatureCollectionWithFilename).features.forEach((feature, idx) => {
-                /*if(idx < 20)*/ {
-                  const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
-                  const parsedPolygonPartData = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature);
-                  parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
-                  parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
-                }
+                const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
+                const parsedPolygonPartData = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature);
+                parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
+                parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
               });
 
               const outlinedPolygon = getOutlinedFeature((data as FeatureCollectionWithFilename).features as Feature<Polygon | MultiPolygon, Properties>[]);
@@ -774,19 +790,17 @@ export const InnerRasterForm = (
                       
                       setExpandedParts(new Array(ppDataKeys.length).fill(false));
                       
-                      /// ?reloadFormMetadata()
-                      const polygonsData = ppDataKeys.map((key)=>{
-                                                let {errors, polygonPart} = parsedPPData[key]; 
+                      const polygonsData = ppDataKeys.map((key) => {
+                                                let { polygonPart } = parsedPPData[key]; 
                                                 return {[key]: polygonPart} 
                                             })
-                                            .reduce((acc,curr)=> (acc={...acc,...curr},acc),{});
+                                            .reduce((acc,curr) => (acc={...acc,...curr},acc),{});
 
                       setParsingErrors(
-                        ppDataKeys.map((key)=>{
-                          let {errors, polygonPart} = parsedPPData[key];
+                        ppDataKeys.map((key) => {
+                          let { errors } = parsedPPData[key];
                           return (!isEmpty(errors) ? {[key]: errors} : undefined)
-                        }).
-                        filter((item)=>item !== undefined) as Record<string, unknown>[]
+                        }).filter((item) => item !== undefined) as Record<string, unknown>[]
                       );
 
                       setValues({
@@ -798,14 +812,14 @@ export const InnerRasterForm = (
                       setStatus({
                         errors: {
                           // ...currentErrors,
-                          ['shape']: [intl.formatMessage({ id: (e as Error).message })],
+                          'shape': [ intl.formatMessage({ id: (e as Error).message }) ],
                         },
                       });
                     })
                 },
                 false,
                 false,
-                ()=>{
+                () => {
                   setLoadingPolygonParts(false);
                 });
               }}
@@ -972,7 +986,7 @@ export const InnerRasterForm = (
             {
               validationWarn?.message &&
               isEmpty(firstPhaseErrors) &&
-              (!isEmpty(errors) || !vestValidationResults.errorCount) &&
+              (!isEmpty(errors) || !vestValidationHasErrors) &&
               isEmpty(graphQLError) &&
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
