@@ -1,12 +1,10 @@
-import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Legend, LegendItem, Map, TileLayer, TileOsm, TileWMTS, TileXYZ, VectorLayer, VectorSource } from '@map-colonies/react-components';
-import { Feature, Geometry } from 'geojson';
+import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Legend, LegendItem, Map, TileLayer, TileWMTS, TileXYZ, VectorLayer, VectorSource } from '@map-colonies/react-components';
+import { Feature } from 'geojson';
 import { get, isEmpty } from 'lodash';
-import { Vector } from 'ol/layer';
 import { FitOptions } from 'ol/View';
-import { Style, Stroke, Fill } from 'ol/style';
-import { validateGeoJSONString } from '../../../../common/utils/geojson.validation';
+import { Style } from 'ol/style';
 import { Mode } from '../../../../common/models/mode.enum';
 import { MapLoadingIndicator } from '../../../../common/components/map/ol-map.loader';
 import { useStore } from '../../../models/RootStore';

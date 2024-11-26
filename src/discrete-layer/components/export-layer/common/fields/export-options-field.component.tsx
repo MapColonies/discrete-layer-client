@@ -1,12 +1,11 @@
 import { Box } from '@map-colonies/react-components';
-import { MenuItem, Select, Typography } from '@map-colonies/react-core';
+import { MenuItem, Select } from '@map-colonies/react-core';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useStore } from '../../../../models';
 import { ExportFieldProps } from '../../types/interfaces';
 import ExportFieldLabel from '../export-field-label.component';
-import TooltippedValue from '../../../../../common/components/form/tooltipped.value';
 import ExportFieldHelperText from '../export-field-helper-text.component';
 
 interface ExportOptionsFieldProps extends ExportFieldProps {

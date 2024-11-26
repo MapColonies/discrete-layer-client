@@ -6,7 +6,6 @@ import { FormikValues } from 'formik';
 import { cloneDeep, get, isEmpty } from 'lodash';
 import moment from 'moment';
 import * as Yup from 'yup';
-import { MixedSchema } from 'yup/lib/mixed';
 import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
@@ -32,11 +31,7 @@ import {
 } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
-import {
-  Layer3DRecordInput,
-  LayerDemRecordInput,
-  LayerRasterRecordInput,
-} from '../../models/RootStore.base';
+import { Layer3DRecordInput, LayerDemRecordInput } from '../../models/RootStore.base';
 import { UserAction } from '../../models/userStore';
 import {
   FieldConfigModelKeys,
@@ -62,7 +57,6 @@ import './entity.dialog.css';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
-const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
 
