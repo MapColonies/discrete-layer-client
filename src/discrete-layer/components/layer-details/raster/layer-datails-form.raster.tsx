@@ -35,6 +35,7 @@ import {
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   ParsedPolygonPart,
+  ParsedPolygonPartError,
   PolygonPartRecordModelType,
   RecordType,
   SourceValidationModelType
@@ -318,10 +319,11 @@ export const InnerRasterForm = (
     const stattusErrors = parsingErrors.reduce(
       (acc,curr) => {
         Object.keys(curr).forEach(key=>{
-          let errObj = curr[key] as Record<string, string[]>; 
+          let errObj = curr[key] as Record<string, ParsedPolygonPartError>; 
           Object.keys(errObj).forEach(fieldKey => {
-            errObj[fieldKey] = errObj[fieldKey].map(
-              errText => intl.formatMessage({id: errText}, {fieldName: emphasizeByHTML(fieldKey)})
+            // @ts-ignore
+            errObj[fieldKey] = errObj[fieldKey].codes.map(
+              errText => intl.formatMessage({id: errText}, {fieldName: emphasizeByHTML(`${intl.formatMessage({ id: errObj[fieldKey].label })}`)})
             );
           });
         });
@@ -347,11 +349,17 @@ export const InnerRasterForm = (
     });
    }, [parsingErrors]);
 
-   useEffect(() => {
+  useEffect(() => {
     if(ppCollisionCheckInProgress !== undefined) {
       setShowCurtain(ppCollisionCheckInProgress);
     }
-   }, [ppCollisionCheckInProgress]);
+  }, [ppCollisionCheckInProgress]);
+
+  useEffect(() => {
+    if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
+      setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
+    }
+  }, [sourceExtent, outlinedPerimeter]);
 
   const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
@@ -551,11 +559,6 @@ export const InnerRasterForm = (
                   type: 'Point'
                 },
               });
-              
-
-              if (!isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPolygon as Feature<any>)){
-                setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
-              }
 
               return resolve(parsedPolygonParts);
             })
