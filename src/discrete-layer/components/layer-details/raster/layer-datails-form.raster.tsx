@@ -749,6 +749,7 @@ export const InnerRasterForm = (
             values={values}
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
+            manageMetadata={false}
           >
             <Box className="uploadShapeButton">
             <Button

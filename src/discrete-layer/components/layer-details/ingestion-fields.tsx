@@ -46,6 +46,7 @@ interface IngestionFieldsProps {
     metadata: MetadataFile
   ) => void;
   formik?: EntityFormikHandlers;
+  manageMetadata?: boolean;
 }
 
 const FileItem: React.FC<{ file: FileData }> = ({ file }) => {
@@ -171,6 +172,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   reloadFormMetadata,
   formik,
   children,
+  manageMetadata=true,
 }) => {
   const intl = useIntl();
   const store = useStore();
@@ -453,6 +455,8 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
               <FormattedMessage id="general.choose-btn.text" />
             </Button>
           </Box>
+          {
+            manageMetadata && 
           <Box className="uploadMetadataButton">
             <Button
               outlined
@@ -489,6 +493,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
               )}
             </Button>
           </Box>
+          }
           <Box>
             {children}
           </Box>
@@ -502,6 +507,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
           onSetOpen={setFilePickerDialogOpen}
           onFilesSelection={onFilesSelection}
           selection={selection}
+          fetchMetaData={manageMetadata}
         />
       }
     </>

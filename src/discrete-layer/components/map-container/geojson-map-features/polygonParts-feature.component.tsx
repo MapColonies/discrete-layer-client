@@ -11,16 +11,32 @@ import { IFeatureConfig } from "../../../views/components/data-fetchers/wfs-feat
 import { GeojsonFeatureWithInfoBox } from './geojson-feature-with-infobox.component';
 import { IPosition } from '../../../../common/hooks/useHeightFromTerrain';
 import { crossesMeridian, ZERO_MERIDIAN } from '../../../../common/utils/geo.tools';
+import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
 
 
 export const PolygonPartsFeature: React.FC = observer(() => {
   const store = useStore();
   const intl = useIntl();
   const cesiumViewer = useCesiumMap();
+  const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
+  const valuesZoomLevelInDeg = Object.values(ZOOM_LEVELS_TABLE);
   const polygonPartsFeature = store.mapMenusManagerStore.currentPolygonPartsInfo;
   const lastMenuPosition = store.mapMenusManagerStore.lastMenuCoordinate;
 
   const [markerPosition, setMarkerPosition] = useState<IPosition>();
+
+  const enrichWFSData = (geoJsonFeature : Feature) => {
+    const resolutionDegree = geoJsonFeature?.properties?.['resolutionDegree'];
+    if(isNaN(resolutionDegree)){
+      return;
+    }
+
+    const indexOfCurrentDeg = valuesZoomLevelInDeg.indexOf(resolutionDegree);
+    if(indexOfCurrentDeg >= 0){
+      // @ts-ignore
+      geoJsonFeature.properties['resolutionDegree'] = `${resolutionDegree} --------> ( ${indexOfCurrentDeg} )`;
+    }
+  };
 
   useEffect(() => {
       if(lastMenuPosition){
@@ -55,6 +71,8 @@ export const PolygonPartsFeature: React.FC = observer(() => {
         const geoJsonFeature = feature as Feature;
         const polygonPartsFeatureConfig: IFeatureConfig = CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG;
         const isCrossesMeridian = crossesMeridian(geoJsonFeature.geometry as Polygon | MultiPolygon, ZERO_MERIDIAN);
+
+        enrichWFSData(geoJsonFeature);
 
         return ( 
          <GeojsonFeatureWithInfoBox
