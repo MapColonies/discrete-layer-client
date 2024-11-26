@@ -349,11 +349,17 @@ export const InnerRasterForm = (
     });
    }, [parsingErrors]);
 
-   useEffect(() => {
+  useEffect(() => {
     if(ppCollisionCheckInProgress !== undefined) {
       setShowCurtain(ppCollisionCheckInProgress);
     }
-   }, [ppCollisionCheckInProgress]);
+  }, [ppCollisionCheckInProgress]);
+
+  useEffect(() => {
+    if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
+      setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
+    }
+  }, [sourceExtent, outlinedPerimeter]);
 
   const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
@@ -553,11 +559,6 @@ export const InnerRasterForm = (
                   type: 'Point'
                 },
               });
-              
-
-              if (!isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPolygon as Feature<any>)){
-                setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
-              }
 
               return resolve(parsedPolygonParts);
             })
