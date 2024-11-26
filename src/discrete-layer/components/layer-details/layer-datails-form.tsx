@@ -115,18 +115,14 @@ const InnerForm = (
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
-  const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
   const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
       ...get(status, 'errors') as Record<string, string[]>,
-      ...(gpkgValidationError ? {
-            error: [gpkgValidationError]
-          } : {})
     }
-  }, [status, gpkgValidationError]);
+  }, [status]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -146,11 +142,8 @@ const InnerForm = (
   }, [mode, isSelectedFiles])
 
   useEffect(() => {
-    setShowCurtain(
-      !isSelectedFiles || (isSelectedFiles && 
-      gpkgValidationError !== undefined)
-    );
-  }, [isSelectedFiles, gpkgValidationError]);
+    setShowCurtain(!isSelectedFiles);
+  }, [isSelectedFiles]);
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -273,10 +266,6 @@ const InnerForm = (
       ...transformEntityToFormFields((isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel)),
       ...ingestionFields,
     });
-
-    setGpkgValidationError(
-      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
-    );
 
     setGraphQLError(metadata.error);
   };

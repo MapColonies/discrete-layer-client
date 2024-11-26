@@ -158,7 +158,6 @@ export const InnerRasterForm = (
   const [polygonPartsMode, setPolygonPartsMode] = useState<POLYGON_PARTS_MODE>('MANUAL');
   const [layerPolygonParts, setLayerPolygonParts] = useState<Record<string, PolygonPartRecordModelType>>({});
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
-  const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
   const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
   const [validationWarn, setValidationWarn] = useState<ValidationMessage>();
@@ -167,14 +166,11 @@ export const InnerRasterForm = (
     return {
       ...get(status, 'errors') as Record<string, string[]>,
       ...(ppCheckPerformed ? customError : {}),
-      ...(gpkgValidationError ? {
-        error: [gpkgValidationError]
-      } : {}),
       ...(clientCustomValidationError ? {
         error: [clientCustomValidationError]
       } : {})
     }
-  }, [status, customError, ppCheckPerformed, gpkgValidationError, clientCustomValidationError]);
+  }, [status, customError, ppCheckPerformed, clientCustomValidationError]);
 
   const getYupErrors = useCallback((): Record<string, string[]> => {
     const validationResults: Record<string, string[]> = {};
@@ -223,11 +219,8 @@ export const InnerRasterForm = (
   }, [isSelectedFiles])
 
   useEffect(() => {
-    setShowCurtain(
-      !isSelectedFiles || (isSelectedFiles && 
-      gpkgValidationError !== undefined)
-    );
-  }, [isSelectedFiles, gpkgValidationError])
+    setShowCurtain(!isSelectedFiles);
+  }, [isSelectedFiles])
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
