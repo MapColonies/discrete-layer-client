@@ -2,6 +2,8 @@
 import { get, isEmpty, omit } from 'lodash';
 import moment, { unitOfTime } from 'moment';
 import { IntlShape } from 'react-intl';
+import * as Yup from 'yup';
+import { MixedSchema } from 'yup/lib/mixed';
 import { $enum } from 'ts-enum-util';
 import { Feature } from 'geojson';
 import rewind from '@turf/rewind';
@@ -10,6 +12,7 @@ import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
 import { Mode } from '../../../common/models/mode.enum';
+import { emphasizeByHTML } from '../../../common/helpers/formatters';
 import {
   CategoryConfigModelType,
   EntityDescriptorModelType,
@@ -23,6 +26,7 @@ import {
   LinkModelType,
   OperationType,
   ParsedPolygonPart,
+  ParsedPolygonPartError,
   PolygonPartRecordModel,
   PolygonPartRecordModelType,
   ProductType,
@@ -243,14 +247,50 @@ export const removeEmptyObjFields = (
   return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
 };
 
+export const getYupFieldConfig = (
+  field: FieldConfigModelType,
+  intl: IntlShape
+): MixedSchema => {
+  return !field.dateGranularity ?
+    Yup.mixed().required(
+      intl.formatMessage(
+        { id: 'validation-general.required' },
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
+      )
+    ):
+    Yup.date().nullable().max(
+      new Date(),
+      intl.formatMessage(
+        { id: 'validation-general.date.future' },
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
+      )
+    ).typeError(
+      intl.formatMessage(
+        { id: 'validation-general.required' },
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
+      )
+    ).required(
+      intl.formatMessage(
+        { id: 'validation-general.required' },
+        { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
+      )
+    );
+};
+
 export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature): ParsedPolygonPart => {
   const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
-  const errors: Record<string,string[]> = {};
+  const errors: Record<string,ParsedPolygonPartError> = {};
   desciptors.forEach((desc) => {
     const shapeFieldValue = get(feature, desc.shapeFileMapping as string);
 
+    // This logic mimics basic YUP schema:
+    // 1. required fields 
+    // 2. no future dates
     if(!shapeFieldValue && desc.isRequired){
-      errors[desc.fieldName as string] = ['validation-general.required'];
+      errors[desc.fieldName as string] = {
+        codes: ['validation-general.required'],
+        label: desc.label as string
+      };
     }
     
     if(desc.shapeFileMapping) {
@@ -258,6 +298,17 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
         case 'imagingTimeBeginUTC':
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
+          if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
+            if(errors[desc.fieldName as string]){
+              errors[desc.fieldName as string].codes.push('validation-general.date.future');
+            }
+            else{
+              errors[desc.fieldName as string] = {
+                codes: ['validation-general.date.future'],
+                label: desc.label as string
+              };
+            }
+          }
           break;
         case 'footprint':
           poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);

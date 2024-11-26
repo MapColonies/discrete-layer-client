@@ -8,9 +8,13 @@ import { RecordTypeEnumType } from "./RecordTypeEnum";
 /* The TypeScript type of an instance of PolygonPartRecordModel */
 export interface PolygonPartRecordModelType extends Instance<typeof PolygonPartRecordModel.Type> {}
 
+export interface ParsedPolygonPartError {
+  codes: string[];
+  label: string
+}
 export interface ParsedPolygonPart {
   polygonPart: PolygonPartRecordModelType;
-  errors: Record<string,string[]>;
+  errors: Record<string,ParsedPolygonPartError>;
 }
 /* A graphql query fragment builders for PolygonPartRecordModel */
 export { selectFromPolygonPartRecord, polygonPartRecordModelPrimitives, PolygonPartRecordModelSelector } from "./PolygonPartRecordModel.base"

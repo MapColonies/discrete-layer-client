@@ -35,6 +35,7 @@ import {
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   ParsedPolygonPart,
+  ParsedPolygonPartError,
   PolygonPartRecordModelType,
   RecordType,
   SourceValidationModelType
@@ -318,10 +319,11 @@ export const InnerRasterForm = (
     const stattusErrors = parsingErrors.reduce(
       (acc,curr) => {
         Object.keys(curr).forEach(key=>{
-          let errObj = curr[key] as Record<string, string[]>; 
+          let errObj = curr[key] as Record<string, ParsedPolygonPartError>; 
           Object.keys(errObj).forEach(fieldKey => {
-            errObj[fieldKey] = errObj[fieldKey].map(
-              errText => intl.formatMessage({id: errText}, {fieldName: emphasizeByHTML(fieldKey)})
+            // @ts-ignore
+            errObj[fieldKey] = errObj[fieldKey].codes.map(
+              errText => intl.formatMessage({id: errText}, {fieldName: emphasizeByHTML(`${intl.formatMessage({ id: errObj[fieldKey].label })}`)})
             );
           });
         });
