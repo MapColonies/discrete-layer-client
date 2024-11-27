@@ -18,14 +18,14 @@ import { get, set, isEmpty, isObject } from 'lodash';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
-import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography, Tooltip } from '@map-colonies/react-core';
+import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
-import useSessionStoreWatcherForm from '../../../../common/hooks/useSessionStoreWatcherForm';
+// import useSessionStoreWatcherForm from '../../../../common/hooks/useSessionStoreWatcherForm';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
 import { mergeRecursive } from '../../../../common/helpers/object';
@@ -157,8 +157,7 @@ export const InnerRasterForm = (
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
-  const [syncAnywayChecked, setSyncAnywayChecked] = useState<boolean>(false);
-  const validationWarn = useSessionStoreWatcherForm();
+  // const validationWarn = useSessionStoreWatcherForm();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
@@ -918,40 +917,6 @@ export const InnerRasterForm = (
               Object.keys(graphQLError).length > NONE &&
               <GraphQLError error={graphQLError} />
             }
-            {
-              validationWarn?.message &&
-              isEmpty(firstPhaseErrors) &&
-              (!isEmpty(errors) || !vestValidationResults.errorCount) &&
-              isEmpty(graphQLError) &&
-              <Box className="ingestionWarning">
-                <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
-                <Box>
-                  <Typography tag="div" className="ingestionWarningMessage">
-                    <Typography tag="span" className="warningMessage warning"
-                      dangerouslySetInnerHTML={{__html:
-                        intl.formatMessage(
-                          { id: 'ingestion.warning.invalid-secondary-file' },
-                          { title: emphasizeByHTML(`${intl.formatMessage({ id: 'ingestion.warning.title' })}`) }
-                        )
-                      }}
-                    />
-                    <Typography tag="span" className="warning">{' - '}</Typography>
-                    <Tooltip content={validationWarn?.message}>
-                      <Typography tag="span" className={validationWarn?.severity}>{validationWarn?.message}</Typography>
-                    </Tooltip>
-                  </Typography>
-                  <Checkbox
-                    className="warning"
-                    label={intl.formatMessage({id: 'ingestion.checkbox.label'})}
-                    checked={syncAnywayChecked}
-                    onClick={
-                      (evt: React.MouseEvent<HTMLInputElement>): void => {
-                        setSyncAnywayChecked(evt.currentTarget.checked);
-                      }}
-                  />
-                </Box>
-              </Box>
-            } 
           </Box>
           <Box className="buttons">
             {
@@ -965,8 +930,7 @@ export const InnerRasterForm = (
                   ppFeatures.length === NONE ||
                   Object.keys(errors).length > NONE ||
                   (Object.keys(getStatusErrors()).length > NONE) ||
-                  !isEmpty(graphQLError) ||
-                  (!isEmpty(validationWarn?.message) && !syncAnywayChecked)
+                  !isEmpty(graphQLError)
                 }
               >
                 <FormattedMessage id="general.ok-btn.text" />

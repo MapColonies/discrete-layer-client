@@ -169,12 +169,12 @@ export const syncHttpClientGql = () => {
         let masterResponse: any = isRawRequest
           ? await client.rawRequest(query, variables)
           : await client.request(query, variables);
-        if (relevantQuery
-          && !syncSlavesDns.includes(client)
-          && isRasterRequest(variables)
-          && shouldUpdateSlaves(relevantQuery.queryName)) {
-          syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
-        }
+        // if (relevantQuery
+        //   && !syncSlavesDns.includes(client)
+        //   && isRasterRequest(variables)
+        //   && shouldUpdateSlaves(relevantQuery.queryName)) {
+        //   syncSlaves(isRawRequest, masterResponse, query, variables, relevantQuery);
+        // }
         return masterResponse;
       } catch (error) {
         console.error(`Error during ${query}: ${JSON.stringify(error)}`);
