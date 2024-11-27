@@ -10,12 +10,11 @@ import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
 import { Button, CircularProgress, Icon, IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
-import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+import useSessionStoreWatcherDirectory from '../../../common/hooks/useSessionStoreWatcherDirectory';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
-import { sessionStore } from '../../../common/helpers/storage';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import {
@@ -26,7 +25,7 @@ import {
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { clearSyncWarnings, getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
+import { clearSyncWarnings, importJSONFileFromClient, ValidationMessage } from './utils';
 
 import './ingestion-fields.css';
 
@@ -188,44 +187,11 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
 
   const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType[]}>();
-  const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<ValidationMessage>();
+  const directoryComparisonWarn = useSessionStoreWatcherDirectory();
 
   const handleError = useCallback((error: boolean) => {
     onErrorCallback(error);
   }, [onErrorCallback]);
-
-  useEffect(() => {
-    // Add method wathers for storage changes
-    sessionStore.watchMethods(
-      ['setItem', 'removeItem'],
-      (method, key, ...args) => {},
-      (method, key, ...args) => {
-        if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
-          switch (method) {
-            case 'setItem': {
-              const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
-              if (dirComparison) {
-                setDirectoryComparisonWarn(getValidationMessage(dirComparison, intl));
-              }
-              break;
-            }
-            case 'removeItem': {
-              setDirectoryComparisonWarn(undefined);
-              break;
-            }
-            default: {
-              break;
-            }
-          }
-        }
-      }
-    );
-
-    // Clean up the method watchers when the component unmounts
-    return () => {
-      sessionStore.unWatchMethods();
-    };
-  }, []);
 
   useEffect(() => {
     if (chosenMetadataFile !== null) {
