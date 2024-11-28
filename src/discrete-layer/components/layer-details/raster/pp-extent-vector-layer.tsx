@@ -4,7 +4,6 @@ import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { MapEvent } from 'ol';
 import bboxPolygon from '@turf/bbox-polygon';
 import { observer } from 'mobx-react';
-import squareGrid from '@turf/square-grid';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';

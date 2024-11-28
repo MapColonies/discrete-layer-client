@@ -598,7 +598,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   }
 
-  const getActiveTabHeader = (tabIdx: number): JSX.Element => {
+  const getActiveTabHeader = (tabIdx: number, site: string): JSX.Element => {
 
     if(!tabsPanelExpanded) {
       return (
@@ -628,8 +628,8 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Typography use="headline6" tag="span">
                 <FormattedMessage id={tabView?.title}></FormattedMessage>
               </Typography>
-              <Typography use="headline6" tag="span" className={`current-client-site-${currentSite()}`}>
-                {currentSite()!=='generic' && intl.formatMessage({ id: `tab-views.catalog.site.${currentSite()}` })}
+              <Typography use="headline6" tag="span" className={`current-client-site-${site}`}>
+                {site!=='generic' && intl.formatMessage({ id: `tab-views.catalog.site.${site}` })}
               </Typography>
             </div>
           </div>
@@ -787,6 +787,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const contextMenuSizeByTab = useMemo((): MenuDimensions => {
     return actionsMenuDimensions as MenuDimensions;
   }, [activeTabView, actionsMenuDimensions]);
+
+  const site = useMemo(() => currentSite(), []);
  
   return (
     <>
@@ -889,7 +891,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
               }}
             >
-              {getActiveTabHeader(activeTabView)}
+              {getActiveTabHeader(activeTabView, site)}
             </Box>
           ) : null}
           <Box 
@@ -902,7 +904,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           >
             <Box className="tabContentContainer" style={{display: activeTabView === TabViews.CATALOG ? 'block' : 'none'}}>
               {
-                getActiveTabHeader(activeTabView)
+                getActiveTabHeader(activeTabView, site)
               }
               <Box className="panelContent" style={{ overflow: 'hidden' }}>
                 <CatalogTreeComponent refresh={catalogRefresh}/>
@@ -912,7 +914,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               activeTabView === TabViews.SEARCH_RESULTS &&
               <Box className="tabContentContainer">
                 {
-                  getActiveTabHeader(activeTabView)
+                  getActiveTabHeader(activeTabView, site)
                 }
                 <LayersResultsComponent
                   searchLoading={searchLoading}
@@ -928,7 +930,7 @@ const DiscreteLayerView: React.FC = observer(() => {
               activeTabView === TabViews.EXPORT_LAYER &&
               <Box className="tabContentContainer">
                 {
-                  getActiveTabHeader(activeTabView)
+                  getActiveTabHeader(activeTabView, site)
                 }
                 <ExportLayerComponent
                   handleTabViewChange={handleTabViewChange}
