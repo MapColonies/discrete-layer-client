@@ -97,10 +97,12 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const LegendsArray = useMemo(() => {
     const res:LegendItem[] = [];
     PPMapStyles.forEach((value, key)=>{
-      res.push({
-        title: intl.formatMessage({id: `polygon-parts.map-preview-legend.${key}`}) as string,
-        style: value as Style
-      })
+      if(!key.includes('MARKER')){
+        res.push({
+          title: intl.formatMessage({id: `polygon-parts.map-preview-legend.${key}`}) as string,
+          style: value as Style
+        })
+      }
     });
     return res;
   },[]);
