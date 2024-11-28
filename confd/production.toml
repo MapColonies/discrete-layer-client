@@ -45,5 +45,6 @@ keys = [
   "/configuration/project/version",
   "/configuration/whatsnew/url",
   "/configuration/sites/config",
-  "/configuration/bff/path"
+  "/configuration/bff/path",
+  "/configuration/polygon/parts/feature/type/prefix"
 ]
