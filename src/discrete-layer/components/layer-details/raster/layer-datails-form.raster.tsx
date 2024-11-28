@@ -25,7 +25,6 @@ import { ValidationsError } from '../../../../common/components/error/validation
 import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
-// import useSessionStoreWatcherForm from '../../../../common/hooks/useSessionStoreWatcherForm';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
 import { mergeRecursive } from '../../../../common/helpers/object';
@@ -157,7 +156,6 @@ export const InnerRasterForm = (
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
-  // const validationWarn = useSessionStoreWatcherForm();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
