@@ -435,7 +435,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       if(formDrafts.length === NONE) return;
       
       formDrafts.forEach((formDraft: DraftResult)=>{
-        hasVestErrors &&= (formDraft.errorCount === NONE);
+        hasVestErrors ||= (formDraft.errorCount !== NONE);
       });
 
       if (!hasVestErrors) {

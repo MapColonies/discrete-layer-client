@@ -25,3 +25,12 @@
   
     return retObj;
   }
+
+  export const removePropertiesWithPrefix = (obj: any, prefix: string): any => {
+    for (const key in obj) {
+      if (key.startsWith(prefix)) {
+        delete obj[key];
+      }
+    }
+    return obj;
+  };

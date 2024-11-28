@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
-import { get, set, isEmpty, isObject } from 'lodash';
+import { get, set, isEmpty, isObject, omit } from 'lodash';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
@@ -29,7 +29,7 @@ import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
-import { mergeRecursive } from '../../../../common/helpers/object';
+import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -138,6 +138,8 @@ export const InnerRasterForm = (
 
   const status = props.status as StatusError | Record<string, unknown>;
   type POLYGON_PARTS_MODE = 'FROM_SHAPE' | 'MANUAL';
+
+  const POLYGON_PARTS_STATUS_ERROR = 'pp_status_errors';
   
   const intl = useIntl();
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
@@ -202,6 +204,30 @@ export const InnerRasterForm = (
     },
     [errors, getFieldMeta],
   );
+
+  const vestValidationHasErrors = useMemo<boolean>(() => {
+    let vestHasErrors = false;
+    let countPPWithErrors = 0;
+    Object.keys(vestValidationResults).forEach((key) => {
+      const currPartHasErrors = (vestValidationResults[key].errorCount > NONE);
+      vestHasErrors ||= currPartHasErrors;
+      countPPWithErrors += currPartHasErrors ? 1 : 0;
+    });
+
+    if(vestHasErrors){
+      setStatus({
+        errors: {
+          [POLYGON_PARTS_STATUS_ERROR]: [
+            intl.formatMessage(
+              {id: 'validation-general.polygonParts.hasErrors'}, 
+              {numErrorParts: emphasizeByHTML(`${countPPWithErrors}`)}
+            )
+          ]
+        },
+      });
+    }
+    return vestHasErrors;
+  }, [vestValidationResults]);
 
   useEffect(() => {
     setShowCurtain(!isSelectedFiles);
@@ -333,9 +359,9 @@ export const InnerRasterForm = (
     );
 
     if(parsingErrors.length){
-      stattusErrors['shape'] = [
+      stattusErrors[POLYGON_PARTS_STATUS_ERROR] = [
         intl.formatMessage(
-          {id: 'validation-general.shapeFile.polygonParts.hasErrors'}, 
+          {id: 'validation-general.polygonParts.hasErrors'}, 
           {numErrorParts: emphasizeByHTML(`${parsingErrors.length}`)}
         )
       ];
@@ -359,6 +385,10 @@ export const InnerRasterForm = (
     if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
       setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
     }
+    else {
+      setClientCustomValidationError(undefined);
+    }
+
   }, [sourceExtent, outlinedPerimeter]);
 
   const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
@@ -395,16 +425,19 @@ export const InnerRasterForm = (
     }];
   }, [entityDescriptors, mode]);
 
+  const removeStatusError = (errorKey: string) => {
+    setStatus(omit(status,`errors.${errorKey}`));
+  };
+
   const entityFormikHandlers: EntityFormikHandlers = useMemo(
     () => ({
       handleChange: (e: React.ChangeEvent<unknown>): void => {
-        setGraphQLError(undefined);
-        setPPCheckPerformed(false);
         handleChange(e);
       },
       handleBlur: (e: React.FocusEvent<unknown>): void => {
         setGraphQLError(undefined);
         setPPCheckPerformed(false);
+        removeStatusError(POLYGON_PARTS_STATUS_ERROR);
         handleBlur(e);
       },
       handleSubmit,
@@ -790,7 +823,7 @@ export const InnerRasterForm = (
                       );
 
                       setValues({
-                        ...values,
+                        ...removePropertiesWithPrefix(values, NESTED_FORMS_PRFIX),
                         ...polygonsData
                       });
                     })
@@ -798,7 +831,7 @@ export const InnerRasterForm = (
                       setStatus({
                         errors: {
                           // ...currentErrors,
-                          ['shape']: [intl.formatMessage({ id: (e as Error).message })],
+                          [POLYGON_PARTS_STATUS_ERROR]: [intl.formatMessage({ id: (e as Error).message })],
                         },
                       });
                     })
@@ -972,7 +1005,7 @@ export const InnerRasterForm = (
             {
               validationWarn?.message &&
               isEmpty(firstPhaseErrors) &&
-              (!isEmpty(errors) || !vestValidationResults.errorCount) &&
+              (!isEmpty(errors) || !vestValidationHasErrors) &&
               isEmpty(graphQLError) &&
               <Box className="ingestionWarning">
                 <Typography tag="span"><IconButton className="mc-icon-Status-Warnings warningIcon warning" /></Typography>
