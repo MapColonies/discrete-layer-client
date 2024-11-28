@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -10,6 +10,8 @@ const AppTitle = (): JSX.Element => {
   const intl = useIntl();
   const projectVersion = CONFIG.PROJECT_VERSION;
   const appVersion = packageJson.version;
+
+  const site = useMemo(() => currentSite(), []);
 
   useEffect(() => {
     document.title = `${intl.formatMessage({ id: 'general.logo.text' })} - ${projectVersion}`;
@@ -29,7 +31,7 @@ const AppTitle = (): JSX.Element => {
               id: 'general.version.tooltip',
             })} ${projectVersion}`}
           >
-            <Box className={`appVersionContainer-${currentSite()}`}> {versionText} </Box>
+            <Box className={`appVersionContainer-${site}`}> {versionText} </Box>
           </Tooltip>
         </Box>
         <Icon className="appIcon mc-icon-AppIcon" />
