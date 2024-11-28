@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
-import { currentBffUrl, syncSlavesDns } from './common/helpers/siteUrl';
+import { currentBffUrl, syncSlavesClients } from './common/helpers/siteUrl';
 import { sessionStore } from './common/helpers/storage';
 import { RecordType } from './discrete-layer/models';
 
@@ -112,7 +112,7 @@ const shouldUpdateSlaves = (queryName: string) => {
 };
 
 const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, variables?: any, relevantQuery?: SYNC_QUERY) => {
-  syncSlavesDns.forEach(async (slaveClient: GraphQLClient) => {
+  syncSlavesClients.forEach(async (slaveClient: GraphQLClient) => {
     try {
       let slaveResponse: any = isRawRequest? await slaveClient.rawRequest(query, variables):
         await slaveClient.request(query, variables);
