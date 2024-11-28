@@ -164,6 +164,10 @@
   color: var(--mdc-theme-text-primary-on-dark);
 }
 
+.dark-theme .mdc-text-field--invalid .mdc-text-field__input {
+  color: var(--mdc-theme-gc-error-high, red) !important;
+}
+  
 .dark-theme .mdc-text-field__input {
   color: var(--mdc-theme-text-primary-on-dark, #fff) !important;
 }
