@@ -8,14 +8,13 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, isEmpty } from 'lodash';
-import { Button, CircularProgress, Icon, IconButton, Tooltip, Typography } from '@map-colonies/react-core';
+import { Button, CircularProgress, Icon, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box, defaultFormatters, FileData } from '@map-colonies/react-components';
-import { SYNC_QUERY_NAME } from '../../../syncHttpClientGql';
 import { Selection } from '../../../common/components/file-picker';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
+// import useSessionStoreWatcherDirectory from '../../../common/hooks/useSessionStoreWatcherDirectory';
 import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
-import { sessionStore } from '../../../common/helpers/storage';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
 import {
@@ -26,7 +25,7 @@ import {
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
-import { clearSyncWarnings, getValidationMessage, importJSONFileFromClient, ValidationMessage } from './utils';
+import { clearSyncWarnings, importJSONFileFromClient } from './utils';
 
 import './ingestion-fields.css';
 
@@ -92,8 +91,7 @@ const IngestionInputs: React.FC<{
   values: string[];
   selection: Selection;
   formik: EntityFormikHandlers;
-  notSynchedDirWarning?: ValidationMessage;
-}> = ({ recordType, fields, values, selection, formik, notSynchedDirWarning }) => {
+}> = ({ recordType, fields, values, selection, formik }) => {
   return (
     <>
       {
@@ -116,12 +114,11 @@ const IngestionInputs: React.FC<{
                 }
                 {
                   index === DIRECTORY && values[index] !== '' &&
-                  <Tooltip content={notSynchedDirWarning?.message ? notSynchedDirWarning?.message : values[index]}>
-                  <Typography tag="div" dir="auto" className={`filesPathContainer ${notSynchedDirWarning?.severity}`}>
-                    { notSynchedDirWarning?.message && values[index] && <IconButton className={`mc-icon-Status-Warnings ${notSynchedDirWarning?.severity}`} /> }
-                    { values[index] }
-                  </Typography>
-                </Tooltip>
+                  <Tooltip content={values[index]}>
+                    <Typography tag="div" dir="auto" className="filesPathContainer">
+                      { values[index] }
+                    </Typography>
+                  </Tooltip>
                 }
                 {
                   index === FILES && values[index] !== '' &&
@@ -188,44 +185,11 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
 
   const queryResolveMetadataAsModel = useQuery<{ resolveMetadataAsModel: LayerMetadataMixedUnion}>();
   const queryValidateSource = useQuery<{validateSource: SourceValidationModelType[]}>();
-  const [directoryComparisonWarn, setDirectoryComparisonWarn] = useState<ValidationMessage>();
+  // const directoryComparisonWarn = useSessionStoreWatcherDirectory();
 
   const handleError = useCallback((error: boolean) => {
     onErrorCallback(error);
   }, [onErrorCallback]);
-
-  useEffect(() => {
-    // Add method wathers for storage changes
-    sessionStore.watchMethods(
-      ['setItem', 'removeItem'],
-      (method, key, ...args) => {},
-      (method, key, ...args) => {
-        if (key.includes(SYNC_QUERY_NAME.GET_DIRECTORY)) {
-          switch (method) {
-            case 'setItem': {
-              const dirComparison = sessionStore.getObject(SYNC_QUERY_NAME.GET_DIRECTORY);
-              if (dirComparison) {
-                setDirectoryComparisonWarn(getValidationMessage(dirComparison, intl));
-              }
-              break;
-            }
-            case 'removeItem': {
-              setDirectoryComparisonWarn(undefined);
-              break;
-            }
-            default: {
-              break;
-            }
-          }
-        }
-      }
-    );
-
-    // Clean up the method watchers when the component unmounts
-    return () => {
-      sessionStore.unWatchMethods();
-    };
-  }, []);
 
   useEffect(() => {
     if (chosenMetadataFile !== null) {
@@ -440,7 +404,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
             values={[values.directory, values.fileNames]}
             selection={selection}
             formik={formik as EntityFormikHandlers}
-            notSynchedDirWarning={directoryComparisonWarn}
+            // notSynchedDirWarning={directoryComparisonWarn}
           />
         </Box>
         <Box className="ingestionButtonsContainer">
