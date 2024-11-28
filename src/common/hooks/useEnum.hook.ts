@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import EnumsMapContext, { IEnumsMapType } from "../contexts/enumsMap.context";
 
 export const useEnums = (): IEnumsMapType => {

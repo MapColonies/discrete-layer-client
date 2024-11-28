@@ -1,5 +1,5 @@
 import { Box } from '@map-colonies/react-components';
-import { MenuItem, Select, Typography } from '@map-colonies/react-core';
+import { MenuItem, Select } from '@map-colonies/react-core';
 import { isEmpty } from 'lodash';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useIntl } from 'react-intl';

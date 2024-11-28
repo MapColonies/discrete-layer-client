@@ -16,7 +16,6 @@ import { Mode } from '../../../common/models/mode.enum';
 import { 
   AutocompletionModelType,
   EntityDescriptorModelType,
-  FieldCategory,
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   LinkModelType,

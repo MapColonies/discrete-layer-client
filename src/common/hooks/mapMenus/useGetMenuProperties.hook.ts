@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { IContextMenuData } from "@map-colonies/react-components";
 import { useStore } from "../../../discrete-layer/models";
 import { MapMenusIds, IMapMenuProperties } from "../../../discrete-layer/models/mapMenusManagerStore";

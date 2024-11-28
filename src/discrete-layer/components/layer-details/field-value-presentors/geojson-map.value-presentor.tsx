@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
-import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Map, TileLayer, TileOsm, TileWMTS, TileXYZ, VectorLayer, VectorSource } from '@map-colonies/react-components';
+import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Map, TileLayer, TileWMTS, TileXYZ, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Geometry } from 'geojson';
 import { FitOptions } from 'ol/View';
 import { validateGeoJSONString } from '../../../../common/utils/geojson.validation';

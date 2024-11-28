@@ -1,18 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { observer } from 'mobx-react-lite';
 import { useIntl } from "react-intl";
+import { isEmpty } from "lodash";
 import { Box } from "@map-colonies/react-components";
 import { Button } from "@map-colonies/react-core";
+import { useClickOutside } from "../../../../common/hooks/useClickOutside";
+import { FilterField } from "../../../models/RootStore.base";
 import { RecordType, useStore } from "../../../models";
 import { useGetFilterableFields } from "./hooks/useGetFilterableFields";
 import { CatalogFilterFormFields } from "./catalog-filter-form-fields.component";
 import { getCatalogFilters } from "./utils";
 
 import './catalog-filter-panel.css';
-import { FilterField } from "../../../models/RootStore.base";
-import { isEmpty } from "lodash";
-import { useClickOutside } from "../../../../common/hooks/useClickOutside";
+
 interface CatalogFilterPanelProps {
     isOpen: boolean;
     closePanel: () => void;

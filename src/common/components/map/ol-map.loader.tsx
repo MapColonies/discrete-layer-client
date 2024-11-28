@@ -6,10 +6,9 @@ import { MapEvent } from 'ol';
 import './ol-map.loader.css';
 
 interface MapLoadingIndicatorProps {
-  
 }
 
-export const MapLoadingIndicator: React.FC<MapLoadingIndicatorProps> = ({ }) => {
+export const MapLoadingIndicator: React.FC<MapLoadingIndicatorProps> = () => {
   const mapOl = useMap();
     
   useEffect(() => {

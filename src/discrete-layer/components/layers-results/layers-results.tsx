@@ -28,13 +28,10 @@ import { Loading } from '../../../common/components/tree/statuses/loading';
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { usePrevious } from '../../../common/hooks/previous.hook';
-import { EntityDescriptorModelType } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { TabViews } from '../../views/tab-views';
-import { LayerRecordTypes } from '../layer-details/entity-types-keys';
-import { getFieldNamesByEntityDescriptorMap } from '../layer-details/utils';
 
 import './layers-results.css';
 

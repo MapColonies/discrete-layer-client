@@ -1,4 +1,3 @@
-import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
 import { Feature } from 'geojson';
 import { get, isEmpty } from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
