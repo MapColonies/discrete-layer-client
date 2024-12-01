@@ -22,7 +22,7 @@ import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, 
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
-import { GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
+import { GraphQLError, IGpaphQLError, isGraphQLHasPayloadNestedObjectError } from '../../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
@@ -202,7 +202,7 @@ export const InnerRasterForm = (
     [errors, getFieldMeta],
   );
 
-  const vestValidationHasErrors = useMemo<boolean>(() => {
+  useEffect(() => {
     let vestHasErrors = false;
     let countPPWithErrors = 0;
     Object.keys(vestValidationResults).forEach((key) => {
@@ -223,7 +223,6 @@ export const InnerRasterForm = (
         },
       });
     }
-    return vestHasErrors;
   }, [vestValidationResults]);
 
   useEffect(() => {
@@ -652,8 +651,10 @@ export const InnerRasterForm = (
     }
 
     const currentFormKey = polygon_part.uniquePartId;
-    let isFirstPhaseErrorInPolygonPart = (firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE);
-    let isVestPhaseErrorInPolygonPart = (vestValidationResults[currentFormKey] && vestValidationResults[currentFormKey]?.errorCount > NONE);
+    const isFirstPhaseErrorInPolygonPart = (firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE);
+    const isVestPhaseErrorInPolygonPart = (vestValidationResults[currentFormKey] && vestValidationResults[currentFormKey]?.errorCount > NONE);
+    const isGraphQLErrorInPolygonPart = isGraphQLHasPayloadNestedObjectError(mutationQueryError as IGpaphQLError, index);
+    
 
     if(layerPolygonParts && Object.keys(layerPolygonParts).length > NONE){
       polygon_part = layerPolygonParts[currentFormKey];
@@ -665,7 +666,7 @@ export const InnerRasterForm = (
                   open={expandedParts[index]}
                   handle={
                     <Handler partIndex={index} text={currentFormKey} 
-                      isErrorInPolygonPart={isFirstPhaseErrorInPolygonPart || isVestPhaseErrorInPolygonPart}
+                      isErrorInPolygonPart={isFirstPhaseErrorInPolygonPart || isVestPhaseErrorInPolygonPart || isGraphQLErrorInPolygonPart}
                       handleClick={()=>{
                         removePolygonPart(currentFormKey);
 

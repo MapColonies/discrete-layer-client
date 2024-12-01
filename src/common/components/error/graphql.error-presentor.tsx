@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
+import { isEmpty, isArray } from 'lodash';
 import { IconButton } from '@map-colonies/react-core';
 import { AutoDirectionBox } from '../auto-direction-box/auto-direction-box.component';
 
@@ -14,7 +14,7 @@ const NONE = 0;
 const USER_ERROR_RESPONSE_CODE = 400;
 const SERVER_ERROR_RESPONSE_CODE = 500;
 
-interface IGpaphQLError {
+export interface IGpaphQLError {
   error: any;
 }
 
@@ -28,6 +28,18 @@ interface IServerErrorResponse {
   status?: number;
   statusText?: string;
 }
+
+export const isGraphQLHasPayloadNestedObjectError = ( errorGraphQL: any, idx: number ) => {
+  let ret = false;
+  if(!isEmpty(errorGraphQL?.response)){
+    errorGraphQL?.response.errors?.forEach((error: IServerError) => {
+      const regex = /\d+(?:\/\d+)*/g;
+      const matches = error.serverResponse?.data.message.match(regex);
+      ret ||= (isArray(matches) && matches.includes(idx.toString()));
+    })
+  }
+  return ret;
+};
 
 export const GraphQLError: React.FC<IGpaphQLError> = ({ error }) => {
 
