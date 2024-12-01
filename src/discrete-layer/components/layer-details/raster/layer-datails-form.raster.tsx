@@ -857,6 +857,7 @@ export const InnerRasterForm = (
                     rowCount={expandedParts.length}
                     overscanRowCount={3}
                     rowHeight={(idx)=> ( expandedParts[idx.index] ? 316 : 48 )}
+                    scrollToIndex = { expandedParts.length - 1 }
                   />
               }
               {
@@ -875,7 +876,7 @@ export const InnerRasterForm = (
 
                       schemaUpdater(1, lastPartIdx);
                    
-                      setExpandedParts([...expandedParts, false]);
+                      setExpandedParts([...expandedParts.fill(false), true]);
 
                       const polygonData = {
                         uniquePartId: NESTED_FORMS_PRFIX + lastPartIdx,
