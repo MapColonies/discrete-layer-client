@@ -28,6 +28,7 @@ import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
+import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -138,6 +139,7 @@ export const InnerRasterForm = (
   const POLYGON_PARTS_STATUS_ERROR = 'pp_status_errors';
   
   const intl = useIntl();
+  const ZOOM_LEVELS = useZoomLevels();
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
@@ -158,6 +160,7 @@ export const InnerRasterForm = (
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
+  const [gpkgValidationResults, setGpkgValidationResults] = useState<SourceValidationModelType|undefined>(undefined);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
@@ -441,29 +444,33 @@ export const InnerRasterForm = (
       layerRecord[key] = metadata.recordModel[key];
     }
 
+    const validationResults = metadata.recordModel as unknown as SourceValidationModelType;
+
     setSourceExtent({
       type: "Feature",
       properties: {
         featureType: FeatureType.SOURCE_EXTENT
       },
-      geometry: (metadata.recordModel as unknown as SourceValidationModelType).extentPolygon,
+      geometry: validationResults.extentPolygon,
     });
 
-    if((metadata.recordModel as unknown as SourceValidationModelType).extentPolygon){
+    if(validationResults.extentPolygon){
       setSourceExtentMarker({
         type: "Feature",
         properties: {
           featureType: FeatureType.SOURCE_EXTENT_MARKER
         },
         geometry: {
-          coordinates: getFirstPoint((metadata.recordModel as unknown as SourceValidationModelType).extentPolygon),
+          coordinates: getFirstPoint(validationResults.extentPolygon),
           type: 'Point'
         },
       });
     }
-
+    
+    setGpkgValidationResults(validationResults)
+    
     setGpkgValidationError(
-      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
+      !validationResults.isValid ? validationResults.message as string : undefined
     );
 
     resetForm();
@@ -871,6 +878,8 @@ export const InnerRasterForm = (
 
                       const polygonData = {
                         uniquePartId: NESTED_FORMS_PRFIX + lastPartIdx,
+                        sourceResolutionMeter: Object.values(ZOOM_LEVELS)
+                                              .find((zoom) => zoom.resolutionDeg === gpkgValidationResults?.resolutionDegree)?.resolutionMeter,
                         __typename: "PolygonPartRecord",
                       }
                       
