@@ -19,13 +19,11 @@ import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../common/components/file-picker';
-// import useSessionStoreWatcherForm from '../../../common/hooks/useSessionStoreWatcherForm';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
   LayerMetadataMixedUnion,
   RecordType,
-  SourceValidationModelType,
 } from '../../models';
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
@@ -111,17 +109,12 @@ const InnerForm = (
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
-  const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
-  // const validationWarn = useSessionStoreWatcherForm();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
-      ...get(status, 'errors') as Record<string, string[]>,
-      ...(gpkgValidationError ? {
-            error: [gpkgValidationError]
-          } : {})
+      ...get(status, 'errors') as Record<string, string[]>
     }
-  }, [status, gpkgValidationError]);
+  }, [status]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -139,13 +132,6 @@ const InnerForm = (
   useEffect(() => {
     setShowCurtain((mode === Mode.NEW || mode === Mode.UPDATE) && !isSelectedFiles);
   }, [mode, isSelectedFiles])
-
-  useEffect(() => {
-    setShowCurtain(
-      !isSelectedFiles || (isSelectedFiles && 
-      gpkgValidationError !== undefined)
-    );
-  }, [isSelectedFiles, gpkgValidationError]);
 
   useEffect(() => {
     setGraphQLError(mutationQueryError);
@@ -220,10 +206,6 @@ const InnerForm = (
       ...transformEntityToFormFields((isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel)),
       ...ingestionFields,
     });
-
-    setGpkgValidationError(
-      !(metadata.recordModel as unknown as SourceValidationModelType).isValid ? (metadata.recordModel as unknown as SourceValidationModelType).message as string : undefined
-    );
 
     setGraphQLError(metadata.error);
   };
