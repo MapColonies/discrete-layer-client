@@ -19,6 +19,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { ValidationsError } from '../../../common/components/error/validations.error-presentor';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../common/components/file-picker';
+// import useSessionStoreWatcherForm from '../../../common/hooks/useSessionStoreWatcherForm';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -109,6 +110,7 @@ const InnerForm = (
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
   const [firstPhaseErrors, setFirstPhaseErrors] = useState<Record<string, string[]>>({});
   const [showCurtain, setShowCurtain] = useState<boolean>(true);
+  // const validationWarn = useSessionStoreWatcherForm();
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
