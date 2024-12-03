@@ -524,6 +524,7 @@
   "validation-field.heightRangeTo.min": "{fieldName} is less than minimum: {value}",
   "validation-field.heightRangeTo.max": "{fieldName} is greater than maximum: {value}",
   "validation-field.scale.pattern": "{fieldName} is not a valid number between 0 to 100000000",
+  "validation-field.productId.pattern": "{fieldName} is not a valid string",
   "validation-field.scale.min": "{fieldName} is less than minimum: {value}",
   "validation-field.scale.max": "{fieldName} is greater than maximum: {value}",
   "validation-field.footprint.json": "{fieldName} is not geoJSON",
