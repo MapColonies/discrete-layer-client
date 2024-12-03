@@ -22,7 +22,7 @@ import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, 
 import { Box } from '@map-colonies/react-components';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
-import { GraphQLError, IGpaphQLError, isGraphQLHasPayloadNestedObjectError } from '../../../../common/components/error/graphql.error-presentor';
+import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
@@ -161,6 +161,7 @@ export const InnerRasterForm = (
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
   const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
   const [gpkgValidationResults, setGpkgValidationResults] = useState<SourceValidationModelType|undefined>(undefined);
+  const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     return {
@@ -205,11 +206,13 @@ export const InnerRasterForm = (
   useEffect(() => {
     let vestHasErrors = false;
     let countPPWithErrors = 0;
-    Object.keys(vestValidationResults).forEach((key) => {
-      const currPartHasErrors = (vestValidationResults[key].errorCount > NONE);
-      vestHasErrors ||= currPartHasErrors;
-      countPPWithErrors += currPartHasErrors ? 1 : 0;
-    });
+    Object.keys(vestValidationResults)
+      .filter((key)=> key.includes(NESTED_FORMS_PRFIX))
+      .forEach((key) => {
+        const currPartHasErrors = (vestValidationResults[key].errorCount > NONE);
+        vestHasErrors ||= currPartHasErrors;
+        countPPWithErrors += currPartHasErrors ? 1 : 0;
+      });
 
     if(vestHasErrors){
       setStatus({
@@ -237,6 +240,7 @@ export const InnerRasterForm = (
   }, [isSelectedFiles, gpkgValidationError])
 
   useEffect(() => {
+    setGraphQLPayloadObjectErrors(getGraphQLPayloadNestedObjectErrors(mutationQueryError));
     setGraphQLError(mutationQueryError);
   }, [mutationQueryError]);
 
@@ -653,8 +657,7 @@ export const InnerRasterForm = (
     const currentFormKey = polygon_part.uniquePartId;
     const isFirstPhaseErrorInPolygonPart = (firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE);
     const isVestPhaseErrorInPolygonPart = (vestValidationResults[currentFormKey] && vestValidationResults[currentFormKey]?.errorCount > NONE);
-    const isGraphQLErrorInPolygonPart = isGraphQLHasPayloadNestedObjectError(mutationQueryError as IGpaphQLError, index);
-    
+    const isGraphQLErrorInPolygonPart = graphQLPayloadObjectErrors.includes(index);
 
     if(layerPolygonParts && Object.keys(layerPolygonParts).length > NONE){
       polygon_part = layerPolygonParts[currentFormKey];
@@ -857,7 +860,7 @@ export const InnerRasterForm = (
                     rowCount={expandedParts.length}
                     overscanRowCount={3}
                     rowHeight={(idx)=> ( expandedParts[idx.index] ? 316 : 48 )}
-                    scrollToIndex = { expandedParts.length - 1 }
+                    scrollToIndex = { graphQLPayloadObjectErrors[0] ? graphQLPayloadObjectErrors[0] : (expandedParts.length ? expandedParts.length - 1 : 0) }
                   />
               }
               {
@@ -976,6 +979,7 @@ export const InnerRasterForm = (
                 }
               >
                 <FormattedMessage id="general.ok-btn.text" />
+                {mutationQueryLoading && <Box className="loadingOnTop"><CircularProgress/></Box>}
               </Button> :
               <Button
                 type="button"

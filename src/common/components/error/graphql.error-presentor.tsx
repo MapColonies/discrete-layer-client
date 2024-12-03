@@ -41,6 +41,20 @@ export const isGraphQLHasPayloadNestedObjectError = ( errorGraphQL: any, idx: nu
   return ret;
 };
 
+export const getGraphQLPayloadNestedObjectErrors = ( errorGraphQL: any ): number[] => {
+  const ret: number[] = [];
+  if(!isEmpty(errorGraphQL?.response)){
+    errorGraphQL?.response.errors?.forEach((error: IServerError) => {
+      const regex = /\d+(?:\/\d+)*/g;
+      const matches = error.serverResponse?.data.message.match(regex);
+      if(isArray(matches)){
+        ret.push(parseInt(matches[0]));
+      }
+    })
+  }
+  return ret;
+};
+
 export const GraphQLError: React.FC<IGpaphQLError> = ({ error }) => {
 
   const intl = useIntl();
