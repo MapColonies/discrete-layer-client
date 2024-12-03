@@ -26,7 +26,7 @@ export const Error: React.FC<ErrorProps> = (props) => {
             message && <Typography tag="span"> {message}</Typography>
           }
           {
-            !message && <Typography tag="span"> <FormattedMessage id="general.server.error"/></Typography>
+            !message && <Typography tag="span"> <FormattedMessage id="general.server.unavailable"/></Typography>
           }
         </Typography>
       </Box>
