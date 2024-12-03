@@ -128,7 +128,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [isNewRasterEntityDialogOpen, setNewRasterEntityDialogOpen] = useState<boolean>(false);
   const [isNew3DEntityDialogOpen, setNew3DEntityDialogOpen] = useState<boolean>(false);
   const [isNewDemEntityDialogOpen, setNewDemEntityDialogOpen] = useState<boolean>(false);
-  const [isEditEntityDialogOpen, setEditEntityDialogOpen] = useState<boolean>(false);
+  const [isEntityDialogOpen, setEntityDialogOpen] = useState<boolean>(false);
   const [isSystemsJobsDialogOpen, setSystemsJobsDialogOpen] = useState<boolean>(false);
   const [isSystemCoreInfoDialogOpen, setSystemCoreInfoDialogOpen] = useState<boolean>(false);
   const [openNew, setOpenNew] = useState<boolean>(false);
@@ -793,7 +793,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   return (
     <>
       <ActionResolver
-        handleOpenEntityDialog = {setEditEntityDialogOpen}
+        handleOpenEntityDialog = {setEntityDialogOpen}
         handleFlyTo = {onFlyTo}
         handleTabViewChange = {handleTabViewChange}
         activeTabView = {activeTabView}
@@ -952,8 +952,8 @@ const DiscreteLayerView: React.FC = observer(() => {
             }}>
             <DetailsPanel
               activeTabView={activeTabView}
-              isEditEntityDialogOpen = {isEditEntityDialogOpen}
-              setEditEntityDialogOpen = {setEditEntityDialogOpen}
+              isEntityDialogOpen = {isEntityDialogOpen}
+              setEntityDialogOpen = {setEntityDialogOpen}
               detailsPanelExpanded = {detailsPanelExpanded}
               setDetailsPanelExpanded = {setDetailsPanelExpanded} 
             />

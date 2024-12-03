@@ -17,8 +17,8 @@ import { TabViews } from '../tab-views';
 import './details-panel.component.css';
 
 interface DetailsPanelComponentProps {
-  isEditEntityDialogOpen: boolean;
-  setEditEntityDialogOpen: (open: boolean) => void;
+  isEntityDialogOpen: boolean;
+  setEntityDialogOpen: (open: boolean) => void;
   detailsPanelExpanded: boolean;
   setDetailsPanelExpanded: (isExpanded: boolean) => void;
   activeTabView: TabViews;
@@ -26,8 +26,8 @@ interface DetailsPanelComponentProps {
 
 export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((props) => {
   const {
-    isEditEntityDialogOpen,
-    setEditEntityDialogOpen,
+    isEntityDialogOpen,
+    setEntityDialogOpen,
     detailsPanelExpanded,
     setDetailsPanelExpanded,
     activeTabView
@@ -46,8 +46,8 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
     }
   }, [store.userStore.user, layerToPresent]);
 
-  const handleEditEntityDialogClick = (): void => {
-    setEditEntityDialogOpen(!isEditEntityDialogOpen);
+  const handleEntityDialogClick = (): void => {
+    setEntityDialogOpen(!isEntityDialogOpen);
   };
 
   return (
@@ -69,27 +69,40 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
               className="operationIcon mc-icon-Edit1"
               label="EDIT"
               onClick={(): void => {
-                handleEditEntityDialogClick();
+                handleEntityDialogClick();
               }}
             />
           </Tooltip>
         }
         {
-          isEditEntityDialogOpen && layerToPresent?.__typename === 'LayerRasterRecord' && isSelectedLayerUpdateMode &&
+          permissions.isEditAllowed === false && 
+          <Tooltip content={intl.formatMessage({ id: 'action.view.tooltip' })}>
+            <IconButton
+              className="mc-icon-Info"
+              label="VIEW"
+              onClick={(): void => {
+                handleEntityDialogClick();
+              }}
+            />
+          </Tooltip>
+        }
+        {
+          isEntityDialogOpen && layerToPresent?.__typename === 'LayerRasterRecord' && isSelectedLayerUpdateMode &&
           <EntityRasterDialog
-            isOpen={isEditEntityDialogOpen}
-            onSetOpen={setEditEntityDialogOpen}
+            isOpen={isEntityDialogOpen}
+            onSetOpen={setEntityDialogOpen}
             layerRecord={layerToPresent}
             isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         }
         {
-          isEditEntityDialogOpen && 
+          isEntityDialogOpen && 
           (layerToPresent?.__typename !== 'LayerRasterRecord' || (layerToPresent?.__typename === 'LayerRasterRecord' && !isSelectedLayerUpdateMode)) &&
           <EntityDialog
-            isOpen={isEditEntityDialogOpen}
-            onSetOpen={setEditEntityDialogOpen}
+            isOpen={isEntityDialogOpen}
+            onSetOpen={setEntityDialogOpen}
             layerRecord={layerToPresent}
+            isViewMode={!permissions.isEditAllowed}
             isSelectedLayerUpdateMode={isSelectedLayerUpdateMode}
           />
         }
