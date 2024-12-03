@@ -66,6 +66,7 @@ interface EntityDialogProps {
   recordType?: RecordType;
   layerRecord?: ILayerImage | null;
   isSelectedLayerUpdateMode?: boolean;
+  isViewMode?: boolean;
 }
 
 const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDescriptorModelType[]): void => {
@@ -146,6 +147,9 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     const decideMode = useCallback(() => {
       if (props.isSelectedLayerUpdateMode === true && props.layerRecord) {
         return Mode.UPDATE;
+      }
+      else if(props.isViewMode === true && props.layerRecord){
+        return Mode.VIEW;
       }
       return !props.layerRecord ? Mode.NEW : Mode.EDIT;
     }, []);
