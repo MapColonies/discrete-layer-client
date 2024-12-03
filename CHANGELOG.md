@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.14.0...v2.14.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* bff error message ([#544](https://github.com/MapColonies/discrete-layer-client/issues/544)) ([3b2dacb](https://github.com/MapColonies/discrete-layer-client/commit/3b2dacbad87ce0bfcb09d903dd688b1acad7efc9))
+
 ## [2.14.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.13.0...v2.14.0) (2024-12-03)
 
 
