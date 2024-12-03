@@ -78,6 +78,7 @@
   "action.publish.tooltip": "Publish",
   "action.unpublish.tooltip": "Unpublish",
   "action.edit.tooltip": "Edit",
+  "action.view.tooltip": "View",
   "action.saveMetadata.tooltip": "Save Metadata",
   "action.flyTo.tooltip": "Fly To",
   "action.update.tooltip": "Update",

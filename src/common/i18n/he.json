@@ -79,6 +79,7 @@
   "action.publish.tooltip": "פרסום",
   "action.unpublish.tooltip": "ביטול פרסום",
   "action.edit.tooltip": "עריכה",
+  "action.view.tooltip": "מורחב",
   "action.saveMetadata.tooltip": "שמור קובץ מטא-דאטה",
   "action.flyTo.tooltip": "הצג מיקום",
   "action.update.tooltip": "עדכון",

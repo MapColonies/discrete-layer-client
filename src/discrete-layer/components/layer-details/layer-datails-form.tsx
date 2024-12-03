@@ -269,6 +269,7 @@ const InnerForm = (
             }
           </Box>
           <Box className="buttons">
+            { mode !== Mode.VIEW &&
             <Button
               raised
               type="submit"
@@ -282,6 +283,7 @@ const InnerForm = (
             >
               <FormattedMessage id="general.ok-btn.text" />
             </Button>
+            }
             <Button
               type="button"
               onClick={(): void => {
