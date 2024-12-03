@@ -331,7 +331,7 @@ export const InnerRasterForm = (
   }, [ppCollisionCheckInProgress]);
 
   useEffect(() => {
-    if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
+    if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
       setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
     }
     else {
@@ -424,6 +424,7 @@ export const InnerRasterForm = (
     ingestionFields: FormValues,
     metadata: MetadataFile
   ): void => {
+    console.log('HERE~~~~~~', metadata)
     setIsSelectedFiles(!!ingestionFields.fileNames);
     
     // Check update related fields in metadata obj
