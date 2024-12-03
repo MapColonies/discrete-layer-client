@@ -15,6 +15,7 @@
   "general.error.title": "Something went wrong...",
   "general.error.description": "Message:",
   "general.server.error": "Server Error",
+  "general.server.unavailable": "BFF server is unavailable",
   "general.http-400.error": "Bad Request",
   "general.http-401.error": "Unauthorized",
   "general.http-402.error": "Payment Required",
