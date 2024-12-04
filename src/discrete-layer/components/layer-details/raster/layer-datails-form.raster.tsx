@@ -424,7 +424,6 @@ export const InnerRasterForm = (
     ingestionFields: FormValues,
     metadata: MetadataFile
   ): void => {
-    console.log('HERE~~~~~~', metadata)
     setIsSelectedFiles(!!ingestionFields.fileNames);
     
     // Check update related fields in metadata obj
