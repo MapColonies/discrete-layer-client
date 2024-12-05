@@ -27,12 +27,13 @@ body[dir='rtl'] .header {
   display: flex;
   align-items: center;
 }
+
 .ingestionButton .mdc-button {
   padding: 20px;
 }
 
-.uploadMetadataButton .mdc-button--outlined:not(:disabled){
-   border-color: currentColor;
+.uploadMetadataButton .mdc-button--outlined:not(:disabled) {
+  border-color: currentColor;
   /* color: var(--mdc-theme-text-icon-on-dark); */
   padding: 20px;
 }
@@ -79,6 +80,11 @@ body[dir='rtl'] .fileNamesSpacer {
   column-gap: 8px;
 }
 
+.fileItemName {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .fileIcon {
   font-size: 16px;
   cursor: default;
@@ -105,11 +111,4 @@ body[dir='rtl'] .moreTooltip {
   width: 60ch;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: flex;
-  flex-direction: row-reverse;
-  direction: rtl;
-}
-
-body[dir='rtl'] .filesPathContainer {
-  direction: ltr;
 }

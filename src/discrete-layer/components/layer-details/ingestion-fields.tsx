@@ -52,7 +52,7 @@ const FileItem: React.FC<{ file: FileData }> = ({ file }) => {
   return (
     <>
       <Box><Icon className="fileIcon mc-icon-Map-Vector" /></Box>
-      <Box>{file.name}</Box>
+      <Box className='fileItemName'>{file.name}</Box>
       <Box style={{ direction: 'ltr' }}>
         {defaultFormatters.formatFileSize(null, file)}
       </Box>
@@ -115,9 +115,9 @@ const IngestionInputs: React.FC<{
                 {
                   index === DIRECTORY && values[index] !== '' &&
                   <Tooltip content={values[index]}>
-                    <Typography tag="div" dir="auto" className="filesPathContainer">
-                      { values[index] }
-                    </Typography>
+                    <Box className="filesPathContainer">
+                      <Typography dir='ltr' tag='span'>{values[index]}</Typography>
+                    </Box>
                   </Tooltip>
                 }
                 {
