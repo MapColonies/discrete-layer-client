@@ -15,6 +15,7 @@
   "general.error.title": "משהו השתבש...",
   "general.error.description": "מידע נוסף:",
   "general.server.error": "התקבלה שגיאה מהשרת",
+  "general.server.unavailable": "שרת BFF לא זמין",
   "general.http-400.error": "בקשה לא חוקית",
   "general.http-401.error": "לא מורשה",
   "general.http-402.error": "נדרש תשלום",
