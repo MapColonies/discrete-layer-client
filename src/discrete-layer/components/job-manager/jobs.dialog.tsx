@@ -14,7 +14,6 @@ import {
 } from '../../../common/components/grid';
 import { GraphQLError } from '../../../common/components/error/graphql.error-presentor';
 import useCountDown, { IActions } from '../../../common/hooks/countdown.hook';
-import { Error } from '../../../common/components/tree/statuses/error';
 import { useQuery, useStore } from '../../models/RootStore';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { JobModelType } from '../../models';
@@ -250,18 +249,6 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     );
   };
 
-  const renderJobsDataErrror = (): JSX.Element => {
-  console.log('error.message ',error)
-    return (
-      <Box>
-        <Error
-        className="errorMessage" 
-        message={error.message}
-        />
-      </Box>
-    );
-  };
-
   const renderDateTimeRangePicker = (): JSX.Element => {
     return (
       <Box className="jobsTimeRangePicker">
@@ -333,12 +320,13 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
         <DialogContent className="jobsBody">
           {renderDateTimeRangePicker()}
           {!error && renderGridList()}
-          {error && renderJobsDataErrror()}
           
           {
-            mutationQuery.error !== undefined && (
+            (mutationQuery.error !== undefined || error) && (
               // eslint-disable-next-line
-              <GraphQLError error={mutationQuery.error} />
+              <div className={`${error && 'render-jobs-data-errror'}`}>
+                <GraphQLError error={mutationQuery.error || error} />
+              </div>
             )
           }
           <Box className="buttons">
