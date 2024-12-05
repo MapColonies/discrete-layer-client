@@ -85,7 +85,8 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
         outlined
         enhanced>
         {
-          lookupOptions.map(({ translationCode, value, properties }, index) => {
+          lookupOptions.filter((option)=> value && option.properties.resolutionDeg as unknown as number >= Number(value))
+          .map(({ translationCode, value, properties }, index) => {
             const E_POWER = 'e-';
             const substrStart = 0;
             let numberOfDecimals = 8;
