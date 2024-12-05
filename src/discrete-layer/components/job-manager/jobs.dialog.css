@@ -179,9 +179,9 @@ body[dir='rtl'] .jobsBody .ag-pinned-right-cols-container {
 }
 
 .render-jobs-data-errror {
-  position: relative;
-  top: 350px;
-  left: 470px;
+  position: absolute;
+  top: 410px;
+  left: 536px;
 }
 
 /* Not sure why I did it, it causes some problems with disappearing elements */ 
