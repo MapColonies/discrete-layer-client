@@ -163,21 +163,8 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   text-overflow: ellipsis;
 }
 
-.warningIcon {
-  font-size: 32px;
-  padding: 8px 0;
-}
-
-.warningMessage {
-  padding-left: 12px;
-  padding-right: unset;
-}
-
-body[dir='rtl'] .warningMessage {
-  padding-left: unset;
-  padding-right: 12px;
-}
-
-.warning.mdc-form-field label {
-  color: var(--mdc-theme-gc-warning-high);
+#layerDetailsFormRaster .loadingOnTop {
+  position: absolute;
+  top:6px;
+  left: 20px;
 }

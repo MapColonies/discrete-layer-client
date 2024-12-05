@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.14.0...v2.14.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* bff error message ([#544](https://github.com/MapColonies/discrete-layer-client/issues/544)) ([3b2dacb](https://github.com/MapColonies/discrete-layer-client/commit/3b2dacbad87ce0bfcb09d903dd688b1acad7efc9))
+
+## [2.14.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.13.0...v2.14.0) (2024-12-03)
+
+
+### Features
+
+* add view option in panel to a regular user ([#543](https://github.com/MapColonies/discrete-layer-client/issues/543)) ([4065fae](https://github.com/MapColonies/discrete-layer-client/commit/4065faee9429dca4b9bcfdf679a6e907d9f1c78e))
+* new vest validation for productId ([#541](https://github.com/MapColonies/discrete-layer-client/issues/541)) ([c71f053](https://github.com/MapColonies/discrete-layer-client/commit/c71f053b9195dc13f09af0edb2de1378a826c4a7))
+
+
+### Bug Fixes
+
+* add 'scrollToIndex' to react-virtualized <List/> and convert all expandedParts to false ([#538](https://github.com/MapColonies/discrete-layer-client/issues/538)) ([dcbe785](https://github.com/MapColonies/discrete-layer-client/commit/dcbe785159c9db68e6a9a38bf16765ba6c6e7e85))
+* add manage metadata option to dialogs ([#525](https://github.com/MapColonies/discrete-layer-client/issues/525)) ([d623341](https://github.com/MapColonies/discrete-layer-client/commit/d6233416b34c75932dc59a41da10520409f90823))
+* add type null to sourceId types in pp record ([#539](https://github.com/MapColonies/discrete-layer-client/issues/539)) ([7fef8b9](https://github.com/MapColonies/discrete-layer-client/commit/7fef8b95de0e475799b324e9d5eb2482053b86d4))
+* add zoomlevel to resolutionDegree in polygonParts info box ([#524](https://github.com/MapColonies/discrete-layer-client/issues/524)) ([0e91b68](https://github.com/MapColonies/discrete-layer-client/commit/0e91b68cc0732ad27350bd2ec6418f8133b3f8a6))
+* bug, remove MARKER from pp-map Legends ([#532](https://github.com/MapColonies/discrete-layer-client/issues/532)) ([0755491](https://github.com/MapColonies/discrete-layer-client/commit/07554918361e5ba8e28470668f532c3097ba2a4d))
+* change in he/en.json from sourceDate to imagingTime ([#531](https://github.com/MapColonies/discrete-layer-client/issues/531)) ([998d1c7](https://github.com/MapColonies/discrete-layer-client/commit/998d1c71b4a06d081e5b40267ab64e8c476303c5))
+* chart.yaml bump version ([1384768](https://github.com/MapColonies/discrete-layer-client/commit/1384768a3b5473e56736df3ccde441bbc449deb1))
+* current site use memo ([#530](https://github.com/MapColonies/discrete-layer-client/issues/530)) ([9ce97b3](https://github.com/MapColonies/discrete-layer-client/commit/9ce97b388c7db4f7fb566e1822b966abce2a2812))
+* defaults ([732810c](https://github.com/MapColonies/discrete-layer-client/commit/732810c2e83e3483a52743171b46cd27e28a1f3a))
+* error handling ([#540](https://github.com/MapColonies/discrete-layer-client/issues/540)) ([e8fccdb](https://github.com/MapColonies/discrete-layer-client/commit/e8fccdb79c52c2c48c28ea397c5c6fd38f355f73))
+* eslint ([f4ac480](https://github.com/MapColonies/discrete-layer-client/commit/f4ac480b9d2e5cd2f4a669bd8280bcf13b041dfa))
+* graphql error pp list indication ([#542](https://github.com/MapColonies/discrete-layer-client/issues/542)) ([46b80d9](https://github.com/MapColonies/discrete-layer-client/commit/46b80d97f74ca2c20495a53e9d85650e2a7e5980))
+* lookup tables crashes app in case that service is not available ([#537](https://github.com/MapColonies/discrete-layer-client/issues/537)) ([1de0869](https://github.com/MapColonies/discrete-layer-client/commit/1de0869d62ca95fe166a58cfe71ee71be8ec5836))
+* pp resolution in manual mode from gpkg ([#535](https://github.com/MapColonies/discrete-layer-client/issues/535)) ([a9d78ef](https://github.com/MapColonies/discrete-layer-client/commit/a9d78efd0a6b51e16d6c970d91f3dd37b4fe953e))
+* remove geopackageValidation from edit rester and unnecessary sho… ([#536](https://github.com/MapColonies/discrete-layer-client/issues/536)) ([963d671](https://github.com/MapColonies/discrete-layer-client/commit/963d6713c59ecbd5ae5ac52d225336ef7fbb1c50))
+* shape file date fields wrong format ( MAPCO-5495 ) ([#526](https://github.com/MapColonies/discrete-layer-client/issues/526)) ([25b1125](https://github.com/MapColonies/discrete-layer-client/commit/25b1125087b43875f86f94d253d0de4291ec3aa4))
+* state errors and vest errors ([#534](https://github.com/MapColonies/discrete-layer-client/issues/534)) ([6caac7e](https://github.com/MapColonies/discrete-layer-client/commit/6caac7e6bd8b8d34040b5b7b35c5f0c126c82e10))
+* update raster labels en.json and he.json ([#528](https://github.com/MapColonies/discrete-layer-client/issues/528)) ([54c4fa1](https://github.com/MapColonies/discrete-layer-client/commit/54c4fa1c03f1526265dde05d8916a52acb375743))
+
 ## [2.13.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.11.0...v2.13.0) (2024-11-21)
 
 
