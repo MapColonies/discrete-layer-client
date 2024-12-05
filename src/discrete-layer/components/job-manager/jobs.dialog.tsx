@@ -319,12 +319,14 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
         </DialogTitle>
         <DialogContent className="jobsBody">
           {renderDateTimeRangePicker()}
-          {renderGridList()}
+          {!error && renderGridList()}
           
           {
-            mutationQuery.error !== undefined && (
+            (mutationQuery.error !== undefined || error) && (
               // eslint-disable-next-line
-              <GraphQLError error={mutationQuery.error} />
+              <Box className={`${error ? 'render-jobs-data-errror' : ''}`}>
+                <GraphQLError error={mutationQuery.error || error} />
+              </Box>
             )
           }
           <Box className="buttons">

@@ -178,6 +178,12 @@ body[dir='rtl'] .jobsBody .ag-pinned-right-cols-container {
   z-index: 2 !important;
 }
 
+.render-jobs-data-errror {
+  position: absolute;
+  top: 410px;
+  left: 536px;
+}
+
 /* Not sure why I did it, it causes some problems with disappearing elements */ 
 
 /* .jobsBody [aria-hidden="true"]:not(.ag-paging-row-summary-panel,.ag-paging-description) {
