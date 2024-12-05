@@ -115,9 +115,9 @@ const IngestionInputs: React.FC<{
                 {
                   index === DIRECTORY && values[index] !== '' &&
                   <Tooltip content={values[index]}>
-                    <Typography tag="div" className="filesPathContainer">
+                    <Box className="filesPathContainer">
                       <Typography dir='ltr' tag='span'>{values[index]}</Typography>
-                    </Typography>
+                    </Box>
                   </Tooltip>
                 }
                 {
