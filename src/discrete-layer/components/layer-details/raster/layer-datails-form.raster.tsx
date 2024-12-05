@@ -97,6 +97,8 @@ export interface EntityFormikHandlers extends FormikHandlers {
   status: StatusError | Record<string, unknown>;
 }
 
+const isGeometryPolygon =  (geometry: Geometry) => geometry ? geometry.type === 'Polygon' : true;
+
 export const InnerRasterForm = (
   props: LayerDetailsFormCustomProps & FormikProps<FormValues>
 ): JSX.Element => {
@@ -159,22 +161,23 @@ export const InnerRasterForm = (
   const [layerPolygonParts, setLayerPolygonParts] = useState<Record<string, PolygonPartRecordModelType>>({});
   const [ppCheckPerformed, setPPCheckPerformed] = useState<boolean>(false);
   const [gpkgValidationError, setGpkgValidationError] = useState<string|undefined>(undefined);
-  const [clientCustomValidationError, setClientCustomValidationError] = useState<string|undefined>(undefined);
+  const [clientCustomValidationErrors, setClientCustomValidationErrors] = useState<Record<string,string>>({});
   const [gpkgValidationResults, setGpkgValidationResults] = useState<SourceValidationModelType|undefined>(undefined);
   const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
+    const customValidationErrors = Object.values(clientCustomValidationErrors);
     return {
       ...get(status, 'errors') as Record<string, string[]>,
       ...(ppCheckPerformed ? customError : {}),
       ...(gpkgValidationError ? {
         error: [gpkgValidationError]
       } : {}),
-      ...(clientCustomValidationError ? {
-        error: [clientCustomValidationError]
+      ...(customValidationErrors.length > NONE ? {
+        error: [...customValidationErrors]
       } : {})
     }
-  }, [status, customError, ppCheckPerformed, gpkgValidationError, clientCustomValidationError]);
+  }, [status, customError, ppCheckPerformed, gpkgValidationError, clientCustomValidationErrors]);
 
   const getYupErrors = useCallback(
     (): Record<string, string[]> => {
@@ -254,6 +257,7 @@ export const InnerRasterForm = (
   useEffect(() => {
     const features: Feature[] = [];
     const polygonParts: Record<string,PolygonPartRecordModelType> = {};
+    let countPPWithGeometryErrors = 0;
 
     Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
       features.push({
@@ -265,7 +269,23 @@ export const InnerRasterForm = (
 
        // @ts-ignore
       polygonParts[key] = {...values[key]};
+
+      // @ts-ignore
+      countPPWithGeometryErrors += (!isGeometryPolygon(values[key].footprint) ? 1 : 0);
     });
+
+    if(countPPWithGeometryErrors > NONE){
+      setClientCustomValidationErrors({
+        ...clientCustomValidationErrors,
+        [CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_GEOMETRY]: intl.formatMessage(
+          {id: 'validation-general.polygonParts.noValidGeometry'}, 
+          {numErrorParts: emphasizeByHTML(`${countPPWithGeometryErrors}`)}
+        )
+      });
+    }
+    else {
+      setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_GEOMETRY));
+    }
     setPPFeatures(features);
     setLayerPolygonParts(polygonParts);
   }, [values]);
@@ -333,12 +353,19 @@ export const InnerRasterForm = (
     }
   }, [ppCollisionCheckInProgress]);
 
+  enum CUSTOM_VALIDATION_ERROR_CODES {
+    SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
+    POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY'
+  } 
   useEffect(() => {
-    if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
-      setClientCustomValidationError(intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message }));
+    if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
+      setClientCustomValidationErrors({
+        ...clientCustomValidationErrors,
+        [CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG]: intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message })
+      });
     }
     else {
-      setClientCustomValidationError(undefined);
+      setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG));
     }
 
   }, [sourceExtent, outlinedPerimeter]);
@@ -658,6 +685,7 @@ export const InnerRasterForm = (
     const isFirstPhaseErrorInPolygonPart = (firstPhaseErrors[currentFormKey] && Object.keys(firstPhaseErrors[currentFormKey])?.length > NONE);
     const isVestPhaseErrorInPolygonPart = (vestValidationResults[currentFormKey] && vestValidationResults[currentFormKey]?.errorCount > NONE);
     const isGraphQLErrorInPolygonPart = graphQLPayloadObjectErrors.includes(index);
+    const isGeometryValid = isGeometryPolygon(polygon_part.footprint);
 
     if(layerPolygonParts && Object.keys(layerPolygonParts).length > NONE){
       polygon_part = layerPolygonParts[currentFormKey];
@@ -669,7 +697,7 @@ export const InnerRasterForm = (
                   open={expandedParts[index]}
                   handle={
                     <Handler partIndex={index} text={currentFormKey} 
-                      isErrorInPolygonPart={isFirstPhaseErrorInPolygonPart || isVestPhaseErrorInPolygonPart || isGraphQLErrorInPolygonPart}
+                      isErrorInPolygonPart={isFirstPhaseErrorInPolygonPart || isVestPhaseErrorInPolygonPart || isGraphQLErrorInPolygonPart || !isGeometryValid}
                       handleClick={()=>{
                         removePolygonPart(currentFormKey);
 

@@ -34,7 +34,7 @@ export const PolygonPartsFeature: React.FC = observer(() => {
     const indexOfCurrentDeg = valuesZoomLevelInDeg.indexOf(resolutionDegree);
     if(indexOfCurrentDeg >= 0){
       // @ts-ignore
-      geoJsonFeature.properties['resolutionDegree'] = `${resolutionDegree} --------> ( ${indexOfCurrentDeg} )`;
+      geoJsonFeature.properties['resolutionDegree'] = `${resolutionDegree} (${indexOfCurrentDeg})`;
     }
   };
 
