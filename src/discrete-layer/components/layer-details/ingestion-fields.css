@@ -35,8 +35,6 @@ body[dir='rtl'] .header {
 
 .uploadMetadataButton .mdc-button--outlined:not(:disabled) {
   border-color: currentColor;
-.uploadMetadataButton .mdc-button--outlined:not(:disabled) {
-  border-color: currentColor;
   /* color: var(--mdc-theme-text-icon-on-dark); */
   padding: 20px;
 }
