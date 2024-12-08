@@ -28,10 +28,13 @@ body[dir='rtl'] .header {
   align-items: center;
 }
 
+
 .ingestionButton .mdc-button {
   padding: 20px;
 }
 
+.uploadMetadataButton .mdc-button--outlined:not(:disabled) {
+  border-color: currentColor;
 .uploadMetadataButton .mdc-button--outlined:not(:disabled) {
   border-color: currentColor;
   /* color: var(--mdc-theme-text-icon-on-dark); */
