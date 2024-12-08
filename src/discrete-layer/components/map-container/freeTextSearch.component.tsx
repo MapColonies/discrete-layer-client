@@ -1,15 +1,15 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Box } from '@map-colonies/react-components';
-import { IconButton, TextField, Tooltip } from '@map-colonies/react-core';
+import { TextField } from '@map-colonies/react-core';
 import { observer } from 'mobx-react-lite';
 import { useIntl } from 'react-intl';
 import useDebounceField from '../../../common/hooks/debounce-field.hook';
 import { useStore } from '../../models';
+import { FilterField } from '../../models/RootStore.base';
 import { UserAction } from '../../models/userStore';
 import { EntityFormikHandlers } from '../layer-details/layer-datails-form';
 
-import './freeTextSearch.css';
-import { FilterField } from '../../models/RootStore.base';
+import './freeTextSearch.component.css';
 
 export const PYCSW_ANY_TEXT_FIELD = 'csw:AnyText';
 const FREE_TEXT_SEARCH_DEBOUNCE = 1000;
@@ -35,38 +35,36 @@ export const FreeTextSearch: React.FC<FreeTextSearchProps> = observer(({ onFilte
   });
 
   useEffect(() => {
-    if(isCatalogFiltersEnabled) {
+    if (isCatalogFiltersEnabled) {
       setValue(INITIAL_VALUE);
     }
   }, [isCatalogFiltersEnabled]);
 
   useEffect(() => {
-    if(catalogFilters.length === 0) {
-      if(value.trim().length > 0) {
-        const freeTextFilter = getFreeTextFilter(value);        
+    if (catalogFilters.length === 0) {
+      if (value.trim().length > 0) {
+        const freeTextFilter = getFreeTextFilter(value);
         onFiltersApply([freeTextFilter]);
-      } 
+      }
     }
-  }, [catalogFilters])
-
+  }, [catalogFilters]);
 
   useEffect(() => {
     setValue(INITIAL_VALUE);
-  }, [store.userStore.user?.role])
+  }, [store.userStore.user?.role]);
 
-
-  const handleFreeTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFreeTextChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const fieldValue = e.target.value;
     setValue(fieldValue);
 
-    if(fieldValue.trim().length === 0) {
+    if (fieldValue.trim().length === 0) {
       onFiltersReset();
       return;      
-    } 
-      const freeTextFilter = getFreeTextFilter(e.target.value);
-      store.discreteLayersStore.searchParams.resetCatalogFilters();
-      
-      onFiltersApply([freeTextFilter]);
+    }
+
+    const freeTextFilter = getFreeTextFilter(fieldValue);
+    store.discreteLayersStore.searchParams.resetCatalogFilters();
+    onFiltersApply([freeTextFilter]);
   }, [onFiltersReset, onFiltersApply]);
 
   const [innerValue, handleFieldChange] = useDebounceField(
@@ -75,17 +73,19 @@ export const FreeTextSearch: React.FC<FreeTextSearchProps> = observer(({ onFilte
     FREE_TEXT_SEARCH_DEBOUNCE
   );
 
-
   return (
     <Box className="freeTextSearchContainer">
+      <input type="password" style={{ display: 'none' }} />
       <TextField
         disabled={!isSystemFreeTextSearchEnabled}
-        style={{ padding: '0 6px 0 6px' }}
+        style={{ padding: '0 6px' }}
         onChange={(e: ChangeEvent<HTMLInputElement>): void => {
-            handleFieldChange(e);
+          handleFieldChange(e);
         }}
-        placeholder={intl.formatMessage({id: "catalog-filter.freeText.placeholder"})}
+        placeholder={intl.formatMessage({ id: "catalog-filter.freeText.placeholder" })}
         value={innerValue}
+        type="text"
+        autoComplete={'off'}
       />
     </Box>
   );
