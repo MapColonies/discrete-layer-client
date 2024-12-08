@@ -83,6 +83,7 @@ body[dir='rtl'] .fileNamesSpacer {
 .fileItemName {
   text-overflow: ellipsis;
   overflow: hidden;
+  direction: rtl;
 }
 
 .fileIcon {
@@ -111,4 +112,5 @@ body[dir='rtl'] .moreTooltip {
   width: 60ch;
   overflow: hidden;
   text-overflow: ellipsis;
+  direction: rtl;
 }
