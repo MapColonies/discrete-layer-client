@@ -31,7 +31,7 @@ interface IServerErrorResponse {
 
 export const isGraphQLHasPayloadNestedObjectError = ( errorGraphQL: any, idx: number ) => {
   let ret = false;
-  if(!isEmpty(errorGraphQL?.response)){
+  if (!isEmpty(errorGraphQL?.response)) {
     errorGraphQL?.response.errors?.forEach((error: IServerError) => {
       const regex = /\d+(?:\/\d+)*/g;
       const matches = error.serverResponse?.data.message.match(regex);
@@ -43,11 +43,11 @@ export const isGraphQLHasPayloadNestedObjectError = ( errorGraphQL: any, idx: nu
 
 export const getGraphQLPayloadNestedObjectErrors = ( errorGraphQL: any ): number[] => {
   const ret: number[] = [];
-  if(!isEmpty(errorGraphQL?.response)){
+  if (!isEmpty(errorGraphQL?.response)) {
     errorGraphQL?.response.errors?.forEach((error: IServerError) => {
       const regex = /\d+(?:\/\d+)*/g;
       const matches = error.serverResponse?.data.message.match(regex);
-      if(isArray(matches)){
+      if (isArray(matches)) {
         ret.push(parseInt(matches[0]));
       }
     })
@@ -85,6 +85,11 @@ export const GraphQLError: React.FC<IGpaphQLError> = ({ error }) => {
                   <li dir="auto" key={index} dangerouslySetInnerHTML={{__html: formatMessage(error)}}></li>
                 );
               })
+            }
+            {
+              error.response.status >= USER_ERROR_RESPONSE_CODE &&
+              error.response.status < SERVER_ERROR_RESPONSE_CODE &&
+              <li dir="auto" key={error.response.status as number}><FormattedMessage id={`general.http-${error.response.status}.error`}/></li>
             }
             {
               error.response.status >= SERVER_ERROR_RESPONSE_CODE &&
