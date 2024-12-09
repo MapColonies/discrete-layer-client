@@ -317,18 +317,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
           },
           {
             recordModel: {},
-            error: {
-              response: {
-                errors: [
-                  {
-                    message: intl.formatMessage(
-                      { id: 'ingestion.error.source-file-exception' },
-                      { value: queryValidateSource.error.message }
-                    ),
-                  },
-                ],
-              },
-            }
+            error: queryValidateSource.error,
           } as MetadataFile
         );
       }
