@@ -358,7 +358,7 @@ export const InnerRasterForm = (
     POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY'
   } 
   useEffect(() => {
-    if (sourceExtent && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
+    if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
       setClientCustomValidationErrors({
         ...clientCustomValidationErrors,
         [CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG]: intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message })
