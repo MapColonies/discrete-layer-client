@@ -177,7 +177,7 @@ export const syncHttpClientGql = () => {
         // }
         return masterResponse;
       } catch (error) {
-        console.error(`Error during ${query}: ${JSON.stringify(error)}`);
+        console.error(`Error during ${query}`);
         throw error;
       }
     };

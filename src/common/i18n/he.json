@@ -29,7 +29,7 @@
   "general.http-410.error": "נעלם",
   "general.http-411.error": "אורך נדרש",
   "general.http-412.error": "תנאי מוקדם נכשל",
-  "general.http-413.error": "מטען גדול מדי",
+  "general.http-413.error": "תוכן גדול מידיי",
   "general.http-414.error": "URI ארוך מדי",
   "general.http-415.error": "סוג מדיה לא נתמך",
   "general.http-416.error": "טווח לא מספק",
