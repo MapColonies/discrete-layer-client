@@ -169,9 +169,19 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--mdc-theme-alternative-surface) inset !important;
+}
+input:-webkit-autofill {
+  -webkit-text-fill-color: white !important;
+}
+
 input::placeholder {
-    font-size: 14px;
-    line-height: 2;
+  font-size: 14px;
+  line-height: 2;
 }
 
 input:disabled {
