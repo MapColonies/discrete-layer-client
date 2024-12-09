@@ -75,7 +75,6 @@ export const FreeTextSearch: React.FC<FreeTextSearchProps> = observer(({ onFilte
 
   return (
     <Box className="freeTextSearchContainer">
-      <input type="password" style={{ display: 'none' }} />
       <TextField
         disabled={!isSystemFreeTextSearchEnabled}
         style={{ padding: '0 6px' }}
