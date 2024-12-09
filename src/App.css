@@ -172,10 +172,10 @@ input::-webkit-inner-spin-button {
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px var(--mdc-theme-alternative-surface) inset !important;
 }
-input:-webkit-autofill{
+input:-webkit-autofill {
   -webkit-text-fill-color: white !important;
 }
 
