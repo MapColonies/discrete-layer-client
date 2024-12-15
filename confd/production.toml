@@ -22,6 +22,7 @@ keys = [
   "/configuration/active/layer/properties/url/pattern/params/format",
   "/configuration/map/center",
   "/configuration/map/zoom",
+  "/configuration/map/mapmode2d",
   "/configuration/map/use/optimized/tile/requests",
   "/configuration/logger/http/host",
   "/configuration/logger/http/port",

@@ -38,6 +38,7 @@
   CONFIGURATION_MAP_CENTER: {{ quote .Values.env.map.center }}
   CONFIGURATION_MAP_ZOOM: {{ quote .Values.env.map.zoom }}
   CONFIGURATION_MAP_USE_OPTIMIZED_TILE_REQUESTS: {{ quote .Values.env.map.useOptimizedTileRequests }}
+  CONFIGURATION_MAP_MAPMODE2D: {{ quote .Values.env.map.mapMode2D }}
   CONFIGURATION_BASEMAPS: {{ quote .Values.env.baseMaps }}
   CONFIGURATION_DEFAULT_TERRAIN_PROVIDER_URL: {{ quote .Values.env.defaultTerrainProviderUrl }}
   CONFIGURATION_WEB_TOOLS_URL: {{ quote .Values.env.webToolsUrl }}
