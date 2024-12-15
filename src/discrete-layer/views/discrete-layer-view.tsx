@@ -89,6 +89,7 @@ import { PolygonPartsFeature } from '../components/map-container/geojson-map-fea
 import { ExtentUpdater } from '../components/map-container/extent-updater';
 import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
 import { currentSite } from '../../common/helpers/siteUrl';
+import { MapMode2D } from 'cesium';
 
 type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
@@ -100,7 +101,8 @@ const DELTA = 0.00001;
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
-const mapMode2D = CONFIG.MAP.MAP_MODE_2D === 'ROTATE' ? 0 : 1;
+const mapMode2D = MapMode2D[CONFIG.MAP.MAP_MODE_2D];
+console.log('mapMode2D', mapMode2D)
 
 const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
