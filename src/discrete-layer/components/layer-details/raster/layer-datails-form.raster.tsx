@@ -20,6 +20,7 @@ import { Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
 import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
+import CONFIG from '../../../../common/config';
 import { Mode } from '../../../../common/models/mode.enum';
 import { ValidationsError } from '../../../../common/components/error/validations.error-presentor';
 import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../common/components/error/graphql.error-presentor';
@@ -169,7 +170,7 @@ export const InnerRasterForm = (
     const customValidationErrors = Object.values(clientCustomValidationErrors);
     return {
       ...get(status, 'errors') as Record<string, string[]>,
-      ...(ppCheckPerformed ? customError : {}),
+      ...customError,
       ...(gpkgValidationError ? {
         error: [gpkgValidationError]
       } : {}),
@@ -369,8 +370,13 @@ export const InnerRasterForm = (
     }
 
   }, [sourceExtent, outlinedPerimeter]);
-
-  const excidedFeaturesNumberError = useMemo(() => new Error(`validation-general.shapeFile.too-many-features`), []);
+  
+  const excidedFeaturesNumberError = useMemo(() => new Error(
+    intl.formatMessage(
+      { id: 'validation-general.shapeFile.too-many-features'},
+      { maxPPNumber: emphasizeByHTML(`${CONFIG.POLYGON_PARTS_MAX_PER_SHAPE}`)}
+     )
+  ), []);
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
   const shapeFilePerimeterVSGpkgExtentError = useMemo(() => new Error(`validation-general.shapeFile.polygonParts.not-in-gpkg-extent`), []);
 
@@ -515,12 +521,12 @@ export const InnerRasterForm = (
   };
 
   const isShapeFileValid = (featuresArr: unknown[] | undefined): boolean | Error => {
-    // if (typeof featuresArr === 'undefined') {
-    //   return shapeFileGenericError;
-    // }
-    // if (featuresArr && featuresArr.length > 1) {
-    //   return excidedFeaturesNumberError;
-    // }
+    if (typeof featuresArr === 'undefined') {
+      return shapeFileGenericError;
+    }
+    if (featuresArr && featuresArr.length > CONFIG.POLYGON_PARTS_MAX_PER_SHAPE) {
+      return excidedFeaturesNumberError;
+    }
     return true;
   }
 
@@ -813,6 +819,7 @@ export const InnerRasterForm = (
                       });
                     })
                     .catch((e) => {
+                      setLoadingPolygonParts(false);
                       setStatus({
                         errors: {
                           // ...currentErrors,
