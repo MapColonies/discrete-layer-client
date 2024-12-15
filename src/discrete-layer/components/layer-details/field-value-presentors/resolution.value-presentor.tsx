@@ -19,10 +19,11 @@ interface ResolutionValuePresentorProps {
   value?: string;
   formik?: EntityFormikHandlers;
   fieldNamePrefix?: string;
+  maxFilterValue?: string;
 }
   
 export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresentorProps> = (props) => {
-  const { mode, fieldInfo, formik, fieldNamePrefix } = props;
+  const { mode, fieldInfo, formik, fieldNamePrefix, maxFilterValue } = props;
   const value = props.value?.toString();
   const intl = useIntl();
   const { lookupTablesData } = useContext(lookupTablesContext);
@@ -85,7 +86,10 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
         outlined
         enhanced>
         {
-          lookupOptions.filter((option)=> value && option.properties.resolutionDeg as unknown as number >= Number(value))
+          lookupOptions
+          .filter((option)=> maxFilterValue ?
+            option.properties.resolutionDeg as unknown as number >= Number(maxFilterValue) :
+            option.properties.resolutionDeg)
           .map(({ translationCode, value, properties }, index) => {
             const E_POWER = 'e-';
             const substrStart = 0;

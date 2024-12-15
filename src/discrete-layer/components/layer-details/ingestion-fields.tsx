@@ -290,7 +290,8 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
             {
               recordModel:{
                 ...selection.metadata?.recordModel,
-                ...queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE]
+                ...queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE],
+                resolutionDegreeMaxValue: queryValidateSource.data?.validateSource[ONLY_ONE_SOURCE]["resolutionDegree"],
               },
               error: selection.metadata?.error
             }  as unknown as MetadataFile
