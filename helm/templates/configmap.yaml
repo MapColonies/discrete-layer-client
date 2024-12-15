@@ -57,6 +57,7 @@
   CONFIGURATION_SITES_CONFIG: {{ quote .Values.env.sitesConfig }}
   CONFIGURATION_BFF_PATH: {{ quote .Values.env.bffPath }}
   CONFIGURATION_POLYGON_PARTS_FEATURE_TYPE_PREFIX: {{ quote .Values.env.polygonPartsFeatureTypePrefix }}
+  CONFIGURATION_POLYGON_PARTS_MAXPERSHAPE: {{ quote .Values.env.polygonPartsMaxPerShape }}
 {{- end -}}
 
 {{ include "mc-chart.configmap" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "DATA" $DATA "WITH_TELEMETRY_TRACING" false "WITH_TELEMETRY_METRICS" false "context" .)}}

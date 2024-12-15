@@ -34,7 +34,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
 
   const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
-  const { data, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
+  const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
 
@@ -83,6 +83,24 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
       store.discreteLayersStore.setPPCollisionCheckInProgress(false);
     } 
   }, [data, loading]);
+
+  useEffect(() => {
+    if (!loading && error) {
+      mapOl.getTargetElement().classList.remove('olSpinner');
+      dispatchAction(
+        {
+          action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
+          data: 
+            {
+              error: [
+                intl.formatMessage(
+                  {id: 'validation-general.polygonParts.wfsServerError'}
+              )]
+            },
+        }
+      );
+    } 
+  }, [error, loading]);
 
   useEffect(() => {
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
