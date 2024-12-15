@@ -225,7 +225,7 @@ export const isBest = (entity: ILayerImage): boolean => {
 };
 
 export const isMultiSelection = (recordType: RecordType): boolean => {
-  return recordType !== RecordType.RECORD_3D;
+  return recordType !== RecordType.RECORD_3D && recordType !== RecordType.RECORD_RASTER;
 };
 
 const removeObjFields = (
