@@ -24,7 +24,8 @@ window._env_ = {
   MAP: {
     center: {{ getv "/configuration/map/center" "[34.811, 31.908]" }},
     zoom: {{ getv "/configuration/map/zoom" "14" }},
-    useOptimizedTileRequests: {{getv "/configuration/map/use/optimized/tile/requests" "false"}}
+    useOptimizedTileRequests: {{getv "/configuration/map/use/optimized/tile/requests" "false"}},
+    mapMode2D: '{{getv "/configuration/map/mapmode2d" "INFINITE_SCROLL"}}'
   },
   LOGGER: {
     level: '{{ getv "/configuration/logger/level" "warn" }}',
