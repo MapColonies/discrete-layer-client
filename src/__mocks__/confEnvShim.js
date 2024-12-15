@@ -29,6 +29,7 @@ if (!window._env_) {
       MAP: {
         center: [34.811, 31.908],
         zoom: 14,
+        mapMode2D: 'ROTATE',
       },
       LOGGER: {
         level: 'warn',
