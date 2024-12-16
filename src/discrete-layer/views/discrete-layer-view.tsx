@@ -101,7 +101,7 @@ const DELTA = 0.00001;
 const DRAWING_MATERIAL_OPACITY = 0.5;
 const DRAWING_FINAL_MATERIAL_OPACITY = 0.8;
 const DRAWING_MATERIAL_COLOR = CesiumColor.YELLOW.withAlpha(DRAWING_MATERIAL_OPACITY);
-const mapMode2D = MapMode2D[CONFIG.MAP.MAP_MODE_2D];
+const mapMode2D = MapMode2D[CONFIG.MAP.MAPMODE2D as keyof typeof MapMode2D];
 
 const DRAWING_FINAL_MATERIAL = new CesiumPolylineDashMaterialProperty({
   color: CesiumColor.DARKSLATEGRAY.withAlpha(DRAWING_FINAL_MATERIAL_OPACITY), //new CesiumColor( 116, 135, 136, 1),
