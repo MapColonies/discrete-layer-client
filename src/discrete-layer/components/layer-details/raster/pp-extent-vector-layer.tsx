@@ -12,6 +12,9 @@ import { GeojsonFeatureInput } from '../../../models/RootStore.base';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
 import { ILayerImage } from '../../../models/layerImage';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
+import { UserAction } from '../../../models/userStore';
+import { IDispatchAction } from '../../../models/actionDispatcherStore';
+import { useIntl } from 'react-intl';
 
 interface PolygonPartsVectorLayerProps {
   layerRecord?: ILayerImage | null;
@@ -20,9 +23,10 @@ interface PolygonPartsVectorLayerProps {
 export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord}) => {
   const store = useStore();
   const mapOl = useMap();
+  const intl = useIntl();
 
   const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
-  const { data, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
+  const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
   
@@ -51,6 +55,22 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
       setExistingPolygoParts(data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]);
     } 
   }, [data, loading]);
+
+  useEffect(() => {
+    if (!loading && error) {
+      store.actionDispatcherStore.dispatchAction(
+        {
+          action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
+          data: {
+            error: [
+              intl.formatMessage(
+                {id: 'validation-general.polygonParts.wfsServerError'}
+            )]
+          },
+        } as IDispatchAction
+      );
+    }
+  }, [error, loading]);
 
   const getExistingPolygoParts = (bbox: BBox) => {
     // const fakePP = squareGrid(bbox, 10, {units: 'miles'});

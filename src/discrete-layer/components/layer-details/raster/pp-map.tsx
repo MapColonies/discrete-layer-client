@@ -116,18 +116,24 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       });
     }
 
-    return geoFeatures?.map((feat, idx) => {
-      let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
+    return (
+      <>
+        {
+          geoFeatures?.map((feat, idx) => {
+          let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
 
-      if( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey){
-        featureStyle = selectionStyle;
-      }
+          if( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey){
+            featureStyle = selectionStyle;
+          }
 
-      return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
-      geometry={{...feat.geometry}} 
-      fit={false}
-      featureStyle={featureStyle}/> : <></>
-    });
+          return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
+            geometry={{...feat.geometry}} 
+            fit={false}
+            featureStyle={featureStyle}/> : <></>
+          })
+        }
+      </>
+    )
   }
     
   return (
