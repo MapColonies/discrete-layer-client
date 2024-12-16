@@ -502,7 +502,7 @@
   "validation-general.polygonParts.hasErrors": "{numErrorParts} חלקי תיחום שגויים, נדרש להשלים מידע על חלקי תיחום או לתקן קובץ shape",
   "validation-general.polygonParts.noValidGeometry": "{numErrorParts} חלק(י) תיחום מכיל(ים) גאומטריה מסוג MULTIPOLYGON",
   "validation-general.polygonParts.resolutionCollision": "רזולוציה של {numErrorParts} חלקי תיחום מסומנים מתנגשת עם חלקים קיימים באותו אזור!",
-  "validation-general.polygonParts.wfsServerError": "שירות WFS של חלקי תיחום החזיר שגיעה.",
+  "validation-general.polygonParts.wfsServerError": "שירות WFS של חלקי תיחום החזיר שגיאה.",
   "validation-field.sourceDateEnd.min": "{fieldName} מוקדם מ: {value}",
   "validation-field.sourceDateStart.max": "{fieldName} מאוחר מ: {value}",
   "validation-field.productVersion.pattern": "{fieldName} לא בפורמט תקין: משנית.ראשית",
