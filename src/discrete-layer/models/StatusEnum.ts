@@ -13,7 +13,8 @@ InProgress="InProgress",
 Completed="Completed",
 Failed="Failed",
 Expired="Expired",
-Aborted="Aborted"
+Aborted="Aborted",
+Suspended="Suspended"
 }
 
 /**
@@ -26,4 +27,5 @@ export const StatusEnumType = types.enumeration("Status", [
   "Failed",
   "Expired",
   "Aborted",
+  "Suspended",
       ])

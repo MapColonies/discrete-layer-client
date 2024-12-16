@@ -580,6 +580,7 @@
   "system-status.job.status_translation.Failed": "Failed",
   "system-status.job.status_translation.Expired": "Expired",
   "system-status.job.status_translation.Aborted": "Aborted",
+  "system-status.job.status_translation.Suspended": "Suspended",
 
   "system-status.job.filter.status.all": "All",
 

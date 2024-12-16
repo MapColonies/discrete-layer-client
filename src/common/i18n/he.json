@@ -584,6 +584,7 @@
   "system-status.job.status_translation.Failed": "נכשל",
   "system-status.job.status_translation.Expired": "פג תוקף",
   "system-status.job.status_translation.Aborted": "בוטל",
+  "system-status.job.status_translation.Suspended": "מושהה",
 
   "system-status.job.filter.status.all": "הכל",
 
