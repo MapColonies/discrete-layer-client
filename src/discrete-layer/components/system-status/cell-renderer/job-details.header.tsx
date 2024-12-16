@@ -77,6 +77,10 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
         label: getStatusTranslation(Status.Pending),
         value: (pendingTasks as unknown) as string,
       },
+      suspended: {
+        label: getStatusTranslation(Status.Suspended),
+        value: (completedTasks as unknown) as string,
+      },
     },
     failReason: {
       reason: status === Status.Failed ? reason : null,
