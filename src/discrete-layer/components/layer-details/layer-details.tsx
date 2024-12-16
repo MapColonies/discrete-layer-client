@@ -21,6 +21,8 @@ import {
   LinkModelType,
   RecordType,
   useStore,
+  ValidationConfigModelType,
+  ValidationValueType,
 } from '../../models';
 import { getEnumKeys } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
@@ -73,7 +75,7 @@ export const getValuePresentor = (
 ): JSX.Element => {
   const { fieldName, lookupTable } = fieldInfo;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupTable as string);
-  const value = fieldValue ?? formik?.getFieldProps(`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`).value as unknown;
+  const value = formik?.getFieldProps(`${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`).value ?? fieldValue as unknown;
   
   switch (basicType) {
     case 'string':
@@ -131,15 +133,19 @@ export const getValuePresentor = (
       return (
         <UrlValuePresentorComponent value={value as string} linkInfo={links[(layerRecord as LinkModelType).protocol as LinkType]}/>
       );
-    case 'resolution':
+    case 'resolution':{
+      const maxFieldRef = (fieldInfo.validation as ValidationConfigModelType[])
+        ?.filter((valid: ValidationConfigModelType) => 
+          valid.valueType === ValidationValueType.FIELD && valid.max)[0]?.max || undefined;
       return (
         <ResolutionValuePresentorComponent 
           value={value as string}
           fieldInfo={fieldInfo}
           mode={mode}
           formik={formik}
+          maxFilterValue={formik?.getFieldProps(`${fieldNamePrefix ?? ''}${maxFieldRef}`).value}
           fieldNamePrefix={fieldNamePrefix} />
-      )
+      )}
     case 'momentDateType':
       return (
         <DateValuePresentorComponent 
