@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.14.1...v2.15.0) (2024-12-16)
+
+
+### Features
+
+* add new job status called 'Suspended' ([#558](https://github.com/MapColonies/discrete-layer-client/issues/558)) ([a70a876](https://github.com/MapColonies/discrete-layer-client/commit/a70a8764a87c0739f3a48c19606ddde435ef1214))
+* rotate cesium map instead of infinite scroll and adding it to t… ([#555](https://github.com/MapColonies/discrete-layer-client/issues/555)) ([04f9c01](https://github.com/MapColonies/discrete-layer-client/commit/04f9c01ae798047237d70f9f153ac801d31d1095))
+
+
+### Bug Fixes
+
+* add missing translation ([#559](https://github.com/MapColonies/discrete-layer-client/issues/559)) ([4ec03b4](https://github.com/MapColonies/discrete-layer-client/commit/4ec03b4b6a5525468cc912f6a1561551e7c872a7))
+* change by convention of mapMode2D and remove the ts error for mapmode2d is a string ([#557](https://github.com/MapColonies/discrete-layer-client/issues/557)) ([b0dda0f](https://github.com/MapColonies/discrete-layer-client/commit/b0dda0f7b0a3ed5793afd2d99b5fb6610c756f33))
+* display payload too large error message ([#553](https://github.com/MapColonies/discrete-layer-client/issues/553)) ([28550d9](https://github.com/MapColonies/discrete-layer-client/commit/28550d94d3df9cc2565266a946d164680d819ed2))
+* dusable gpkg vs extent verification ([#560](https://github.com/MapColonies/discrete-layer-client/issues/560)) ([24332ba](https://github.com/MapColonies/discrete-layer-client/commit/24332ba2269e1ec858959abd7877892432e0c083))
+* filter lookupOptions by current value (MAPCO-5661) ([#549](https://github.com/MapColonies/discrete-layer-client/issues/549)) ([483d7f7](https://github.com/MapColonies/discrete-layer-client/commit/483d7f76fd0a75bb5447943d22bb3e448033868b))
+* Ingestion inputs value ( MAPCO-4191, MAPCO-5683 ) ([#550](https://github.com/MapColonies/discrete-layer-client/issues/550)) ([c12c497](https://github.com/MapColonies/discrete-layer-client/commit/c12c4972f9c9587b7f3953b941a4681015e457c3))
+* Ingestion inputs values (directory and file) should not push buttons left (MAPCO-4191) ([#547](https://github.com/MapColonies/discrete-layer-client/issues/547)) ([56d694c](https://github.com/MapColonies/discrete-layer-client/commit/56d694cb036ce039392825548239c7dfa3697e10))
+* max parts per shape and wfs service errors ([#556](https://github.com/MapColonies/discrete-layer-client/issues/556)) ([30070e0](https://github.com/MapColonies/discrete-layer-client/commit/30070e0c747a40574b2d85114fb69257dd30c492))
+* poygon parts fit behavior ([#554](https://github.com/MapColonies/discrete-layer-client/issues/554)) ([8d50bd2](https://github.com/MapColonies/discrete-layer-client/commit/8d50bd24df445a0f7689e15d2abf328de3f2568d))
+* precise condition in [sourceExtent, outlinedPerimeter] useEffect ([#545](https://github.com/MapColonies/discrete-layer-client/issues/545)) ([fb7c6b1](https://github.com/MapColonies/discrete-layer-client/commit/fb7c6b1d4dc7584706217c2c77c89d7854d7aca6))
+* Query jobs error with proper presentation when data integrity is broken ( MAPCO-4946 ) ([#546](https://github.com/MapColonies/discrete-layer-client/issues/546)) ([52a0328](https://github.com/MapColonies/discrete-layer-client/commit/52a03282b9b638f49deb4959d7e0c215cc714ce1))
+* remove autofill of saved passwords in search TextFeild ([#551](https://github.com/MapColonies/discrete-layer-client/issues/551)) ([19d666e](https://github.com/MapColonies/discrete-layer-client/commit/19d666e71bf7d5c62851d162a526f043243cb3f9))
+* revert bad merge ([#552](https://github.com/MapColonies/discrete-layer-client/issues/552)) ([1ac212f](https://github.com/MapColonies/discrete-layer-client/commit/1ac212f9d7af545c9da67a9de4df9faabd925816))
+* wfs resolution with zoom and allow only polygon geometry ([#548](https://github.com/MapColonies/discrete-layer-client/issues/548)) ([1f17056](https://github.com/MapColonies/discrete-layer-client/commit/1f17056f166f538cadc0b42d5cc98562d276cc54))
+
 ### [2.14.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.14.0...v2.14.1) (2024-12-03)
 
 
