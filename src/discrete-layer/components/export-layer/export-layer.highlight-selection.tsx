@@ -30,17 +30,17 @@ const ExportLayerHighLightSelection: React.FC = observer(() => {
     <>
       {highlightCollection?.features && 
       <CesiumGeojsonLayer
-          clampToGround={true}
-          data={highlightCollection}
-          onLoad={(geoJsonDataSource): void => {
-              geoJsonDataSource.entities.values.forEach(item => {
-                  if(item.polyline) {
-                      (item.polyline.width as CesiumConstantProperty).setValue(HIGHLIGHT_OUTLINE_WIDTH);
-                      // @ts-ignore
-                      item.polyline.material = SELECTION_OUTLINE_COLOR;
-                  }
-              });
-          }}
+        clampToGround={true}
+        data={highlightCollection}
+        onLoad={(geoJsonDataSource): void => {
+          geoJsonDataSource.entities.values.forEach(item => {
+            if(item.polyline) {
+              (item.polyline.width as CesiumConstantProperty).setValue(HIGHLIGHT_OUTLINE_WIDTH);
+              // @ts-ignore
+              item.polyline.material = SELECTION_OUTLINE_COLOR;
+            }
+          });
+        }}
       />} 
     </>);
 });
