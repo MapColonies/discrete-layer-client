@@ -318,7 +318,7 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
           poygonPartData[desc.fieldName as string] = parseFloat(shapeFieldValue);
           break;
         default:
-          poygonPartData[desc.fieldName as string] = shapeFieldValue;
+          poygonPartData[desc.fieldName as string] = shapeFieldValue !== '' ? shapeFieldValue : undefined;
           break;
       }
     } 
