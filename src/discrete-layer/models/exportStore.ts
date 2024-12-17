@@ -39,7 +39,7 @@ export const exportStore = ModelBase
     geometrySelectionsCollection: types.frozen<FeatureCollection>(INITIAL_GEOMETRY_SELECTION),
     drawingState: types.maybe(types.frozen<IDrawingState>(INITIAL_DRAWING_STATE)),
     isBBoxDialogOpen: types.maybe(types.frozen<boolean>(false)),
-    highlightedSelection: types.maybe(types.frozen<Feature>()),
+    highlightedSelection: types.maybe(types.frozen<Feature | FeatureCollection>()),
     hasExportPreviewed: types.frozen<boolean>(false),
     formData: types.frozen<Record<string, unknown>>({}),
     isMultiSelectionAllowed: types.frozen<boolean>(false),
@@ -81,7 +81,7 @@ export const exportStore = ModelBase
       resetHasExportPreviewed();
     }
 
-    function setHighlightedFeature(feature: Feature): void {
+    function setHighlightedFeature(feature: Feature | FeatureCollection): void {
       self.highlightedSelection = feature;
     }
 
