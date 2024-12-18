@@ -296,11 +296,11 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                 setJsonValue(e.currentTarget.value);
                 debouncedRemoveStatusErrors();
-                formik?.handleChange({});
+                formik?.handleChange(e.target);
               }}
               onBlur={(e) => {
                 handleBlur(e);
-                formik?.handleBlur({});
+                formik?.handleBlur(e.target);
               }}
               placeholder={'JSON'}
               required={fieldInfo.isRequired as boolean}
