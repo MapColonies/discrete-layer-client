@@ -225,7 +225,7 @@ const InnerForm = (
           <IngestionFields
             formik={entityFormikHandlers}
             reloadFormMetadata={reloadFormMetadata}
-            validateSources={false}
+            validateSources={recordType === RecordType.RECORD_3D}
             recordType={recordType}
             fields={ingestionFields}
             values={values}
