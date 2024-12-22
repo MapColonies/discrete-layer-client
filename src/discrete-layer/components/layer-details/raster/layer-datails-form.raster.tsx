@@ -360,18 +360,18 @@ export const InnerRasterForm = (
     SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
     POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY'
   } 
-  useEffect(() => {
-    if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
-      setClientCustomValidationErrors({
-        ...clientCustomValidationErrors,
-        [CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG]: intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message })
-      });
-    }
-    else {
-      setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG));
-    }
-
-  }, [sourceExtent, outlinedPerimeter]);
+  // ****** Verification of GPKG extent vs. PP perimeter is disabled
+  // useEffect(() => {
+  //   if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
+  //     setClientCustomValidationErrors({
+  //       ...clientCustomValidationErrors,
+  //       [CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG]: intl.formatMessage({ id: shapeFilePerimeterVSGpkgExtentError.message })
+  //     });
+  //   }
+  //   else {
+  //     setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG));
+  //   }
+  // }, [sourceExtent, outlinedPerimeter]);
   
   const excidedFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
