@@ -107,6 +107,7 @@ export const InnerRasterForm = (
     errors,
     values,
     dirty,
+    validateForm,
     handleChange,
     handleBlur,
     handleSubmit,
@@ -165,6 +166,7 @@ export const InnerRasterForm = (
   const [clientCustomValidationErrors, setClientCustomValidationErrors] = useState<Record<string,string>>({});
   const [gpkgValidationResults, setGpkgValidationResults] = useState<SourceValidationModelType|undefined>(undefined);
   const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
+  const [isSubmittedForm, setIsSubmittedForm] = useState(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     const customValidationErrors = Object.values(clientCustomValidationErrors);
@@ -186,7 +188,7 @@ export const InnerRasterForm = (
       Object.entries(errors).forEach(([key, value]) => {
         if(isObject(value)){
           Object.entries(value).forEach(([keyNested, valueNested]) => {
-            if (getFieldMeta(key+'.'+keyNested).touched) {
+            if (getFieldMeta(key+'.'+keyNested).touched || isSubmittedForm) {
               if(!validationResults[key]){
                 // @ts-ignore
                 validationResults[key] = {};
@@ -204,7 +206,7 @@ export const InnerRasterForm = (
       });
       return validationResults;
     },
-    [errors, getFieldMeta],
+    [errors, getFieldMeta, isSubmittedForm],
   );
 
   useEffect(() => {
@@ -656,9 +658,7 @@ export const InnerRasterForm = (
           if(handleClick){
             setDeletingPart(true);
             
-            setTimeout(() => {
-              handleClick();
-            }, 200);
+            handleClick();
 
             e.preventDefault();
             e.stopPropagation();
@@ -716,6 +716,10 @@ export const InnerRasterForm = (
                         setValues({
                           ...values
                         });
+
+                        setTimeout(async () => {
+                          await validateForm();
+                        }, 0); 
                       }}
                       handleSelection={()=>{
                         setSelectedFeature(currentFormKey);
@@ -758,7 +762,11 @@ export const InnerRasterForm = (
   return (
     <Box id="layerDetailsFormRaster">
       <Form
-        onSubmit={handleSubmit}
+        onSubmit = {(e) => {
+          e.preventDefault();
+          handleSubmit(e);
+          setIsSubmittedForm(true);
+        }}
         autoComplete={'off'}
         className="form"
         noValidate
@@ -913,6 +921,7 @@ export const InnerRasterForm = (
                       const lastPartIdx = exisitngParts.length ? exisitngParts[0] + 1 : 0;
 
                       schemaUpdater(1, lastPartIdx);
+                      setIsSubmittedForm(false);
                    
                       setExpandedParts([...expandedParts.fill(false), true]);
 
@@ -927,7 +936,10 @@ export const InnerRasterForm = (
                         ...values,
                         ...{[polygonData.uniquePartId]: polygonData}
                       });
-                      
+
+                      setTimeout(async () => {
+                        await validateForm();
+                      }, 0);
                     }}>
                       <Icon className="mc-icon-Plus" />
                     </Button>
