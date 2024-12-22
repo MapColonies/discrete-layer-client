@@ -7,7 +7,9 @@ import { Properties } from "@turf/helpers";
 import mask from "@turf/mask";
 import polygonToLine from "@turf/polygon-to-line";
 import simplify from "@turf/simplify";
+import * as turf from '@turf/turf';
 import { Feature, MultiPolygon, Polygon, Position, Geometry } from "geojson";
+import { PolygonPartRecordModelType } from "../../discrete-layer/models";
 
 export const ZERO_MERIDIAN = 0;
 export const ANTI_MERIDIAN = 180;
@@ -123,4 +125,21 @@ export const getFirstPoint = (geojson: Geometry): Position => {
       default:
         throw new Error("Unsupported GeoJSON geometry type");
     }
-  }
+}
+
+export const getGapsByConvexHull = (polygonsData: {
+    [x: string]: PolygonPartRecordModelType;
+}) => {
+    const polygonsCoordinates = Object.values(polygonsData).map(
+        (poly: PolygonPartRecordModelType) => poly.footprint.coordinates);
+    const turfPolygons = polygonsCoordinates.map(
+        (coordinate) => turf.polygon(coordinate));
+    const polygonsCollection = turf.featureCollection(turfPolygons);
+    // @ts-ignore
+    const mergedPolygons = polygonsCollection.features.reduce((acc, curr) => {
+        return acc ? turf.union(acc, curr) : curr;
+    }, null);
+    const convexHull = turf.convex(polygonsCollection);
+    return convexHull? turf.difference(convexHull, mergedPolygons): null;
+};
+

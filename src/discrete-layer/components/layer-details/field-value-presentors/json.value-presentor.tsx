@@ -63,10 +63,21 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
 
   const removeStatusErrors = (): void => {
     setTimeout(() => {
-      if (typeof currentErrors !== 'undefined') {
+      if (currentErrors != undefined) {
         // Remove valid field from errors obj if exists
-        unset(currentErrors,fieldName);
+        unset(currentErrors, fieldName);
+
+        // if the currentErrors is about polygon parts
+        const prefixWithoutAddition = fieldNamePrefix?.slice(0, -1);
+        if(typeof(prefixWithoutAddition) === 'string') {
+          const ppObjLength = Object.keys(currentErrors?.[prefixWithoutAddition]).length;
+          if(ppObjLength === NONE){
+            unset(currentErrors, prefixWithoutAddition);
+          }
+        }
+
         formik?.setStatus({ errors: currentErrors });
+
       } else {
         formik?.setStatus({});
       }
@@ -296,11 +307,11 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                 setJsonValue(e.currentTarget.value);
                 debouncedRemoveStatusErrors();
-                formik?.handleChange({});
+                formik?.handleChange(e.target);
               }}
               onBlur={(e) => {
                 handleBlur(e);
-                formik?.handleBlur({});
+                formik?.handleBlur(e.target);
               }}
               placeholder={'JSON'}
               required={fieldInfo.isRequired as boolean}
