@@ -1,3 +1,5 @@
+import { topology } from 'topojson-server';
+import { feature } from 'topojson-client';
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 import booleanContains from "@turf/boolean-contains";
@@ -55,13 +57,14 @@ There is 2 alternatives to get perimeter(outlined feature)
         }, features[0]);
         const convexHullFromUnion: Feature = convex(unitedPolygon.geometry);
 */
+const QUANTIZATION_TOLERANCE = 1e6;
 const SIMPLIFY_TOLERANCE =  0.0001; // maximum allowed deviation(degrees) of simplified points from the original geometry
 // 0.0001 works good for geometries from ~200m(linear dimensions) 
 // but for a large geometries number of vertices might be relatively big and not so relevant for UI 
 export const getOutlinedFeature = (features: Feature<Polygon | MultiPolygon, Properties>[]) => {
     const masked = mask({
         type: 'FeatureCollection',
-        features
+        features: applyTopology(features, QUANTIZATION_TOLERANCE)
     });
     // Remove whole world geometry
     masked.geometry.coordinates = masked.geometry.coordinates.slice(1);
@@ -70,6 +73,25 @@ export const getOutlinedFeature = (features: Feature<Polygon | MultiPolygon, Pro
         polygonToLine(masked), 
         {tolerance: SIMPLIFY_TOLERANCE, highQuality: false}
     );
+}
+
+export const applyTopology = (features: Feature<Polygon | MultiPolygon, Properties>[], quantization: number): Feature<Polygon | MultiPolygon, Properties>[]  => {
+    const polygons: Record<string,Geometry> = {};
+    features.forEach((feat, idx) => {
+        polygons[idx] = {
+            ...feat.geometry
+        } as unknown as Geometry;
+    });
+
+    const pp_topology = topology(polygons, quantization );
+    const ret_features: Feature<Polygon | MultiPolygon, Properties>[] = [];
+
+    Object.entries(polygons).forEach(([key, val]) => {
+      const topo_feat = feature(pp_topology, pp_topology.objects[key]);
+      ret_features.push(topo_feat as never);
+    });
+
+    return ret_features;
 }
 
 export const isPolygonContainsPolygon = (polygon: Feature, polygonToCheck: Feature): boolean => {

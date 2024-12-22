@@ -5,8 +5,10 @@ import { IntlShape } from 'react-intl';
 import * as Yup from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
 import { $enum } from 'ts-enum-util';
-import { Feature } from 'geojson';
+import { Feature, Geometry } from 'geojson';
 import rewind from '@turf/rewind';
+import { AllGeoJSON } from '@turf/helpers';
+import truncate from '@turf/truncate';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
@@ -275,6 +277,11 @@ export const getYupFieldConfig = (
         { fieldName: emphasizeByHTML(`${intl.formatMessage({ id: field.label })}`) }
       )
     );
+};
+
+export const decreaseFeaturePrecision = (feat: Geometry): Geometry => {
+  const truncate_options = {precision: 9, coordinates: 2};
+  return truncate(omit(feat, 'bbox') as AllGeoJSON, truncate_options) as Geometry;
 };
 
 export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature): ParsedPolygonPart => {
