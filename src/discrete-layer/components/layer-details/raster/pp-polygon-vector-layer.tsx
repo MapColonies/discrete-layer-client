@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { Feature, GeoJsonProperties, Geometry, LineString, MultiLineString, Polygon } from 'geojson';
 import { observer } from 'mobx-react';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
-import intersect from '@turf/intersect';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
+import booleanIntersects from "@turf/boolean-intersects";
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
@@ -107,7 +107,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     if(ingestionResolutionMeter){
       partsToCheck?.forEach((part) => {
         existingPolygoParts?.forEach((eixstingPart) => {
-          const intersection = intersect(
+          const intersection = booleanIntersects( 
             part.geometry as Polygon, 
             eixstingPart.geometry as Polygon
           );
