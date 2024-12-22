@@ -107,6 +107,7 @@ export const InnerRasterForm = (
     errors,
     values,
     dirty,
+    validateForm,
     handleChange,
     handleBlur,
     handleSubmit,
@@ -715,6 +716,10 @@ export const InnerRasterForm = (
                         setValues({
                           ...values
                         });
+
+                        setTimeout(async () => {
+                          await validateForm();
+                        }, 0); 
                       }}
                       handleSelection={()=>{
                         setSelectedFeature(currentFormKey);
@@ -931,7 +936,10 @@ export const InnerRasterForm = (
                         ...values,
                         ...{[polygonData.uniquePartId]: polygonData}
                       });
-                      
+
+                      setTimeout(async () => {
+                        await validateForm();
+                      }, 0);
                     }}>
                       <Icon className="mc-icon-Plus" />
                     </Button>
