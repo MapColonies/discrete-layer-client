@@ -47,7 +47,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const renderCount = useRef(0);
 
   useEffect(() => {
-    if(geoFeatures && geoFeatures?.length > MIN_FETURES_NUMBER)
+    if(geoFeatures && geoFeatures?.length >= MIN_FETURES_NUMBER)
     renderCount.current += 1;
   });
  
