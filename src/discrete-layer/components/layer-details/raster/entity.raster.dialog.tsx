@@ -4,9 +4,8 @@ import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, get, isEmpty } from 'lodash';
-import moment from 'moment';
+// import moment from 'moment';
 import * as Yup from 'yup';
-import { MixedSchema } from 'yup/lib/mixed';
 import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
@@ -44,8 +43,7 @@ import {
   cleanUpEntityPayload,
   filterModeDescriptors,
   getFlatEntityDescriptors,
-  getPartialRecord,
-  getRecordForUpdate,
+  // getRecordForUpdate,
   getValidationType,
   getYupFieldConfig
 } from '../utils';
@@ -565,6 +563,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
                   mutationQueryLoading={mutationQuery.loading}
                   closeDialog={closeDialog}
                   removePolygonPart={removePolygonPart}
+                  customErrorReset={store.discreteLayersStore.clearCustomValidationError}
                   customError={store.discreteLayersStore.customValidationError}
                   ppCollisionCheckInProgress={store.discreteLayersStore.ppCollisionCheckInProgress}
                 />
