@@ -289,8 +289,6 @@ export const discreteLayersStore = ModelBase
       } 
     }
 
-
-
     function addPreviewedLayer(id: string): void {
       self.previewedLayers = [
         ...self.previewedLayers ?? [],
@@ -392,6 +390,10 @@ export const discreteLayersStore = ModelBase
       self.customValidationError = cloneDeep(err);
     }
 
+    function clearCustomValidationError(): void {
+      self.customValidationError = undefined;
+    }
+
     function setPPCollisionCheckInProgress(val: boolean | undefined): void {
       self.ppCollisionCheckInProgress = val;
     }
@@ -428,6 +430,7 @@ export const discreteLayersStore = ModelBase
       resetUpdateMode,
       setMapViewerExtentPolygon,
       setCustomValidationError,
+      clearCustomValidationError,
       setPPCollisionCheckInProgress
     };
   });
