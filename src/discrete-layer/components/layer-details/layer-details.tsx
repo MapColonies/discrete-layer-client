@@ -24,7 +24,7 @@ import {
   ValidationConfigModelType,
   ValidationValueType,
 } from '../../models';
-import { getEnumKeys } from '../../components/layer-details/utils';
+import { DEFAULT_ENUM, getEnumKeys, isEnumType } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -155,13 +155,7 @@ export const getValuePresentor = (
           formik={formik}
           fieldNamePrefix={fieldNamePrefix}/>
       );
-    case 'DemDataType':
-    case 'NoDataValue':
-    case 'VerticalDatum':
-    case 'Units':
-    case 'UndulationModel':
-    case 'Transparency':
-    case 'ProductType': {
+    case (isEnumType(basicType) ? basicType : DEFAULT_ENUM): {
       let options: string[] = [];
       if (basicType === 'ProductType') {
         options = getEnumKeys(enumsMap as IEnumsMapType, basicType, layerRecord.__typename);
