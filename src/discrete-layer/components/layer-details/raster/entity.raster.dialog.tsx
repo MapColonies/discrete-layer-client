@@ -348,7 +348,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       },
     ];
 
-    const schemaUpdater = (partsNumber: number, startIndex = 0)=>{
+    const schemaUpdater = (partsNumber: number, startIndex = 0, removePrevNested = false)=>{
       const nestedFormdescriptors = getFlatEntityDescriptors(
         'PolygonPartRecord',
         store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
@@ -370,8 +370,8 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
         }
       });
       
-      const newSchema = removePropertiesWithPrefix(schema, NESTED_FORMS_PRFIX);
-
+      const newSchema = removePrevNested ? removePropertiesWithPrefix(schema, NESTED_FORMS_PRFIX) : {...schema};
+      
       for(let i=0; i < partsNumber; i++ ){
         newSchema[`${NESTED_FORMS_PRFIX}${i+startIndex}`] = Yup.object().shape({...nestedYupSchema});
       }
