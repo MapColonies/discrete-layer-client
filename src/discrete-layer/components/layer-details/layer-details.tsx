@@ -24,7 +24,7 @@ import {
   ValidationConfigModelType,
   ValidationValueType,
 } from '../../models';
-import { getEnumKeys } from '../../components/layer-details/utils';
+import { getEnumKeys, isEnumType } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -49,6 +49,7 @@ import { PYCSW_ANY_TEXT_FIELD } from '../map-container/freeTextSearch.component'
 import { ResolutionValuePresentorComponent } from './field-value-presentors/resolution.value-presentor';
 
 const FOOTPRINT_FIELD_NAMES = ['footprint', 'geometry'];
+const DEFAULT_ENUM = 'DUMMY';
 
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];
@@ -155,13 +156,7 @@ export const getValuePresentor = (
           formik={formik}
           fieldNamePrefix={fieldNamePrefix}/>
       );
-    case 'DemDataType':
-    case 'NoDataValue':
-    case 'VerticalDatum':
-    case 'Units':
-    case 'UndulationModel':
-    case 'Transparency':
-    case 'ProductType': {
+    case (isEnumType(basicType) ? basicType : DEFAULT_ENUM): {
       let options: string[] = [];
       if (basicType === 'ProductType') {
         options = getEnumKeys(enumsMap as IEnumsMapType, basicType, layerRecord.__typename);

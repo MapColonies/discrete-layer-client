@@ -53,6 +53,12 @@ import {
 
 const JSON_INDENTATION = 4;
 
+export const ENUM_TYPES = ['DemDataType', 'DemDataType', 'NoDataValue', 'VerticalDatum', 'Units', 'UndulationModel', 'Transparency', 'ProductType' ]
+
+export const isEnumType = (typeName: string) => {
+  return ENUM_TYPES.some(enumType => enumType === typeName);
+}
+
 export const getEntityDescriptors = (
   layerRecordTypename: LayerRecordTypes,
   entityDescriptors: EntityDescriptorModelType[]

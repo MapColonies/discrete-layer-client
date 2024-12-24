@@ -37,17 +37,17 @@ import {
   LayerRecordTypes,
 } from '../entity-types-keys';
 import { LayersDetailsComponent } from '../layer-details';
-import { IRecordFieldInfo } from '../layer-details.field-info';
+import { FieldInfoName, IRecordFieldInfo } from '../layer-details.field-info';
 import EntityRasterForm from './layer-datails-form.raster';
 import {
   clearSyncWarnings,
   cleanUpEntityPayload,
   filterModeDescriptors,
   getFlatEntityDescriptors,
-  getPartialRecord,
-  getRecordForUpdate,
   getValidationType,
-  getYupFieldConfig
+  getYupFieldConfig,
+  getBasicType,
+  isEnumType
 } from '../utils';
 import suite from '../validate';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
@@ -56,6 +56,7 @@ import './entity.raster.dialog.css';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
+const DEFAULT_TYPE_NAME = 'DUMMY';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
@@ -73,33 +74,40 @@ const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDe
   getFlatEntityDescriptors(
     record['__typename'] as LayerRecordTypes,
     descriptors
-  ).filter(
-    field => field.default
-  ).forEach(
-    descriptor => record[descriptor.fieldName as string] = descriptor.default
-  );
+  ).forEach((field) => {
+      const fieldName = field.fieldName as string;
+      const fieldNameType = getBasicType(field.fieldName as FieldInfoName, DEFAULT_TYPE_NAME);
+      if((field.lookupTable || isEnumType(fieldNameType))) {
+        record[fieldName] = '';
+      }
+      if (field.default){
+        record[fieldName] = field.default;
+      }
+    }
+  )
 };
 
 export const NESTED_FORMS_PRFIX = 'polygonPart_';
 
 export const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
   const record = {} as Record<string, unknown>;
-  switch (recordType) {
-    case RecordType.RECORD_RASTER:
-      LayerRasterRecordModelKeys.forEach((key) => {
-        record[key as string] = undefined;
-      });
-      // record.updateDate = moment();
-      record.sensors = [];
-      record.productType = ProductType.ORTHOPHOTO;
-      record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
-      break;
-    default:
-      break;
-  }
+  // switch (recordType) {
+  //   case RecordType.RECORD_RASTER:
+  //     // record.updateDate = moment();
+      
+  //     break;
+  //     default:
+  //       break;
+  //     }
+      
+  LayerRasterRecordModelKeys.forEach((key) => {
+    record[key as string] = undefined;
+  });
 
   setDefaultValues(record, descriptors);
-
+  
+  record.productType = ProductType.ORTHOPHOTO;
+  record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
   record.id = DEFAULT_ID;
   record.type = recordType;
 
@@ -516,13 +524,6 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
                   layerRecord={
                     mode === Mode.UPDATE
                       ? {...props.layerRecord} as LayerMetadataMixedUnion : layerRecord
-
-                      // ? getRecordForUpdate(
-                      //     props.layerRecord as LayerMetadataMixedUnion,
-                      //     layerRecord,
-                      //     descriptors as FieldConfigModelType[]
-                      //   )
-                      // : layerRecord
                   }
                   schemaUpdater = {schemaUpdater}
                   yupSchema={Yup.object({
