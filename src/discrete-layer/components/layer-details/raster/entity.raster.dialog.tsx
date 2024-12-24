@@ -13,6 +13,7 @@ import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { getStatusColoredBackground } from '../../../../common/helpers/style';
 import { Mode } from '../../../../common/models/mode.enum';
+import { removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import {
   EntityDescriptorModelType,
   LayerMetadataMixedUnion,
@@ -377,7 +378,8 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
         }
       });
       
-      const newSchema = {...schema};
+      const newSchema = removePropertiesWithPrefix(schema, NESTED_FORMS_PRFIX);
+
       for(let i=0; i < partsNumber; i++ ){
         newSchema[`${NESTED_FORMS_PRFIX}${i+startIndex}`] = Yup.object().shape({...nestedYupSchema});
       }

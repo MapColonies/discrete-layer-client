@@ -42,7 +42,8 @@ interface IngestionFieldsProps {
   validateSources?: boolean;
   reloadFormMetadata?: (
     ingestionFields: FormValues,
-    metadata: MetadataFile
+    metadata: MetadataFile,
+    removePrevData?: boolean
   ) => void;
   formik?: EntityFormikHandlers;
   manageMetadata?: boolean;
@@ -357,7 +358,8 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
           directory: directory,
           fileNames: fileNames.join(','),
         },
-        selected.metadata as MetadataFile
+        selected.metadata as MetadataFile,
+        true // ONLY WHEN (RE-)SELECTING FILE, removePrevData should be TRUE
       );
     }
   };
