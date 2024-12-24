@@ -461,7 +461,8 @@ export const InnerRasterForm = (
   
   const reloadFormMetadata = (
     ingestionFields: FormValues,
-    metadata: MetadataFile
+    metadata: MetadataFile,
+    removePrevData = false
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
     
@@ -514,8 +515,15 @@ export const InnerRasterForm = (
 
     resetForm();
 
+    if(removePrevData){
+      setPolygonPartsMode('MANUAL');
+      setExpandedParts([]);
+    }
+    
+    const relevantValues = removePrevData ? removePropertiesWithPrefix(values, NESTED_FORMS_PRFIX) : values;
+    
     setValues({
-      ...values,
+      ...relevantValues,
       ...transformEntityToFormFields((isEmpty(metadata.recordModel) ? layerRecord : metadata.recordModel)),
       ...ingestionFields,
     });
@@ -675,13 +683,12 @@ export const InnerRasterForm = (
     ppList = ref;
   }
   const updateListRowHeights = (idx=0) => {
-    ppList.recomputeRowHeights(idx);
-    ppList.forceUpdate();
+    ppList?.recomputeRowHeights(idx);
+    ppList?.forceUpdate();
   }
     
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
     const data = Object.values(layerPolygonParts);
-    console.log('***** RENDERROW *****', index);
 
     let polygon_part = data[index];
     if(!polygon_part){
@@ -804,6 +811,10 @@ export const InnerRasterForm = (
 
                       const ppDataKeys = Object.keys(parsedPPData);
                       schemaUpdater(ppDataKeys.length);
+
+                      setTimeout(async () => {
+                        await validateForm();
+                      }, 0);
                       
                       setExpandedParts(new Array(ppDataKeys.length).fill(false));
                       

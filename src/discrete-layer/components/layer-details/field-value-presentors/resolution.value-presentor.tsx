@@ -50,7 +50,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
   }, [innerValue]);
 
   useEffect(() => {
-    if (!formik?.getFieldProps(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}`).value && lookupOptions) {
+    if (lookupOptions) {
       const filteredOptions = lookupOptions?.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === Number(value));
       if (!!filteredOptions?.length) {
         formik?.setFieldValue(`${fieldNamePrefix ?? ''}${fieldInfo.dependentField.name}` as string, filteredOptions[0].properties[fieldInfo.dependentField.valueFromPropertyName]);

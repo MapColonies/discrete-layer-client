@@ -39,7 +39,10 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
   }, [innerValue]);
 
   if (!lookupTablesData || !lookupTablesData.dictionary || fieldInfo.lookupTable == null) return null;
-  const lookupOptions = lookupTablesData.dictionary[fieldInfo.lookupTable];
+  const lookupOptions = [
+    {value: '', translationCode: 'general.empty-string'},
+    ...lookupTablesData.dictionary[fieldInfo.lookupTable]
+  ];
 
   if (formik === undefined || mode === Mode.VIEW || (mode === Mode.EDIT && fieldInfo.isManuallyEditable !== true)) {
     return (
