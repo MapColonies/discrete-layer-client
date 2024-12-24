@@ -30,6 +30,12 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
   
+  const showLoadingSpinner = (isShown: boolean) => {
+    isShown? 
+      mapOl.getTargetElement().classList.add('olSpinner') :
+      mapOl.getTargetElement().classList.remove('olSpinner');
+  };
+
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
       getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox);
@@ -54,6 +60,11 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     if (!loading && data) {
       setExistingPolygoParts(data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]);
     } 
+    if (loading){
+      showLoadingSpinner(true);
+    }else{
+      showLoadingSpinner(false);
+    }
   }, [data, loading]);
 
   useEffect(() => {
