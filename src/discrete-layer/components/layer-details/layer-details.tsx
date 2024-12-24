@@ -24,7 +24,7 @@ import {
   ValidationConfigModelType,
   ValidationValueType,
 } from '../../models';
-import { getEnumKeys, isEnumType } from '../../components/layer-details/utils';
+import { DEFAULT_ENUM, getEnumKeys, isEnumType } from '../../components/layer-details/utils';
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
@@ -49,7 +49,6 @@ import { PYCSW_ANY_TEXT_FIELD } from '../map-container/freeTextSearch.component'
 import { ResolutionValuePresentorComponent } from './field-value-presentors/resolution.value-presentor';
 
 const FOOTPRINT_FIELD_NAMES = ['footprint', 'geometry'];
-const DEFAULT_ENUM = 'DUMMY';
 
 interface LayersDetailsComponentProps {
   entityDescriptors: EntityDescriptorModelType[];

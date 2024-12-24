@@ -56,7 +56,7 @@ import './entity.raster.dialog.css';
 
 const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
-const DEFAULT_TYPE_NAME = 'DUMMY';
+const DEFAULT_TYPE_NAME = 'DEFAULT_TYPE_NAME';
 const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
@@ -91,15 +91,7 @@ export const NESTED_FORMS_PRFIX = 'polygonPart_';
 
 export const buildRecord = (recordType: RecordType, descriptors: EntityDescriptorModelType[]): ILayerImage => {
   const record = {} as Record<string, unknown>;
-  // switch (recordType) {
-  //   case RecordType.RECORD_RASTER:
-  //     // record.updateDate = moment();
-      
-  //     break;
-  //     default:
-  //       break;
-  //     }
-      
+  
   LayerRasterRecordModelKeys.forEach((key) => {
     record[key as string] = undefined;
   });

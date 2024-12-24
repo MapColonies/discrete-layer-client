@@ -53,6 +53,8 @@ import {
 
 const JSON_INDENTATION = 4;
 
+export const DEFAULT_ENUM = 'DEFAULT_ENUM';
+
 export const ENUM_TYPES = ['DemDataType', 'DemDataType', 'NoDataValue', 'VerticalDatum', 'Units', 'UndulationModel', 'Transparency', 'ProductType' ]
 
 export const isEnumType = (typeName: string) => {
