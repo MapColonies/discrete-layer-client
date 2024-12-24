@@ -78,7 +78,7 @@ interface LayerDetailsFormCustomProps {
   mutationQueryError: unknown;
   mutationQueryLoading: boolean;
   closeDialog: () => void;
-  schemaUpdater: (parts:number, startIndex?: number) => void;
+  schemaUpdater: (parts:number, startIndex?: number, removePrevNested?: boolean) => void;
   removePolygonPart: (polygonPartKey: string) => void;
   customErrorReset: () => void;
   customError?: Record<string,string[]> | undefined;
@@ -518,6 +518,7 @@ export const InnerRasterForm = (
     if(removePrevData){
       setPolygonPartsMode('MANUAL');
       setExpandedParts([]);
+      schemaUpdater(0, 0, true);
     }
     
     const relevantValues = removePrevData ? removePropertiesWithPrefix(values, NESTED_FORMS_PRFIX) : values;
@@ -810,7 +811,7 @@ export const InnerRasterForm = (
                       setLoadingPolygonParts(false);
 
                       const ppDataKeys = Object.keys(parsedPPData);
-                      schemaUpdater(ppDataKeys.length);
+                      schemaUpdater(ppDataKeys.length, 0, true);
 
                       setTimeout(async () => {
                         await validateForm();
