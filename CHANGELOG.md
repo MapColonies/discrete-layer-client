@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.16.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.15.0...v2.16.0) (2024-12-24)
+
+
+### Features
+
+* 3D new validation api ([#566](https://github.com/MapColonies/discrete-layer-client/issues/566)) ([7c8993f](https://github.com/MapColonies/discrete-layer-client/commit/7c8993f24933e42cd0d174ed707a4ff4d6a763b2))
+* add new ability to find gaps betweem polygon parts ([#565](https://github.com/MapColonies/discrete-layer-client/issues/565)) ([b4159c0](https://github.com/MapColonies/discrete-layer-client/commit/b4159c079d77a980f6b891c0812fe127f6a489e0))
+
+
+### Bug Fixes
+
+* datePicker setFieldTouched true on change ([#572](https://github.com/MapColonies/discrete-layer-client/issues/572)) ([2be8e7c](https://github.com/MapColonies/discrete-layer-client/commit/2be8e7c2ea3470149ca2a5605125ae71f6257d07))
+* export highlighted selection ([#562](https://github.com/MapColonies/discrete-layer-client/issues/562)) ([140ae9f](https://github.com/MapColonies/discrete-layer-client/commit/140ae9fc2e06c7a886731a28e96693cf7f3703d6))
+* intersect exception and topology for more clear perimeter ([#567](https://github.com/MapColonies/discrete-layer-client/issues/567)) ([06801c1](https://github.com/MapColonies/discrete-layer-client/commit/06801c19ed24a10f14c04905e4891f3d1fe19933))
+* polugon parts ol map fit  behaviour ([#569](https://github.com/MapColonies/discrete-layer-client/issues/569)) ([b9cd9ef](https://github.com/MapColonies/discrete-layer-client/commit/b9cd9ef08f5cc2448d88406916e9dc2fee816f28))
+* Raster ingestion submit button is disabled (MAPCO-5945) ([#564](https://github.com/MapColonies/discrete-layer-client/issues/564)) ([79ee47e](https://github.com/MapColonies/discrete-layer-client/commit/79ee47e4c20e2fb678929edd9c78447467167120))
+* resolution on blur should clear custom errors ([#568](https://github.com/MapColonies/discrete-layer-client/issues/568)) ([d66aba9](https://github.com/MapColonies/discrete-layer-client/commit/d66aba9f1a172cac34bc856597fc58e0d30b1752))
+* sent e.target to formik handleChange and handleBlur ([#563](https://github.com/MapColonies/discrete-layer-client/issues/563)) ([5bd3aca](https://github.com/MapColonies/discrete-layer-client/commit/5bd3acade1e15e2694e2dc37b03900409093526c))
+* shape null values as undefined ([#561](https://github.com/MapColonies/discrete-layer-client/issues/561)) ([87535e1](https://github.com/MapColonies/discrete-layer-client/commit/87535e19b974bc59b868db330f97ea5489158bfe))
+* show loading spinner before display exisitng parts on map ([#570](https://github.com/MapColonies/discrete-layer-client/issues/570)) ([0bf8303](https://github.com/MapColonies/discrete-layer-client/commit/0bf83030afaaa1d844290a6e9e1075c05ca297af))
+* submit enable when replace gpkg ( MAPCO-5944 ) ([#571](https://github.com/MapColonies/discrete-layer-client/issues/571)) ([82052b1](https://github.com/MapColonies/discrete-layer-client/commit/82052b17afdcf0d81acf5d20a074b51def026c9d))
+
 ## [2.15.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.14.1...v2.15.0) (2024-12-16)
 
 
