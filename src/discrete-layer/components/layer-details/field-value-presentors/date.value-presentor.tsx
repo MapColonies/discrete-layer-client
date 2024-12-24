@@ -78,6 +78,13 @@ export const DateValuePresentorComponent: React.FC<DateValuePresentorProps> = ({
           onChange={
             (dateVal, val): void => {
               const momentVal = moment(dateVal, getDateformatType(shouldShowTime));
+              const maxNowValidation = (fieldInfo.validation?.find((valid)=> valid.max === '$NOW'))? new Date(): null;
+              formik?.setFieldTouched(fieldName, true);
+              if(maxNowValidation){
+                if (dateVal > maxNowValidation){
+                  formik?.setFieldError(fieldName, '');
+                };
+              } 
               handleOnChange({
                 /* eslint-disable */
                 persist: () => {},
