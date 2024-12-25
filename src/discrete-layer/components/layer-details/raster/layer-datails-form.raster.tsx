@@ -926,6 +926,7 @@ export const InnerRasterForm = (
                     type="button"
                     onClick={(): void => {
                       setLoadingPolygonParts(false);
+                      setPPCheckPerformed(false);
 
                       //Sort exisitng pp keys in descending order
                       const exisitngParts = layerPolygonParts ? Object.keys(layerPolygonParts)
