@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.16.2...v2.16.3) (2024-12-25)
+
+
+### Bug Fixes
+
+* set state PPCheck ([#576](https://github.com/MapColonies/discrete-layer-client/issues/576)) ([141d65b](https://github.com/MapColonies/discrete-layer-client/commit/141d65bf096db2eef06aa2cd49867b9466621c48))
+* use currentTarget instead of target in onChange and onBlur ([#575](https://github.com/MapColonies/discrete-layer-client/issues/575)) ([5261e36](https://github.com/MapColonies/discrete-layer-client/commit/5261e36aeb3bdbed6f29994d2458825b78bd8532))
+
 ### [2.16.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.16.1...v2.16.2) (2024-12-24)
 
 
