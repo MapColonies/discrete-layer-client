@@ -77,7 +77,12 @@ export const GraphQLError: React.FC<IGpaphQLError> = ({ error }) => {
       {
         !isEmpty(error?.response) &&
         <AutoDirectionBox className="errorContainer">
-          <IconButton className="errorIcon mc-icon-Status-Warnings" />
+          <IconButton className="errorIcon mc-icon-Status-Warnings" 
+            onClick={(e): void => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          />
           <ul className="errorsList">
             {
               error.response.errors?.map((error: IServerError, index: number) => {
