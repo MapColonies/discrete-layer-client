@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useCallback, useState, useLayoutEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
@@ -44,6 +44,7 @@ import { LayersDetailsComponent } from './layer-details';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import EntityForm from './layer-datails-form';
 import {
+  cleanUpEntityPayload,
   clearSyncWarnings,
   getFlatEntityDescriptors,
   getPartialRecord,
@@ -189,6 +190,16 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       );
     };
 
+    const metadataPayloadKeys = useMemo(
+      () => {
+        return getFlatEntityDescriptors(
+          'Layer3DRecord',
+          store.discreteLayersStore.entityDescriptors as EntityDescriptorModelType[]
+        )
+        .map(descriptor => descriptor.fieldName);
+      },
+      [store.discreteLayersStore.entityDescriptors]);
+
     const handleIngestQueries = (): void => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { directory, fileNames, __typename, ...metadata } = inputValues;
@@ -211,7 +222,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
               data: {
                 directory: directory as string,
                 fileNames: [fileNames as string],
-                metadata: metadata as Layer3DRecordInput,
+                metadata: cleanUpEntityPayload(metadata, metadataPayloadKeys as string[]) as unknown as Layer3DRecordInput,
                 type: RecordType.RECORD_3D,
               },
             })
