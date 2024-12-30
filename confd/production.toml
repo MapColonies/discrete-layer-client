@@ -48,5 +48,6 @@ keys = [
   "/configuration/sites/config",
   "/configuration/bff/path",
   "/configuration/polygon/parts/feature/type/prefix",
-  "/configuration/polygon/parts/maxpershape"
+  "/configuration/polygon/parts/maxpershape",
+  "/configuration/polygon/parts/max/vertices"
 ]

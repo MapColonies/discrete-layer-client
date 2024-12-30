@@ -150,6 +150,7 @@ env:
   bffPath: ''
   polygonPartsFeatureTypePrefix: ''
   polygonPartsMaxPerShape: 300
+  polygonPartsMaxVertices: 300000
 route:
   enabled: true
   annotations:

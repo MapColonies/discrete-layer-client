@@ -373,12 +373,26 @@ export const InnerRasterForm = (
   //   }
   // }, [sourceExtent, outlinedPerimeter]);
   
-  const excidedFeaturesNumberError = useMemo(() => new Error(
+  const exceededFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
       { id: 'validation-general.shapeFile.too-many-features'},
       { maxPPNumber: emphasizeByHTML(`${CONFIG.POLYGON_PARTS_MAX_PER_SHAPE}`)}
      )
   ), []);
+
+  const exceededVertexNumberError = useCallback((numberOfPP: number, numberOfVertexes: number) => {
+    return new Error(
+      intl.formatMessage(
+        { id: 'validation-general.shapeFile.too-many-vertices' },
+        { 
+          maxVerticesPP: emphasizeByHTML(`${CONFIG.POLYGON_PARTS_MAX_VERTICES}`),
+          ppNumber: emphasizeByHTML(`${numberOfPP}`),
+          verticesNumber: emphasizeByHTML(`${numberOfVertexes}`)
+        }
+      )
+    );
+  }, []);
+  
   const shapeFileGenericError = useMemo(() => new Error(`validation-general.shapeFile.generic`), []);
   // const shapeFilePerimeterVSGpkgExtentError = useMemo(() => new Error(`validation-general.shapeFile.polygonParts.not-in-gpkg-extent`), []);
 
@@ -533,11 +547,19 @@ export const InnerRasterForm = (
   };
 
   const isShapeFileValid = (featuresArr: unknown[] | undefined): boolean | Error => {
+    let verticesNum = 0;
+    featuresArr?.forEach(f => {
+      //@ts-ignore
+      verticesNum += f.geometry.coordinates.length;
+    });
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }
     if (featuresArr && featuresArr.length > CONFIG.POLYGON_PARTS_MAX_PER_SHAPE) {
-      return excidedFeaturesNumberError;
+      return exceededFeaturesNumberError;
+    }
+    if(verticesNum > CONFIG.POLYGON_PARTS_MAX_VERTICES){
+      return exceededVertexNumberError(featuresArr.length, verticesNum)
     }
     return true;
   }
