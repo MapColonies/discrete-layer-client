@@ -192,6 +192,8 @@ const InnerForm = (
     metadata: MetadataFile
   ): void => {
     setIsSelectedFiles(!!ingestionFields.fileNames);
+
+    delete ((metadata.recordModel as unknown) as Record<string, unknown>)['__typename'];
     
     // Check update related fields in metadata obj
     const updateFields = extractDescriptorRelatedFieldNames('updateRules', getFlatEntityDescriptors(layerRecord.__typename, entityDescriptors));
