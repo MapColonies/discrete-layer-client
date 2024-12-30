@@ -19,7 +19,12 @@ export const ValidationsError: React.FC<IValidationsError> = ({ errors })=> {
       {
         Object.keys(errors).length > NONE &&
         <AutoDirectionBox className="errorContainer">
-          <IconButton className="errorIcon mc-icon-Status-Warnings" />
+          <IconButton className="errorIcon mc-icon-Status-Warnings" 
+            onClick={(e): void => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          />
           <ul className="errorsList">
             {
               Object.keys(errors).map((key: string) => {
