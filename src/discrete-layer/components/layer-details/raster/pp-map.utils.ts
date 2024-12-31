@@ -87,7 +87,7 @@ export const getWFSFeatureTypeName = (layerRecord: LayerRasterRecordModelType | 
   // Naming convension of polygon parts feature typeName
   // polygonParts:{productId}-{productType}
   return layerRecord ? 
-    `${CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX}${layerRecord.productId}-${enums[layerRecord.productType as string].realValue}` :
+    `${CONFIG.POLYGONPARTS.FEATURETYPEPREFIX}${layerRecord.productId}-${enums[layerRecord.productType as string].realValue}` :
     'SHOULD_BE_CALCULATED_FROM_UPDATED_LAYER';
 }
 
