@@ -30,7 +30,7 @@ const PROJECT_VERSION = (window as any)._env_.PROJECT_VERSION;
 const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 const SITES_CONFIG = JSON.parse((window as any)._env_.SITES_CONFIG);
 const BFF_PATH = (window as any)._env_.BFF_PATH;
-const POLYGON_PARTS = (window as any)._env_.POLYGON_PARTS;
+const POLYGONPARTS = (window as any)._env_.POLYGONPARTS;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -195,10 +195,10 @@ const APP_CONFIG = {
   SITES_CONFIG: SITES_CONFIG,
   BFF_PATH: BFF_PATH,
   POLYGONPARTS: {
-    FEATURETYPEPREFIX: POLYGON_PARTS.featureTypePrefix,
+    FEATURETYPEPREFIX: POLYGONPARTS.featureTypePrefix,
     MAX: {
-      PERSHAPE: POLYGON_PARTS.MAX.perShape,
-      VERTICES: POLYGON_PARTS.MAX.vertices,
+      PERSHAPE: POLYGONPARTS.MAX.perShape,
+      VERTICES: POLYGONPARTS.MAX.vertices,
     }
   }
 };
