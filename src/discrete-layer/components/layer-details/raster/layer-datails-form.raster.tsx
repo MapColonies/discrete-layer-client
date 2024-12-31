@@ -143,7 +143,7 @@ export const InnerRasterForm = (
   type POLYGON_PARTS_MODE = 'FROM_SHAPE' | 'MANUAL';
 
   const POLYGON_PARTS_STATUS_ERROR = 'pp_status_errors';
-  const ppConfig = CONFIG.POLYGONPARTS;
+  const ppConfig = CONFIG.POLYGON_PARTS;
   
   const intl = useIntl();
   const ZOOM_LEVELS = useZoomLevels();
@@ -378,7 +378,7 @@ export const InnerRasterForm = (
   const exceededFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
       { id: 'validation-general.shapeFile.too-many-features'},
-      { maxPPNumber: emphasizeByHTML(`${ppConfig.MAX.PERSHAPE}`)}
+      { maxPPNumber: emphasizeByHTML(`${ppConfig.MAX.PER_SHAPE}`)}
      )
   ), []);
 
@@ -557,7 +557,7 @@ export const InnerRasterForm = (
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }
-    if (featuresArr && featuresArr.length > ppConfig.MAX.PERSHAPE) {
+    if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
       return exceededFeaturesNumberError;
     }
     if(verticesNum > ppConfig.MAX.VERTICES){
