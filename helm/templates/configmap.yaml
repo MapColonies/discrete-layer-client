@@ -56,9 +56,9 @@
   CONFIGURATION_WHATSNEW_URL: {{ quote .Values.env.whatsnewUrl }}
   CONFIGURATION_SITES_CONFIG: {{ quote .Values.env.sitesConfig }}
   CONFIGURATION_BFF_PATH: {{ quote .Values.env.bffPath }}
-  CONFIGURATION_POLYGON_PARTS_FEATURE_TYPE_PREFIX: {{ quote .Values.env.polygonPartsFeatureTypePrefix }}
-  CONFIGURATION_POLYGON_PARTS_MAXPERSHAPE: {{ quote .Values.env.polygonPartsMaxPerShape }}
-  CONFIGURATION_POLYGON_PARTS_MAX_VERTICES: {{ quote .Values.env.polygonPartsMaxVertices }}
+  CONFIGURATION_POLYGONPARTS_FEATURETYPEPREFIX: {{ quote .Values.env.polygonParts.featureTypePrefix }}
+  CONFIGURATION_POLYGONPARTS_MAX_PERSHAPE: {{ quote .Values.env.polygonParts.max.perShape }}
+  CONFIGURATION_POLYGONPARTS_MAX_VERTICES: {{ quote .Values.env.polygonParts.max.vertices }}
 {{- end -}}
 
 {{ include "mc-chart.configmap" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "DATA" $DATA "WITH_TELEMETRY_TRACING" false "WITH_TELEMETRY_METRICS" false "context" .)}}

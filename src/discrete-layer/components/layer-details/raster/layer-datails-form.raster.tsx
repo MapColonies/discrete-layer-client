@@ -143,6 +143,7 @@ export const InnerRasterForm = (
   type POLYGON_PARTS_MODE = 'FROM_SHAPE' | 'MANUAL';
 
   const POLYGON_PARTS_STATUS_ERROR = 'pp_status_errors';
+  const ppConfig = CONFIG.POLYGON_PARTS;
   
   const intl = useIntl();
   const ZOOM_LEVELS = useZoomLevels();
@@ -373,10 +374,11 @@ export const InnerRasterForm = (
   //   }
   // }, [sourceExtent, outlinedPerimeter]);
   
+  
   const exceededFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
       { id: 'validation-general.shapeFile.too-many-features'},
-      { maxPPNumber: emphasizeByHTML(`${CONFIG.POLYGON_PARTS_MAX_PER_SHAPE}`)}
+      { maxPPNumber: emphasizeByHTML(`${ppConfig.MAX.PER_SHAPE}`)}
      )
   ), []);
 
@@ -385,7 +387,7 @@ export const InnerRasterForm = (
       intl.formatMessage(
         { id: 'validation-general.shapeFile.too-many-vertices' },
         { 
-          maxVerticesPP: emphasizeByHTML(`${CONFIG.POLYGON_PARTS_MAX_VERTICES}`),
+          maxVerticesPP: emphasizeByHTML(`${ppConfig.MAX.VERTICES}`),
           ppNumber: emphasizeByHTML(`${numberOfPP}`),
           verticesNumber: emphasizeByHTML(`${numberOfVertexes}`)
         }
@@ -555,10 +557,10 @@ export const InnerRasterForm = (
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }
-    if (featuresArr && featuresArr.length > CONFIG.POLYGON_PARTS_MAX_PER_SHAPE) {
+    if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
       return exceededFeaturesNumberError;
     }
-    if(verticesNum > CONFIG.POLYGON_PARTS_MAX_VERTICES){
+    if(verticesNum > ppConfig.MAX.VERTICES){
       return exceededVertexNumberError(featuresArr.length, verticesNum)
     }
     return true;
