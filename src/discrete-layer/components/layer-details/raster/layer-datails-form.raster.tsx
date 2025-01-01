@@ -16,7 +16,7 @@ import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
 import { get, set, isEmpty, isObject, omit } from 'lodash';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
-import { Properties } from '@turf/helpers';
+import { AllGeoJSON, Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
 import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
+import { explode, getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import {
@@ -548,12 +548,12 @@ export const InnerRasterForm = (
     setGraphQLError(metadata.error);
   };
 
-  const isShapeFileValid = (featuresArr: unknown[] | undefined): boolean | Error => {
+  const isShapeFileValid = (featuresArr: Feature<Geometry, GeoJsonProperties>[]): boolean | Error => {
     let verticesNum = 0;
     featuresArr?.forEach(f => {
-      //@ts-ignore
-      verticesNum += f.geometry.coordinates.length;
+      verticesNum += explode(f as AllGeoJSON)?.features.length;
     });
+
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }

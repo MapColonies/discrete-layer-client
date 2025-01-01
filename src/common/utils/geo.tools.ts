@@ -3,7 +3,7 @@ import { feature } from 'topojson-client';
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 import booleanContains from "@turf/boolean-contains";
-import { Properties } from "@turf/helpers";
+import { AllGeoJSON, Properties } from "@turf/helpers";
 import mask from "@turf/mask";
 import polygonToLine from "@turf/polygon-to-line";
 import simplify from "@turf/simplify";
@@ -125,6 +125,10 @@ export const getFirstPoint = (geojson: Geometry): Position => {
       default:
         throw new Error("Unsupported GeoJSON geometry type");
     }
+}
+
+export const explode = (geometry: AllGeoJSON) => {
+    return turf.explode(geometry)
 }
 
 export const getGapsByConvexHull = (polygonsData: {
