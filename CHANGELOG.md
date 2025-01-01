@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.17.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.16.3...v2.17.0) (2025-01-01)
+
+
+### Features
+
+* add vertices limit to env configuration ([#579](https://github.com/MapColonies/discrete-layer-client/issues/579)) ([e015eb7](https://github.com/MapColonies/discrete-layer-client/commit/e015eb707d8b7502e6568338bcc5c0c62ce5671d))
+
+
+### Bug Fixes
+
+* delete typename from metadata.recordModel and send to bff only necessary fields ([#578](https://github.com/MapColonies/discrete-layer-client/issues/578)) ([b052c0a](https://github.com/MapColonies/discrete-layer-client/commit/b052c0a38d01dc68c1f0d84d39f83c69fa229f6b))
+* disable error icon click ([#577](https://github.com/MapColonies/discrete-layer-client/issues/577)) ([1e415a4](https://github.com/MapColonies/discrete-layer-client/commit/1e415a43bb3648c329531d58a84ba3b640e050e9))
+* total of coordination ([#580](https://github.com/MapColonies/discrete-layer-client/issues/580)) ([3eb0b03](https://github.com/MapColonies/discrete-layer-client/commit/3eb0b03b921edb97beef7ca27f85b463f1e7ffaf))
+
 ### [2.16.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.16.2...v2.16.3) (2024-12-25)
 
 
