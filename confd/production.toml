@@ -47,6 +47,7 @@ keys = [
   "/configuration/whatsnew/url",
   "/configuration/sites/config",
   "/configuration/bff/path",
-  "/configuration/polygon/parts/feature/type/prefix",
-  "/configuration/polygon/parts/maxpershape"
+  "/configuration/polygonparts/featuretypeprefix",
+  "/configuration/polygonparts/max/pershape",
+  "/configuration/polygonparts/max/vertices"
 ]

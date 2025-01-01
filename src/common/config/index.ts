@@ -30,8 +30,7 @@ const PROJECT_VERSION = (window as any)._env_.PROJECT_VERSION;
 const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 const SITES_CONFIG = JSON.parse((window as any)._env_.SITES_CONFIG);
 const BFF_PATH = (window as any)._env_.BFF_PATH;
-const POLYGON_PARTS_FEATURE_TYPE_PREFIX = (window as any)._env_.POLYGON_PARTS_FEATURE_TYPE_PREFIX;
-const POLYGON_PARTS_MAX_PER_SHAPE = (window as any)._env_.POLYGON_PARTS_MAX_PER_SHAPE;
+const POLYGON_PARTS = (window as any)._env_.POLYGON_PARTS;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -195,8 +194,13 @@ const APP_CONFIG = {
   WHATSNEW_URL: WHATSNEW_URL,
   SITES_CONFIG: SITES_CONFIG,
   BFF_PATH: BFF_PATH,
-  POLYGON_PARTS_FEATURE_TYPE_PREFIX: POLYGON_PARTS_FEATURE_TYPE_PREFIX,
-  POLYGON_PARTS_MAX_PER_SHAPE: POLYGON_PARTS_MAX_PER_SHAPE,
+  POLYGON_PARTS: {
+    FEATURE_TYPE_PREFIX: POLYGON_PARTS.featureTypePrefix,
+    MAX: {
+      PER_SHAPE: POLYGON_PARTS.max.perShape,
+      VERTICES: POLYGON_PARTS.max.vertices,
+    }
+  }
 };
 
 export default APP_CONFIG;
