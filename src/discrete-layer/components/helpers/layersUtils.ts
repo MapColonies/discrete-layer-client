@@ -158,7 +158,7 @@ export const getWMTSOptions = (layer: LayerRasterRecordModelType, url: string, c
     format,
     tileMatrixSetID,
     // tileMatrixLabels
-    maximumLevel: Number(tileMatrixLabels.at(-1)),
+    maximumLevel: Math.max(...tileMatrixLabels.map(Number)),
     tilingScheme: new CesiumGeographicTilingScheme()
   };
 };
