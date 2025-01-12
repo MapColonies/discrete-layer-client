@@ -373,7 +373,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       });
 
       const { topLevelEntityVestErrors ,...rest} = vestValidationResults;
-      removePrevNested && setVestValidationResults({topLevelEntityVestErrors});
+      removePrevNested && topLevelEntityVestErrors && Object.keys(topLevelEntityVestErrors).length && setVestValidationResults({topLevelEntityVestErrors});
 
       const newSchema = removePrevNested ? removePropertiesWithPrefix(schema, NESTED_FORMS_PRFIX) : {...schema};
       
