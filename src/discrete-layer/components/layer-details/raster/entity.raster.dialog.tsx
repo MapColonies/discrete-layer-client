@@ -146,6 +146,8 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const [vestValidationResults, setVestValidationResults] = useState<
       Record<string,DraftResult>
     >({} as Record<string,DraftResult>);
+    const [isSubmittedForm, setIsSubmittedForm] = useState(false);
+    
     const [descriptors, setDescriptors] = useState<unknown[]>([]);
     const [schema, setSchema] = useState<Record<string, Yup.AnySchema>>({});
     const [inputValues, setInputValues] = useState<FormikValues>({});
@@ -369,7 +371,10 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
             break;
         }
       });
-      
+
+      const { topLevelEntityVestErrors ,...rest} = vestValidationResults;
+      removePrevNested && setVestValidationResults({topLevelEntityVestErrors});
+
       const newSchema = removePrevNested ? removePropertiesWithPrefix(schema, NESTED_FORMS_PRFIX) : {...schema};
       
       for(let i=0; i < partsNumber; i++ ){
@@ -381,6 +386,9 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const removePolygonPart = (polygonPartKey: string) => {
       delete schema[polygonPartKey];
       setSchema({...schema});
+
+      const { [polygonPartKey]: polygonPartValue, ...rest } = vestValidationResults;
+      setVestValidationResults(rest)
     };
           
     useEffect(() => {
@@ -449,7 +457,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
           break;
         }
       }
-    }, [vestValidationResults]);
+    }, [isSubmittedForm]);
 
     const closeDialog = useCallback(() => {
       onSetOpen(false);
@@ -550,7 +558,9 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
                         vestSuite[nestedFieldName] = get(vestSuiteNested, "get")();
                       });
                     
-                    setVestValidationResults(vestSuite) ;
+                    setVestValidationResults(vestSuite);
+
+                    setIsSubmittedForm(!isSubmittedForm);
                     // setVestValidationResults(get(vestSuiteTopLevel, "get")()) ;
                   }}
                   vestValidationResults={vestValidationResults}
