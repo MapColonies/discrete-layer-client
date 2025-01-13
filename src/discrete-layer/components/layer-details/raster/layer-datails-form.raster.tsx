@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { explode, getFirstPoint, getOutlinedFeature, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
+import { explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import {
@@ -98,8 +98,6 @@ export interface EntityFormikHandlers extends FormikHandlers {
   setStatus: (status?: StatusError | Record<string, unknown>) => void;
   status: StatusError | Record<string, unknown>;
 }
-
-const isGeometryPolygon =  (geometry: Geometry) => geometry ? geometry.type === 'Polygon' : true;
 
 export const InnerRasterForm = (
   props: LayerDetailsFormCustomProps & FormikProps<FormValues>
@@ -557,12 +555,12 @@ export const InnerRasterForm = (
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }
-    if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
-      return exceededFeaturesNumberError;
-    }
-    if(verticesNum > ppConfig.MAX.VERTICES){
-      return exceededVertexNumberError(featuresArr.length, verticesNum)
-    }
+    // if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
+    //   return exceededFeaturesNumberError;
+    // }
+    // if(verticesNum > ppConfig.MAX.VERTICES){
+    //   return exceededVertexNumberError(featuresArr.length, verticesNum)
+    // }
     return true;
   }
 

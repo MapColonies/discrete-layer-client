@@ -94,6 +94,20 @@ export const applyTopology = (features: Feature<Polygon | MultiPolygon, Properti
     return ret_features;
 }
 
+export const isGeometryPolygon =  (geometry: Geometry) => geometry ? geometry.type === 'Polygon' : true;
+
+export const polygonVertexDensityFactor = (polygon: Feature, tolerance: number): number => {
+    const vertices_org = explode(polygon as AllGeoJSON).features.map(f => f.geometry.coordinates);
+    const vertices_simpl = explode(turf.simplify(
+            polygon as AllGeoJSON, 
+            {tolerance, highQuality: false}
+        ))
+        .features.map(f => f.geometry.coordinates);
+    console.log("simple vs org vertices count:", vertices_org.length, "to:", vertices_simpl.length, `(${vertices_simpl.length/vertices_org.length})`);
+
+    return vertices_simpl.length/vertices_org.length;
+}
+
 export const isPolygonContainsPolygon = (polygon: Feature, polygonToCheck: Feature): boolean => {
     const polygonBBox = bbox(polygon);
     const polygonBBoxPolygon = bboxPolygon(polygonBBox);

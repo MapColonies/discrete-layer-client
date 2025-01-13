@@ -498,6 +498,7 @@
   "validation-general.shapeFile.generic": "Please select zip file with only shape or related files, or a single shape file",
   "validation-general.shapeFile.polygonParts.not-in-gpkg-extent": "Polygon Parts from shape file are not in GPKG extent", 
   "validation-general.polygonParts.hasErrors": "Marked {numErrorParts} Plygon Parts has errors. Complete missing data or fix the SHAPE file.",
+  "validation-general.shapeFile.polygonParts.geometryTooDensed": "Footprint contain patterns with height density, must be simplified.",
   "validation-general.polygonParts.noValidGeometry": "Marked {numErrorParts} Plygon Parts contains not supported MULTIPOLYGON geometry.",
   "validation-general.polygonParts.resolutionCollision": "Marked {numErrorParts} Plygon Parts has resolution collision with parts already existing in that area",
   "validation-general.polygonParts.wfsServerError": "Service WFS of Polygon Parts returned error.",

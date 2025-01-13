@@ -9,12 +9,14 @@ import { Feature, Geometry } from 'geojson';
 import rewind from '@turf/rewind';
 import { AllGeoJSON } from '@turf/helpers';
 import truncate from '@turf/truncate';
+import { polygonVertexDensityFactor } from '../../../common/utils/geo.tools';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
 import { SYNC_QUERY, syncQueries } from '../../../syncHttpClientGql';
 import { Mode } from '../../../common/models/mode.enum';
 import { emphasizeByHTML } from '../../../common/helpers/formatters';
+import CONFIG from '../../../common/config';
 import {
   CategoryConfigModelType,
   EntityDescriptorModelType,
@@ -327,6 +329,14 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
           break;
         case 'footprint':
           poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
+
+          const densityFactor = polygonVertexDensityFactor(feature, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE);
+          if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
+            errors[desc.fieldName as string] = {
+              codes: ['validation-general.shapeFile.polygonParts.geometryTooDensed'],
+              label: desc.label as string
+            };
+          }
           break;
         case 'horizontalAccuracyCE90':
         case 'sourceResolutionMeter':

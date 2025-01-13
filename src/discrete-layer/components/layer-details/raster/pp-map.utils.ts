@@ -1,6 +1,7 @@
 import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { Vector } from 'ol/layer';
+import Point from 'ol/geom/Point';
 import { Style, Stroke, Fill, Text, Icon } from 'ol/style';
 import CONFIG from '../../../../common/config';
 import { LayerRasterRecordModelType } from '../../../models';
@@ -18,7 +19,7 @@ export enum FeatureType {
   ILLEGAL_PP='ILLEGAL_PP',
 }
 
-export const PPMapStyles = new Map<FeatureType,Style|undefined>([
+export const PPMapStyles = new Map<FeatureType,Style|Style[]|undefined>([
   // @ts-ignore
   [FeatureType.DEFAULT, new Vector().getStyleFunction()()[0]],
   [FeatureType.PP_PERIMETER, new Style({
@@ -61,7 +62,8 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
                               })
                             })
   ],
-  [FeatureType.SELECTED, new Style({
+  [FeatureType.SELECTED, [
+            new Style({
                           stroke: new Stroke({
                             width: 2,
                             color: "#ff0000"
@@ -69,7 +71,22 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
                           fill: new Fill({
                             color: "#aa2727"
                           })
-                        })
+                          
+            }),
+            new Style({
+                        image: new Icon({
+                          scale: 0.2,
+                          anchor: [0.5, 1],
+                          src: 'assets/img/map-marker.gif'
+                        }),
+                        geometry: function (feature) {
+                          // return the coordinates of the first ring of the polygon
+                          const geom_extent_coordinate = feature?.getGeometry()?.getExtent();
+                          
+                          return geom_extent_coordinate ? new Point([geom_extent_coordinate[0], geom_extent_coordinate[1]]) : new Point([]);
+                        }
+            })
+          ]
 ],
 [FeatureType.ILLEGAL_PP, new Style({
   stroke: new Stroke({
