@@ -110,7 +110,7 @@ const isValidWGS84Coordinates = (geom: Geometry) => {
 }
 
 
-export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
+export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[]):geoJSONValidation => {
   const res = {
     valid: jsonValue !== undefined && jsonValue !== EMPTY_JSON_STRING_VALUE && jsonValue !== '',
     severity_level: 'INFO',
@@ -158,6 +158,12 @@ export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
           severity_level: 'WARN',
           reason: 'geo_json-has_self_intersections'
         }
+      }
+
+      const validationArr = geoCustomChecks?.map((func) => func(geoJson)).filter(u => u != undefined);
+
+      if(validationArr && validationArr.length){
+        return validationArr[0]
       }
     }
   }

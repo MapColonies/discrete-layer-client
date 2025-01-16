@@ -7,7 +7,7 @@ import shp, { FeatureCollectionWithFilename, parseShp } from 'shpjs';
 import { useDebouncedCallback } from 'use-debounce';
 import { Button, IconButton, TextField, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { EMPTY_JSON_STRING_VALUE, validateGeoJSONString } from '../../../../common/utils/geojson.validation';
+import { EMPTY_JSON_STRING_VALUE, geoJSONValidation, validateGeoJSONString } from '../../../../common/utils/geojson.validation';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
@@ -27,6 +27,7 @@ interface JsonValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
+  geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[];
   formik?: EntityFormikHandlers;
   type?: string;
   enableLoadFromShape?: boolean;
@@ -38,6 +39,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
   mode,
   fieldInfo,
   value,
+  geoCustomChecks,
   formik,
   type,
   enableLoadFromShape = false,
@@ -69,14 +71,14 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
 
         // if the currentErrors is about polygon parts
         const prefixWithoutAddition = fieldNamePrefix?.slice(0, -1);
-        if(typeof(prefixWithoutAddition) === 'string') {
-          const ppObjLength = Object.keys(currentErrors?.[prefixWithoutAddition]).length;
+        if(typeof(prefixWithoutAddition) === 'string' && currentErrors?.[prefixWithoutAddition]) {
+          const ppObjLength = Object.keys(currentErrors?.[prefixWithoutAddition])?.length;
           if(ppObjLength === NONE){
             unset(currentErrors, prefixWithoutAddition);
           }
         }
 
-        formik?.setStatus({ errors: currentErrors });
+        formik?.setStatus({ errors: {...currentErrors} });
 
       } else {
         formik?.setStatus({});
@@ -233,7 +235,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         }
 
         if (jsonValue !== EMPTY_JSON_STRING_VALUE){
-          const validRes = validateGeoJSONString(jsonValue);
+          const validRes = validateGeoJSONString(jsonValue, geoCustomChecks);
           
           if (!validRes.valid){
             setGeoJsonWarning('');

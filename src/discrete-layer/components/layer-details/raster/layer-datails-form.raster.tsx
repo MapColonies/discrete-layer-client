@@ -27,9 +27,10 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon } from '../../../../common/utils/geo.tools';
+import { explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
+import { geoJSONValidation } from '../../../../common/utils/geojson.validation';
 import {
   EntityDescriptorModelType,
   FieldConfigModelType,
@@ -293,6 +294,29 @@ export const InnerRasterForm = (
   }, [values]);
 
   useEffect(() => {
+    let countPPWithGeometryErrors = 0;
+
+    if(status?.errors){
+      Object.keys(status?.errors).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
+        // @ts-ignore
+        countPPWithGeometryErrors += (status?.errors?.[key]?.footprint) ? 1 : 0;
+      });
+    }
+
+      if(countPPWithGeometryErrors > NONE){
+        setClientCustomValidationErrors({
+        ...clientCustomValidationErrors,
+        [CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_FOOTPRINT]: intl.formatMessage(
+          {id: 'validation-general.polygonParts.footPrint.hasErrors'}, 
+          {numErrorParts: emphasizeByHTML(`${countPPWithGeometryErrors}`)}
+        )
+      });
+    } else {
+      setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_FOOTPRINT));
+    }
+  }, [status?.errors]);
+
+  useEffect(() => {
     if (polygonPartsMode === 'MANUAL' && ppFeatures.length) {
       const definedPPGeometries = ppFeatures.filter((item) => !isEmpty(item.geometry));
       if (definedPPGeometries.length) {
@@ -357,7 +381,8 @@ export const InnerRasterForm = (
 
   enum CUSTOM_VALIDATION_ERROR_CODES {
     SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
-    POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY'
+    POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
+    POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
   } 
   // ****** Verification of GPKG extent vs. PP perimeter is disabled
   // useEffect(() => {
@@ -438,7 +463,7 @@ export const InnerRasterForm = (
       handleBlur: (e: React.FocusEvent<unknown>): void => {
         setGraphQLError(undefined);
         setPPCheckPerformed(false);
-        removeStatusError(POLYGON_PARTS_STATUS_ERROR);
+        // removeStatusError(POLYGON_PARTS_STATUS_ERROR);
         customErrorReset();
         handleBlur(e);
       },
@@ -555,12 +580,12 @@ export const InnerRasterForm = (
     if (typeof featuresArr === 'undefined') {
       return shapeFileGenericError;
     }
-    // if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
-    //   return exceededFeaturesNumberError;
-    // }
-    // if(verticesNum > ppConfig.MAX.VERTICES){
-    //   return exceededVertexNumberError(featuresArr.length, verticesNum)
-    // }
+    if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
+      return exceededFeaturesNumberError;
+    }
+    if(verticesNum > ppConfig.MAX.VERTICES){
+      return exceededVertexNumberError(featuresArr.length, verticesNum)
+    }
     return true;
   }
 
@@ -709,7 +734,18 @@ export const InnerRasterForm = (
     ppList?.recomputeRowHeights(idx);
     ppList?.forceUpdate();
   }
-    
+  
+  const ppVertexDensityFactor = (value: any) => {
+    if(polygonVertexDensityFactor(value, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE) < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
+      return {
+        valid: false,
+        severity_level: 'ERROR',
+        reason: 'geometryTooDensed'
+      } as geoJSONValidation;
+    }
+  }
+  const customChecks = [ppVertexDensityFactor];
+  
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
     const data = Object.values(layerPolygonParts);
 
@@ -763,6 +799,9 @@ export const InnerRasterForm = (
         <Box className="polygonPartFormContainer"> 
           <Field key={currentFormKey} name={currentFormKey}>
             {(props: any) => <LayersDetailsComponent
+                                geoCustomChecks={
+                                  customChecks
+                                }
                                 entityDescriptors={editFieldDescriptors}
                                 layerRecord={polygon_part}
                                 // mode={mode}
@@ -999,7 +1038,8 @@ export const InnerRasterForm = (
                   : []
                 } 
                 selectedFeatureKey={selectedFeature}
-                selectionStyle={ PPMapStyles.get(FeatureType.SELECTED)} 
+                //@ts-ignore
+                selectionStyle={[PPMapStyles.get(FeatureType.SELECTED_FILL), PPMapStyles.get(FeatureType.SELECTED_MARKER)]} 
                 style={{width: '520px', position: 'relative', direction: 'ltr'}} 
                 fitOptions={{padding:[10,20,10,20]}}
                 showExisitngPolygonParts={showExisitngLayerPartsOnMap}

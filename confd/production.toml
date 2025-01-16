@@ -48,6 +48,7 @@ keys = [
   "/configuration/sites/config",
   "/configuration/bff/path",
   "/configuration/polygonparts/featuretypeprefix",
+  "/configuration/polygonparts/densityFactor",
   "/configuration/polygonparts/max/pershape",
   "/configuration/polygonparts/max/vertices"
 ]

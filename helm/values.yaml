@@ -150,6 +150,7 @@ env:
   bffPath: ''
   polygonParts:
     featureTypePrefix: ''
+    densityFactor: 0.3
     max:
       perShape: 300
       vertices: 300000
