@@ -79,7 +79,7 @@ interface LayerDetailsFormCustomProps {
   mutationQueryLoading: boolean;
   closeDialog: () => void;
   schemaUpdater: (parts:number, startIndex?: number, removePrevNested?: boolean) => void;
-  removePolygonPart: (polygonPartKey: string) => void;
+  removePolygonPart: (polygonPartKey: string) => string[];
   customErrorReset: () => void;
   customError?: Record<string,string[]> | undefined;
   ppCollisionCheckInProgress?: boolean | undefined;
@@ -738,7 +738,11 @@ export const InnerRasterForm = (
                     <Handler partIndex={index} text={currentFormKey} 
                       isErrorInPolygonPart={isFirstPhaseErrorInPolygonPart || isVestPhaseErrorInPolygonPart || isGraphQLErrorInPolygonPart || !isGeometryValid}
                       handleClick={()=>{
-                        removePolygonPart(currentFormKey);
+                        const ppFields: string[] = removePolygonPart(currentFormKey);
+
+                        ppFields.forEach((key) => {
+                          setFieldTouched(currentFormKey + '.' + key, false);
+                        });
 
                         expandedParts?.splice(index, 1);
                         setExpandedParts([...expandedParts]);
@@ -1107,7 +1111,7 @@ interface LayerDetailsFormProps {
   entityDescriptors: EntityDescriptorModelType[];
   layerRecord: LayerMetadataMixedUnion;
   schemaUpdater: (parts:number) => void;
-  removePolygonPart: (polygonPartKey: string) => void;
+  removePolygonPart: (polygonPartKey: string) => string[];
   yupSchema: OptionalObjectSchema<
     { [x: string]: Yup.AnySchema<unknown, unknown, unknown> },
     AnyObject,

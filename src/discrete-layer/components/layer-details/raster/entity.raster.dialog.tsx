@@ -383,12 +383,22 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       setSchema(newSchema);
     }
 
-    const removePolygonPart = (polygonPartKey: string) => {
+    const removePolygonPart = (polygonPartKey: string): string[] => {
+      let touchedFields: string[] = [];
+
+      const ppFields = (schema[polygonPartKey] as unknown as Record<string, string>).fields;
+
+      Object.keys(ppFields).forEach((key) => {
+        touchedFields.push(key);
+      });
+
       delete schema[polygonPartKey];
       setSchema({...schema});
 
       const { [polygonPartKey]: polygonPartValue, ...rest } = vestValidationResults;
-      setVestValidationResults(rest)
+      setVestValidationResults(rest);
+      
+      return touchedFields;
     };
           
     useEffect(() => {
