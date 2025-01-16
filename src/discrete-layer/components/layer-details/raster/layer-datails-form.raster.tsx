@@ -801,10 +801,12 @@ export const InnerRasterForm = (
                           setFieldTouched(currentFormKey + '.' + key, false);
                         });
 
-                        const { errors } = status;
-                        if(errors && typeof errors === 'object'){
-                          const { [currentFormKey]: removedKey, ...rest } = errors as Record<string, unknown>;
-                          setStatus({ errors: {...rest} })
+                        if(status){
+                          const { errors } = status;
+                          if(errors && typeof errors === 'object'){
+                            const { [currentFormKey]: removedKey, ...rest } = errors as Record<string, unknown>;
+                            setStatus({ errors: {...rest} });
+                          }
                         }
 
                         expandedParts?.splice(index, 1);
