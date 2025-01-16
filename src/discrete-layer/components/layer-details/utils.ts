@@ -9,7 +9,7 @@ import { Feature, Geometry } from 'geojson';
 import rewind from '@turf/rewind';
 import { AllGeoJSON } from '@turf/helpers';
 import truncate from '@turf/truncate';
-import { polygonVertexDensityFactor } from '../../../common/utils/geo.tools';
+import { polygonVertexDensityFactor, area, countSmallHoles } from '../../../common/utils/geo.tools';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
@@ -297,6 +297,18 @@ export const decreaseFeaturePrecision = (feat: Geometry): Geometry => {
 export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature): ParsedPolygonPart => {
   const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
   const errors: Record<string,ParsedPolygonPartError> = {};
+
+  const addError = (descriptor: FieldConfigModelType, code: string) => {
+    if(errors[descriptor.fieldName as string]){
+      errors[descriptor.fieldName as string].codes.push(code);
+    } else {
+      errors[descriptor.fieldName as string] = {
+        codes: [code],
+        label: descriptor.label as string
+      };
+    }
+  }
+
   desciptors.forEach((desc) => {
     const shapeFieldValue = get(feature, desc.shapeFileMapping as string);
 
@@ -304,10 +316,7 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
     // 1. required fields 
     // 2. no future dates
     if(!shapeFieldValue && desc.isRequired){
-      errors[desc.fieldName as string] = {
-        codes: ['validation-general.required'],
-        label: desc.label as string
-      };
+      addError(desc, 'validation-general.required');
     }
     
     if(desc.shapeFileMapping) {
@@ -316,15 +325,7 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
           if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
-            if(errors[desc.fieldName as string]){
-              errors[desc.fieldName as string].codes.push('validation-general.date.future');
-            }
-            else{
-              errors[desc.fieldName as string] = {
-                codes: ['validation-general.date.future'],
-                label: desc.label as string
-              };
-            }
+            addError(desc, 'validation-general.date.future');
           }
           break;
         case 'footprint':
@@ -332,10 +333,18 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
 
           const densityFactor = polygonVertexDensityFactor(feature, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE);
           if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
-            errors[desc.fieldName as string] = {
-              codes: ['validation-general.shapeFile.polygonParts.geometryTooDensed'],
-              label: desc.label as string
-            };
+            addError(desc, 'validation-general.shapeFile.polygonParts.geometryTooDensed');
+          }
+
+          const polygonArea = area(feature as AllGeoJSON);
+          if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD){
+            console.log('Feature area:', polygonArea);
+            addError(desc, 'validation-general.shapeFile.polygonParts.geometryTooSmall');
+          }
+
+          const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
+          if(polygonSmallHoles > 0){
+            addError(desc, 'validation-general.shapeFile.polygonParts.geometryHasSmallHoles');
           }
           break;
         case 'horizontalAccuracyCE90':

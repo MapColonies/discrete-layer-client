@@ -3,7 +3,7 @@ import { feature } from 'topojson-client';
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 import booleanContains from "@turf/boolean-contains";
-import { AllGeoJSON, Properties } from "@turf/helpers";
+import { AllGeoJSON, Properties, FeatureCollection } from "@turf/helpers";
 import mask from "@turf/mask";
 import polygonToLine from "@turf/polygon-to-line";
 import simplify from "@turf/simplify";
@@ -143,6 +143,44 @@ export const getFirstPoint = (geojson: Geometry): Position => {
 
 export const explode = (geometry: AllGeoJSON) => {
     return turf.explode(geometry)
+}
+
+export const area = (geometry: AllGeoJSON) => {
+    return turf.area(geometry as unknown as  Feature<any> | FeatureCollection<any> | turf.helpers.Geometry);
+}
+
+// Function to detect small holes in Polygon and MultiPolygon
+export const countSmallHoles = (feature:  Feature<any>, threshold: number) => {
+  let ret = 0;
+  const type = feature.geometry.type;
+
+  if (type === 'Polygon') {
+    ret = countPolygonHoles(feature.geometry.coordinates, threshold);
+  } else if (type === 'MultiPolygon') {
+    feature.geometry.coordinates.forEach((polygon: Position[][]) => {
+      ret += countPolygonHoles(polygon, threshold);
+    });
+  } else {
+    console.log('Feature is not a Polygon or MultiPolygon.');
+  }
+
+  if(ret>0){
+    console.log('Feature has holes', ret);
+  }
+  return ret;
+}
+
+const countPolygonHoles = (coordinates: Position[][], threshold: number): number => {
+  let ret = 0;
+  const [outerRing, ...holes] = coordinates;
+  holes.forEach((hole) => {
+    const holePolygon = turf.polygon([hole]);
+    const holeArea = turf.area(holePolygon);
+    if (holeArea <= threshold) {
+      ret++;
+    }
+  });
+  return ret;
 }
 
 export const getGapsByConvexHull = (polygonsData: {

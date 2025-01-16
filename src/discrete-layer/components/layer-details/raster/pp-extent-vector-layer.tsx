@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
+import CONFIG from '../../../../common/config';
 import { GetFeatureModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../../models';
 import { GeojsonFeatureInput } from '../../../models/RootStore.base';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
@@ -92,7 +93,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
       data: {
         feature:  bboxPolygon(mapOl.getView().calculateExtent() as BBox) as GeojsonFeatureInput,
         typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: 100 
+        count: CONFIG.POLYGON_PARTS.NUMBER_WFS_FEATURES
       } 
     }));
   };
