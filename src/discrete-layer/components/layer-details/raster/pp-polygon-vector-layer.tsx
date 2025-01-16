@@ -55,7 +55,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
       data: {
         feature:  feature as GeojsonFeatureInput,
         typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: CONFIG.POLYGON_PARTS.NUMBER_WFS_FEATURES 
+        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES 
       } 
     }));
   };

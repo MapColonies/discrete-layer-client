@@ -93,7 +93,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
       data: {
         feature:  bboxPolygon(mapOl.getView().calculateExtent() as BBox) as GeojsonFeatureInput,
         typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: CONFIG.POLYGON_PARTS.NUMBER_WFS_FEATURES
+        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES
       } 
     }));
   };

@@ -49,6 +49,8 @@ keys = [
   "/configuration/bff/path",
   "/configuration/polygonparts/featuretypeprefix",
   "/configuration/polygonparts/densityFactor",
+  "/configuration/polygonparts/areaThreshold",
+  "/configuration/polygonparts/max/WFSFeatures",
   "/configuration/polygonparts/max/pershape",
   "/configuration/polygonparts/max/vertices"
 ]
