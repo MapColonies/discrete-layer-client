@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
+import { area, countSmallHoles, explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import { geoJSONValidation } from '../../../../common/utils/geojson.validation';
@@ -736,7 +736,8 @@ export const InnerRasterForm = (
   }
   
   const ppVertexDensityFactor = (value: any) => {
-    if(polygonVertexDensityFactor(value, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE) < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
+    const densityFactor = polygonVertexDensityFactor(value, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE);
+    if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
       return {
         valid: false,
         severity_level: 'ERROR',
@@ -744,7 +745,29 @@ export const InnerRasterForm = (
       } as geoJSONValidation;
     }
   }
-  const customChecks = [ppVertexDensityFactor];
+
+  const ppArea = (value: any) => {
+    const polygonArea = area(value);
+    if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD) {
+      return {
+        valid: false,
+        severity_level: 'ERROR',
+        reason: 'geometryTooSmall'
+      } as geoJSONValidation;
+    }
+  }
+
+  const ppCountSmallHoles = (value: any) => {
+    const polygonSmallHoles = countSmallHoles(value, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
+    if(polygonSmallHoles > 0) {
+      return {
+        valid: false,
+        severity_level: 'ERROR',
+        reason: 'geometryTooSmall'
+      } as geoJSONValidation;
+    }
+  }
+  const customChecks = [ppVertexDensityFactor, ppArea, ppCountSmallHoles];
   
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
     const data = Object.values(layerPolygonParts);
