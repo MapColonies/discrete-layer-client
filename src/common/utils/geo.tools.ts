@@ -152,19 +152,20 @@ export const area = (geometry: AllGeoJSON) => {
 // Function to detect small holes in Polygon and MultiPolygon
 export const countSmallHoles = (feature:  Feature<any>, threshold: number) => {
   let ret = 0;
-  const type = feature.geometry.type;
+  const featureGeometry = feature.geometry ?? feature;
+  const type = featureGeometry.type;
 
   if (type === 'Polygon') {
-    ret = countPolygonHoles(feature.geometry.coordinates, threshold);
+    ret = countPolygonHoles(featureGeometry.coordinates, threshold);
   } else if (type === 'MultiPolygon') {
-    feature.geometry.coordinates.forEach((polygon: Position[][]) => {
+    featureGeometry.coordinates.forEach((polygon: Position[][]) => {
       ret += countPolygonHoles(polygon, threshold);
     });
   } else {
     console.log('Feature is not a Polygon or MultiPolygon.');
   }
 
-  if(ret>0){
+  if(ret > 0){
     console.log('Feature has holes', ret);
   }
   return ret;

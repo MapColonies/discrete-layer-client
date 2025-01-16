@@ -160,10 +160,10 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((val
         }
       }
 
-      const validationArr = geoCustomChecks?.map((func) => func(geoJson)).filter(u => u != undefined);
+      const validationArr = geoCustomChecks?.map((func) => func(geoJson)).filter(u => u != undefined) as geoJSONValidation[];
 
       if(validationArr && validationArr.length){
-        return validationArr[0]
+        return validationArr[0];
       }
     }
   }

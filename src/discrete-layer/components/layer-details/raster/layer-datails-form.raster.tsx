@@ -763,7 +763,7 @@ export const InnerRasterForm = (
       return {
         valid: false,
         severity_level: 'ERROR',
-        reason: 'geometryTooSmall'
+        reason: 'geometryHasSmallHoles'
       } as geoJSONValidation;
     }
   }
@@ -800,6 +800,12 @@ export const InnerRasterForm = (
                         ppFields.forEach((key) => {
                           setFieldTouched(currentFormKey + '.' + key, false);
                         });
+
+                        const { errors } = status;
+                        if(errors && typeof errors === 'object'){
+                          const { [currentFormKey]: removedKey, ...rest } = errors as Record<string, unknown>;
+                          setStatus({ errors: {...rest} })
+                        }
 
                         expandedParts?.splice(index, 1);
                         setExpandedParts([...expandedParts]);
