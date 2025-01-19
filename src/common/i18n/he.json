@@ -221,7 +221,7 @@
   "polygon-parts.map-preview-legend.PP_PERIMETER": "הקף של חלקי תיחום",
   "polygon-parts.map-preview-legend.SOURCE_EXTENT": "שטח המקור",
   "polygon-parts.map-preview-legend.EXISTING_PP": "חלקי תיחום הקיימים",
-  "polygon-parts.map-preview-legend.SELECTED": "חלק הנבחר",
+  "polygon-parts.map-preview-legend.SELECTED_FILL": "חלק הנבחר",
   "polygon-parts.map-preview-legend.ILLEGAL_PP": "חלק תיחום עם רזולוציה קטנה מהקיים",
 
   "field.actions.edit-draft": "ערוך טיוטה",
