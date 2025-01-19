@@ -168,3 +168,16 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   top:6px;
   left: 20px;
 }
+
+#layerDetailsFormRaster .deletePolygonPart {
+  position: relative;
+  top: -44px;
+  left: 550px;
+  display: flex;
+  width: 160px;
+  align-items: center;
+}
+
+body[dir='rtl'] #layerDetailsFormRaster .deletePolygonPart { 
+  left: -550px;
+}

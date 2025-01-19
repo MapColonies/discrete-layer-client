@@ -1,7 +1,9 @@
 import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { Vector } from 'ol/layer';
-import Point from 'ol/geom/Point';
+import { MultiPoint } from 'ol/geom';
+import CircleStyle from 'ol/style/Circle';
+import { Coordinate } from 'ol/coordinate';
 import { Style, Stroke, Fill, Text, Icon } from 'ol/style';
 import CONFIG from '../../../../common/config';
 import { LayerRasterRecordModelType } from '../../../models';
@@ -77,19 +79,20 @@ export const PPMapStyles = new Map<FeatureType, Style | undefined>([
   ],
   [FeatureType.SELECTED_MARKER,
   new Style({
-    image: new Icon({
-      scale: 0.06,
-      anchor: [0.5, 1],
-      anchorOrigin: 'bottom-left',
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'fraction',
-      src: 'assets/img/app/purple-map-pin-icon.png'
+    image: new CircleStyle({
+      radius: 5,
+      fill: new Fill({
+        color: '#FFA032', //GC_WARNING_HIGH
+      }),
     }),
     geometry: function (feature) {
-      // return the coordinates of the first ring of the polygon
-      const geom_extent_coordinate = feature?.getGeometry()?.getExtent();
-
-      return geom_extent_coordinate ? new Point([geom_extent_coordinate[0], geom_extent_coordinate[1]]) : new Point([]);
+      // return the coordinates of the inner and outer rings of the polygon
+      //@ts-ignore
+      const coordinates = feature?.getGeometry()?.getCoordinates().reduce( 
+        (accumulator: Array<Coordinate>, currentValue: Array<Coordinate>) => [...accumulator, ...currentValue],
+        []
+      );
+      return new MultiPoint(coordinates);
     }
   })
   ],

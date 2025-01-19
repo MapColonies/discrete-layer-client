@@ -697,7 +697,7 @@ export const InnerRasterForm = (
       onMouseOver={(e: any): void => { handleSelection && handleSelection();}}
       onMouseOut={(e: any): void => { handleClearSelection && handleClearSelection();}}
     />
-    <Box style={{ position: 'relative', top: '-44px', left: '-550px', display: "flex", width: "160px", alignItems: "center"}}
+    <Box className="deletePolygonPart"
      onMouseOver={(e: any): void => { handleSelection && handleSelection();}}
      onMouseOut={(e: any): void => { handleClearSelection && handleClearSelection();}}
     >
