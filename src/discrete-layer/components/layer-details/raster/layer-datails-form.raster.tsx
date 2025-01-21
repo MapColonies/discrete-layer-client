@@ -302,12 +302,12 @@ export const InnerRasterForm = (
       'validation-general.shapeFile.polygonParts.geometryHasSmallHoles'
     ];
     const cleanUpFieldErrorMsg = (obj: Record<string,unknown>, field: string, err: string):void =>{
-      const parsingErrors = get(obj, field) as string[];
-      if(!isEmpty(parsingErrors)){
-        const err_idx = parsingErrors.findIndex((elem: string)=>elem === intl.formatMessage({id: err}));
+      const fieldErrors = get(obj, field) as string[];
+      if(!isEmpty(fieldErrors)){
+        const err_idx = fieldErrors.findIndex((elem: string)=>elem === intl.formatMessage({id: err}));
         if(err_idx > -1) {
-          parsingErrors.splice(err_idx,1);
-          if(isEmpty(parsingErrors)){
+          fieldErrors.splice(err_idx,1);
+          if(isEmpty(fieldErrors)){
             unset(obj, field);
           }
         }
