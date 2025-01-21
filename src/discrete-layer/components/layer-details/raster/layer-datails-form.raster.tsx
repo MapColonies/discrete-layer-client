@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
 import { DraftResult } from 'vest/vestResult';
-import { get, set, isEmpty, isObject, omit } from 'lodash';
+import { get, set, isEmpty, isObject, omit, unset } from 'lodash';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { AllGeoJSON, Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
@@ -169,6 +169,7 @@ export const InnerRasterForm = (
   const [gpkgValidationResults, setGpkgValidationResults] = useState<SourceValidationModelType|undefined>(undefined);
   const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
+  const [isThresholdErrorsCleaned, setIsThresholdErrorsCleaned] = useState(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     const customValidationErrors = Object.values(clientCustomValidationErrors);
@@ -295,16 +296,76 @@ export const InnerRasterForm = (
 
   useEffect(() => {
     let countPPWithGeometryErrors = 0;
+    let effectiveStatusErrors = status?.errors;
+    const errorsForThreshold = [
+      'validation-general.shapeFile.polygonParts.geometryTooSmall',
+      'validation-general.shapeFile.polygonParts.geometryHasSmallHoles'
+    ];
+    const cleanUpFieldErrorMsg = (obj: Record<string,unknown>, field: string, err: string):void =>{
+      const parsingErrors = get(obj, field) as string[];
+      if(!isEmpty(parsingErrors)){
+        const err_idx = parsingErrors.findIndex((elem: string)=>elem === intl.formatMessage({id: err}));
+        if(err_idx > -1) {
+          parsingErrors.splice(err_idx,1);
+          if(isEmpty(parsingErrors)){
+            unset(obj, field);
+          }
+        }
+      }
+    };
 
-    if(status?.errors){
-      Object.keys(status?.errors).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
+    if(effectiveStatusErrors){
+      Object.keys(effectiveStatusErrors).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
         // @ts-ignore
-        countPPWithGeometryErrors += (status?.errors?.[key]?.footprint) ? 1 : 0;
+        countPPWithGeometryErrors += (effectiveStatusErrors?.[key]?.footprint) ? 1 : 0;
+        // errorsForThreshold.forEach(err => {
+        //   const footprintErrors = get(effectiveStatusErrors, `${key}.footprint`) as string[];
+        //   if(!isEmpty(footprintErrors)){
+        //     const err_idx = footprintErrors.findIndex((elem: string)=>elem === intl.formatMessage({id: err}));
+        //     if(err_idx > -1) {
+        //       countPPWithGeometryErrors++;
+        //     }
+        //   }
+        // });
       });
     }
 
-      if(countPPWithGeometryErrors > NONE){
-        setClientCustomValidationErrors({
+    if (isThresholdErrorsCleaned) return;
+
+    if(countPPWithGeometryErrors > NONE) {
+      const footprintErrorsRatio = countPPWithGeometryErrors / Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).length;
+      if( footprintErrorsRatio <= 0.05){
+
+        // const parsingErrorToClean = [...parsingErrors];
+        errorsForThreshold.forEach(err => {
+          if(effectiveStatusErrors){
+            Object.keys(effectiveStatusErrors).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
+              cleanUpFieldErrorMsg(get(effectiveStatusErrors,`${key}`), 'footprint', err);
+            });
+          }
+        });
+        
+        // const reduced = parsingErrorToClean.reduce(
+        //   (acc,curr) => {
+        //     const ppErr = Object.keys(curr)[0];
+        //     // @ts-ignore
+        //     return (curr[ppErr].hasOwnProperty('footprint') ? {...acc, ...curr} : {...acc});
+        //   },
+        //   {}
+        // );
+        setIsThresholdErrorsCleaned(true);
+        effectiveStatusErrors = {...status/*, ...{errors: {...reduced}} */}.errors;
+        setStatus({errors: effectiveStatusErrors});
+      }
+
+      countPPWithGeometryErrors = 0;
+      if(effectiveStatusErrors){
+        Object.keys(effectiveStatusErrors).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
+          // @ts-ignore
+          countPPWithGeometryErrors += (effectiveStatusErrors?.[key]?.footprint) ? 1 : 0;
+        });
+      }
+      setClientCustomValidationErrors({
         ...clientCustomValidationErrors,
         [CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_FOOTPRINT]: intl.formatMessage(
           {id: 'validation-general.polygonParts.footPrint.hasErrors'}, 
@@ -905,6 +966,8 @@ export const InnerRasterForm = (
                       setPolygonPartsMode('FROM_SHAPE');
                       
                       setLoadingPolygonParts(false);
+
+                      setIsThresholdErrorsCleaned(false);
 
                       const ppDataKeys = Object.keys(parsedPPData);
                       schemaUpdater(ppDataKeys.length, 0, true);
