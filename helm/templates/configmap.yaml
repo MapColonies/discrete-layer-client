@@ -58,6 +58,7 @@
   CONFIGURATION_BFF_PATH: {{ quote .Values.env.bffPath }}
   CONFIGURATION_POLYGONPARTS_FEATURETYPEPREFIX: {{ quote .Values.env.polygonParts.featureTypePrefix }}
   CONFIGURATION_POLYGONPARTS_DENSITYFACTOR: {{ quote .Values.env.polygonParts.densityFactor }}
+  CONFIGURATION_POLYGONPARTS_GEOMETRY_ERRORS_THRESHOLD: {{ quote .Values.env.polygonParts.geometryErrorsThreshold }}
   CONFIGURATION_POLYGONPARTS_AREA_THRESHOLD: {{ quote .Values.env.polygonParts.areaThreshold }}
   CONFIGURATION_POLYGONPARTS_MAX_WFS_FEATURES: {{ quote .Values.env.polygonParts.max.WFSFeatures }}
   CONFIGURATION_POLYGONPARTS_MAX_PERSHAPE: {{ quote .Values.env.polygonParts.max.perShape }}

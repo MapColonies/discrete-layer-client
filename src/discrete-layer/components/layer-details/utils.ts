@@ -52,12 +52,25 @@ import {
   LayerRecordTypes,
   LayerRecordTypesKeys
 } from './entity-types-keys';
+import { hasSelfIntersections } from '../../../common/utils/geojson.validation';
 
 const JSON_INDENTATION = 4;
 
 export const DEFAULT_ENUM = 'DEFAULT_ENUM';
 
 export const ENUM_TYPES = ['DemDataType', 'DemDataType', 'NoDataValue', 'VerticalDatum', 'Units', 'UndulationModel', 'Transparency', 'ProductType' ]
+
+export const GEOMETRY_ERRORS = {
+  geometryTooDense: 'validation-general.shapeFile.polygonParts.geometryTooDensed',
+  geometryTooSmall: 'validation-general.shapeFile.polygonParts.geometryTooSmall',
+  geometryHasSmallHoles: 'validation-general.shapeFile.polygonParts.geometryHasSmallHoles',
+  geometryHasSelfIntersections: 'validation-field.footprint.geo_json-has_self_intersections.geojson',
+}
+
+export const GEOMETRY_ERRORS_THRESHOLD = {
+  geometryTooSmall: GEOMETRY_ERRORS.geometryTooSmall,
+  geometryHasSmallHoles: GEOMETRY_ERRORS.geometryHasSmallHoles,
+};
 
 export const isEnumType = (typeName: string) => {
   return ENUM_TYPES.some(enumType => enumType === typeName);
@@ -333,18 +346,23 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
 
           const densityFactor = polygonVertexDensityFactor(feature, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE);
           if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
-            addError(desc, 'validation-general.shapeFile.polygonParts.geometryTooDensed');
+            addError(desc, GEOMETRY_ERRORS.geometryTooDense);
           }
 
           const polygonArea = area(feature as AllGeoJSON);
           if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD){
             console.log('Feature area:', polygonArea);
-            addError(desc, 'validation-general.shapeFile.polygonParts.geometryTooSmall');
+            addError(desc, GEOMETRY_ERRORS.geometryTooSmall);
           }
 
           const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
           if(polygonSmallHoles > 0){
-            addError(desc, 'validation-general.shapeFile.polygonParts.geometryHasSmallHoles');
+            addError(desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
+          }
+          
+          const selfIntersections = hasSelfIntersections(feature.geometry);
+          if(selfIntersections){
+            addError(desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
           }
           break;
         case 'horizontalAccuracyCE90':

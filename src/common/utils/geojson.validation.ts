@@ -25,7 +25,7 @@ const hasTooManyVerteces = (geom: Geometry): boolean => {
   return totalVertices >= MAX_VERTECES ;
 }
 
-const hasSelfIntersections = (json: Geometry): boolean => {
+export const hasSelfIntersections = (json: Geometry): boolean => {
   return kinks(json as any).features.length > 0;
 }
 
@@ -154,8 +154,8 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((val
       }
       if(hasSelfIntersections(geoJson)) {
         return {
-          valid: true,
-          severity_level: 'WARN',
+          valid: false,
+          severity_level: 'ERROR',
           reason: 'geo_json-has_self_intersections'
         }
       }

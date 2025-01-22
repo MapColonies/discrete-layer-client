@@ -68,6 +68,7 @@ if (!window._env_) {
       POLYGON_PARTS: {
         featureTypePrefix: 'polygonParts:',
         densityFactor: 0.3,
+        geometryErrorsThreshold: 0.05,
         areaThreshold: 5,
         max: {
           WFSFeatures: 1000000,

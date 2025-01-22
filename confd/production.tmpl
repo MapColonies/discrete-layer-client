@@ -65,6 +65,7 @@ window._env_ = {
   POLYGON_PARTS: {
     featureTypePrefix: '{{getv "/configuration/polygonparts/featuretypeprefix" "polygonParts:"}}',
     densityFactor: '{{getv "/configuration/polygonparts/densityFactor" "0.3"}}',
+    geometryErrorsThreshold: '{{getv "/configuration/polygonparts/geometryErrorsThreshold" "0.05"}}',
     areaThreshold: '{{getv "/configuration/polygonparts/areaThreshold" "5"}}',
     max: {
       WFSFeatures: '{{getv "/configuration/polygonparts/max/WFSFeatures" "1000000"}}',
