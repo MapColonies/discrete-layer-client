@@ -29,6 +29,9 @@ const checkPolygon = (coordinates: Position[][], meridian: number) => {
 }
 
 export const crossesMeridian = (geometry: Polygon | MultiPolygon, meridian: number) => {
+    if(!geometry)
+      return true;
+
     const type = geometry.type;
 
     if (type === 'Polygon') {
