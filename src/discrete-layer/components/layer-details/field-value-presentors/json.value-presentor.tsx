@@ -287,9 +287,11 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
               errorMsg,
             ])
           ));
-          formik?.setStatus({
-            errors: errs,
-          });
+          setTimeout(() => {
+            formik?.setStatus({
+              errors: errs,
+            });
+          }, 0);
         } else {
           removeStatusErrors();
         }

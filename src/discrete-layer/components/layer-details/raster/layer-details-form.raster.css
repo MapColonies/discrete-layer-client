@@ -118,9 +118,17 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   display: none;
 }
 
-#layerDetailsFormRaster .showOnMapContainer {
+#layerDetailsFormRaster .checkBoxContainer {
+  height: 20px;
+}
+
+#layerDetailsFormRaster .displayFlex {
+  display: flex;
+}
+
+#layerDetailsFormRaster .flexCheckItem {
+  flex: 1;
   position: relative;
-  top: -8px;
 }
 
 #layerDetailsFormRaster .mdc-checkbox__background {
