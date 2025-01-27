@@ -161,6 +161,8 @@ export const InnerRasterForm = (
   const [selectedFeature, setSelectedFeature] = useState<string | undefined>();
   const [expandedParts, setExpandedParts] = useState<boolean[]>([]);
   const [showPolygonPartsOnMap, setShowPolygonPartsOnMap] = useState<boolean>(true);
+  const [showFaultyPolygonParts, setShowFaultyPolygonParts] = useState<boolean>(false);
+  const [faultyPolygonParts, setFaultyPolygonParts] = useState<string[]>([]);
   const [showExisitngLayerPartsOnMap, setShowExisitngLayerPartsOnMap] = useState<boolean>(false);
   const [polygonPartsMode, setPolygonPartsMode] = useState<POLYGON_PARTS_MODE>('MANUAL');
   const [layerPolygonParts, setLayerPolygonParts] = useState<Record<string, PolygonPartRecordModelType>>({});
@@ -375,7 +377,7 @@ export const InnerRasterForm = (
           }
         });
 
-        unset(effectiveStatusErrors, POLYGON_PARTS_STATUS_ERROR)
+        unset(effectiveStatusErrors, POLYGON_PARTS_STATUS_ERROR);
 
         const effectiveStatusErrorsLength = Object.keys(effectiveStatusErrors).length;
 
@@ -475,6 +477,17 @@ export const InnerRasterForm = (
     }
   }, [ppCollisionCheckInProgress]);
 
+
+  useEffect(() => {
+    const vestValidationPPKeys = Object.fromEntries(Object.entries(vestValidationResults).filter(([key, value]) => vestValidationResults[key].errorCount));
+    const graphQLPPKeys = Object.fromEntries(graphQLPayloadObjectErrors.map((k) => [NESTED_FORMS_PRFIX + k, k]));
+    const ppWithProblems = Object.keys({...firstPhaseErrors, ...vestValidationPPKeys, ...graphQLPPKeys}).filter(key => key.includes(NESTED_FORMS_PRFIX))
+
+    setFaultyPolygonParts(ppWithProblems);
+  
+  }, [firstPhaseErrors, vestValidationResults, graphQLPayloadObjectErrors])
+  
+
   enum CUSTOM_VALIDATION_ERROR_CODES {
     SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
     POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
@@ -500,6 +513,10 @@ export const InnerRasterForm = (
       { maxPPNumber: emphasizeByHTML(`${ppConfig.MAX.PER_SHAPE}`)}
      )
   ), []);
+
+  const isFaultyPPVisible: boolean = useMemo(() => {
+    return faultyPolygonParts.length ? showFaultyPolygonParts : false
+  }, [faultyPolygonParts, showFaultyPolygonParts])
 
   const exceededVertexNumberError = useCallback((numberOfPP: number, numberOfVertexes: number) => {
     return new Error(
@@ -559,7 +576,7 @@ export const InnerRasterForm = (
       handleBlur: (e: React.FocusEvent<unknown>): void => {
         setGraphQLError(undefined);
         setPPCheckPerformed(false);
-        // removeStatusError(POLYGON_PARTS_STATUS_ERROR);
+        removeStatusError(POLYGON_PARTS_STATUS_ERROR);
         customErrorReset();
         handleBlur(e);
       },
@@ -866,7 +883,21 @@ export const InnerRasterForm = (
   const customChecks = [/*ppVertexDensityFactor,*/ ppArea, ppCountSmallHoles];
   
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
-    const data = Object.values(layerPolygonParts);
+    let data = Object.values(layerPolygonParts);
+    let dataKeys = Object.keys(layerPolygonParts);
+
+    if(isFaultyPPVisible){
+      data = [];
+      
+      for(let i = 0; i < Object.keys(dataKeys).length; i++){
+        for(let j = 0; j < Object.keys(faultyPolygonParts).length; j++){
+          if(dataKeys[i] === faultyPolygonParts[j]){
+            data.push(Object.values(layerPolygonParts)[i] as unknown as PolygonPartRecordModelType);
+          }
+        }
+      }
+    }
+
 
     let polygon_part = data[index];
     if(!polygon_part){
@@ -897,9 +928,15 @@ export const InnerRasterForm = (
                           setFieldTouched(currentFormKey + '.' + key, false);
                         });
 
+                        setGraphQLPayloadObjectErrors((prev: number[]) => {
+                          const newGraphQLErrors = [ ...prev ];
+                          newGraphQLErrors?.splice(index, 1);
+                          return newGraphQLErrors;
+                        });
+
                         if(status){
                           const { errors } = status;
-                          if(errors && typeof errors === 'object'){
+                          if(errors){
                             const { [currentFormKey]: removedKey, ...rest } = errors as Record<string, unknown>;
                             setStatus({ errors: {...rest} });
                           }
@@ -1062,26 +1099,40 @@ export const InnerRasterForm = (
           ].join(' ')}
         >
           {showCurtain && <Box className="curtain"></Box>}
-          <Box style={{height: '20px'}}>
-            <Checkbox 
-              className='polygonPartsData showOnMapContainer'
-              label={intl.formatMessage({id: 'polygon-parts.show-parts-on-map.label'})}
-              checked={showPolygonPartsOnMap}
-              onClick={
-                (evt: React.MouseEvent<HTMLInputElement>): void => {
-                  setShowPolygonPartsOnMap(evt.currentTarget.checked);
-                }}
-            />
-            { mode === Mode.UPDATE && <Checkbox 
-                className='showOnMapContainer'
+          <Box className='checkBoxContainer displayFlex'>
+            <Box className='polygonPartsData showOnMapContainer displayFlex'>
+              <Checkbox
+                className='flexCheckItem'
+                label={intl.formatMessage({id: 'polygon-parts.show-parts-on-map.label'})}
+                checked={showPolygonPartsOnMap}
+                onClick={
+                  (evt: React.MouseEvent<HTMLInputElement>): void => {
+                    setShowPolygonPartsOnMap(evt.currentTarget.checked);
+                  }}
+                  />
+              <Checkbox
+                className='flexCheckItem'
+                disabled={faultyPolygonParts.length === 0}
+                label={intl.formatMessage({ id: 'polygon-parts.show-parts-with-errors-on-map.label' })}
+                checked={isFaultyPPVisible}
+                onClick={
+                  (evt: React.MouseEvent<HTMLInputElement>): void => {
+                    setShowFaultyPolygonParts(evt.currentTarget.checked);
+                  }}
+              />
+            </Box>
+            <Box className='displayFlex'>
+            { mode === Mode.UPDATE && <Checkbox
+                className='flexCheckItem showOnMapContainer'
                 label={intl.formatMessage({id: 'polygon-parts.show-exisitng-parts-on-map.label'})}
                 checked={showExisitngLayerPartsOnMap}
                 onClick={
                   (evt: React.MouseEvent<HTMLInputElement>): void => {
                     setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
                   }}
-              />
-            }
+                  />
+                }
+            </Box>
           </Box>
           <Box className="polygonPartsContainer">
             <Box className="polygonPartsData">
@@ -1107,7 +1158,7 @@ export const InnerRasterForm = (
                     ref={setRef}
                     height={(polygonPartsMode === 'MANUAL') ? 370 : 410}
                     rowRenderer={renderRow}
-                    rowCount={expandedParts.length}
+                    rowCount={(faultyPolygonParts.length && showFaultyPolygonParts) ? faultyPolygonParts.length : expandedParts.length}
                     overscanRowCount={3}
                     rowHeight={(idx)=> ( expandedParts[idx.index] ? 316 : 48 )}
                     scrollToIndex = { graphQLPayloadObjectErrors[0] ? graphQLPayloadObjectErrors[0] : (expandedParts.length ? expandedParts.length - 1 : 0) }

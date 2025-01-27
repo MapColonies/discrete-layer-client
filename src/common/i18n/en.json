@@ -211,6 +211,7 @@
   "polygon-parts.empty-list": "Add polygon parts",
   "polygon-parts.deleting.label": "Deleting",
   "polygon-parts.show-parts-on-map.label": "Show polygon parts on map",
+  "polygon-parts.show-parts-with-errors-on-map.label": "Show only polygon parts with errors",
   "polygon-parts.show-exisitng-parts-on-map.label": "Show existing polygon parts",
   "polygon-parts.map-preview-legend.title": "Legend",
   "polygon-parts.map-preview-legend.DEFAULT": "Polygon parts",
