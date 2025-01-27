@@ -11,6 +11,7 @@ import * as turf from '@turf/turf';
 import { Feature, MultiPolygon, Polygon, Position, Geometry } from "geojson";
 import { PolygonPartRecordModelType } from "../../discrete-layer/models";
 
+export const DEGREES_PER_METER = 0.00001;
 export const ZERO_MERIDIAN = 0;
 export const ANTI_MERIDIAN = 180;
 const checkPolygon = (coordinates: Position[][], meridian: number) => {

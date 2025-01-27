@@ -6,7 +6,7 @@ export type severityLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FAT
 export type geoJSONValidation = {valid: boolean, severity_level: severityLevel, reason: string};
 export const EMPTY_JSON_STRING_VALUE = '{}';
 
-const MAX_VERTECES = 100;
+const MAX_VERTECES = 300;
 const LINEARING_MIN_POSITIONS = 4;
 
 const hasTooManyVerteces = (geom: Geometry): boolean => {

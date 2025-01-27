@@ -9,7 +9,7 @@ import { Feature, Geometry } from 'geojson';
 import rewind from '@turf/rewind';
 import { AllGeoJSON } from '@turf/helpers';
 import truncate from '@turf/truncate';
-import { polygonVertexDensityFactor, area, countSmallHoles } from '../../../common/utils/geo.tools';
+import { polygonVertexDensityFactor, area, countSmallHoles, DEGREES_PER_METER } from '../../../common/utils/geo.tools';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
@@ -343,10 +343,12 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
           break;
         case 'footprint':
           poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
-
-          const densityFactor = polygonVertexDensityFactor(feature, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE);
+          let doSelfIntersectCheck=true;
+          const nativePartResolution = parseFloat(get(feature, 'properties.Resolution')) * DEGREES_PER_METER;
+          const densityFactor = polygonVertexDensityFactor(feature, nativePartResolution);
           if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
             addError(desc, GEOMETRY_ERRORS.geometryTooDense);
+            doSelfIntersectCheck =false;
           }
 
           const polygonArea = area(feature as AllGeoJSON);
@@ -360,9 +362,11 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
             addError(desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
           }
           
-          const selfIntersections = hasSelfIntersections(feature.geometry);
-          if(selfIntersections){
-            addError(desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
+          if(doSelfIntersectCheck){
+            const selfIntersections = hasSelfIntersections(feature.geometry);
+            if(selfIntersections){
+              addError(desc, GEOMETRY_ERRORS.geometryHasSelfIntersections);
+            }
           }
           break;
         case 'horizontalAccuracyCE90':

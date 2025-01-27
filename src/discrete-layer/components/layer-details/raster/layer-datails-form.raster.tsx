@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { area, countSmallHoles, explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
+import { area, countSmallHoles, DEGREES_PER_METER, explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import { geoJSONValidation } from '../../../../common/utils/geojson.validation';
@@ -832,7 +832,7 @@ export const InnerRasterForm = (
   }
   
   const ppVertexDensityFactor = (value: any) => {
-    const densityFactor = polygonVertexDensityFactor(value, CONFIG.POLYGON_PARTS.VALIDATION_SIMPLIFICATION_TOLERANCE);
+    const densityFactor = polygonVertexDensityFactor(value, DEGREES_PER_METER * 0.01); //simplification factor 1cm fix 
     if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
       return {
         valid: false,
@@ -863,7 +863,7 @@ export const InnerRasterForm = (
       } as geoJSONValidation;
     }
   }
-  const customChecks = [ppVertexDensityFactor, ppArea, ppCountSmallHoles];
+  const customChecks = [/*ppVertexDensityFactor,*/ ppArea, ppCountSmallHoles];
   
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
     const data = Object.values(layerPolygonParts);
