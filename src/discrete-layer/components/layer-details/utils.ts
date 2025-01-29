@@ -323,6 +323,7 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
   }
 
   desciptors.forEach((desc) => {
+    //@ts-ignore
     const shapeFieldValue = get(feature, desc.shapeFileMapping as string);
 
     // This logic mimics basic YUP schema:

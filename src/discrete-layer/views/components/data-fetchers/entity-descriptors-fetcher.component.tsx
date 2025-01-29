@@ -32,7 +32,10 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isCreateEssential
         isUpdateEssential
         dateGranularity
-        shapeFileMapping
+        shapeFileMapping {
+          provider
+          valuePath
+        }
         updateRules {
           freeze
           value {
