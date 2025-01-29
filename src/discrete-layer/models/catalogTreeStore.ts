@@ -17,14 +17,15 @@ import CONFIG from '../../common/config';
 import { GroupBy, groupBy, KeyPredicate } from '../../common/helpers/group-by';
 import MESSAGES from '../../common/i18n';
 import { ResponseState } from '../../common/models/response-state.enum';
-import { getLayerLink } from '../components/helpers/layersUtils';
 import { existStatus, isUnpublished } from '../../common/helpers/style';
+import { getLayerLink } from '../components/helpers/layersUtils';
+import { useParallelQueries, useParallelSearchQueries } from '../../common/hooks/useParallelQueries.hook';
 import { isBest } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { IRootStore, RootStoreType } from './RootStore';
-import { LayerMetadataMixedUnion, RecordType } from './';
+import { layerMetadataMixedModelPrimitives,  LayerMetadataMixedUnion, RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
@@ -157,18 +158,39 @@ export const catalogTreeStore = ModelBase.props({
         },
         end: CONFIG.RUNNING_MODE.END_RECORD,
         start: CONFIG.RUNNING_MODE.START_RECORD,
-      });
+      }, 
+      // @ts-ignore
+      (qb) => layerMetadataMixedModelPrimitives.__query.replaceAll('\nfootprint', '')
+    );
+
+    const searchFootprints = store.querySearch(
+      {
+        opts: {
+          filter: [
+            {
+              field: 'mc:type',
+              eq: store.discreteLayersStore.searchParams.recordType,
+            },
+          ],
+        },
+        end: CONFIG.RUNNING_MODE.END_RECORD,
+        start: CONFIG.RUNNING_MODE.START_RECORD,
+      }, 
+      // @ts-ignore
+      (qb) => '       __typename\n... on Layer3DRecord {\n\n__typename\nid\nfootprint\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\nfootprint\n\n}\n... on LayerDemRecord {\n\n__typename\nid\nfootprint\n\n}\n... on VectorBestRecord {\n\n__typename\nid\nfootprint\n\n}\n... on QuantizedMeshBestRecord {\n\n__typename\nid\nfootprint\n\n}\n'
+    );
 
       try {
         setSearchError(null);
 
         // Avoiding the cache with the refetch
-        const dataSearch = yield search.refetch();
+        // const dataSearch = yield search.refetch();
 
-        const layersList = get(dataSearch, 'search') as ILayerImage[];
-        const layersImages: ILayerImage[] = cloneDeep(layersList);
+        // const layersList = get(dataSearch, 'search') as ILayerImage[];
+        // const layersImages: ILayerImage[] = cloneDeep(layersList);
         
-        return store.discreteLayersStore.setLayersImages(layersImages, false);
+        // return store.discreteLayersStore.setLayersImages(layersImages, false);
+        return [];
       } catch (e) {
         setSearchError(search.error);
         resetCatalogTreeData();
@@ -251,7 +273,7 @@ export const catalogTreeStore = ModelBase.props({
     /**
      * Initial tree data, fetch new entries from server
      */
-    const initTree = flow(function* initTree(): Generator<
+    const initTree = flow(function* initTree(dataSearch?: () => void): Generator<
       Promise<ILayerImage[]> | Promise<CapabilityModelType[]>,
       void,
       ILayerImage[]
@@ -261,12 +283,10 @@ export const catalogTreeStore = ModelBase.props({
         resetCatalogTreeData();
         store.discreteLayersStore.resetSelectedLayer();
 
-        const layersListResults = yield catalogSearch();
-
-        if (typeof layersListResults !== 'undefined' && (layersListResults as ILayerImage[] | null) !== null) {
-
+        
+        if (typeof dataSearch !== 'undefined' ) {
+          dataSearch();
           yield capabilitiesFetch();
-          store.discreteLayersStore.setLayersImages(layersListResults, false);
           const layersList = store.discreteLayersStore.layersImages as ILayerImage[];
 
           // get unlinked/new discretes shortcuts

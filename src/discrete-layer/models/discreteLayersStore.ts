@@ -11,14 +11,15 @@ import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import CONFIG from '../../common/config';
+import { useMergeRecordData } from '../../common/hooks/useMergeRecordData.hook';
+import { isUnpublished } from '../../common/helpers/style';
+import { LinkType } from '../../common/models/link-type.enum';
 import { TabViews } from '../views/tab-views';
 import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
-import { isUnpublished } from '../../common/helpers/style';
-import { LinkType } from '../../common/models/link-type.enum';
 import { getLayerLink } from '../components/helpers/layersUtils';
 import { LayerMetadataMixedUnionKeys, LayerRecordTypes, LayerRecordTypesKeys } from '../components/layer-details/entity-types-keys';
 import { extractDescriptorRelatedFieldNames, getFlatEntityDescriptors } from '../components/layer-details/utils';
@@ -134,9 +135,9 @@ export const discreteLayersStore = ModelBase
 
       // Filter out Unpublished entries on User premissions.
       const isUserAdmin = store.userStore.isUserAdmin();
-      const filteredLayersImages = data.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
+      const filteredLayersImages = data?.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
       
-      const preparedLayersImages = filteredLayersImages.map(item => {
+      const preparedLayersImages = filteredLayersImages?.map(item => {
         let validations = {};
         if (item.type === RecordType.RECORD_RASTER) {
           const layerLink = getLayerLink(item);
@@ -157,7 +158,7 @@ export const discreteLayersStore = ModelBase
     }
 
     function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
-      self.layersImages = getPreparedLayersImages(data, showFootprint);
+      self.layersImages = data && getPreparedLayersImages(useMergeRecordData(data, self.layersImages), showFootprint);
 
       return self.layersImages;
     }

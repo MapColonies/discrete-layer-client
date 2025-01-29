@@ -18,8 +18,10 @@ import {
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
+import CONFIG from '../../../common/config';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
+import { useParallelQueries, useParallelSearchQueries } from '../../../common/hooks/useParallelQueries.hook';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
 import { FootprintRenderer } from '../../../common/components/tree/icon-renderers/footprint.icon-renderer';
 import { LayerImageRenderer } from '../../../common/components/tree/icon-renderers/layer-image.icon-renderer';
@@ -32,12 +34,14 @@ import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
+import { IBaseRootStore, IRootStore, layerMetadataMixedModelPrimitives} from '../../models/index';
 import { TabViews } from '../../views/tab-views';
 import { BestInEditDialog } from '../dialogs/best-in-edit.dialog';
 import { getLinkUrlWithToken } from '../helpers/layersUtils';
 import { queue } from '../snackbar/notification-queue';
 
 import './catalog-tree.css';
+import { UseQueryHookResult } from 'mst-gql';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
@@ -58,6 +62,40 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(
       false
     );
+
+    const search = store.querySearch({
+      opts: {
+        filter: [
+          {
+            field: 'mc:type',
+            eq: store.discreteLayersStore.searchParams.recordType,
+          },
+        ],
+      },
+      end: CONFIG.RUNNING_MODE.END_RECORD,
+      start: CONFIG.RUNNING_MODE.START_RECORD,
+    }, 
+    // @ts-ignore
+    (qb) => layerMetadataMixedModelPrimitives.__query.replaceAll('\nfootprint', '')
+  );
+
+  const searchFootprints = store.querySearch(
+    {
+      opts: {
+        filter: [
+          {
+            field: 'mc:type',
+            eq: store.discreteLayersStore.searchParams.recordType,
+          },
+        ],
+      },
+      end: CONFIG.RUNNING_MODE.END_RECORD,
+      start: CONFIG.RUNNING_MODE.START_RECORD,
+    }, 
+    // @ts-ignore
+    (qb) => '       __typename\n... on Layer3DRecord {\n\n__typename\nid\nfootprint\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\nfootprint\n\n}\n... on LayerDemRecord {\n\n__typename\nid\nfootprint\n\n}\n... on VectorBestRecord {\n\n__typename\nid\nfootprint\n\n}\n... on QuantizedMeshBestRecord {\n\n__typename\nid\nfootprint\n\n}\n'
+  );
+
     const selectedLayersRef = useRef(intialOrder);
     const intl = useIntl();
     const {
@@ -91,12 +129,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     useEffect(() => {
       if (refresh) {
         setIsDataLoading(true);
-        void store.catalogTreeStore.initTree();
+        const dataSearch = () => { useParallelSearchQueries([search, searchFootprints])}
+        void store.catalogTreeStore.initTree(dataSearch);
+
+
       }
     }, [refresh]);
 
     useEffect(() => {
-      void store.catalogTreeStore.initTree();
+        const dataSearch = () => { useParallelSearchQueries([search, searchFootprints])}
+      void store.catalogTreeStore.initTree(dataSearch);
+
     }, []);
 
     const entityPermittedActions = useMemo(() => {
@@ -216,6 +259,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       );
     }
 
+    console.log('store.discreteLayersStore.layersImages: ', store.discreteLayersStore.layersImages)
     return (
       <>
         {loading && <Loading />}
