@@ -120,6 +120,10 @@
   "record-type.record_quantized_mesh.label": "פני השטח",
   "record-type.record_all.label": "הכל",
 
+  "enum-value.provider_type.synergy.label": "סינרגיה",
+  "enum-value.provider_type.terra_nova.label": "טרה-נובה",
+  "enum-value.provider_type.maxar.label": "Vivid",
+  
   "polygon-selection.draw-btn.tooltip": "ציור אזור לחיפוש",
   "polygon-selection.cancel-btn.tooltip": "בטל ציור",
   "polygon-selection.cancel-btn.text": "בטל ציור",

@@ -18,7 +18,7 @@ import { get, set, isEmpty, isObject, omit, unset } from 'lodash';
 import { Feature, GeoJsonProperties, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { AllGeoJSON, Properties } from '@turf/helpers';
 import shp, { FeatureCollectionWithFilename } from 'shpjs';
-import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography } from '@map-colonies/react-core';
+import { Button, Checkbox, CircularProgress, CollapsibleList, Icon, IconButton, SimpleListItem, Typography, Select } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { Mode } from '../../../../common/models/mode.enum';
@@ -30,6 +30,7 @@ import { Loading } from '../../../../common/components/tree/statuses/loading';
 import { area, countSmallHoles, DEGREES_PER_METER, explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
+import { useEnums } from '../../../../common/hooks/useEnum.hook';
 import { geoJSONValidation } from '../../../../common/utils/geojson.validation';
 import {
   EntityDescriptorModelType,
@@ -38,6 +39,7 @@ import {
   ParsedPolygonPart,
   ParsedPolygonPartError,
   PolygonPartRecordModelType,
+  ProviderType,
   RecordType,
   SourceValidationModelType
 } from '../../../models';
@@ -53,6 +55,9 @@ import {
   importShapeFileFromClient,
   transformSynergyShapeFeatureToEntity,
   GEOMETRY_ERRORS_THRESHOLD,
+  getEnumKeys,
+  transformTeraNovaShapeFeatureToEntity,
+  transformMaxarShapeFeatureToEntity,
 } from '../utils';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
@@ -146,6 +151,7 @@ export const InnerRasterForm = (
   const ppConfig = CONFIG.POLYGON_PARTS;
   
   const intl = useIntl();
+  const enumsMap = useEnums();
   const ZOOM_LEVELS = useZoomLevels();
   const [graphQLError, setGraphQLError] = useState<unknown>(mutationQueryError);
   const [isSelectedFiles, setIsSelectedFiles] = useState<boolean>(false);
@@ -487,6 +493,15 @@ export const InnerRasterForm = (
   
   }, [firstPhaseErrors, vestValidationResults, graphQLPayloadObjectErrors])
   
+  const shapeFileProviders = useMemo(() => {
+    return getEnumKeys(enumsMap, 'ProviderType').map((key) => {
+      const value = key as keyof typeof ProviderType;
+      return {
+        label: intl.formatMessage({id: `enum-value.provider_type.${ProviderType[value].toLowerCase()}.label`}),
+        value: ProviderType[value]
+      };
+    });
+  }, []);
 
   enum CUSTOM_VALIDATION_ERROR_CODES {
     SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
@@ -711,9 +726,29 @@ export const InnerRasterForm = (
     return res;
   }
 
+  const transformShapeFeatureToEntity = (polygonPartDescriptors: FieldConfigModelType[], feature: Feature<Geometry, GeoJsonProperties>, provider: string, fileName?: string) => {
+    let ret = {} as ParsedPolygonPart;
+    switch(provider){
+      case ProviderType.SYNERGY:
+        ret = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);  
+        break;
+      case ProviderType.TERRA_NOVA:
+        ret = transformTeraNovaShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);  
+        break;
+          case ProviderType.MAXAR:
+        ret = transformMaxarShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);
+        break;
+      default:
+        console.log(`**** PROVIDER ${provider} NOT SUPPORTED ****`);
+    }
+    return ret;
+  }
+
   const proccessShapeFile = async (
     shapeArrayBuffer: ArrayBuffer,
-    fileType: string
+    fileType: string,
+    provider: string,
+    fileName?: string
   ): Promise<Record<string,ParsedPolygonPart>> => {
     return new Promise((resolve, reject) => {
       const ZIP_EXTENSION = 'zip';
@@ -734,7 +769,7 @@ export const InnerRasterForm = (
               (data as FeatureCollectionWithFilename).features.forEach((feature, idx) => {
                 /*if(idx < 20)*/ {
                   const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
-                  const parsedPolygonPartData = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature);
+                  const parsedPolygonPartData = transformShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);
                   parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
                   parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
                 }
@@ -1022,17 +1057,24 @@ export const InnerRasterForm = (
             onErrorCallback={setShowCurtain}
             manageMetadata={false}
           >
-            <Box className="uploadShapeButton">
-            <Button
-              outlined
-              type="button"
+            <Select
+              className={'selectButtonFlavor'}
+              enhanced
+              placeholder={intl.formatMessage({ id: `polygon-parts.button.load-from-shapeFile` })}
+              options={shapeFileProviders}
               disabled={/*!isIngestedSourceSelected() &&*/ showCurtain}
-              onClick={(): void => {
-                setLoadingPolygonParts(true);
 
-                importShapeFileFromClient((ev, fileType) => {
+              onClick={(e): void => {
+
+                const targetName = (e.target as HTMLElement)?.dataset?.value;
+                
+                if(!targetName) return;
+
+                setLoadingPolygonParts(true);
+                
+                importShapeFileFromClient((ev, fileType, fileName) => {
                   const shpFile = (ev.target?.result as unknown) as ArrayBuffer;
-                  void proccessShapeFile(shpFile, fileType)
+                  void proccessShapeFile(shpFile, fileType, targetName, fileName)
                     .then((parsedPPData) => {
                       
                       setPolygonPartsMode('FROM_SHAPE');
@@ -1072,6 +1114,12 @@ export const InnerRasterForm = (
                     })
                     .catch((e) => {
                       setLoadingPolygonParts(false);
+                      schemaUpdater(0, 0, true);
+                      setPolygonPartsMode('MANUAL');
+                      setExpandedParts([]);
+                      setValues({
+                        ...removePropertiesWithPrefix(values, NESTED_FORMS_PRFIX),
+                      });
                       setStatus({
                         errors: {
                           // ...currentErrors,
@@ -1086,10 +1134,7 @@ export const InnerRasterForm = (
                   setLoadingPolygonParts(false);
                 });
               }}
-            >
-              <FormattedMessage id="polygon-parts.button.load-from-shapeFile" />
-            </Button>
-            </Box>
+            />
           </IngestionFields>
         }
         <Box

@@ -154,11 +154,6 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   border-color: unset;
 }
 
-#layerDetailsFormRaster .uploadShapeButton .mdc-button--outlined:not(:disabled){
-  border-color: currentColor;
-  padding: 20px;
-}
-
 #layerDetailsFormRaster .ingestionWarning {
   display: flex;
   flex-direction: row;

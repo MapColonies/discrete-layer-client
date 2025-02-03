@@ -9,6 +9,7 @@ import { Feature, Geometry } from 'geojson';
 import rewind from '@turf/rewind';
 import { AllGeoJSON } from '@turf/helpers';
 import truncate from '@turf/truncate';
+import convert, { Distance } from 'convert-units';
 import { polygonVertexDensityFactor, area, countSmallHoles, DEGREES_PER_METER } from '../../../common/utils/geo.tools';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
@@ -34,6 +35,7 @@ import {
   PolygonPartRecordModel,
   PolygonPartRecordModelType,
   ProductType,
+  ProviderType,
   QuantizedMeshBestRecordModel,
   RecordType,
   UpdateRulesModelType,
@@ -307,72 +309,215 @@ export const decreaseFeaturePrecision = (feat: Geometry): Geometry => {
   return truncate(omit(feat, 'bbox') as AllGeoJSON, truncate_options) as Geometry;
 };
 
-export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature): ParsedPolygonPart => {
+
+const footprintChecks = (errors: Record<string,ParsedPolygonPartError>, desc: FieldConfigModelType, feature: Feature, nativePartResolution: number) => {
+  let doSelfIntersectCheck=true;
+  
+  const densityFactor = polygonVertexDensityFactor(feature, nativePartResolution);
+  if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
+    addError(errors, desc, GEOMETRY_ERRORS.geometryTooDense);
+    doSelfIntersectCheck =false;
+  }
+
+  const polygonArea = area(feature as AllGeoJSON);
+  if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD){
+    console.log('Feature area:', polygonArea);
+    addError(errors, desc, GEOMETRY_ERRORS.geometryTooSmall);
+  }
+
+  const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
+  if(polygonSmallHoles > 0){
+    addError(errors, desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
+  }
+  
+  if(doSelfIntersectCheck){
+    const selfIntersections = hasSelfIntersections(feature.geometry);
+    if(selfIntersections){
+      addError(errors, desc, GEOMETRY_ERRORS.geometryHasSelfIntersections);
+    }
+  }
+}
+
+const addError = (errors: Record<string,ParsedPolygonPartError>, descriptor: FieldConfigModelType, code: string) => {
+  if(errors[descriptor.fieldName as string]){
+    errors[descriptor.fieldName as string].codes.push(code);
+  } else {
+    errors[descriptor.fieldName as string] = {
+      codes: [code],
+      label: descriptor.label as string
+    };
+  }
+}
+
+const convertToMeter = (units: string) => {
+  const UNITS_INDEX = 1;
+  const num = parseFloat(units);
+  let un = units.split('_');
+  if(!un[UNITS_INDEX]) return num;
+  return convert(num).from(un[UNITS_INDEX] as unknown as Distance).to('m');
+}
+
+export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature, provider: ProviderType, fileName?: string): ParsedPolygonPart => {
   const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
   const errors: Record<string,ParsedPolygonPartError> = {};
 
-  const addError = (descriptor: FieldConfigModelType, code: string) => {
-    if(errors[descriptor.fieldName as string]){
-      errors[descriptor.fieldName as string].codes.push(code);
-    } else {
-      errors[descriptor.fieldName as string] = {
-        codes: [code],
-        label: descriptor.label as string
-      };
-    }
-  }
-
   desciptors.forEach((desc) => {
-    //@ts-ignore
-    const shapeFieldValue = get(feature, desc.shapeFileMapping as string);
+    const shpMap = desc.shapeFileMapping?.filter(k => {
+      return k.provider === provider
+    })[0];
+
+    let shapeFieldValue = get(feature, shpMap?.valuePath as string);
 
     // This logic mimics basic YUP schema:
     // 1. required fields 
     // 2. no future dates
     if(!shapeFieldValue && desc.isRequired){
-      addError(desc, 'validation-general.required');
+      addError(errors, desc, 'validation-general.required');
     }
     
-    if(desc.shapeFileMapping) {
+    if(shapeFieldValue) {
       switch(desc.fieldName){
         case 'imagingTimeBeginUTC':
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
           if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
-            addError(desc, 'validation-general.date.future');
+            addError(errors, desc, 'validation-general.date.future');
+          }
+          break;
+          case 'footprint':
+            poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
+  
+            let nativePartResolution;
+            let fieldRes = desciptors.filter(k => k.fieldName === 'sourceResolutionMeter')[0].shapeFileMapping?.filter(k => k.provider === provider)[0].valuePath;
+            
+            nativePartResolution = parseFloat(get(feature, fieldRes)) * DEGREES_PER_METER;
+            
+            if(!isNaN(nativePartResolution)){ 
+              footprintChecks(errors, desc, feature, nativePartResolution);
+            }
+           
+            break;
+        case 'horizontalAccuracyCE90':
+        case 'sourceResolutionMeter':
+          poygonPartData[desc.fieldName as string] = parseFloat(shapeFieldValue);
+          break;
+        default:
+          poygonPartData[desc.fieldName as string] = shapeFieldValue !== '' ? shapeFieldValue : undefined;
+          break;
+      }
+    } 
+  });
+  return {
+    polygonPart: {...poygonPartData as unknown as PolygonPartRecordModelType},
+    errors: {...errors}
+  };
+};
+
+export const transformMaxarShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature, provider: ProviderType, fileName?: string): ParsedPolygonPart => {
+  const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
+  const errors: Record<string,ParsedPolygonPartError> = {};
+
+  desciptors.forEach((desc) => {
+    const shpMap = desc.shapeFileMapping?.filter(k => {
+      return k.provider === provider
+    })[0];
+
+    let shapeFieldValue = get(feature, shpMap?.valuePath as string);
+    
+    if(shpMap?.valuePath === 'NOT_EXISTS_USE_FILENAME'){
+      shapeFieldValue = shapeFieldValue ? shapeFieldValue : fileName;
+    }
+
+    // This logic mimics basic YUP schema:
+    // 1. required fields 
+    // 2. no future dates
+    if(!shapeFieldValue && desc.isRequired){
+      addError(errors, desc, 'validation-general.required');
+    }
+    
+    if(shapeFieldValue) {
+      switch(desc.fieldName){
+        case 'imagingTimeBeginUTC':
+        case 'imagingTimeEndUTC':
+          poygonPartData[desc.fieldName as string] = shapeFieldValue;
+          if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
+            addError(errors, desc, 'validation-general.date.future');
           }
           break;
         case 'footprint':
           poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
-          let doSelfIntersectCheck=true;
-          const nativePartResolution = parseFloat(get(feature, 'properties.Resolution')) * DEGREES_PER_METER;
-          const densityFactor = polygonVertexDensityFactor(feature, nativePartResolution);
-          if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
-            addError(desc, GEOMETRY_ERRORS.geometryTooDense);
-            doSelfIntersectCheck =false;
-          }
 
-          const polygonArea = area(feature as AllGeoJSON);
-          if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD){
-            console.log('Feature area:', polygonArea);
-            addError(desc, GEOMETRY_ERRORS.geometryTooSmall);
-          }
-
-          const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
-          if(polygonSmallHoles > 0){
-            addError(desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
-          }
+          let nativePartResolution;
+          let fieldRes = desciptors.filter(k => k.fieldName === 'sourceResolutionMeter')[0].shapeFileMapping?.filter(k => k.provider === provider)[0].valuePath;
           
-          if(doSelfIntersectCheck){
-            const selfIntersections = hasSelfIntersections(feature.geometry);
-            if(selfIntersections){
-              addError(desc, GEOMETRY_ERRORS.geometryHasSelfIntersections);
-            }
+          nativePartResolution = parseFloat(get(feature, fieldRes)) * DEGREES_PER_METER;
+
+          if(!isNaN(nativePartResolution)){ 
+            footprintChecks(errors, desc, feature, nativePartResolution);
           }
+         
           break;
         case 'horizontalAccuracyCE90':
         case 'sourceResolutionMeter':
           poygonPartData[desc.fieldName as string] = parseFloat(shapeFieldValue);
+          break;
+        default:
+          poygonPartData[desc.fieldName as string] = shapeFieldValue !== '' ? shapeFieldValue : undefined;
+          break;
+      }
+    } 
+  });
+  return {
+    polygonPart: {...poygonPartData as unknown as PolygonPartRecordModelType},
+    errors: {...errors}
+  };
+};
+
+export const transformTeraNovaShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature, provider: ProviderType, fileName?: string): ParsedPolygonPart => {
+  const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
+  const errors: Record<string,ParsedPolygonPartError> = {};
+
+  desciptors.forEach((desc) => {
+    const shpMap = desc.shapeFileMapping?.filter(k => {
+      return k.provider === provider
+    })[0];
+
+    let shapeFieldValue = get(feature, shpMap?.valuePath as string);
+
+    // This logic mimics basic YUP schema:
+    // 1. required fields 
+    // 2. no future dates
+    if(!shapeFieldValue && desc.isRequired){
+      addError(errors, desc, 'validation-general.required');
+    }
+    
+    if(shapeFieldValue) {
+      switch(desc.fieldName){
+        case 'imagingTimeBeginUTC':
+        case 'imagingTimeEndUTC':
+          poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
+          if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
+            addError(errors, desc, 'validation-general.date.future');
+          }
+          break;
+        case 'footprint':
+          poygonPartData[desc.fieldName as string] = rewind(shapeFieldValue);
+
+          let nativePartResolution;
+          let fieldRes = desciptors.filter(k => k.fieldName === 'sourceResolutionMeter')[0].shapeFileMapping?.filter(k => k.provider === provider)[0].valuePath;
+          
+          nativePartResolution = convertToMeter(get(feature, fieldRes)) * DEGREES_PER_METER;
+
+          if(!isNaN(nativePartResolution)){ 
+            footprintChecks(errors, desc, feature, nativePartResolution);
+          }
+          
+        break;
+        case 'horizontalAccuracyCE90':
+          poygonPartData[desc.fieldName as string] = parseFloat(shapeFieldValue);
+          break;
+        case 'sourceResolutionMeter':
+          poygonPartData[desc.fieldName as string] = convertToMeter(shapeFieldValue);
           break;
         default:
           poygonPartData[desc.fieldName as string] = shapeFieldValue !== '' ? shapeFieldValue : undefined;
@@ -478,7 +623,7 @@ export function importJSONFileFromClient(fileLoadCB: (ev: ProgressEvent<FileRead
 }  
 
 export function importShapeFileFromClient(
-  fileLoadCB: (ev: ProgressEvent<FileReader>, type: string) => void,
+  fileLoadCB: (ev: ProgressEvent<FileReader>, type: string, fileName?: string) => void,
   allowGeojson = false,
   allowSingleSHP = true,
   cancelLoadCB = ()=>{}): void {
@@ -491,10 +636,11 @@ export function importShapeFileFromClient(
     if (target.files) {
       const file = target.files[0];
       const fileType = file.name.split('.').pop();
+      const fileName = file.name.replace(`.${fileType}`, '');
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
       fileReader.addEventListener('load', (e) => {
-        fileLoadCB(e, fileType as string);
+        fileLoadCB(e, fileType as string, fileName);
         input.remove();
       });
     }

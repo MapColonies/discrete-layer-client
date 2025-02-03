@@ -118,6 +118,10 @@
   "record-type.record_quantized_mesh.label": "Quantized Mesh BEST",
   "record-type.record_all.label": "All",
 
+  "enum-value.provider_type.synergy.label": "Synergy",
+  "enum-value.provider_type.terra_nova.label": "Tera-Nova",
+  "enum-value.provider_type.maxar.label": "Vivid",
+
   "polygon-selection.draw-btn.tooltip": "Draw an area to search",
   "polygon-selection.cancel-btn.tooltip": "Cancel the ongoing draw",
   "polygon-selection.cancel-btn.text": "Cancel Draw",
@@ -207,7 +211,7 @@
   "context-menu.sub-title.tooltip": "overlapping layers",
 
   "details-panel.no-selection": "No selection",
-  "polygon-parts.button.load-from-shapeFile": "Load SHAPE",
+  "polygon-parts.button.load-from-shapeFile": "Load SHP",
   "polygon-parts.empty-list": "Add polygon parts",
   "polygon-parts.deleting.label": "Deleting",
   "polygon-parts.show-parts-on-map.label": "Show polygon parts on map",
