@@ -6,7 +6,7 @@ export type severityLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FAT
 export type geoJSONValidation = {valid: boolean, severity_level: severityLevel, reason: string};
 export const EMPTY_JSON_STRING_VALUE = '{}';
 
-const MAX_VERTECES = 100;
+const MAX_VERTECES = 300;
 const LINEARING_MIN_POSITIONS = 4;
 
 const hasTooManyVerteces = (geom: Geometry): boolean => {
@@ -25,7 +25,7 @@ const hasTooManyVerteces = (geom: Geometry): boolean => {
   return totalVertices >= MAX_VERTECES ;
 }
 
-const hasSelfIntersections = (json: Geometry): boolean => {
+export const hasSelfIntersections = (json: Geometry): boolean => {
   return kinks(json as any).features.length > 0;
 }
 
@@ -110,7 +110,7 @@ const isValidWGS84Coordinates = (geom: Geometry) => {
 }
 
 
-export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
+export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[]):geoJSONValidation => {
   const res = {
     valid: jsonValue !== undefined && jsonValue !== EMPTY_JSON_STRING_VALUE && jsonValue !== '',
     severity_level: 'INFO',
@@ -154,10 +154,16 @@ export const validateGeoJSONString = (jsonValue: string):geoJSONValidation => {
       }
       if(hasSelfIntersections(geoJson)) {
         return {
-          valid: true,
-          severity_level: 'WARN',
+          valid: false,
+          severity_level: 'ERROR',
           reason: 'geo_json-has_self_intersections'
         }
+      }
+
+      const validationArr = geoCustomChecks?.map((func) => func(geoJson)).filter(u => u != undefined) as geoJSONValidation[];
+
+      if(validationArr && validationArr.length){
+        return validationArr[0];
       }
     }
   }

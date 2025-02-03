@@ -150,7 +150,11 @@ env:
   bffPath: ''
   polygonParts:
     featureTypePrefix: ''
+    densityFactor: 0.3
+    geometryErrorsThreshold: 0.05
+    areaThreshold: 5
     max:
+      WFSFeatures: 1000000
       perShape: 300
       vertices: 300000
 route:

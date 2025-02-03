@@ -67,9 +67,13 @@ if (!window._env_) {
       BFF_PATH: '/graphql',
       POLYGON_PARTS: {
         featureTypePrefix: 'polygonParts:',
+        densityFactor: 0.3,
+        geometryErrorsThreshold: 0.05,
+        areaThreshold: 5,
         max: {
-          perShape: 300,
-          vertices: 3,
+          WFSFeatures: 1000000,
+          perShape: 30000,
+          vertices: 30000000,
         }
       }
     };

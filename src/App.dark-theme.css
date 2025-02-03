@@ -381,11 +381,37 @@ body[dir='rtl'] .dark-theme .rst__virtualScrollOverride {
 
 /* LINEAR PROGRESS CUSTOMIZATION */
 .mdc-linear-progress--indeterminate .mdc-linear-progress__secondary-bar {
-   left: unset;
+  left: unset;
 }
 
 /* COLLAPSABLE PANEL*/
 .dark-theme .rmwc-collapsible-list__children-inner{
   border: 1px solid var(--mdc-theme-gc-selection-background); 
   margin-bottom: 2px;
+}
+
+/* SELLECT BUTTON FLAVOR*/
+.dark-theme .selectButtonFlavor .mdc-select__anchor{
+  height: 40px;
+  width: 144px;
+  background-color: transparent;
+  border-radius: 4px !important;
+  border: 1px solid var(--mdc-theme-primary);
+}
+
+.dark-theme .selectButtonFlavor .mdc-select__selected-text{
+  color: var(--mdc-theme-primary) !important;
+}
+
+.dark-theme .selectButtonFlavor.mdc-select--disabled .mdc-select__selected-text{
+  color: var(--mdc-theme-text-disabled-on-dark) !important;
+}
+
+.dark-theme .selectButtonFlavor.mdc-select--disabled .mdc-select__anchor{
+  border: solid 1px var(--mdc-theme-on-secondary);
+  opacity: 0.4;
+}
+
+.dark-theme .selectButtonFlavor .mdc-list-item__ripple{
+  opacity: 0 !important;
 }

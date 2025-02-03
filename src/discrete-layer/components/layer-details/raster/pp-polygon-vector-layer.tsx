@@ -9,6 +9,7 @@ import booleanIntersects from "@turf/boolean-intersects";
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
+import CONFIG from '../../../../common/config';
 import { GetFeatureModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../../models';
 import { GeojsonFeatureInput } from '../../../models/RootStore.base';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
@@ -54,7 +55,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
       data: {
         feature:  feature as GeojsonFeatureInput,
         typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: 100 
+        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES 
       } 
     }));
   };

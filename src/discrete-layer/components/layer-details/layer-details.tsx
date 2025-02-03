@@ -13,6 +13,7 @@ import CONFIG from '../../../common/config';
 import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
+import { geoJSONValidation } from '../../../common/utils/geojson.validation';
 import { 
   AutocompletionModelType,
   EntityDescriptorModelType,
@@ -57,6 +58,7 @@ interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
   formik?: EntityFormikHandlers;
+  geoCustomChecks?:((value: string) => geoJSONValidation | undefined)[];
   isSearchTab?: boolean;
   enableMapPreview?: boolean;
   fieldNamePrefix?: string;
@@ -69,6 +71,7 @@ export const getValuePresentor = (
   fieldValue: unknown,
   mode: Mode,
   formik?: EntityFormikHandlers,
+  geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[],
   enumsMap?: IEnumsMapType | null,
   enableMapPreview = true,
   fieldNamePrefix?: string
@@ -111,6 +114,7 @@ export const getValuePresentor = (
           mode={mode}
           fieldInfo={fieldInfo}
           value={value as string}
+          geoCustomChecks={geoCustomChecks}
           formik={formik}
           enableMapPreview={enableMapPreview && FOOTPRINT_FIELD_NAMES.includes(fieldName as string)}
           enableLoadFromShape={FOOTPRINT_FIELD_NAMES.includes(fieldName as string)}
@@ -197,7 +201,7 @@ export const getValuePresentor = (
 };
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
-  const { entityDescriptors, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false, enableMapPreview=true, fieldNamePrefix, showFiedlsCategory=true } = props;
+  const { entityDescriptors, geoCustomChecks, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false, enableMapPreview=true, fieldNamePrefix, showFiedlsCategory=true } = props;
   const { enumsMap } = useContext(EnumsMapContext);
   const store = useStore();
   
@@ -287,6 +291,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                     fieldValue,
                     mode,
                     formik,
+                    geoCustomChecks,
                     enumsMap,
                     enableMapPreview,
                     fieldNamePrefix

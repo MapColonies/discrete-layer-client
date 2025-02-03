@@ -1,6 +1,9 @@
 import { Feature } from 'geojson';
 import { get } from 'lodash';
 import { Vector } from 'ol/layer';
+import { MultiPoint } from 'ol/geom';
+import CircleStyle from 'ol/style/Circle';
+import { Coordinate } from 'ol/coordinate';
 import { Style, Stroke, Fill, Text, Icon } from 'ol/style';
 import CONFIG from '../../../../common/config';
 import { LayerRasterRecordModelType } from '../../../models';
@@ -11,22 +14,23 @@ export enum FeatureType {
   DEFAULT = 'DEFAULT',
   PP_PERIMETER = 'PP_PERIMETER',
   PP_PERIMETER_MARKER = 'PP_PERIMETER_MARKER',
-  SOURCE_EXTENT ='SOURCE_EXTENT',
-  SOURCE_EXTENT_MARKER='SOURCE_EXTENT_MARKER',
-  EXISTING_PP='EXISTING_PP',
-  SELECTED='SELECTED',
-  ILLEGAL_PP='ILLEGAL_PP',
+  SOURCE_EXTENT = 'SOURCE_EXTENT',
+  SOURCE_EXTENT_MARKER = 'SOURCE_EXTENT_MARKER',
+  EXISTING_PP = 'EXISTING_PP',
+  SELECTED_FILL = 'SELECTED_FILL',
+  SELECTED_MARKER = 'SELECTED_MARKER',
+  ILLEGAL_PP = 'ILLEGAL_PP',
 }
 
-export const PPMapStyles = new Map<FeatureType,Style|undefined>([
+export const PPMapStyles = new Map<FeatureType, Style | undefined>([
   // @ts-ignore
   [FeatureType.DEFAULT, new Vector().getStyleFunction()()[0]],
   [FeatureType.PP_PERIMETER, new Style({
-                                stroke: new Stroke({
-                                  width: 4,
-                                  color: "#000000"
-                                }),
-                              })
+    stroke: new Stroke({
+      width: 4,
+      color: "#000000"
+    }),
+  })
   ],
   [FeatureType.PP_PERIMETER_MARKER, new Style({
     image: new Icon({
@@ -37,62 +41,83 @@ export const PPMapStyles = new Map<FeatureType,Style|undefined>([
   })
   ],
   [FeatureType.SOURCE_EXTENT, new Style({
-                                stroke: new Stroke({
-                                  width: 4,
-                                  color: "#7F00FF"
-                                }),
-                              })
+    stroke: new Stroke({
+      width: 4,
+      color: "#7F00FF"
+    }),
+  })
   ],
   [FeatureType.SOURCE_EXTENT_MARKER, new Style({
-                                      image: new Icon({
-                                        scale: 0.2,
-                                        anchor: [0.5, 1],
-                                        src: 'assets/img/map-marker.gif'
-                                      })
-                                    })
+    image: new Icon({
+      scale: 0.2,
+      anchor: [0.5, 1],
+      src: 'assets/img/map-marker.gif'
+    })
+  })
   ],
   [FeatureType.EXISTING_PP, new Style({
-                              stroke: new Stroke({
-                                width: 2,
-                                color: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.outlineColor
-                              }),
-                              fill: new Fill({
-                                color: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.color
-                              })
-                            })
-  ],
-  [FeatureType.SELECTED, new Style({
-                          stroke: new Stroke({
-                            width: 2,
-                            color: "#ff0000"
-                          }),
-                          fill: new Fill({
-                            color: "#aa2727"
-                          })
-                        })
-],
-[FeatureType.ILLEGAL_PP, new Style({
-  stroke: new Stroke({
-    width: 2,
-    color: "#e91e63"
-  }),
-  fill: new Fill({
-    color: "#e91e6385"
+    stroke: new Stroke({
+      width: 2,
+      color: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.outlineColor
+    }),
+    fill: new Fill({
+      color: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.color
+    })
   })
-})
-]
+  ],
+  [FeatureType.SELECTED_FILL,
+  new Style({
+    stroke: new Stroke({
+      width: 2,
+      color: "#ff0000"
+    }),
+    fill: new Fill({
+      color: "#aa2727"
+    })
+
+  }),
+  ],
+  [FeatureType.SELECTED_MARKER,
+  new Style({
+    image: new CircleStyle({
+      radius: 5,
+      fill: new Fill({
+        color: '#FFA032', //GC_WARNING_HIGH
+      }),
+    }),
+    geometry: function (feature) {
+      // return the coordinates of the inner and outer rings of the polygon
+      //@ts-ignore
+      const coordinates = feature?.getGeometry()?.getCoordinates().reduce( 
+        (accumulator: Array<Coordinate>, currentValue: Array<Coordinate>) => [...accumulator, ...currentValue],
+        []
+      );
+      return new MultiPoint(coordinates);
+    }
+  })
+  ],
+  [FeatureType.ILLEGAL_PP, new Style({
+    stroke: new Stroke({
+      width: 2,
+      color: "#e91e63"
+    }),
+    fill: new Fill({
+      color: "#e91e6385"
+    })
+  })
+  ]
 ])
 
 export const getWFSFeatureTypeName = (layerRecord: LayerRasterRecordModelType | null, enums: IEnumsMapType) => {
   // Naming convension of polygon parts feature typeName
   // polygonParts:{productId}-{productType}
-  return layerRecord ? 
+  return layerRecord ?
     `${CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX}${layerRecord.productId}-${enums[layerRecord.productType as string].realValue}` :
     'SHOULD_BE_CALCULATED_FROM_UPDATED_LAYER';
 }
 
 // Inspired by https://openlayers.org/en/latest/examples/vector-labels.html
-const stringDivider = (str:string, width:number, spaceReplacer: string):string  => {
+const stringDivider = (str: string, width: number, spaceReplacer: string): string => {
   if (str.length > width) {
     let p = width;
     while (p > 0 && str[p] !== ' ' && str[p] !== '-') {
@@ -112,14 +137,14 @@ const stringDivider = (str:string, width:number, spaceReplacer: string):string  
   return str;
 }
 
-const getText = (feature: Feature, resolution: number, featureConfig: Record<string,string>, ZOOM_LEVELS_TABLE: Record<string,number>) => {
+const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>) => {
   const type = featureConfig.text;
   const maxResolution = parseInt(featureConfig.maxreso);
   const zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
-                      .map((res) => res.toString())
-                      .findIndex( val => val === get(feature.properties,'resolutionDegree').toString())
-  const ingestionDateUTC = dateFormatter(get(feature.properties,'ingestionDateUtc'), true);
-  const updatedInVersion = get(feature.properties,'productVersion');
+    .map((res) => res.toString())
+    .findIndex(val => val === get(feature.properties, 'resolutionDegree').toString())
+  const ingestionDateUTC = dateFormatter(get(feature.properties, 'ingestionDateUtc'), true);
+  const updatedInVersion = get(feature.properties, 'productVersion');
 
   let text = `${ingestionDateUTC} (v${updatedInVersion}) \n\n ${zoomLevel}`;
 
@@ -165,7 +190,7 @@ export const FEATURE_LABEL_CONFIG = {
   },
 };
 
-export const createTextStyle = (feature: Feature, resolution: number, featureConfig: Record<string,string>, ZOOM_LEVELS_TABLE: Record<string,number>) => {
+export const createTextStyle = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>) => {
   const align = featureConfig.align;
   const baseline = featureConfig.baseline;
   const size = featureConfig.size;
@@ -187,8 +212,8 @@ export const createTextStyle = (feature: Feature, resolution: number, featureCon
     textBaseline: baseline,
     font: font,
     text: getText(feature, resolution, featureConfig, ZOOM_LEVELS_TABLE),
-    fill: new Fill({color: fillColor}),
-    stroke: new Stroke({color: outlineColor, width: outlineWidth}),
+    fill: new Fill({ color: fillColor }),
+    stroke: new Stroke({ color: outlineColor, width: outlineWidth }),
     offsetX: offsetX,
     offsetY: offsetY,
     placement: placement,

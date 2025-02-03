@@ -118,9 +118,17 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   display: none;
 }
 
-#layerDetailsFormRaster .showOnMapContainer {
+#layerDetailsFormRaster .checkBoxContainer {
+  height: 20px;
+}
+
+#layerDetailsFormRaster .displayFlex {
+  display: flex;
+}
+
+#layerDetailsFormRaster .flexCheckItem {
+  flex: 1;
   position: relative;
-  top: -8px;
 }
 
 #layerDetailsFormRaster .mdc-checkbox__background {
@@ -146,11 +154,6 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   border-color: unset;
 }
 
-#layerDetailsFormRaster .uploadShapeButton .mdc-button--outlined:not(:disabled){
-  border-color: currentColor;
-  padding: 20px;
-}
-
 #layerDetailsFormRaster .ingestionWarning {
   display: flex;
   flex-direction: row;
@@ -167,4 +170,17 @@ body[dir='rtl'] #layerDetailsFormRaster .enumOptions .mdc-select__dropdown-icon 
   position: absolute;
   top:6px;
   left: 20px;
+}
+
+#layerDetailsFormRaster .deletePolygonPart {
+  position: relative;
+  top: -44px;
+  left: 550px;
+  display: flex;
+  width: 160px;
+  align-items: center;
+}
+
+body[dir='rtl'] #layerDetailsFormRaster .deletePolygonPart { 
+  left: -550px;
 }

@@ -196,7 +196,11 @@ const APP_CONFIG = {
   BFF_PATH: BFF_PATH,
   POLYGON_PARTS: {
     FEATURE_TYPE_PREFIX: POLYGON_PARTS.featureTypePrefix,
+    DENSITY_FACTOR: POLYGON_PARTS.densityFactor,
+    GEOMETRY_ERRORS_THRESHOLD: POLYGON_PARTS.geometryErrorsThreshold,
+    AREA_THRESHOLD: POLYGON_PARTS.areaThreshold,
     MAX: {
+      WFS_FEATURES: POLYGON_PARTS.max.WFSFeatures,
       PER_SHAPE: POLYGON_PARTS.max.perShape,
       VERTICES: POLYGON_PARTS.max.vertices,
     }
