@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.18.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.17.0...v2.18.0) (2025-02-03)
+
+
+### Features
+
+* patch Ver 2.0.0 ([#585](https://github.com/MapColonies/discrete-layer-client/issues/585)) ([9caf37c](https://github.com/MapColonies/discrete-layer-client/commit/9caf37cef1db7f3e99cce047729bbff446dcb5cc))
+
+
+### Bug Fixes
+
+* add maximum zoom level when requesting tiles in Cesium ( MAPCO-6226 ) ([#582](https://github.com/MapColonies/discrete-layer-client/issues/582)) ([9a855db](https://github.com/MapColonies/discrete-layer-client/commit/9a855db3df8df615045b738b7aed2ee6c2ff159b))
+* change default to unchecked ([#581](https://github.com/MapColonies/discrete-layer-client/issues/581)) ([c321c16](https://github.com/MapColonies/discrete-layer-client/commit/c321c16e30046bdeca932dc74fddedaa6132c728))
+* set removed pp fields to untouched ([#584](https://github.com/MapColonies/discrete-layer-client/issues/584)) ([1ccf71d](https://github.com/MapColonies/discrete-layer-client/commit/1ccf71d6ad0995bd077ed41026d60aa26951bc4f))
+* use useEffect to trigger ingestQueries only when submitting form ( MAPCO-6199 ) ([#583](https://github.com/MapColonies/discrete-layer-client/issues/583)) ([bc53226](https://github.com/MapColonies/discrete-layer-client/commit/bc532262808793e73e141d73028ad650bbaef3db))
+
 ## [2.17.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.16.3...v2.17.0) (2025-01-01)
 
 
