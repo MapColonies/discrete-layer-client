@@ -11,6 +11,7 @@ import { EMPTY_JSON_STRING_VALUE, geoJSONValidation, validateGeoJSONString } fro
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Mode } from '../../../../common/models/mode.enum';
 import TooltippedValue from '../../../../common/components/form/tooltipped.value';
+import { geoArgs } from '../../../../common/utils/geo.tools';
 import { IRecordFieldInfo } from '../layer-details.field-info';
 import { EntityFormikHandlers } from '../layer-datails-form';
 import { importShapeFileFromClient } from '../utils';
@@ -27,7 +28,10 @@ interface JsonValuePresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
   value?: string;
-  geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[];
+  geoCustomChecks?:{
+    validationFunc: ((value: string, args: geoArgs) => geoJSONValidation | undefined)[],
+    validationFuncArgs: geoArgs
+  };
   formik?: EntityFormikHandlers;
   type?: string;
   enableLoadFromShape?: boolean;
@@ -235,6 +239,10 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         }
 
         if (jsonValue !== EMPTY_JSON_STRING_VALUE){
+          geoCustomChecks?.validationFuncArgs?.map(g => {
+            g.value = formik.getFieldMeta(`${fieldNamePrefix}${g.name}`).value;
+          });
+          
           const validRes = validateGeoJSONString(jsonValue, geoCustomChecks);
           
           if (!validRes.valid){

@@ -14,6 +14,7 @@ import EnumsMapContext, { IEnumsMapType } from '../../../common/contexts/enumsMa
 import { LinkType } from '../../../common/models/link-type.enum';
 import { Mode } from '../../../common/models/mode.enum';
 import { geoJSONValidation } from '../../../common/utils/geojson.validation';
+import { geoArgs } from '../../../common/utils/geo.tools';
 import { 
   AutocompletionModelType,
   EntityDescriptorModelType,
@@ -58,7 +59,10 @@ interface LayersDetailsComponentProps {
   isBrief?: boolean;
   layerRecord?: ILayerImage | null;
   formik?: EntityFormikHandlers;
-  geoCustomChecks?:((value: string) => geoJSONValidation | undefined)[];
+  geoCustomChecks?:{
+    validationFunc: ((value: string, args: geoArgs) => geoJSONValidation | undefined)[],
+    validationFuncArgs: geoArgs
+  };
   isSearchTab?: boolean;
   enableMapPreview?: boolean;
   fieldNamePrefix?: string;
@@ -71,7 +75,10 @@ export const getValuePresentor = (
   fieldValue: unknown,
   mode: Mode,
   formik?: EntityFormikHandlers,
-  geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[],
+  geoCustomChecks?:{
+    validationFunc: ((value: string, args: geoArgs) => geoJSONValidation | undefined)[],
+    validationFuncArgs: geoArgs
+  },
   enumsMap?: IEnumsMapType | null,
   enableMapPreview = true,
   fieldNamePrefix?: string
