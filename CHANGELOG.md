@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.18.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.0...v2.18.1) (2025-02-09)
+
+
+### Bug Fixes
+
+* change calculation of small polygons to be by native resolution ([#586](https://github.com/MapColonies/discrete-layer-client/issues/586)) ([0fafc0a](https://github.com/MapColonies/discrete-layer-client/commit/0fafc0ac8508ee97ebb3a5ad969343a3b7f9766a))
+
 ## [2.18.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.17.0...v2.18.0) (2025-02-03)
 
 
