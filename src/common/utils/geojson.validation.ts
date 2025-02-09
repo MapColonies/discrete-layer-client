@@ -1,6 +1,7 @@
 import bolleanValid from '@turf/boolean-valid';
 import kinks from '@turf/kinks';
 import { Geometry, Position } from 'geojson';
+import { geoCustomChecks } from './geo.tools';
 
 export type severityLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FATAL';
 export type geoJSONValidation = {valid: boolean, severity_level: severityLevel, reason: string};
@@ -109,8 +110,7 @@ const isValidWGS84Coordinates = (geom: Geometry) => {
   return true; 
 }
 
-
-export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[]):geoJSONValidation => {
+export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCustomChecks): geoJSONValidation => {
   const res = {
     valid: jsonValue !== undefined && jsonValue !== EMPTY_JSON_STRING_VALUE && jsonValue !== '',
     severity_level: 'INFO',
@@ -160,7 +160,11 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((val
         }
       }
 
-      const validationArr = geoCustomChecks?.map((func) => func(geoJson)).filter(u => u != undefined) as geoJSONValidation[];
+      let validationArr: geoJSONValidation[] = [] as unknown as geoJSONValidation[];
+      
+      if(geoCustomChecks){
+        validationArr = geoCustomChecks.validationFunc.map((func) => func(geoJson, geoCustomChecks.validationFuncArgs)).filter(u => u != undefined) as geoJSONValidation[];
+      }
 
       if(validationArr && validationArr.length){
         return validationArr[0];

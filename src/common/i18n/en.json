@@ -548,6 +548,7 @@
   "validation-field.footprint.not-geo_json.geojson": "{fieldName} is not geoJSON",
   "validation-field.footprint.geo_json-geometry-not-supported.geojson": "{fieldName} geometry type not supported",
   "validation-field.footprint.geo_json-too_many_verteces.geojson": "{fieldName} too many vertices ",
+  "validation-field.footprint.resolutionNotExistForGeometry.geojson": "To check the geometry, it is required to fill in the resolution field.",
   "validation-field.footprint.geometryTooDensed.geojson": "Footprint contain patterns with height density, must be simplified.",
   "validation-field.footprint.geometryTooSmall.geojson": "Geometry too small.",
   "validation-field.footprint.geometryHasSmallHoles.geojson": "Geometry contains too small holes",

@@ -10,7 +10,7 @@ import rewind from '@turf/rewind';
 import { AllGeoJSON } from '@turf/helpers';
 import truncate from '@turf/truncate';
 import convert, { Distance } from 'convert-units';
-import { polygonVertexDensityFactor, area, countSmallHoles, DEGREES_PER_METER } from '../../../common/utils/geo.tools';
+import { polygonVertexDensityFactor, area, countSmallHoles, DEGREES_PER_METER, isSmallArea } from '../../../common/utils/geo.tools';
 import { IEnumsMapType } from '../../../common/contexts/enumsMap.context';
 import { sessionStore } from '../../../common/helpers/storage';
 import { ValidationTypeName } from '../../../common/models/validation.enum';
@@ -310,22 +310,22 @@ export const decreaseFeaturePrecision = (feat: Geometry): Geometry => {
 };
 
 
-const footprintChecks = (errors: Record<string,ParsedPolygonPartError>, desc: FieldConfigModelType, feature: Feature, nativePartResolution: number) => {
+const geometryChecks = (errors: Record<string,ParsedPolygonPartError>, desc: FieldConfigModelType, feature: Feature, nativePartResolution: number) => {
   let doSelfIntersectCheck=true;
   
-  const densityFactor = polygonVertexDensityFactor(feature, nativePartResolution);
+  const densityFactor = polygonVertexDensityFactor(feature, nativePartResolution * DEGREES_PER_METER);
   if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
     addError(errors, desc, GEOMETRY_ERRORS.geometryTooDense);
     doSelfIntersectCheck =false;
   }
 
-  const polygonArea = area(feature as AllGeoJSON);
-  if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD){
-    console.log('Feature area:', polygonArea);
+  const isSmallPolygon = isSmallArea(area(feature as AllGeoJSON), CONFIG.POLYGON_PARTS.AREA_THRESHOLD, nativePartResolution);
+  if(isSmallPolygon){
+    console.log('Feature area:', isSmallPolygon);
     addError(errors, desc, GEOMETRY_ERRORS.geometryTooSmall);
   }
 
-  const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
+  const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD, nativePartResolution);
   if(polygonSmallHoles > 0){
     addError(errors, desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
   }
@@ -362,9 +362,9 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
   const errors: Record<string,ParsedPolygonPartError> = {};
 
   desciptors.forEach((desc) => {
-    const shpMap = desc.shapeFileMapping?.filter(k => {
+    const shpMap = desc.shapeFileMapping?.find(k => {
       return k.provider === provider
-    })[0];
+    });
 
     let shapeFieldValue = get(feature, shpMap?.valuePath as string);
 
@@ -390,10 +390,10 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
             let nativePartResolution;
             let fieldRes = desciptors.filter(k => k.fieldName === 'sourceResolutionMeter')[0].shapeFileMapping?.filter(k => k.provider === provider)[0].valuePath;
             
-            nativePartResolution = parseFloat(get(feature, fieldRes)) * DEGREES_PER_METER;
+            nativePartResolution = parseFloat(get(feature, fieldRes));
             
             if(!isNaN(nativePartResolution)){ 
-              footprintChecks(errors, desc, feature, nativePartResolution);
+              geometryChecks(errors, desc, feature, nativePartResolution);
             }
            
             break;
@@ -418,9 +418,9 @@ export const transformMaxarShapeFeatureToEntity = (desciptors: FieldConfigModelT
   const errors: Record<string,ParsedPolygonPartError> = {};
 
   desciptors.forEach((desc) => {
-    const shpMap = desc.shapeFileMapping?.filter(k => {
+    const shpMap = desc.shapeFileMapping?.find(k => {
       return k.provider === provider
-    })[0];
+    });
 
     let shapeFieldValue = get(feature, shpMap?.valuePath as string);
     
@@ -450,10 +450,10 @@ export const transformMaxarShapeFeatureToEntity = (desciptors: FieldConfigModelT
           let nativePartResolution;
           let fieldRes = desciptors.filter(k => k.fieldName === 'sourceResolutionMeter')[0].shapeFileMapping?.filter(k => k.provider === provider)[0].valuePath;
           
-          nativePartResolution = parseFloat(get(feature, fieldRes)) * DEGREES_PER_METER;
+          nativePartResolution = parseFloat(get(feature, fieldRes));
 
           if(!isNaN(nativePartResolution)){ 
-            footprintChecks(errors, desc, feature, nativePartResolution);
+            geometryChecks(errors, desc, feature, nativePartResolution);
           }
          
           break;
@@ -478,9 +478,9 @@ export const transformTeraNovaShapeFeatureToEntity = (desciptors: FieldConfigMod
   const errors: Record<string,ParsedPolygonPartError> = {};
 
   desciptors.forEach((desc) => {
-    const shpMap = desc.shapeFileMapping?.filter(k => {
+    const shpMap = desc.shapeFileMapping?.find(k => {
       return k.provider === provider
-    })[0];
+    });
 
     let shapeFieldValue = get(feature, shpMap?.valuePath as string);
 
@@ -506,10 +506,10 @@ export const transformTeraNovaShapeFeatureToEntity = (desciptors: FieldConfigMod
           let nativePartResolution;
           let fieldRes = desciptors.filter(k => k.fieldName === 'sourceResolutionMeter')[0].shapeFileMapping?.filter(k => k.provider === provider)[0].valuePath;
           
-          nativePartResolution = convertToMeter(get(feature, fieldRes)) * DEGREES_PER_METER;
+          nativePartResolution = convertToMeter(get(feature, fieldRes));
 
           if(!isNaN(nativePartResolution)){ 
-            footprintChecks(errors, desc, feature, nativePartResolution);
+            geometryChecks(errors, desc, feature, nativePartResolution);
           }
           
         break;

@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { area, countSmallHoles, DEGREES_PER_METER, explode, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
+import { area, countSmallHoles, explode, geoArgs, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, isSmallArea, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
@@ -883,8 +883,26 @@ export const InnerRasterForm = (
     ppList?.forceUpdate();
   }
   
-  const ppVertexDensityFactor = (value: any) => {
-    const densityFactor = polygonVertexDensityFactor(value, DEGREES_PER_METER * 0.01); //simplification factor 1cm fix 
+  const NATIVE_RESOLUTION_NAME_FIELD = 'sourceResolutionMeter';
+  const geoArgsParams: geoArgs = [{name: NATIVE_RESOLUTION_NAME_FIELD, value: undefined}];
+  const getResolutionObject = (params: geoArgs) => params.find((param) => param.name === NATIVE_RESOLUTION_NAME_FIELD);
+
+  const resolutionNotExist = () : geoJSONValidation => {
+    return {
+      valid: false,
+      severity_level: 'ERROR',
+      reason: 'resolutionNotExistForGeometry'
+    } as geoJSONValidation;
+  }
+
+  const ppVertexDensityFactor = (geometry: any, params: geoArgs) => {
+    const resolutionObj = getResolutionObject(params);
+
+    if(!resolutionObj || !resolutionObj.value){
+      return resolutionNotExist();
+    };
+
+    const densityFactor = polygonVertexDensityFactor(geometry, resolutionObj.value);
     if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
       return {
         valid: false,
@@ -894,9 +912,15 @@ export const InnerRasterForm = (
     }
   }
 
-  const ppArea = (value: any) => {
-    const polygonArea = area(value);
-    if(polygonArea <= CONFIG.POLYGON_PARTS.AREA_THRESHOLD) {
+  const ppArea = (geometry: any, params: geoArgs) => {
+    const resolutionObj = getResolutionObject(params);
+
+    if(!resolutionObj || !resolutionObj.value){
+      return resolutionNotExist();
+    };
+
+    const isSmallPolygon = isSmallArea(area(geometry), CONFIG.POLYGON_PARTS.AREA_THRESHOLD, resolutionObj.value);
+    if(isSmallPolygon) {
       return {
         valid: false,
         severity_level: 'ERROR',
@@ -905,8 +929,14 @@ export const InnerRasterForm = (
     }
   }
 
-  const ppCountSmallHoles = (value: any) => {
-    const polygonSmallHoles = countSmallHoles(value, CONFIG.POLYGON_PARTS.AREA_THRESHOLD);
+  const ppCountSmallHoles = (geometry: any, params: geoArgs) => {
+    const resolutionObj = getResolutionObject(params);
+    
+    if(!resolutionObj || !resolutionObj.value){
+      return resolutionNotExist();
+    };
+
+    const polygonSmallHoles = countSmallHoles(geometry, CONFIG.POLYGON_PARTS.AREA_THRESHOLD, resolutionObj.value);
     if(polygonSmallHoles > 0) {
       return {
         valid: false,
@@ -915,7 +945,17 @@ export const InnerRasterForm = (
       } as geoJSONValidation;
     }
   }
-  const customChecks = [/*ppVertexDensityFactor,*/ ppArea, ppCountSmallHoles];
+
+  const customChecks = useMemo(() => {
+    return {
+        validationFunc: [
+          ppVertexDensityFactor,
+          ppArea,
+          ppCountSmallHoles
+        ],
+        validationFuncArgs: geoArgsParams
+      };
+  }, [ppVertexDensityFactor, ppArea, ppCountSmallHoles]);
   
   const renderRow: ListRowRenderer = ({ index, key, style }) => {
     let data = Object.values(layerPolygonParts);
