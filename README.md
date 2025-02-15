@@ -1,6 +1,6 @@
 # Discrete Layer Client
 
-React  app created with typescript that defines manages and displays discrete layers image catalog
+React app created with typescript that defines manages and displays discrete layers image catalog
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
 
