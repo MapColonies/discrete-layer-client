@@ -37,6 +37,7 @@ interface JobsDialogProps {
 }
 
 export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialogProps) => {
+  const store = useStore();
   const intl = useIntl();
   const { isOpen, onSetOpen } = props;
   const [updateTaskPayload, setUpdateTaskPayload] = useState<Record<string,unknown>>({}); 
@@ -70,13 +71,21 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
     }
   );
 
+  const { setQuery: setQueryForOneJob, data: jobData } = useQuery((store) =>
+    store.queryJob({
+      id: 'DEFAULT'
+    }),
+    {
+      fetchPolicy: 'no-cache'
+    }
+  );
+
   useEffect(() => {
     setTillDate(dateNow)
   }, [dateNow])
 
   const mutationQuery = useQuery();
 
-  const store = useStore();
 
   const getJobActions = useMemo(() => {
     let actions: IActionGroup[] = store.actionDispatcherStore.getEntityActionGroups(
@@ -178,6 +187,11 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
       clearInterval(pollingInterval);
     };
   }, [query, pollingCycle]);
+  
+  useEffect(() => {
+    if(!jobData) return;
+    downloadJSONToClient(jobData.job, `${encodeURI(jobData.job.resourceId as string)}_job_details.json`);
+  }, [jobData]);
 
   const closeDialog = useCallback(() => {
     onSetOpen(false);
@@ -212,7 +226,10 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
           break;
         }
         case 'Job.download_details':
-          downloadJSONToClient(data, `${encodeURI(data.resourceId as string)}_job_details.json`);
+          setQueryForOneJob((store) =>
+            store.queryJob({
+              id: data.id as string
+            }));
           break;
         default:
           break;
