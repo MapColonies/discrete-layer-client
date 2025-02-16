@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.19.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.19.0...v2.19.1) (2025-02-16)
+
+
+### Bug Fixes
+
+* change self intersection to works with gpsi library ([#590](https://github.com/MapColonies/discrete-layer-client/issues/590)) ([0a8d97a](https://github.com/MapColonies/discrete-layer-client/commit/0a8d97a73adbe5bf3fd0c739978502299666a608))
+
 ## [2.19.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.2...v2.19.0) (2025-02-16)
 
 
