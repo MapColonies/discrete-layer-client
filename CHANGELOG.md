@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.19.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.2...v2.19.0) (2025-02-16)
+
+
+### Features
+
+* fetch job from bff on download ([#589](https://github.com/MapColonies/discrete-layer-client/issues/589)) ([32b7a1e](https://github.com/MapColonies/discrete-layer-client/commit/32b7a1ee7a864b5b799de3cbea742f20d3ef8bef))
+
 ### [2.18.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.1...v2.18.2) (2025-02-11)
 
 
