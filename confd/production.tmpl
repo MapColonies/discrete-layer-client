@@ -64,11 +64,11 @@ window._env_ = {
   BFF_PATH: '{{getv "/configuration/bff/path" "/graphql"}}',
   POLYGON_PARTS: {
     featureTypePrefix: '{{getv "/configuration/polygonparts/featuretypeprefix" "polygonParts:"}}',
-    densityFactor: '{{getv "/configuration/polygonparts/densityFactor" "0.3"}}',
-    geometryErrorsThreshold: '{{getv "/configuration/polygonparts/geometryErrorsThreshold" "0.05"}}',
-    areaThreshold: '{{getv "/configuration/polygonparts/areaThreshold" "5"}}',
+    densityFactor: {{getv "/configuration/polygonparts/densityFactor" "0.3"}},
+    geometryErrorsThreshold: {{getv "/configuration/polygonparts/geometryErrorsThreshold" "0.05"}},
+    areaThreshold: {{getv "/configuration/polygonparts/areaThreshold" "10"}},
     max: {
-      WFSFeatures: '{{getv "/configuration/polygonparts/max/WFSFeatures" "1000000"}}',
+      WFSFeatures: {{getv "/configuration/polygonparts/max/WFSFeatures" "1000000"}},
       perShape: {{getv "/configuration/polygonparts/max/pershape" "300"}},
       vertices: {{getv "/configuration/polygonparts/max/vertices" "300000"}}
     }
