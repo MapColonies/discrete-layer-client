@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
+import { debounce } from 'lodash';
 import { MapEvent } from 'ol';
 import bboxPolygon from '@turf/bbox-polygon';
 import { observer } from 'mobx-react';
@@ -31,6 +32,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
+  const ZOOM_LEVEL_STOP_FETCHING_PP = 7; // TODO: to take from configuration
   
   const showLoadingSpinner = (isShown: boolean) => {
     isShown? 
@@ -41,17 +43,26 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
       setPage(0);
-      setExistingPolygoParts([]);
+      setExistingPolygoParts([
+        {
+          type: 'Feature',
+          geometry: {
+            ...layerRecord?.footprint
+          },
+          properties: null
+        }
+      ]);
       getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, 0);
     };
 
-    mapOl.on('moveend', handleMoveEndEvent);
+    const debounceCall = debounce(handleMoveEndEvent, 500);
+    mapOl.on('moveend', debounceCall);
 
     getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, 0);
     
     return (): void => {
       try {
-        mapOl.un('moveend', handleMoveEndEvent);
+        mapOl.un('moveend', debounceCall);
       } catch (e) {
         console.log('OL "moveEnd" remove listener failed', e);
       }
@@ -94,23 +105,37 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     // console.log(fakePP);
     // setExistingPolygoParts(fakePP.features);
 
-    setQuery(store.queryGetPolygonPartsFeature({ 
-      data: {
-        feature:  bboxPolygon(bbox) as GeojsonFeatureInput,
-        typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
-        startIndex
-      } 
-    }));
-  };
+    const currentZoomLevel = mapOl.getView().getZoom();
 
+    if(currentZoomLevel && currentZoomLevel < ZOOM_LEVEL_STOP_FETCHING_PP) 
+    {
+      setExistingPolygoParts([
+        {
+          type: 'Feature',
+          geometry: {
+            ...layerRecord?.footprint
+          },
+          properties: null
+        }
+      ])
+    } else {
+      setQuery(store.queryGetPolygonPartsFeature({ 
+        data: {
+          feature:  bboxPolygon(bbox) as GeojsonFeatureInput,
+          typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
+          count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
+          startIndex
+        } 
+    }));
+    }
+  };
     
   return (
     <VectorLayer>
       <VectorSource>
         {existingPolygoParts.map((feat, idx) => {
             const greenStyle = new Style({
-              text: createTextStyle(feat, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE),
+              text: createTextStyle(feat, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE, intl.formatMessage({id: 'polygon-parts.map-preview.zoom-before-fetch'})),
               stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),
               fill: PPMapStyles.get(FeatureType.EXISTING_PP)?.getFill(),
             });
