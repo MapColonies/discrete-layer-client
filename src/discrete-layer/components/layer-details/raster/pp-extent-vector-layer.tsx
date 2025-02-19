@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { MapEvent } from 'ol';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -27,6 +27,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const intl = useIntl();
 
   const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
+  const [page, setPage] = useState(0);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
@@ -36,17 +37,17 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
       mapOl.getTargetElement().classList.add('olSpinner') :
       mapOl.getTargetElement().classList.remove('olSpinner');
   };
-
+  
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
-      getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox);
-      
-      console.log(mapOl.getView().calculateExtent(), bboxPolygon(mapOl.getView().calculateExtent() as BBox))
+      setPage(0);
+      setExistingPolygoParts([]);
+      getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, 0);
     };
 
     mapOl.on('moveend', handleMoveEndEvent);
 
-    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox);
+    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, 0);
     
     return (): void => {
       try {
@@ -59,7 +60,11 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   
   useEffect(() => {
     if (!loading && data) {
-      setExistingPolygoParts(data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]);
+      setExistingPolygoParts([...existingPolygoParts, ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]]);
+      if(data.getPolygonPartsFeature.numberReturned as number !== 0){
+        getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
+        setPage(page+1);
+      }
     } 
     if (loading){
       showLoadingSpinner(true);
@@ -84,16 +89,17 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     }
   }, [error, loading]);
 
-  const getExistingPolygoParts = (bbox: BBox) => {
+  const getExistingPolygoParts = (bbox: BBox, startIndex: number) => {
     // const fakePP = squareGrid(bbox, 10, {units: 'miles'});
     // console.log(fakePP);
     // setExistingPolygoParts(fakePP.features);
 
     setQuery(store.queryGetPolygonPartsFeature({ 
       data: {
-        feature:  bboxPolygon(mapOl.getView().calculateExtent() as BBox) as GeojsonFeatureInput,
+        feature:  bboxPolygon(bbox) as GeojsonFeatureInput,
         typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES
+        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
+        startIndex
       } 
     }));
   };

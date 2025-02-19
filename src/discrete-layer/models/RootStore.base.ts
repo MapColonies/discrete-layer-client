@@ -228,6 +228,7 @@ export type WfsPolygonPartsGetFeatureParams = {
   feature: GeojsonFeatureInput
   typeName: string
   count?: number
+  startIndex?: number
   dWithin?: number
   filterProperties?: WfsFilterPropertyParam[]
 }
