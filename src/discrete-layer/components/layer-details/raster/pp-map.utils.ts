@@ -137,16 +137,20 @@ const stringDivider = (str: string, width: number, spaceReplacer: string): strin
   return str;
 }
 
-const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>) => {
+const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>, defaultText?: string) => {
   const type = featureConfig.text;
   const maxResolution = parseInt(featureConfig.maxreso);
   const zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
     .map((res) => res.toString())
-    .findIndex(val => val === get(feature.properties, 'resolutionDegree').toString())
+    .findIndex(val => val === get(feature.properties, 'resolutionDegree')?.toString())
   const ingestionDateUTC = dateFormatter(get(feature.properties, 'ingestionDateUtc'), true);
   const updatedInVersion = get(feature.properties, 'productVersion');
 
-  let text = `${ingestionDateUTC} (v${updatedInVersion}) \n\n ${zoomLevel}`;
+  let text = defaultText ?? '';
+  
+  if(zoomLevel > -1){
+    text = `${ingestionDateUTC} (v${updatedInVersion}) \n\n ${zoomLevel}`;
+  }
 
   if (resolution > maxResolution) {
     text = '';
@@ -190,7 +194,7 @@ export const FEATURE_LABEL_CONFIG = {
   },
 };
 
-export const createTextStyle = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>) => {
+export const createTextStyle = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>, defaultText?: string) => {
   const align = featureConfig.align;
   const baseline = featureConfig.baseline;
   const size = featureConfig.size;
@@ -211,7 +215,7 @@ export const createTextStyle = (feature: Feature, resolution: number, featureCon
     textAlign: align === '' ? undefined : align,
     textBaseline: baseline,
     font: font,
-    text: getText(feature, resolution, featureConfig, ZOOM_LEVELS_TABLE),
+    text: getText(feature, resolution, featureConfig, ZOOM_LEVELS_TABLE, defaultText),
     fill: new Fill({ color: fillColor }),
     stroke: new Stroke({ color: outlineColor, width: outlineWidth }),
     offsetX: offsetX,
