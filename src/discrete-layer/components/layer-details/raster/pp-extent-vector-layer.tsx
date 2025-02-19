@@ -22,17 +22,21 @@ interface PolygonPartsVectorLayerProps {
   layerRecord?: ILayerImage | null;
 }
 
+const START_OFFSET = 0;
+const START_PAGE = 0;
+const ZOOM_LEVEL_STOP_FETCHING_PP = 7; // TODO: to take from configuration
+const DEBOUNCE_MOUSE_INTERVAL = 500;
+
 export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord}) => {
   const store = useStore();
   const mapOl = useMap();
   const intl = useIntl();
 
   const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(START_PAGE);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
-  const ZOOM_LEVEL_STOP_FETCHING_PP = 7; // TODO: to take from configuration
   
   const showLoadingSpinner = (isShown: boolean) => {
     isShown? 
@@ -42,7 +46,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
-      setPage(0);
+      setPage(START_PAGE);
       setExistingPolygoParts([
         {
           type: 'Feature',
@@ -52,13 +56,13 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
           properties: null
         }
       ]);
-      getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, 0);
+      getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
     };
 
-    const debounceCall = debounce(handleMoveEndEvent, 500);
+    const debounceCall = debounce(handleMoveEndEvent, DEBOUNCE_MOUSE_INTERVAL);
     mapOl.on('moveend', debounceCall);
 
-    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, 0);
+    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
     
     return (): void => {
       try {
@@ -71,7 +75,10 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   
   useEffect(() => {
     if (!loading && data) {
-      setExistingPolygoParts([...existingPolygoParts, ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]]);
+      setExistingPolygoParts([
+        ...(page === 0 ? existingPolygoParts.slice(1) : existingPolygoParts),
+        ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
+      ]);
       if(data.getPolygonPartsFeature.numberReturned as number !== 0){
         getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
