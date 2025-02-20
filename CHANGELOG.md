@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.19.1...v2.20.0) (2025-02-20)
+
+
+### Features
+
+* pp wfs pagination ( MAPCO-6827 ) ([#592](https://github.com/MapColonies/discrete-layer-client/issues/592)) ([300f88f](https://github.com/MapColonies/discrete-layer-client/commit/300f88fc78ce96487dea91d82b89307f8e57fa22))
+
+
+### Bug Fixes
+
+* change files to be compatible with convention of confd ([#591](https://github.com/MapColonies/discrete-layer-client/issues/591)) ([8e29ad4](https://github.com/MapColonies/discrete-layer-client/commit/8e29ad441e175f743b3af6ba5996cc35ba25bca1))
+
 ### [2.19.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.19.0...v2.19.1) (2025-02-16)
 
 
