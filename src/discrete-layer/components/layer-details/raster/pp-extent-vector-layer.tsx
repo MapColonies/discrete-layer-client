@@ -1,5 +1,5 @@
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { debounce } from 'lodash';
 import { MapEvent } from 'ol';
