@@ -27,7 +27,17 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { area, countSmallHoles, explode, geoArgs, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, isSmallArea, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
+import {
+  area,
+  countSmallHoles,
+  explode,
+  geoArgs,
+  getFirstPoint,
+  getOutlinedFeature,
+  isGeometryPolygon,
+  isSmallArea,
+  polygonVertexDensityFactor
+} from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
@@ -69,7 +79,13 @@ import 'react-virtualized/styles.css';
 
 const NONE = 0;
 
-// Shape of form values - a bit problematic because we cant extend union type.
+enum CUSTOM_VALIDATION_ERROR_CODES {
+  SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
+  POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
+  POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
+} 
+
+// Shape of form values - a bit problematic because we cannot extend union type
 export interface FormValues {
   directory: string;
   fileNames: string;
@@ -275,7 +291,7 @@ export const InnerRasterForm = (
 
     Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
       features.push({
-        type: "Feature",
+        type: 'Feature',
         properties: {key},
         // @ts-ignore
         geometry: values[key].footprint
@@ -288,7 +304,7 @@ export const InnerRasterForm = (
       countPPWithGeometryErrors += (!isGeometryPolygon(values[key].footprint) ? 1 : 0);
     });
 
-    if(countPPWithGeometryErrors > NONE){
+    if (countPPWithGeometryErrors > NONE){
       setClientCustomValidationErrors({
         ...clientCustomValidationErrors,
         [CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_GEOMETRY]: intl.formatMessage(
@@ -318,8 +334,7 @@ export const InnerRasterForm = (
               const error = intl.formatMessage({ id: err });
               return footprintErrors.includes(error);
             });
-          }
-          else {
+          } else {
             hasOneOrMoreError = true;
           }
   
@@ -428,7 +443,7 @@ export const InnerRasterForm = (
         set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
         setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
         setOutlinedPerimeterMarker({
-          type: "Feature",
+          type: 'Feature',
           properties: {
             featureType: FeatureType.PP_PERIMETER_MARKER
           },
@@ -503,11 +518,6 @@ export const InnerRasterForm = (
     });
   }, []);
 
-  enum CUSTOM_VALIDATION_ERROR_CODES {
-    SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
-    POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
-    POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
-  } 
   // ****** Verification of GPKG extent vs. PP perimeter is disabled
   // useEffect(() => {
   //   if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
@@ -520,7 +530,6 @@ export const InnerRasterForm = (
   //     setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG));
   //   }
   // }, [sourceExtent, outlinedPerimeter]);
-  
   
   const exceededFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
@@ -646,7 +655,8 @@ export const InnerRasterForm = (
     }
 
     // Synch entity with loaded values
-    for (const [key, val] of Object.entries(metadata.recordModel)) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [key, _val] of Object.entries(metadata.recordModel)) {
       // @ts-ignore
       layerRecord[key] = metadata.recordModel[key];
     }
@@ -654,7 +664,7 @@ export const InnerRasterForm = (
     const validationResults = metadata.recordModel as unknown as SourceValidationModelType;
 
     setSourceExtent({
-      type: "Feature",
+      type: 'Feature',
       properties: {
         featureType: FeatureType.SOURCE_EXTENT
       },
@@ -663,7 +673,7 @@ export const InnerRasterForm = (
 
     if(validationResults.extentPolygon){
       setSourceExtentMarker({
-        type: "Feature",
+        type: 'Feature',
         properties: {
           featureType: FeatureType.SOURCE_EXTENT_MARKER
         },
@@ -717,18 +727,18 @@ export const InnerRasterForm = (
     return true;
   }
 
-  const isIngestedSourceSelected = () => {
+  /*const isIngestedSourceSelected = () => {
     let res = true;
     ingestionFields.forEach((curr) => {
       // @ts-ignore
       res = res && !isEmpty(values[curr?.fieldName]);
     }, true);
     return res;
-  }
+  }*/
 
   const transformShapeFeatureToEntity = (polygonPartDescriptors: FieldConfigModelType[], feature: Feature<Geometry, GeoJsonProperties>, provider: string, fileName?: string) => {
     let ret = {} as ParsedPolygonPart;
-    switch(provider){
+    switch (provider) {
       case ProviderType.SYNERGY:
         ret = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);  
         break;
@@ -767,19 +777,19 @@ export const InnerRasterForm = (
               }
 
               (data as FeatureCollectionWithFilename).features.forEach((feature, idx) => {
-                /*if(idx < 20)*/ {
-                  const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
-                  const parsedPolygonPartData = transformShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);
-                  parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
-                  parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
-                }
+                // if(idx < 20) {
+                const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
+                const parsedPolygonPartData = transformShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);
+                parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
+                parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
+                // }
               });
 
               const outlinedPolygon = getOutlinedFeature((data as FeatureCollectionWithFilename).features as Feature<Polygon | MultiPolygon, Properties>[]);
               set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
               setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
               setOutlinedPerimeterMarker({
-                type: "Feature",
+                type: 'Feature',
                 properties: {
                   featureType: FeatureType.PP_PERIMETER_MARKER
                 },
@@ -1133,18 +1143,18 @@ export const InnerRasterForm = (
                       setExpandedParts(new Array(ppDataKeys.length).fill(false));
                       
                       /// ?reloadFormMetadata()
-                      const polygonsData = ppDataKeys.map((key)=>{
-                                                let {errors, polygonPart} = parsedPPData[key]; 
-                                                return {[key]: polygonPart} 
-                                            })
-                                            .reduce((acc,curr)=> (acc={...acc,...curr},acc),{});
+                      const polygonsData = ppDataKeys.map((key) => {
+                          let {polygonPart} = parsedPPData[key]; 
+                          return {[key]: polygonPart} 
+                        })// eslint-disable-next-line no-sequences
+                        .reduce((acc,curr) => (acc={...acc,...curr},acc),{});
 
                       setParsingErrors(
-                        ppDataKeys.map((key)=>{
-                          let {errors, polygonPart} = parsedPPData[key];
-                          return (!isEmpty(errors) ? {[key]: errors} : undefined)
-                        }).
-                        filter((item)=>item !== undefined) as Record<string, unknown>[]
+                        ppDataKeys.map((key) => {
+                            let {errors} = parsedPPData[key];
+                            return (!isEmpty(errors) ? {[key]: errors} : undefined)
+                          })
+                          .filter((item)=>item !== undefined) as Record<string, unknown>[]
                       );
 
                       setValues({
@@ -1200,23 +1210,23 @@ export const InnerRasterForm = (
                 disabled={faultyPolygonParts.length === 0}
                 label={intl.formatMessage({ id: 'polygon-parts.show-parts-with-errors-on-map.label' })}
                 checked={isFaultyPPVisible}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setShowFaultyPolygonParts(evt.currentTarget.checked);
-                  }}
+                onClick={(evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowFaultyPolygonParts(evt.currentTarget.checked);
+                }}
               />
             </Box>
             <Box className='displayFlex'>
-            { mode === Mode.UPDATE && <Checkbox
+            {
+              mode === Mode.UPDATE &&
+              <Checkbox
                 className='flexCheckItem showOnMapContainer'
                 label={intl.formatMessage({id: 'polygon-parts.show-exisitng-parts-on-map.label'})}
                 checked={showExisitngLayerPartsOnMap}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
-                  }}
-                  />
-                }
+                onClick={(evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
+                }}
+              />
+            }
             </Box>
           </Box>
           <Box className="polygonPartsContainer">

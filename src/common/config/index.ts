@@ -201,6 +201,7 @@ const APP_CONFIG = {
     AREA_THRESHOLD: POLYGON_PARTS.areaThreshold,
     MAX: {
       WFS_FEATURES: POLYGON_PARTS.max.WFSFeatures,
+      SHOW_FOOTPRINT_ZOOM_LEVEL: POLYGON_PARTS.max.showFootprintZoomLevel,
       PER_SHAPE: POLYGON_PARTS.max.perShape,
       VERTICES: POLYGON_PARTS.max.vertices,
     }

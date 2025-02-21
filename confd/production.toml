@@ -52,6 +52,7 @@ keys = [
   "/configuration/polygonparts/geometry/errors/threshold",
   "/configuration/polygonparts/area/threshold",
   "/configuration/polygonparts/max/wfs/features",
+  "/configuration/polygonParts/max/show/footprint/zoom/level",
   "/configuration/polygonparts/max/pershape",
   "/configuration/polygonparts/max/vertices"
 ]

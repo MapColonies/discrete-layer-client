@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Legend, LegendItem, Map, TileLayer, TileWMTS, TileXYZ, useMap, useVectorSource, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Feature } from 'geojson';
@@ -27,7 +27,7 @@ interface GeoFeaturesPresentorProps {
 }
 
 const DEFAULT_PROJECTION = 'EPSG:4326';
-const MIN_FETURES_NUMBER = 5; // minimal set of fetures (source, source_marker, perimeter, perimeter_marker, PPs [at least one])
+const MIN_FEATURES_NUMBER = 5; // minimal set of fetures (source, source_marker, perimeter, perimeter_marker, PPs [at least one])
 const RENDERS_TILL_FULL_FEATURES_SET = 2; // first render with source, second with all PPs and their perimeter geometries
 
 export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> = ({
@@ -47,19 +47,20 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const renderCount = useRef(0);
 
   useEffect(() => {
-    if(geoFeatures && geoFeatures?.length >= MIN_FETURES_NUMBER)
+    if (geoFeatures && geoFeatures?.length >= MIN_FEATURES_NUMBER)
     renderCount.current += 1;
   });
  
   const previewBaseMap = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-array-constructor
     const olBaseMap = new Array();
     let baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isForPreview);
-    if(!baseMap){
+    if (!baseMap) {
       baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isCurrent);
     }
-    if(baseMap){
+    if (baseMap) {
       baseMap.baseRasteLayers.forEach((layer) => {
-        if(layer.type === 'WMTS_LAYER'){
+        if (layer.type === 'WMTS_LAYER') {
           const wmtsOptions = getWMTSOptions({
             url: layer.options.url as string,
             layer: '',
@@ -72,9 +73,9 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
             <TileLayer key={layer.id} options={{ opacity: layer.opacity }}>
               <TileWMTS options={wmtsOptions} />
             </TileLayer>
-          )
+          );
         }
-        if(layer.type === 'XYZ_LAYER'){
+        if (layer.type === 'XYZ_LAYER') {
           const xyzOptions = getXYZOptions({
             url: layer.options.url as string,
           });
@@ -92,7 +93,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const LegendsArray = useMemo(() => {
     const res:LegendItem[] = [];
     PPMapStyles.forEach((value, key)=>{
-      if(!key.includes('MARKER')){
+      if (!key.includes('MARKER')) {
         res.push({
           title: intl.formatMessage({id: `polygon-parts.map-preview-legend.${key}`}) as string,
           style: value as Style
@@ -106,7 +107,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
     const source = useVectorSource();
     const map = useMap();
 
-    if(renderCount.current < RENDERS_TILL_FULL_FEATURES_SET ){
+    if (renderCount.current < RENDERS_TILL_FULL_FEATURES_SET) {
       source.once('change', () => {
         if (source.getState() === 'ready') {
           setTimeout(()=>{ 
@@ -120,21 +121,21 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       <>
         {
           geoFeatures?.map((feat, idx) => {
-          let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
+            let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
 
-          if( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey){
-            featureStyle = selectionStyle;
-          }
+            if (selectedFeatureKey && feat?.properties?.key === selectedFeatureKey) {
+              featureStyle = selectionStyle;
+            }
 
-          return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
-            geometry={{...feat.geometry}} 
-            fit={false}
-            featureStyle={featureStyle}/> : <></>
+            return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
+              geometry={{...feat.geometry}} 
+              fit={false}
+              featureStyle={featureStyle}/> : <></>
           })
         }
       </>
-    )
-  }
+    );
+  };
     
   return (
     <Box style={{...style}}>
@@ -150,7 +151,8 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
           showExisitngPolygonParts && <PolygonPartsExtentVectorLayer layerRecord={layerRecord}/>
         }
         {
-          ppCheck && <PolygonPartsByPolygonVectorLayer 
+          ppCheck &&
+          <PolygonPartsByPolygonVectorLayer 
             layerRecord={layerRecord} 
             maskFeature={geoFeatures?.find((feat)=>{
               return get(feat,'properties.featureType') === FeatureType.PP_PERIMETER;
@@ -162,4 +164,5 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
         <Legend legendItems={LegendsArray} title={intl.formatMessage({id: 'polygon-parts.map-preview-legend.title'})}/>
       </Map>
     </Box>
-    )}
+  );
+}

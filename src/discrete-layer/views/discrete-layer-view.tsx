@@ -4,6 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { find, get, isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
+import { MapMode2D } from 'cesium';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -33,16 +34,18 @@ import {
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
 import CONFIG from '../../common/config';
-import { localStore } from '../../common/helpers/storage';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
+import { currentSite } from '../../common/helpers/siteUrl';
+import { localStore } from '../../common/helpers/storage';
+import { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { LinkType } from '../../common/models/link-type.enum';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
 import { PolygonSelectionUi } from '../components/map-container/polygon-selection-ui_2';
-import { Filters } from '../components/filters/filters';
+// import { Filters } from '../components/filters/filters';
 import { CatalogTreeComponent } from '../components/catalog-tree/catalog-tree';
-import { LayersResultsComponent } from '../components/layers-results/layers-results';
+import { LayersResults } from '../components/layers-results/layers-results';
 import { EntityDialog } from '../components/layer-details/entity.dialog';
 import { JobsDialog } from '../components/job-manager/jobs.dialog';
 import {
@@ -64,6 +67,19 @@ import { PoiEntity } from '../components/map-container/poi-entity';
 import { Terrain } from '../components/map-container/terrain';
 import ActionsMenuDimensionsContext from '../components/map-container/contextMenus/contexts/actionsMenuDimensionsContext';
 import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
+import { IDispatchAction } from '../models/actionDispatcherStore';
+import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
+import { ExportLayerComponent } from '../components/export-layer/export-layer.component';
+import ExportDrawingHandler from '../components/export-layer/export-drawing-handler.component';
+import ExportPolygonsRenderer from '../components/export-layer/export-polygons-renderer.component';
+import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
+import { MapActionResolver } from './components/map-action-resolver.component';
+import { WfsFeature } from '../components/map-container/geojson-map-features/wfs-feature.component';
+import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
+import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
+import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts';
+import { ExtentUpdater } from '../components/map-container/extent-updater';
+import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
 import AppTitle from './components/app-title/app-title.component';
 import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
@@ -75,23 +91,6 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
-import { IDispatchAction } from '../models/actionDispatcherStore';
-import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
-import { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
-import { ExportLayerComponent } from '../components/export-layer/export-layer.component';
-import ExportDrawingHandler from '../components/export-layer/export-drawing-handler.component';
-import ExportPolygonsRenderer from '../components/export-layer/export-polygons-renderer.component';
-import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
-import { MapActionResolver } from './components/map-action-resolver.component';
-import { WfsFeature } from '../components/map-container/geojson-map-features/wfs-feature.component';
-import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
-import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
-import { ExtentUpdater } from '../components/map-container/extent-updater';
-import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
-import { currentSite } from '../../common/helpers/siteUrl';
-import { MapMode2D } from 'cesium';
-
-type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
 const EXPANDED_PANEL_WIDTH = '28%';
 const COLLAPSED_PANEL_WIDTH = '40px';
@@ -139,7 +138,6 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [detailsPanelExpanded, setDetailsPanelExpanded] = useState<boolean>(false);
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
-  const [openImportFromCatalog, setOpenImportFromCatalog] = useState<boolean>(false);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
   const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
@@ -161,7 +159,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     const val = localStore.get('whatsNewVisitedCnt');
-    if(val){
+    if (val) {
       setWhatsNewVisitedCnt(parseInt(val));
     }
   }, [])
@@ -169,7 +167,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
 
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.setLayersImages([...layers], false);
     } else {
       store.discreteLayersStore.setTabviewData(TabViews.SEARCH_RESULTS, layers);
@@ -181,13 +179,13 @@ const DiscreteLayerView: React.FC = observer(() => {
     let fullCatalogLayers: LayerMetadataMixedUnion[] | undefined;
     
     // Tab data is set only when switching tabs.
-    if(activeTabView === TabViews.CATALOG) {
+    if (activeTabView === TabViews.CATALOG) {
       fullCatalogLayers = store.discreteLayersStore.layersImages;
     } else {
       fullCatalogLayers = store.discreteLayersStore.tabViews?.[TabViews.CATALOG].layersImages;
     }
 
-    if(!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
+    if (!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
       const searchLayers = get(data, 'search', []) as ILayerImage[];
       
       /**
@@ -197,7 +195,7 @@ const DiscreteLayerView: React.FC = observer(() => {
        */
       searchLayers.forEach(layer => {
         const isNewLayer = !fullCatalogLayers?.some(catalogLayer => catalogLayer.id === layer.id);
-        if(isNewLayer) {
+        if (isNewLayer) {
           fullCatalogLayers?.push(layer);
         }
       })
@@ -216,7 +214,7 @@ const DiscreteLayerView: React.FC = observer(() => {
      * because the map container will need to resize accordingly to fill up the space.
      * */ 
     const appContainer = document.querySelector('.app-container') as HTMLDivElement;
-    if(!tabsPanelExpanded) {
+    if (!tabsPanelExpanded) {
       appContainer?.style.setProperty(SIDE_PANEL_WIDTH_VARIABLE, COLLAPSED_PANEL_WIDTH);
     } else {
       appContainer?.style.setProperty(SIDE_PANEL_WIDTH_VARIABLE, EXPANDED_PANEL_WIDTH);
@@ -226,12 +224,13 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
     
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.resetSelectedLayer();
+      store.discreteLayersStore.resetPolygonParts();
     }
 
-    if(!isPoiSearchActive) {
+    if (!isPoiSearchActive) {
       setPoi(undefined);
     }
   }, [store.discreteLayersStore.searchParams.geojson])
@@ -255,28 +254,25 @@ const DiscreteLayerView: React.FC = observer(() => {
   }), [intl]);
   /* eslint-enable */
 
-  const memoizedLayers =  useMemo(() => {
+  const memoizedLayers = useMemo(() => {
     return(
       <>
         <MapActionResolver />
         <SelectedLayersContainer/>
         <HighlightedLayer/>
         <LayersFootprints/>
+        <PolygonParts />
       </>
     );
   }, []);
 
-
-  
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);
       store.discreteLayersStore.restoreTabviewData(targetViewIdx);
-  
-      if(activeTabView === TabViews.EXPORT_LAYER) {
+      if (activeTabView === TabViews.EXPORT_LAYER) {
         store.exportStore.setHasExportPreviewed(false);
       }
-  
       setActiveTabView(targetViewIdx);
     }
   };
@@ -306,10 +302,11 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     store.discreteLayersStore.resetSelectedLayer();
-  }, [store.discreteLayersStore.searchParams.recordType])
+    store.discreteLayersStore.resetPolygonParts();
+  }, [store.discreteLayersStore.searchParams.recordType]);
 
   useEffect(() => {
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       void store.discreteLayersStore.clearLayersImages();
   
       // TODO: build query params: FILTERS and SORTS
@@ -322,12 +319,11 @@ const DiscreteLayerView: React.FC = observer(() => {
         start: CONFIG.RUNNING_MODE.START_RECORD,
       }));
     }
-
-  }, [store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters])
+  }, [store.discreteLayersStore.searchParams.geojson, store.discreteLayersStore.searchParams.catalogFilters]);
 
   useEffect(() => {
     const hasFiltersEnabled = store.discreteLayersStore.searchParams.catalogFilters.length > 0 || store.discreteLayersStore.searchParams.geojson;
-    if(hasFiltersEnabled) {
+    if (hasFiltersEnabled) {
       const filters = buildFilters();
       setQuery(store.querySearch({
         opts: {
@@ -337,38 +333,38 @@ const DiscreteLayerView: React.FC = observer(() => {
         start: CONFIG.RUNNING_MODE.START_RECORD,
       }));
     }
-
-  }, [store.discreteLayersStore.searchParams.recordType])
+  }, [store.discreteLayersStore.searchParams.recordType]);
 
   const handlePolygonSelected = (geometry: Geometry): void => {
     store.discreteLayersStore.searchParams.setLocation(geometry);
   };
 
   const handleCatalogFiltersApply = (filters: FilterField[]): void => {
-    if(activeTabView !== TabViews.SEARCH_RESULTS) {
+    if (activeTabView !== TabViews.SEARCH_RESULTS) {
       handleTabViewChange(TabViews.SEARCH_RESULTS);
     }
-
     store.discreteLayersStore.resetSelectedLayer();
+    store.discreteLayersStore.resetPolygonParts();
     store.discreteLayersStore.searchParams.setCatalogFilters(filters);
   };
 
   const handleCatalogFiltersReset = (): void => {
-    if(store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
+    if (store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
 
     store.discreteLayersStore.searchParams.resetCatalogFilters();
 
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
 
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       void store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.resetSelectedLayer();
+      store.discreteLayersStore.resetPolygonParts();
     }
     
     // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
     // If any of the geographical filters is enabled, then we want to stay at the search results tab.
     
-    if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
+    if (typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
       handleTabViewChange(TabViews.CATALOG);
       setSearchResultsError(undefined);
     }
@@ -381,11 +377,10 @@ const DiscreteLayerView: React.FC = observer(() => {
       setCorners(undefined);
       setSearchResultsError(undefined);
 
-    if(activeTabView !== TabViews.CATALOG) {
+    if (activeTabView !== TabViews.CATALOG) {
       // Catalog filters are being cleaned from inside the catalog filters panel.
       // If there's any filter enabled, then we want to stay at the search results tab.
-
-      if(store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
+      if (store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
         handleTabViewChange(TabViews.CATALOG);
       }
     }
@@ -394,14 +389,13 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    if(activeTabView !== TabViews.CATALOG) {
+    if (activeTabView !== TabViews.CATALOG) {
       handlePolygonReset();
       setActiveTabView(TabViews.CATALOG);
     }
-
     store.exportStore.reset();
     store.discreteLayersStore.resetTabView();
-  }, [userRole])
+  }, [userRole]);
 
   const handleNewEntityDialogClick = (recordType: RecordType): void => {
     switch (recordType) {
@@ -533,7 +527,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const onFlyTo = useCallback((): void => {
-    setRect( new CesiumRectangle());
+    setRect(new CesiumRectangle());
     dispatchAction({
       action: UserAction.SYSTEM_CALLBACK_FLYTO,
       data: { selectedLayer: store.discreteLayersStore.selectedLayer }
@@ -603,7 +597,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const getActiveTabHeader = (tabIdx: number, site: string): JSX.Element => {
 
-    if(!tabsPanelExpanded) {
+    if (!tabsPanelExpanded) {
       return (
         <div className="tabHeaderContainer">
            <PanelExpanderButton />
@@ -919,7 +913,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 {
                   getActiveTabHeader(activeTabView, site)
                 }
-                <LayersResultsComponent
+                <LayersResults
                   searchLoading={searchLoading}
                   searchError={searchResultsError} 
                   style={{
@@ -947,20 +941,22 @@ const DiscreteLayerView: React.FC = observer(() => {
               </Box>
             }
           </Box>
-          {activeTabView !== TabViews.EXPORT_LAYER && 
+          {
+            activeTabView !== TabViews.EXPORT_LAYER && 
             <Box className="sidePanelContainer sideDetailsPanel" style={{
               backgroundColor: theme.custom?.GC_ALTERNATIVE_SURFACE as string,
               height: detailsPanelExpanded ? '50%' : '25%',
               display: tabsPanelExpanded ? 'block' : 'none',
             }}>
-            <DetailsPanel
-              activeTabView={activeTabView}
-              isEntityDialogOpen = {isEntityDialogOpen}
-              setEntityDialogOpen = {setEntityDialogOpen}
-              detailsPanelExpanded = {detailsPanelExpanded}
-              setDetailsPanelExpanded = {setDetailsPanelExpanded} 
-            />
-          </Box>}
+              <DetailsPanel
+                activeTabView={activeTabView}
+                isEntityDialogOpen = {isEntityDialogOpen}
+                setEntityDialogOpen = {setEntityDialogOpen}
+                detailsPanelExpanded = {detailsPanelExpanded}
+                setDetailsPanelExpanded = {setDetailsPanelExpanded} 
+              />
+            </Box>
+          }
         </Box>
         <Box className="mapAppContainer">
         <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>

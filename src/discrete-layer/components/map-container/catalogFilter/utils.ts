@@ -1,7 +1,7 @@
-import { get, isEmpty } from "lodash";
-import { FieldConfigModelType, FilterableFieldConfigModelType } from "../../../models";
-import { FilterField } from "../../../models/RootStore.base";
-import { isDateRange } from "@map-colonies/react-components";
+import { isEmpty } from 'lodash';
+import { FieldConfigModelType, FilterableFieldConfigModelType } from '../../../models';
+import { FilterField } from '../../../models/RootStore.base';
+import { isDateRange } from '@map-colonies/react-components';
 
 export enum CustomFilterOperations {
   DATE_RANGE = 'dateRange',

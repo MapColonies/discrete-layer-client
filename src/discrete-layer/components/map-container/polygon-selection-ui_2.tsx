@@ -1,18 +1,15 @@
-import React, {useState, useMemo, useEffect, useRef} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
-import { IconButton, Select, TextField, Tooltip, useTheme } from '@map-colonies/react-core';
+import { IconButton, Tooltip, useTheme } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
-import CONFIG from '../../../common/config';
 import { useStore } from '../../models/RootStore';
-import { RecordType } from '../../models/RecordTypeEnum';
+import { FilterField } from '../../models/RootStore.base';
 import { BBoxCorners, BBoxDialog } from './bbox.dialog';
+import { CatalogFilterPanel } from './catalogFilter/catalog-filter-panel.component';
+import { FreeTextSearch } from './freeTextSearch.component';
 import { IPOI, PoiDialog } from './poi.dialog';
 
 import './polygon-selection-ui.css';
-import { CatalogFilterPanel } from './catalogFilter/catalog-filter-panel.component';
-import { FilterField } from '../../models/RootStore.base';
-import { FreeTextSearch } from './freeTextSearch.component';
 
 export const Divider: React.FC = () => {
   const theme = useTheme();
@@ -159,9 +156,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             }}
           />
         </Tooltip>
-        <Tooltip
-          content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}
-        >
+        <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
           <IconButton
             className={getActiveClass(
               'mc-icon-Coordinates',
@@ -194,23 +189,24 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             onFiltersApply(filters);
           }}
         />
-        {open && (
+        {
+          open &&
           <BBoxDialog
             isOpen={open}
             onSetOpen={setOpen}
             onPolygonUpdate={onPolygonUpdate}
             corners={corners}
           />
-        )}
-        {openPoiDialog && (
+        }
+        {
+          openPoiDialog &&
           <PoiDialog
             isOpen={openPoiDialog}
             onSetOpen={setOpenPoiDialog}
             onPoiUpdate={onPoiUpdate}
             poi={poi}
           />
-        )}
-
+        }
         <CatalogFilterPanel
           onFiltersReset={() => {
             setIsCatalogFiltersEnabled(false);

@@ -24,7 +24,6 @@ interface PolygonPartsVectorLayerProps {
 
 const START_OFFSET = 0;
 const START_PAGE = 0;
-const ZOOM_LEVEL_STOP_FETCHING_PP = 7; // TODO: to take from configuration
 const DEBOUNCE_MOUSE_INTERVAL = 500;
 
 export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord}) => {
@@ -114,8 +113,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
 
     const currentZoomLevel = mapOl.getView().getZoom();
 
-    if(currentZoomLevel && currentZoomLevel < ZOOM_LEVEL_STOP_FETCHING_PP) 
-    {
+    if (currentZoomLevel && currentZoomLevel < (CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL - 3)) {
       setExistingPolygoParts([
         {
           type: 'Feature',
@@ -133,27 +131,30 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
           count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
           startIndex
         } 
-    }));
+      }));
     }
   };
     
   return (
     <VectorLayer>
       <VectorSource>
-        {existingPolygoParts.map((feat, idx) => {
+        {
+          existingPolygoParts.map((feat, idx) => {
             const greenStyle = new Style({
               text: createTextStyle(feat, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE, intl.formatMessage({id: 'polygon-parts.map-preview.zoom-before-fetch'})),
               stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),
               fill: PPMapStyles.get(FeatureType.EXISTING_PP)?.getFill(),
             });
-
-            return feat ? <GeoJSONFeature 
-              geometry={{...feat.geometry}} 
-              fit={false}
-              featureStyle={greenStyle}
-            /> : <></>
-          }
-        )}
+            return feat ?
+              <GeoJSONFeature 
+                key={idx}
+                geometry={{...feat.geometry}} 
+                fit={false}
+                featureStyle={greenStyle}
+              /> :
+              <></>
+          })
+        }
       </VectorSource>
     </VectorLayer>
   );

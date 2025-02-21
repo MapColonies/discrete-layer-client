@@ -57,7 +57,7 @@ if (!window._env_) {
       },
       NUMBER_OF_CHARACTERS_LIMIT: 18,
       ACCESS_TOKEN: {
-        attributeName: 'x-api-key',
+        attributeName: 'token',
         injectionType: 'queryParam',
         tokenValue: 'TOKEN'
       },
@@ -71,7 +71,8 @@ if (!window._env_) {
         geometryErrorsThreshold: 0.05,
         areaThreshold: 5,
         max: {
-          WFSFeatures: 1000000,
+          WFSFeatures: 500,
+          showFootprintZoomLevel: 10,
           perShape: 30000,
           vertices: 30000000,
         }

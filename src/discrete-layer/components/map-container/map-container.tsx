@@ -28,7 +28,6 @@ import {
   SupportedLocales
 } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
-import { LayersResultsComponent } from '../layers-results/layers-results';
 import { DrawerOpener } from '../drawer-opener/drawer-opener';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { SelectedLayersContainer } from './selected-layers-container';
@@ -200,7 +199,8 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
               </Box>)
             }
 
-            {resultsOpen && (
+            {
+              resultsOpen &&
               <Box className="drawerPosition" style={{  height: '600px', width: mapActionsWidth, zIndex: -1}}>
                 <Drawer dismissible open={resultsOpen}>
                   <DrawerHeader>
@@ -208,12 +208,9 @@ export const MapContainer: React.FC<MapContainerProps> = (props) => {
                     <DrawerSubtitle>Subtitle</DrawerSubtitle>
                   </DrawerHeader>
                   <DrawerContent>
-                    {/* <LayersResultsComponent 
-                      style={{height: '450px',width: '100%'}}
-                    /> */}
                   </DrawerContent>
                 </Drawer>
-              </Box>)
+              </Box>
             }
 
             <DrawerOpener

@@ -3,9 +3,9 @@ import React, { useCallback, useEffect } from 'react';
 import { NodeData } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
 import { Feature } from 'geojson';
-import _, { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { DrawType } from '@map-colonies/react-components';
-import { existStatus, isUnpublished } from '../../../common/helpers/style';
+import { existStatus, isPolygonPartsShown, isUnpublished } from '../../../common/helpers/style';
 import {
   LayerRasterRecordModelKeys,
   LayerDemRecordModelKeys,
@@ -20,27 +20,25 @@ import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel'
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
-import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
-import { LayerMetadataMixedUnion } from '../../models';
 import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
+import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
+import { useEnums } from '../../../common/hooks/useEnum.hook';
 import CONFIG from '../../../common/config';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
+import { LayerMetadataMixedUnion } from '../../models';
 import { TabViews } from '../tab-views';
-import { useEnums } from '../../../common/hooks/useEnum.hook';
 
-const FIRST = 0;
-
-interface ActionResolverComponentProps {
+interface ActionResolverProps {
   handleOpenEntityDialog: (open: boolean) => void;
   handleFlyTo: () => void;
   handleTabViewChange: (tabView: TabViews) => void;
   activeTabView: TabViews;
 }
 
-export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((props) => {
+export const ActionResolver: React.FC<ActionResolverProps> = observer((props) => {
   const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange, activeTabView } = props;
 
   const store = useStore();
@@ -50,7 +48,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
   
   const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
   const { setDemHeightsOptions } = useHandleDemHeightsRequests();
-  const { setGetPolygonPartsFeatureOptions } = useHandleWfsPolygonPartsRequests();
+  const { setGetPolygonPartsFeatureOptions } = useHandleWfsPolygonPartsRequests(); //<-from context menu
   
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
@@ -78,7 +76,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         
         const shouldUpdateTreeNode = activeTabView === TabViews.CATALOG;
 
-        if(shouldUpdateTreeNode) {
+        if (shouldUpdateTreeNode) {
           store.catalogTreeStore.updateNodeById(selectedLayer.id, {
             ...selectedLayer,
             footprintShown: isShown,
@@ -93,19 +91,35 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
     ]
   );
 
+  const polygonPartsShow = useCallback(
+    (isShown: boolean, selectedLayer: ILayerImage) => {
+      if (!isEmpty(selectedLayer) && activeTabView === TabViews.CATALOG) {
+        const activePPLayer = store.discreteLayersStore.layersImages?.find(layer => isPolygonPartsShown(layer as unknown as Record<string, unknown>)) as LayerRasterRecordModelType;
+        store.discreteLayersStore.showPolygonParts(selectedLayer.id, isShown);
+        if (activePPLayer) {
+          store.catalogTreeStore.updateNodeById(activePPLayer.id, {...activePPLayer, polygonPartsShown: false});
+        }
+        store.catalogTreeStore.updateNodeById(selectedLayer.id, {...selectedLayer});
+      }
+    },
+    [
+      store.discreteLayersStore.showPolygonParts,
+      store.catalogTreeStore.updateNodeById,
+      activeTabView
+    ]
+  );
+
   const basePPUpdateErrorShow = useCallback(
     (ppResolutionsUpdateError: Record<string,string[]>) => {
       store.discreteLayersStore.setCustomValidationError(ppResolutionsUpdateError);
     },
     []
   );
-  
+
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
       console.log(`  ${action} EVENT`, data);
-      let numOfLayers: number;
-      let order: number;
 
       switch (action) {
         case 'LayerRasterRecord.edit':
@@ -229,19 +243,18 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
 
           setGetPolygonPartsFeatureOptions({
             feature: {
-              "type": "Feature",
-              "properties": {},
-              "geometry": {
-                "coordinates": [
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                coordinates: [
                   coordinates.longitude.toString(),
                   coordinates.latitude.toString()
                 ],
-                "type": "Point"
+                type: 'Point'
               }
             },
             typeName: getWFSFeatureTypeName(data?.layerRecord as LayerRasterRecordModelType, ENUMS),
             shouldFlyToFeatures: true,
-            // filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,
             dWithin: 0
           });
@@ -351,6 +364,18 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT: {
           const selectedLayer = data.selectedLayer as ILayerImage;
           baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_SHOWPOLYGONPARTS: {
+          const selectedLayer = data.selectedLayer as LayerRasterRecordModelType;
+          polygonPartsShow(selectedLayer.polygonPartsShown as boolean, selectedLayer);
+          if (selectedLayer.polygonPartsShown) {
+            store.discreteLayersStore.resetPolygonPartsInfo();
+            store.discreteLayersStore.setPolygonPartsLayer(selectedLayer);
+            // PP query moved to polygonParts.tsx
+          } else {
+            store.discreteLayersStore.resetPolygonParts();
+          }
           break;
         }
         case UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE: {

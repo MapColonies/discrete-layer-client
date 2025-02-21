@@ -154,7 +154,8 @@ env:
     geometryErrorsThreshold: 0.05
     areaThreshold: 5
     max:
-      WFSFeatures: 1000000
+      WFSFeatures: 500
+      showFootprintZoomLevel: 10
       perShape: 300
       vertices: 300000
 route:

@@ -26,6 +26,7 @@ export const useGeneralExportBehavior = (cbFunction: () => void): void => {
 
       store.discreteLayersStore.setLayersImages([layerToExport], true);
       store.discreteLayersStore.showLayer(layerToExport.id, true, null);
+      store.discreteLayersStore.showPolygonParts(layerToExport.id, true);
       
       cbFunction();
 

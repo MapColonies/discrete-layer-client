@@ -1,12 +1,12 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form';
-import { lastDayOfYear, startOfDay, startOfMonth, startOfWeek, startOfYear, subDays, subWeeks, subYears } from 'date-fns';
+import { lastDayOfYear, startOfDay, startOfYear, subDays, subYears } from 'date-fns';
+import { isEmpty } from 'lodash';
 import { Box, DateRangePicker, isDateRange } from '@map-colonies/react-components';
 import { getDateformatType } from '../../../../../common/helpers/formatters';
 import { FieldConfigModelType, FilterFieldValidationModelType } from '../../../../models';
 import CatalogFilterFieldLabel from './catalog-filter-field-label.component';
-import { isEmpty } from 'lodash';
 
 interface CatalogFilterDateRangeFieldProps {
   fieldDescriptor: FieldConfigModelType;
@@ -32,7 +32,7 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
     THIRTY_DAYS: intl.formatMessage({id: 'catalog-filter.thirtyDays.date-shortcuts'}),
     THIS_YEAR: intl.formatMessage({id: 'catalog-filter.thisYear.date-shortcuts'}),
     LAST_YEAR: intl.formatMessage({id: 'catalog-filter.lastYear.date-shortcuts'}),
-  }
+  };
 
   return (
     <Box
