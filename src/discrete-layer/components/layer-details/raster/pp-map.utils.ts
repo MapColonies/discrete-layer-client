@@ -138,7 +138,7 @@ const stringDivider = (str: string, width: number, spaceReplacer: string): strin
 }
 
 const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>, defaultText?: string) => {
-  const type = featureConfig.text;
+  const type = get(feature.properties, 'text') ?? featureConfig.text;
   const maxResolution = parseInt(featureConfig.maxreso);
   const zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
     .map((res) => res.toString())
@@ -149,7 +149,7 @@ const getText = (feature: Feature, resolution: number, featureConfig: Record<str
   let text = defaultText ?? '';
   
   if(zoomLevel > -1){
-    text = `${ingestionDateUTC} (v${updatedInVersion}) \n\n ${zoomLevel}`;
+    text = `${ingestionDateUTC}\n\nv${updatedInVersion} (${zoomLevel})`;
   }
 
   if (resolution > maxResolution) {
