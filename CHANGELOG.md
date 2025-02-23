@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.20.0...v2.21.0) (2025-02-23)
+
+
+### Features
+
+* ol dynamically text in pp ([#593](https://github.com/MapColonies/discrete-layer-client/issues/593)) ([bbba27f](https://github.com/MapColonies/discrete-layer-client/commit/bbba27fb88ce3486db697215b9886a62f11b5c9d))
+
 ## [2.20.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.19.1...v2.20.0) (2025-02-20)
 
 

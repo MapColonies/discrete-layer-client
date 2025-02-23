@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { debounce } from 'lodash';
 import { MapEvent } from 'ol';
+import { Size } from 'ol/size';
+import GeoJSON from "ol/format/GeoJSON";
+import intersect from '@turf/intersect';
+import { polygon } from '@turf/helpers';
 import bboxPolygon from '@turf/bbox-polygon';
 import { observer } from 'mobx-react';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
@@ -52,7 +56,9 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
           geometry: {
             ...layerRecord?.footprint
           },
-          properties: null
+          properties: {
+            text: 'hide'
+          }
         }
       ]);
       getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
@@ -124,6 +130,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
         }
       ])
     } else {
+      showLoadingSpinner(true);
       setQuery(store.queryGetPolygonPartsFeature({ 
         data: {
           feature:  bboxPolygon(bbox) as GeojsonFeatureInput,
@@ -145,8 +152,22 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
               stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),
               fill: PPMapStyles.get(FeatureType.EXISTING_PP)?.getFill(),
             });
+
+            const BUFFER = 2; // Add extra pixels to perimeter around the OL extent in order to discard new geometry boundaries
+            const size = mapOl.getSize() as Size;
+            const bbox = bboxPolygon(mapOl.getView().calculateExtent([size[0] + BUFFER,size[1] + BUFFER]) as BBox);
+            const extentPolygon = polygon(bbox.geometry.coordinates);
+            
+            //@ts-ignore
+            const featureClippedPolygon = intersect(feat, extentPolygon);
+           
+            if (featureClippedPolygon) {
+              const geometry = new GeoJSON().readGeometry(featureClippedPolygon.geometry);
+              greenStyle.setGeometry(geometry);
+            }
+
             return feat ?
-              <GeoJSONFeature 
+              <GeoJSONFeature
                 key={idx}
                 geometry={{...feat.geometry}} 
                 fit={false}
