@@ -132,6 +132,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
         }
       ])
     } else {
+      showLoadingSpinner(true);
       setQuery(store.queryGetPolygonPartsFeature({ 
         data: {
           feature:  bboxPolygon(bbox) as GeojsonFeatureInput,
