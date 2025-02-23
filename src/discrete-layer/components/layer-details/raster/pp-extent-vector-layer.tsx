@@ -31,7 +31,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const mapOl = useMap();
   const intl = useIntl();
 
-  const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
+  const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
   const [page, setPage] = useState(START_PAGE);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
@@ -46,7 +46,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
       setPage(START_PAGE);
-      setExistingPolygoParts([
+      setExistingPolygonParts([
         {
           type: 'Feature',
           geometry: {
@@ -55,13 +55,13 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
           properties: null
         }
       ]);
-      getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
+      getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
     };
 
     const debounceCall = debounce(handleMoveEndEvent, DEBOUNCE_MOUSE_INTERVAL);
     mapOl.on('moveend', debounceCall);
 
-    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
+    getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
     
     return (): void => {
       try {
@@ -74,18 +74,18 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   
   useEffect(() => {
     if (!loading && data) {
-      setExistingPolygoParts([
-        ...(page === 0 ? existingPolygoParts.slice(1) : existingPolygoParts),
+      setExistingPolygonParts([
+        ...(page === 0 ? existingPolygonParts.slice(1) : existingPolygonParts),
         ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
       ]);
-      if(data.getPolygonPartsFeature.numberReturned as number !== 0){
-        getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
+      if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
+        getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
       }
     } 
-    if (loading){
+    if (loading) {
       showLoadingSpinner(true);
-    }else{
+    } else {
       showLoadingSpinner(false);
     }
   }, [data, loading]);
@@ -106,7 +106,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     }
   }, [error, loading]);
 
-  const getExistingPolygoParts = (bbox: BBox, startIndex: number) => {
+  const getExistingPolygonParts = (bbox: BBox, startIndex: number) => {
     // const fakePP = squareGrid(bbox, 10, {units: 'miles'});
     // console.log(fakePP);
     // setExistingPolygoParts(fakePP.features);
@@ -114,7 +114,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     const currentZoomLevel = mapOl.getView().getZoom();
 
     if (currentZoomLevel && currentZoomLevel < (CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL - 3)) {
-      setExistingPolygoParts([
+      setExistingPolygonParts([
         {
           type: 'Feature',
           geometry: {
@@ -139,7 +139,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
     <VectorLayer>
       <VectorSource>
         {
-          existingPolygoParts.map((feat, idx) => {
+          existingPolygonParts.map((feat, idx) => {
             const greenStyle = new Style({
               text: createTextStyle(feat, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE, intl.formatMessage({id: 'polygon-parts.map-preview.zoom-before-fetch'})),
               stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),
