@@ -153,8 +153,9 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
               fill: PPMapStyles.get(FeatureType.EXISTING_PP)?.getFill(),
             });
 
+            const BUFFER = 2; // Add extra pixels to perimeter around the OL extent in order to discard new geometry boundaries
             const size = mapOl.getSize() as Size;
-            const bbox = bboxPolygon(mapOl.getView().calculateExtent([size[0] + 2,size[1] + 2]) as BBox);
+            const bbox = bboxPolygon(mapOl.getView().calculateExtent([size[0] + BUFFER,size[1] + BUFFER]) as BBox);
             const extentPolygon = polygon(bbox.geometry.coordinates);
             
             //@ts-ignore
