@@ -27,7 +27,7 @@ interface PolygonPartsVectorLayerProps {
 }
 
 const START_OFFSET = 0;
-const START_PAGE = 0;
+const STARTING_PAGE = 0;
 const DEBOUNCE_MOUSE_INTERVAL = 500;
 
 export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord}) => {
@@ -36,7 +36,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const intl = useIntl();
 
   const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
-  const [page, setPage] = useState(START_PAGE);
+  const [page, setPage] = useState(STARTING_PAGE);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
@@ -49,7 +49,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
-      setPage(START_PAGE);
+      setPage(STARTING_PAGE);
       setExistingPolygonParts([
         {
           type: 'Feature',
@@ -76,7 +76,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
         console.log('OL "moveEnd" remove listener failed', e);
       }
     };
-  },[]);
+  }, []);
   
   useEffect(() => {
     if (!loading && data) {

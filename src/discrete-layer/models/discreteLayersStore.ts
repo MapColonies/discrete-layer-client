@@ -27,6 +27,7 @@ import { FieldConfigModelType } from './FieldConfigModel';
 import { GetFeatureModelType } from './GetFeatureModel';
 import { RecordType } from './RecordTypeEnum';
 import { WfsPolygonPartsGetFeatureParams } from './RootStore.base';
+import { WfsFeatureModelType } from './WfsFeatureModel';
 
 export type LayersImagesResponse = ILayerImage[];
 
@@ -43,7 +44,7 @@ export interface ITabViewData {
   layersImages?: ILayerImage[];
   filters?: unknown;
   polygonPartsLayer?: ILayerImage;
-  polygonPartsInfo?: PolygonPartsWfsFeatureInfo;
+  polygonPartsInfo?: WfsFeatureModelType[];
 }
 
 const INITIAL_STATE = {
@@ -62,7 +63,7 @@ const INITIAL_STATE = {
   customValidationError: undefined,
   ppCollisionCheckInProgress: undefined,
   polygonPartsLayer: undefined,
-  polygonPartsInfo: undefined,
+  polygonPartsInfo: [],
 };
 
 export type PolygonPartsWfsFeatureInfo = GetFeatureModelType & Pick<WfsPolygonPartsGetFeatureParams, 'feature'>;
@@ -88,7 +89,7 @@ export const discreteLayersStore = ModelBase
     customValidationError: types.maybe(types.frozen<Record<string,string[]>|undefined>(INITIAL_STATE.customValidationError)),
     ppCollisionCheckInProgress: types.maybe(types.frozen<boolean|undefined>(INITIAL_STATE.ppCollisionCheckInProgress)),
     polygonPartsLayer: types.maybe(types.frozen<ILayerImage>(INITIAL_STATE.polygonPartsLayer as unknown as ILayerImage)),
-    polygonPartsInfo: types.maybe(types.frozen<PolygonPartsWfsFeatureInfo>()),
+    polygonPartsInfo: types.maybe(types.frozen<WfsFeatureModelType[]>(INITIAL_STATE.polygonPartsInfo)),
     
     // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
@@ -269,12 +270,12 @@ export const discreteLayersStore = ModelBase
           self.tabViews[idxTabViewToUpdate].layersImages = preparedLayersImages;
           self.tabViews[idxTabViewToUpdate].selectedLayer = undefined;
           self.tabViews[idxTabViewToUpdate].polygonPartsLayer = undefined;
-          self.tabViews[idxTabViewToUpdate].polygonPartsInfo = undefined;
+          self.tabViews[idxTabViewToUpdate].polygonPartsInfo = [];
         } else {
           self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
           self.tabViews[idxTabViewToUpdate].polygonPartsLayer = self.polygonPartsLayer ? { ...self.polygonPartsLayer } : undefined;
-          self.tabViews[idxTabViewToUpdate].polygonPartsInfo = self.polygonPartsInfo ? { ...self.polygonPartsInfo } : undefined;
-          self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
+          self.tabViews[idxTabViewToUpdate].polygonPartsInfo = [ ...(self.polygonPartsInfo ?? []) ];
+          self.tabViews[idxTabViewToUpdate].layersImages = [ ...(self.layersImages ?? []) ];
         }
       } 
     }
@@ -284,7 +285,7 @@ export const discreteLayersStore = ModelBase
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
         self.selectedLayer = self.tabViews[idxTabViewToUpdate].selectedLayer;
         self.polygonPartsLayer = self.tabViews[idxTabViewToUpdate].polygonPartsLayer;
-        self.polygonPartsInfo = self.tabViews[idxTabViewToUpdate].polygonPartsInfo;
+        self.polygonPartsInfo = self.tabViews[idxTabViewToUpdate].polygonPartsInfo ?? [];
         self.layersImages = self.tabViews[idxTabViewToUpdate].layersImages ?? [];
       } 
     }
@@ -418,12 +419,12 @@ export const discreteLayersStore = ModelBase
       self.polygonPartsLayer = layer ? {...layer} : undefined;
     }
 
-    function setPolygonPartsInfo(polygonPartsInfo: PolygonPartsWfsFeatureInfo): void {
-      self.polygonPartsInfo = polygonPartsInfo;
+    function setPolygonPartsInfo(polygonPartsInfo: WfsFeatureModelType[]): void {
+      self.polygonPartsInfo = [ ...(polygonPartsInfo ?? []) ];
     }
 
     function resetPolygonPartsInfo(): void {
-      self.polygonPartsInfo = undefined;
+      self.polygonPartsInfo = [];
     }
 
     function resetPolygonParts(): void {

@@ -224,7 +224,7 @@
   "polygon-parts.map-preview-legend.EXISTING_PP": "Existing polygon part",
   "polygon-parts.map-preview-legend.SELECTED_FILL": "Selected polygon part",
   "polygon-parts.map-preview-legend.ILLEGAL_PP": "Polygon part with illegal resolution",
-  "polygon-parts.map-preview.zoom-before-fetch": "Zoom-in to see the parts",
+  "polygon-parts.map-preview.zoom-before-fetch": "Zoom in to see the parts",
 
   "field.actions.edit-draft": "Edit draft",
   "field.actions.more": "More options",

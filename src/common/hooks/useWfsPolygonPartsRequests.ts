@@ -6,11 +6,12 @@ import {
   useStore,
 } from '../../discrete-layer/models';
 import { WfsPolygonPartsGetFeatureParams } from '../../discrete-layer/models/RootStore.base';
+import CONFIG from '../config';
 
 type GetFeatureOptions = WfsPolygonPartsGetFeatureParams;
 
 const useWfsPolygonPartsRequests = (): {
-  data: { getPolygonPartsFeature: GetFeatureModelType} | undefined;
+  data: { getPolygonPartsFeature: GetFeatureModelType } | undefined;
   loading: boolean;
   queryPolygonPartsFeatureOptions: WfsPolygonPartsGetFeatureParams | undefined;
   setQueryPolygonPartsFeatureOptions: (options: GetFeatureOptions) => void;
@@ -18,12 +19,14 @@ const useWfsPolygonPartsRequests = (): {
   const store = useStore();
   const [queryPolygonPartsFeatureOptions, setQueryPolygonPartsFeatureOptions] = useState<GetFeatureOptions>();
 
-  const { data, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
+  const { data, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType }>();
 
   useEffect(() => {
     if (queryPolygonPartsFeatureOptions) {
       setQuery(store.queryGetPolygonPartsFeature({
-        data: { ...queryPolygonPartsFeatureOptions }
+        data: {
+          ...queryPolygonPartsFeatureOptions
+        }
       }));
     }
   }, [queryPolygonPartsFeatureOptions]);
@@ -34,7 +37,17 @@ const useWfsPolygonPartsRequests = (): {
         ...cloneDeep(data.getPolygonPartsFeature),
         feature: queryPolygonPartsFeatureOptions.feature,
       };
-      store.discreteLayersStore.setPolygonPartsInfo(featureInfo);
+      if (data.getPolygonPartsFeature.numberReturned !== 0) {
+        if (featureInfo.features) {
+          store.discreteLayersStore.setPolygonPartsInfo(featureInfo.features);
+        }
+        const startIndex = queryPolygonPartsFeatureOptions.startIndex as number;
+        const nextPage = startIndex / CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES + 1;
+        setQueryPolygonPartsFeatureOptions({
+          ...queryPolygonPartsFeatureOptions,
+          startIndex: nextPage * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES
+        });
+      }
     } 
   }, [data, loading]);
 
