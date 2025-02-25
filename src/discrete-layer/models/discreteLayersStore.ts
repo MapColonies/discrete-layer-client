@@ -423,6 +423,10 @@ export const discreteLayersStore = ModelBase
       self.polygonPartsInfo = [ ...(polygonPartsInfo ?? []) ];
     }
 
+    function addPolygonPartsInfo(polygonPartsInfo: WfsFeatureModelType[]): void {
+      self.polygonPartsInfo = [ ...(self.polygonPartsInfo ?? []), ...(polygonPartsInfo ?? []) ];
+    }
+
     function resetPolygonPartsInfo(): void {
       self.polygonPartsInfo = [];
     }
@@ -469,6 +473,7 @@ export const discreteLayersStore = ModelBase
       setPPCollisionCheckInProgress,
       setPolygonPartsLayer,
       setPolygonPartsInfo,
+      addPolygonPartsInfo,
       resetPolygonPartsInfo,
       resetPolygonParts
     };

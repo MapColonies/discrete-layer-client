@@ -4,6 +4,7 @@ import {
   GetFeatureModelType,
   useQuery,
   useStore,
+  WfsFeatureModelType,
 } from '../../discrete-layer/models';
 import { WfsPolygonPartsGetFeatureParams } from '../../discrete-layer/models/RootStore.base';
 import CONFIG from '../config';
@@ -37,10 +38,12 @@ const useWfsPolygonPartsRequests = (): {
         ...cloneDeep(data.getPolygonPartsFeature),
         feature: queryPolygonPartsFeatureOptions.feature,
       };
+      if (queryPolygonPartsFeatureOptions.startIndex === 0) {
+        store.discreteLayersStore.setPolygonPartsInfo(featureInfo.features as WfsFeatureModelType[]);
+      } else {
+        store.discreteLayersStore.addPolygonPartsInfo(featureInfo.features as WfsFeatureModelType[]);
+      }
       if (data.getPolygonPartsFeature.numberReturned !== 0) {
-        if (featureInfo.features) {
-          store.discreteLayersStore.setPolygonPartsInfo(featureInfo.features);
-        }
         const startIndex = queryPolygonPartsFeatureOptions.startIndex as number;
         const nextPage = startIndex / CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES + 1;
         setQueryPolygonPartsFeatureOptions({
