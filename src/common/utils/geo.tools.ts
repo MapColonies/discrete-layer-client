@@ -10,10 +10,19 @@ import simplify from "@turf/simplify";
 import * as turf from '@turf/turf';
 import { Feature, MultiPolygon, Polygon, Position, Geometry } from "geojson";
 import { PolygonPartRecordModelType } from "../../discrete-layer/models";
+import { geoJSONValidation } from './geojson.validation';
 
 export const DEGREES_PER_METER = 0.00001;
 export const ZERO_MERIDIAN = 0;
 export const ANTI_MERIDIAN = 180;
+
+export type geoArgs = {name: string, value: any}[];
+
+export type geoCustomChecks = {
+  validationFunc: ((value: string, args: geoArgs) => geoJSONValidation | undefined)[],
+  validationFuncArgs: geoArgs
+};
+
 const checkPolygon = (coordinates: Position[][], meridian: number) => {
     for (const ring of coordinates) {
         for (let i = 0; i < ring.length - 1; i++) {
@@ -153,17 +162,22 @@ export const area = (geometry: AllGeoJSON) => {
     return turf.area(geometry as unknown as  Feature<any> | FeatureCollection<any> | turf.helpers.Geometry);
 }
 
+export const isSmallArea = (area: number, pixelAreaThreshold: number, resolutionMeter: number): boolean => {
+  //IF($area > (sqrt(10) * to_real("resolution")) ^ 2 , 'Good', 'Small')
+  return (area > Math.pow((Math.sqrt(pixelAreaThreshold) * resolutionMeter), 2)) ? false : true;
+}
+
 // Function to detect small holes in Polygon and MultiPolygon
-export const countSmallHoles = (feature:  Feature<any>, threshold: number) => {
+export const countSmallHoles = (feature:  Feature<any>, threshold: number, resolution: number) => {
   let ret = 0;
   const featureGeometry = feature.geometry ?? feature;
   const type = featureGeometry.type;
 
   if (type === 'Polygon') {
-    ret = countPolygonHoles(featureGeometry.coordinates, threshold);
+    ret = countPolygonHoles(featureGeometry.coordinates, threshold, resolution);
   } else if (type === 'MultiPolygon') {
     featureGeometry.coordinates.forEach((polygon: Position[][]) => {
-      ret += countPolygonHoles(polygon, threshold);
+      ret += countPolygonHoles(polygon, threshold, resolution);
     });
   } else {
     console.log('Feature is not a Polygon or MultiPolygon.');
@@ -175,13 +189,13 @@ export const countSmallHoles = (feature:  Feature<any>, threshold: number) => {
   return ret;
 }
 
-const countPolygonHoles = (coordinates: Position[][], threshold: number): number => {
+const countPolygonHoles = (coordinates: Position[][], threshold: number, resolution: number): number => {
   let ret = 0;
   const [outerRing, ...holes] = coordinates;
   holes.forEach((hole) => {
     const holePolygon = turf.polygon([hole]);
-    const holeArea = turf.area(holePolygon);
-    if (holeArea <= threshold) {
+    const holeArea = area(holePolygon);
+    if (isSmallArea(holeArea, threshold, resolution)) {
       ret++;
     }
   });

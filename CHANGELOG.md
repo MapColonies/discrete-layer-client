@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.20.0...v2.21.0) (2025-02-23)
+
+
+### Features
+
+* ol dynamically text in pp ([#593](https://github.com/MapColonies/discrete-layer-client/issues/593)) ([bbba27f](https://github.com/MapColonies/discrete-layer-client/commit/bbba27fb88ce3486db697215b9886a62f11b5c9d))
+
+## [2.20.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.19.1...v2.20.0) (2025-02-20)
+
+
+### Features
+
+* pp wfs pagination ( MAPCO-6827 ) ([#592](https://github.com/MapColonies/discrete-layer-client/issues/592)) ([300f88f](https://github.com/MapColonies/discrete-layer-client/commit/300f88fc78ce96487dea91d82b89307f8e57fa22))
+
+
+### Bug Fixes
+
+* change files to be compatible with convention of confd ([#591](https://github.com/MapColonies/discrete-layer-client/issues/591)) ([8e29ad4](https://github.com/MapColonies/discrete-layer-client/commit/8e29ad441e175f743b3af6ba5996cc35ba25bca1))
+
+### [2.19.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.19.0...v2.19.1) (2025-02-16)
+
+
+### Bug Fixes
+
+* change self intersection to works with gpsi library ([#590](https://github.com/MapColonies/discrete-layer-client/issues/590)) ([0a8d97a](https://github.com/MapColonies/discrete-layer-client/commit/0a8d97a73adbe5bf3fd0c739978502299666a608))
+
+## [2.19.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.2...v2.19.0) (2025-02-16)
+
+
+### Features
+
+* fetch job from bff on download ([#589](https://github.com/MapColonies/discrete-layer-client/issues/589)) ([32b7a1e](https://github.com/MapColonies/discrete-layer-client/commit/32b7a1ee7a864b5b799de3cbea742f20d3ef8bef))
+
+### [2.18.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.1...v2.18.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* empty error message ([#588](https://github.com/MapColonies/discrete-layer-client/issues/588)) ([cff5cb8](https://github.com/MapColonies/discrete-layer-client/commit/cff5cb893122776fe2fb9ac68d505ab2e6d209ba))
+* vivid date parsing and production_tmpl numbers ([#587](https://github.com/MapColonies/discrete-layer-client/issues/587)) ([cb4a48f](https://github.com/MapColonies/discrete-layer-client/commit/cb4a48f0de0f8961920cb964037c993199e845c9))
+
+### [2.18.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.18.0...v2.18.1) (2025-02-09)
+
+
+### Bug Fixes
+
+* change calculation of small polygons to be by native resolution ([#586](https://github.com/MapColonies/discrete-layer-client/issues/586)) ([0fafc0a](https://github.com/MapColonies/discrete-layer-client/commit/0fafc0ac8508ee97ebb3a5ad969343a3b7f9766a))
+
 ## [2.18.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.17.0...v2.18.0) (2025-02-03)
 
 

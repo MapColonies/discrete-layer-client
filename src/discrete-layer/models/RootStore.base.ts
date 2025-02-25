@@ -228,6 +228,7 @@ export type WfsPolygonPartsGetFeatureParams = {
   feature: GeojsonFeatureInput
   typeName: string
   count?: number
+  startIndex?: number
   dWithin?: number
   filterProperties?: WfsFilterPropertyParam[]
 }
@@ -441,6 +442,7 @@ queryGetFreeDiskSpace="queryGetFreeDiskSpace",
 queryTriggerExportTask="queryTriggerExportTask",
 queryGetExternalServices="queryGetExternalServices",
 queryJobs="queryJobs",
+queryJob="queryJob",
 queryGetLookupTablesData="queryGetLookupTablesData",
 queryGetClusterServices="queryGetClusterServices",
 queryGetDirectory="queryGetDirectory",
@@ -548,6 +550,11 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     },
     queryJobs(variables: { params?: JobsSearchParams }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ jobs: JobModelType[]}>(`query jobs($params: JobsSearchParams) { jobs(params: $params) {
+        ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryJob(variables: { id: string }, resultSelector: string | ((qb: JobModelSelector) => JobModelSelector) = jobModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ job: JobModelType}>(`query job($id: String!) { job(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new JobModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

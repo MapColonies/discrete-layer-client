@@ -37,7 +37,7 @@ window._env_ = {
     }
   },
   JOB_STATUS: {
-    pollingCycleInterval: '{{ getv "/configuration/job/status/polling/cycle/interval" "60000" }}',
+    pollingCycleInterval: '{{ getv "/configuration/job/status/polling/cycle/interval" "120000" }}',
   },
   DEFAULT_USER: {
     role: '{{ getv "/configuration/default/user/role" "USER" }}',
@@ -64,11 +64,11 @@ window._env_ = {
   BFF_PATH: '{{getv "/configuration/bff/path" "/graphql"}}',
   POLYGON_PARTS: {
     featureTypePrefix: '{{getv "/configuration/polygonparts/featuretypeprefix" "polygonParts:"}}',
-    densityFactor: '{{getv "/configuration/polygonparts/densityFactor" "0.3"}}',
-    geometryErrorsThreshold: '{{getv "/configuration/polygonparts/geometryErrorsThreshold" "0.05"}}',
-    areaThreshold: '{{getv "/configuration/polygonparts/areaThreshold" "5"}}',
+    densityFactor: {{getv "/configuration/polygonparts/densityfactor" "0.3"}},
+    geometryErrorsThreshold: {{getv "/configuration/polygonparts/geometry/errors/threshold" "0.05"}},
+    areaThreshold: {{getv "/configuration/polygonparts/area/threshold" "10"}},
     max: {
-      WFSFeatures: '{{getv "/configuration/polygonparts/max/WFSFeatures" "1000000"}}',
+      WFSFeatures: {{getv "/configuration/polygonparts/max/wfs/features" "200"}},
       perShape: {{getv "/configuration/polygonparts/max/pershape" "300"}},
       vertices: {{getv "/configuration/polygonparts/max/vertices" "300000"}}
     }

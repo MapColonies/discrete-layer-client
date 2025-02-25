@@ -48,10 +48,10 @@ keys = [
   "/configuration/sites/config",
   "/configuration/bff/path",
   "/configuration/polygonparts/featuretypeprefix",
-  "/configuration/polygonparts/densityFactor",
-  "/configuration/polygonparts/geometryErrorsThreshold",
-  "/configuration/polygonparts/areaThreshold",
-  "/configuration/polygonparts/max/WFSFeatures",
+  "/configuration/polygonparts/densityfactor",
+  "/configuration/polygonparts/geometry/errors/threshold",
+  "/configuration/polygonparts/area/threshold",
+  "/configuration/polygonparts/max/wfs/features",
   "/configuration/polygonparts/max/pershape",
   "/configuration/polygonparts/max/vertices"
 ]

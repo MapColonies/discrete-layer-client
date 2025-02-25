@@ -228,6 +228,7 @@
   "polygon-parts.map-preview-legend.EXISTING_PP": "חלקי תיחום הקיימים",
   "polygon-parts.map-preview-legend.SELECTED_FILL": "חלק הנבחר",
   "polygon-parts.map-preview-legend.ILLEGAL_PP": "חלק תיחום עם רזולוציה קטנה מהקיים",
+  "polygon-parts.map-preview.zoom-before-fetch": "התקרב כדי לראות את חלקי התיחום",
 
   "field.actions.edit-draft": "ערוך טיוטה",
   "field.actions.more": "פעולות נוספות",
@@ -551,6 +552,7 @@
   "validation-field.footprint.not-json.geojson": "{fieldName} אינו GEOJSON",
   "validation-field.footprint.not-geo_json.geojson": "{fieldName} אינו GEOJSON",
   "validation-field.footprint.geo_json-geometry-not-supported.geojson": "{fieldName} לא מסוג הנתמך",
+  "validation-field.footprint.resolutionNotExistForGeometry.geojson": "על מנת לבדוק גאומטריה, נדרש למלא את שדה הרזולוציה.",
   "validation-field.footprint.geometryTooDensed.geojson": "תיחום גאוגרפי מכיל צפיפות נקודות יתרה, נדרש לבצע תהליך של פישוט.",
   "validation-field.footprint.geometryTooSmall.geojson": "תיחום גאוגרפי קטן מידי.",
   "validation-field.footprint.geometryHasSmallHoles.geojson": "גיאומטריה מכילה חורים קטנים מידי.",

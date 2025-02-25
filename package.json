@@ -1,6 +1,6 @@
 {
   "name": "discrete-layer-client",
-  "version": "2.18.0",
+  "version": "2.21.0",
   "bugs": {
     "url": "https://github.com/MapColonies/discrete-layer-client/issues"
   },
@@ -142,6 +142,7 @@
     "detect-gpu": "^5.0.9",
     "enzyme-to-json": "^3.6.1",
     "formik": "2.1.6",
+    "geojson-polygon-self-intersections": "^1.2.1",
     "graphql-request": "^3.4.0",
     "https-browserify": "^1.0.0",
     "jsum": "^2.0.0-alpha.4",

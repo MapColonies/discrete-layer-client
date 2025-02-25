@@ -1,11 +1,16 @@
 import bolleanValid from '@turf/boolean-valid';
-import kinks from '@turf/kinks';
+// import kinks from '@turf/kinks';
+import booleanPointOnLine from '@turf/boolean-point-on-line';
+import { lineString } from "@turf/helpers";
 import { Geometry, Position } from 'geojson';
+import { geoCustomChecks } from './geo.tools';
+const gpsi = require('geojson-polygon-self-intersections');
 
 export type severityLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FATAL';
 export type geoJSONValidation = {valid: boolean, severity_level: severityLevel, reason: string};
 export const EMPTY_JSON_STRING_VALUE = '{}';
 
+const INTERSECTION_TOLLERANCE = 1e-11; // 0.01mm
 const MAX_VERTECES = 300;
 const LINEARING_MIN_POSITIONS = 4;
 
@@ -25,8 +30,37 @@ const hasTooManyVerteces = (geom: Geometry): boolean => {
   return totalVertices >= MAX_VERTECES ;
 }
 
+// export const hasSelfIntersections = (json: Geometry): boolean => {
+//   return kinks(json as any).features.length > 0;
+// }
+
 export const hasSelfIntersections = (json: Geometry): boolean => {
-  return kinks(json as any).features.length > 0;
+  //@ts-ignore
+  const filterFunc = (isect, ring0, edge0, start0, end0, frac0, ring1, edge1, start1, end1, frac1, unique) => {
+    const firstLine = lineString([start0, end0]);
+    const secondLine = lineString([start1, end1]);
+    const isPointOnFirstLine = booleanPointOnLine(isect, firstLine, { epsilon: INTERSECTION_TOLLERANCE });
+    const isPointOnSecondLine = booleanPointOnLine(isect, secondLine, { epsilon: INTERSECTION_TOLLERANCE });
+
+    if(isPointOnFirstLine && isPointOnSecondLine) {
+      console.log('Intersection point(by gpsi): ', isect);
+      return { isect, ring0, edge0, start0, end0, frac0, ring1, edge1, start1, end1, frac1, unique };
+    }
+
+    return undefined;
+  }
+
+  const isects = gpsi(
+    {
+      type: "Feature",
+      geometry: json,
+    },
+    filterFunc,
+  );
+
+  const isectsLength = isects.filter((obj: any) => obj != undefined).length;
+  
+  return isectsLength > 0;
 }
 
 const isValidGeometryType = (json: Geometry): boolean => {
@@ -109,8 +143,7 @@ const isValidWGS84Coordinates = (geom: Geometry) => {
   return true; 
 }
 
-
-export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((value: string) => geoJSONValidation | undefined)[]):geoJSONValidation => {
+export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCustomChecks): geoJSONValidation => {
   const res = {
     valid: jsonValue !== undefined && jsonValue !== EMPTY_JSON_STRING_VALUE && jsonValue !== '',
     severity_level: 'INFO',
@@ -160,7 +193,11 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: ((val
         }
       }
 
-      const validationArr = geoCustomChecks?.map((func) => func(geoJson)).filter(u => u != undefined) as geoJSONValidation[];
+      let validationArr: geoJSONValidation[] = [] as unknown as geoJSONValidation[];
+      
+      if(geoCustomChecks){
+        validationArr = geoCustomChecks.validationFunc.map((func) => func(geoJson, geoCustomChecks.validationFuncArgs)).filter(u => u != undefined) as geoJSONValidation[];
+      }
 
       if(validationArr && validationArr.length){
         return validationArr[0];
