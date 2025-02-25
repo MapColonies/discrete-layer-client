@@ -135,20 +135,21 @@ const stringDivider = (str: string, width: number, spaceReplacer: string): strin
     }
   }
   return str;
-}
+};
 
-const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>, defaultText?: string) => {
+export const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>, defaultText?: string) => {
   const type = get(feature.properties, 'text') ?? featureConfig.text;
   const maxResolution = parseInt(featureConfig.maxreso);
+  const featureResolution = get(feature.properties, 'resolutionDegree')?.split(' ')[0];
   const zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
     .map((res) => res.toString())
-    .findIndex(val => val === get(feature.properties, 'resolutionDegree')?.toString())
+    .findIndex(val => val === featureResolution?.toString());
   const ingestionDateUTC = dateFormatter(get(feature.properties, 'ingestionDateUtc'), false);
   const updatedInVersion = get(feature.properties, 'productVersion');
 
   let text = defaultText ?? '';
   
-  if(zoomLevel > -1){
+  if (zoomLevel > -1) {
     text = `${ingestionDateUTC}\n\nv${updatedInVersion} (${zoomLevel})`;
   }
 

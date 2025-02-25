@@ -1,7 +1,7 @@
 import { CSSProperties, useEffect, useMemo } from 'react';
-import { Polygon, MultiPolygon } from 'geojson';
-import _ from 'lodash';
 import { useIntl } from 'react-intl';
+import { Polygon, MultiPolygon } from 'geojson';
+import { isEmpty } from 'lodash';
 import center from '@turf/center';
 import { AllGeoJSON } from '@turf/helpers';
 import { CesiumCartesian3, CesiumCartographic, CesiumColor, CesiumEntity, CesiumHorizontalOrigin, CesiumVerticalOrigin } from '@map-colonies/react-components';
@@ -10,7 +10,8 @@ import { useForceEntitySelection } from '../../../../common/hooks/useForceEntity
 import { IPosition, useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
 import useStaticHTML from '../../../../common/hooks/useStaticHtml';
 import { crossesMeridian, ZERO_MERIDIAN } from '../../../../common/utils/geo.tools';
-import { FEATURE_LABEL_CONFIG } from '../../layer-details/raster/pp-map.utils';
+import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
+import { FEATURE_LABEL_CONFIG, getText } from '../../layer-details/raster/pp-map.utils';
 import { CesiumInfoBoxContainer } from './cesium-infoBox-container';
 import { GeojsonFeature, GeojsonFeatureProps } from './geojson-feature.component';
 import GenericInfoBoxContainer from './generic-infoBox-container.component';
@@ -67,10 +68,11 @@ const LONGITUDE_POSITION = 0;
 const LATITUDE_POSITION = 1;
 
 export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps> = (props) => {
+  const intl = useIntl();
+  const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
+  const { setCoordinates, newPositions } = useHeightFromTerrain();
   const themeObj = useTheme();
   const theme = themeObj as Record<string, string>;
-  const intl = useIntl();
-  const { setCoordinates, newPositions } = useHeightFromTerrain();
   const markerPositionWithHeight = newPositions?.[0] as IPosition;
 
   const {
@@ -93,7 +95,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
   useEffect(() => {
     if (markerPosition) {
       setCoordinates([markerPosition]);
-    } else if (!_.isEmpty(feature.geometry)) {
+    } else if (!isEmpty(feature.geometry)) {
       const featureCenter = center(feature as AllGeoJSON);
       const centerCartographic: IPosition = {
         longitude: featureCenter.geometry.coordinates[LONGITUDE_POSITION],
@@ -122,7 +124,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
     };
 
     const featureInfo = feature.properties as Record<string, unknown>;
-    const featureHasData = noDataFoundPredicate ? noDataFoundPredicate(featureInfo) : !_.isEmpty(featureInfo);
+    const featureHasData = noDataFoundPredicate ? noDataFoundPredicate(featureInfo) : !isEmpty(featureInfo);
 
     const style = useMemo(() => featureHasData ? hasDataStyle : noDataStyle, [featureHasData]);
 
@@ -192,6 +194,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
   });
 
   const { entitySelected } = useForceEntitySelection([featureInfoHtml]);
+
   const billboardProps = useMemo(() => {
     return markerIconPath !== '' ?
       {
@@ -201,10 +204,11 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
       } :
       undefined;
   }, [markerIconPath, markerScale]);
+  
   const labelProps = useMemo(() => {
     return markerIconPath === '' ?
       {
-        text: feature.properties?.['resolutionDegree'],
+        text: getText(feature, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE),
         font: `${FEATURE_LABEL_CONFIG.polygons.size}px ${FEATURE_LABEL_CONFIG.polygons.font}`,
         fillColor: featureConfig?.outlineColor ? CesiumColor.fromCssColorString(featureConfig.outlineColor) : undefined,
         outlineColor: featureConfig?.color ? CesiumColor.fromCssColorString(featureConfig.color) : undefined,
@@ -213,7 +217,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
         horizontalOrigin: CesiumHorizontalOrigin.CENTER,
       } :
       undefined;
-  }, [infoBoxTitle, markerIconPath]);
+  }, [feature, featureConfig]);
 
   return (
     <>
@@ -235,7 +239,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
 
       {
         shouldVisualize &&
-        !_.isEmpty(feature) &&
+        !isEmpty(feature) &&
         <GeojsonFeature
           feature={feature}
           isPolylined={isPolylined}

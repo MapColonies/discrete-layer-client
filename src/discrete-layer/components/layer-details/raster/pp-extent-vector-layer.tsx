@@ -98,17 +98,14 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
 
   useEffect(() => {
     if (!loading && error) {
-      store.actionDispatcherStore.dispatchAction(
-        {
-          action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
-          data: {
-            error: [
-              intl.formatMessage(
-                {id: 'validation-general.polygonParts.wfsServerError'}
-            )]
-          },
-        } as IDispatchAction
-      );
+      store.actionDispatcherStore.dispatchAction({
+        action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
+        data: {
+          error: [
+            intl.formatMessage({ id: 'validation-general.polygonParts.wfsServerError' })
+          ]
+        },
+      } as IDispatchAction);
     }
   }, [error, loading]);
 
