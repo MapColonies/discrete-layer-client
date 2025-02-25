@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { Feature, LineString, MultiPolygon, Polygon } from 'geojson';
+import { Feature, GeoJsonProperties, Geometry, LineString, MultiPolygon, Polygon } from 'geojson';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { useCesiumMap } from '@map-colonies/react-components';
@@ -8,7 +8,7 @@ import CONFIG from '../../../../common/config';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
 import useWfsPolygonPartsRequests from '../../../../common/hooks/useWfsPolygonPartsRequests';
 import { crossesMeridian, ZERO_MERIDIAN } from '../../../../common/utils/geo.tools';
-import { LayerRasterRecordModelType, useStore, WfsFeatureModelType } from '../../../models';
+import { LayerRasterRecordModelType, useStore } from '../../../models';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
 import { getWFSFeatureTypeName } from '../../layer-details/raster/pp-map.utils';
 import { GeojsonFeatureWithInfoBox } from './geojson-feature-with-infobox.component';
@@ -105,7 +105,7 @@ export const PolygonParts: React.FC = observer(() => {
             shouldVisualize={true}
           />
         ) : (
-          (polygonPartsInfo as WfsFeatureModelType[]).map((feature) => {
+          (polygonPartsInfo as Feature<Geometry, GeoJsonProperties>[]).map((feature) => {
             const geoJsonFeature = feature as Feature;
             const isCrossesMeridian = crossesMeridian(geoJsonFeature.geometry as Polygon | MultiPolygon, ZERO_MERIDIAN);
             enrichWFSData(geoJsonFeature);

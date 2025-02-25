@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { types, Instance, flow, getParent } from 'mobx-state-tree';
 import { cloneDeep, set, get } from 'lodash';
-import { Feature, Geometry, Polygon } from 'geojson';
+import { Feature, GeoJsonProperties, Geometry, Polygon } from 'geojson';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -27,7 +27,6 @@ import { FieldConfigModelType } from './FieldConfigModel';
 import { GetFeatureModelType } from './GetFeatureModel';
 import { RecordType } from './RecordTypeEnum';
 import { WfsPolygonPartsGetFeatureParams } from './RootStore.base';
-import { WfsFeatureModelType } from './WfsFeatureModel';
 
 export type LayersImagesResponse = ILayerImage[];
 
@@ -44,7 +43,7 @@ export interface ITabViewData {
   layersImages?: ILayerImage[];
   filters?: unknown;
   polygonPartsLayer?: ILayerImage;
-  polygonPartsInfo?: WfsFeatureModelType[];
+  polygonPartsInfo?: Feature<Geometry, GeoJsonProperties>[];
 }
 
 const INITIAL_STATE = {
@@ -89,7 +88,7 @@ export const discreteLayersStore = ModelBase
     customValidationError: types.maybe(types.frozen<Record<string,string[]>|undefined>(INITIAL_STATE.customValidationError)),
     ppCollisionCheckInProgress: types.maybe(types.frozen<boolean|undefined>(INITIAL_STATE.ppCollisionCheckInProgress)),
     polygonPartsLayer: types.maybe(types.frozen<ILayerImage>(INITIAL_STATE.polygonPartsLayer as unknown as ILayerImage)),
-    polygonPartsInfo: types.maybe(types.frozen<WfsFeatureModelType[]>(INITIAL_STATE.polygonPartsInfo)),
+    polygonPartsInfo: types.maybe(types.frozen<Feature<Geometry, GeoJsonProperties>[]>(INITIAL_STATE.polygonPartsInfo)),
     
     // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
@@ -419,11 +418,11 @@ export const discreteLayersStore = ModelBase
       self.polygonPartsLayer = layer ? {...layer} : undefined;
     }
 
-    function setPolygonPartsInfo(polygonPartsInfo: WfsFeatureModelType[]): void {
+    function setPolygonPartsInfo(polygonPartsInfo: Feature<Geometry, GeoJsonProperties>[]): void {
       self.polygonPartsInfo = [ ...(polygonPartsInfo ?? []) ];
     }
 
-    function addPolygonPartsInfo(polygonPartsInfo: WfsFeatureModelType[]): void {
+    function addPolygonPartsInfo(polygonPartsInfo: Feature<Geometry, GeoJsonProperties>[]): void {
       self.polygonPartsInfo = [ ...(self.polygonPartsInfo ?? []), ...(polygonPartsInfo ?? []) ];
     }
 

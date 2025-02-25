@@ -1,10 +1,10 @@
-import { cloneDeep } from 'lodash';
 import { useEffect, useState } from 'react';
+import { Feature, GeoJsonProperties, Geometry } from 'geojson';
+import { cloneDeep } from 'lodash';
 import {
   GetFeatureModelType,
   useQuery,
   useStore,
-  WfsFeatureModelType,
 } from '../../discrete-layer/models';
 import { WfsPolygonPartsGetFeatureParams } from '../../discrete-layer/models/RootStore.base';
 import CONFIG from '../config';
@@ -39,9 +39,9 @@ const useWfsPolygonPartsRequests = (): {
         feature: queryPolygonPartsFeatureOptions.feature,
       };
       if (queryPolygonPartsFeatureOptions.startIndex === 0) {
-        store.discreteLayersStore.setPolygonPartsInfo(featureInfo.features as WfsFeatureModelType[]);
+        store.discreteLayersStore.setPolygonPartsInfo(featureInfo.features as Feature<Geometry, GeoJsonProperties>[]);
       } else {
-        store.discreteLayersStore.addPolygonPartsInfo(featureInfo.features as WfsFeatureModelType[]);
+        store.discreteLayersStore.addPolygonPartsInfo(featureInfo.features as Feature<Geometry, GeoJsonProperties>[]);
       }
       if (data.getPolygonPartsFeature.numberReturned !== 0) {
         const startIndex = queryPolygonPartsFeatureOptions.startIndex as number;

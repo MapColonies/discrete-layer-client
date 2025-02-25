@@ -115,7 +115,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const getExistingPolygonParts = (bbox: BBox, startIndex: number) => {
     // const fakePP = squareGrid(bbox, 10, {units: 'miles'});
     // console.log(fakePP);
-    // setExistingPolygoParts(fakePP.features);
+    // setExistingPolygonParts(fakePP.features);
 
     const currentZoomLevel = mapOl.getView().getZoom();
 
