@@ -140,10 +140,17 @@ const stringDivider = (str: string, width: number, spaceReplacer: string): strin
 export const getText = (feature: Feature, resolution: number, featureConfig: Record<string, string>, ZOOM_LEVELS_TABLE: Record<string, number>, defaultText?: string) => {
   const type = get(feature.properties, 'text') ?? featureConfig.text;
   const maxResolution = parseInt(featureConfig.maxreso);
-  const featureResolution = get(feature.properties, 'resolutionDegree')?.split(' ')[0];
-  const zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
+
+  let featureResolution = get(feature.properties, 'resolutionDegree');
+  
+  let zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
     .map((res) => res.toString())
-    .findIndex(val => val === featureResolution?.toString());
+    .findIndex(val => val === get(feature.properties, 'resolutionDegree')?.toString());
+
+  if (typeof featureResolution == 'string' && featureResolution?.includes('(')) {
+    featureResolution = featureResolution.split(/[()]/)[1];
+    zoomLevel = parseFloat(featureResolution);
+  }
   const ingestionDateUTC = dateFormatter(get(feature.properties, 'ingestionDateUtc'), false);
   const updatedInVersion = get(feature.properties, 'productVersion');
 
