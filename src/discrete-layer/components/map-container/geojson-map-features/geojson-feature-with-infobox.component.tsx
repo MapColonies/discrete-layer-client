@@ -209,7 +209,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
     return markerIconPath === '' ?
       {
         text: getText(feature, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE),
-        font: `${FEATURE_LABEL_CONFIG.polygons.size}px ${FEATURE_LABEL_CONFIG.polygons.font}`,
+        font: `${FEATURE_LABEL_CONFIG.polygons.size} ${FEATURE_LABEL_CONFIG.polygons.font}`,
         fillColor: featureConfig?.outlineColor ? CesiumColor.fromCssColorString(featureConfig.outlineColor) : undefined,
         outlineColor: featureConfig?.color ? CesiumColor.fromCssColorString(featureConfig.color) : undefined,
         outlineWidth: 3,
