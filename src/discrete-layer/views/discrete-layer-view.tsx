@@ -77,7 +77,6 @@ import { MapActionResolver } from './components/map-action-resolver.component';
 import { WfsFeature } from '../components/map-container/geojson-map-features/wfs-feature.component';
 import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
 import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
-import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts';
 import { ExtentUpdater } from '../components/map-container/extent-updater';
 import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
 import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
@@ -261,7 +260,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         <SelectedLayersContainer/>
         <HighlightedLayer/>
         <LayersFootprints/>
-        <PolygonParts />
       </>
     );
   }, []);
