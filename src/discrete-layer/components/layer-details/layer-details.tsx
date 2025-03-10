@@ -91,14 +91,7 @@ export const getValuePresentor = (
     case 'string':
     case 'identifier':
     case 'sensors':
-      return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
-        <AutocompleteValuePresentorComponent 
-          mode={mode}
-          fieldInfo={fieldInfo}
-          value={value as string}
-          formik={formik}
-          fieldNamePrefix={fieldNamePrefix}
-        /> :
+      return (
         <StringValuePresentorComponent
           mode={mode}
           fieldInfo={fieldInfo}
@@ -106,6 +99,21 @@ export const getValuePresentor = (
           formik={formik}
           fieldNamePrefix={fieldNamePrefix}/>
       );
+      // return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
+      //   <AutocompleteValuePresentorComponent 
+      //     mode={mode}
+      //     fieldInfo={fieldInfo}
+      //     value={value as string}
+      //     formik={formik}
+      //     fieldNamePrefix={fieldNamePrefix}
+      //   /> :
+      //   <StringValuePresentorComponent
+      //     mode={mode}
+      //     fieldInfo={fieldInfo}
+      //     value={value as string}
+      //     formik={formik}
+      //     fieldNamePrefix={fieldNamePrefix}/>
+      // );
     case 'string[]':
       return (
         <StringValuePresentorComponent 

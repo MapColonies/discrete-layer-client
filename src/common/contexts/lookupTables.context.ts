@@ -1,8 +1,10 @@
 import { createContext } from 'react';
+import { CountryTranslation} from '@map-colonies/types'
 
 export interface ILookupOption {
   value: string;
   translationCode?: string;
+  translation?: CountryTranslation[];
   properties: Record<string, unknown>
 }
 export interface ILookupTableData {

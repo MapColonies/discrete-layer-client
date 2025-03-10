@@ -78,7 +78,11 @@ const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDe
       const fieldName = field.fieldName as string;
       const fieldNameType = getBasicType(field.fieldName as FieldInfoName, DEFAULT_TYPE_NAME);
       if((field.lookupTable || isEnumType(fieldNameType))) {
-        record[fieldName] = '';
+        if(field.isMultiSelection){
+          record[fieldName] = [];
+        }else{
+          record[fieldName] = '';
+        }
       }
       if (field.default){
         record[fieldName] = field.default;
