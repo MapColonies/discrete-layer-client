@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import React, { useContext, useState } from 'react';
-import { MultiSelection } from '@map-colonies/react-components';
+import { MultiSelection as McMultiSelection } from '@map-colonies/react-components';
 import CONFIG from '../../config';
 import { Mode } from '../../models/mode.enum';
 import lookupTablesContext, { ILookupOption } from '../../contexts/lookupTables.context';
@@ -24,7 +24,7 @@ interface MultiSelectionWrapperProps {
     formik?: EntityFormikHandlers;
 }
 
-export const MultiSelectionWrapper: React.FC<MultiSelectionWrapperProps> = (props) => {
+export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
     const { mode, fieldInfo, lookupOptions, fieldName, value, formik } = props;
     const [multiSelectionValues, setMultiSelectionValues] = useState(fieldInfo.isMultiSelection && !isEmpty(value) ? value?.split(", ") : [])
     const { lookupTablesData } = useContext(lookupTablesContext);
@@ -160,7 +160,7 @@ export const MultiSelectionWrapper: React.FC<MultiSelectionWrapperProps> = (prop
     };
 
     return (
-        <MultiSelection
+        <McMultiSelection
             options={getMultiSelectionOptions()}
             values={getMultiSelectionValues()}
             onChange={(e: React.FormEvent<HTMLSelectElement>): void => {

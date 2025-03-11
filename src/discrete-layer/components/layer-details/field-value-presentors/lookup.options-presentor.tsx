@@ -12,7 +12,7 @@ import { IRecordFieldInfo } from '../layer-details.field-info';
 import './enum.value-presentor.css';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 import CONFIG from '../../../../common/config';
-import { MultiSelectionWrapper } from '../../../../common/components/multi-selection';
+import { MultiSelection } from '../../../../common/components/multi-selection/index';
 
 interface LookupTablesPresentorProps {
   mode: Mode;
@@ -69,7 +69,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
 
   return (
     fieldInfo.isMultiSelection ?
-      <MultiSelectionWrapper
+      <MultiSelection
         mode={mode}
         fieldInfo={fieldInfo}
         lookupOptions={lookupOptions}
