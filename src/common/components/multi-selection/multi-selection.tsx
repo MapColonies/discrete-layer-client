@@ -1,39 +1,35 @@
-import { MultiSelection } from '@map-colonies/react-components';
 import { isEmpty } from 'lodash';
-import React, { useCallback, useContext, useState } from 'react';
-import { useIntl } from 'react-intl';
-import TooltippedValue from '../form/tooltipped.value';
+import React, { useContext, useState } from 'react';
+import { MultiSelection } from '@map-colonies/react-components';
+import CONFIG from '../../config';
+import { Mode } from '../../models/mode.enum';
 import lookupTablesContext, { ILookupOption } from '../../contexts/lookupTables.context';
-import useDebounceField from '../../hooks/debounce-field.hook';
-import CONFIG from '../../../common/config';
-import { Mode } from '../../../common/models/mode.enum';
+import { CustomTheme } from '../../../theming/custom.theme';
 import { EntityFormikHandlers } from '../../../discrete-layer/components/layer-details/layer-datails-form';
 import { IRecordFieldInfo } from '../../../discrete-layer/components/layer-details/layer-details.field-info';
-import '../../../discrete-layer/components/layer-details/field-value-presentors/enum.value-presentor';
-import { CustomTheme } from '../../../theming/custom.theme';
+
+// Css
 import '../../../App.css'
 import '../../../discrete-layer/components/map-container/catalogFilter/catalog-filter-panel.css'
 
 interface MultiSelectionWrapperProps {
     mode: Mode;
     fieldInfo: IRecordFieldInfo;
-    lookupOptions: (false | ILookupOption | {
+    lookupOptions: (ILookupOption | {
         value: string;
         translationCode: string;
     })[];
+    fieldName: string;
     value?: string;
     formik?: EntityFormikHandlers;
-    fieldNamePrefix?: string;
 }
 
 export const MultiSelectionWrapper: React.FC<MultiSelectionWrapperProps> = (props) => {
-    const { mode, fieldInfo, lookupOptions, value, formik, fieldNamePrefix } = props;
-    const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
+    const { mode, fieldInfo, lookupOptions, fieldName, value, formik } = props;
+    const [multiSelectionValues, setMultiSelectionValues] = useState(fieldInfo.isMultiSelection && !isEmpty(value) ? value?.split(", ") : [])
+    const { lookupTablesData } = useContext(lookupTablesContext);
     const lang = CONFIG.I18N.DEFAULT_LANGUAGE;
     const backLocale = CONFIG.DEFAULT_LOCALE;
-    const [multiSelectionValues, setMultiSelectionValues] = useState(fieldInfo.isMultiSelection && !isEmpty(value) ? value?.split(", ") : [])
-    const intl = useIntl();
-    const { lookupTablesData } = useContext(lookupTablesContext);
     const customStyles = {
         container: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
             return {
