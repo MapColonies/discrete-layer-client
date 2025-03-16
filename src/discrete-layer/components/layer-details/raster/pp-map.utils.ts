@@ -143,7 +143,7 @@ const getText = (feature: Feature, resolution: number, featureConfig: Record<str
   const zoomLevel = Object.values(ZOOM_LEVELS_TABLE)
     .map((res) => res.toString())
     .findIndex(val => val === get(feature.properties, 'resolutionDegree')?.toString())
-  const ingestionDateUTC = dateFormatter(get(feature.properties, 'ingestionDateUtc'), false);
+  const ingestionDateUTC = dateFormatter(get(feature.properties, 'imagingTimeEndUTC'), false);
   const updatedInVersion = get(feature.properties, 'productVersion');
 
   let text = defaultText ?? '';
