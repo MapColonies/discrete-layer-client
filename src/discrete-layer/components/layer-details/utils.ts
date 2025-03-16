@@ -238,7 +238,7 @@ const checkIsBest = (entity: ILayerImage): boolean => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST } = ProductType;
 
-  const bestProductTypes: ProductType[] = [ ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST ];
+  const bestProductTypes: ProductType[] = [ ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST ];
 
   return bestProductTypes.includes(entity.productType as ProductType);
 };
@@ -249,6 +249,14 @@ export const isDiscrete = (entity: ILayerImage): boolean => {
 
 export const isBest = (entity: ILayerImage): boolean => {
   return checkIsBest(entity)
+};
+
+export const isVector = (entity: ILayerImage): boolean => {
+  const { VECTOR_BEST } = ProductType;
+
+  const vectorProductTypes: ProductType[] = [ VECTOR_BEST ];
+ 
+  return vectorProductTypes.includes(entity.productType as ProductType);
 };
 
 export const isMultiSelection = (recordType: RecordType): boolean => {

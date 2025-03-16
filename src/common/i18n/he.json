@@ -115,6 +115,7 @@
   
 
   "record-type.record_raster.label": "ראסטר",
+  "record-type.record_vector.label": "וקטור",
   "record-type.record_3d.label": "תלת-מימד",
   "record-type.record_dem.label": "גבהים",
   "record-type.record_quantized_mesh.label": "פני השטח",
@@ -184,6 +185,7 @@
   "tab-views.catalog.top-categories.unpublished": "לא מפורסמים",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",
+  "tab-views.catalog.top-categories.vector": "שכבות מידע",
   "tab-views.catalog.top-categories.drafts": "טיוטות",
 
   "tab-views.catalog.actions.ingest_raster": "הוסף מוצר",

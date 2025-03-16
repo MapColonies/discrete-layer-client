@@ -113,6 +113,7 @@
   "action.export.select-hot-area.tooltip": "Choose from hot areas",
 
   "record-type.record_raster.label": "Raster",
+  "record-type.record_vector.label": "Vector",
   "record-type.record_3d.label": "3D",
   "record-type.record_dem.label": "DEM",
   "record-type.record_quantized_mesh.label": "Quantized Mesh BEST",
@@ -182,6 +183,7 @@
   "tab-views.catalog.top-categories.unpublished": "Unpublished",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "Catalog",
+  "tab-views.catalog.top-categories.vector": "Data Layers",
   "tab-views.catalog.top-categories.drafts": "Drafts",
 
   "tab-views.catalog.actions.ingest_raster": "Ingest discrete",
