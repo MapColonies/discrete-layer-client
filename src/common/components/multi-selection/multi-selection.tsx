@@ -46,15 +46,13 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
                 backgroundColor: CustomTheme.darkTheme.GC_ALTERNATIVE_SURFACE,
                 cursor: 'pointer',
                 border: `1px solid`,
-                borderColor: isFocused ? '#24aee9' : CustomTheme.darkTheme.GC_TAB_ACTIVE_BACKGROUND,
+                borderColor: isFocused ? 'var(--mdc-theme-primary)' : CustomTheme.darkTheme.GC_TAB_ACTIVE_BACKGROUND,
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
                 flexDirection: 'row-reverse' as const,
                 justifyContent: 'space-between',
-                //mode === Mode.EDIT && 
                 height: '24px',
-                // minHeight: '24px',
             }
         },
         menu: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
@@ -79,7 +77,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
             return {
                 cursor: 'pointer',
                 height: '40px',
-                color: isSelected ? CustomTheme.darkTheme.GC_HOVER_BACKGROUND : 'lightgray',
+                color: isSelected ? CustomTheme.darkTheme.GC_HOVER_BACKGROUND : 'var(--mdc-theme-on-surface)',
                 backgroundColor: isSelected && 'black',
                 border: '0',
             }
@@ -87,7 +85,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
         input: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
             return {
                 ...styles,
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: 'var(--mdc-theme-on-surface)',
             }
         },
         value: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
@@ -109,7 +107,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
                 ...styles,
                 padding: '0',
                 width: '14px',
-                color: '#24aee9',
+                color: 'var(--mdc-theme-primary)',
             }
         },
         clearIndicator: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
@@ -117,7 +115,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
                 ...styles,
                 padding: '0',
                 width: '14px',
-                color: '#24aee9',
+                color: 'var(--mdc-theme-primary)',
             }
         },
     };
