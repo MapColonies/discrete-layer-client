@@ -8,8 +8,6 @@ import { CustomTheme } from '../../../theming/custom.theme';
 import { LayerMetadataMixedUnion, LinkModelType, RecordType } from '../../../discrete-layer/models';
 import { EntityFormikHandlers } from '../../../discrete-layer/components/layer-details/layer-datails-form';
 import { IRecordFieldInfo } from '../../../discrete-layer/components/layer-details/layer-details.field-info';
-
-// Css
 import '../../../App.css'
 import '../../../discrete-layer/components/map-container/catalogFilter/catalog-filter-panel.css'
 
@@ -22,15 +20,17 @@ interface MultiSelectionWrapperProps {
     })[];
     fieldName: string;
     layerRecord: LayerMetadataMixedUnion | LinkModelType;
-    placeholder: string;
+    placeholder?: string;
     value?: string;
     formik?: EntityFormikHandlers;
 }
 
 export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
     const { mode, fieldInfo, lookupOptions, fieldName, layerRecord, placeholder, value, formik } = props;
+    
     const [multiSelectionValues, setMultiSelectionValues] = useState(fieldInfo.isMultiSelection && !isEmpty(value) ? value?.split(", ") : [])
     const { lookupTablesData } = useContext(lookupTablesContext);
+    
     const lang = CONFIG.I18N.DEFAULT_LANGUAGE;
     const backLocale = CONFIG.DEFAULT_LOCALE;
     const customStyles = {
@@ -144,18 +144,18 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
 
         return chosenValueOptions;
     };
-
-    const onChangeMultiSelection = (data: any) => {
-        formik?.setFieldValue(fieldName, getFormikFieldValue(data));
-        setMultiSelectionValues(data);
-    };
-
+    
     const getFormikFieldValue = (values: { value: string, label: string }[]) => {
         return values.map((val) => {
             const lookupOptionsTranslations = (lookupOptions as ILookupOption[]).map((option) => option.translation);
             const valueTranslation = lookupOptionsTranslations.find((trns) => (trns as unknown as { locale: string, text: string }[]).findIndex((trn) => trn.text === val.value) > -1);
             return valueTranslation?.find((valueTranslations) => valueTranslations.locale === backLocale)?.text
         }).join(', ')
+    };
+
+    const onChangeMultiSelection = (data: any) => {
+        formik?.setFieldValue(fieldName, getFormikFieldValue(data));
+        setMultiSelectionValues(data);
     };
 
     return (
