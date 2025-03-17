@@ -99,7 +99,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
             return {
                 ...styles,
                 position: 'absolute' as const,
-                bottom: '12px',
+                bottom: '20px',
                 height: '2px',
                 padding: mode === Mode.EDIT ? '0 22px' : '0 4px',
             }
