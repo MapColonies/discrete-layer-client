@@ -206,7 +206,8 @@ export const getValuePresentor = (
           fieldInfo={fieldInfo} 
           mode={mode} 
           formik={formik}
-          fieldNamePrefix={fieldNamePrefix} />
+          fieldNamePrefix={fieldNamePrefix}
+          layerRecord={layerRecord}/>
       );
     default:
       return (

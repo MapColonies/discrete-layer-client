@@ -13,17 +13,19 @@ import './enum.value-presentor.css';
 import { FormInputInfoTooltipComponent } from './form.input.info.tooltip';
 import CONFIG from '../../../../common/config';
 import { MultiSelection } from '../../../../common/components/multi-selection/index';
+import { LayerMetadataMixedUnion, LinkModelType } from '../../../models';
 
 interface LookupTablesPresentorProps {
   mode: Mode;
   fieldInfo: IRecordFieldInfo;
+  layerRecord: LayerMetadataMixedUnion | LinkModelType;
   value?: string;
   formik?: EntityFormikHandlers;
   fieldNamePrefix?: string;
 }
 
 export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProps> = (props) => {
-  const { mode, fieldInfo, value, formik, fieldNamePrefix } = props;
+  const { mode, fieldInfo, layerRecord, value, formik, fieldNamePrefix } = props;
   const fieldName = `${fieldNamePrefix ?? ''}${fieldInfo.fieldName}`;
   const lang = CONFIG.I18N.DEFAULT_LANGUAGE;
   const intl = useIntl();
@@ -74,8 +76,10 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
         fieldInfo={fieldInfo}
         lookupOptions={lookupOptions}
         value={value}
+        placeholder={''}
         formik={formik}
         fieldName={fieldName}
+        layerRecord={layerRecord}
       /> :
       <Box className="detailsFieldValue selectBoxContainer">
         <Select

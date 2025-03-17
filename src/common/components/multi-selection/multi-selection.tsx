@@ -5,6 +5,7 @@ import CONFIG from '../../config';
 import { Mode } from '../../models/mode.enum';
 import lookupTablesContext, { ILookupOption } from '../../contexts/lookupTables.context';
 import { CustomTheme } from '../../../theming/custom.theme';
+import { LayerMetadataMixedUnion, LinkModelType, RecordType } from '../../../discrete-layer/models';
 import { EntityFormikHandlers } from '../../../discrete-layer/components/layer-details/layer-datails-form';
 import { IRecordFieldInfo } from '../../../discrete-layer/components/layer-details/layer-details.field-info';
 
@@ -20,12 +21,14 @@ interface MultiSelectionWrapperProps {
         translationCode: string;
     })[];
     fieldName: string;
+    layerRecord: LayerMetadataMixedUnion | LinkModelType;
+    placeholder: string;
     value?: string;
     formik?: EntityFormikHandlers;
 }
 
 export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
-    const { mode, fieldInfo, lookupOptions, fieldName, value, formik } = props;
+    const { mode, fieldInfo, lookupOptions, fieldName, layerRecord, placeholder, value, formik } = props;
     const [multiSelectionValues, setMultiSelectionValues] = useState(fieldInfo.isMultiSelection && !isEmpty(value) ? value?.split(", ") : [])
     const { lookupTablesData } = useContext(lookupTablesContext);
     const lang = CONFIG.I18N.DEFAULT_LANGUAGE;
@@ -33,8 +36,9 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
     const customStyles = {
         container: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
             return {
-                marginRight: mode === Mode.EDIT ? '18px' : '12px',
+                marginRight: mode === Mode.EDIT ? '18px' : (layerRecord as LayerMetadataMixedUnion)?.type === RecordType.RECORD_3D ? '16px' : '12px',
                 marginLeft: '2px',
+                width: '100%',
             }
         },
         control: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
@@ -50,6 +54,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
                 justifyContent: 'space-between',
                 //mode === Mode.EDIT && 
                 height: '24px',
+                // minHeight: '24px',
             }
         },
         menu: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
@@ -82,19 +87,12 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
         input: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
             return {
                 ...styles,
-                marginRight: 'auto',
                 color: 'rgba(255, 255, 255, 0.7)',
-                direction: lang === 'he' ? "rtl !importan" : "ltr !importan",
-                textAlign: lang === 'he' ? "right !importan" : "left !importan",
             }
         },
         value: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
             return {
-                ...styles,
-                // mode === Mode.EDIT  && 
-                height: '20px',
-                direction: lang === 'he' ? "rtl !importan" : "ltr !importan",
-                textAlign: lang === 'he' ? "right !importan" : "left !importan",
+                position: 'relative',
             }
         },
         indicatorsContainer: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
@@ -148,6 +146,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
     };
 
     const onChangeMultiSelection = (data: any) => {
+        formik?.setFieldValue(fieldName, getFormikFieldValue(data));
         setMultiSelectionValues(data);
     };
 
@@ -163,12 +162,8 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
         <McMultiSelection
             options={getMultiSelectionOptions()}
             values={getMultiSelectionValues()}
-            onChange={(e: React.FormEvent<HTMLSelectElement>): void => {
-                // @ts-ignore
-                formik.setFieldValue(fieldName, getFormikFieldValue(e));
-                onChangeMultiSelection(e)
-            }}
-            placeholder={''}
+            onChange={onChangeMultiSelection}
+            placeholder={placeholder}
             styles={customStyles}
         />
     );
