@@ -6,7 +6,7 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { FieldFeatureTypeModel, FieldFeatureTypeModelType } from "./FieldFeatureTypeModel"
-import { FieldFeatureTypeModelSelector } from "./FieldFeatureTypeModel.base"
+import { fieldFeatureTypeModelPrimitives, FieldFeatureTypeModelSelector } from "./FieldFeatureTypeModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -37,4 +37,4 @@ export function selectFromVectorFeatureTypeStructure() {
   return new VectorFeatureTypeStructureModelSelector()
 }
 
-export const vectorFeatureTypeStructureModelPrimitives = selectFromVectorFeatureTypeStructure().layerName.aliasLayerName
+export const vectorFeatureTypeStructureModelPrimitives = selectFromVectorFeatureTypeStructure().layerName.aliasLayerName.fields(fieldFeatureTypeModelPrimitives)
