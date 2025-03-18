@@ -31,6 +31,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         isDisabled
         isCreateEssential
         isUpdateEssential
+        isMultiSelection
         dateGranularity
         shapeFileMapping {
           provider
