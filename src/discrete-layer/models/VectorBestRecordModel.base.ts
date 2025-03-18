@@ -10,7 +10,7 @@ import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { VectorFeatureTypeStructureModel, VectorFeatureTypeStructureModelType } from "./VectorFeatureTypeStructureModel"
-import { VectorFeatureTypeStructureModelSelector } from "./VectorFeatureTypeStructureModel.base"
+import { vectorFeatureTypeStructureModelPrimitives, VectorFeatureTypeStructureModelSelector } from "./VectorFeatureTypeStructureModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -62,4 +62,4 @@ export function selectFromVectorBestRecord() {
   return new VectorBestRecordModelSelector()
 }
 
-export const vectorBestRecordModelPrimitives = selectFromVectorBestRecord().keywords.type.classification.productName.description.srsId.producerName.productType.srsName.footprint.links(linkModelPrimitives)
+export const vectorBestRecordModelPrimitives = selectFromVectorBestRecord().keywords.type.classification.productName.description.srsId.producerName.productType.srsName.footprint.links(linkModelPrimitives).featureStructure(vectorFeatureTypeStructureModelPrimitives)
