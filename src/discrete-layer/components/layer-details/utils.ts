@@ -91,7 +91,7 @@ export const getEntityDescriptors = (
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'Pycsw3DCatalogRecord')
       break;
     case 'VectorBestRecord':
-      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswVectorBestCatalogRecord')
+      entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'VectorBestMetadata')
       break;
     case 'QuantizedMeshBestRecord':
       entityDesc = entityDescriptors.find(descriptor => descriptor.type === 'PycswQuantizedMeshBestCatalogRecord')
