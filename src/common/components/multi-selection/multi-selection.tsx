@@ -99,7 +99,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
                 position: 'absolute' as const,
                 bottom: '20px',
                 height: '2px',
-                padding: mode === Mode.EDIT ? '0 22px' : '0 4px',
+                padding: mode === Mode.NEW && (layerRecord as LayerMetadataMixedUnion)?.type === RecordType.RECORD_RASTER ? '0 4px' : '0 22px',
             }
         },
         dropdownIndicator: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
