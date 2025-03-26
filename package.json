@@ -92,7 +92,7 @@
     "@map-colonies/react-components": "file:../shared-components/packages/react-components",
     "@map-colonies/react-core": "^4.2.0",
     "@map-colonies/static-assets": "^0.5.1",
-    "@map-colonies/types": "file:../types",
+    "@map-colonies/types": "1.6.0",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
