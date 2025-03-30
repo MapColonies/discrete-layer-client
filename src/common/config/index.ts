@@ -116,11 +116,12 @@ const APP_CONFIG = {
     MAX_ZOOM: 21,
   },
   MAP: {
+    PROJECTION: Proj.WGS84,
     CENTER: MAP.center as [number, number],
     ZOOM: MAP.zoom as number,
-    PROJECTION: Proj.WGS84,
+    MAPMODE2D: MAP.mapMode2D,
     USE_OPTIMIZED_TILE_REQUESTS: MAP.useOptimizedTileRequests as boolean,
-    MAPMODE2D: MAP.mapMode2D 
+    DEBUG_PANEL: MAP.debugPanel
   },
   ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER'
   ACTIVE_LAYER_PROPERTIES: ACTIVE_LAYER_PROPERTIES,
