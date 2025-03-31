@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   Cesium3DTileset,
+  CesiumWFSLayer,
   CesiumWMTSLayer,
   CesiumXYZLayer,
   ICesiumImageryLayer,
@@ -116,12 +117,30 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           />
         );
       }
+      case LinkType.WFS:
+        const options = {
+          url: layer.id,
+          featureType: layerLink.name ?? '',
+          style: CONFIG.WFS.STYLE,
+          pageSize: CONFIG.WFS.MAX.PAGE_SIZE,
+          zoomLevel: CONFIG.WFS.MAX.ZOOM_LEVEL,
+          maxCacheSize: CONFIG.WFS.MAX.CACHE_SIZE,
+          sortBy: layerLink.name === 'buildings_dates' ? 'year_day_numeric' : undefined,
+          shouldFilter: layerLink.name === 'buildings_dates' ? false : undefined
+        };
+        return (
+          <CesiumWFSLayer
+            key={layer.id}
+            options={options}
+            meta={layer as unknown as Record<string, unknown>}
+          />
+        );
       default:
         return undefined;
     }
   };
   
-  const getLayer = (layer: ILayerImage): JSX.Element | null | undefined  => {
+  const getLayer = (layer: ILayerImage): JSX.Element | null | undefined => {
     const cache = cacheRef.current;
     if (layer.layerImageShown === true) {
       if (cache[layer.id] !== undefined) {

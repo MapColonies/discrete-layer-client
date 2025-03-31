@@ -75,6 +75,14 @@ if (!window._env_) {
           perShape: 30000,
           vertices: 30000000,
         }
+      },
+      WFS: {
+        style: '{"stroke": "CesiumColor.RED", "fill": "CesiumColor.RED.withAlpha(0.5)", "strokeWidth": 3, "markerSymbol": "?"}',
+        max: {
+          pageSize: 300,
+          zoomLevel: 14,
+          cacheSize: 6000,
+        }
       }
     };
   })(void 0);

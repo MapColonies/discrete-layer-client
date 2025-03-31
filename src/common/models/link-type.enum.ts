@@ -8,6 +8,7 @@ export enum LinkType {
   WMTS = 'WMTS',
   WMS = 'WMS',
   WCS = 'WCS',
+  WFS = 'WFS',
   THUMBNAIL_S = 'THUMBNAIL_S',
   THUMBNAIL_M = 'THUMBNAIL_M',
   THUMBNAIL_L = 'THUMBNAIL_L',

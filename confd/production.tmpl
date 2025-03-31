@@ -73,5 +73,13 @@ window._env_ = {
       perShape: {{getv "/configuration/polygonparts/max/pershape" "300"}},
       vertices: {{getv "/configuration/polygonparts/max/vertices" "300000"}}
     }
+  },
+  WFS: {
+    style: {{getv "/configuration/wfs/style" "{\"stroke\": \"CesiumColor.RED\", \"fill\": \"CesiumColor.RED.withAlpha(0.5)\", \"strokeWidth\": 3, \"markerSymbol\": \"?\"}"}},
+    max: {
+      pageSize: {{getv "/configuration/wfs/max/page/size" "300"}},
+      zoomLevel: {{getv "/configuration/wfs/max/zoom/level" "14"}},
+      cacheSize: {{getv "/configuration/wfs/max/cache/size" "6000"}}
+    }
   }
 };
