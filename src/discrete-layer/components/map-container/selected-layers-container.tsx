@@ -119,7 +119,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
       }
       case LinkType.WFS:
         const options = {
-          url: layer.id,
+          url: layerLink.url ?? '',
           featureType: layerLink.name ?? '',
           style: CONFIG.WFS.STYLE,
           pageSize: CONFIG.WFS.MAX.PAGE_SIZE,
