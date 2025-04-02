@@ -77,7 +77,7 @@ if (!window._env_) {
         }
       },
       WFS: {
-        style: '{"stroke": "CesiumColor.RED", "fill": "CesiumColor.RED.withAlpha(0.5)", "strokeWidth": 3, "markerSymbol": "?"}',
+        style: '{"color": "#AC9940", "fill": "#F03F8E"}',
         max: {
           pageSize: 300,
           zoomLevel: 14,

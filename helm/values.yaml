@@ -159,7 +159,7 @@ env:
       perShape: 300
       vertices: 300000
   wfs:
-    style: '{"stroke": "CesiumColor.RED", "fill": "CesiumColor.RED.withAlpha(0.5)", "strokeWidth": 3, "markerSymbol": "?"}'
+    style: '{"color": "#AC9940", "fill": "#F03F8E"}'
     max:
       pageSize: 300
       zoomLevel: 14

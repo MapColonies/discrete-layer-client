@@ -208,7 +208,7 @@ const APP_CONFIG = {
     }
   },
   WFS: {
-    STYLE: WFS.style,
+    STYLE: JSON.parse(WFS.style),
     MAX: {
       PAGE_SIZE: WFS.max.pageSize,
       ZOOM_LEVEL: WFS.max.zoomLevel,
