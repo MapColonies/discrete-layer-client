@@ -77,7 +77,7 @@ if (!window._env_) {
         }
       },
       WFS: {
-        style: '{"color": "#AC9940", "fill": "#F03F8E"}',
+        style: '{"color": "#45EB93", "fill": "#C4A346"}',
         max: {
           pageSize: 300,
           zoomLevel: 14,

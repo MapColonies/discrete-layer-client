@@ -159,7 +159,7 @@ env:
       perShape: 300
       vertices: 300000
   wfs:
-    style: '{"color": "#AC9940", "fill": "#F03F8E"}'
+    style: '{"color": "#45EB93", "fill": "#C4A346"}'
     max:
       pageSize: 300
       zoomLevel: 14
