@@ -247,11 +247,15 @@ const DiscreteLayerView: React.FC = observer(() => {
   
   /* eslint-disable */
   const mapSettingsLocale = useMemo(() => ({
+    DIRECTION: intl.locale === 'he' ? 'rtl' : 'ltr',
     MAP_SETTINGS_DIALOG_TITLE:  intl.formatMessage({ id: 'map-settings.dialog.title' }),
     MAP_SETTINGS_SCENE_MODE_TITLE: intl.formatMessage({ id: 'map-settings.base-map.scene-mode.title' }),
     MAP_SETTINGS_BASE_MAP_TITLE: intl.formatMessage({ id: 'map-settings.base-map.title' }),
     ZOOM_LABEL: intl.formatMessage({ id: 'map.zoom.label' }),
-    DIRECTION: intl.locale === 'he' ? 'rtl' : 'ltr',
+    DEBUG_PANEL_TITLE: intl.formatMessage({ id: 'debug-panel.title' }),
+    WFS_TITLE: intl.formatMessage({ id: 'debug-panel.wfs.title' }),
+    WFS_CACHE: intl.formatMessage({ id: 'debug-panel.wfs.cache' }),
+    WFS_EXTENT: intl.formatMessage({ id: 'debug-panel.wfs.extent' }),
   }), [intl]);
   /* eslint-enable */
 
@@ -987,6 +991,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   imgText: intl.formatMessage({ id: 'map-legends.actions.img' }),
                 }
               }}
+              debugPanel={CONFIG.MAP.DEBUG_PANEL}
             >
                 {activeTabView !== TabViews.EXPORT_LAYER && <CesiumDrawingsDataSource
                 

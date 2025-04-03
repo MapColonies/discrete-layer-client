@@ -31,6 +31,7 @@ const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 const SITES_CONFIG = JSON.parse((window as any)._env_.SITES_CONFIG);
 const BFF_PATH = (window as any)._env_.BFF_PATH;
 const POLYGON_PARTS = (window as any)._env_.POLYGON_PARTS;
+const WFS = (window as any)._env_.WFS;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -116,11 +117,12 @@ const APP_CONFIG = {
     MAX_ZOOM: 21,
   },
   MAP: {
+    PROJECTION: Proj.WGS84,
     CENTER: MAP.center as [number, number],
     ZOOM: MAP.zoom as number,
-    PROJECTION: Proj.WGS84,
+    MAPMODE2D: MAP.mapMode2D,
     USE_OPTIMIZED_TILE_REQUESTS: MAP.useOptimizedTileRequests as boolean,
-    MAPMODE2D: MAP.mapMode2D 
+    DEBUG_PANEL: JSON.parse(MAP.debugPanel)
   },
   ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER'
   ACTIVE_LAYER_PROPERTIES: ACTIVE_LAYER_PROPERTIES,
@@ -203,6 +205,14 @@ const APP_CONFIG = {
       WFS_FEATURES: POLYGON_PARTS.max.WFSFeatures,
       PER_SHAPE: POLYGON_PARTS.max.perShape,
       VERTICES: POLYGON_PARTS.max.vertices,
+    }
+  },
+  WFS: {
+    STYLE: JSON.parse(WFS.style),
+    MAX: {
+      PAGE_SIZE: WFS.max.pageSize,
+      ZOOM_LEVEL: WFS.max.zoomLevel,
+      CACHE_SIZE: WFS.max.cacheSize,
     }
   }
 };

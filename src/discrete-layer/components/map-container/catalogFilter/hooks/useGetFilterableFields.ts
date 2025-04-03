@@ -8,7 +8,8 @@ const DOMAIN_TO_PRIMARY_ENTITY_TYPE: Record<RecordType, string[]> = {
   [RecordType.RECORD_RASTER]: ['PycswLayerCatalogRecord'],
   [RecordType.RECORD_3D]: ['Pycsw3DCatalogRecord'],
   [RecordType.RECORD_DEM]: ['PycswDemCatalogRecord'],
-  [RecordType.RECORD_ALL]: ['PycswLayerCatalogRecord', 'Pycsw3DCatalogRecord', 'PycswDemCatalogRecord'],
+  [RecordType.RECORD_VECTOR]: ['PycswVectorCatalogRecord'],
+  [RecordType.RECORD_ALL]: ['PycswLayerCatalogRecord', 'Pycsw3DCatalogRecord', 'PycswDemCatalogRecord', 'PycswVectorCatalogRecord'],
 }
 
 export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = true): null | FieldConfigModelType[] => {
