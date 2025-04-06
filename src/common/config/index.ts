@@ -5,7 +5,7 @@ import { LinkType } from '../models/link-type.enum';
 
 /*eslint-disable */
 const LANGUAGE = (window as any)._env_.LANGUAGE as string;
-const LOCALE = (window as any)._env_.LOCALE as string;
+const BACKEND_LOCALE = (window as any)._env_.BACKEND_LOCALE as string;
 const MAP_SERVER = (window as any)._env_.MAP_SERVER;
 const PUBLISH_POINT = (window as any)._env_.PUBLISH_POINT;
 const CHANNEL = (window as any)._env_.CHANNEL;
@@ -107,7 +107,7 @@ const APP_CONFIG = {
   I18N: {
     DEFAULT_LANGUAGE: LANGUAGE,
   },
-  DEFAULT_LOCALE: LOCALE,
+  DEFAULT_BACKEND_LOCALE: BACKEND_LOCALE,
   BOUNDARIES: {
     MAX_X_KM: 100,
     MAX_Y_KM: 100,

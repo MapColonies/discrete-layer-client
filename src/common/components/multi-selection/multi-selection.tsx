@@ -32,7 +32,7 @@ export const MultiSelection: React.FC<MultiSelectionWrapperProps> = (props) => {
     const { lookupTablesData } = useContext(lookupTablesContext);
     
     const lang = CONFIG.I18N.DEFAULT_LANGUAGE;
-    const backLocale = CONFIG.DEFAULT_LOCALE;
+    const backLocale = CONFIG.DEFAULT_BACKEND_LOCALE;
     const customStyles = {
         container: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
             return {
