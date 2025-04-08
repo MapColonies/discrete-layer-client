@@ -114,6 +114,7 @@ env:
   loggerLevel: warn
   bboxAreaSquareKmLimit: 10000
   language: he
+  backendLocale: he
   jobStatus:
     pollingCycleInterval: 60000
   defaultUser:

@@ -1,6 +1,7 @@
 var MAP_SERVER = '{{ getv "/configuration/mapserver/url" "http://10.28.11.95:8080" }}';
 window._env_ = {
   LANGUAGE: '{{ getv "/configuration/ui/language" "he" }}',
+  BACKEND_LOCALE: '{{ getv "/configuration/ui/backend/locale" "he" }}',
   MAP_SERVER: MAP_SERVER,
   PUBLISH_POINT: '{{ getv "/configuration/mapServer/publishPoint" "combined_layers" }}',
   CHANNEL: '{{ getv "/configuration/mapServer/channel" "Artzi_Planet_Optimaized" }}',
