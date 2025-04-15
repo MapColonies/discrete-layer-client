@@ -57,6 +57,18 @@ export const MCEnumsFetcher: React.FC = observer(() => {
         POINT_CLOUD,
       } = ProductType;
 
+      // enums["RECORD_VECTOR_BEST"] = {
+      //   enumName: "RecordType",
+      //   icon: "",
+      //   internal: false,
+      //   parent: "",
+      //   parentDomain: "",
+      //   properties: {},
+      //   realValue: "RECORD_RASTER",
+      //   translationKey: "RecordType.record_raster"
+      // }
+
+      // enums["LayerVectorRecord"] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Orthophoto', translationKey: 'record-type.record_raster.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_VECTOR };
       enums['LayerRasterRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-Orthophoto', translationKey: 'record-type.record_raster.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_RASTER };
       enums['Layer3DRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-3D', translationKey: 'record-type.record_3d.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_3D };
       enums['LayerDemRecord'] = { enumName: '', realValue: '', icon: 'mc-icon-Map-DTM', translationKey: 'record-type.record_dem.label', parent: '', internal: false, properties: {}, parentDomain: RecordType.RECORD_DEM };

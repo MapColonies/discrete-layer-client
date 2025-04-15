@@ -1,19 +1,27 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState, useRef } from 'react';
+import { get, isEmpty } from 'lodash';
+import { observer } from 'mobx-react-lite';
 import {
+  CesiumCesiumEntity,
+  CesiumColor,
   Cesium3DTileset,
+  CesiumSceneMode,
+  CesiumViewer,
+  CesiumWFSLayer,
   CesiumWMTSLayer,
   CesiumXYZLayer,
   ICesiumImageryLayer,
-  useCesiumMap
+  useCesiumMap,
+  CesiumCesiumPolygonGraphics,
+  CesiumCesiumPolylineGraphics,
+  CesiumGeoJsonDataSource
 } from '@map-colonies/react-components';
-import { observer } from 'mobx-react-lite';
-import { get, isEmpty } from 'lodash';
+import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
 import { LinkType } from '../../../common/models/link-type.enum';
-import CONFIG from '../../../common/config';
-import { useStore } from '../../models/RootStore';
 import { ILayerImage } from '../../models/layerImage';
+import { useStore } from '../../models/RootStore';
 import { Layer3DRecordModelType, LayerRasterRecordModelType, LinkModelType } from '../../models';
 import {
   getLayerLink,
@@ -116,12 +124,54 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           />
         );
       }
+      case LinkType.WFS:
+        const options = {
+          url: layerLink.url ?? '',
+          featureType: layerLink.name ?? '',
+          style: CONFIG.WFS.STYLE,
+          pageSize: CONFIG.WFS.MAX.PAGE_SIZE,
+          zoomLevel: CONFIG.WFS.MAX.ZOOM_LEVEL,
+          maxCacheSize: CONFIG.WFS.MAX.CACHE_SIZE,
+          sortBy: layerLink.name === 'buildings_dates' ? 'year_day_numeric' : undefined,
+          shouldFilter: layerLink.name === 'buildings_dates' ? false : undefined
+        };
+        const handleVisualization = (mapViewer: CesiumViewer, dataSource: CesiumGeoJsonDataSource): void => {
+          const is3D = mapViewer.scene.mode === CesiumSceneMode.SCENE3D;
+          dataSource?.entities.values.forEach((entity: CesiumCesiumEntity) => {
+            if (entity.polygon) {
+              entity.polygon = new CesiumCesiumPolygonGraphics({
+                hierarchy: entity.polygon.hierarchy,
+                material: is3D ? CesiumColor.fromCssColorString('#01FF1F') : CesiumColor.TRANSPARENT, 
+                outline: true,
+                outlineColor: CesiumColor.fromCssColorString('#01FF1F'),
+                outlineWidth: 2,
+                extrudedHeight: is3D ? undefined : 100
+              });
+            }
+            if (entity.polyline) {
+              entity.polyline = new CesiumCesiumPolylineGraphics({
+                positions: entity.polyline.positions,
+                material: CesiumColor.fromCssColorString('#01FF1F'), 
+                clampToGround: true,
+                width: 2,
+              });
+            }
+          });
+        };
+        return (
+          <CesiumWFSLayer
+            key={layer.id}
+            options={options}
+            meta={layer as unknown as Record<string, unknown>}
+            visualizationHandler={handleVisualization}
+          />
+        );
       default:
         return undefined;
     }
   };
   
-  const getLayer = (layer: ILayerImage): JSX.Element | null | undefined  => {
+  const getLayer = (layer: ILayerImage): JSX.Element | null | undefined => {
     const cache = cacheRef.current;
     if (layer.layerImageShown === true) {
       if (cache[layer.id] !== undefined) {

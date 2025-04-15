@@ -22,10 +22,10 @@ export const VectorBestRecordModel = VectorBestRecordModelBase
   .props({
     /* eslint-disable */
     /* tslint:disable */
-    insertDate: types.maybe(momentDateType),
-    creationDate: types.maybe(momentDateType),
-    updateDate: types.maybe(momentDateType),
-    ingestionDate: types.maybe(momentDateType),
+    // insertDate: types.maybe(momentDateType),
+    // creationDate: types.maybe(momentDateType),
+    // updateDate: types.maybe(momentDateType),
+    // ingestionDate: types.maybe(momentDateType),
     /* tslint:enable */
     /* eslint-enable */
 
