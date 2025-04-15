@@ -136,16 +136,16 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           shouldFilter: layerLink.name === 'buildings_dates' ? false : undefined
         };
         const handleVisualization = (mapViewer: CesiumViewer, dataSource: CesiumGeoJsonDataSource): void => {
-          const is2D = mapViewer.scene.mode === CesiumSceneMode.SCENE2D;
+          const is3D = mapViewer.scene.mode === CesiumSceneMode.SCENE3D;
           dataSource?.entities.values.forEach((entity: CesiumCesiumEntity) => {
             if (entity.polygon) {
               entity.polygon = new CesiumCesiumPolygonGraphics({
                 hierarchy: entity.polygon.hierarchy,
-                material: is2D ? CesiumColor.TRANSPARENT : CesiumColor.fromCssColorString('#01FF1F'), 
+                material: is3D ? CesiumColor.fromCssColorString('#01FF1F') : CesiumColor.TRANSPARENT, 
                 outline: true,
                 outlineColor: CesiumColor.fromCssColorString('#01FF1F'),
                 outlineWidth: 2,
-                extrudedHeight: is2D ? 100 : undefined
+                extrudedHeight: is3D ? undefined : 100
               });
             }
             if (entity.polyline) {
