@@ -141,17 +141,17 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             if (entity.polygon) {
               entity.polygon = new CesiumCesiumPolygonGraphics({
                 hierarchy: entity.polygon.hierarchy,
-                material: is3D ? CesiumColor.fromCssColorString('#01FF1F') : CesiumColor.TRANSPARENT, 
+                material: is3D ? CesiumColor.fromCssColorString('#01FF1F').withAlpha(0.5) : CesiumColor.TRANSPARENT, 
                 outline: true,
                 outlineColor: CesiumColor.fromCssColorString('#01FF1F'),
                 outlineWidth: 2,
-                extrudedHeight: is3D ? undefined : 100
+                height: is3D ? undefined : 11000
               });
             }
             if (entity.polyline) {
               entity.polyline = new CesiumCesiumPolylineGraphics({
                 positions: entity.polyline.positions,
-                material: CesiumColor.fromCssColorString('#01FF1F'), 
+                material: CesiumColor.fromCssColorString('#01FF1F').withAlpha(0.5), 
                 clampToGround: true,
                 width: 2,
               });
