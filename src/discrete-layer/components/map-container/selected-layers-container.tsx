@@ -141,17 +141,17 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             if (entity.polygon) {
               entity.polygon = new CesiumCesiumPolygonGraphics({
                 hierarchy: entity.polygon.hierarchy,
-                material: is3D ? CesiumColor.fromCssColorString('#01FF1F').withAlpha(0.5) : CesiumColor.TRANSPARENT, 
+                material: is3D ? CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color).withAlpha(0.5) : CesiumColor.TRANSPARENT, 
                 outline: true,
-                outlineColor: CesiumColor.fromCssColorString('#01FF1F'),
+                outlineColor: CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color),
                 outlineWidth: 2,
-                height: is3D ? undefined : 11000
+                height: is3D ? undefined : 10000 // Mount Everest peak reaches an elevation of approximately 8848.86 meters above sea level
               });
             }
             if (entity.polyline) {
               entity.polyline = new CesiumCesiumPolylineGraphics({
                 positions: entity.polyline.positions,
-                material: CesiumColor.fromCssColorString('#01FF1F').withAlpha(0.5), 
+                material: CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color).withAlpha(0.5), 
                 clampToGround: true,
                 width: 2,
               });
