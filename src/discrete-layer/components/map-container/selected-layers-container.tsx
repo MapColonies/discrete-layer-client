@@ -135,9 +135,17 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           sortBy: layerLink.name === 'buildings_dates' ? 'year_day_numeric' : undefined,
           shouldFilter: layerLink.name === 'buildings_dates' ? false : undefined
         };
-        const handleVisualization = (mapViewer: CesiumViewer, dataSource: CesiumGeoJsonDataSource): void => {
+        const handleVisualization = (
+          mapViewer: CesiumViewer,
+          dataSource: CesiumGeoJsonDataSource,
+          processedEntityIds: Set<string>
+        ): void => {
           const is3D = mapViewer.scene.mode === CesiumSceneMode.SCENE3D;
           dataSource?.entities.values.forEach((entity: CesiumCesiumEntity) => {
+            const entityId = entity.id;
+            if (processedEntityIds.has(entityId)) {
+              return;
+            }
             if (entity.polygon) {
               entity.polygon = new CesiumCesiumPolygonGraphics({
                 hierarchy: entity.polygon.hierarchy,
@@ -159,6 +167,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
                 width: 4,
               });
             }
+            processedEntityIds.add(entityId);
           });
         };
         return (
