@@ -15,7 +15,14 @@ import {
   useCesiumMap,
   CesiumCesiumPolygonGraphics,
   CesiumCesiumPolylineGraphics,
-  CesiumGeoJsonDataSource
+  CesiumGeoJsonDataSource,
+  CesiumCartographic,
+  CesiumCartesian3,
+  CesiumVerticalOrigin,
+  CesiumJulianDate,
+  CesiumCesiumBillboardGraphics,
+  CesiumHeightReference,
+  CesiumPositionProperty
 } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -132,18 +139,16 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           pageSize: CONFIG.WFS.MAX.PAGE_SIZE,
           zoomLevel: CONFIG.WFS.MAX.ZOOM_LEVEL,
           maxCacheSize: CONFIG.WFS.MAX.CACHE_SIZE,
-          sortBy: layerLink.name === 'buildings_dates' ? 'year_day_numeric' : undefined,
-          shouldFilter: layerLink.name === 'buildings_dates' ? false : undefined
+          keyField: 'id'
         };
         const handleVisualization = (
           mapViewer: CesiumViewer,
           dataSource: CesiumGeoJsonDataSource,
-          processedEntityIds: Set<string>
+          processEntityIds: string[]
         ): void => {
           const is3D = mapViewer.scene.mode === CesiumSceneMode.SCENE3D;
           dataSource?.entities.values.forEach((entity: CesiumCesiumEntity) => {
-            const entityId = entity.id;
-            if (processedEntityIds.has(entityId)) {
+            if (processEntityIds.length > 0 && !processEntityIds.some((validId) => entity.id.startsWith(validId))) {
               return;
             }
             if (entity.polygon) {
@@ -167,7 +172,34 @@ export const SelectedLayersContainer: React.FC = observer(() => {
                 width: 4,
               });
             }
-            processedEntityIds.add(entityId);
+            if (entity.billboard) {
+              const worldPos = entity.position?.getValue(CesiumJulianDate.now()) as CesiumCartesian3;
+              const worlPosCartographic = CesiumCartographic.fromCartesian(worldPos);
+              const correctedCarto = new CesiumCartographic(
+                worlPosCartographic.longitude,
+                worlPosCartographic.latitude,
+                is3D ? mapViewer.scene.sampleHeight(CesiumCartographic.fromCartesian(worldPos)) : 500
+              );
+        
+              // Convert back to Cartesian3
+              const correctedCartesian = CesiumCartesian3.fromRadians(correctedCarto.longitude, correctedCarto.latitude, correctedCarto.height);
+        
+              entity.position = correctedCartesian as unknown as CesiumPositionProperty;
+        
+              entity.billboard = new CesiumCesiumBillboardGraphics({
+                image:
+                  'data:image/svg+xml;base64,' +
+                  btoa(`
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                    <circle cx="8" cy="8" r="6" fill="${CONFIG.WFS.STYLE.color}33" stroke="#FFFF0080" stroke-width="2"/>
+                  </svg>
+                `), //${BRIGHT_GREEN}33 - with opacity 0.2 ; #FFFF0080 - with opacity 0.5
+                verticalOrigin: CesiumVerticalOrigin.BOTTOM,
+                heightReference: CesiumHeightReference.NONE, // Ensures it's not clamped and floats above
+                scale: 1.0,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+              });
+            }
           });
         };
         return (
