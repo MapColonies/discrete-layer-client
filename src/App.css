@@ -76,10 +76,6 @@ button.cesium-infoBox-close:hover {
   cursor: pointer;
 }
 
-.cesium-infoBox-camera {
-  display: none !important;
-}
-
 .cesium-infoBox {
   transform: unset;
   top: 60px;
