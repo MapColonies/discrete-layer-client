@@ -2652,6 +2652,7 @@
     lodash "^4.17.20"
     ol "^6.4.3"
     ol-ext "^4.0.18"
+    p-map "6.0.0"
     react-datepicker "^4.16.0"
     react-select "5.7.3"
     resium "1.16.1"
@@ -15702,6 +15703,11 @@ p-locate@^5.0.0:
   integrity sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==
   dependencies:
     p-limit "^3.0.2"
+
+p-map@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/p-map/-/p-map-6.0.0.tgz#4d9c40d3171632f86c47601b709f4b4acd70fed4"
+  integrity sha512-T8BatKGY+k5rU+Q/GTYgrEf2r4xRMevAN5mtXc2aPc4rS1j3s+vWTaO2Wag94neXuCAUAs8cxBL9EeB5EA6diw==
 
 p-map@^2.0.0:
   version "2.1.0"
