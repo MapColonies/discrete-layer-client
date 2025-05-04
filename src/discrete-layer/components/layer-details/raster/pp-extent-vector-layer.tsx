@@ -159,14 +159,19 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
             const bbox = bboxPolygon(mapOl.getView().calculateExtent([size[0] + BUFFER,size[1] + BUFFER]) as BBox);
             const extentPolygon = polygon(bbox.geometry.coordinates);
             
-            //@ts-ignore
-            const featureClippedPolygon = intersect(feat, extentPolygon);
-           
-            if (featureClippedPolygon) {
-              const geometry = new GeoJSON().readGeometry(featureClippedPolygon.geometry);
-              greenStyle.setGeometry(geometry);
-            }
+            try{ // There is some cases when turf.intersect() throws exception, then no need to change geometry
+              // @ts-ignore
+              const featureClippedPolygon = intersect(feat, extentPolygon);
 
+              if (featureClippedPolygon) {
+                const geometry = new GeoJSON().readGeometry(featureClippedPolygon.geometry);
+                greenStyle.setGeometry(geometry);
+              }
+            }
+            catch(e){
+              console.log('*** PP: turf.intersect() failed ***', 'feat -->',feat, 'extentPolygon -->',extentPolygon);
+            }
+           
             return feat ? <GeoJSONFeature 
               geometry={{...feat.geometry}} 
               fit={false}
