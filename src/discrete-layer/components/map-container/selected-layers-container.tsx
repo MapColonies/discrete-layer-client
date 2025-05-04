@@ -191,7 +191,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
                   'data:image/svg+xml;base64,' +
                   btoa(`
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                    <circle cx="8" cy="8" r="6" fill="${CONFIG.WFS.STYLE.color}33" stroke="#FFFF0080" stroke-width="2"/>
+                    <circle cx="8" cy="8" r="6" fill="${CONFIG.WFS.STYLE.color}33" stroke="${CONFIG.WFS.STYLE.pointStroke ?? CONFIG.WFS.STYLE.color}80" stroke-width="2"/>
                   </svg>
                 `), //${BRIGHT_GREEN}33 - with opacity 0.2 ; #FFFF0080 - with opacity 0.5
                 verticalOrigin: CesiumVerticalOrigin.BOTTOM,
