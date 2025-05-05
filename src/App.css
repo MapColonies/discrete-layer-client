@@ -190,3 +190,18 @@ input:disabled {
 .mdc-checkbox.mdc-checkbox--disabled ~ label {
   opacity: 0.3;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
+  border: 1px solid var(--mdc-theme-on-surface);
+}

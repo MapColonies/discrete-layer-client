@@ -29,6 +29,7 @@
   CONFIGURATION_LOGGER_LEVEL: {{ quote .Values.env.loggerLevel }}
   CONFIGURATION_BBOX_AREA_SQUARE_KM_LIMIT: {{ quote .Values.env.bboxAreaSquareKmLimit }}
   CONFIGURATION_UI_LANGUAGE: {{ quote .Values.env.language }}
+  CONFIGURATION_BACKEND_LOCALE: {{ quote .Values.env.backendLocale }}
   CONFIGURATION_JOB_STATUS_POLLING_CYCLE_INTERVAL: {{ quote .Values.env.jobStatus.pollingCycleInterval }}
   CONFIGURATION_DEFAULT_USER_ROLE: {{ quote .Values.env.defaultUser.role }}
   CONFIGURATION_RUNNING_MODE_TYPE: {{ quote .Values.env.runningMode.type }}
