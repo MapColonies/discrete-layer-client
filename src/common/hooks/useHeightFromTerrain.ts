@@ -1,7 +1,7 @@
-import { CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from "@map-colonies/react-components";
-import { useEffect, useRef, useState } from "react";
+import { CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from '@map-colonies/react-components';
+import { useEffect, useRef, useState } from 'react';
 import _, { isEmpty } from 'lodash';
-import { is2dArray, isArrayEqual } from "../helpers/array";
+import { is2dArray, isArrayEqual } from '../helpers/array';
 
 
 export interface IPosition {

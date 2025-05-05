@@ -25,6 +25,7 @@ keys = [
   "/configuration/map/zoom",
   "/configuration/map/mapmode2d",
   "/configuration/map/use/optimized/tile/requests",
+  "/configuration/map/debug/panel",
   "/configuration/logger/http/host",
   "/configuration/logger/http/port",
   "/configuration/logger/http/path",
@@ -54,5 +55,9 @@ keys = [
   "/configuration/polygonparts/area/threshold",
   "/configuration/polygonparts/max/wfs/features",
   "/configuration/polygonparts/max/pershape",
-  "/configuration/polygonparts/max/vertices"
+  "/configuration/polygonparts/max/vertices",
+  "/configuration/wfs/style",
+  "/configuration/wfs/max/page/size",
+  "/configuration/wfs/max/zoom/level",
+  "/configuration/wfs/max/cache/size"
 ]
