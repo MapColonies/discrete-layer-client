@@ -75,6 +75,14 @@ if (!window._env_) {
           perShape: 30000,
           vertices: 30000000,
         }
+      },
+      WFS: {
+        style: '{"color": "#45EB93", "fill": "#C4A346"}',
+        max: {
+          pageSize: 300,
+          zoomLevel: 14,
+          cacheSize: 6000,
+        }
       }
     };
   })(void 0);
