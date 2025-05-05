@@ -146,7 +146,8 @@ export const SelectedLayersContainer: React.FC = observer(() => {
           dataSource: CesiumGeoJsonDataSource,
           processEntityIds: string[]
         ): void => {
-          const is3D = mapViewer.scene.mode === CesiumSceneMode.SCENE3D;
+          const is2D = mapViewer.scene.mode === CesiumSceneMode.SCENE2D;
+        
           dataSource?.entities.values.forEach((entity: CesiumCesiumEntity) => {
             if (processEntityIds.length > 0 && !processEntityIds.some((validId) => entity.id.startsWith(validId))) {
               return;
@@ -154,13 +155,13 @@ export const SelectedLayersContainer: React.FC = observer(() => {
             if (entity.polygon) {
               entity.polygon = new CesiumCesiumPolygonGraphics({
                 hierarchy: entity.polygon.hierarchy,
-                material: is3D
-                  ? CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color).withAlpha(0.5)
-                  : CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color).withAlpha(0.2),
+                material: is2D
+                ? CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color).withAlpha(0.2)
+                : CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color).withAlpha(0.5),
                 outline: true,
                 outlineColor: CesiumColor.fromCssColorString(CONFIG.WFS.STYLE.color),
                 outlineWidth: 3,
-                height: is3D ? undefined : 10000, // Mount Everest peak reaches an elevation of approximately 8848.86 meters above sea level
+                height: is2D ? 10000 : undefined, // Mount Everest peak reaches an elevation of approximately 8848.86 meters above sea level
                 perPositionHeight: false,
               });
             }
@@ -178,7 +179,7 @@ export const SelectedLayersContainer: React.FC = observer(() => {
               const correctedCarto = new CesiumCartographic(
                 worlPosCartographic.longitude,
                 worlPosCartographic.latitude,
-                is3D ? mapViewer.scene.sampleHeight(CesiumCartographic.fromCartesian(worldPos)) : 500
+                is2D ? 500 : mapViewer.scene.sampleHeight(CesiumCartographic.fromCartesian(worldPos))
               );
         
               // Convert back to Cartesian3
