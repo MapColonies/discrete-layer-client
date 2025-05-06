@@ -48,7 +48,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "/node_modules/(?!(ol|ol-mapbox-style|ol-ext)/).*/"
+      "/node_modules/(?!(ol|ol-mapbox-style|ol-ext|@map-colonies/react-components|p-map)/).*"
     ],
     "moduleNameMapper": {
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
