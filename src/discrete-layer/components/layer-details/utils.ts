@@ -169,6 +169,9 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     else if (fieldNameStr.toLowerCase().includes('sensors')) {
       return 'sensors';
     }
+    else if (fieldNameStr.toLowerCase().includes('featurestructure')) {
+      return 'featureStructure';
+    }
     else if (fieldNameStr.toLowerCase().includes('footprint') || fieldNameStr.toLowerCase().includes('geometry') || fieldNameStr.toLowerCase().includes('layerpolygonparts')) {
       return 'json';
     }

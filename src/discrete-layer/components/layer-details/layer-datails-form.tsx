@@ -247,6 +247,7 @@ const InnerForm = (
             layerRecord={layerRecord}
             mode={mode}
             formik={entityFormikHandlers}
+            intl={intl}
           />
         </Box>
         <Box className="footer">
