@@ -44,8 +44,8 @@
   CONFIGURATION_BASEMAPS: {{ quote .Values.env.baseMaps }}
   CONFIGURATION_DEFAULT_TERRAIN_PROVIDER_URL: {{ quote .Values.env.defaultTerrainProviderUrl }}
   CONFIGURATION_WEB_TOOLS_URL: {{ quote .Values.env.webToolsUrl }}
-  CONFIGURATION_MODEL_ANALYZER_ROUTE: {{ quote .Values.env.modelAnalyzerRoute }}
-  CONFIGURATION_MODEL_ANALYZER_TOKEN_VALUE: {{ quote .Values.env.modelAnalyzerTokenValue }}
+  CONFIGURATION_MODEL_VIEWER_ROUTE: {{ quote .Values.env.modelViewerRoute }}
+  CONFIGURATION_MODEL_VIEWER_TOKEN_VALUE: {{ quote .Values.env.modelViewerTokenValue }}
   CONFIGURATION_PROJECT_VERSION: {{ quote .Values.env.projectVersion }}
   CONFIGURATION_ACTIVE_LAYER_PROPERTIES_MAPURLPATH: {{ quote .Values.env.activeLayerPropeties.mapUrlPath }}
   CONFIGURATION_ACTIVE_LAYER_PROPERTIES_EXPORTPATH: {{ quote .Values.env.activeLayerPropeties.exportPath }}

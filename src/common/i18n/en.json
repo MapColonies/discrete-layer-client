@@ -96,7 +96,7 @@
   "action.layer.move-up.tooltip": "Move up",
   "action.layer.move-down.tooltip": "Move down",
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
-  "action.analyze.tooltip": "Analyze model",
+  "action.viewer.tooltip": "Viewer",
   "action.job.retry": "Try again",
   "action.job.abort": "Abort",
   "action.job.download_details": "Download",
