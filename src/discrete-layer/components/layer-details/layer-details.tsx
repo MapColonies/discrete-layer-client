@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlShape } from 'react-intl';
 import moment from 'moment';
 import { observer } from 'mobx-react-lite';
 import { get, isEmpty } from 'lodash';
@@ -67,6 +67,7 @@ interface LayersDetailsComponentProps {
   enableMapPreview?: boolean;
   fieldNamePrefix?: string;
   showFiedlsCategory?: boolean;
+  intl?: IntlShape;
 }
 
 export const getValuePresentor = (
@@ -81,7 +82,8 @@ export const getValuePresentor = (
   },
   enumsMap?: IEnumsMapType | null,
   enableMapPreview = true,
-  fieldNamePrefix?: string
+  fieldNamePrefix?: string,
+  intl?: IntlShape
 ): JSX.Element => {
   const { fieldName, lookupTable } = fieldInfo;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupTable as string);
@@ -114,6 +116,35 @@ export const getValuePresentor = (
       //     formik={formik}
       //     fieldNamePrefix={fieldNamePrefix}/>
       // );
+    case 'featureStructure':
+      return (
+        <Box className='featureStructureContainer'>
+          <table className='featureStructureTable'>
+            <thead>
+              <tr>
+                <th className='thTableFeature'>
+                  {
+                    intl?.formatMessage({ id: 'field-names.vector.featureStructure.fieldName' })
+                  }
+                </th>
+                <th className='thTableFeature'>
+                  {
+                    intl?.formatMessage({ id: 'field-names.vector.featureStructure.type' })
+                  }
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {value.fields.map((field: any, index: number) => (
+                <tr key={index}>
+                  <td className='tdTableFeature'>{field.fieldName}</td>
+                  <td className='tdTableFeature'>{field.type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Box>
+      );
     case 'string[]':
       return (
         <StringValuePresentorComponent 
@@ -217,7 +248,7 @@ export const getValuePresentor = (
 };
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
-  const { entityDescriptors, geoCustomChecks, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false, enableMapPreview=true, fieldNamePrefix, showFiedlsCategory=true } = props;
+  const { entityDescriptors, geoCustomChecks, mode, isBrief, layerRecord, formik, className = '', isSearchTab = false, enableMapPreview = true, fieldNamePrefix, showFiedlsCategory = true, intl } = props;
   const { enumsMap } = useContext(EnumsMapContext);
   const store = useStore();
   
@@ -310,7 +341,8 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                     geoCustomChecks,
                     enumsMap,
                     enableMapPreview,
-                    fieldNamePrefix
+                    fieldNamePrefix,
+                    intl
                   )
                 }
               </Box>
