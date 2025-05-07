@@ -97,7 +97,7 @@
   "action.layer.move-up.tooltip": "הזזה למעלה",
   "action.layer.move-down.tooltip": "הזזה למטה",
   "action.layer.move-to-bottom.tooltip": "הורדה לתחתית",
-  "action.analyze.tooltip": "ניתוח שטח",
+  "action.viewer.tooltip": "צפיין",
   "action.job.retry": "נסה שוב",
   "action.job.abort": "בטל",
   "action.job.download_details": "הורדה",

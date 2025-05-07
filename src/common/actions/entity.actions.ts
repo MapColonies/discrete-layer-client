@@ -56,11 +56,11 @@ const GENERAL_ACTIONS_GROUP: IActionGroup = {
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
     {
-      action: 'analyze',
+      action: 'viewer',
       frequent: true,
       icon: '',
       class: 'mc-icon-Earth',
-      titleTranslationId: 'action.analyze.tooltip',
+      titleTranslationId: 'action.viewer.tooltip',
       views: [TabViews.CATALOG, TabViews.SEARCH_RESULTS]
     },
     {

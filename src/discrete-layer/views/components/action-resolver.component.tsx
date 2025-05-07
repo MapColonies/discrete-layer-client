@@ -163,13 +163,13 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
           handleOpenEntityDialog(true);
           break;
-        case 'Layer3DRecord.analyze':
-          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_ANALYZER_TOKEN_VALUE}`);
+        case 'Layer3DRecord.viewer':
+          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_VIEWER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_VIEWER_TOKEN_VALUE}`);
           break;
-        case 'LayerRasterRecord.analyze':
-        case 'LayerDemRecord.analyze':
-        case 'VectorBestRecord.analyze':
-        case 'QuantizedMeshBestRecord.analyze':
+        case 'LayerRasterRecord.viewer':
+        case 'LayerDemRecord.viewer':
+        case 'VectorBestRecord.viewer':
+        case 'QuantizedMeshBestRecord.viewer':
           break;
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
