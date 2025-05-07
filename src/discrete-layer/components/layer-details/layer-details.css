@@ -155,7 +155,7 @@ body[dir='ltr'] .featureStructureContainer {
 .thTableFeature,
 .tdTableFeature {
   padding: 2px;
-  border: 1px solid rgba(0, 0, 0, 1);
+  border: 1px solid var(--mdc-theme-surface);
 }
 
 .thTableFeature {

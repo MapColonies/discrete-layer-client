@@ -118,7 +118,7 @@ export const getValuePresentor = (
       // );
     case 'featureStructure':
       return (
-        <Box className="featureStructureContainer">
+        <Box className='featureStructureContainer'>
           <table className='featureStructureTable'>
             <thead>
               <tr>
