@@ -402,6 +402,8 @@
   "field-names.vector.link.protocol": "פרוטוקול",
   "field-names.vector.link.url": "קישור",
   "field-names.vector.featureStructure": "מבנה הפיצ'ר",
+  "field-names.vector.featureStructure.type": "סוג",
+  "field-names.vector.featureStructure.fieldName": "שם שדה",
 
   "field-names.vector-raster.type": "סוג יישות",
   "field-names.vector-raster.classification": "סיווג",
