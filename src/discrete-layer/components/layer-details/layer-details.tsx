@@ -137,8 +137,8 @@ export const getValuePresentor = (
             <tbody>
               {value.fields.map((field: any, index: number) => (
                 <tr key={index}>
-                  <td className='tbTableFeature'>{field.fieldName}</td>
-                  <td className='tbTableFeature'>{field.type}</td>
+                  <td className='tdTableFeature'>{field.fieldName}</td>
+                  <td className='tdTableFeature'>{field.type}</td>
                 </tr>
               ))}
             </tbody>
