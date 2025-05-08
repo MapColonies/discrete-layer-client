@@ -37,6 +37,7 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
   }, [mode,jsonValue]);
   
   const previewBaseMap = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-array-constructor
     const olBaseMap = new Array();
     let baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isForPreview);
     if(!baseMap){

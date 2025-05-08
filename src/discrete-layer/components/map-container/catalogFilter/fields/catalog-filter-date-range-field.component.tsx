@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form';
-import { lastDayOfYear, startOfDay, startOfMonth, startOfWeek, startOfYear, subDays, subWeeks, subYears } from 'date-fns';
+import { lastDayOfYear, startOfDay, startOfYear, subDays, subYears } from 'date-fns';
 import { Box, DateRangePicker, isDateRange } from '@map-colonies/react-components';
 import { getDateformatType } from '../../../../../common/helpers/formatters';
 import { FieldConfigModelType, FilterFieldValidationModelType } from '../../../../models';

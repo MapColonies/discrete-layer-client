@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { FieldConfigModelType, FilterFieldValidationModelType } from '../../../../models';
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form';
 import { TextField } from '@map-colonies/react-core';

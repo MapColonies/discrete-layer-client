@@ -28,7 +28,6 @@ import {
   SupportedLocales
 } from '@map-colonies/react-components';
 import CONFIG from '../../../common/config';
-import { LayersResultsComponent } from '../layers-results/layers-results';
 import { DrawerOpener } from '../drawer-opener/drawer-opener';
 import { PolygonSelectionUi } from './polygon-selection-ui';
 import { SelectedLayersContainer } from './selected-layers-container';

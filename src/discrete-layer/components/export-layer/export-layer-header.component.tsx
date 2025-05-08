@@ -1,13 +1,13 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { Box } from "@map-colonies/react-components";
-import { Mode } from "../../../common/models/mode.enum";
-import { EntityDescriptorModelType, useStore } from "../../models";
-import { LayersDetailsComponent } from "../layer-details/layer-details";
+import { Box } from '@map-colonies/react-components';
+import { Mode } from '../../../common/models/mode.enum';
+import { EntityDescriptorModelType, useStore } from '../../models';
+import { LayersDetailsComponent } from '../layer-details/layer-details';
+import ExportLayerToolbar from './export-layer-toolbar.component';
 
 import './export-layer.component.css';
-import ExportLayerToolbar from './export-layer-toolbar.component';
-import { isEmpty } from 'lodash';
 
 interface ExportLayerHeaderProps {}
 

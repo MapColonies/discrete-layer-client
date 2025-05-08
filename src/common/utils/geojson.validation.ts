@@ -1,7 +1,7 @@
 import bolleanValid from '@turf/boolean-valid';
 // import kinks from '@turf/kinks';
 import booleanPointOnLine from '@turf/boolean-point-on-line';
-import { lineString } from "@turf/helpers";
+import { lineString } from '@turf/helpers';
 import { Geometry, Position } from 'geojson';
 import { geoCustomChecks } from './geo.tools';
 const gpsi = require('geojson-polygon-self-intersections');
@@ -58,7 +58,7 @@ export const hasSelfIntersections = (json: Geometry): boolean => {
     filterFunc,
   );
 
-  const isectsLength = isects.filter((obj: any) => obj != undefined).length;
+  const isectsLength = isects.filter((obj: any) => obj !== undefined).length;
   
   return isectsLength > 0;
 }
@@ -150,24 +150,24 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCu
     reason: ''
   } as geoJSONValidation;
   
-  try{
-    if(res.valid){
+  try {
+    if (res.valid) {
       const geoJson = JSON.parse(jsonValue);
-      if(!bolleanValid(geoJson)){
+      if (!bolleanValid(geoJson)) {
         return {
           valid: false,
           severity_level: 'ERROR',
           reason: 'not-geo_json'
         }
       }
-      if(!isValidGeometryType(geoJson)){
+      if (!isValidGeometryType(geoJson)) {
         return {
           valid: false,
           severity_level: 'ERROR',
           reason: 'geo_json-geometry-not-supported'
         }
       }
-      if(!isValidWGS84Coordinates(geoJson)){
+      if (!isValidWGS84Coordinates(geoJson)) {
         return {
           valid: false,
           severity_level: 'ERROR',
@@ -175,17 +175,17 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCu
         }
       }
       const linearRingsCheck = isAllGeometryLinearRingsValid(geoJson);
-      if(linearRingsCheck.severity_level !== 'INFO'){
+      if (linearRingsCheck.severity_level !== 'INFO') {
         return linearRingsCheck;
       }
-      if(hasTooManyVerteces(geoJson)) {
+      if (hasTooManyVerteces(geoJson)) {
         return {
           valid: true,
           severity_level: 'WARN',
           reason: 'geo_json-too_many_verteces'
         }
       }
-      if(hasSelfIntersections(geoJson)) {
+      if (hasSelfIntersections(geoJson)) {
         return {
           valid: false,
           severity_level: 'ERROR',
@@ -195,8 +195,8 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCu
 
       let validationArr: geoJSONValidation[] = [] as unknown as geoJSONValidation[];
       
-      if(geoCustomChecks){
-        validationArr = geoCustomChecks.validationFunc.map((func) => func(geoJson, geoCustomChecks.validationFuncArgs)).filter(u => u != undefined) as geoJSONValidation[];
+      if (geoCustomChecks) {
+        validationArr = geoCustomChecks.validationFunc.map((func) => func(geoJson, geoCustomChecks.validationFuncArgs)).filter(u => u !== undefined) as geoJSONValidation[];
       }
 
       if(validationArr && validationArr.length){
@@ -204,12 +204,12 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCu
       }
     }
   }
-  catch (e){
+  catch (e) {
     return {
       valid: false,
       severity_level: 'ERROR',
       reason: 'not-json'
-    }
+    };
   }
   return res;
 };

@@ -1,11 +1,11 @@
-import { get } from 'lodash';
+// import { get } from 'lodash';
 import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
-import { currentBffUrl, syncSlavesClients } from './common/helpers/siteUrl';
-import { sessionStore } from './common/helpers/storage';
-import { RecordType } from './discrete-layer/models';
+import { currentBffUrl } from './common/helpers/siteUrl';
+// import { sessionStore } from './common/helpers/storage';
+// import { RecordType } from './discrete-layer/models';
 
-export const enum SYNC_QUERY_NAME {
+/*export const enum SYNC_QUERY_NAME {
   UPDATE_META_DATA = 'updateMetadata',
   RASTER_INGESTION = 'startRasterIngestion',
   RASTER_UPDATE_GEOPKG = 'startRasterUpdateGeopkg',
@@ -157,7 +157,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
       }
     }
   });
-};
+};*/
 
 export const syncHttpClientGql = () => {
   const clientGql = createHttpClient(currentBffUrl);
@@ -165,7 +165,7 @@ export const syncHttpClientGql = () => {
   const createClientGql = (client: GraphQLClient) => {
     const syncRequest = async ( isRawRequest: boolean, query: string, variables: any) => {
       try {
-        const relevantQuery = currentQuery(query);
+        // const relevantQuery = currentQuery(query);
         let masterResponse: any = isRawRequest
           ? await client.rawRequest(query, variables)
           : await client.request(query, variables);

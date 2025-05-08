@@ -5,7 +5,7 @@ import React, { useContext, useMemo } from 'react';
 import { FormattedMessage, IntlShape } from 'react-intl';
 import moment from 'moment';
 import { observer } from 'mobx-react-lite';
-import { get, isEmpty } from 'lodash';
+import { get } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
@@ -16,7 +16,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { geoJSONValidation } from '../../../common/utils/geojson.validation';
 import { geoArgs } from '../../../common/utils/geo.tools';
 import { 
-  AutocompletionModelType,
+  // AutocompletionModelType,
   EntityDescriptorModelType,
   FieldConfigModelType,
   LayerMetadataMixedUnion,
@@ -30,7 +30,7 @@ import { DEFAULT_ENUM, getEnumKeys, isEnumType } from '../../components/layer-de
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
-import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
+// import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
 import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
