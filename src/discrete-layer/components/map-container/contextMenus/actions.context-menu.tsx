@@ -1,5 +1,7 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import _ from 'lodash';
+import { observer } from 'mobx-react-lite';
 import { IContextMenuData, Box, CesiumCartographic } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
 import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
@@ -15,8 +17,6 @@ import useGetMenuDimensions from '../../../../common/hooks/mapMenus/useGetMenuDi
 import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
 import ActionsMenuDimensionsContext from './contexts/actionsMenuDimensionsContext';
 import './actions.context-menu.css';
-import _ from 'lodash';
-import { observer } from 'mobx-react-lite';
 
 interface IActionsContextMenuProps extends IContextMenuData {}
 

@@ -54,10 +54,8 @@ import { getUIIngestionFieldDescriptors } from './ingestion.utils';
 
 import './entity.raster.dialog.css';
 
-const IS_EDITABLE = 'isManuallyEditable';
 const DEFAULT_ID = 'DEFAULT_UI_ID';
 const DEFAULT_TYPE_NAME = 'DEFAULT_TYPE_NAME';
-const IMMEDIATE_EXECUTION = 0;
 const NONE = 0;
 const START = 0;
 

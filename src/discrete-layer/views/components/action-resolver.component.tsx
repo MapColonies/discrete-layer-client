@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { NodeData } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
 import { Feature } from 'geojson';
-import _, { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { DrawType } from '@map-colonies/react-components';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import {
@@ -30,8 +30,6 @@ import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFe
 import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
 import { TabViews } from '../tab-views';
 import { useEnums } from '../../../common/hooks/useEnum.hook';
-
-const FIRST = 0;
 
 interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
@@ -104,8 +102,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
     if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
       console.log(`  ${action} EVENT`, data);
-      let numOfLayers: number;
-      let order: number;
 
       switch (action) {
         case 'LayerRasterRecord.edit':

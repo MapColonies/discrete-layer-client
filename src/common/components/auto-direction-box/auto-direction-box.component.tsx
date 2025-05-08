@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren, forwardRef } from "react"
+import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren, forwardRef } from 'react';
 
 export const AutoDirectionBox = forwardRef<
   HTMLElement,

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box } from "@map-colonies/react-components";
-import { Button, CircularProgress, Typography } from "@map-colonies/react-core";
-import { FormattedMessage, useIntl } from "react-intl";
+import { Box } from '@map-colonies/react-components';
+import { Button, CircularProgress, Typography } from '@map-colonies/react-core';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { FieldErrors, useFormContext } from 'react-hook-form';
 import { get, isEmpty } from 'lodash';
 import { useStore } from '../../models';

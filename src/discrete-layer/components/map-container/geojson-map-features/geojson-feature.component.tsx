@@ -81,7 +81,6 @@ export const GeojsonFeature: React.FC<GeojsonFeatureProps> =
                 const featureFillColor = featureConfig?.color;
                 const featureOutlineColor = featureConfig?.outlineColor;
                 const lineWidth = featureConfig?.outlineWidth;
-                const outlineWidth = featureConfig?.outlineWidth;
 
                 geoJsonDataSource.entities.values.forEach((item) => {
                   if (item.polyline) {

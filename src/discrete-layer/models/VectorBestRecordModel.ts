@@ -1,12 +1,11 @@
-import { Instance, types } from "mobx-state-tree"
-import { VectorBestRecordModelBase } from "./VectorBestRecordModel.base"
-import { momentDateType } from "./moment-date.type"
+import { Instance, types } from 'mobx-state-tree';
+import { VectorBestRecordModelBase } from './VectorBestRecordModel.base';
 
 /* The TypeScript type of an instance of VectorBestRecordModel */
 export interface VectorBestRecordModelType extends Instance<typeof VectorBestRecordModel.Type> {}
 
 /* A graphql query fragment builders for VectorBestRecordModel */
-export { selectFromVectorBestRecord, vectorBestRecordModelPrimitives, VectorBestRecordModelSelector } from "./VectorBestRecordModel.base"
+export { selectFromVectorBestRecord, vectorBestRecordModelPrimitives, VectorBestRecordModelSelector } from './VectorBestRecordModel.base';
 
 /**
  * VectorBestRecordModel
@@ -33,4 +32,4 @@ export const VectorBestRecordModel = VectorBestRecordModelBase
     footprintShown: types.union(types.undefined, types.null, types.boolean),
     order: types.union(types.undefined, types.null, types.number),
     layerImageShown: types.union(types.undefined, types.null, types.boolean),
-  })
+  });

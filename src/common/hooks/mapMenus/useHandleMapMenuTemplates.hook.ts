@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
+import _ from 'lodash';
+import { IContextMenuData } from '@map-colonies/react-components';
 import CONFIG from '../../config';
 import {
     DynamicMenuData,
@@ -7,14 +10,11 @@ import {
     MenuItemsGroup,
     MenuItemsList,
     isMenuItemGroup
-} from "../../../discrete-layer/models/mapMenusManagerStore";
-import { ContextActionGroupProps, ContextActions, ContextActionsGroupTemplates, ContextActionsTemplates } from "../../actions/context.actions";
-import { useStore } from "../../../discrete-layer/models";
-import { IContextMenuData } from "@map-colonies/react-components";
-import _ from "lodash";
-import { IDispatchAction } from "../../../discrete-layer/models/actionDispatcherStore";
-import { DEFAULT_LAYER_HUE_FACTOR } from "../../../discrete-layer/views/components/map-action-resolver.component";
-import { useIntl } from "react-intl";
+} from '../../../discrete-layer/models/mapMenusManagerStore';
+import { ContextActionGroupProps, ContextActions, ContextActionsGroupTemplates, ContextActionsTemplates } from '../../actions/context.actions';
+import { useStore } from '../../../discrete-layer/models';
+import { IDispatchAction } from '../../../discrete-layer/models/actionDispatcherStore';
+import { DEFAULT_LAYER_HUE_FACTOR } from '../../../discrete-layer/views/components/map-action-resolver.component';
 
 export const useHandleMapMenuTemplates = (
     menuProperties?: IMapMenuProperties,

@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { area, countSmallHoles, explode, geoArgs, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isPolygonContainsPolygon, isSmallArea, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
+import { area, countSmallHoles, explode, geoArgs, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isSmallArea, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
@@ -288,15 +288,17 @@ export const InnerRasterForm = (
       countPPWithGeometryErrors += (!isGeometryPolygon(values[key].footprint) ? 1 : 0);
     });
 
-    if(countPPWithGeometryErrors > NONE){
+    if (countPPWithGeometryErrors > NONE) {
       setClientCustomValidationErrors({
         ...clientCustomValidationErrors,
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         [CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_GEOMETRY]: intl.formatMessage(
           {id: 'validation-general.polygonParts.noValidGeometry'}, 
           {numErrorParts: emphasizeByHTML(`${countPPWithGeometryErrors}`)}
         )
       });
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_GEOMETRY));
     }
     setPPFeatures(features);
@@ -335,6 +337,7 @@ export const InnerRasterForm = (
     const addFootPrintAmountClientError = (count: number) => {
       setClientCustomValidationErrors({
         ...clientCustomValidationErrors,
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         [CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_FOOTPRINT]: intl.formatMessage(
           { id: 'validation-general.polygonParts.footPrint.hasErrors' },
           { numErrorParts: emphasizeByHTML(`${count}`) }
@@ -343,6 +346,7 @@ export const InnerRasterForm = (
     };
 
     const removeFootPrintAmountClientError = () => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       setClientCustomValidationErrors(omit(clientCustomValidationErrors, CUSTOM_VALIDATION_ERROR_CODES.POLYGON_PARTS_NOT_VALID_FOOTPRINT));
     }
     
@@ -646,6 +650,7 @@ export const InnerRasterForm = (
     }
 
     // Synch entity with loaded values
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [key, val] of Object.entries(metadata.recordModel)) {
       // @ts-ignore
       layerRecord[key] = metadata.recordModel[key];
@@ -682,7 +687,7 @@ export const InnerRasterForm = (
 
     resetForm();
 
-    if(removePrevData){
+    if (removePrevData) {
       setPolygonPartsMode('MANUAL');
       setExpandedParts([]);
       schemaUpdater(0, 0, true);
@@ -711,20 +716,20 @@ export const InnerRasterForm = (
     if (featuresArr && featuresArr.length > ppConfig.MAX.PER_SHAPE) {
       return exceededFeaturesNumberError;
     }
-    if(verticesNum > ppConfig.MAX.VERTICES){
+    if (verticesNum > ppConfig.MAX.VERTICES) {
       return exceededVertexNumberError(featuresArr.length, verticesNum)
     }
     return true;
   }
 
-  const isIngestedSourceSelected = () => {
+  /*const isIngestedSourceSelected = () => {
     let res = true;
     ingestionFields.forEach((curr) => {
       // @ts-ignore
       res = res && !isEmpty(values[curr?.fieldName]);
     }, true);
     return res;
-  }
+  }*/
 
   const transformShapeFeatureToEntity = (polygonPartDescriptors: FieldConfigModelType[], feature: Feature<Geometry, GeoJsonProperties>, provider: string, fileName?: string) => {
     let ret = {} as ParsedPolygonPart;
@@ -767,12 +772,10 @@ export const InnerRasterForm = (
               }
 
               (data as FeatureCollectionWithFilename).features.forEach((feature, idx) => {
-                /*if(idx < 20)*/ {
-                  const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
-                  const parsedPolygonPartData = transformShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);
-                  parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
-                  parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
-                }
+                const currentKey = `${NESTED_FORMS_PRFIX}${idx}`;
+                const parsedPolygonPartData = transformShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);
+                parsedPolygonPartData.polygonPart.uniquePartId = currentKey;
+                parsedPolygonParts[currentKey] = {...parsedPolygonPartData};
               });
 
               const outlinedPolygon = getOutlinedFeature((data as FeatureCollectionWithFilename).features as Feature<Polygon | MultiPolygon, Properties>[]);
@@ -1129,22 +1132,23 @@ export const InnerRasterForm = (
                       setTimeout(async () => {
                         await validateForm();
                       }, 0);
-                      
+
                       setExpandedParts(new Array(ppDataKeys.length).fill(false));
-                      
-                      /// ?reloadFormMetadata()
-                      const polygonsData = ppDataKeys.map((key)=>{
-                                                let {errors, polygonPart} = parsedPPData[key]; 
-                                                return {[key]: polygonPart} 
-                                            })
-                                            .reduce((acc,curr)=> (acc={...acc,...curr},acc),{});
+
+                      const polygonsData = ppDataKeys.map((key) => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        let {errors, polygonPart} = parsedPPData[key]; 
+                        return {[key]: polygonPart} 
+                      }) // eslint-disable-next-line no-sequences
+                      .reduce((acc,curr) => (acc={...acc,...curr},acc),{});
 
                       setParsingErrors(
-                        ppDataKeys.map((key)=>{
+                        ppDataKeys.map((key) => {
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
                           let {errors, polygonPart} = parsedPPData[key];
                           return (!isEmpty(errors) ? {[key]: errors} : undefined)
-                        }).
-                        filter((item)=>item !== undefined) as Record<string, unknown>[]
+                        })
+                        .filter((item) => item !== undefined) as Record<string, unknown>[]
                       );
 
                       setValues({
@@ -1170,7 +1174,7 @@ export const InnerRasterForm = (
                 },
                 false,
                 false,
-                ()=>{
+                () => {
                   setLoadingPolygonParts(false);
                 });
               }}

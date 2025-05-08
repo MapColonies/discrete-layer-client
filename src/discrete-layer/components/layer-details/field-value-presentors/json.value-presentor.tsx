@@ -69,7 +69,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
 
   const removeStatusErrors = (): void => {
     setTimeout(() => {
-      if (currentErrors != undefined) {
+      if (currentErrors !== undefined) {
         // Remove valid field from errors obj if exists
         unset(currentErrors, fieldName);
 
@@ -239,7 +239,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
         }
 
         if (jsonValue !== EMPTY_JSON_STRING_VALUE){
-          geoCustomChecks?.validationFuncArgs?.map(g => {
+          geoCustomChecks?.validationFuncArgs?.forEach((g): void => {
             g.value = formik.getFieldMeta(`${fieldNamePrefix}${g.name}`).value;
           });
           

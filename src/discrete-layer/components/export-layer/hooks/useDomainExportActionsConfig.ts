@@ -1,13 +1,13 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { get, isEmpty } from "lodash";
-import EnumsMapContext, { IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
-import { RecordType, useStore } from "../../../models";
-import { TabViews } from "../../../views/tab-views";
-import { IAction } from "../../../../common/actions/entity.actions";
-import lookupTablesContext, { ILookupOption } from "../../../../common/contexts/lookupTables.context";
-import { HOT_AREAS_TABLES_KEY } from "../../../views/components/data-fetchers/lookup-tables-fetcher.component";
-import { Feature } from "geojson";
-import { useIntl } from "react-intl";
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { get, isEmpty } from 'lodash';
+import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import { RecordType, useStore } from '../../../models';
+import { TabViews } from '../../../views/tab-views';
+import { IAction } from '../../../../common/actions/entity.actions';
+import lookupTablesContext, { ILookupOption } from '../../../../common/contexts/lookupTables.context';
+import { HOT_AREAS_TABLES_KEY } from '../../../views/components/data-fetchers/lookup-tables-fetcher.component';
+import { Feature } from 'geojson';
+import { useIntl } from 'react-intl';
 
 export enum ExportActions {
     DRAW_RECTANGLE = 'export-draw-rectangle',
