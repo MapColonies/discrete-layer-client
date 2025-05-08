@@ -1,9 +1,9 @@
-import { degreesPerPixelToZoomLevel } from "@map-colonies/mc-utils";
-import { RCesiumEntityProps } from "@map-colonies/react-components";
-import { get } from "lodash";
-import { useCallback, useContext, useMemo } from "react";
-import EnumsMapContext, { IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
-import { RecordType, useStore } from "../../../models";
+import { useCallback, useContext, useMemo } from 'react';
+import { get } from 'lodash';
+import { degreesPerPixelToZoomLevel } from '@map-colonies/mc-utils';
+import { RCesiumEntityProps } from '@map-colonies/react-components';
+import EnumsMapContext, { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import { RecordType, useStore } from '../../../models';
 
 const useGetEntityLabelForDomain = (): (item: RCesiumEntityProps) => string => {
     const {exportStore: { layerToExport }} = useStore();

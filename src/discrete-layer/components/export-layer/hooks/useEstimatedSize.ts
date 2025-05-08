@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Feature, FeatureCollection } from "geojson";
+import { Feature, FeatureCollection } from 'geojson';
 import { EstimatedSizeModelType, RecordType, useQuery, useStore } from '../../../models';
 import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
 import { get, isEmpty } from 'lodash';

@@ -5,7 +5,7 @@ import { currentBffUrl } from './common/helpers/siteUrl';
 // import { sessionStore } from './common/helpers/storage';
 // import { RecordType } from './discrete-layer/models';
 
-/*export const enum SYNC_QUERY_NAME {
+export const enum SYNC_QUERY_NAME {
   UPDATE_META_DATA = 'updateMetadata',
   RASTER_INGESTION = 'startRasterIngestion',
   RASTER_UPDATE_GEOPKG = 'startRasterUpdateGeopkg',
@@ -62,7 +62,7 @@ export const syncQueries: SYNC_QUERY[] = [
   },
 ];
 
-const currentQuery = (query: string) => {
+/*const currentQuery = (query: string) => {
   return syncQueries.find((syncQuery: SYNC_QUERY) =>
     query.includes(syncQuery.queryName)
   );

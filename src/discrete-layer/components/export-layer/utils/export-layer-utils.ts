@@ -1,7 +1,7 @@
-import { Feature } from "geojson";
-import { get } from "lodash";
-import { IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
-import { AvailableProperties } from "../hooks/useAddFeatureWithProps";
+import { Feature } from 'geojson';
+import { get } from 'lodash';
+import { IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import { AvailableProperties } from '../hooks/useAddFeatureWithProps';
 
 export function sanitizeFeaturesWithProps(features: Feature[], internalPropsForDomain: Record<AvailableProperties, unknown>): Feature[] {
     const otherValidFeatureProps = ['label'];

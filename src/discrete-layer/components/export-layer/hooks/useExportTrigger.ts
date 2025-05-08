@@ -1,7 +1,7 @@
-import { get, isEmpty } from "lodash";
-import { useContext, useEffect, useState } from "react";
-import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from "../../../../common/contexts/enumsMap.context";
-import { RecordType, TriggerExportTaskModelType, useQuery, useStore } from "../../../models";
+import { get, isEmpty } from 'lodash';
+import { useContext, useEffect, useState } from 'react';
+import EnumsMapContext, { IEnumDescriptor, IEnumsMapType } from '../../../../common/contexts/enumsMap.context';
+import { RecordType, TriggerExportTaskModelType, useQuery, useStore } from '../../../models';
 
 export interface ExportTriggerParams {
     catalogRecordID: string;
