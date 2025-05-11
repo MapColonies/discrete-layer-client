@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import { FormikValues } from 'formik';
 import { cloneDeep, get, isEmpty } from 'lodash';
-import moment from 'moment';
+// import moment from 'moment';
 import * as Yup from 'yup';
 import { DraftResult } from 'vest/vestResult';
 import { DialogContent } from '@material-ui/core';
@@ -17,7 +17,7 @@ import {
   EntityDescriptorModelType,
   Layer3DRecordModel,
   LayerMetadataMixedUnion,
-  LayerRasterRecordModel,
+  // LayerRasterRecordModel,
   RecordType,
   useQuery,
   useStore,
@@ -37,7 +37,7 @@ import {
   FieldConfigModelKeys,
   Layer3DRecordModelKeys,
   LayerDemRecordModelKeys,
-  LayerRasterRecordModelKeys,
+  // LayerRasterRecordModelKeys,
   LayerRecordTypes,
 } from './entity-types-keys';
 import { LayersDetailsComponent } from './layer-details';
@@ -99,15 +99,16 @@ export const buildRecord = (recordType: RecordType, descriptors: EntityDescripto
       record.productStatus = RecordStatus.UNPUBLISHED;
       record['__typename'] = Layer3DRecordModel.properties['__typename'].name.replaceAll('"','');
       break;
-    case RecordType.RECORD_RASTER:
-      LayerRasterRecordModelKeys.forEach((key) => {
-        record[key as string] = undefined;
-      });
-      record.updateDate = moment();
-      record.sensors = [];
-      record.productType = ProductType.ORTHOPHOTO;
-      record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
-      break;
+    // case RecordType.RECORD_RASTER:
+    //   LayerRasterRecordModelKeys.forEach((key) => {
+    //     record[key as string] = undefined;
+    //   });
+    //   record.updateDate = moment();
+    //   record.sensors = [];
+    //   record.productType = ProductType.ORTHOPHOTO;
+    //   record.productStatus = RecordStatus.UNPUBLISHED;
+    //   record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
+    //   break;
     default:
       break;
   }

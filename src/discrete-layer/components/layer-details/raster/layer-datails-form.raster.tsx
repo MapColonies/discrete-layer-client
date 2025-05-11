@@ -9,7 +9,7 @@ import {
   FormikBag,
   Field,
 } from 'formik';
-import { List, ListRowRenderer } from "react-virtualized";
+import { List, ListRowRenderer } from 'react-virtualized';
 import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';

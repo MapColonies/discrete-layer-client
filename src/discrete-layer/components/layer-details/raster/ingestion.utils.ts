@@ -1,5 +1,5 @@
-import { EntityDescriptorModelType } from "../../../models";
-import { getFlatEntityDescriptors } from "../utils";
+import { EntityDescriptorModelType } from '../../../models';
+import { getFlatEntityDescriptors } from '../utils';
 
 const PP_COMMON_PARAMS = ['resolutionMeter', 'resolutionDegree'];
 
