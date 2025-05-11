@@ -239,9 +239,9 @@ export const cleanUpEntityPayload = (
 
 const checkIsBest = (entity: ILayerImage): boolean => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST } = ProductType;
+  const { ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST } = ProductType;
 
-  const bestProductTypes: ProductType[] = [ ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST ];
+  const bestProductTypes: ProductType[] = [ ORTHOPHOTO_BEST, RASTER_AID_BEST, RASTER_MAP_BEST, RASTER_VECTOR_BEST, QUANTIZED_MESH_DTM_BEST, QUANTIZED_MESH_DSM_BEST ];
 
   return bestProductTypes.includes(entity.productType as ProductType);
 };
