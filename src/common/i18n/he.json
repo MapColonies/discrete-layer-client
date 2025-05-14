@@ -641,6 +641,7 @@
   "system-status.export-details.link.label": "לינק לקבצים",
   "system-status.export-details.description.label": "תיאור משימה: ",
   "system-status.export-details.no-description.text": "ללא",
+  "system-status.export-details.expirationDate": "תאריך תפוגה",
 
   "system-status.task.fields.type.label": "מטלה",
   "system-status.task.fields.status.label": "סטטוס",

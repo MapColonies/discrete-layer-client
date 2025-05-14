@@ -27,3 +27,11 @@
 .exportJobDataContainer .exportJobLinkContainer > a:hover {
     filter: brightness(150%);
 }
+
+.exportJobDataContainer .jobDescriptionContainer .expired {
+    color: var(--mdc-theme-gc-error-medium);
+}
+
+.exportJobDataContainer .jobDescriptionContainer .valid {
+    color: var(--mdc-theme-gc-priority-normal);
+}
