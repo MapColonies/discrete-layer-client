@@ -29,6 +29,7 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
     inProgressTasks,
     completedTasks,
     pendingTasks,
+    expiredTasks,
   },
 }) => {
   const intl = useIntl();
@@ -77,9 +78,10 @@ export const JobDetailsHeader: React.FC<JobDetailsHeaderProps> = ({
         label: getStatusTranslation(Status.Pending),
         value: (pendingTasks as unknown) as string,
       },
-      suspended: {
+      // suspended: {
+      expired: {
         label: getStatusTranslation(Status.Suspended),
-        value: (completedTasks as unknown) as string,
+        value: (expiredTasks as unknown) as string,
       },
     },
     failReason: {
