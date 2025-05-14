@@ -1,9 +1,9 @@
-import { Box } from '@map-colonies/react-components';
-import { Typography } from '@map-colonies/react-core';
-import { ICellRendererParams } from 'ag-grid-community';
-import { get } from 'lodash';
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
+import { ICellRendererParams } from 'ag-grid-community';
+import { Box } from '@map-colonies/react-components';
+import { Typography } from '@map-colonies/react-core';
 import { Hyperlink } from '../../../../common/components/hyperlink/hyperlink';
 import { dateFormatter } from '../../../../common/helpers/formatters';
 import { JobModelType, Status } from '../../../models';
@@ -47,11 +47,12 @@ const JobDetailsExportJobData: React.FC<JobDetailsExportJobDataProps> = ({ data 
     return (
       <Box className="exportJobDataContainer">
         <Box className="jobDescriptionContainer">
-          { exportLinks && expirationTimeUTC && 
+          {
+            exportLinks && expirationTimeUTC && 
             <>
-              <span className={`${hasExpired ? 'expired' : 'valid'}`}>
+              <Typography tag="span" className={`${hasExpired ? 'expired' : 'valid'}`}>
                 { intl.formatMessage({id: 'system-status.export-details.expirationDate'}) + ': ' + formattedExpirationTime}
-              </span>
+              </Typography>
               { " | " }
             </>
           }
