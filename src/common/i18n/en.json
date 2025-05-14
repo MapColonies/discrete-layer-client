@@ -630,8 +630,9 @@
   "system-status.job-details.header.producerName": "Producer Name",
 
   "system-status.export-details.link.label": "Link to files",
-  "system-status.export-details.description.text": "Job Description: {desc}",
+  "system-status.export-details.description.label": "Description: ",
   "system-status.export-details.no-description.text": "None",
+  "system-status.export-details.expirationDate": "Expiration Date",
 
   "system-status.job-priority-lowest": "Lowest",
   "system-status.job-priority-low": "Low",

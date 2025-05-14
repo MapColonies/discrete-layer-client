@@ -195,52 +195,52 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
         comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
           valueA - valueB,
       },
-      {
-        headerName: intl.formatMessage({
-          id: 'system-status.job.fields.expirationDate.label',
-        }),
-        width: 160,
-        field: 'parameters.cleanupData.cleanupExpirationTime',
-        sortable: true,
-        cellRenderer: 'dateCellRenderer',
-        cellRendererParams: {
-          field: 'parameters.cleanupData.cleanupExpirationTime',
-          comingSoonDaysIndication: 10,
-          shouldShowPredicate: (data: JobModelType): boolean => {
-            return (data.type as string).toLowerCase().includes('export');
-          },
-          onChange: (
-            updatedExpirationDate: Date,
-            jobData: JobModelType
-          ): void => {
-            const { id, productType } = jobData;
-            const updateTaskDomain = getProductDomain(
-              productType as ProductType,
-              enumsMap ?? undefined
-            );
+      // {
+      //   headerName: intl.formatMessage({
+      //     id: 'system-status.job.fields.expirationDate.label',
+      //   }),
+      //   width: 160,
+      //   field: 'expirationDate',
+      //   sortable: true,
+      //   cellRenderer: 'dateCellRenderer',
+      //   cellRendererParams: {
+      //     field: 'expirationDate',
+      //     comingSoonDaysIndication: 10,
+      //     shouldShowPredicate: (data: JobModelType): boolean => {
+      //       return (data.type as string).toLowerCase().includes('export');
+      //     },
+      //     onChange: (
+      //       updatedExpirationDate: Date,
+      //       jobData: JobModelType
+      //     ): void => {
+      //       const { id, productType } = jobData;
+      //       const updateTaskDomain = getProductDomain(
+      //         productType as ProductType,
+      //         enumsMap ?? undefined
+      //       );
 
-            updateJobCB({
-              id,
-              domain: updateTaskDomain,
-              data: {
-                parameters: {
-                  cleanupData: {
-                    cleanupExpirationTime: updatedExpirationDate
-                  }
-                },
-              },
-            });
-          },
-          datePickerProps: {
-            disablePast: true,
-            disableFuture: false,
-            minDate: moment().add(1,'day').toDate(),
-          }
-        },
-        // @ts-ignore
-        comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
-          valueA - valueB,
-      },
+      //       updateJobCB({
+      //         id,
+      //         domain: updateTaskDomain,
+      //         data: {
+      //           parameters: {
+      //             cleanupData: {
+      //               cleanupExpirationTime: updatedExpirationDate
+      //             }
+      //           },
+      //         },
+      //       });
+      //     },
+      //     datePickerProps: {
+      //       disablePast: true,
+      //       disableFuture: false,
+      //       minDate: moment().add(1,'day').toDate(),
+      //     }
+      //   },
+      //   // @ts-ignore
+      //   comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+      //     valueA - valueB,
+      // },
       {
         headerName: intl.formatMessage({
           id: 'system-status.job.fields.status.label',
