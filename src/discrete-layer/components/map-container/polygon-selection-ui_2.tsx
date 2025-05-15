@@ -83,11 +83,11 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
   }, [store.userStore.user?.role])
 
   useEffect(() => {
-    if(poi) {
+    if (poi) {
       setActiveSelection(PolygonSelectionsLabels.POI);
-    } else if(corners) {
+    } else if (corners) {
       setActiveSelection(PolygonSelectionsLabels.BBOX);
-    } else if(isSelectionEnabled && lastDrawingSelectionType) {
+    } else if (isSelectionEnabled && lastDrawingSelectionType) {
       setActiveSelection(lastDrawingSelectionType);
       setLastDrawingSelectionType('');
     }

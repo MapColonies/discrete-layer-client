@@ -28,8 +28,8 @@ const buildFieldFilter = (filterableField: FieldConfigModelType, fieldValue: unk
   switch (fieldFilterConfig.operation) {
     case CustomFilterOperations.DATE_RANGE: {
       // @ts-ignore
-      if(isDateRange(fieldValue)) {
-        if(!fieldValue.startDate || !fieldValue.endDate) return [];
+      if (isDateRange(fieldValue)) {
+        if (!fieldValue.startDate || !fieldValue.endDate) return [];
 
         const filterStart: FilterField = {
           field: filterableField.queryableName ?? '',

@@ -14,7 +14,7 @@ export const WfsFeature: React.FC = observer(() => {
   const intl = useIntl();
   const wfsFeature = store.mapMenusManagerStore.currentWfsFeatureInfo;
   
-  if(!wfsFeature) return null;
+  if (!wfsFeature) return null;
   
   // If there are no features, use array with an empty object instead so that `GeojsonFeatureWithInfoBox` component will render no data found message
   const wfsFeatures = wfsFeature.features?.length ? wfsFeature.features : [{}];

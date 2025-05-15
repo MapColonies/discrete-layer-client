@@ -1,18 +1,18 @@
-import { CSSProperties, useEffect, useMemo } from "react";
-import { CesiumCartesian3, CesiumCartographic, CesiumEntity, CesiumVerticalOrigin } from "@map-colonies/react-components";
-import { Typography, useTheme } from "@map-colonies/react-core";
-import center from "@turf/center";
-import { AllGeoJSON } from "@turf/helpers";
-import { Polygon, MultiPolygon } from "geojson";
-import _ from "lodash";
-import { useIntl } from "react-intl";
-import { IPosition, useHeightFromTerrain } from "../../../../common/hooks/useHeightFromTerrain";
-import useStaticHTML from "../../../../common/hooks/useStaticHtml";
-import { useForceEntitySelection } from "../../../../common/hooks/useForceEntitySelection.hook";
-import { CesiumInfoBoxContainer } from "./cesium-infoBox-container";
-import GenericInfoBoxContainer from "./generic-infoBox-container.component";
-import { GeojsonFeature, GeojsonFeatureProps } from "./geojson-feature.component";
-import { crossesMeridian, ZERO_MERIDIAN } from "../../../../common/utils/geo.tools";
+import { CSSProperties, useEffect, useMemo } from 'react';
+import { CesiumCartesian3, CesiumCartographic, CesiumEntity, CesiumVerticalOrigin } from '@map-colonies/react-components';
+import { Typography, useTheme } from '@map-colonies/react-core';
+import center from '@turf/center';
+import { AllGeoJSON } from '@turf/helpers';
+import { Polygon, MultiPolygon } from 'geojson';
+import _ from 'lodash';
+import { useIntl } from 'react-intl';
+import { IPosition, useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
+import useStaticHTML from '../../../../common/hooks/useStaticHtml';
+import { useForceEntitySelection } from '../../../../common/hooks/useForceEntitySelection.hook';
+import { CesiumInfoBoxContainer } from './cesium-infoBox-container';
+import GenericInfoBoxContainer from './generic-infoBox-container.component';
+import { GeojsonFeature, GeojsonFeatureProps } from './geojson-feature.component';
+import { crossesMeridian, ZERO_MERIDIAN } from '../../../../common/utils/geo.tools';
 
 interface GeojsonFeatureWithInfoBoxProps extends GeojsonFeatureProps {
   noInfoMessage: string;
@@ -91,9 +91,9 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
 
 
   useEffect(() => {
-    if(markerPosition) {
+    if (markerPosition) {
       setCoordinates([markerPosition]);
-    } else if(!_.isEmpty(feature.geometry)) {
+    } else if (!_.isEmpty(feature.geometry)) {
       const featureCenter = center(feature as AllGeoJSON);
 
       const centerCartographic: IPosition = {
@@ -101,7 +101,7 @@ export const GeojsonFeatureWithInfoBox: React.FC<GeojsonFeatureWithInfoBoxProps>
         latitude: featureCenter.geometry.coordinates[LATITUDE_POSITION],
       };
       setCoordinates([centerCartographic]);
-    } else if(fallbackCoordinates) {
+    } else if (fallbackCoordinates) {
       setCoordinates([fallbackCoordinates])
     }
   }, [markerPosition, fallbackCoordinates]);

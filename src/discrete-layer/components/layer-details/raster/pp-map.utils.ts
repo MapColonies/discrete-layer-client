@@ -148,7 +148,7 @@ const getText = (feature: Feature, resolution: number, featureConfig: Record<str
 
   let text = defaultText ?? '';
   
-  if(zoomLevel > -1){
+  if (zoomLevel > -1) {
     text = `${ingestionDateUTC}\n\nv${updatedInVersion} (${zoomLevel})`;
   }
 

@@ -1,4 +1,4 @@
-import { FieldConfigModelType, RecordType, useStore } from "../../../../models";
+import { FieldConfigModelType, RecordType, useStore } from '../../../../models';
 
 /**
  *  This is a dictionary between the current selected domain and the representing entity types of that domain. 
@@ -18,28 +18,28 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
 
   const descriptorsTypesForExtraction = DOMAIN_TO_PRIMARY_ENTITY_TYPE[recordType];
 
-  if(entityDescriptors) {
+  if (entityDescriptors) {
     const filteredDescriptors = entityDescriptors.filter(descriptor => descriptorsTypesForExtraction.includes(descriptor.type as string));
     const allFilterableDescriptorsFields: FieldConfigModelType[] = [];
     
-    for(const descriptor of filteredDescriptors) {
-      for(const category of descriptor.categories ?? []) {
-        for(const iterField of category.fields as FieldConfigModelType[]) {
+    for (const descriptor of filteredDescriptors) {
+      for (const category of descriptor.categories ?? []) {
+        for (const iterField of category.fields as FieldConfigModelType[]) {
           const field = { ...iterField };
-          if(field.isFilterable) {
-            if((forFilterPanel && field.isFilterable.participateInFilterPanel) || (!forFilterPanel && !field.isFilterable.participateInFilterPanel)) {
+          if (field.isFilterable) {
+            if ((forFilterPanel && field.isFilterable.participateInFilterPanel) || (!forFilterPanel && !field.isFilterable.participateInFilterPanel)) {
               const filterableFieldIdx = allFilterableDescriptorsFields.findIndex(filterableField => field.fieldName === filterableField.fieldName);
               
               // Prevent fields duplications in final array
-              if(filterableFieldIdx > -1) {
+              if (filterableFieldIdx > -1) {
                 const isCurrentFilterableFieldQueryable = !!allFilterableDescriptorsFields[filterableFieldIdx].queryableName;
-                if(!isCurrentFilterableFieldQueryable) {
+                if (!isCurrentFilterableFieldQueryable) {
                   // Remove not queryable field and insert the new field
                   allFilterableDescriptorsFields.splice(filterableFieldIdx, 1, field);
                 }
               } else {
                 // WORKAROUND to change RASTER not common filtered field label
-                if(field.fieldName === 'insertDate') {
+                if (field.fieldName === 'insertDate') {
                   field.label = 'filters.ingestion-date.unified.label';
                 }
                 allFilterableDescriptorsFields.push(field);
@@ -58,4 +58,4 @@ export const useGetFilterableFields = (recordType: RecordType, forFilterPanel = 
 
   return null;
 
-}
+};

@@ -77,7 +77,7 @@ export const EnumValuePresentorComponent: React.FC<EnumValuePresentorProps> = ({
                 (item, index) => {
                   let icon = '';
                   let translation = '';
-                  if(item !== ''){
+                  if (item !== '') {
                     if (dictionary !== undefined) {
                       icon = dictionary[item].icon;
                       translation = get(dictionary[item], locale) as string;

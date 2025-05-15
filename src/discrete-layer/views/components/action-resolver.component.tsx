@@ -76,7 +76,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         
         const shouldUpdateTreeNode = activeTabView === TabViews.CATALOG;
 
-        if(shouldUpdateTreeNode) {
+        if (shouldUpdateTreeNode) {
           store.catalogTreeStore.updateNodeById(selectedLayer.id, {
             ...selectedLayer,
             footprintShown: isShown,
@@ -263,7 +263,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
           const {layerToExport} = store.exportStore;
 
-          if(data.is3DInit as boolean) {
+          if (data.is3DInit as boolean) {
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
             store.exportStore.setIsFullyLayerExportEnabled(true);
@@ -271,7 +271,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             break;
           }
 
-          if(!store.exportStore.isFullLayerExportEnabled) {
+          if (!store.exportStore.isFullLayerExportEnabled) {
             // Clean any previous selections
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);

@@ -303,7 +303,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
             };
             const stringifyFieldValue = (val: unknown) => (val + '').toLowerCase();
 
-            if(isSearchTab) {
+            if (isSearchTab) {
               // Check if catalog filter is enabled by that field
               const isFilterParticipantField = getFilterFieldIdx(fieldInfo.queryableName) > -1;
               
@@ -313,7 +313,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                                     stringifyFieldValue(fieldValue)
                                     .indexOf(stringifyFieldValue(store.discreteLayersStore.searchParams.catalogFilters[idxFreeTextSearchFilterField].like)) > -1;
 
-              if(isFilterParticipantField || isByFreeTextSearch) {
+              if (isFilterParticipantField || isByFreeTextSearch) {
                 fieldClassName += ' filterParticipant';
               }
             }

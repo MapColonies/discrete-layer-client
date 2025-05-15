@@ -12,7 +12,7 @@ export const ExtentUpdater: React.FC = (): JSX.Element => {
       const scratchRectangle = new CesiumRectangle();
       try{
         const rect = mapViewer.camera.computeViewRectangle(mapViewer.scene.globe.ellipsoid, scratchRectangle);
-        if(rect){
+        if (rect) {
           const west = CesiumMath.toDegrees(rect.west),
                 south = CesiumMath.toDegrees(rect.south),
                 east = CesiumMath.toDegrees(rect.east),

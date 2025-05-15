@@ -250,7 +250,7 @@ export const discreteLayersStore = ModelBase
       if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
 
-        if(customLayersImages) {
+        if (customLayersImages) {
           const preparedLayersImages = getPreparedLayersImages([...customLayersImages]);
           self.tabViews[idxTabViewToUpdate].layersImages = preparedLayersImages;
           self.tabViews[idxTabViewToUpdate].selectedLayer = undefined;
@@ -325,7 +325,7 @@ export const discreteLayersStore = ModelBase
         // Field is considered mutable if it is manually editable via form, or during automatic process.
         const isFieldMutable = fieldConfig.isManuallyEditable === true || fieldConfig.isLifecycleEnvolved === true;
 
-        if(isFieldMutable) {
+        if (isFieldMutable) {
           set(filteredLayer, fieldConfig.fieldName as string, get(layerImage, fieldConfig.fieldName as string));
         }
       });
@@ -339,7 +339,7 @@ export const discreteLayersStore = ModelBase
 
     function resetAppState(withoutFields: string[] = []): void {
       Object.entries(INITIAL_STATE).forEach(([statekey, initialVal]) => {
-        if(!withoutFields.includes(statekey)) {
+        if (!withoutFields.includes(statekey)) {
          set(self, statekey, initialVal);
         }
       })
@@ -348,12 +348,12 @@ export const discreteLayersStore = ModelBase
     function resetTabView(tabsToReset?: TabViews[]): void {
       let tabsIdx: TabViews[] = self.tabViews?.map(tab => tab.idx) ?? [];
       
-      if(tabsToReset) {
+      if (tabsToReset) {
         tabsIdx = tabsToReset;
       }
 
       const resetTabs = self.tabViews?.map(tab => {
-        if(tabsIdx.includes(tab.idx)) {
+        if (tabsIdx.includes(tab.idx)) {
           return ({
             idx: tab.idx
           });
@@ -375,7 +375,7 @@ export const discreteLayersStore = ModelBase
       fieldName: LayerMetadataMixedUnionKeys
     ): FieldConfigModelType | undefined {
       const descriptors = self.entityDescriptors;
-      if(typeof descriptors === 'undefined') return undefined;
+      if (typeof descriptors === 'undefined') return undefined;
 
       const layerDescriptors = getFlatEntityDescriptors(layerRecordType, descriptors);
 

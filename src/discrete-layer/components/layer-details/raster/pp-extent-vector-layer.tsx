@@ -4,7 +4,7 @@ import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { debounce } from 'lodash';
 import { MapEvent } from 'ol';
 import { Size } from 'ol/size';
-import GeoJSON from "ol/format/GeoJSON";
+import GeoJSON from 'ol/format/GeoJSON';
 import intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -85,7 +85,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
         ...(page === 0 ? existingPolygoParts.slice(1) : existingPolygoParts),
         ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
       ]);
-      if(data.getPolygonPartsFeature.numberReturned as number !== 0){
+      if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
         getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
       }
@@ -120,8 +120,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
 
     const currentZoomLevel = mapOl.getView().getZoom();
 
-    if(currentZoomLevel && currentZoomLevel < ZOOM_LEVEL_STOP_FETCHING_PP) 
-    {
+    if (currentZoomLevel && currentZoomLevel < ZOOM_LEVEL_STOP_FETCHING_PP) {
       setExistingPolygoParts([
         {
           type: 'Feature',

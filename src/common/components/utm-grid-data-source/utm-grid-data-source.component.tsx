@@ -28,7 +28,7 @@ const UTMGridDataSource: React.FC = () => {
           geoJsonDataSource.entities.values.forEach(item => {
             let centerInDegrees;
 
-            if(item.polyline) {
+            if (item.polyline) {
               (item.polyline.clampToGround as CesiumConstantProperty).setValue(true);
               (item.polyline.width as CesiumConstantProperty).setValue(HIGHLIGHT_OUTLINE_WIDTH);
 
@@ -44,12 +44,12 @@ const UTMGridDataSource: React.FC = () => {
                       CesiumMath.toDegrees(cartographicPos.latitude),
                       CesiumMath.toDegrees(cartographicPos.longitude),
                     ];
-                  })
-                ))).geometry.coordinates;
-          }
+                  }))
+                )
+              ).geometry.coordinates;
+            }
 
             if (item.polygon) {
-
               // @ts-ignore
               (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(SELECTION_POLYGON_OUTLINE_COLOR));
               (item.polygon.outlineWidth as CesiumConstantProperty).setValue(
@@ -64,12 +64,13 @@ const UTMGridDataSource: React.FC = () => {
                   // @ts-ignore
                   ((item.polygon.hierarchy.getValue() as Record<string, unknown>)
                     .positions as CesiumCartesian3[]).map((pos) => {
-                    const cartographicPos = CesiumCartographic.fromCartesian(pos);
-                    return [
-                      CesiumMath.toDegrees(cartographicPos.latitude),
-                      CesiumMath.toDegrees(cartographicPos.longitude),
-                    ];
-                  })
+                      const cartographicPos = CesiumCartographic.fromCartesian(pos);
+                      return [
+                        CesiumMath.toDegrees(cartographicPos.latitude),
+                        CesiumMath.toDegrees(cartographicPos.longitude),
+                      ];
+                    }
+                  )
                 )
               ).geometry.coordinates;
             }
