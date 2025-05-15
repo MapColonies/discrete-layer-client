@@ -55,7 +55,7 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
 
   useEffect(() => {
     const dependentTabs = tabViews.filter(tab => {
-      if('dependentValue' in tab) {
+      if ('dependentValue' in tab) {
         return !isEmpty(tab.dependentValue);
       }
 
@@ -66,7 +66,7 @@ export const TabViewsSwitcher: React.FC<TabViewsSwitcherComponentProps> = observ
   }, [tabViews])
   
   useEffect(() => {
-    if(layerToExport !== undefined) {
+    if (layerToExport !== undefined) {
       handleTabViewChange(TabViews.EXPORT_LAYER);
     } else { 
       handleTabViewChange(TabViews.CATALOG);

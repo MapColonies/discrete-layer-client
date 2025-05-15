@@ -52,7 +52,7 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
       validate: {
         ...((rhfValidation?.validate) ?? {}),
         validationAgainstField: (value: unknown): string | boolean |undefined => {
-          if(typeof validationAgainstField !== 'undefined') {
+          if (typeof validationAgainstField !== 'undefined') {
             return validationAgainstField.validate(value, formMethods.watch(getFormFieldId(validationAgainstField.watch)));
           }
         }

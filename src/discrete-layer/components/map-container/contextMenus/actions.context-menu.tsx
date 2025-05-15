@@ -38,7 +38,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   useEffect(() => {
     const areSameDimensions = _.isEqual(actionsMenuDimensions, actionsContextMenuDimensions);
     
-    if(actionsContextMenuDimensions && !areSameDimensions) {
+    if (actionsContextMenuDimensions && !areSameDimensions) {
       setActionsMenuDimensions(actionsContextMenuDimensions)
     }
   }, [actionsContextMenuDimensions])
@@ -86,7 +86,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   const getHeightText = (): string => {
     const coordinateHeight = (heightsAtCoordinates.newPositions?.[FIRST] as CesiumCartographic).height;
 
-    if(typeof coordinateHeight !== 'undefined' && !isNaN(coordinateHeight)) {
+    if (typeof coordinateHeight !== 'undefined' && !isNaN(coordinateHeight)) {
       return `${coordinateHeight.toFixed(COORDS_DISPLAY_PRECISION)} ${intl.formatMessage({ id: 'actions.meter.sign' })}`;
     }
 
@@ -97,8 +97,8 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
     const MAX_ACTIVE_LAYERS_TO_PRESENT = CONFIG.CONTEXT_MENUS.MAP.MAX_ACTIVE_LAYERS_TO_PRESENT;
     const activeLayersInPosition = (menuProperties?.dynamicMenuData?.ACTIVE_LAYERS_IN_POSITION as unknown[] | undefined);
     
-    if(activeLayersInPosition) {
-      if(activeLayersInPosition.length <= MAX_ACTIVE_LAYERS_TO_PRESENT) return;
+    if (activeLayersInPosition) {
+      if (activeLayersInPosition.length <= MAX_ACTIVE_LAYERS_TO_PRESENT) return;
       
       const title = intl.formatMessage(
         { id: 'map-context-menu.title' },

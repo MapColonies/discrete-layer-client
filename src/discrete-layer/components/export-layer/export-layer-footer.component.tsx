@@ -58,7 +58,7 @@ const ExportFormValidationErrors: React.FC<{errors: FieldErrors<Record<string, u
   };
 
   useEffect(() => {
-    if(!isEmpty(errors)) {
+    if (!isEmpty(errors)) {
       const errorsBySelection: Map<string, string[]> = new Map<string, string[]>();
 
       Object.entries(errors).forEach(([erroredFieldName, errorMsg]) => {
@@ -121,10 +121,10 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
   const exportTriggerErrorMsg = get(exportTriggerError, 'response.errors[0].serverResponse.data.message') as string | undefined;
 
   useEffect(() => {
-    if(typeof exportTriggerErrorMsg !== 'undefined') {
+    if (typeof exportTriggerErrorMsg !== 'undefined') {
       const issuedSelection = extractJsonObjFromString<Polygon>(exportTriggerErrorMsg);
       
-      if(typeof issuedSelection !== 'undefined') {
+      if (typeof issuedSelection !== 'undefined') {
         const issuedSelectionId = exportStore.getFeatureIdByGeom(issuedSelection);
         exportStore.setServerErroredSelectionId(issuedSelectionId);
       }
@@ -132,42 +132,42 @@ const ExportLayerFooter: React.FC<ExportLayerFooterProps> = observer(({ handleTa
     } else {
       exportStore.setServerErroredSelectionId(undefined);
     }
-  }, [exportTriggerErrorMsg])
+  }, [exportTriggerErrorMsg]);
 
   useEffect(() => {
     setExportSizeEstimation(undefined);
-  }, [exportStore.geometrySelectionsCollection])
+  }, [exportStore.geometrySelectionsCollection]);
 
   useEffect(() => {
     setExportSizeEstimation(exportSizeEstimationRes);
-  }, [exportSizeEstimationRes])
+  }, [exportSizeEstimationRes]);
 
   useEffect(() => {
-    if(typeof exportSizeEstimation === 'number' && typeof freeDiskSpaceRes === 'number') {
-      if(exportSizeEstimation > freeDiskSpaceRes) {
+    if (typeof exportSizeEstimation === 'number' && typeof freeDiskSpaceRes === 'number') {
+      if (exportSizeEstimation > freeDiskSpaceRes) {
         const insufficientSizeErrorText = intl.formatMessage({ id: 'export-layer.insufficient-space.error' });
         setIsInsufficientSpaceError(insufficientSizeErrorText);
       } else {
         setIsInsufficientSpaceError(undefined);
       }
     }
-  }, [exportSizeEstimation, freeDiskSpaceRes])
+  }, [exportSizeEstimation, freeDiskSpaceRes]);
 
   useEffect(() => {
-    if(exportStore.hasExportPreviewed) {
+    if (exportStore.hasExportPreviewed) {
       setExportDataToEstimateSize(exportStore.geometrySelectionsCollection);
     }
   }, [exportStore.hasExportPreviewed]);
 
   useEffect(() => {
     setIsInsufficientSpaceError(undefined);
-  }, [exportStore.geometrySelectionsCollection])
+  }, [exportStore.geometrySelectionsCollection]);
 
   useEffect(() => {
-    if(typeof exportTriggerRes !== 'undefined' && typeof exportTriggerRes.jobId !== 'undefined') {
+    if (typeof exportTriggerRes !== 'undefined' && typeof exportTriggerRes.jobId !== 'undefined') {
       onExportSuccess(exportTriggerRes.jobId);
     }
-  }, [exportTriggerRes])
+  }, [exportTriggerRes]);
 
   const formattedFileError =
     exportStore.importedFileError !== null

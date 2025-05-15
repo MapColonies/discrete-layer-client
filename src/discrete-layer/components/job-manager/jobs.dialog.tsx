@@ -131,7 +131,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   // }
 
   useEffect(() => {
-    if(data !== undefined){
+    if (data !== undefined){
       const jobsData = data ? cloneDeep(data.jobs) : [];
       
       setGridRowData(jobsData);
@@ -189,7 +189,7 @@ export const JobsDialog: React.FC<JobsDialogProps> = observer((props: JobsDialog
   }, [query, pollingCycle]);
   
   useEffect(() => {
-    if(!jobData) return;
+    if (!jobData) return;
     downloadJSONToClient(jobData.job, `${encodeURI(jobData.job.resourceId as string)}_job_details.json`);
   }, [jobData]);
 

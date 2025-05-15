@@ -21,7 +21,6 @@ import { JobProductTypeRenderer } from '../../../../common/components/grid/cell-
 import { DateCellRenderer } from '../../system-status/cell-renderer/date.cell-renderer';
 import { TooltippedCellRenderer } from '../../system-status/cell-renderer/tool-tipped.cell-renderer';
 import PlaceholderCellRenderer from '../../system-status/cell-renderer/placeholder.cell-renderer';
-import moment from 'moment';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 
 export interface ICommonJobManagerGridProps {
@@ -268,14 +267,14 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
     const firstColumnPadding = 120;
     let colDef: ColDef[];
 
-    if(typeof omitColDefsByRenderer !== 'undefined') {
+    if (typeof omitColDefsByRenderer !== 'undefined') {
       const renderersList = omitColDefsByRenderer.renderers;
 
-      if(!(omitColDefsByRenderer.preserveColWidth ?? false)) {
+      if (!(omitColDefsByRenderer.preserveColWidth ?? false)) {
         colDef = defaultColDef.filter(colDef => !renderersList.includes(colDef.cellRenderer as string)); 
       } else {
         colDef = defaultColDef.map(colDef => {
-          if(renderersList.includes(colDef.cellRenderer as string)) {
+          if (renderersList.includes(colDef.cellRenderer as string)) {
             return ({
               ...colDef,
               cellRenderer: 'placeholderRenderer',
@@ -290,7 +289,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       colDef = defaultColDef;
     }
 
-    if(typeof gridOptions.detailsRowCellRenderer === 'undefined') {
+    if (typeof gridOptions.detailsRowCellRenderer === 'undefined') {
       colDef[0].width = firstColumnPadding;
     }
 

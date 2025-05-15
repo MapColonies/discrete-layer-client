@@ -169,7 +169,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
     } else {
       result.push(...(props.rowData as []));
     }
-    if(typeof props.isLoading === 'undefined' || props.isLoading === false) {
+    if (typeof props.isLoading === 'undefined' || props.isLoading === false) {
       gridApi?.hideOverlay();
       setRowData(result);
     } else {

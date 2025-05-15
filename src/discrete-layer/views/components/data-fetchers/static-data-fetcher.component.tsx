@@ -13,7 +13,7 @@ export const StaticDataFetcher: React.FC = () => {
 
     // Init stores after some dependencies are set
     useEffect(() => {
-      if(store.servicesAvailabilityStore.servicesAvailability) {
+      if (store.servicesAvailabilityStore.servicesAvailability) {
         // Here we have the services availabilities initialized.
         store.mapMenusManagerStore.initStore();
       }

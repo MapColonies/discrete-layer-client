@@ -75,10 +75,10 @@ const setDefaultValues = (record: Record<string, unknown>, descriptors: EntityDe
   ).forEach((field) => {
       const fieldName = field.fieldName as string;
       const fieldNameType = getBasicType(field.fieldName as FieldInfoName, DEFAULT_TYPE_NAME);
-      if((field.lookupTable || isEnumType(fieldNameType))) {
-        if(field.isMultiSelection){
+      if ((field.lookupTable || isEnumType(fieldNameType))) {
+        if (field.isMultiSelection) {
           record[fieldName] = [];
-        }else{
+        } else {
           record[fieldName] = '';
         }
       }
@@ -242,7 +242,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const preparePartsDataPayload = (metadata: Record<string,unknown>) : Record<string,unknown>[] => {
       const partsData = [];
       for (const [fieldName, partObj] of Object.entries(metadata)) {
-        if(fieldName.indexOf(NESTED_FORMS_PRFIX) > -1){
+        if (fieldName.indexOf(NESTED_FORMS_PRFIX) > -1) {
           //build partData array with injected resolutions
           const cleanedPayloadEntity = cleanUpEntityPayload(partObj as Record<string,unknown>, polygonPartsPayloadKeys as string[]);
           partsData.push({
@@ -280,7 +280,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     const handleUpdateQueries = (): void => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { directory, fileNames, __typename, ...metadata } = inputValues;
-      if(recordType === RecordType.RECORD_RASTER) {
+      if (recordType === RecordType.RECORD_RASTER) {
         mutationQuery.setQuery(
           store.mutateStartRasterUpdateGeopkg({
             data: {
@@ -453,7 +453,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
       let hasVestErrors = false;
       
       const formDrafts = Object.values(vestValidationResults);
-      if(formDrafts.length === NONE) return;
+      if (formDrafts.length === NONE) return;
       
       formDrafts.forEach((formDraft: DraftResult)=>{
         hasVestErrors ||= (formDraft.errorCount !== NONE);

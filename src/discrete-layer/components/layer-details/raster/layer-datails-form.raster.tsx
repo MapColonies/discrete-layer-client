@@ -9,7 +9,7 @@ import {
   FormikBag,
   Field,
 } from 'formik';
-import { List, ListRowRenderer } from "react-virtualized";
+import { List, ListRowRenderer } from 'react-virtualized';
 import * as Yup from 'yup';
 import { OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';
 import { AnyObject } from 'yup/lib/types';
@@ -201,7 +201,7 @@ export const InnerRasterForm = (
         if (isObject(value)) {
           Object.entries(value).forEach(([keyNested, valueNested]) => {
             if (getFieldMeta(key+'.'+keyNested).touched || isSubmittedForm) {
-              if(!validationResults[key]){
+              if (!validationResults[key]) {
                 // @ts-ignore
                 validationResults[key] = {};
               }
@@ -482,7 +482,7 @@ export const InnerRasterForm = (
    }, [parsingErrors]);
 
   useEffect(() => {
-    if(ppCollisionCheckInProgress !== undefined) {
+    if (ppCollisionCheckInProgress !== undefined) {
       setShowCurtain(ppCollisionCheckInProgress);
     }
   }, [ppCollisionCheckInProgress]);
@@ -495,7 +495,7 @@ export const InnerRasterForm = (
 
     setFaultyPolygonParts(ppWithProblems);
   
-  }, [firstPhaseErrors, vestValidationResults, graphQLPayloadObjectErrors])
+  }, [firstPhaseErrors, vestValidationResults, graphQLPayloadObjectErrors]);
   
   const shapeFileProviders = useMemo(() => {
     return getEnumKeys(enumsMap, 'ProviderType').map((key) => {
@@ -666,7 +666,7 @@ export const InnerRasterForm = (
       geometry: validationResults.extentPolygon,
     });
 
-    if(validationResults.extentPolygon){
+    if (validationResults.extentPolygon) {
       setSourceExtentMarker({
         type: "Feature",
         properties: {
@@ -814,7 +814,7 @@ export const InnerRasterForm = (
 
   const topLevelFieldsErrors = {} as Record<string,string[]>;
   firstPhaseErrors && Object.keys(firstPhaseErrors).forEach((err) => {
-    if(!err.includes(NESTED_FORMS_PRFIX)){
+    if (!err.includes(NESTED_FORMS_PRFIX)){
       topLevelFieldsErrors[err] = firstPhaseErrors[err];
     }
   });
@@ -863,7 +863,7 @@ export const InnerRasterForm = (
         className="operationIcon mc-icon-Delete"
         label="DELETE PART"
         onClick={ (e): void => {
-          if(handleClick){
+          if (handleClick) {
             setDeletingPart(true);
             
             handleClick();
@@ -901,12 +901,12 @@ export const InnerRasterForm = (
   const ppVertexDensityFactor = (geometry: any, params: geoArgs) => {
     const resolutionObj = getResolutionObject(params);
 
-    if(!resolutionObj || !resolutionObj.value){
+    if (!resolutionObj || !resolutionObj.value) {
       return resolutionNotExist();
     };
 
     const densityFactor = polygonVertexDensityFactor(geometry, resolutionObj.value);
-    if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
+    if (densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
       return {
         valid: false,
         severity_level: 'ERROR',
@@ -918,12 +918,12 @@ export const InnerRasterForm = (
   const ppArea = (geometry: any, params: geoArgs) => {
     const resolutionObj = getResolutionObject(params);
 
-    if(!resolutionObj || !resolutionObj.value){
+    if (!resolutionObj || !resolutionObj.value) {
       return resolutionNotExist();
     };
 
     const isSmallPolygon = isSmallArea(area(geometry), CONFIG.POLYGON_PARTS.AREA_THRESHOLD, resolutionObj.value);
-    if(isSmallPolygon) {
+    if (isSmallPolygon) {
       return {
         valid: false,
         severity_level: 'ERROR',
@@ -935,12 +935,12 @@ export const InnerRasterForm = (
   const ppCountSmallHoles = (geometry: any, params: geoArgs) => {
     const resolutionObj = getResolutionObject(params);
     
-    if(!resolutionObj || !resolutionObj.value){
+    if (!resolutionObj || !resolutionObj.value) {
       return resolutionNotExist();
     };
 
     const polygonSmallHoles = countSmallHoles(geometry, CONFIG.POLYGON_PARTS.AREA_THRESHOLD, resolutionObj.value);
-    if(polygonSmallHoles > 0) {
+    if (polygonSmallHoles > 0) {
       return {
         valid: false,
         severity_level: 'ERROR',
@@ -964,12 +964,12 @@ export const InnerRasterForm = (
     let data = Object.values(layerPolygonParts);
     let dataKeys = Object.keys(layerPolygonParts);
 
-    if(isFaultyPPVisible){
+    if (isFaultyPPVisible) {
       data = [];
       
       for(let i = 0; i < Object.keys(dataKeys).length; i++){
         for(let j = 0; j < Object.keys(faultyPolygonParts).length; j++){
-          if(dataKeys[i] === faultyPolygonParts[j]){
+          if (dataKeys[i] === faultyPolygonParts[j]) {
             data.push(Object.values(layerPolygonParts)[i] as unknown as PolygonPartRecordModelType);
           }
         }
@@ -978,7 +978,7 @@ export const InnerRasterForm = (
 
 
     let polygon_part = data[index];
-    if(!polygon_part){
+    if (!polygon_part) {
       return <></>;
     }
 
@@ -988,7 +988,7 @@ export const InnerRasterForm = (
     const isGraphQLErrorInPolygonPart = graphQLPayloadObjectErrors.includes(index);
     const isGeometryValid = isGeometryPolygon(polygon_part.footprint);
 
-    if(layerPolygonParts && Object.keys(layerPolygonParts).length > NONE){
+    if (layerPolygonParts && Object.keys(layerPolygonParts).length > NONE) {
       polygon_part = layerPolygonParts[currentFormKey];
     }
     return (
@@ -1012,9 +1012,9 @@ export const InnerRasterForm = (
                           return newGraphQLErrors;
                         });
 
-                        if(status){
+                        if (status) {
                           const { errors } = status;
-                          if(errors){
+                          if (errors) {
                             const { [currentFormKey]: removedKey, ...rest } = errors as Record<string, unknown>;
                             setStatus({ errors: {...rest} });
                           }
@@ -1111,7 +1111,7 @@ export const InnerRasterForm = (
 
                 const targetName = (e.target as HTMLElement)?.dataset?.value;
                 
-                if(!targetName) return;
+                if (!targetName) return;
 
                 setLoadingPolygonParts(true);
                 

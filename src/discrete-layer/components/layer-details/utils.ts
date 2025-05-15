@@ -320,38 +320,37 @@ export const decreaseFeaturePrecision = (feat: Geometry): Geometry => {
   return truncate(omit(feat, 'bbox') as AllGeoJSON, truncate_options) as Geometry;
 };
 
-
 const geometryChecks = (errors: Record<string,ParsedPolygonPartError>, desc: FieldConfigModelType, feature: Feature, nativePartResolution: number) => {
-  let doSelfIntersectCheck=true;
+  let doSelfIntersectCheck = true;
   
   const densityFactor = polygonVertexDensityFactor(feature, nativePartResolution * DEGREES_PER_METER);
-  if(densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR){
+  if (densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
     addError(errors, desc, GEOMETRY_ERRORS.geometryTooDense);
-    doSelfIntersectCheck =false;
+    doSelfIntersectCheck = false;
   }
 
   const polygon_area = area(feature as AllGeoJSON);
   const isSmallPolygon = isSmallArea(polygon_area, CONFIG.POLYGON_PARTS.AREA_THRESHOLD, nativePartResolution);
-  if(isSmallPolygon){
+  if (isSmallPolygon) {
     console.log('Feature area:', polygon_area, isSmallPolygon);
     addError(errors, desc, GEOMETRY_ERRORS.geometryTooSmall);
   }
 
   const polygonSmallHoles = countSmallHoles(feature, CONFIG.POLYGON_PARTS.AREA_THRESHOLD, nativePartResolution);
-  if(polygonSmallHoles > 0){
+  if (polygonSmallHoles > 0) {
     addError(errors, desc, GEOMETRY_ERRORS.geometryHasSmallHoles);
   }
   
-  if(doSelfIntersectCheck){
+  if (doSelfIntersectCheck) {
     const selfIntersections = hasSelfIntersections(feature.geometry);
-    if(selfIntersections){
+    if (selfIntersections){
       addError(errors, desc, GEOMETRY_ERRORS.geometryHasSelfIntersections);
     }
   }
 }
 
 const addError = (errors: Record<string,ParsedPolygonPartError>, descriptor: FieldConfigModelType, code: string) => {
-  if(errors[descriptor.fieldName as string]){
+  if (errors[descriptor.fieldName as string]) {
     errors[descriptor.fieldName as string].codes.push(code);
   } else {
     errors[descriptor.fieldName as string] = {
@@ -359,15 +358,15 @@ const addError = (errors: Record<string,ParsedPolygonPartError>, descriptor: Fie
       label: descriptor.label as string
     };
   }
-}
+};
 
 const convertToMeter = (units: string) => {
   const UNITS_INDEX = 1;
   const num = parseFloat(units);
   let un = units.split('_');
-  if(!un[UNITS_INDEX]) return num;
+  if (!un[UNITS_INDEX]) return num;
   return convert(num).from(un[UNITS_INDEX] as unknown as Distance).to('m');
-}
+};
 
 const getProviderResolutionValuePath = (desciptors: FieldConfigModelType[],provider: ProviderType) => {
   return desciptors
@@ -375,7 +374,7 @@ const getProviderResolutionValuePath = (desciptors: FieldConfigModelType[],provi
         ?.shapeFileMapping
         ?.find(k => k.provider === provider)
         .valuePath;
-}
+};
 
 export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigModelType[], feature: Feature, provider: ProviderType, fileName?: string): ParsedPolygonPart => {
   const poygonPartData: Record<string,unknown> = {"__typename": "PolygonPartRecord"};
@@ -391,16 +390,16 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
     // This logic mimics basic YUP schema:
     // 1. required fields 
     // 2. no future dates
-    if(!shapeFieldValue && desc.isRequired){
+    if (!shapeFieldValue && desc.isRequired) {
       addError(errors, desc, 'validation-general.required');
     }
     
-    if(shapeFieldValue) {
+    if (shapeFieldValue) {
       switch(desc.fieldName){
         case 'imagingTimeBeginUTC':
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
-          if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
+          if (poygonPartData[desc.fieldName as string] as moment.Moment > moment()) {
             addError(errors, desc, 'validation-general.date.future');
           }
           break;
@@ -412,7 +411,7 @@ export const transformSynergyShapeFeatureToEntity = (desciptors: FieldConfigMode
             
             nativePartResolution = parseFloat(get(feature, fieldRes));
             
-            if(!isNaN(nativePartResolution)){ 
+            if (!isNaN(nativePartResolution)) { 
               geometryChecks(errors, desc, feature, nativePartResolution);
             }
            
@@ -444,23 +443,23 @@ export const transformMaxarShapeFeatureToEntity = (desciptors: FieldConfigModelT
 
     let shapeFieldValue = get(feature, shpMap?.valuePath as string);
     
-    if(shpMap?.valuePath === 'NOT_EXISTS_USE_FILENAME'){
+    if (shpMap?.valuePath === 'NOT_EXISTS_USE_FILENAME') {
       shapeFieldValue = shapeFieldValue ? shapeFieldValue : fileName;
     }
 
     // This logic mimics basic YUP schema:
     // 1. required fields 
     // 2. no future dates
-    if(!shapeFieldValue && desc.isRequired){
+    if (!shapeFieldValue && desc.isRequired) {
       addError(errors, desc, 'validation-general.required');
     }
     
-    if(shapeFieldValue) {
-      switch(desc.fieldName){
+    if (shapeFieldValue) {
+      switch(desc.fieldName) {
         case 'imagingTimeBeginUTC':
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  'YYYY-MM-DD');
-          if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
+          if (poygonPartData[desc.fieldName as string] as moment.Moment > moment()) {
             addError(errors, desc, 'validation-general.date.future');
           }
           break;
@@ -472,7 +471,7 @@ export const transformMaxarShapeFeatureToEntity = (desciptors: FieldConfigModelT
           
           nativePartResolution = get(feature, fieldRes);
 
-          if(!isNaN(nativePartResolution)){ 
+          if (!isNaN(nativePartResolution)) { 
             geometryChecks(errors, desc, feature, nativePartResolution);
           }
          
@@ -507,16 +506,16 @@ export const transformTeraNovaShapeFeatureToEntity = (desciptors: FieldConfigMod
     // This logic mimics basic YUP schema:
     // 1. required fields 
     // 2. no future dates
-    if(!shapeFieldValue && desc.isRequired){
+    if (!shapeFieldValue && desc.isRequired) {
       addError(errors, desc, 'validation-general.required');
     }
     
-    if(shapeFieldValue) {
+    if (shapeFieldValue) {
       switch(desc.fieldName){
         case 'imagingTimeBeginUTC':
         case 'imagingTimeEndUTC':
           poygonPartData[desc.fieldName as string] = moment(shapeFieldValue,  "DD/MM/YYYY");
-          if(poygonPartData[desc.fieldName as string] as moment.Moment > moment()){
+          if (poygonPartData[desc.fieldName as string] as moment.Moment > moment()) {
             addError(errors, desc, 'validation-general.date.future');
           }
           break;
@@ -528,7 +527,7 @@ export const transformTeraNovaShapeFeatureToEntity = (desciptors: FieldConfigMod
           
           nativePartResolution = convertToMeter(get(feature, fieldRes));
 
-          if(!isNaN(nativePartResolution)){ 
+          if (!isNaN(nativePartResolution)) { 
             geometryChecks(errors, desc, feature, nativePartResolution);
           }
           
@@ -827,15 +826,15 @@ export const filterModeDescriptors = (mode: Mode, descriptors: EntityDescriptorM
         return {
           ...cat,
           fields: cat.fields.filter((field: FieldConfigModelType) => {
-            if(mode === Mode.NEW){
+            if (mode === Mode.NEW) {
               return field.isCreateEssential;
-            } else if (mode === Mode.UPDATE){
+            } else if (mode === Mode.UPDATE) {
               return field.isUpdateEssential;
-            } else{
+            } else {
               return true;
             }
           })
         }})
       }
   });
-}
+};

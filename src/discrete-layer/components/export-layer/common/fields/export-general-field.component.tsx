@@ -63,7 +63,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
       validate: {
         ...((rhfValidation?.validate) ?? {}),
         validationAgainstField: (value: unknown): string | boolean |undefined => {
-          if(typeof validationAgainstField !== 'undefined') {
+          if (typeof validationAgainstField !== 'undefined') {
             return validationAgainstField.validate(value, formMethods.watch(getFormFieldId(validationAgainstField.watch)));
           }
         }
@@ -81,7 +81,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
     return (): void => {
       formMethods.unregister(fieldId);
     }
-  }, [fieldId])
+  }, [fieldId]);
 
 
   return (
@@ -105,7 +105,7 @@ const ExportGeneralFieldComponent: React.FC<ExportFieldProps> = ({
         }}
         placeholder={placeholderVal}
         onChange={(e: ChangeEvent<HTMLInputElement>): void => {
-          if(!(isLoading as boolean)) {
+          if (!(isLoading as boolean)) {
             handleFieldChange(e);
           }
         }}

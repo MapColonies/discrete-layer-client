@@ -248,7 +248,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   }, [selection, queryResolveMetadataAsModel.loading, queryValidateSource.loading, isError]);
 
   useEffect(() => {
-    if(queryValidateSource.data){
+    if (queryValidateSource.data) {
       const  directory= selection.files.length ? 
       selection.folderChain
           .map((folder: FileData) => folder.name)
@@ -339,7 +339,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
                         : '';
     const fileNames = selected.files.map((file: FileData) => file.name);
 
-    if(validateSources){
+    if (validateSources) {
       queryValidateSource.setQuery(
         store.queryValidateSource(
           {

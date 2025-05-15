@@ -42,7 +42,7 @@ export const hasSelfIntersections = (json: Geometry): boolean => {
     const isPointOnFirstLine = booleanPointOnLine(isect, firstLine, { epsilon: INTERSECTION_TOLLERANCE });
     const isPointOnSecondLine = booleanPointOnLine(isect, secondLine, { epsilon: INTERSECTION_TOLLERANCE });
 
-    if(isPointOnFirstLine && isPointOnSecondLine) {
+    if (isPointOnFirstLine && isPointOnSecondLine) {
       console.log('Intersection point(by gpsi): ', isect);
       return { isect, ring0, edge0, start0, end0, frac0, ring1, edge1, start1, end1, frac1, unique };
     }
@@ -199,7 +199,7 @@ export const validateGeoJSONString = (jsonValue: string, geoCustomChecks?: geoCu
         validationArr = geoCustomChecks.validationFunc.map((func) => func(geoJson, geoCustomChecks.validationFuncArgs)).filter(u => u !== undefined) as geoJSONValidation[];
       }
 
-      if(validationArr && validationArr.length){
+      if (validationArr && validationArr.length) {
         return validationArr[0];
       }
     }

@@ -39,7 +39,7 @@ const checkPolygon = (coordinates: Position[][], meridian: number) => {
 }
 
 export const crossesMeridian = (geometry: Polygon | MultiPolygon, meridian: number) => {
-    if(!geometry)
+    if (!geometry)
       return true;
 
     const type = geometry.type;
@@ -183,7 +183,7 @@ export const countSmallHoles = (feature:  Feature<any>, threshold: number, resol
     console.log('Feature is not a Polygon or MultiPolygon.');
   }
 
-  if(ret > 0){
+  if (ret > 0){
     console.log('Feature has holes', ret);
   }
   return ret;

@@ -25,7 +25,7 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
   const [geoJsonValue, setGeoJsonValue] = useState();
   const store = useStore();
   useEffect(() => {
-    if(jsonValue && validateGeoJSONString(jsonValue).valid){
+    if (jsonValue && validateGeoJSONString(jsonValue).valid) {
       //Postpone feature generation till OL-viewer present in DOM
       setTimeout(()=>{
         setGeoJsonValue(JSON.parse(jsonValue as string))
@@ -40,12 +40,12 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
     // eslint-disable-next-line @typescript-eslint/no-array-constructor
     const olBaseMap = new Array();
     let baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isForPreview);
-    if(!baseMap){
+    if (!baseMap) {
       baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isCurrent);
     }
-    if(baseMap){
+    if (baseMap) {
       baseMap.baseRasteLayers.forEach((layer) => {
-        if(layer.type === 'WMTS_LAYER'){
+        if (layer.type === 'WMTS_LAYER') {
           const wmtsOptions = getWMTSOptions({
             url: layer.options.url as string,
             layer: '',
@@ -60,7 +60,7 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
             </TileLayer>
           )
         }
-        if(layer.type === 'XYZ_LAYER'){
+        if (layer.type === 'XYZ_LAYER') {
           const xyzOptions = getXYZOptions({
             url: layer.options.url as string,
           });
