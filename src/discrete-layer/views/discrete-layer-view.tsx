@@ -160,7 +160,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     const val = localStore.get('whatsNewVisitedCnt');
-    if(val){
+    if (val) {
       setWhatsNewVisitedCnt(parseInt(val));
     }
   }, [])
@@ -168,7 +168,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     const layers = get(data, 'search', []) as ILayerImage[];
 
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.setLayersImages([...layers], false);
     } else {
       store.discreteLayersStore.setTabviewData(TabViews.SEARCH_RESULTS, layers);
@@ -180,13 +180,13 @@ const DiscreteLayerView: React.FC = observer(() => {
     let fullCatalogLayers: LayerMetadataMixedUnion[] | undefined;
     
     // Tab data is set only when switching tabs.
-    if(activeTabView === TabViews.CATALOG) {
+    if (activeTabView === TabViews.CATALOG) {
       fullCatalogLayers = store.discreteLayersStore.layersImages;
     } else {
       fullCatalogLayers = store.discreteLayersStore.tabViews?.[TabViews.CATALOG].layersImages;
     }
 
-    if(!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
+    if (!isEmpty(data) && !isEmpty(fullCatalogLayers)) {
       const searchLayers = get(data, 'search', []) as ILayerImage[];
       
       /**
@@ -196,7 +196,7 @@ const DiscreteLayerView: React.FC = observer(() => {
        */
       searchLayers.forEach(layer => {
         const isNewLayer = !fullCatalogLayers?.some(catalogLayer => catalogLayer.id === layer.id);
-        if(isNewLayer) {
+        if (isNewLayer) {
           fullCatalogLayers?.push(layer);
         }
       })
@@ -207,7 +207,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     setSearchResultsError(searchError);
-  }, [searchError])
+  }, [searchError]);
   
   useEffect(() => {
     /**
@@ -215,7 +215,7 @@ const DiscreteLayerView: React.FC = observer(() => {
      * because the map container will need to resize accordingly to fill up the space.
      * */ 
     const appContainer = document.querySelector('.app-container') as HTMLDivElement;
-    if(!tabsPanelExpanded) {
+    if (!tabsPanelExpanded) {
       appContainer?.style.setProperty(SIDE_PANEL_WIDTH_VARIABLE, COLLAPSED_PANEL_WIDTH);
     } else {
       appContainer?.style.setProperty(SIDE_PANEL_WIDTH_VARIABLE, EXPANDED_PANEL_WIDTH);
@@ -225,15 +225,15 @@ const DiscreteLayerView: React.FC = observer(() => {
   useEffect(() => {
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
     
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.resetSelectedLayer();
     }
 
-    if(!isPoiSearchActive) {
+    if (!isPoiSearchActive) {
       setPoi(undefined);
     }
-  }, [store.discreteLayersStore.searchParams.geojson])
+  }, [store.discreteLayersStore.searchParams.geojson]);
 
   const dispatchAction = (action: Record<string,unknown>): void => {
     store.actionDispatcherStore.dispatchAction(
@@ -276,7 +276,7 @@ const DiscreteLayerView: React.FC = observer(() => {
       store.discreteLayersStore.setTabviewData(activeTabView);
       store.discreteLayersStore.restoreTabviewData(targetViewIdx);
   
-      if(activeTabView === TabViews.EXPORT_LAYER) {
+      if (activeTabView === TabViews.EXPORT_LAYER) {
         store.exportStore.setHasExportPreviewed(false);
       }
   
@@ -312,7 +312,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, [store.discreteLayersStore.searchParams.recordType])
 
   useEffect(() => {
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       void store.discreteLayersStore.clearLayersImages();
   
       // TODO: build query params: FILTERS and SORTS
@@ -330,7 +330,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   useEffect(() => {
     const hasFiltersEnabled = store.discreteLayersStore.searchParams.catalogFilters.length > 0 || store.discreteLayersStore.searchParams.geojson;
-    if(hasFiltersEnabled) {
+    if (hasFiltersEnabled) {
       const filters = buildFilters();
       setQuery(store.querySearch({
         opts: {
@@ -348,7 +348,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleCatalogFiltersApply = (filters: FilterField[]): void => {
-    if(activeTabView !== TabViews.SEARCH_RESULTS) {
+    if (activeTabView !== TabViews.SEARCH_RESULTS) {
       handleTabViewChange(TabViews.SEARCH_RESULTS);
     }
 
@@ -357,13 +357,13 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   const handleCatalogFiltersReset = (): void => {
-    if(store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
+    if (store.discreteLayersStore.searchParams.catalogFilters.length === 0) return;
 
     store.discreteLayersStore.searchParams.resetCatalogFilters();
 
     store.discreteLayersStore.resetTabView([TabViews.SEARCH_RESULTS]);
 
-    if(activeTabView === TabViews.SEARCH_RESULTS) {
+    if (activeTabView === TabViews.SEARCH_RESULTS) {
       void store.discreteLayersStore.clearLayersImages();
       store.discreteLayersStore.resetSelectedLayer();
     }
@@ -371,7 +371,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     // Geographic filters are being cleaned via the "Trashcan" (handlePolygonReset function).
     // If any of the geographical filters is enabled, then we want to stay at the search results tab.
     
-    if(typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
+    if (typeof store.discreteLayersStore.searchParams.geojson === 'undefined') {
       handleTabViewChange(TabViews.CATALOG);
       setSearchResultsError(undefined);
     }
@@ -384,11 +384,11 @@ const DiscreteLayerView: React.FC = observer(() => {
       setCorners(undefined);
       setSearchResultsError(undefined);
 
-    if(activeTabView !== TabViews.CATALOG) {
+    if (activeTabView !== TabViews.CATALOG) {
       // Catalog filters are being cleaned from inside the catalog filters panel.
       // If there's any filter enabled, then we want to stay at the search results tab.
 
-      if(store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
+      if (store.discreteLayersStore.searchParams.catalogFilters?.length === 0) {
         handleTabViewChange(TabViews.CATALOG);
       }
     }
@@ -397,7 +397,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    if(activeTabView !== TabViews.CATALOG) {
+    if (activeTabView !== TabViews.CATALOG) {
       handlePolygonReset();
       setActiveTabView(TabViews.CATALOG);
     }
@@ -606,7 +606,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
   const getActiveTabHeader = (tabIdx: number, site: string): JSX.Element => {
 
-    if(!tabsPanelExpanded) {
+    if (!tabsPanelExpanded) {
       return (
         <div className="tabHeaderContainer">
            <PanelExpanderButton />

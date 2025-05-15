@@ -13,5 +13,5 @@ export const extractJsonObjFromString = <T = Record<string, unknown>>(input: str
   const jsonRegex = new RegExp(/\{(?:[^{}]|(R))*\}/);
   const match = jsonRegex.exec(input)?.[FIRST_MATCH];
 
-  if(typeof match === 'string') return JSON.parse(match) as T;
-}
+  if (typeof match === 'string') return JSON.parse(match) as T;
+};

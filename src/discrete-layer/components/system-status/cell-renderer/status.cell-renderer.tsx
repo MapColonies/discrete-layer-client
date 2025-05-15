@@ -21,7 +21,7 @@ export const StatusRenderer: React.FC<ICellRendererParams> = (props) => {
   const status = jobData.status;
 
   const getProgress = (): string | null => {
-    if(jobData.taskCount as number === NO_DATA) {
+    if (jobData.taskCount as number === NO_DATA) {
         return null;
     }
 

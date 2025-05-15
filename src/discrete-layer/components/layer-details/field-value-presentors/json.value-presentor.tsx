@@ -75,9 +75,9 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
 
         // if the currentErrors is about polygon parts
         const prefixWithoutAddition = fieldNamePrefix?.slice(0, -1);
-        if(typeof(prefixWithoutAddition) === 'string' && currentErrors?.[prefixWithoutAddition]) {
+        if (typeof(prefixWithoutAddition) === 'string' && currentErrors?.[prefixWithoutAddition]) {
           const ppObjLength = Object.keys(currentErrors?.[prefixWithoutAddition])?.length;
-          if(ppObjLength === NONE){
+          if (ppObjLength === NONE) {
             unset(currentErrors, prefixWithoutAddition);
           }
         }
@@ -249,7 +249,7 @@ export const JsonValuePresentorComponent: React.FC<JsonValuePresentorProps> = ({
             setGeoJsonWarning('');
             throw new Error(validRes.reason);
           } else {
-            if(validRes.severity_level === 'INFO') {
+            if (validRes.severity_level === 'INFO') {
               setGeoJsonWarning('');
             } else {
               setGeoJsonWarning(intl.formatMessage(

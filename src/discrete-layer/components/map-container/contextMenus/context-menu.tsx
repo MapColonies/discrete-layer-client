@@ -81,7 +81,7 @@ export const ContextMenu: React.FC<PropsWithChildren<IMapContextMenuData>> = ({
   useEffect(() => {
     document.addEventListener('click', handleClickOutside, false);
     
-    if(!isContextMenuVisible) {
+    if (!isContextMenuVisible) {
       setTimeout(() => {
         show({ event: contextEvt });
       }, 0)

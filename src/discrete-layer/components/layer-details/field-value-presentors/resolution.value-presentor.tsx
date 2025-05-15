@@ -37,7 +37,7 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
     if (isEmpty(innerValue)) {
       return innerValue;
     } else {
-      if(fieldInfo.lookupTableBinding){
+      if (fieldInfo.lookupTableBinding) {
         // const filteredOptions = lookupOptions.filter(option => option.properties[fieldInfo.lookupTableBinding.valueFromPropertyName] === innerValue);
         return innerValue;
 
@@ -96,14 +96,13 @@ export const ResolutionValuePresentorComponent: React.FC<ResolutionValuePresento
             let numberOfDecimals = 8;
 
             const [, ePower] = (properties[fieldInfo.lookupTableBinding.valueFromPropertyName] + '').split(E_POWER);
-            if(ePower){
+            if (ePower) {
               numberOfDecimals = 5;
             }
             const [integers, decimals] = (properties[fieldInfo.lookupTableBinding.valueFromPropertyName] + '').split('.');
             const resString = `${integers}.${decimals.substring(substrStart, numberOfDecimals)}${ePower ? E_POWER + ePower :''}`;
             const zoomLevel = Number.parseFloat(value);
             const menuItemText = `${(zoomLevel + '').padEnd(MAX_PADDING_LENGTH + (MAX_VALUE_LENGTH - resString.length)*2,' ')}${resString}`;
-            
 
             return (
               <MenuItem key={index} value={properties[fieldInfo.lookupTableBinding.valueFromPropertyName] as number}>

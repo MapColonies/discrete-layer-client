@@ -150,7 +150,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
       if (props.isSelectedLayerUpdateMode === true && props.layerRecord) {
         return Mode.UPDATE;
       }
-      else if(props.isViewMode === true && props.layerRecord){
+      else if (props.isViewMode === true && props.layerRecord) {
         return Mode.VIEW;
       }
       return !props.layerRecord ? Mode.NEW : Mode.EDIT;

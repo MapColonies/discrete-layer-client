@@ -152,7 +152,7 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
               const maxResDegFieldName = intl.formatMessage({id: 'export-layer.maxResolutionDeg.field'});
               const validationErrorMsg = intl.formatMessage({id: 'export-layer.validations.againstOtherField'}, {relation: validationRelationText, fieldName: maxResDegFieldName});
               
-              if(Number(minResolutionValue) < Number(maxResolutionValue)) {
+              if (Number(minResolutionValue) < Number(maxResolutionValue)) {
                 return validationErrorMsg;
               }
             }
@@ -232,11 +232,11 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
     const featureProps: Record<string, unknown> = {};
 
     for(const [fieldName, fieldOptions] of Object.entries(propsForDomain ?? {})) {
-      if(predicate(fieldOptions)) {
+      if (predicate(fieldOptions)) {
         let fieldValue = fieldOptions.defaultValue as string | undefined ?? 
         (get(layerToExport, fieldOptions.defaultsFromEntityField as string) as string | undefined ?? '');
         
-        if(typeof fieldOptions.formatValueFunc !== 'undefined' && fieldValue) {
+        if (typeof fieldOptions.formatValueFunc !== 'undefined' && fieldValue) {
           const formattedVal = fieldOptions.formatValueFunc(fieldValue) as string | undefined;
           fieldValue = formattedVal ?? ''
         }
@@ -249,11 +249,11 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
 
   const getInternalPropsForFeature = (): Record<string, unknown> => {
     return getPropsForFeature((options) => !(options.isExternal as boolean)); 
-  }
+  };
 
   const getExternalPropsForEntity = (): Record<string, unknown> => {
     return getPropsForFeature((options) => options.isExternal as boolean); 
-  }
+  };
 
   useEffect(() => {
     const layerRecordType = (get(enums, layerToExport?.productType as string) as IEnumDescriptor | undefined)?.parentDomain as RecordType;
@@ -264,10 +264,10 @@ const useAddFeatureWithProps = (shouldAddFeature = true): IUseAddFeatureWithProp
   useEffect(() => {
     setExternalPropsForDomain(getExternalPropsForEntity());
     setInternalPropsForDomain(getInternalPropsForFeature());
-  }, [propsForDomain])
+  }, [propsForDomain]);
 
   useEffect(() => {
-    if(tempRawSelection && shouldAddFeature) {
+    if (tempRawSelection && shouldAddFeature) {
       // Add entity related properties to the raw selection.
       const tempRawSelectionProps = tempRawSelection.properties ?? {};
       const currentSelectionLabelProp =  !isEmpty(tempRawSelectionProps.label) ? {label: tempRawSelectionProps.label as string} : {};

@@ -17,12 +17,12 @@ const DemHeightsFeatureComponent: React.FC = observer(() => {
   const [coordinatesToQuery, setCoordinatesToQuery] = useState<IPosition>();
 
   useEffect(() => {
-      if(lastMenuPosition){
+      if (lastMenuPosition){
         setCoordinatesToQuery(lastMenuPosition);
       }
   }, [currentPositionDemHeight])
 
-  if(!currentPositionDemHeight) return null;
+  if (!currentPositionDemHeight) return null;
 
   // Dem heights is not returning a real geojson feature, here is a mock feature so we could use the 'GeojsonFeatureWithInfoBox' component
   const demHeightFeature: Feature<LineString | Polygon> = {type: 'Feature', geometry: {} as Polygon, properties: currentPositionDemHeight};

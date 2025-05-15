@@ -46,7 +46,7 @@ export const applyFactor = (rect: CesiumRectangle, factor = DEFAULT_RECTANGLE_FA
 
 export const generateFactoredLayerRectangle = (layer: LayerMetadataMixedUnion, factor = DEFAULT_RECTANGLE_FACTOR): CesiumRectangle => {
   const rectWithBuffers = generateLayerRectangle(layer);
-  if(area({ type: 'Feature', properties:{}, geometry: layer.footprint})/1000000 > EARTH_AREA){
+  if (area({ type: 'Feature', properties:{}, geometry: layer.footprint})/1000000 > EARTH_AREA){
     factor = 0;
   }
   applyFactor(rectWithBuffers, factor);

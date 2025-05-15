@@ -42,7 +42,7 @@ const JobDetailsExportJobData: React.FC<JobDetailsExportJobDataProps> = ({ data 
     
     const jobDescriptionText = intl.formatMessage({ id: 'system-status.export-details.description.label' } );
 
-    if(!(isExportJob as boolean)) return null;
+    if (!(isExportJob as boolean)) return null;
 
     return (
       <Box className="exportJobDataContainer">
