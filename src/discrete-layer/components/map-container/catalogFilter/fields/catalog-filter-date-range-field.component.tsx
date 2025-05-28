@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form';
-import { lastDayOfYear, startOfDay, startOfMonth, startOfWeek, startOfYear, subDays, subWeeks, subYears } from 'date-fns';
+import { lastDayOfYear, startOfDay, startOfYear, subDays, subYears } from 'date-fns';
 import { Box, DateRangePicker, isDateRange } from '@map-colonies/react-components';
 import { getDateformatType } from '../../../../../common/helpers/formatters';
 import { FieldConfigModelType, FilterFieldValidationModelType } from '../../../../models';
@@ -49,7 +49,7 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
         name={fieldId}
         defaultValue={{}}
         rules={{ ...(fieldValidation as RegisterOptions) , validate: (dateRangeValue) => {
-          if(!isEmpty(dateRangeValue) && (!dateRangeValue.startDate || !dateRangeValue.endDate)) {
+          if (!isEmpty(dateRangeValue) && (!dateRangeValue.startDate || !dateRangeValue.endDate)) {
             return intl.formatMessage({id: "catalog-filter.dateRangeField.validation-error" });
           }
         }}}
@@ -104,7 +104,7 @@ export const CatalogFilterDateRangeField: React.FC<CatalogFilterDateRangeFieldPr
               showMonthYearDropdown
               onBlur={onBlur}
               onChange={(dateRangeObj) => {
-                if(isDateRange(dateRangeObj)) {
+                if (isDateRange(dateRangeObj)) {
                   const dateRangeVal = !dateRangeObj.startDate && !dateRangeObj.endDate ? {} : dateRangeObj;
                   onChange(dateRangeVal);
                   

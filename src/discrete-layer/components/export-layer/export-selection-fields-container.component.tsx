@@ -62,10 +62,10 @@ const ExportSelectionFieldsContainer: React.FC = observer(() => {
   }, [featuresWithProps]);
 
   useLayoutEffect(() => {
-    if(typeof selectionServerError !== 'undefined') {
+    if (typeof selectionServerError !== 'undefined') {
       const erroredSelection = selectionsContainerRef.current?.querySelector(`.${SELECTION_ERROR_CLASSNAME}`);
       
-      if(!isEmpty(erroredSelection)) {
+      if (!isEmpty(erroredSelection)) {
         scrollToElement(erroredSelection);
       }
     }

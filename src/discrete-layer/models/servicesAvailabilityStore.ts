@@ -53,6 +53,7 @@ export const servicesAvailabilityStore = ModelBase
     },
   }))
   .actions((self) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const store = self.root;
 
     function isActionAvailable(action: UserActionToService | ContextActionToService  | string): boolean | undefined {

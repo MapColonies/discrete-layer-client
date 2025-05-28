@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { Box, GeoJSONFeature, getWMTSOptions, getXYZOptions, Legend, LegendItem, Map, TileLayer, TileWMTS, TileXYZ, useMap, useVectorSource, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Feature } from 'geojson';
@@ -47,19 +47,21 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const renderCount = useRef(0);
 
   useEffect(() => {
-    if(geoFeatures && geoFeatures?.length >= MIN_FETURES_NUMBER)
-    renderCount.current += 1;
+    if (geoFeatures && geoFeatures?.length >= MIN_FETURES_NUMBER) {
+      renderCount.current += 1;
+    }
   });
  
   const previewBaseMap = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-array-constructor
     const olBaseMap = new Array();
     let baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isForPreview);
-    if(!baseMap){
+    if (!baseMap) {
       baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isCurrent);
     }
-    if(baseMap){
+    if (baseMap) {
       baseMap.baseRasteLayers.forEach((layer) => {
-        if(layer.type === 'WMTS_LAYER'){
+        if (layer.type === 'WMTS_LAYER') {
           const wmtsOptions = getWMTSOptions({
             url: layer.options.url as string,
             layer: '',
@@ -74,7 +76,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
             </TileLayer>
           )
         }
-        if(layer.type === 'XYZ_LAYER'){
+        if (layer.type === 'XYZ_LAYER') {
           const xyzOptions = getXYZOptions({
             url: layer.options.url as string,
           });
@@ -92,7 +94,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const LegendsArray = useMemo(() => {
     const res:LegendItem[] = [];
     PPMapStyles.forEach((value, key)=>{
-      if(!key.includes('MARKER')){
+      if (!key.includes('MARKER')) {
         res.push({
           title: intl.formatMessage({id: `polygon-parts.map-preview-legend.${key}`}) as string,
           style: value as Style
@@ -100,16 +102,16 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       }
     });
     return res;
-  },[]);
+  }, []);
   
   const GeoFeaturesInnerComponent: React.FC = () => {
     const source = useVectorSource();
     const map = useMap();
 
-    if(renderCount.current < RENDERS_TILL_FULL_FEATURES_SET ){
+    if (renderCount.current < RENDERS_TILL_FULL_FEATURES_SET) {
       source.once('change', () => {
         if (source.getState() === 'ready') {
-          setTimeout(()=>{ 
+          setTimeout(() => { 
             map.getView().fit(source.getExtent(), fitOptions)
           },0);
         }
@@ -122,7 +124,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
           geoFeatures?.map((feat, idx) => {
           let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
 
-          if( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey){
+          if ( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey) {
             featureStyle = selectionStyle;
           }
 
@@ -134,7 +136,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
         }
       </>
     )
-  }
+  };
     
   return (
     <Box style={{...style}}>
@@ -162,4 +164,5 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
         <Legend legendItems={LegendsArray} title={intl.formatMessage({id: 'polygon-parts.map-preview-legend.title'})}/>
       </Map>
     </Box>
-    )}
+  );
+};

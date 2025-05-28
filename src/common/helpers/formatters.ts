@@ -2,8 +2,8 @@ import moment from 'moment';
 import CONFIG from '../config';
 
 export const getDateformatType = (withTime = false, fnsFormat = false, humanReadable = false): string => {
-  if(fnsFormat) {
-    if(humanReadable) {
+  if (fnsFormat) {
+    if (humanReadable) {
       return withTime ? CONFIG.LOCALE.DATE_FNS_HUMAN_READABLE_DATE_TIME: CONFIG.LOCALE.DATE_FNS_HUMAN_READABLE_DATE; 
     }
 
@@ -72,9 +72,9 @@ export const formatBytes = (bytes: number, decimals = DEFAULT_DECIMALS): string 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}
+};
 
 export const kbToBytes = (n: number): number => {
   const multiplyFactorToBytes = 1024;
   return n * multiplyFactorToBytes;
-}
+};

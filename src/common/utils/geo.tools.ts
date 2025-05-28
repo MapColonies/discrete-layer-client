@@ -1,15 +1,15 @@
 import { topology } from 'topojson-server';
 import { feature } from 'topojson-client';
-import bbox from "@turf/bbox";
-import bboxPolygon from "@turf/bbox-polygon";
-import booleanContains from "@turf/boolean-contains";
-import { AllGeoJSON, Properties, FeatureCollection } from "@turf/helpers";
-import mask from "@turf/mask";
-import polygonToLine from "@turf/polygon-to-line";
-import simplify from "@turf/simplify";
+import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
+import booleanContains from '@turf/boolean-contains';
+import { AllGeoJSON, Properties, FeatureCollection } from '@turf/helpers';
+import mask from '@turf/mask';
+import polygonToLine from '@turf/polygon-to-line';
+import simplify from '@turf/simplify';
 import * as turf from '@turf/turf';
-import { Feature, MultiPolygon, Polygon, Position, Geometry } from "geojson";
-import { PolygonPartRecordModelType } from "../../discrete-layer/models";
+import { Feature, MultiPolygon, Polygon, Position, Geometry } from 'geojson';
+import { PolygonPartRecordModelType } from '../../discrete-layer/models';
 import { geoJSONValidation } from './geojson.validation';
 
 export const DEGREES_PER_METER = 0.00001;
@@ -39,7 +39,7 @@ const checkPolygon = (coordinates: Position[][], meridian: number) => {
 }
 
 export const crossesMeridian = (geometry: Polygon | MultiPolygon, meridian: number) => {
-    if(!geometry)
+    if (!geometry)
       return true;
 
     const type = geometry.type;
@@ -183,7 +183,7 @@ export const countSmallHoles = (feature:  Feature<any>, threshold: number, resol
     console.log('Feature is not a Polygon or MultiPolygon.');
   }
 
-  if(ret > 0){
+  if (ret > 0){
     console.log('Feature has holes', ret);
   }
   return ret;
@@ -191,6 +191,7 @@ export const countSmallHoles = (feature:  Feature<any>, threshold: number, resol
 
 const countPolygonHoles = (coordinates: Position[][], threshold: number, resolution: number): number => {
   let ret = 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [outerRing, ...holes] = coordinates;
   holes.forEach((hole) => {
     const holePolygon = turf.polygon([hole]);

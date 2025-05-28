@@ -98,8 +98,8 @@ export const mapMenusManagerStore = ModelBase
         const itemsList: MenuItemsList = [];
 
         actions.forEach(groupOrAction => {
-          if(!isActionGroup(groupOrAction)) {
-            if(!store.userStore.isActionAllowed(groupOrAction.action) as boolean) return;
+          if (!isActionGroup(groupOrAction)) {
+            if (!store.userStore.isActionAllowed(groupOrAction.action) as boolean) return;
             
             const item: MenuItem = {
               action: {...groupOrAction},

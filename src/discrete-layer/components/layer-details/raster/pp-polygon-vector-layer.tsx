@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
-import booleanIntersects from "@turf/boolean-intersects";
+import booleanIntersects from '@turf/boolean-intersects';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
@@ -80,7 +80,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     };
     
     useEffect(() => {
-      if(maskFeature){
+      if (maskFeature) {
         showLoadingSpinner(true);
         store.discreteLayersStore.setPPCollisionCheckInProgress(true);
         getExistingPolygoParts(convertFeatureToPolygon(maskFeature), START_PAGE);  
@@ -93,7 +93,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
         ...(page === 0 ? existingPolygoParts.slice(1) : existingPolygoParts),
         ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
       ]);
-      if(data.getPolygonPartsFeature.numberReturned as number !== 0){
+      if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
         getExistingPolygoParts(convertFeatureToPolygon(maskFeature), (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
       }
@@ -126,7 +126,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
 
   useEffect(() => {
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
-    if(ingestionResolutionMeter){
+    if (ingestionResolutionMeter) {
       partsToCheck?.forEach((part) => {
         existingPolygoParts?.forEach((eixstingPart) => {
           const intersection = booleanIntersects( 

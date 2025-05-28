@@ -8,10 +8,10 @@ export const ServicesAvailabilityFetcher: React.FC = observer(() => {
   const servicesAvailabilityQuery = useQuery((store) => store.queryServicesAvailability());
   
   useEffect(() => {
-    if(!servicesAvailabilityQuery.loading && servicesAvailabilityQuery.data) {  
+    if (!servicesAvailabilityQuery.loading && servicesAvailabilityQuery.data) {  
          store.servicesAvailabilityStore.setServicesAvailabilities(servicesAvailabilityQuery.data.servicesAvailability);
     }
-  }, [servicesAvailabilityQuery.data, servicesAvailabilityQuery.loading])
+  }, [servicesAvailabilityQuery.data, servicesAvailabilityQuery.loading]);
   
   return null;
 });

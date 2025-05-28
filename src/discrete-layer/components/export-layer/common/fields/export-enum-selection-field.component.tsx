@@ -13,7 +13,6 @@ import CONFIG from '../../../../../common/config';
 import { useStore } from '../../../../models';
 import { ExportFieldProps } from '../../types/interfaces';
 import ExportFieldLabel from '../export-field-label.component';
-import TooltippedValue from '../../../../../common/components/form/tooltipped.value';
 import ExportFieldHelperText from '../export-field-helper-text.component';
 
 interface ExportEnumSelectionFieldProps extends ExportFieldProps {
@@ -53,7 +52,7 @@ const ExportEnumSelectionField: React.FC<ExportEnumSelectionFieldProps> = ({
       validate: {
         ...((rhfValidation?.validate) ?? {}),
         validationAgainstField: (value: unknown): string | boolean |undefined => {
-          if(typeof validationAgainstField !== 'undefined') {
+          if (typeof validationAgainstField !== 'undefined') {
             return validationAgainstField.validate(value, formMethods.watch(getFormFieldId(validationAgainstField.watch)));
           }
         }

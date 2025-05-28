@@ -14,6 +14,7 @@ interface CloseWithoutSaveDialogProps {
 }
 
 export const CloseWithoutSaveDialog: React.FC<CloseWithoutSaveDialogProps> = observer(({ isOpen, onSetOpen }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const store = useStore();
   
   const closeDialog = useCallback(() => {

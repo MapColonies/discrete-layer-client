@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { NodeData } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
 import { Feature } from 'geojson';
-import _, { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { DrawType } from '@map-colonies/react-components';
 import { existStatus, isUnpublished } from '../../../common/helpers/style';
 import {
@@ -30,8 +30,6 @@ import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFe
 import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
 import { TabViews } from '../tab-views';
 import { useEnums } from '../../../common/hooks/useEnum.hook';
-
-const FIRST = 0;
 
 interface ActionResolverComponentProps {
   handleOpenEntityDialog: (open: boolean) => void;
@@ -78,7 +76,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         
         const shouldUpdateTreeNode = activeTabView === TabViews.CATALOG;
 
-        if(shouldUpdateTreeNode) {
+        if (shouldUpdateTreeNode) {
           store.catalogTreeStore.updateNodeById(selectedLayer.id, {
             ...selectedLayer,
             footprintShown: isShown,
@@ -104,8 +102,6 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
     if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
       console.log(`  ${action} EVENT`, data);
-      let numOfLayers: number;
-      let order: number;
 
       switch (action) {
         case 'LayerRasterRecord.edit':
@@ -163,13 +159,13 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
           handleOpenEntityDialog(true);
           break;
-        case 'Layer3DRecord.analyze':
-          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_ANALYZER_TOKEN_VALUE}`);
+        case 'Layer3DRecord.viewer':
+          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_VIEWER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_VIEWER_TOKEN_VALUE}`);
           break;
-        case 'LayerRasterRecord.analyze':
-        case 'LayerDemRecord.analyze':
-        case 'VectorBestRecord.analyze':
-        case 'QuantizedMeshBestRecord.analyze':
+        case 'LayerRasterRecord.viewer':
+        case 'LayerDemRecord.viewer':
+        case 'VectorBestRecord.viewer':
+        case 'QuantizedMeshBestRecord.viewer':
           break;
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
@@ -267,7 +263,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
           const {layerToExport} = store.exportStore;
 
-          if(data.is3DInit as boolean) {
+          if (data.is3DInit as boolean) {
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
             store.exportStore.setIsFullyLayerExportEnabled(true);
@@ -275,7 +271,7 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
             break;
           }
 
-          if(!store.exportStore.isFullLayerExportEnabled) {
+          if (!store.exportStore.isFullLayerExportEnabled) {
             // Clean any previous selections
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);

@@ -48,7 +48,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "/node_modules/(?!(ol|ol-mapbox-style|ol-ext)/).*/"
+      "/node_modules/(?!(ol|ol-mapbox-style|ol-ext|@map-colonies/react-components|p-map)/).*"
     ],
     "moduleNameMapper": {
       "ol/style": "<rootDir>/src/__mocks__/olStyleMock.js",
@@ -89,9 +89,10 @@
     "@formatjs/icu-messageformat-parser": "^2.6.0",
     "@map-colonies/error-types": "^1.1.5",
     "@map-colonies/mc-utils": "^1.6.1",
-    "@map-colonies/react-components": "^4.7.1",
+    "@map-colonies/react-components": "^4.9.3",
     "@map-colonies/react-core": "^4.2.0",
     "@map-colonies/static-assets": "^0.5.1",
+    "@map-colonies/types": "1.6.0",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

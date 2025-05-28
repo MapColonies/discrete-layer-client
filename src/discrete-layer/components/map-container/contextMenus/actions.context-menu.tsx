@@ -1,5 +1,7 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import _ from 'lodash';
+import { observer } from 'mobx-react-lite';
 import { IContextMenuData, Box, CesiumCartographic } from '@map-colonies/react-components';
 import { CircularProgress, Icon, Typography } from '@map-colonies/react-core';
 import { useHeightFromTerrain } from '../../../../common/hooks/useHeightFromTerrain';
@@ -15,8 +17,6 @@ import useGetMenuDimensions from '../../../../common/hooks/mapMenus/useGetMenuDi
 import { ContextMenu, ContextMenuItemRenderer } from './context-menu';
 import ActionsMenuDimensionsContext from './contexts/actionsMenuDimensionsContext';
 import './actions.context-menu.css';
-import _ from 'lodash';
-import { observer } from 'mobx-react-lite';
 
 interface IActionsContextMenuProps extends IContextMenuData {}
 
@@ -38,7 +38,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   useEffect(() => {
     const areSameDimensions = _.isEqual(actionsMenuDimensions, actionsContextMenuDimensions);
     
-    if(actionsContextMenuDimensions && !areSameDimensions) {
+    if (actionsContextMenuDimensions && !areSameDimensions) {
       setActionsMenuDimensions(actionsContextMenuDimensions)
     }
   }, [actionsContextMenuDimensions])
@@ -86,7 +86,7 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
   const getHeightText = (): string => {
     const coordinateHeight = (heightsAtCoordinates.newPositions?.[FIRST] as CesiumCartographic).height;
 
-    if(typeof coordinateHeight !== 'undefined' && !isNaN(coordinateHeight)) {
+    if (typeof coordinateHeight !== 'undefined' && !isNaN(coordinateHeight)) {
       return `${coordinateHeight.toFixed(COORDS_DISPLAY_PRECISION)} ${intl.formatMessage({ id: 'actions.meter.sign' })}`;
     }
 
@@ -97,8 +97,8 @@ export const ActionsContextMenu: React.FC<IActionsContextMenuProps> = observer((
     const MAX_ACTIVE_LAYERS_TO_PRESENT = CONFIG.CONTEXT_MENUS.MAP.MAX_ACTIVE_LAYERS_TO_PRESENT;
     const activeLayersInPosition = (menuProperties?.dynamicMenuData?.ACTIVE_LAYERS_IN_POSITION as unknown[] | undefined);
     
-    if(activeLayersInPosition) {
-      if(activeLayersInPosition.length <= MAX_ACTIVE_LAYERS_TO_PRESENT) return;
+    if (activeLayersInPosition) {
+      if (activeLayersInPosition.length <= MAX_ACTIVE_LAYERS_TO_PRESENT) return;
       
       const title = intl.formatMessage(
         { id: 'map-context-menu.title' },

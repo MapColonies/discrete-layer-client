@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ILayerImage } from "../discrete-layer/models/layerImage";
+import { ILayerImage } from '../discrete-layer/models/layerImage';
 
 export const createMockData = (count: number, prefix: string): ILayerImage[] => {
   const rowData: ILayerImage[] = [];

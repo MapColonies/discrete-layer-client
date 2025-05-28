@@ -44,7 +44,7 @@ const ExportDrawingHandler: React.FC = observer(() => {
       // const layerFootprint = store.exportStore.layerToExport?.footprint as Geometry;
       // const layerPolygon = { type: 'Feature', properties:{}, geometry: layerFootprint} as Feature;
       // const layerArea = area(layerPolygon) / 1000000;
-      // if(layerArea < MAX_LAYER_AREA_FOR_PREVIEW){
+      // if (layerArea < MAX_LAYER_AREA_FOR_PREVIEW) {
       //   features.push(layerPolygon);
       // }
 

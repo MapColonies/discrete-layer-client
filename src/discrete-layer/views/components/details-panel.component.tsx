@@ -140,6 +140,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
           layerRecord={layerToPresent}
           isBrief={!detailsPanelExpanded}
           mode={Mode.VIEW}
+          intl={intl}
         />
       </Box>
     </>

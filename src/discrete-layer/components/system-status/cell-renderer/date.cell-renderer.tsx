@@ -42,11 +42,11 @@ export const DateCellRenderer: React.FC<IDateCellRendererParams> = (props) => {
   const dateFnsFormat = useMemo(() => shouldShowTime ? 'dd/LL/yyyy HH:mm' : 'dd/LL/yyyy', [shouldShowTime]);
 
   const isComingSoonClassName = (): string => {
-    if(typeof date === 'undefined') return '';
+    if (typeof date === 'undefined') return '';
 
     const today = moment();
     const diffFromToday = today.diff(date);
-    if(typeof comingSoonDaysIndication === 'undefined' || diffFromToday > FUTURE_DATE_DIFF_ANCHOR) return '';
+    if (typeof comingSoonDaysIndication === 'undefined' || diffFromToday > FUTURE_DATE_DIFF_ANCHOR) return '';
 
     return moment(date).diff(today, 'days') <= comingSoonDaysIndication ? SOON_INDICATOR_CSS_CLASS :  '';
   }
