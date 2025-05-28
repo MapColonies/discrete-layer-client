@@ -27,7 +27,7 @@ import { getGraphQLPayloadNestedObjectErrors, GraphQLError } from '../../../../c
 import { MetadataFile } from '../../../../common/components/file-picker';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
-import { area, countSmallHoles, explode, geoArgs, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isSmallArea, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
+import { area, countSmallHoles, DEGREES_PER_METER, explode, geoArgs, getFirstPoint, getOutlinedFeature, isGeometryPolygon, isSmallArea, polygonVertexDensityFactor } from '../../../../common/utils/geo.tools';
 import { mergeRecursive, removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import { useZoomLevels } from '../../../../common/hooks/useZoomLevels';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
@@ -904,8 +904,8 @@ export const InnerRasterForm = (
     if (!resolutionObj || !resolutionObj.value) {
       return resolutionNotExist();
     };
-
-    const densityFactor = polygonVertexDensityFactor(geometry, resolutionObj.value);
+ 
+    const densityFactor = polygonVertexDensityFactor(geometry, resolutionObj.value * DEGREES_PER_METER);
     if (densityFactor < CONFIG.POLYGON_PARTS.DENSITY_FACTOR) {
       return {
         valid: false,
