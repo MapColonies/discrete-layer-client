@@ -25,7 +25,8 @@ import {
   FieldConfigModelType,
   ProductType,
   ValidationValueType,
-  LayerRasterRecordModelType
+  LayerRasterRecordModelType,
+  RecordStatus
 } from '../../../models';
 import { IDispatchAction } from '../../../models/actionDispatcherStore';
 import { ILayerImage } from '../../../models/layerImage';
@@ -101,6 +102,7 @@ export const buildRecord = (recordType: RecordType, descriptors: EntityDescripto
   setDefaultValues(record, descriptors);
   
   record.productType = ProductType.ORTHOPHOTO;
+  record.productStatus = RecordStatus.UNPUBLISHED;
   record['__typename'] = LayerRasterRecordModel.properties['__typename'].name.replaceAll('"','');
   record.id = DEFAULT_ID;
   record.type = recordType;
