@@ -29,6 +29,7 @@
   CONFIGURATION_LOGGER_LEVEL: {{ quote .Values.env.loggerLevel }}
   CONFIGURATION_BBOX_AREA_SQUARE_KM_LIMIT: {{ quote .Values.env.bboxAreaSquareKmLimit }}
   CONFIGURATION_UI_LANGUAGE: {{ quote .Values.env.language }}
+  CONFIGURATION_BACKEND_LOCALE: {{ quote .Values.env.backendLocale }}
   CONFIGURATION_JOB_STATUS_POLLING_CYCLE_INTERVAL: {{ quote .Values.env.jobStatus.pollingCycleInterval }}
   CONFIGURATION_DEFAULT_USER_ROLE: {{ quote .Values.env.defaultUser.role }}
   CONFIGURATION_RUNNING_MODE_TYPE: {{ quote .Values.env.runningMode.type }}
@@ -37,13 +38,14 @@
   CONFIGURATION_EXPORT_MAX_ZOOM_LEVEL: {{ quote .Values.env.export.maxZoomLevel }}
   CONFIGURATION_MAP_CENTER: {{ quote .Values.env.map.center }}
   CONFIGURATION_MAP_ZOOM: {{ quote .Values.env.map.zoom }}
-  CONFIGURATION_MAP_USE_OPTIMIZED_TILE_REQUESTS: {{ quote .Values.env.map.useOptimizedTileRequests }}
   CONFIGURATION_MAP_MAPMODE2D: {{ quote .Values.env.map.mapMode2D }}
+  CONFIGURATION_MAP_USE_OPTIMIZED_TILE_REQUESTS: {{ quote .Values.env.map.useOptimizedTileRequests }}
+  CONFIGURATION_DEBUG_PANEL: {{ quote .Values.env.map.debugPanel }}
   CONFIGURATION_BASEMAPS: {{ quote .Values.env.baseMaps }}
   CONFIGURATION_DEFAULT_TERRAIN_PROVIDER_URL: {{ quote .Values.env.defaultTerrainProviderUrl }}
   CONFIGURATION_WEB_TOOLS_URL: {{ quote .Values.env.webToolsUrl }}
-  CONFIGURATION_MODEL_ANALYZER_ROUTE: {{ quote .Values.env.modelAnalyzerRoute }}
-  CONFIGURATION_MODEL_ANALYZER_TOKEN_VALUE: {{ quote .Values.env.modelAnalyzerTokenValue }}
+  CONFIGURATION_MODEL_VIEWER_ROUTE: {{ quote .Values.env.modelViewerRoute }}
+  CONFIGURATION_MODEL_VIEWER_TOKEN_VALUE: {{ quote .Values.env.modelViewerTokenValue }}
   CONFIGURATION_PROJECT_VERSION: {{ quote .Values.env.projectVersion }}
   CONFIGURATION_ACTIVE_LAYER_PROPERTIES_MAPURLPATH: {{ quote .Values.env.activeLayerPropeties.mapUrlPath }}
   CONFIGURATION_ACTIVE_LAYER_PROPERTIES_EXPORTPATH: {{ quote .Values.env.activeLayerPropeties.exportPath }}
@@ -64,6 +66,10 @@
   CONFIGURATION_POLYGONPARTS_MAX_SHOW_FOOTPRINT_ZOOM_LEVEL: {{ quote .Values.env.polygonParts.max.showFootprintZoomLevel }}
   CONFIGURATION_POLYGONPARTS_MAX_PERSHAPE: {{ quote .Values.env.polygonParts.max.perShape }}
   CONFIGURATION_POLYGONPARTS_MAX_VERTICES: {{ quote .Values.env.polygonParts.max.vertices }}
+  CONFIGURATION_WFS_STYLE: {{ quote .Values.env.wfs.style }}
+  CONFIGURATION_WFS_MAX_PAGE_SIZE: {{ quote .Values.env.wfs.max.pageSize }}
+  CONFIGURATION_WFS_MAX_ZOOM_LEVEL: {{ quote .Values.env.wfs.max.zoomLevel }}
+  CONFIGURATION_WFS_MAX_CACHE_SIZE: {{ quote .Values.env.wfs.max.cacheSize }}
 {{- end -}}
 
 {{ include "mc-chart.configmap" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "DATA" $DATA "WITH_TELEMETRY_TRACING" false "WITH_TELEMETRY_METRICS" false "context" .)}}

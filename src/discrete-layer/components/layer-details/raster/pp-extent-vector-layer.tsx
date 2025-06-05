@@ -4,7 +4,7 @@ import { BBox, Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { debounce } from 'lodash';
 import { MapEvent } from 'ol';
 import { Size } from 'ol/size';
-import GeoJSON from "ol/format/GeoJSON";
+import GeoJSON from 'ol/format/GeoJSON';
 import intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -116,6 +116,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
 
     const currentZoomLevel = mapOl.getView().getZoom();
 
+    // TODO SEPARATE ZOOM VALUES
     if (currentZoomLevel && currentZoomLevel < (CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL - 3)) {
       setExistingPolygonParts([
         {
@@ -155,24 +156,26 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
             const bbox = bboxPolygon(mapOl.getView().calculateExtent([size[0] + BUFFER,size[1] + BUFFER]) as BBox);
             const extentPolygon = polygon(bbox.geometry.coordinates);
             
-            //@ts-ignore
-            const featureClippedPolygon = intersect(feat, extentPolygon);
-           
-            if (featureClippedPolygon) {
-              const geometry = new GeoJSON().readGeometry(featureClippedPolygon.geometry);
-              greenStyle.setGeometry(geometry);
-            }
+            try{ // There is some cases when turf.intersect() throws exception, then no need to change geometry
+              // @ts-ignore
+              const featureClippedPolygon = intersect(feat, extentPolygon);
 
-            return feat ?
-              <GeoJSONFeature
-                key={idx}
-                geometry={{...feat.geometry}} 
-                fit={false}
-                featureStyle={greenStyle}
-              /> :
-              <></>
-          })
-        }
+              if (featureClippedPolygon) {
+                const geometry = new GeoJSON().readGeometry(featureClippedPolygon.geometry);
+                greenStyle.setGeometry(geometry);
+              }
+            }
+            catch(e){
+              console.log('*** PP: turf.intersect() failed ***', 'feat -->',feat, 'extentPolygon -->',extentPolygon);
+            }
+           
+            return feat ? <GeoJSONFeature 
+              geometry={{...feat.geometry}} 
+              fit={false}
+              featureStyle={greenStyle}
+            /> : <></>
+          }
+        )}
       </VectorSource>
     </VectorLayer>
   );

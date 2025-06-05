@@ -50,20 +50,20 @@ const ExportSelectionComponent: React.FC<ExportSelectionComponentProps> = observ
     const prevFeatureProps = prevFeature?.properties;
     const newFeatureProps = feature.properties;
 
-    if(prevFeatureProps) {
-        if(!isEqual(prevFeatureProps, newFeatureProps)) {
+    if (prevFeatureProps) {
+        if (!isEqual(prevFeatureProps, newFeatureProps)) {
             setNewFeature(feature);
         }
     } else {
         setNewFeature(feature);
     }
-  },[feature])
+  },[feature]);
 
   useEffect(() => {
     // Estimate size.
     setSelection(newFeature);
     
-  }, [newFeature])
+  }, [newFeature]);
 
   const estimatedSizeText = useMemo(() => {
     const NOT_AVAILABLE_TEXT = 'N/A';

@@ -1,9 +1,9 @@
-import buffer from "@turf/buffer";
-import polygonToLine from "@turf/polygon-to-line";
-import { Polygon } from "@turf/turf";
-import { Feature } from "geojson";
-import { useCallback } from "react";
-import { useStore } from "../../../models";
+import { useCallback } from 'react';
+import { Feature } from 'geojson';
+import buffer from '@turf/buffer';
+import polygonToLine from '@turf/polygon-to-line';
+import { Polygon } from '@turf/turf';
+import { useStore } from '../../../models';
 
 const HIGHLIGHT_BUFFER_METERS = 2;
 

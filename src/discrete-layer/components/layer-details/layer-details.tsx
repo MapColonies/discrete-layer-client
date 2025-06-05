@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlShape } from 'react-intl';
 import moment from 'moment';
 import { observer } from 'mobx-react-lite';
-import { get, isEmpty } from 'lodash';
+import { get } from 'lodash';
 import { Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { FieldLabelComponent } from '../../../common/components/form/field-label';
@@ -16,7 +16,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { geoJSONValidation } from '../../../common/utils/geojson.validation';
 import { geoArgs } from '../../../common/utils/geo.tools';
 import { 
-  AutocompletionModelType,
+  // AutocompletionModelType,
   EntityDescriptorModelType,
   FieldConfigModelType,
   LayerMetadataMixedUnion,
@@ -30,7 +30,7 @@ import { DEFAULT_ENUM, getEnumKeys, isEnumType } from '../../components/layer-de
 import { ILayerImage } from '../../models/layerImage';
 import { links } from '../../models/links';
 import { getLinkUrl, getLinkUrlWithToken } from '../helpers/layersUtils';
-import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
+// import { AutocompleteValuePresentorComponent } from './field-value-presentors/autocomplete.value-presentor';
 import { DateValuePresentorComponent } from './field-value-presentors/date.value-presentor';
 import { EnumValuePresentorComponent } from './field-value-presentors/enum.value-presentor';
 import { JsonValuePresentorComponent } from './field-value-presentors/json.value-presentor';
@@ -67,6 +67,7 @@ interface LayersDetailsComponentProps {
   enableMapPreview?: boolean;
   fieldNamePrefix?: string;
   showFiedlsCategory?: boolean;
+  intl?: IntlShape;
 }
 
 export const getValuePresentor = (
@@ -81,7 +82,8 @@ export const getValuePresentor = (
   },
   enumsMap?: IEnumsMapType | null,
   enableMapPreview = true,
-  fieldNamePrefix?: string
+  fieldNamePrefix?: string,
+  intl?: IntlShape
 ): JSX.Element => {
   const { fieldName, lookupTable } = fieldInfo;
   const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename, lookupTable as string);
@@ -91,20 +93,57 @@ export const getValuePresentor = (
     case 'string':
     case 'identifier':
     case 'sensors':
-      return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
-        <AutocompleteValuePresentorComponent 
-          mode={mode}
-          fieldInfo={fieldInfo}
-          value={value as string}
-          formik={formik}
-          fieldNamePrefix={fieldNamePrefix}
-        /> :
+      return (
         <StringValuePresentorComponent
           mode={mode}
           fieldInfo={fieldInfo}
           value={value as string}
           formik={formik}
           fieldNamePrefix={fieldNamePrefix}/>
+      );
+      // return ((!isEmpty(formik) && !isEmpty(fieldInfo.autocomplete) && (fieldInfo.autocomplete as AutocompletionModelType).type === 'DOMAIN') ? 
+      //   <AutocompleteValuePresentorComponent 
+      //     mode={mode}
+      //     fieldInfo={fieldInfo}
+      //     value={value as string}
+      //     formik={formik}
+      //     fieldNamePrefix={fieldNamePrefix}
+      //   /> :
+      //   <StringValuePresentorComponent
+      //     mode={mode}
+      //     fieldInfo={fieldInfo}
+      //     value={value as string}
+      //     formik={formik}
+      //     fieldNamePrefix={fieldNamePrefix}/>
+      // );
+    case 'featureStructure':
+      return (
+        <Box className='featureStructureContainer'>
+          <table className='featureStructureTable'>
+            <thead>
+              <tr>
+                <th className='thTableFeature'>
+                  {
+                    intl?.formatMessage({ id: 'field-names.vector.featureStructure.fieldName' })
+                  }
+                </th>
+                <th className='thTableFeature'>
+                  {
+                    intl?.formatMessage({ id: 'field-names.vector.featureStructure.type' })
+                  }
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {value.fields.map((field: any, index: number) => (
+                <tr key={index}>
+                  <td className='tdTableFeature'>{field.fieldName}</td>
+                  <td className='tdTableFeature'>{field.type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Box>
       );
     case 'string[]':
       return (
@@ -198,7 +237,8 @@ export const getValuePresentor = (
           fieldInfo={fieldInfo} 
           mode={mode} 
           formik={formik}
-          fieldNamePrefix={fieldNamePrefix} />
+          fieldNamePrefix={fieldNamePrefix}
+          layerRecord={layerRecord}/>
       );
     default:
       return (
@@ -208,7 +248,7 @@ export const getValuePresentor = (
 };
 
 export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = observer((props: LayersDetailsComponentProps) => {
-  const { entityDescriptors, geoCustomChecks, mode, isBrief, layerRecord, formik, className = '', isSearchTab= false, enableMapPreview=true, fieldNamePrefix, showFiedlsCategory=true } = props;
+  const { entityDescriptors, geoCustomChecks, mode, isBrief, layerRecord, formik, className = '', isSearchTab = false, enableMapPreview = true, fieldNamePrefix, showFiedlsCategory = true, intl } = props;
   const { enumsMap } = useContext(EnumsMapContext);
   const store = useStore();
   
@@ -263,7 +303,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
             };
             const stringifyFieldValue = (val: unknown) => (val + '').toLowerCase();
 
-            if(isSearchTab) {
+            if (isSearchTab) {
               // Check if catalog filter is enabled by that field
               const isFilterParticipantField = getFilterFieldIdx(fieldInfo.queryableName) > -1;
               
@@ -273,7 +313,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                                     stringifyFieldValue(fieldValue)
                                     .indexOf(stringifyFieldValue(store.discreteLayersStore.searchParams.catalogFilters[idxFreeTextSearchFilterField].like)) > -1;
 
-              if(isFilterParticipantField || isByFreeTextSearch) {
+              if (isFilterParticipantField || isByFreeTextSearch) {
                 fieldClassName += ' filterParticipant';
               }
             }
@@ -301,7 +341,8 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
                     geoCustomChecks,
                     enumsMap,
                     enableMapPreview,
-                    fieldNamePrefix
+                    fieldNamePrefix,
+                    intl
                   )
                 }
               </Box>

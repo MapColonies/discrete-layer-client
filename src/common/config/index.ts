@@ -5,6 +5,7 @@ import { LinkType } from '../models/link-type.enum';
 
 /*eslint-disable */
 const LANGUAGE = (window as any)._env_.LANGUAGE as string;
+const BACKEND_LOCALE = (window as any)._env_.BACKEND_LOCALE as string;
 const MAP_SERVER = (window as any)._env_.MAP_SERVER;
 const PUBLISH_POINT = (window as any)._env_.PUBLISH_POINT;
 const CHANNEL = (window as any)._env_.CHANNEL;
@@ -20,8 +21,8 @@ const DEFAULT_USER = (window as any)._env_.DEFAULT_USER;
 const BASE_MAPS = JSON.parse((window as any)._env_.BASE_MAPS);
 const DEFAULT_TERRAIN_PROVIDER_URL = (window as any)._env_.DEFAULT_TERRAIN_PROVIDER_URL;
 const WEB_TOOLS_URL = (window as any)._env_.WEB_TOOLS_URL;
-const MODEL_ANALYZER_ROUTE = (window as any)._env_.MODEL_ANALYZER_ROUTE;
-const MODEL_ANALYZER_TOKEN_VALUE = (window as any)._env_.MODEL_ANALYZER_TOKEN_VALUE;
+const MODEL_VIEWER_ROUTE = (window as any)._env_.MODEL_VIEWER_ROUTE;
+const MODEL_VIEWER_TOKEN_VALUE = (window as any)._env_.MODEL_VIEWER_TOKEN_VALUE;
 const RUNNING_MODE = (window as any)._env_.RUNNING_MODE;
 const NUMBER_OF_CHARACTERS_LIMIT = (window as any)._env_.NUMBER_OF_CHARACTERS_LIMIT;
 const ACCESS_TOKEN = (window as any)._env_.ACCESS_TOKEN;
@@ -31,6 +32,7 @@ const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 const SITES_CONFIG = JSON.parse((window as any)._env_.SITES_CONFIG);
 const BFF_PATH = (window as any)._env_.BFF_PATH;
 const POLYGON_PARTS = (window as any)._env_.POLYGON_PARTS;
+const WFS = (window as any)._env_.WFS;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
   return {
@@ -106,6 +108,7 @@ const APP_CONFIG = {
   I18N: {
     DEFAULT_LANGUAGE: LANGUAGE,
   },
+  DEFAULT_BACKEND_LOCALE: BACKEND_LOCALE,
   BOUNDARIES: {
     MAX_X_KM: 100,
     MAX_Y_KM: 100,
@@ -116,11 +119,12 @@ const APP_CONFIG = {
     MAX_ZOOM: 21,
   },
   MAP: {
+    PROJECTION: Proj.WGS84,
     CENTER: MAP.center as [number, number],
     ZOOM: MAP.zoom as number,
-    PROJECTION: Proj.WGS84,
+    MAPMODE2D: MAP.mapMode2D,
     USE_OPTIMIZED_TILE_REQUESTS: MAP.useOptimizedTileRequests as boolean,
-    MAPMODE2D: MAP.mapMode2D 
+    DEBUG_PANEL: JSON.parse(MAP.debugPanel)
   },
   ACTIVE_LAYER: ACTIVE_LAYER, // | 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER'
   ACTIVE_LAYER_PROPERTIES: ACTIVE_LAYER_PROPERTIES,
@@ -162,8 +166,8 @@ const APP_CONFIG = {
   BASE_MAPS: enrichBaseMaps(BASE_MAPS),
   DEFAULT_TERRAIN_PROVIDER_URL: DEFAULT_TERRAIN_PROVIDER_URL,
   WEB_TOOLS_URL: WEB_TOOLS_URL,
-  MODEL_ANALYZER_ROUTE: MODEL_ANALYZER_ROUTE,
-  MODEL_ANALYZER_TOKEN_VALUE: MODEL_ANALYZER_TOKEN_VALUE,
+  MODEL_VIEWER_ROUTE: MODEL_VIEWER_ROUTE,
+  MODEL_VIEWER_TOKEN_VALUE: MODEL_VIEWER_TOKEN_VALUE,
   RUNNING_MODE: {
     TYPE: RUNNING_MODE.type,
     AUTOCOMPLETE: RUNNING_MODE.autocomplete,
@@ -204,6 +208,14 @@ const APP_CONFIG = {
       SHOW_FOOTPRINT_ZOOM_LEVEL: POLYGON_PARTS.max.showFootprintZoomLevel,
       PER_SHAPE: POLYGON_PARTS.max.perShape,
       VERTICES: POLYGON_PARTS.max.vertices,
+    }
+  },
+  WFS: {
+    STYLE: JSON.parse(WFS.style),
+    MAX: {
+      PAGE_SIZE: WFS.max.pageSize,
+      ZOOM_LEVEL: WFS.max.zoomLevel,
+      CACHE_SIZE: WFS.max.cacheSize,
     }
   }
 };

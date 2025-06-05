@@ -1,29 +1,29 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect } from 'react';
 
 const LISTENER_DELAY = 200;
 
 function isDescendant(parent: Node, child: Node) {
   let node = child.parentNode;
   let highestParentAvailableTag = '';
-  if(node === null || child === parent) return true;
+  if (node === null || child === parent) return true;
 
   while (node != null) {
-      if (node === parent) {
-          return true;
-      }
-      highestParentAvailableTag = node?.nodeName ?? '';
-      node = node.parentNode;
+    if (node === parent) {
+      return true;
+    }
+    highestParentAvailableTag = node?.nodeName ?? '';
+    node = node.parentNode;
   }
   
-  if(node === null && highestParentAvailableTag !== '#document') return true;
+  if (node === null && highestParentAvailableTag !== '#document') { return true; }
   return false;
 }
 
 export const useClickOutside = <T extends HTMLElement>(ref:  React.RefObject<T>, onClickOutside: (e: MouseEvent) => void, shouldHandle = true) => {
   const clickHandler = useCallback((e: MouseEvent) => {
-    if(ref.current) {
-      if(!isDescendant(ref.current, e.target as Node)) {
-          onClickOutside(e);
+    if (ref.current) {
+      if (!isDescendant(ref.current, e.target as Node)) {
+        onClickOutside(e);
       }
     }
   }, []);
@@ -35,7 +35,7 @@ export const useClickOutside = <T extends HTMLElement>(ref:  React.RefObject<T>,
   }, []);
 
   useEffect(() => {
-    if(!shouldHandle) {
+    if (!shouldHandle) {
       document.removeEventListener('click', clickHandler);
     } else {
       setTimeout(() => {
@@ -43,5 +43,5 @@ export const useClickOutside = <T extends HTMLElement>(ref:  React.RefObject<T>,
       }, LISTENER_DELAY);
     }
 
-  }, [shouldHandle])
+  }, [shouldHandle]);
 }

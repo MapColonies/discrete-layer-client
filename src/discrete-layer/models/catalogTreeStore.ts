@@ -19,7 +19,7 @@ import MESSAGES from '../../common/i18n';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { getLayerLink } from '../components/helpers/layersUtils';
 import { existStatus, isUnpublished } from '../../common/helpers/style';
-import { isBest } from '../components/layer-details/utils';
+import { isBest, isVector } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
@@ -325,8 +325,9 @@ export const catalogTreeStore = ModelBase.props({
           };
 
           // whole catalog as is
+          const layersListWithoutVector = layersList.filter(layer => !isVector(layer));
           const parentCatalog = buildParentTreeNode(
-            layersList,
+            layersListWithoutVector,
             intl.formatMessage({
               id: 'tab-views.catalog.top-categories.catalog',
             }),
@@ -335,11 +336,29 @@ export const catalogTreeStore = ModelBase.props({
             /* eslint-enable */
           );
 
+          const arrVector = layersList.filter(isVector);
+          const vectorCatalog = {
+            title: intl.formatMessage({
+              id: 'tab-views.catalog.top-categories.vector',
+            }),
+            isGroup: true,
+            children: [
+              ...arrVector.map((item) => {
+                return {
+                  ...item,
+                  title: getLayerTitle(item),
+                  isSelected: false,
+                };
+              }),
+            ],
+          };
+
           const isUserAdmin = store.userStore.isUserAdmin();
 
           setCatalogTreeData([
-            parentCatalog, 
+            parentCatalog,
             parentBests, 
+            vectorCatalog,
             ...(isUserAdmin ? [parentUnpublished] : [])
           ]);
           setIsDataLoading(false);

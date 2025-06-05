@@ -47,8 +47,9 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const renderCount = useRef(0);
 
   useEffect(() => {
-    if (geoFeatures && geoFeatures?.length >= MIN_FEATURES_NUMBER)
-    renderCount.current += 1;
+    if (geoFeatures && geoFeatures?.length >= MIN_FEATURES_NUMBER) {
+      renderCount.current += 1;
+    }
   });
  
   const previewBaseMap = useMemo(() => {
@@ -101,7 +102,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       }
     });
     return res;
-  },[]);
+  }, []);
   
   const GeoFeaturesInnerComponent: React.FC = () => {
     const source = useVectorSource();
@@ -110,7 +111,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
     if (renderCount.current < RENDERS_TILL_FULL_FEATURES_SET) {
       source.once('change', () => {
         if (source.getState() === 'ready') {
-          setTimeout(()=>{ 
+          setTimeout(() => { 
             map.getView().fit(source.getExtent(), fitOptions)
           },0);
         }
@@ -123,9 +124,9 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
           geoFeatures?.map((feat, idx) => {
             let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
 
-            if (selectedFeatureKey && feat?.properties?.key === selectedFeatureKey) {
-              featureStyle = selectionStyle;
-            }
+          if ( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey) {
+            featureStyle = selectionStyle;
+          }
 
             return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
               geometry={{...feat.geometry}} 
@@ -165,4 +166,4 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       </Map>
     </Box>
   );
-}
+};

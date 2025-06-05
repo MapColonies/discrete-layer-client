@@ -45,11 +45,11 @@ const useHandleWfsPolygonPartsRequests = (): {
 
   useEffect(() => {
     // After data has been received, trigger side effect logics
-    if(store.mapMenusManagerStore.currentPolygonPartsInfo && getPolygonPartsFeatureOptions) {
+    if (store.mapMenusManagerStore.currentPolygonPartsInfo && getPolygonPartsFeatureOptions) {
       const polygonPartsFeatures = store.mapMenusManagerStore.currentPolygonPartsInfo.features;
       const { shouldFlyToFeatures } = getPolygonPartsFeatureOptions;
       
-      if(polygonPartsFeatures && polygonPartsFeatures.length > 0 && shouldFlyToFeatures) {
+      if (polygonPartsFeatures && polygonPartsFeatures.length > 0 && shouldFlyToFeatures) {
         const featuresBBox = bbox({ type: "FeatureCollection", features: polygonPartsFeatures });
         store.mapMenusManagerStore.setMultiplePolygonPartsBBox(featuresBBox);
       }

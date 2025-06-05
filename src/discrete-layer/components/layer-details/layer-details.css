@@ -133,3 +133,35 @@ body[dir='rtl'] .textFieldInfoIcon {
 .filterParticipant {
   background: var(--mdc-theme-gc-success);
 }
+
+body[dir='ltr'] .featureStructureContainer {
+  direction: ltr;
+}
+
+.featureStructureContainer {
+  max-height: 150px;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.featureStructureTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: var(--mdc-theme-text-primary-on-dark);
+  word-break: break-all;
+}
+
+.thTableFeature,
+.tdTableFeature {
+  padding: 2px;
+  border: 1px solid var(--mdc-theme-surface);
+}
+
+.thTableFeature {
+  text-align: center;
+  position: sticky;
+  top: 0;
+  background: var(--mdc-theme-gc-tab-active-background);
+  z-index: 1;
+}

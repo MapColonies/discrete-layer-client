@@ -1,7 +1,7 @@
 // import { get } from 'lodash';
 import { createHttpClient } from 'mst-gql';
 import { GraphQLClient } from 'mst-gql/node_modules/graphql-request';
-import { currentBffUrl/*, syncSlavesClients*/ } from './common/helpers/siteUrl';
+import { currentBffUrl } from './common/helpers/siteUrl';
 // import { sessionStore } from './common/helpers/storage';
 // import { RecordType } from './discrete-layer/models';
 

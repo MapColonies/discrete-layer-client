@@ -36,7 +36,7 @@ export const SaveMetadataButton: React.FC<SaveMetadataProps> = ({
       Object.entries(metadata).map(([key, val]) => {
         const basicType = getBasicType(key as FieldInfoName, metadata.__typename);
         
-        if(enumBasicTypes.has(basicType)) {
+        if (enumBasicTypes.has(basicType)) {
           return [key, enumsMap?.[val as string]?.realValue];
         }
 

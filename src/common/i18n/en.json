@@ -96,7 +96,7 @@
   "action.layer.move-up.tooltip": "Move up",
   "action.layer.move-down.tooltip": "Move down",
   "action.layer.move-to-bottom.tooltip": "Send to bottom",
-  "action.analyze.tooltip": "Analyze model",
+  "action.viewer.tooltip": "Viewer",
   "action.job.retry": "Try again",
   "action.job.abort": "Abort",
   "action.job.download_details": "Download",
@@ -115,6 +115,7 @@
   "record-type.record_raster.label": "Raster",
   "record-type.record_3d.label": "3D",
   "record-type.record_dem.label": "DEM",
+  "record-type.record_vector.label": "Vector",
   "record-type.record_quantized_mesh.label": "Quantized Mesh BEST",
   "record-type.record_all.label": "All",
 
@@ -182,6 +183,7 @@
   "tab-views.catalog.top-categories.unpublished": "Unpublished",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "Catalog",
+  "tab-views.catalog.top-categories.vector": "Data Layers",
   "tab-views.catalog.top-categories.drafts": "Drafts",
 
   "tab-views.catalog.actions.ingest_raster": "Ingest discrete",
@@ -378,6 +380,26 @@
   "field-names.dem.insertDate": "Insert Date",
   "field-names.dem.wktGeometry": "WKT Geometry",
   "field-names.dem.keywords": "Keywords",
+
+  "field-names.vector.type": "Entity Type",
+  "field-names.vector.classification": "Classification",
+  "field-names.vector.productName": "Name",
+  "field-names.vector.description": "Description",
+  "field-names.vector.srsId": "EPSG",
+  "field-names.vector.producerName": "Producer",
+  "field-names.vector.productType": "Type",
+  "field-names.vector.srsName": "Srs Name",
+  "field-names.vector.footprint": "Footprint",
+  "field-names.vector.id": "ID",
+  "field-names.vector.keywords": "Keywords",
+  "field-names.vector.links": "Links",
+  "field-names.vector.link.name": "Name",
+  "field-names.vector.link.description": "Description",
+  "field-names.vector.link.protocol": "Protocol",
+  "field-names.vector.link.url": "URL",
+  "field-names.vector.featureStructure": "Feature Structure",
+  "field-names.vector.featureStructure.type": "Type",
+  "field-names.vector.featureStructure.fieldName": "Field Name",
 
   "field-names.vector-raster.type": "Entity Type",
   "field-names.vector-raster.classification": "Classification",
@@ -607,8 +629,9 @@
   "system-status.job-details.header.producerName": "Producer Name",
 
   "system-status.export-details.link.label": "Link to files",
-  "system-status.export-details.description.text": "Job Description: {desc}",
+  "system-status.export-details.description.label": "Description: ",
   "system-status.export-details.no-description.text": "None",
+  "system-status.export-details.expirationDate": "Expiration Date",
 
   "system-status.job-priority-lowest": "Lowest",
   "system-status.job-priority-low": "Low",
@@ -665,7 +688,13 @@
   "map-settings.base-map.title": "Base Maps",
   "map-settings.base-map.scene-mode.title": "Scene Mode",
   "map-settings.dialog.title": "Map Settings",
+
   "map.zoom.label": "zoom",
+
+  "debug-panel.title": "Debugger Tool",
+  "debug-panel.wfs.title": "Data Layers",
+  "debug-panel.wfs.cache": "Cache",
+  "debug-panel.wfs.extent": "Extent",
 
   "user-role.switch.user.text": "User",
   "user-role.switch.admin.text": "Admin",

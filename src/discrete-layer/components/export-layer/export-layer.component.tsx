@@ -33,8 +33,8 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
     const finalJobId = store.exportStore.finalJobId;
     
     useGeneralExportBehavior(() => {
-      if(isEmpty(store.exportStore.geometrySelectionsCollection.features)) {
-        if(!isPolygonContainedInLayer(store.discreteLayersStore.mapViewerExtentPolygon as Feature, layerToExport as LayerMetadataMixedUnion)){
+      if (isEmpty(store.exportStore.geometrySelectionsCollection.features)) {
+        if (!isPolygonContainedInLayer(store.discreteLayersStore.mapViewerExtentPolygon as Feature, layerToExport as LayerMetadataMixedUnion)){
           handleFlyTo();
         }
       }
@@ -45,7 +45,7 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
     useEffect(() => {
       return (): void => {
         // Save form data to store.
-        if(!isSubmitted) {
+        if (!isSubmitted) {
           store.exportStore.setFormData(formMethods.getValues());
         } else {
           store.exportStore.resetFormData();
@@ -58,7 +58,7 @@ export const ExportLayerComponent: React.FC<ExportLayerComponentProps> = observe
         action: ExportActions.END_EXPORT_SESSION,
         data: {}
       });
-    }, [])
+    }, []);
 
     const tabContentByMode = (): JSX.Element => {
       if (!isEmpty(finalJobId)) {

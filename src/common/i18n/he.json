@@ -97,7 +97,7 @@
   "action.layer.move-up.tooltip": "הזזה למעלה",
   "action.layer.move-down.tooltip": "הזזה למטה",
   "action.layer.move-to-bottom.tooltip": "הורדה לתחתית",
-  "action.analyze.tooltip": "ניתוח שטח",
+  "action.viewer.tooltip": "צפיין",
   "action.job.retry": "נסה שוב",
   "action.job.abort": "בטל",
   "action.job.download_details": "הורדה",
@@ -117,6 +117,7 @@
   "record-type.record_raster.label": "ראסטר",
   "record-type.record_3d.label": "תלת-מימד",
   "record-type.record_dem.label": "גבהים",
+  "record-type.record_vector.label": "וקטור",
   "record-type.record_quantized_mesh.label": "פני השטח",
   "record-type.record_all.label": "הכל",
 
@@ -184,6 +185,7 @@
   "tab-views.catalog.top-categories.unpublished": "לא מפורסמים",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",
+  "tab-views.catalog.top-categories.vector": "שכבות מידע",
   "tab-views.catalog.top-categories.drafts": "טיוטות",
 
   "tab-views.catalog.actions.ingest_raster": "הוסף מוצר",
@@ -382,6 +384,26 @@
   "field-names.dem.insertDate": "תאריך גירסה",
   "field-names.dem.wktGeometry": "תיחום גאוגרפי",
   "field-names.dem.keywords": "מילות מפתח",
+
+  "field-names.vector.type": "סוג יישות",
+  "field-names.vector.classification": "סיווג",
+  "field-names.vector.productName": "שם",
+  "field-names.vector.description": "תאור",
+  "field-names.vector.srsId": "מזהה מערכת",
+  "field-names.vector.producerName": "יצרן",
+  "field-names.vector.productType": "סוג",
+  "field-names.vector.srsName": "מערכת ייחוס",
+  "field-names.vector.footprint": "עקבה",
+  "field-names.vector.id": "מזהה",
+  "field-names.vector.keywords": "מילות מפתח",
+  "field-names.vector.links": "קישורים",
+  "field-names.vector.link.name": "שם",
+  "field-names.vector.link.description": "תאור",
+  "field-names.vector.link.protocol": "פרוטוקול",
+  "field-names.vector.link.url": "קישור",
+  "field-names.vector.featureStructure": "מבנה הפיצ'ר",
+  "field-names.vector.featureStructure.type": "סוג",
+  "field-names.vector.featureStructure.fieldName": "שם שדה",
 
   "field-names.vector-raster.type": "סוג יישות",
   "field-names.vector-raster.classification": "סיווג",
@@ -619,6 +641,7 @@
   "system-status.export-details.link.label": "לינק לקבצים",
   "system-status.export-details.description.label": "תיאור משימה: ",
   "system-status.export-details.no-description.text": "ללא",
+  "system-status.export-details.expirationDate": "תאריך תפוגה",
 
   "system-status.task.fields.type.label": "מטלה",
   "system-status.task.fields.status.label": "סטטוס",
@@ -669,7 +692,13 @@
   "map-settings.base-map.title": "מפות בסיס",
   "map-settings.base-map.scene-mode.title": "מצב תצוגה",
   "map-settings.dialog.title": "הגדרות מפה",
+
   "map.zoom.label": "zoom",
+
+  "debug-panel.title": "דיבאגר",
+  "debug-panel.wfs.title": "שכבות מידע",
+  "debug-panel.wfs.cache": "בזכרון",
+  "debug-panel.wfs.extent": "בתצוגה",
 
   "user-role.switch.user.text": "משתמש",
   "user-role.switch.admin.text": "מנהל",

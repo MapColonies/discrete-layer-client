@@ -21,7 +21,6 @@ import { JobProductTypeRenderer } from '../../../../common/components/grid/cell-
 import { DateCellRenderer } from '../../system-status/cell-renderer/date.cell-renderer';
 import { TooltippedCellRenderer } from '../../system-status/cell-renderer/tool-tipped.cell-renderer';
 import PlaceholderCellRenderer from '../../system-status/cell-renderer/placeholder.cell-renderer';
-import moment from 'moment';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
 
 export interface ICommonJobManagerGridProps {
@@ -195,52 +194,52 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
         comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
           valueA - valueB,
       },
-      {
-        headerName: intl.formatMessage({
-          id: 'system-status.job.fields.expirationDate.label',
-        }),
-        width: 160,
-        field: 'parameters.cleanupData.cleanupExpirationTime',
-        sortable: true,
-        cellRenderer: 'dateCellRenderer',
-        cellRendererParams: {
-          field: 'parameters.cleanupData.cleanupExpirationTime',
-          comingSoonDaysIndication: 10,
-          shouldShowPredicate: (data: JobModelType): boolean => {
-            return (data.type as string).toLowerCase().includes('export');
-          },
-          onChange: (
-            updatedExpirationDate: Date,
-            jobData: JobModelType
-          ): void => {
-            const { id, productType } = jobData;
-            const updateTaskDomain = getProductDomain(
-              productType as ProductType,
-              enumsMap ?? undefined
-            );
+      // {
+      //   headerName: intl.formatMessage({
+      //     id: 'system-status.job.fields.expirationDate.label',
+      //   }),
+      //   width: 160,
+      //   field: 'expirationDate',
+      //   sortable: true,
+      //   cellRenderer: 'dateCellRenderer',
+      //   cellRendererParams: {
+      //     field: 'expirationDate',
+      //     comingSoonDaysIndication: 10,
+      //     shouldShowPredicate: (data: JobModelType): boolean => {
+      //       return (data.type as string).toLowerCase().includes('export');
+      //     },
+      //     onChange: (
+      //       updatedExpirationDate: Date,
+      //       jobData: JobModelType
+      //     ): void => {
+      //       const { id, productType } = jobData;
+      //       const updateTaskDomain = getProductDomain(
+      //         productType as ProductType,
+      //         enumsMap ?? undefined
+      //       );
 
-            updateJobCB({
-              id,
-              domain: updateTaskDomain,
-              data: {
-                parameters: {
-                  cleanupData: {
-                    cleanupExpirationTime: updatedExpirationDate
-                  }
-                },
-              },
-            });
-          },
-          datePickerProps: {
-            disablePast: true,
-            disableFuture: false,
-            minDate: moment().add(1,'day').toDate(),
-          }
-        },
-        // @ts-ignore
-        comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
-          valueA - valueB,
-      },
+      //       updateJobCB({
+      //         id,
+      //         domain: updateTaskDomain,
+      //         data: {
+      //           parameters: {
+      //             cleanupData: {
+      //               cleanupExpirationTime: updatedExpirationDate
+      //             }
+      //           },
+      //         },
+      //       });
+      //     },
+      //     datePickerProps: {
+      //       disablePast: true,
+      //       disableFuture: false,
+      //       minDate: moment().add(1,'day').toDate(),
+      //     }
+      //   },
+      //   // @ts-ignore
+      //   comparator: (valueA, valueB, nodeA, nodeB, isInverted): number =>
+      //     valueA - valueB,
+      // },
       {
         headerName: intl.formatMessage({
           id: 'system-status.job.fields.status.label',
@@ -268,14 +267,14 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
     const firstColumnPadding = 120;
     let colDef: ColDef[];
 
-    if(typeof omitColDefsByRenderer !== 'undefined') {
+    if (typeof omitColDefsByRenderer !== 'undefined') {
       const renderersList = omitColDefsByRenderer.renderers;
 
-      if(!(omitColDefsByRenderer.preserveColWidth ?? false)) {
+      if (!(omitColDefsByRenderer.preserveColWidth ?? false)) {
         colDef = defaultColDef.filter(colDef => !renderersList.includes(colDef.cellRenderer as string)); 
       } else {
         colDef = defaultColDef.map(colDef => {
-          if(renderersList.includes(colDef.cellRenderer as string)) {
+          if (renderersList.includes(colDef.cellRenderer as string)) {
             return ({
               ...colDef,
               cellRenderer: 'placeholderRenderer',
@@ -290,7 +289,7 @@ const JobManagerGrid: React.FC<ICommonJobManagerGridProps> = (props) => {
       colDef = defaultColDef;
     }
 
-    if(typeof gridOptions.detailsRowCellRenderer === 'undefined') {
+    if (typeof gridOptions.detailsRowCellRenderer === 'undefined') {
       colDef[0].width = firstColumnPadding;
     }
 

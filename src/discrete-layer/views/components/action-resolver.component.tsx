@@ -177,13 +177,13 @@ export const ActionResolver: React.FC<ActionResolverProps> = observer((props) =>
           store.discreteLayersStore.selectLayer(cleanUpEntity(data, LayerRasterRecordModelKeys) as LayerMetadataMixedUnion, true);
           handleOpenEntityDialog(true);
           break;
-        case 'Layer3DRecord.analyze':
-          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_ANALYZER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_ANALYZER_TOKEN_VALUE}`);
+        case 'Layer3DRecord.viewer':
+          window.open(`${CONFIG.WEB_TOOLS_URL}/${CONFIG.MODEL_VIEWER_ROUTE}?model_ids=${data.productId}&token=${CONFIG.MODEL_VIEWER_TOKEN_VALUE}`);
           break;
-        case 'LayerRasterRecord.analyze':
-        case 'LayerDemRecord.analyze':
-        case 'VectorBestRecord.analyze':
-        case 'QuantizedMeshBestRecord.analyze':
+        case 'LayerRasterRecord.viewer':
+        case 'LayerDemRecord.viewer':
+        case 'VectorBestRecord.viewer':
+        case 'QuantizedMeshBestRecord.viewer':
           break;
         case 'Job.retry':
           // Is handled in jobs.dialog.tsx
@@ -280,7 +280,7 @@ export const ActionResolver: React.FC<ActionResolverProps> = observer((props) =>
         case ExportActions.TOGGLE_FULL_LAYER_EXPORT: {
           const {layerToExport} = store.exportStore;
 
-          if(data.is3DInit as boolean) {
+          if (data.is3DInit as boolean) {
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);
             store.exportStore.setIsFullyLayerExportEnabled(true);
@@ -288,7 +288,7 @@ export const ActionResolver: React.FC<ActionResolverProps> = observer((props) =>
             break;
           }
 
-          if(!store.exportStore.isFullLayerExportEnabled) {
+          if (!store.exportStore.isFullLayerExportEnabled) {
             // Clean any previous selections
             store.exportStore.resetFeatureSelections();
             store.exportStore.setTempRawSelection(getLayerFootprint(layerToExport as LayerMetadataMixedUnion, false) as Feature);

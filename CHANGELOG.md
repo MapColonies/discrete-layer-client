@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.21.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.1...v2.21.2) (2025-03-20)
+
+
+### Bug Fixes
+
+* fetch all relevant pp on update check stage ([#597](https://github.com/MapColonies/discrete-layer-client/issues/597)) ([12cb04d](https://github.com/MapColonies/discrete-layer-client/commit/12cb04d47950f664b3a7cefb32f8f7a7edb40533))
+
+### [2.21.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.0...v2.21.1) (2025-03-16)
+
+
+### Bug Fixes
+
+* pp date label field rename and intersect crash ( MAPCO-7054 ,  MAPCO-7056 ) ([#596](https://github.com/MapColonies/discrete-layer-client/issues/596)) ([b78cfe0](https://github.com/MapColonies/discrete-layer-client/commit/b78cfe0bb8a8c42421ff37c4700d31d5e2446e8c))
+
 ## [2.21.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.20.0...v2.21.0) (2025-02-23)
 
 

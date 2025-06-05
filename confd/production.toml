@@ -3,6 +3,7 @@ src = "production.tmpl"
 dest = "public/env-config.js"
 keys = [
   "/configuration/ui/language",
+  "/configuration/ui/backend/locale",
   "/configuration/mapServer/url",
   "/configuration/mapServer/publishPoint",
   "/configuration/mapServer/channel",
@@ -24,6 +25,7 @@ keys = [
   "/configuration/map/zoom",
   "/configuration/map/mapmode2d",
   "/configuration/map/use/optimized/tile/requests",
+  "/configuration/map/debug/panel",
   "/configuration/logger/http/host",
   "/configuration/logger/http/port",
   "/configuration/logger/http/path",
@@ -34,8 +36,8 @@ keys = [
   "/configuration/basemaps",
   "/configuration/default/terrain/provider/url",
   "/configuration/web/tools/url",
-  "/configuration/model/analyzer/route",
-  "/configuration/model/analyzer/token/value",
+  "/configuration/model/viewer/route",
+  "/configuration/model/viewer/token/value",
   "/configuration/running/mode/type",
   "/configuration/running/mode/autocomplete",
   "/configuration/access/token/attribute/name",
@@ -54,5 +56,9 @@ keys = [
   "/configuration/polygonparts/max/wfs/features",
   "/configuration/polygonParts/max/show/footprint/zoom/level",
   "/configuration/polygonparts/max/pershape",
-  "/configuration/polygonparts/max/vertices"
+  "/configuration/polygonparts/max/vertices",
+  "/configuration/wfs/style",
+  "/configuration/wfs/max/page/size",
+  "/configuration/wfs/max/zoom/level",
+  "/configuration/wfs/max/cache/size"
 ]

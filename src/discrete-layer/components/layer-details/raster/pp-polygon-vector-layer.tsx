@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
-import booleanIntersects from "@turf/boolean-intersects";
+import booleanIntersects from '@turf/boolean-intersects';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
@@ -28,6 +28,8 @@ interface PolygonPartsVectorLayerProps {
   ingestionResolutionMeter?: number | null;
 }
 
+const START_PAGE = 0;
+
 export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord, maskFeature, partsToCheck, ingestionResolutionMeter}) => {
   const store = useStore();
   const intl = useIntl();
@@ -36,6 +38,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
+  const [page, setPage] = useState(START_PAGE);
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
 
@@ -50,12 +53,19 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     }
   }
   
-  const getExistingPolygoParts = (feature: Feature | null | undefined) => {
+  const showLoadingSpinner = (isShown: boolean) => {
+    isShown? 
+      mapOl.getTargetElement().classList.add('olSpinner') :
+      mapOl.getTargetElement().classList.remove('olSpinner');
+  };
+
+  const getExistingPolygoParts = (feature: Feature | null | undefined, startIndex: number) => {
     setQuery(store.queryGetPolygonPartsFeature({ 
       data: {
         feature:  feature as GeojsonFeatureInput,
         typeName: getWFSFeatureTypeName(layerRecord as LayerRasterRecordModelType, ENUMS),
-        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES 
+        count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
+        startIndex
       } 
     }));
   };
@@ -70,24 +80,35 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     };
     
     useEffect(() => {
-      if(maskFeature){
-        mapOl.getTargetElement().classList.add('olSpinner');
+      if (maskFeature) {
+        showLoadingSpinner(true);
         store.discreteLayersStore.setPPCollisionCheckInProgress(true);
-        getExistingPolygoParts(convertFeatureToPolygon(maskFeature));  
+        getExistingPolygoParts(convertFeatureToPolygon(maskFeature), START_PAGE);  
     }
   },[maskFeature]);
   
   useEffect(() => {
-    if (!loading && data) {
-      setExistingPolygonParts(data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]);
-      mapOl.getTargetElement().classList.remove('olSpinner');
-      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
+    if (!loading && data && maskFeature) {
+      setExistingPolygonParts([
+        ...(page === 0 ? existingPolygonParts.slice(1) : existingPolygonParts),
+        ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
+      ]);
+      if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
+        getExistingPolygoParts(convertFeatureToPolygon(maskFeature), (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
+        setPage(page+1);
+      }
     } 
+    if (loading){
+      showLoadingSpinner(true);
+    } else{
+      showLoadingSpinner(false);
+      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
+    }
   }, [data, loading]);
 
   useEffect(() => {
     if (!loading && error) {
-      mapOl.getTargetElement().classList.remove('olSpinner');
+      showLoadingSpinner(false);
       dispatchAction(
         {
           action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
@@ -105,7 +126,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
 
   useEffect(() => {
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
-    if(ingestionResolutionMeter){
+    if (ingestionResolutionMeter) {
       partsToCheck?.forEach((part) => {
         existingPolygonParts?.forEach((eixstingPart) => {
           const intersection = booleanIntersects( 

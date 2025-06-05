@@ -52,6 +52,7 @@ body[dir='rtl'] #jobsDialog .closeIcon {
 }
 
 #jobsDialog .refreshContainer .refreshSecs {
+  cursor: pointer;
   position: relative;
   text-align: center;
   font-size: 8px;

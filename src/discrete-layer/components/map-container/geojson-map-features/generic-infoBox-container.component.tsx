@@ -1,15 +1,15 @@
-import { PropsWithChildren } from "react";
-import { CesiumMath } from "@map-colonies/react-components";
-import { Typography, useTheme } from "@map-colonies/react-core";
-import { IPosition } from "../../../../common/hooks/useHeightFromTerrain";
+import { PropsWithChildren } from 'react';
+import { CesiumMath } from '@map-colonies/react-components';
+import { Typography, useTheme } from '@map-colonies/react-core';
+import { IPosition } from '../../../../common/hooks/useHeightFromTerrain';
 import CreateSvgIconLocationOn from '../../../../icons/LocationOn';
-import { getCoordinatesDisplayText } from "../../layer-details/utils";
+import { getCoordinatesDisplayText } from '../../layer-details/utils';
 
 const GenericInfoBoxContainer: React.FC<PropsWithChildren<{ positionInRadians?: IPosition }>> = ({ positionInRadians, children }) => {
     const themeObj = useTheme();
     const theme = themeObj as Record<string, string>;
 
-    if(!positionInRadians) return null;
+    if (!positionInRadians) return null;
 
     return (
       <> 
@@ -28,6 +28,6 @@ const GenericInfoBoxContainer: React.FC<PropsWithChildren<{ positionInRadians?: 
         {children}
       </>
     );
-}
+};
 
 export default GenericInfoBoxContainer;

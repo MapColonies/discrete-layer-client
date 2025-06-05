@@ -44,7 +44,7 @@ enforce.extend({
     }
   },
   extIsNotEmpty: (val) => {
-    if(moment.isMoment(val)) {
+    if (moment.isMoment(val)) {
       return moment(val).isValid();
     }
 
@@ -101,7 +101,7 @@ const suite = (fieldDescriptor: FieldConfigModelType[], data: Record<string, unk
       const shouldValidateTime = field.dateGranularity === DateGranularityType.DATE_AND_TIME;
 
       field.validation?.forEach((validation: ValidationConfigModelType): void => {
-        if(validation){
+        if (validation) {
           /* eslint-disable */
           test(fieldName, validation.errorMsgTranslation as string, () => {
             if (data[fieldName]) {

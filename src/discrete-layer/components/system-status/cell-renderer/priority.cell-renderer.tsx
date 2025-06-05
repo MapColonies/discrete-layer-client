@@ -73,7 +73,7 @@ export const PriorityRenderer: React.FC<IPriorityCellRendererParams> = (
       size: 'small',
     };
 
-    if(isReadOnlyMode) {
+    if (isReadOnlyMode) {
       return (
         <Box className="priorityReadonlyPresentor">
           <Icon

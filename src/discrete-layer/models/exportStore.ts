@@ -117,7 +117,7 @@ export const exportStore = ModelBase
     function setSelectionProperty(selectionId: string, key: string, value: unknown): void {
       const updatedFeatures = self.geometrySelectionsCollection.features
       .map(feature => {
-        if(feature.properties?.id !== selectionId) return feature;
+        if (feature.properties?.id !== selectionId) return feature;
 
         return {...feature, properties: {...feature.properties, [key]: value}};
       });
@@ -202,17 +202,17 @@ export const exportStore = ModelBase
             try {
               const parsedGeojson = JSON.parse(new TextDecoder().decode(shpOrGeojson)) as Record<string, unknown>;
               
-              if(parsedGeojson.type !== FEATURE_COLLECTION_TYPE || isEmpty(parsedGeojson.features)) {
+              if (parsedGeojson.type !== FEATURE_COLLECTION_TYPE || isEmpty(parsedGeojson.features)) {
                 throw invalidGeojsonError;
               }
 
               const featuresList = parsedGeojson.features as Feature[];
     
-              if(featuresList.length > 1 && !self.isMultiSelectionAllowed) {
+              if (featuresList.length > 1 && !self.isMultiSelectionAllowed) {
                 throw multiSelectionSupportError;
               }
 
-              if(typeof internalPropsForDomain !== 'undefined') {
+              if (typeof internalPropsForDomain !== 'undefined') {
                 addFeaturesList(sanitizeFeaturesWithProps(featuresList, internalPropsForDomain));
               }
             } catch(e) {
@@ -231,15 +231,15 @@ export const exportStore = ModelBase
 
             try {
               
-              if(Array.isArray(featureCollectionData) || isEmpty(featureCollectionData.features)){
+              if (Array.isArray(featureCollectionData) || isEmpty(featureCollectionData.features)){
                 throw invalidShapefileError;
               }
               
-              if(featureCollectionData.features.length > 1 && !self.isMultiSelectionAllowed) {
+              if (featureCollectionData.features.length > 1 && !self.isMultiSelectionAllowed) {
                 throw multiSelectionSupportError;
               }
               
-              if(typeof internalPropsForDomain !== 'undefined') {
+              if (typeof internalPropsForDomain !== 'undefined') {
                 addFeaturesList(sanitizeFeaturesWithProps(featureCollectionData.features, internalPropsForDomain));
               }
             } catch(e) {

@@ -3,14 +3,13 @@ import { isEmpty } from 'lodash';
 import { CesiumCartographic, cesiumSampleTerrainMostDetailed, useCesiumMap } from '@map-colonies/react-components';
 import { is2dArray, isArrayEqual } from '../helpers/array';
 
-
 export interface IPosition {
   latitude: number;
   longitude: number;
 }
 
 interface UseHeightFromTerrainProps {
-    position: IPosition[] | IPosition[][];
+  position: IPosition[] | IPosition[][];
 }
 
 interface IHeightFromTerrain {
@@ -31,22 +30,25 @@ export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeig
       prevPositions.current = options.position;
       setCoordinates(options.position);
     }
-  }, [options?.position])
+  }, [options?.position]);
 
   useEffect(() => {
     if (coordinates) {
       // @ts-ignore
       const is2dArr = is2dArray(coordinates);
       const cartographicArr: CesiumCartographic[] | CesiumCartographic[][] | undefined = (is2dArr) ?
-        coordinates.map((ring: any) => ring.map((coord: any) => CesiumCartographic.fromDegrees(coord.longitude, coord.latitude))) :
+        coordinates.map((ring: any) => ring.map((coord: any) => CesiumCartographic.fromDegrees(coord.longitude, coord.latitude)))
+        :
         coordinates.map((coord: any) => CesiumCartographic.fromDegrees(coord.longitude, coord.latitude));
       
       setIsLoadingData(true);
+
+      // const promises: Promise<CesiumCartographic[]>[] = [];
         
       if (is2dArr) {
         const promises: Promise<CesiumCartographic[]>[] = [];
         
-        cartographicArr.forEach((ring: any) =>  {
+        cartographicArr.forEach((ring: any): void =>  {
           // @ts-ignore
           promises.push(cesiumSampleTerrainMostDetailed(
             mapViewer.terrainProvider,

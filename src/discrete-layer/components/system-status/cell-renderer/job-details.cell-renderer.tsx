@@ -171,15 +171,36 @@ const TasksRenderer: React.FC<TasksRendererParams> = observer(({ jobId, productT
   );
 });
 
-export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
-  const jobId = (props.data as JobModelType).id;
+export const JobDetailsRenderer: React.FC<ICellRendererParams> = observer((props) => {
+  const [propsWithJobParams, setPropsWithJobParams] = useState(props);
+
+  const jobId = (props.data as JobModelType).id.replace(DETAILS_ROW_ID_SUFFIX, '');
+
+  const { data } = useQuery(
+    (store) =>
+      store.queryJob({
+        id: jobId,
+      })
+  );
+
+  useEffect(() => {
+    if (!data?.job) return;
+
+    setPropsWithJobParams(prev => ({
+      ...prev,
+      data: {
+        ...props.data,
+        parameters: data.job?.parameters
+      },
+    }));
+  }, [data]);
 
   const keyPrefix = `${(props.data as JobModelType).resourceId as string}`;
 
   return (
     <Box className="jobDetailsContainer">
-      <JobDetailsHeader job={props.data as JobModelType} />
-      <JobDetailsExportJobData {...props} />
+     <JobDetailsHeader job={props.data as JobModelType} /> 
+      <JobDetailsExportJobData key={jobId} {...propsWithJobParams} />
       <Box className="gridContainer">
         {taskFields.map((field) => (
           <Typography
@@ -191,8 +212,8 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = (props) => {
             <FormattedMessage id={field.label} />
           </Typography>
         ))}
-        <TasksRenderer productType={(props.data as JobModelType).productType as ProductType} jobId={jobId.replace(DETAILS_ROW_ID_SUFFIX, '')} />
+        <TasksRenderer productType={(props.data as JobModelType).productType as ProductType} jobId={jobId} />
       </Box>
     </Box>
   );
-};
+});

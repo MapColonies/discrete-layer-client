@@ -17,10 +17,10 @@ export const MapActionResolver: React.FC = observer(() => {
 
   // Preserve last highlighted layer to reset it when new highlighted layer is set.
   useEffect(() => {
-    if(highlightedLayer) {
+    if (highlightedLayer) {
       prevHighlightedLayer.current = highlightedLayer;
     } else {
-      if(prevHighlightedLayer.current) {
+      if (prevHighlightedLayer.current) {
         prevHighlightedLayer.current.hue = DEFAULT_LAYER_HUE_FACTOR;
         prevHighlightedLayer.current = undefined;
       }
@@ -71,13 +71,13 @@ export const MapActionResolver: React.FC = observer(() => {
       case ContextActions.HIGHLIGHT_ACTIVE_LAYER: {
         const foundLayer = mapViewer.layersManager?.get(data?.id as string);
 
-        if(foundLayer) {
-          if(data?.hue as number > DEFAULT_LAYER_HUE_FACTOR) {
-            if(highlightedLayer) {
+        if (foundLayer) {
+          if (data?.hue as number > DEFAULT_LAYER_HUE_FACTOR) {
+            if (highlightedLayer) {
               highlightedLayer.hue = DEFAULT_LAYER_HUE_FACTOR;
             }
             setHighlightedLayer(foundLayer);
-          } else if(data?.hue as number === DEFAULT_LAYER_HUE_FACTOR) {
+          } else if (data?.hue as number === DEFAULT_LAYER_HUE_FACTOR) {
             setHighlightedLayer(undefined);
           }
           foundLayer.hue = data?.hue as number;
