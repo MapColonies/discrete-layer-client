@@ -63,6 +63,7 @@
   CONFIGURATION_POLYGONPARTS_GEOMETRY_ERRORS_THRESHOLD: {{ quote .Values.env.polygonParts.geometryErrorsThreshold }}
   CONFIGURATION_POLYGONPARTS_AREA_THRESHOLD: {{ quote .Values.env.polygonParts.areaThreshold }}
   CONFIGURATION_POLYGONPARTS_MAX_WFS_FEATURES: {{ quote .Values.env.polygonParts.max.WFSFeatures }}
+  CONFIGURATION_POLYGONPARTS_MAX_SHOW_FOOTPRINT_ZOOM_LEVEL: {{ quote .Values.env.polygonParts.max.showFootprintZoomLevel }}
   CONFIGURATION_POLYGONPARTS_MAX_PERSHAPE: {{ quote .Values.env.polygonParts.max.perShape }}
   CONFIGURATION_POLYGONPARTS_MAX_VERTICES: {{ quote .Values.env.polygonParts.max.vertices }}
   CONFIGURATION_WFS_STYLE: {{ quote .Values.env.wfs.style }}

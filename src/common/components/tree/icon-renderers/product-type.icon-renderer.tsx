@@ -1,20 +1,35 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
-import { getStatusColoredText } from '../../../helpers/style';
+import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
+import { getStatusStyle } from '../../../helpers/style';
 import { TypeIcon } from '../../shared/type-icon';
 
 interface IProductTypeCellRendererParams {
   data: ILayerImage;
   thumbnailUrl?: string;
+  onClick?: (data: ILayerImage, value: boolean) => void;
 }
 
-export const ProductTypeRenderer: React.FC<IProductTypeCellRendererParams> = ({ data, thumbnailUrl }) => {
+export const ProductTypeRenderer: React.FC<IProductTypeCellRendererParams> = ({ data, thumbnailUrl, onClick }) => {
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      onClick(data, !(data as LayerRasterRecordModelType).polygonPartsShown);
+    }
+  };
+
+  const computedStyle = useMemo(() => {
+    return {
+      ...(getStatusStyle(data as any, 'color') ?? {})
+    };
+  }, [data]);
 
   return (
     <TypeIcon
       typeName={data.productType as string}
       thumbnailUrl={thumbnailUrl}
-      style={getStatusColoredText(data as any)}
+      style={computedStyle}
+      onClick={data.__typename === "LayerRasterRecord" ? handleClick : undefined}
     />
   );
   

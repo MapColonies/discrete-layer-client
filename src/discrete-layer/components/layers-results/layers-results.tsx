@@ -27,10 +27,13 @@ import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
 import CONFIG from '../../../common/config';
 import { dateFormatter } from '../../../common/helpers/formatters';
+import { isPolygonPartsShown } from '../../../common/helpers/style';
 import { usePrevious } from '../../../common/hooks/previous.hook';
+import { LayerRasterRecordModelType } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
 import { useStore } from '../../models/RootStore';
+import { UserAction } from '../../models/userStore';
 import { TabViews } from '../../views/tab-views';
 
 import './layers-results.css';
@@ -40,13 +43,13 @@ const PAGE_SIZE = 10;
 const IMMEDIATE_EXECUTION = 0;
 const INITIAL_ORDER = 0;
 
-interface LayersResultsComponentProps {
-  style?: {[key: string]: string};
+interface LayersResultsProps {
   searchLoading: boolean;
   searchError: any;
+  style?: { [key: string]: string };
 }
 
-export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = observer((props) => {
+export const LayersResults: React.FC<LayersResultsProps> = observer((props) => {
   const intl = useIntl();
   const store = useStore();
   const [layersImages, setlayersImages] = useState<ILayerImage[]>([]);
@@ -56,14 +59,22 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const cacheRef = useRef({} as ILayerImage[]);
   const selectedLayersRef = useRef(INITIAL_ORDER);
 
+  const updateRow = (id: string, newData: Partial<ILayerImage>, gridApi: GridApi): void => {
+    const rowNode = gridApi.getRowNode(id);
+    if (rowNode) {
+      rowNode.setData({ ...rowNode.data, ...newData });
+      gridApi.refreshCells({ rowNodes: [rowNode], force: true });
+    }
+  };
+
   const isSameRowData = (source: ILayerImage[] | undefined, target: ILayerImage[] | undefined): boolean => {
     let res = false;
     if (source && target && source.length === target.length) {
       let matchesRes = true;
       source.forEach((srcFeat: ILayerImage) => { 
         const match = target.find((targetFeat: ILayerImage) => {
-          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat, ['layerURLMissing']);
-          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat, ['layerURLMissing']);          
+          const srcOnlyEditables = store.discreteLayersStore.getEditablePartialObject(srcFeat, ['layerURLMissing', 'polygonPartsShown']);
+          const targetOnlyEditables = store.discreteLayersStore.getEditablePartialObject(targetFeat, ['layerURLMissing', 'polygonPartsShown']);          
 
           return JSON.stringify(srcOnlyEditables) === JSON.stringify(targetOnlyEditables);
         });
@@ -89,15 +100,15 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
     [ 'LayerRasterRecord', 'Layer3DRecord', 'LayerDemRecord', 'VectorBestRecord', 'QuantizedMeshBestRecord' ].forEach( entityName => {
-       const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
-       const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
+      const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
+      const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
         return {
           titleTranslationId: actionGroup.titleTranslationId,
-          group: 
+          group:
             actionGroup.group.filter(action => {
               // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true &&
-                    action.views.includes(TabViews.SEARCH_RESULTS);
+              return store.userStore.isActionAllowed(`entity_action.${entityName}.${action.action}`) === false ? false : true && 
+                     action.views.includes(TabViews.SEARCH_RESULTS);
             })
             .map((action) => {
               return {
@@ -107,13 +118,13 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
               };
             }),
         }
-       });
-       entityActions[entityName] = permittedGroupsActions;
-    })
+      });
+      entityActions[entityName] = permittedGroupsActions;
+    });
     return entityActions;
   }, [store.userStore.user]);
 
-  const dispatchAction = (action: Record<string,unknown>): void => {
+  const dispatchAction = (action: Record<string, unknown>): void => {
     store.actionDispatcherStore.dispatchAction({
       action: action.action,
       data: action.data
@@ -188,6 +199,18 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
           display: 'flex',
           justifyContent: 'center',
           paddingTop: '8px'
+        },
+        onClick: (data: ILayerImage, value: boolean, gridApi: GridApi): void => {
+          const activePPLayer = store.discreteLayersStore.layersImages?.find(layer => isPolygonPartsShown(layer as unknown as Record<string, unknown>)) as LayerRasterRecordModelType;
+          store.discreteLayersStore.showPolygonParts(data.id, value);
+          if (activePPLayer) {
+            updateRow(activePPLayer.id, {...activePPLayer, polygonPartsShown: false}, gridApi);
+          }
+          updateRow(data.id, {...data, polygonPartsShown: value} as LayerRasterRecordModelType, gridApi);
+          dispatchAction({
+            action: UserAction.SYSTEM_CALLBACK_SHOWPOLYGONPARTS,
+            data: { selectedLayer: {...data, polygonPartsShown: value } }
+          });
         }
       }
     },
@@ -281,7 +304,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     },
     onGridReady(params: GridReadyEvent) {
       setGridApi(params.api);
-      params.api.forEachNode( (node) => {
+      params.api.forEachNode((node) => {
         if ((node.data as ILayerImage).id === store.discreteLayersStore.selectedLayer?.id) {
           params.api.selectNode(node, true);
         }
@@ -304,7 +327,7 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
 
   useEffect(() => {
     if (store.discreteLayersStore.layersImages) {
-      setlayersImages([...store.discreteLayersStore.layersImages.map(item => ({...item}))]);
+      setlayersImages([...store.discreteLayersStore.layersImages.map(item => ({ ...item }))]);
     }
   }, [store.discreteLayersStore.layersImages]);
 
@@ -316,17 +339,17 @@ export const LayersResultsComponent: React.FC<LayersResultsComponentProps> = obs
     <Box id="layerResults">
       {
         props.searchError ?
-        <Error
-          className="errorMessage"
-          message={props.searchError.response?.errors[0].message}
-          details={props.searchError.response?.errors[0].extensions?.exception?.config?.url}
-        /> :
-        <GridComponent
-          gridOptions={gridOptions}
-          rowData={getRowData()}
-          style={props.style}
-          isLoading={props.searchLoading}
-        />
+          <Error
+            className="errorMessage"
+            message={props.searchError.response?.errors[0].message}
+            details={props.searchError.response?.errors[0].extensions?.exception?.config?.url}
+          /> :
+          <GridComponent
+            gridOptions={gridOptions}
+            rowData={getRowData()}
+            style={props.style}
+            isLoading={props.searchLoading}
+          />
       }
     </Box>
   );

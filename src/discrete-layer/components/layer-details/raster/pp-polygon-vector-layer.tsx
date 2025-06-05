@@ -35,7 +35,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const intl = useIntl();
   const mapOl = useMap();
 
-  const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
+  const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const [page, setPage] = useState(START_PAGE);
@@ -89,8 +89,8 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   
   useEffect(() => {
     if (!loading && data && maskFeature) {
-      setExistingPolygoParts([
-        ...(page === 0 ? existingPolygoParts.slice(1) : existingPolygoParts),
+      setExistingPolygonParts([
+        ...(page === 0 ? existingPolygonParts.slice(1) : existingPolygonParts),
         ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
       ]);
       if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
@@ -128,7 +128,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
     if (ingestionResolutionMeter) {
       partsToCheck?.forEach((part) => {
-        existingPolygoParts?.forEach((eixstingPart) => {
+        existingPolygonParts?.forEach((eixstingPart) => {
           const intersection = booleanIntersects( 
             part.geometry as Polygon, 
             eixstingPart.geometry as Polygon
@@ -155,7 +155,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
         }
       );
     }
-  }, [existingPolygoParts, ingestionResolutionMeter]);
+  }, [existingPolygonParts, ingestionResolutionMeter]);
 
 
 
@@ -175,7 +175,8 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
             /> : <></>
           }
         )}
-        {existingPolygoParts.map((feat, idx) => {
+        {
+          existingPolygonParts.map((feat, idx) => {
             const greenStyle = new Style({
               text: createTextStyle(feat, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE),
               stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),
@@ -187,8 +188,8 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
               fit={false}
               featureStyle={greenStyle}
             /> : <></>
-          }
-        )}
+          })
+        }
       </VectorSource>
     </VectorLayer>
   );

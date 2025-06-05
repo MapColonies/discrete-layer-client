@@ -27,7 +27,7 @@ interface GeoFeaturesPresentorProps {
 }
 
 const DEFAULT_PROJECTION = 'EPSG:4326';
-const MIN_FETURES_NUMBER = 5; // minimal set of fetures (source, source_marker, perimeter, perimeter_marker, PPs [at least one])
+const MIN_FEATURES_NUMBER = 5; // minimal set of fetures (source, source_marker, perimeter, perimeter_marker, PPs [at least one])
 const RENDERS_TILL_FULL_FEATURES_SET = 2; // first render with source, second with all PPs and their perimeter geometries
 
 export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> = ({
@@ -47,7 +47,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
   const renderCount = useRef(0);
 
   useEffect(() => {
-    if (geoFeatures && geoFeatures?.length >= MIN_FETURES_NUMBER) {
+    if (geoFeatures && geoFeatures?.length >= MIN_FEATURES_NUMBER) {
       renderCount.current += 1;
     }
   });
@@ -74,7 +74,7 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
             <TileLayer key={layer.id} options={{ opacity: layer.opacity }}>
               <TileWMTS options={wmtsOptions} />
             </TileLayer>
-          )
+          );
         }
         if (layer.type === 'XYZ_LAYER') {
           const xyzOptions = getXYZOptions({
@@ -122,20 +122,20 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
       <>
         {
           geoFeatures?.map((feat, idx) => {
-          let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
+            let featureStyle = PPMapStyles.get(feat?.properties?.featureType);
 
           if ( selectedFeatureKey && feat?.properties?.key === selectedFeatureKey) {
             featureStyle = selectionStyle;
           }
 
-          return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
-            geometry={{...feat.geometry}} 
-            fit={false}
-            featureStyle={featureStyle}/> : <></>
+            return (feat && !isEmpty(feat.geometry)) ? <GeoJSONFeature 
+              geometry={{...feat.geometry}} 
+              fit={false}
+              featureStyle={featureStyle}/> : <></>
           })
         }
       </>
-    )
+    );
   };
     
   return (
@@ -152,7 +152,8 @@ export const GeoFeaturesPresentorComponent: React.FC<GeoFeaturesPresentorProps> 
           showExisitngPolygonParts && <PolygonPartsExtentVectorLayer layerRecord={layerRecord}/>
         }
         {
-          ppCheck && <PolygonPartsByPolygonVectorLayer 
+          ppCheck &&
+          <PolygonPartsByPolygonVectorLayer 
             layerRecord={layerRecord} 
             maskFeature={geoFeatures?.find((feat)=>{
               return get(feat,'properties.featureType') === FeatureType.PP_PERIMETER;

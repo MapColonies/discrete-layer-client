@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip, Typography } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
-import { existStatus, getStatusColoredText } from '../../../common/helpers/style';
+import { existStatus, getStatusStyle } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import { EntityDialog } from '../../components/layer-details/entity.dialog';
 import { EntityRasterDialog } from '../../components/layer-details/raster/entity.raster.dialog';
@@ -53,7 +53,7 @@ export const DetailsPanel: React.FC<DetailsPanelComponentProps> = observer((prop
   return (
     <>
       <Box style={{ display: 'flex', paddingTop: '8px' }}>
-        <Typography dir="auto" use="headline6" tag="div" className="detailsTitle" style={getStatusColoredText(layerToPresent as any ?? {})}>
+        <Typography dir="auto" use="headline6" tag="div" className="detailsTitle" style={getStatusStyle(layerToPresent as any ?? {}, 'color')}>
           {layerToPresent?.productName}
         </Typography>
         {

@@ -89,4 +89,4 @@ export const useHeightFromTerrain = (options?: UseHeightFromTerrainProps): IHeig
   }, [coordinates]);
 
   return { newPositions, setCoordinates, isLoadingData };
-}
+};
