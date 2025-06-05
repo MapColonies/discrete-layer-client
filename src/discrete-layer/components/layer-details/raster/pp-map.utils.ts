@@ -151,7 +151,7 @@ export const getText = (feature: Feature, resolution: number, featureConfig: Rec
     featureResolution = featureResolution.split(/[()]/)[1];
     zoomLevel = parseFloat(featureResolution);
   }
-  const ingestionDateUTC = dateFormatter(get(feature.properties, 'ingestionDateUtc'), false);
+  const ingestionDateUTC = dateFormatter(get(feature.properties, 'imagingTimeEndUTC'), false);
   const updatedInVersion = get(feature.properties, 'productVersion');
 
   let text = defaultText ?? '';
