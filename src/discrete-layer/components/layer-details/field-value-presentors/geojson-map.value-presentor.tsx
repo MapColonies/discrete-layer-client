@@ -44,7 +44,7 @@ export const GeoJsonMapValuePresentorComponent: React.FC<GeoJsonMapValuePresento
       baseMap = store.discreteLayersStore.baseMaps?.maps.find((map) => map.isCurrent);
     }
     if (baseMap) {
-      baseMap.baseRasteLayers.forEach((layer) => {
+      baseMap.baseRasterLayers.forEach((layer) => {
         if (layer.type === 'WMTS_LAYER') {
           const wmtsOptions = getWMTSOptions({
             url: layer.options.url as string,

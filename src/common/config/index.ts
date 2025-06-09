@@ -40,7 +40,7 @@ const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
       return {
         ...baseMap,
         thumbnail: baseMap.thumbnail && ACCESS_TOKEN.injectionType?.toLowerCase() === 'queryparam' ? `${baseMap.thumbnail}?${ACCESS_TOKEN.attributeName}=${ACCESS_TOKEN.tokenValue}` : baseMap.thumbnail,
-        baseRasteLayers: (baseMap.baseRasteLayers as IRasterLayer[]).map((rasterLayer) => {
+        baseRasterLayers: (baseMap.baseRasterLayers as IRasterLayer[]).map((rasterLayer) => {
           return {
             ...rasterLayer,
             options: {

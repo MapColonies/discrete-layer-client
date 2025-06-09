@@ -700,6 +700,8 @@
   "debug-panel.wfs.cache": "בזכרון",
   "debug-panel.wfs.extent": "בתצוגה",
 
+  "active-layers.title": "שכבות פעילות",
+
   "user-role.switch.user.text": "משתמש",
   "user-role.switch.admin.text": "מנהל",
   "user-role.dialog.title.text": "שינוי הרשאות משתמש",

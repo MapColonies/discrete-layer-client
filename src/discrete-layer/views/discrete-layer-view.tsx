@@ -31,7 +31,7 @@ import {
   IDrawing,
   IDrawingEvent
 } from '@map-colonies/react-components';
-import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/legend';
 import CONFIG from '../../common/config';
 import { localStore } from '../../common/helpers/storage';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
@@ -250,11 +250,17 @@ const DiscreteLayerView: React.FC = observer(() => {
     MAP_SETTINGS_DIALOG_TITLE:  intl.formatMessage({ id: 'map-settings.dialog.title' }),
     MAP_SETTINGS_SCENE_MODE_TITLE: intl.formatMessage({ id: 'map-settings.base-map.scene-mode.title' }),
     MAP_SETTINGS_BASE_MAP_TITLE: intl.formatMessage({ id: 'map-settings.base-map.title' }),
+    MAP_SETTINGS_TERRAIN_TITLE: intl.formatMessage({ id: 'record-type.record_quantized_mesh.label' }),
     ZOOM_LABEL: intl.formatMessage({ id: 'map.zoom.label' }),
     DEBUG_PANEL_TITLE: intl.formatMessage({ id: 'debug-panel.title' }),
     WFS_TITLE: intl.formatMessage({ id: 'debug-panel.wfs.title' }),
     WFS_CACHE: intl.formatMessage({ id: 'debug-panel.wfs.cache' }),
     WFS_EXTENT: intl.formatMessage({ id: 'debug-panel.wfs.extent' }),
+    ACTIVE_LAYERS_TITLE: intl.formatMessage({ id: 'active-layers.title' }),
+    RASTER_SECTION: intl.formatMessage({ id: 'record-type.record_raster.label' }),
+    '3D_SECTION': intl.formatMessage({ id: 'record-type.record_3d.label' }),
+    DEM_SECTION: intl.formatMessage({ id: 'record-type.record_dem.label' }),
+    VECTOR_SECTION: intl.formatMessage({ id: 'record-type.record_vector.label' }),
   }), [intl]);
   /* eslint-enable */
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/legend';
 import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
 import { LinkType } from '../../../../common/models/link-type.enum';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../../../__mocks-data__/search-results.mock';
@@ -100,8 +100,8 @@ export const BaseMapsLegendsFetcher: React.FC = observer(() => {
         baseMaps.maps.map(async (baseMap) => {
           return {
             ...baseMap,
-            baseRasteLayers: await Promise.all(
-              baseMap.baseRasteLayers.map(async (rasterLayer) => {
+            baseRasterLayers: await Promise.all(
+              baseMap.baseRasterLayers.map(async (rasterLayer) => {
                 // Here we'll make the call to get the legends from the links in DB.
                 const layerFromCatalog = await GET_MOCK_LAYER_WITH_LINKS(
                   rasterLayer.id
