@@ -398,6 +398,10 @@ export const discreteLayersStore = ModelBase
       self.ppCollisionCheckInProgress = val;
     }
 
+    function getActiveLayersImages(): ILayerImage[] {
+      return self.layersImages?.filter(layer => layer.layerImageShown || layer.footprintShown) ?? [];
+    }
+
 
     return {
       getLayersImages,
@@ -431,7 +435,8 @@ export const discreteLayersStore = ModelBase
       setMapViewerExtentPolygon,
       setCustomValidationError,
       clearCustomValidationError,
-      setPPCollisionCheckInProgress
+      setPPCollisionCheckInProgress,
+      getActiveLayersImages
     };
   });
 

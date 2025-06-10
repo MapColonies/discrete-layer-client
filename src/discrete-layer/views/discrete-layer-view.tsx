@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { MapMode2D } from 'cesium';
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { find, get, isEmpty } from 'lodash';
@@ -8,14 +9,15 @@ import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { 
-  IconButton,
-  useTheme,
-  Typography,
-  MenuSurfaceAnchor,
-  MenuSurface,
-  Tooltip,
   Avatar,
-  Select
+  Icon,
+  IconButton,
+  MenuSurface,
+  MenuSurfaceAnchor,
+  Select,
+  Tooltip,
+  Typography,
+  useTheme
 } from '@map-colonies/react-core';
 import {
   BboxCorner,
@@ -68,13 +70,6 @@ import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
 import AppTitle from './components/app-title/app-title.component';
 import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 import { TabViews } from './tab-views';
-
-import '@material/tab-bar/dist/mdc.tab-bar.css';
-import '@material/tab/dist/mdc.tab.css';
-import '@material/tab-scroller/dist/mdc.tab-scroller.css';
-import '@material/tab-indicator/dist/mdc.tab-indicator.css';
-
-import './discrete-layer-view.css';
 import { IDispatchAction } from '../models/actionDispatcherStore';
 import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
 import { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
@@ -89,7 +84,13 @@ import { PolygonPartsFeature } from '../components/map-container/geojson-map-fea
 import { ExtentUpdater } from '../components/map-container/extent-updater';
 import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
 import { currentSite } from '../../common/helpers/siteUrl';
-import { MapMode2D } from 'cesium';
+
+import '@material/tab-bar/dist/mdc.tab-bar.css';
+import '@material/tab/dist/mdc.tab.css';
+import '@material/tab-scroller/dist/mdc.tab-scroller.css';
+import '@material/tab-indicator/dist/mdc.tab-indicator.css';
+
+import './discrete-layer-view.css';
 
 // type LayerType = 'WMTS_LAYER' | 'WMS_LAYER' | 'XYZ_LAYER' | 'OSM_LAYER';
 
@@ -140,6 +141,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
+  const [isActiveLayerFilterEnabled, setIsActiveLayerFilterEnabled] = useState<boolean>(false);
+  const [catalogFilter, setCatalogFilter] = useState<boolean>(false);
   const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [isPoiSearchActive, setIsPoiSearchActive] = useState(false);
@@ -258,7 +261,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   }), [intl]);
   /* eslint-enable */
 
-  const memoizedLayers =  useMemo(() => {
+  const memoizedLayers = useMemo(() => {
     return(
       <>
         <MapActionResolver />
@@ -269,8 +272,6 @@ const DiscreteLayerView: React.FC = observer(() => {
     );
   }, []);
 
-
-  
   const handleTabViewChange = (targetViewIdx: TabViews): void => {
     if (activeTabView !== targetViewIdx) {
       store.discreteLayersStore.setTabviewData(activeTabView);
@@ -404,7 +405,7 @@ const DiscreteLayerView: React.FC = observer(() => {
 
     store.exportStore.reset();
     store.discreteLayersStore.resetTabView();
-  }, [userRole])
+  }, [userRole]);
 
   const handleNewEntityDialogClick = (recordType: RecordType): void => {
     switch (recordType) {
@@ -602,7 +603,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         />
       </Tooltip>
     );
-  }
+  };
 
   const getActiveTabHeader = (tabIdx: number, site: string): JSX.Element => {
 
@@ -663,14 +664,32 @@ const DiscreteLayerView: React.FC = observer(() => {
                 />
               </Box>
             }
-
+            {
+              tabIdx === TabViews.CATALOG &&
+              <Tooltip content={intl.formatMessage({ id: catalogFilter ? 'action.show-all.tooltip' : 'action.filter-nonactive.tooltip' })}>
+                <Icon
+                  className="operationIcon"
+                  disabled={!isActiveLayerFilterEnabled}
+                  label="ACTIVE"
+                  onClick={(): void => {
+                    if (isActiveLayerFilterEnabled) {
+                      setCatalogFilter(prev => !prev);
+                    }
+                  }}
+                  icon={
+                    <svg width="100%" height="100%" viewBox="0 0 24 24" fill={catalogFilter ? theme.primary : theme.textIconOnBackground}>
+                      <path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"/>
+                    </svg>
+                  }
+                />
+              </Tooltip>
+            }
             {
               tabIdx === TabViews.CATALOG && 
               <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
                 <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
               </Tooltip>
             }
-
             {
               tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed) && 
@@ -913,7 +932,14 @@ const DiscreteLayerView: React.FC = observer(() => {
                 getActiveTabHeader(activeTabView, site)
               }
               <Box className="panelContent" style={{ overflow: 'hidden' }}>
-                <CatalogTreeComponent refresh={catalogRefresh}/>
+                <CatalogTreeComponent
+                  refresh={catalogRefresh}
+                  isFiltered={catalogFilter}
+                  onActiveLayer={(value: boolean) => {
+                    if (!(catalogFilter && !value)) {
+                      setIsActiveLayerFilterEnabled(value);
+                    }
+                  }} />
               </Box>
             </Box>
             {

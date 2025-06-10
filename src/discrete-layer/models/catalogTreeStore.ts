@@ -138,6 +138,103 @@ export const catalogTreeStore = ModelBase.props({
       setCatalogTreeData([]);
     }
 
+    const createCatalogTree = (layersList: ILayerImage[]): void => {
+
+      // Get unpublished/new discretes
+
+      const arrUnpublished = layersList.filter((item) => {
+        // @ts-ignore
+        const itemObjectBag = item as Record<string, unknown>;
+        return (
+          existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
+        );
+      });
+      const parentUnpublished = {
+        title: intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.unpublished',
+        }),
+        isGroup: true,
+        children: [
+          ...arrUnpublished.map((item) => {
+            return {
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            };
+          }),
+        ],
+      };
+
+      // Get BESTs shortcuts
+
+      const arrBests = layersList.filter(isBest);
+      const parentBests = {
+        title: intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.bests',
+        }),
+        isGroup: true,
+        children: [
+          ...arrBests.map((item) => {
+            return {
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            };
+          }),
+        ],
+      };
+
+      // Get vector data layers
+
+      const arrVector = layersList.filter(isVector);
+      const vectorCatalog = {
+        title: intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.vector',
+        }),
+        isGroup: true,
+        children: [
+          ...arrVector.map((item) => {
+            return {
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            };
+          }),
+        ],
+      };
+
+      // Whole catalog as is
+
+      const layersListWithoutVector = layersList.filter(layer => !isVector(layer));
+      const parentCatalog = buildParentTreeNode(
+        layersListWithoutVector,
+        intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.catalog',
+        }),
+        /* eslint-disable */
+        { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
+        /* eslint-enable */
+      );
+
+      const isUserAdmin = store.userStore.isUserAdmin();
+
+      setCatalogTreeData([
+        parentCatalog,
+        parentBests, 
+        vectorCatalog,
+        ...(isUserAdmin ? [parentUnpublished] : [])
+      ]);
+
+    };
+
+    const filterTree = (onlyActiveLayers: boolean): void => {
+      if (onlyActiveLayers) {
+        createCatalogTree(store.discreteLayersStore.getActiveLayersImages());
+      } else {
+        createCatalogTree(store.discreteLayersStore.layersImages as ILayerImage[]);
+      }
+    };
+
     /**
      * Fetch new catalog data
      */
@@ -177,6 +274,9 @@ export const catalogTreeStore = ModelBase.props({
       }
     });
 
+    /***
+     * Fetch capabilities for the layers in the catalog
+     */
     const capabilitiesFetch = flow(function* capabilitiesFetchGen(layers?: LayerMetadataMixedUnion[]): Generator<
       Promise<{ capabilities: CapabilityModelType[] }>,
       CapabilityModelType[],
@@ -266,102 +366,14 @@ export const catalogTreeStore = ModelBase.props({
         if (typeof layersListResults !== 'undefined' && (layersListResults as ILayerImage[] | null) !== null) {
 
           yield capabilitiesFetch();
+
           store.discreteLayersStore.setLayersImages(layersListResults, false);
           const layersList = store.discreteLayersStore.layersImages as ILayerImage[];
 
-          // get unlinked/new discretes shortcuts
-          /*const arrUnlinked = arr.filter((item) => {
-            // @ts-ignore
-            const itemObjectBag = item as Record<string,unknown>;
-            return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-          });
-          const parentUnlinked = buildParentTreeNode(
-            arrUnlinked,
-            intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-            {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-          );*/
+          createCatalogTree(layersList);
 
-          // get unpublished/new discretes
-          const arrUnpublished = layersList.filter((item) => {
-            // @ts-ignore
-            const itemObjectBag = item as Record<string, unknown>;
-            return (
-              existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
-            );
-          });
-
-          const parentUnpublished = {
-            title: intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.unpublished',
-            }),
-            isGroup: true,
-            children: [
-              ...arrUnpublished.map((item) => {
-                return {
-                  ...item,
-                  title: getLayerTitle(item),
-                  isSelected: false,
-                };
-              }),
-            ],
-          };
-
-          // get BESTs shortcuts
-          const arrBests = layersList.filter(isBest);
-          const parentBests = {
-            title: intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.bests',
-            }),
-            isGroup: true,
-            children: [
-              ...arrBests.map((item) => {
-                return {
-                  ...item,
-                  title: getLayerTitle(item),
-                  isSelected: false,
-                };
-              }),
-            ],
-          };
-
-          // whole catalog as is
-          const layersListWithoutVector = layersList.filter(layer => !isVector(layer));
-          const parentCatalog = buildParentTreeNode(
-            layersListWithoutVector,
-            intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.catalog',
-            }),
-            /* eslint-disable */
-            { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
-            /* eslint-enable */
-          );
-
-          const arrVector = layersList.filter(isVector);
-          const vectorCatalog = {
-            title: intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.vector',
-            }),
-            isGroup: true,
-            children: [
-              ...arrVector.map((item) => {
-                return {
-                  ...item,
-                  title: getLayerTitle(item),
-                  isSelected: false,
-                };
-              }),
-            ],
-          };
-
-          const isUserAdmin = store.userStore.isUserAdmin();
-
-          setCatalogTreeData([
-            parentCatalog,
-            parentBests, 
-            vectorCatalog,
-            ...(isUserAdmin ? [parentUnpublished] : [])
-          ]);
           setIsDataLoading(false);
+
         }
       } catch (e) {
         setIsDataLoading(false);
@@ -557,8 +569,9 @@ export const catalogTreeStore = ModelBase.props({
 
     return {
       catalogSearch,
-      initTree,
       capabilitiesFetch,
+      initTree,
+      filterTree,
       setCatalogTreeData,
       setIsDataLoading,
       resetCatalogTreeData,
