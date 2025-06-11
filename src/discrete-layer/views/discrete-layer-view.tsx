@@ -38,6 +38,7 @@ import CONFIG from '../../common/config';
 import { localStore } from '../../common/helpers/storage';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
 import { LinkType } from '../../common/models/link-type.enum';
+import { ActiveLayersIcon } from '../../icons/4font/ActiveLayers';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -141,7 +142,7 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
-  const [isActiveLayerFilterEnabled, setIsActiveLayerFilterEnabled] = useState<boolean>(false);
+  const [isActiveLayersFilterEnabled, setIsActiveLayersFilterEnabled] = useState<boolean>(false);
   const [catalogFilter, setCatalogFilter] = useState<boolean>(false);
   const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
@@ -659,7 +660,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                     (evt: React.ChangeEvent<HTMLSelectElement>): void => {
                       store.discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
                       setCatalogFilter(false);
-                      setIsActiveLayerFilterEnabled(false);
+                      setIsActiveLayersFilterEnabled(false);
                       setCatalogRefresh(catalogRefresh + 1);
                     }
                   }
@@ -671,17 +672,21 @@ const DiscreteLayerView: React.FC = observer(() => {
               <Tooltip content={intl.formatMessage({ id: catalogFilter ? 'action.show-all.tooltip' : 'action.filter-nonactive.tooltip' })}>
                 <Icon
                   className="operationIcon"
-                  disabled={!isActiveLayerFilterEnabled}
+                  disabled={!isActiveLayersFilterEnabled}
                   label="ACTIVE"
                   onClick={(): void => {
-                    if (isActiveLayerFilterEnabled) {
+                    if (isActiveLayersFilterEnabled) {
                       setCatalogFilter(prev => !prev);
                     }
                   }}
                   icon={
-                    <svg width="100%" height="100%" viewBox="0 0 24 24" fill={catalogFilter ? theme.primary : theme.textIconOnBackground}>
-                      <path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"/>
-                    </svg>
+                    <ActiveLayersIcon
+                      catalogFilter={catalogFilter}
+                      theme={{
+                        primary: theme.primary,
+                        textIconOnBackground: theme.textIconOnBackground,
+                      }}
+                    />
                   }
                 />
               </Tooltip>
@@ -693,7 +698,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   className="operationIcon mc-icon-Refresh"
                   onClick={(): void => {
                     setCatalogFilter(false);
-                    setIsActiveLayerFilterEnabled(false);
+                    setIsActiveLayersFilterEnabled(false);
                     setCatalogRefresh(catalogRefresh + 1);
                   }}
                 />
@@ -946,7 +951,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                   isFiltered={catalogFilter}
                   onActiveLayer={(value: boolean) => {
                     if (!(catalogFilter && !value)) {
-                      setIsActiveLayerFilterEnabled(value);
+                      setIsActiveLayersFilterEnabled(value);
                     }
                   }} />
               </Box>
