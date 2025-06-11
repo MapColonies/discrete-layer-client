@@ -399,7 +399,7 @@ export const discreteLayersStore = ModelBase
     }
 
     function getActiveLayersImages(): ILayerImage[] {
-      return self.layersImages?.filter(layer => layer.layerImageShown || layer.footprintShown) ?? [];
+      return self.layersImages?.filter(layer => layer.layerImageShown || layer.footprintShown || (layer as any).polygonPartsShown) ?? [];
     }
 
 

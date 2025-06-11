@@ -52,10 +52,12 @@ interface IGetParentNode {
 const buildParentTreeNode = (
   arr: ILayerImage[],
   title: string,
-  groupByParams: GroupBy
+  groupByParams: GroupBy,
+  expanded: boolean
 ): {
   title: string;
   isGroup: boolean;
+  expanded: boolean;
   children: TreeItem[];
 } => {
   const regionPredicate = (groupByParams.keys.find(
@@ -65,6 +67,7 @@ const buildParentTreeNode = (
   return {
     title: title,
     isGroup: true,
+    expanded,
     children: treeData
       .sort((a, b) =>
         regionPredicate(a.key[TOP_LEVEL_GROUP_BY_FIELD]).localeCompare(
@@ -75,6 +78,7 @@ const buildParentTreeNode = (
         return {
           title: regionPredicate(item.key[TOP_LEVEL_GROUP_BY_FIELD]),
           isGroup: true,
+          expanded,
           children: [
             ...item.items
               .sort(alphabeticalSort())
@@ -138,30 +142,27 @@ export const catalogTreeStore = ModelBase.props({
       setCatalogTreeData([]);
     }
 
-    const createCatalogTree = (layersList: ILayerImage[]): void => {
+    const createCatalogTree = (layersList: ILayerImage[], expanded: boolean = false): void => {
 
       // Get unpublished/new discretes
 
       const arrUnpublished = layersList.filter((item) => {
         // @ts-ignore
         const itemObjectBag = item as Record<string, unknown>;
-        return (
-          existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
-        );
+        return existStatus(itemObjectBag) && isUnpublished(itemObjectBag);
       });
       const parentUnpublished = {
         title: intl.formatMessage({
           id: 'tab-views.catalog.top-categories.unpublished',
         }),
         isGroup: true,
+        expanded,
         children: [
-          ...arrUnpublished.map((item) => {
-            return {
-              ...item,
-              title: getLayerTitle(item),
-              isSelected: false,
-            };
-          }),
+          ...arrUnpublished.map((item) => ({
+            ...item,
+            title: getLayerTitle(item),
+            isSelected: false,
+          })),
         ],
       };
 
@@ -173,14 +174,13 @@ export const catalogTreeStore = ModelBase.props({
           id: 'tab-views.catalog.top-categories.bests',
         }),
         isGroup: true,
+        expanded,
         children: [
-          ...arrBests.map((item) => {
-            return {
-              ...item,
-              title: getLayerTitle(item),
-              isSelected: false,
-            };
-          }),
+          ...arrBests.map((item) => ({
+            ...item,
+            title: getLayerTitle(item),
+            isSelected: false,
+          })),
         ],
       };
 
@@ -192,14 +192,13 @@ export const catalogTreeStore = ModelBase.props({
           id: 'tab-views.catalog.top-categories.vector',
         }),
         isGroup: true,
+        expanded,
         children: [
-          ...arrVector.map((item) => {
-            return {
-              ...item,
-              title: getLayerTitle(item),
-              isSelected: false,
-            };
-          }),
+          ...arrVector.map((item) => ({
+            ...item,
+            title: getLayerTitle(item),
+            isSelected: false,
+          })),
         ],
       };
 
@@ -212,15 +211,16 @@ export const catalogTreeStore = ModelBase.props({
           id: 'tab-views.catalog.top-categories.catalog',
         }),
         /* eslint-disable */
-        { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
+        { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] },
         /* eslint-enable */
+        expanded
       );
 
       const isUserAdmin = store.userStore.isUserAdmin();
 
       setCatalogTreeData([
         parentCatalog,
-        parentBests, 
+        parentBests,
         vectorCatalog,
         ...(isUserAdmin ? [parentUnpublished] : [])
       ]);
@@ -229,7 +229,7 @@ export const catalogTreeStore = ModelBase.props({
 
     const filterTree = (onlyActiveLayers: boolean): void => {
       if (onlyActiveLayers) {
-        createCatalogTree(store.discreteLayersStore.getActiveLayersImages());
+        createCatalogTree(store.discreteLayersStore.getActiveLayersImages(), true);
       } else {
         createCatalogTree(store.discreteLayersStore.layersImages as ILayerImage[]);
       }
