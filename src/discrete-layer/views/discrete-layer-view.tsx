@@ -658,6 +658,8 @@ const DiscreteLayerView: React.FC = observer(() => {
                   onChange={
                     (evt: React.ChangeEvent<HTMLSelectElement>): void => {
                       store.discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
+                      setCatalogFilter(false);
+                      setIsActiveLayerFilterEnabled(false);
                       setCatalogRefresh(catalogRefresh + 1);
                     }
                   }
@@ -687,7 +689,14 @@ const DiscreteLayerView: React.FC = observer(() => {
             {
               tabIdx === TabViews.CATALOG && 
               <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                <IconButton
+                  className="operationIcon mc-icon-Refresh"
+                  onClick={(): void => {
+                    setCatalogFilter(false);
+                    setIsActiveLayerFilterEnabled(false);
+                    setCatalogRefresh(catalogRefresh + 1);
+                  }}
+                />
               </Tooltip>
             }
             {
