@@ -16,7 +16,6 @@ import {
   ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
@@ -47,11 +46,13 @@ const actionDismissibleRegex = new RegExp('actionDismissible');
 const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 
 interface CatalogTreeComponentProps {
-  refresh?: number;
+  refresh: number;
+  isFiltered: boolean;
+  onActiveLayer: (value: boolean) => void;
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(
-  ({ refresh }) => {
+  ({ refresh, isFiltered, onActiveLayer }) => {
     const store = useStore();
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
@@ -94,6 +95,10 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         void store.catalogTreeStore.initTree();
       }
     }, [refresh]);
+
+    useEffect(() => {
+      void store.catalogTreeStore.filterTree(isFiltered);
+    }, [isFiltered]);
 
     useEffect(() => {
       void store.catalogTreeStore.initTree();
@@ -272,7 +277,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           dispatchAction({
                             action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
                             data: { selectedLayer: {...data, footprintShown: value } }
-                          })
+                          });
+                          onActiveLayer(store.discreteLayersStore.getActiveLayersImages().length > 0);
                         }}
                       />,
                       <LayerImageRenderer
@@ -306,6 +312,8 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                             order
                           );
                           data.layerImageShown = value;
+
+                          onActiveLayer(store.discreteLayersStore.getActiveLayersImages().length > 0);
                         }}
                       />,
                       <ProductTypeRenderer

@@ -76,6 +76,8 @@
   "action.clear.tooltip": "ניקוי",
   "action.delete.tooltip": "מחיקה",
   "action.filter.tooltip": "חיפוש מתקדם",
+  "action.filter-nonactive.tooltip": "הצג רק שכבות פעילות",
+  "action.show-all.tooltip": "הצג הכל",
   "action.system-jobs.tooltip": "צפייה במשימות הוספה של המערכת",
   "action.system-core-info.tooltip": "צפייה במידע המערכת",
   "action.web-tools.tooltip": "פתיחת ממשק כלים",
@@ -181,7 +183,6 @@
   "tab-views.create-best": "עריכת טיוטת BEST",
   "tab-views.export-layer": "ייצוא שכבה",
 
-  "tab-views.catalog.top-categories.unlinked": "לא משוייכים",
   "tab-views.catalog.top-categories.unpublished": "לא מפורסמים",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "קטלוג",

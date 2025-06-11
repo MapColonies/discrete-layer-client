@@ -35,4 +35,5 @@ export const LayerRasterRecordModel = LayerRasterRecordModelBase
     layerImageShown: types.union(types.undefined, types.null, types.boolean),
     layerURLMissing: types.union(types.undefined, types.null, types.boolean),
     isNewlyAddedToBest: types.union(types.undefined, types.null, types.boolean),
+    polygonPartsShown: types.union(types.undefined, types.null, types.boolean),
   })
