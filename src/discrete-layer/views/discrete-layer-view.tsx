@@ -681,10 +681,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                   }}
                   icon={
                     <ActiveLayersIcon
-                      catalogFilter={catalogFilter}
-                      theme={{
-                        primary: theme.primary,
-                        textIconOnBackground: theme.textIconOnBackground,
+                      isFiltered={catalogFilter}
+                      color={{
+                        active: theme.primary,
+                        inactive: theme.textIconOnBackground,
                       }}
                     />
                   }
@@ -1006,7 +1006,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           </Box>}
         </Box>
         <Box className="mapAppContainer">
-        <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
+          <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
             <CesiumMap
               mapMode2D={mapMode2D}
               projection={CONFIG.MAP.PROJECTION}  
