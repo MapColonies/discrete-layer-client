@@ -132,8 +132,24 @@ export const catalogTreeStore = ModelBase.props({
       self.isLoading = isLoading;
     }
 
+    function countTreeItems(tree: TreeItem[]): number {
+      let count = 0;
+      tree.forEach(item => {
+        if (!item.children || !Array.isArray(item.children) || item.children.length === 0) {
+          count++;
+        } else {
+          count += countTreeItems(item.children);
+        }
+      });
+      return count;
+    }
+
     function setCatalogTreeData(catalogTreeData: TreeItem[]): void {
-      self.catalogTreeData = catalogTreeData;
+      if (countTreeItems(self.catalogTreeData ?? []) !== countTreeItems(catalogTreeData)) {
+        self.catalogTreeData = [...(self.catalogTreeData ?? []), ...catalogTreeData];
+      } else {
+        self.catalogTreeData = catalogTreeData;
+      }
     }
 
     function resetCatalogTreeData(): void {
@@ -227,13 +243,41 @@ export const catalogTreeStore = ModelBase.props({
 
     };
 
-    const filterTree = (onlyActiveLayers: boolean): void => {
-      if (onlyActiveLayers) {
-        createCatalogTree(store.discreteLayersStore.getActiveLayersImages(), true);
-      } else {
-        createCatalogTree(store.discreteLayersStore.layersImages as ILayerImage[]);
+    function getFilteredTreeData(tree: TreeItem): TreeItem | null {
+      if (!tree.children || !Array.isArray(tree.children) || tree.children.length === 0) {
+        return null;
       }
-    };
+
+      const filteredChildren = tree.children
+        .map((child: any) => {
+          if (child.isGroup) {
+            const filteredGroup = getFilteredTreeData(child);
+            return filteredGroup ? { ...child, children: filteredGroup.children } : null;
+          }
+          return child.layerImageShown || child.footprintShown || child.polygonPartsShown ? child : null;
+        })
+        .filter(Boolean); // Remove null values
+
+        if (filteredChildren.length > 0) {
+          return {
+            ...tree,
+            children: filteredChildren
+          };
+        }
+
+        return null;
+    }
+
+    function getFilteredCatalogTreeData(): TreeItem[] {
+      let filteredCatalogTreeData: TreeItem[] = [];
+      (self.catalogTreeData ?? []).forEach((tree: TreeItem) => {
+        const filteredTree = getFilteredTreeData(tree);
+        if (filteredTree !== null) {
+          filteredCatalogTreeData.push(filteredTree);
+        }
+      });
+      return filteredCatalogTreeData;
+    }
 
     /**
      * Fetch new catalog data
@@ -571,7 +615,7 @@ export const catalogTreeStore = ModelBase.props({
       catalogSearch,
       capabilitiesFetch,
       initTree,
-      filterTree,
+      getFilteredCatalogTreeData,
       setCatalogTreeData,
       setIsDataLoading,
       resetCatalogTreeData,

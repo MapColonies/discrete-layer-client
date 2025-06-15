@@ -63,6 +63,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const intl = useIntl();
     const {
       isLoading: loading,
+      getFilteredCatalogTreeData,
       setCatalogTreeData,
       setIsDataLoading,
       errorSearch,
@@ -95,10 +96,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         void store.catalogTreeStore.initTree();
       }
     }, [refresh]);
-
-    useEffect(() => {
-      void store.catalogTreeStore.filterTree(isFiltered);
-    }, [isFiltered]);
 
     useEffect(() => {
       void store.catalogTreeStore.initTree();
@@ -227,7 +224,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         <Box id="catalogContainer" className="catalogContainer">
           {!loading && (
             <TreeComponent
-              treeData={treeRawData}
+              treeData={!isFiltered ? treeRawData : getFilteredCatalogTreeData()}
               onChange={treeData => {
                 console.log('****** UPDATE TREE DATA ******');
                 setCatalogTreeData(treeData);
