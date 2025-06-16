@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { Feature, GeoJsonProperties, Geometry, LineString, MultiPolygon, Polygon, BBox, Point } from 'geojson';
+import { Feature, Polygon, BBox, Point } from 'geojson';
+import { Properties, Geometry } from '@turf/helpers';
 import area from '@turf/area';
 import intersect from '@turf/intersect';
 import centroid from '@turf/centroid';
 import bboxPolygon from '@turf/bbox-polygon';
 
-import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { 
   CesiumWFSLayer,
@@ -32,28 +32,24 @@ import {
   CesiumEllipsoid,
   ICesiumWFSLayerLabelTextField,
   CesiumViewer,
+  useCesiumMapViewstate,
  } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
-import useWfsPolygonPartsRequests from '../../../../common/hooks/useWfsPolygonPartsRequests';
-import { crossesMeridian, ZERO_MERIDIAN } from '../../../../common/utils/geo.tools';
-import { LayerRasterRecordModelType, useStore } from '../../../models';
+import { useStore } from '../../../models';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
-import { getWFSFeatureTypeName } from '../../layer-details/raster/pp-map.utils';
 import { GeojsonFeatureWithInfoBox } from './geojson-feature-with-infobox.component';
+
 
 export const PolygonParts: React.FC = observer(() => {
   const store = useStore();
   const intl = useIntl();
   const ENUMS = useEnums();
-  const cesiumViewer = useCesiumMap();
+  // const cesiumViewer = useCesiumMap();
+  const { viewState: mapViewState } = useCesiumMapViewstate();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
-  const valuesZoomLevelInDeg = Object.values(ZOOM_LEVELS_TABLE);
-  const { setQueryPolygonPartsFeatureOptions } = useWfsPolygonPartsRequests(); // <- from catalog tree/grid
-  const [zoomLevel, setZoomLevel] = useState(cesiumViewer.currentZoomLevel);
-  const [mapExtent, setMapExtent] = useState(store.discreteLayersStore.mapViewerExtentPolygon);
+  const [zoomLevel, setZoomLevel] = useState(mapViewState.currentZoomLevel);
   const [activeLayer, setActiveLayer] = useState(store.discreteLayersStore.polygonPartsLayer);
-  // const [polygonPartsInfo, setPolygonPartsInfo] = useState(store.discreteLayersStore.polygonPartsInfo);
   const [showFootprint, setShowFootprint] = useState(false);
 
   useEffect(() => {
@@ -63,54 +59,23 @@ export const PolygonParts: React.FC = observer(() => {
         setShowFootprint(false);
       }
     }
-    if (store.discreteLayersStore.polygonPartsLayer && store.discreteLayersStore.mapViewerExtentPolygon) {
-      if (zoomLevel !== cesiumViewer.currentZoomLevel) {
-        setZoomLevel(cesiumViewer.currentZoomLevel);
-      }
-      if (JSON.stringify(mapExtent) !== JSON.stringify(store.discreteLayersStore.mapViewerExtentPolygon)) {
-        setMapExtent(store.discreteLayersStore.mapViewerExtentPolygon);
+    if (store.discreteLayersStore.polygonPartsLayer) {
+      if (zoomLevel !== mapViewState.currentZoomLevel) {
+        setZoomLevel(mapViewState.currentZoomLevel);
       }
     }
-  }, [store.discreteLayersStore.polygonPartsLayer, store.discreteLayersStore.mapViewerExtentPolygon]);
+  }, [store.discreteLayersStore.polygonPartsLayer, mapViewState.currentZoomLevel]);
 
-  // useEffect(() => {
-  //   if (mapExtent && activeLayer) {
-  //     if (zoomLevel && zoomLevel > CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL) {
-  //       setShowFootprint(false);
-  //       setQueryPolygonPartsFeatureOptions({
-  //         feature: {
-  //           type: 'Feature',
-  //           properties: {},
-  //           geometry: mapExtent.geometry
-  //         },
-  //         typeName: getWFSFeatureTypeName(activeLayer as LayerRasterRecordModelType, ENUMS),
-  //         count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
-  //         startIndex: 0,
-  //         dWithin: 0
-  //       });
-  //     } else {
-  //       setShowFootprint(true);
-  //     }
-  //   }
-  // }, [mapExtent, activeLayer]);
-
-  // useEffect(() => {
-  //   setPolygonPartsInfo(store.discreteLayersStore.polygonPartsInfo);
-  // }, [store.discreteLayersStore.polygonPartsInfo]);
-
-  // const enrichWFSData = (geoJsonFeature: Feature) => {
-  //   const resolutionDegree = geoJsonFeature?.properties?.['resolutionDegree'];
-  //   if (isNaN(resolutionDegree)) {
-  //     return;
-  //   }
-  //   const indexOfCurrentDeg = valuesZoomLevelInDeg.indexOf(resolutionDegree);
-  //   if (indexOfCurrentDeg >= 0) {
-  //     // @ts-ignore
-  //     geoJsonFeature.properties['resolutionDegree'] = `${resolutionDegree} (${indexOfCurrentDeg})`;
-  //   }
-  // };
-
-  // if (isEmpty(polygonPartsInfo) && !showFootprint) { return null; }
+  useEffect(() => {
+    if (activeLayer) {
+      // TODO: (instead of optionsPolygonParts.zoomLevel should come from some CONFIG) OR (make CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL = 14)
+      if (zoomLevel && zoomLevel < optionsPolygonParts.zoomLevel) {
+        setShowFootprint(false);
+      } else {
+        setShowFootprint(true);
+      }
+    }
+  }, [zoomLevel, activeLayer]);
 
   const POINT_STROKE = '#FFFF00';
   const BRIGHT_GREEN = '#01FF1F';
@@ -474,7 +439,7 @@ export const PolygonParts: React.FC = observer(() => {
           const correctedCarto = new CesiumCartographic(
             CesiumMath.toDegrees(worlPosCartographic.longitude),
             CesiumMath.toDegrees(worlPosCartographic.latitude),
-            is2D ? 500 : undefined //mapViewer.scene.sampleHeight(CesiumCartographic.fromCartesian(position))
+            is2D ? 500 : undefined
           );
           return [correctedCarto.longitude, correctedCarto.latitude, correctedCarto.height];
         });
@@ -712,52 +677,31 @@ export const PolygonParts: React.FC = observer(() => {
   };
   return (
     <>
-      {/* {
-        showFootprint ? (
-          <GeojsonFeatureWithInfoBox
-            feature={{
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                ...activeLayer?.footprint,
-              },
-            }}
-            featureConfig={CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG}
-            isPolylined={false}
-            infoBoxTitle={intl.formatMessage({ id: 'map-context-menu.polygon-parts.title' })}
-            noInfoMessage={intl.formatMessage({ id: 'polygonParts-info.no-data.message' })}
-            markerIconPath={''}
-            shouldFocusOnCreation={false}
-            shouldVisualize={true}
-          />
-        ) : (
-          (polygonPartsInfo as Feature<Geometry, GeoJsonProperties>[]).map((feature) => {
-            const geoJsonFeature = feature as Feature;
-            const isCrossesMeridian = crossesMeridian(geoJsonFeature.geometry as Polygon | MultiPolygon, ZERO_MERIDIAN);
-            enrichWFSData(geoJsonFeature);
-            return (
-              <GeojsonFeatureWithInfoBox
-                key={geoJsonFeature.id}
-                feature={geoJsonFeature as Feature<LineString | Polygon>}
-                featureConfig={CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG}
-                isPolylined={false}
-                infoBoxTitle={intl.formatMessage({ id: 'map-context-menu.polygon-parts.title' })}
-                noInfoMessage={intl.formatMessage({ id: 'polygonParts-info.no-data.message' })}
-                markerIconPath={''}
-                shouldFocusOnCreation={false}
-                shouldVisualize={!isCrossesMeridian}
-              />
-            );
-          })
-        )
-      } */}
       {
-        activeLayer && <CesiumWFSLayer
-          key={metaPolygonParts.id}
-          options={optionsPolygonParts}
-          meta={metaPolygonParts}
-          visualizationHandler={handleVisualizationPolygonParts}
-        />
+        activeLayer && (
+          showFootprint ? <CesiumWFSLayer
+              key={metaPolygonParts.id}
+              options={optionsPolygonParts}
+              meta={metaPolygonParts}
+              visualizationHandler={handleVisualizationPolygonParts}
+            /> : 
+            <GeojsonFeatureWithInfoBox
+              feature={{
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  ...activeLayer?.footprint,
+                },
+              }}
+              featureConfig={CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG}
+              isPolylined={false}
+              infoBoxTitle={intl.formatMessage({ id: 'map-context-menu.polygon-parts.title' })}
+              noInfoMessage={intl.formatMessage({ id: 'polygonParts-info.no-data.message' })}
+              markerIconPath={''}
+              shouldFocusOnCreation={false}
+              shouldVisualize={true}
+            />
+        )
       }
     </>
   );
