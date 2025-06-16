@@ -90,6 +90,8 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
+// import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts-NOT-IN-USE-AS-EXAMPLE';
+import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts';
 
 const EXPANDED_PANEL_WIDTH = '28%';
 const COLLAPSED_PANEL_WIDTH = '40px';
@@ -264,6 +266,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         <SelectedLayersContainer/>
         <HighlightedLayer/>
         <LayersFootprints/>
+        <PolygonParts/>
       </>
     );
   }, []);

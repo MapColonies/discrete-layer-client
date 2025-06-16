@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { LayerRasterRecordModelType } from '../../../../discrete-layer/models';
-import { getStatusStyle } from '../../../helpers/style';
+import { getIconStyle } from '../../../helpers/style';
 import { TypeIcon } from '../../shared/type-icon';
 
 interface IProductTypeCellRendererParams {
@@ -20,7 +20,7 @@ export const ProductTypeRenderer: React.FC<IProductTypeCellRendererParams> = ({ 
 
   const computedStyle = useMemo(() => {
     return {
-      ...(getStatusStyle(data as any, 'color') ?? {})
+      ...(getIconStyle(data as any, 'color') ?? {})
     };
   }, [data]);
 

@@ -3,7 +3,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { getLinkUrlWithToken } from '../../../../discrete-layer/components/helpers/layersUtils';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 import { LayerRasterRecordModelType, LinkModelType } from '../../../../discrete-layer/models';
-import { getStatusStyle } from '../../../helpers/style';
+import { getIconStyle } from '../../../helpers/style';
 import { LinkType } from '../../../models/link-type.enum';
 import { TypeIcon } from '../../shared/type-icon';
 import { GridApi } from '..';
@@ -25,7 +25,7 @@ export const ProductTypeRenderer: React.FC<IProductTypeCellRendererParams> = (pr
   const computedStyle = useMemo(() => {
     return {
       ...(props.style ?? {}),
-      ...(getStatusStyle(data as any, 'color') ?? {})
+      ...(getIconStyle(data as any, 'color') ?? {})
     };
   }, [props.style, data]);
 

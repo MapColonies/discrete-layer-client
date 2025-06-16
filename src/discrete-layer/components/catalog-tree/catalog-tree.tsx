@@ -17,6 +17,7 @@ import {
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
 import { Box } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
@@ -25,7 +26,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
-import { getStatusStyle } from '../../../common/helpers/style';
+import { getTextStyle } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -52,6 +53,7 @@ interface CatalogTreeComponentProps {
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(
   ({ refresh }) => {
     const store = useStore();
+    const theme = useTheme();
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
     const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(
@@ -261,7 +263,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     setHoveredNode(undefined);
                   }
                 },
-                style: getStatusStyle(rowInfo.node, 'color'),
+                style: rowInfo.node.isGroup ? (()=> {
+                  return (rowInfo?.node.children as ILayerImage[]).some((elem) => elem.footprintShown || elem.layerImageShown || (elem as any).polygonPartsShown ) ? {color: theme.primary, fontWeight: '600'} : {};
+              })() : getTextStyle(rowInfo.node, 'color'),
                 icons: rowInfo.node.isGroup
                   ? []
                   : [
