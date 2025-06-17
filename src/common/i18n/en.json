@@ -75,6 +75,8 @@
   "action.clear.tooltip": "Clear",
   "action.delete.tooltip": "Delete",
   "action.filter.tooltip": "Advanced Search",
+  "action.filter-nonactive.tooltip": "Show only active layers in catalog tree",
+  "action.show-all.tooltip": "Show ALL in catalog tree",
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
   "action.web-tools.tooltip": "Go to Web Tools",
@@ -179,7 +181,6 @@
   "tab-views.create-best": "BEST edit",
   "tab-views.export-layer": "Export Layer",
 
-  "tab-views.catalog.top-categories.unlinked": "Unlinked",
   "tab-views.catalog.top-categories.unpublished": "Unpublished",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "Catalog",

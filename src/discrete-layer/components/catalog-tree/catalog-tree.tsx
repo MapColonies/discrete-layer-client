@@ -16,7 +16,6 @@ import {
   ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
@@ -47,11 +46,12 @@ const actionDismissibleRegex = new RegExp('actionDismissible');
 const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 
 interface CatalogTreeComponentProps {
-  refresh?: number;
+  refresh: number;
+  isFiltered: boolean;
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(
-  ({ refresh }) => {
+  ({ refresh, isFiltered }) => {
     const store = useStore();
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
@@ -62,6 +62,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const intl = useIntl();
     const {
       isLoading: loading,
+      getFilteredCatalogTreeData,
       setCatalogTreeData,
       setIsDataLoading,
       errorSearch,
@@ -222,7 +223,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         <Box id="catalogContainer" className="catalogContainer">
           {!loading && (
             <TreeComponent
-              treeData={treeRawData}
+              treeData={!isFiltered ? treeRawData : getFilteredCatalogTreeData()}
               onChange={treeData => {
                 console.log('****** UPDATE TREE DATA ******');
                 setCatalogTreeData(treeData);
@@ -272,7 +273,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           dispatchAction({
                             action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
                             data: { selectedLayer: {...data, footprintShown: value } }
-                          })
+                          });
                         }}
                       />,
                       <LayerImageRenderer
