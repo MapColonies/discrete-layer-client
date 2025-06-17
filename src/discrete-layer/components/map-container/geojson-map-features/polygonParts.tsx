@@ -36,10 +36,11 @@ import {
  } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
-import { EntityDescriptorModelType, useStore } from '../../../models';
+import { EntityDescriptorModelType, LayerRasterRecordModelType, useStore } from '../../../models';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
 import { GeojsonFeatureWithInfoBox } from './geojson-feature-with-infobox.component';
 import { getFlatEntityDescriptors } from '../../layer-details/utils';
+import { ILayerImage } from '../../../models/layerImage';
 
 
 export const PolygonParts: React.FC = observer(() => {
@@ -92,7 +93,7 @@ export const PolygonParts: React.FC = observer(() => {
 
   const getFieldLabelTranslation = (fieldName: string): string => {
     let res = 'N/A';
-    const fieldTuple = polygonPartsFieldLabels.find((fieldTuple)=> fieldName === fieldTuple[0]);
+    const fieldTuple = polygonPartsFieldLabels.find((fieldTuple)=> fieldName.toLocaleLowerCase() === fieldTuple[0]?.toLocaleLowerCase());
     if(fieldTuple){
       res = intl.formatMessage({ id: fieldTuple[1] as string })
     }
@@ -104,21 +105,11 @@ export const PolygonParts: React.FC = observer(() => {
   const LIGHT_BLUE = '#24AEE9';
 
   const metaPolygonParts = {
-    id: '00000000',
-    keywords: 'PolygonParts',
-    links: 'cyprus,,WFS,https://raster-pp-serving', // RASTER PP
-    type: 'RECORD_VECTOR',
-    classification: '5',
-    productName: 'בדיקות עדכון',
-    description: 'PolygonParts layer',
-    srsId: '4326',
-    srsName: '4326',
-    producerName: 'IDFMU',
-    footprint: '{"type":"Polygon","coordinates":[[[-180,-90],[180,-90],[180,90],[-180,90],[-180,-90]]]}',
-    productType: 'VECTOR_BEST',
+    ...activeLayer,
+    id: `virt-PP_${activeLayer?.id}`,
     featureStructure: {
       layerName: 'polygonParts:layer',
-      aliasLayerName: 'בדיקות עדכון',
+      aliasLayerName: `${activeLayer?.productName}`,
       fields: [
         {
           fieldName: 'id',
@@ -142,12 +133,12 @@ export const PolygonParts: React.FC = observer(() => {
         },
         {
           fieldName: 'sourceId',
-          aliasFieldName: 'sourceId',//TODO: getFieldLabelTranslation('sourceId'),
+          aliasFieldName: getFieldLabelTranslation('sourceId'),
           type: 'String',
         },
         {
           fieldName: 'sourceName',
-          aliasFieldName: 'sourceName',
+          aliasFieldName: getFieldLabelTranslation('sourceName'),
           type: 'String',
         },
         {
@@ -162,61 +153,88 @@ export const PolygonParts: React.FC = observer(() => {
         },
         {
           fieldName: 'imagingTimeBeginUTC',
-          aliasFieldName: 'imagingTimeBeginUTC',
+          aliasFieldName: getFieldLabelTranslation('imagingTimeBeginUTC'),
           type: 'Date',
         },
         {
           fieldName: 'imagingTimeEndUTC',
-          aliasFieldName: 'imagingTimeEndUTC',
+          aliasFieldName: getFieldLabelTranslation('imagingTimeEndUTC'),
           type: 'Date',
         },
         {
           fieldName: 'resolutionDegree',
-          aliasFieldName: 'resolutionDegree',
+          aliasFieldName: getFieldLabelTranslation('resolutionDegree'),
           type: 'Number',
         },
         {
           fieldName: 'resolutionMeter',
-          aliasFieldName: 'resolutionMeter',
+          aliasFieldName: getFieldLabelTranslation('resolutionMeter'),
           type: 'Number',
         },
         {
           fieldName: 'sourceResolutionMeter',
-          aliasFieldName: 'sourceResolutionMeter',
+          aliasFieldName: getFieldLabelTranslation('sourceResolutionMeter'),
           type: 'Number',
         },
         {
           fieldName: 'horizontalAccuracyCe90',
-          aliasFieldName: 'horizontalAccuracyCe90',
+          aliasFieldName: getFieldLabelTranslation('horizontalAccuracyCe90'),
           type: 'Number',
         },
         {
           fieldName: 'sensors',
-          aliasFieldName: 'sensors',
+          aliasFieldName: getFieldLabelTranslation('sensors'),
           type: 'String',
         },
         {
           fieldName: 'countries',
-          aliasFieldName: 'countries',
+          aliasFieldName: getFieldLabelTranslation('countries'),
           type: 'String',
         },
         {
           fieldName: 'cities',
-          aliasFieldName: 'cities',
+          aliasFieldName: getFieldLabelTranslation('cities'),
           type: 'String',
         },
         {
           fieldName: '_description',
-          aliasFieldName: 'description',
+          aliasFieldName: getFieldLabelTranslation('description'),
           type: 'String',
         },
       ],
-    },
+    }
+  };
+
+  const buildWFSUrl = (layer: ILayerImage) => {
+    const token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hcC1jb2xvbmllcy1pbnQifQ.eyJkIjpbInJhc3RlciIsInJhc3RlcldtcyIsInJhc3RlckV4cG9ydCIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTY3NDYzMjM0Niwic3ViIjoibWFwY29sb25pZXMtYXBwIiwiaXNzIjoibWFwY29sb25pZXMtdG9rZW4tY2xpIn0.D1u28gFlxf_Z1bzIiRHZonUgrdWwhZy8DtmQj15cIzaABRUrGV2n_OJlgWTuNfrao0SbUZb_s0_qUUW6Gz_zO3ET2bVx5xQjBu0CaIWdmUPDjEYr6tw-eZx8EjFFIyq3rs-Fo0daVY9cX1B2aGW_GeJir1oMnJUURhABYRoh60azzl_utee9UdhDpnr_QElNtzJZIKogngsxCWp7tI7wkTuNCBaQM7aLEcymk0ktxlWEAt1E0nGt1R-bx-HnPeeQyZlxx4UQ1nuYTijpz7N8poaCCExOFeafj9T7megv2BzTrKWgfM1eai8srSgNa3I5wKuW0EyYnGZxdbJe8aseZg';
+    // const token = CONFIG.ACCESS_TOKEN.TOKEN_VALUE;
+    if(layer){
+      const url = layer.links?.find(link => link.protocol === 'WFS').url.split(/[?#]/)[0];
+      return `${url}?token=${token}`
+    } else {
+      return 'NO_CURRENT_LAYER';
+    }
+  };
+
+  const buildFeatureType = (layer: ILayerImage) => {
+    if(layer){
+      let featureType = '';
+      featureType += CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX;
+      featureType += (layer as LayerRasterRecordModelType).productId;
+      featureType += '-';
+      featureType += ENUMS[(layer as LayerRasterRecordModelType).productType as string].realValue;
+      return featureType;
+      // return `${CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX}${(layer as LayerRasterRecordModelType).productId}-${ENUMS[(layer as LayerRasterRecordModelType).productType as string].realValue}`
+    } else {
+      return 'NO_CURRENT_LAYER';
+    }
   };
 
   const optionsPolygonParts = {
-    url: "https://raster-serving-int-pp-geoserver-nginx-route-manual-integration.apps.j1lk3njp.eastus.aroapp.io/geoserver/wfs?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hcC1jb2xvbmllcy1pbnQifQ.eyJkIjpbInJhc3RlciIsInJhc3RlcldtcyIsInJhc3RlckV4cG9ydCIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTY3NDYzMjM0Niwic3ViIjoibWFwY29sb25pZXMtYXBwIiwiaXNzIjoibWFwY29sb25pZXMtdG9rZW4tY2xpIn0.D1u28gFlxf_Z1bzIiRHZonUgrdWwhZy8DtmQj15cIzaABRUrGV2n_OJlgWTuNfrao0SbUZb_s0_qUUW6Gz_zO3ET2bVx5xQjBu0CaIWdmUPDjEYr6tw-eZx8EjFFIyq3rs-Fo0daVY9cX1B2aGW_GeJir1oMnJUURhABYRoh60azzl_utee9UdhDpnr_QElNtzJZIKogngsxCWp7tI7wkTuNCBaQM7aLEcymk0ktxlWEAt1E0nGt1R-bx-HnPeeQyZlxx4UQ1nuYTijpz7N8poaCCExOFeafj9T7megv2BzTrKWgfM1eai8srSgNa3I5wKuW0EyYnGZxdbJe8aseZg",
-    featureType: 'polygonParts:ME_UPDATE_TESTS-Orthophoto',
+    // url: "https://raster-serving-int-pp-geoserver-nginx-route-manual-integration.apps.j1lk3njp.eastus.aroapp.io/geoserver/wfs?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hcC1jb2xvbmllcy1pbnQifQ.eyJkIjpbInJhc3RlciIsInJhc3RlcldtcyIsInJhc3RlckV4cG9ydCIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTY3NDYzMjM0Niwic3ViIjoibWFwY29sb25pZXMtYXBwIiwiaXNzIjoibWFwY29sb25pZXMtdG9rZW4tY2xpIn0.D1u28gFlxf_Z1bzIiRHZonUgrdWwhZy8DtmQj15cIzaABRUrGV2n_OJlgWTuNfrao0SbUZb_s0_qUUW6Gz_zO3ET2bVx5xQjBu0CaIWdmUPDjEYr6tw-eZx8EjFFIyq3rs-Fo0daVY9cX1B2aGW_GeJir1oMnJUURhABYRoh60azzl_utee9UdhDpnr_QElNtzJZIKogngsxCWp7tI7wkTuNCBaQM7aLEcymk0ktxlWEAt1E0nGt1R-bx-HnPeeQyZlxx4UQ1nuYTijpz7N8poaCCExOFeafj9T7megv2BzTrKWgfM1eai8srSgNa3I5wKuW0EyYnGZxdbJe8aseZg",
+    // featureType: 'polygonParts:ME_UPDATE_TESTS-Orthophoto',
+    url: buildWFSUrl(activeLayer as ILayerImage),
+    featureType: buildFeatureType(activeLayer as ILayerImage),
     style: {
       color: BRIGHT_GREEN,
       hover: LIGHT_BLUE,
@@ -243,194 +261,8 @@ export const PolygonParts: React.FC = observer(() => {
             name: 'resolutionDegree',
             type: 'number',
             predicate: (value: number) => {
-              const zoomlevelresolutions = [
-                {
-                  value: '0',
-                  translationCode: '0',
-                  properties: {
-                    resolutionDeg: 0.703125,
-                    resolutionMeter: 78271.52,
-                  },
-                },
-                {
-                  value: '1',
-                  translationCode: '1',
-                  properties: {
-                    resolutionDeg: 0.3515625,
-                    resolutionMeter: 39135.76,
-                  },
-                },
-                {
-                  value: '2',
-                  translationCode: '2',
-                  properties: {
-                    resolutionDeg: 0.17578125,
-                    resolutionMeter: 19567.88,
-                  },
-                },
-                {
-                  value: '3',
-                  translationCode: '3',
-                  properties: {
-                    resolutionDeg: 0.087890625,
-                    resolutionMeter: 9783.94,
-                  },
-                },
-                {
-                  value: '4',
-                  translationCode: '4',
-                  properties: {
-                    resolutionDeg: 0.0439453125,
-                    resolutionMeter: 4891.97,
-                  },
-                },
-                {
-                  value: '5',
-                  translationCode: '5',
-                  properties: {
-                    resolutionDeg: 0.02197265625,
-                    resolutionMeter: 2445.98,
-                  },
-                },
-                {
-                  value: '6',
-                  translationCode: '6',
-                  properties: {
-                    resolutionDeg: 0.010986328125,
-                    resolutionMeter: 1222.99,
-                  },
-                },
-                {
-                  value: '7',
-                  translationCode: '7',
-                  properties: {
-                    resolutionDeg: 0.0054931640625,
-                    resolutionMeter: 611.5,
-                  },
-                },
-                {
-                  value: '8',
-                  translationCode: '8',
-                  properties: {
-                    resolutionDeg: 0.00274658203125,
-                    resolutionMeter: 305.75,
-                  },
-                },
-                {
-                  value: '9',
-                  translationCode: '9',
-                  properties: {
-                    resolutionDeg: 0.001373291015625,
-                    resolutionMeter: 152.87,
-                  },
-                },
-                {
-                  value: '10',
-                  translationCode: '10',
-                  properties: {
-                    resolutionDeg: 0.0006866455078125,
-                    resolutionMeter: 76.44,
-                  },
-                },
-                {
-                  value: '11',
-                  translationCode: '11',
-                  properties: {
-                    resolutionDeg: 0.00034332275390625,
-                    resolutionMeter: 38.22,
-                  },
-                },
-                {
-                  value: '12',
-                  translationCode: '12',
-                  properties: {
-                    resolutionDeg: 0.000171661376953125,
-                    resolutionMeter: 19.11,
-                  },
-                },
-                {
-                  value: '13',
-                  translationCode: '13',
-                  properties: {
-                    resolutionDeg: 0.0000858306884765625,
-                    resolutionMeter: 9.55,
-                  },
-                },
-                {
-                  value: '14',
-                  translationCode: '14',
-                  properties: {
-                    resolutionDeg: 0.0000429153442382812,
-                    resolutionMeter: 4.78,
-                  },
-                },
-                {
-                  value: '15',
-                  translationCode: '15',
-                  properties: {
-                    resolutionDeg: 0.0000214576721191406,
-                    resolutionMeter: 2.39,
-                  },
-                },
-                {
-                  value: '16',
-                  translationCode: '16',
-                  properties: {
-                    resolutionDeg: 0.0000107288360595703,
-                    resolutionMeter: 1.19,
-                  },
-                },
-                {
-                  value: '17',
-                  translationCode: '17',
-                  properties: {
-                    resolutionDeg: 0.00000536441802978516,
-                    resolutionMeter: 0.6,
-                  },
-                },
-                {
-                  value: '18',
-                  translationCode: '18',
-                  properties: {
-                    resolutionDeg: 0.00000268220901489258,
-                    resolutionMeter: 0.3,
-                  },
-                },
-                {
-                  value: '19',
-                  translationCode: '19',
-                  properties: {
-                    resolutionDeg: 0.00000134110450744629,
-                    resolutionMeter: 0.15,
-                  },
-                },
-                {
-                  value: '20',
-                  translationCode: '20',
-                  properties: {
-                    resolutionDeg: 6.70552253723145e-7,
-                    resolutionMeter: 0.075,
-                  },
-                },
-                {
-                  value: '21',
-                  translationCode: '21',
-                  properties: {
-                    resolutionDeg: 3.35276126861572e-7,
-                    resolutionMeter: 0.037,
-                  },
-                },
-                {
-                  value: '22',
-                  translationCode: '22',
-                  properties: {
-                    resolutionDeg: 1.67638063430786e-7,
-                    resolutionMeter: 0.0185,
-                  },
-                },
-              ];
-              const res = zoomlevelresolutions.find((res) => res.properties.resolutionDeg === value);
-              return res ? res.value : 'N/A';
+              const res = Object.values(ZOOM_LEVELS_TABLE).indexOf(value);
+              return res !== -1 ? res : 'N/A'; 
             },
           },
         ] as ICesiumWFSLayerLabelTextField[],
