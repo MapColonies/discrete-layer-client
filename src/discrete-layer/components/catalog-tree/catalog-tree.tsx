@@ -48,11 +48,10 @@ const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 interface CatalogTreeComponentProps {
   refresh: number;
   isFiltered: boolean;
-  onActiveLayer: (value: boolean) => void;
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(
-  ({ refresh, isFiltered, onActiveLayer }) => {
+  ({ refresh, isFiltered }) => {
     const store = useStore();
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
@@ -275,7 +274,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                             action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
                             data: { selectedLayer: {...data, footprintShown: value } }
                           });
-                          onActiveLayer(store.discreteLayersStore.getActiveLayersImages().length > 0);
                         }}
                       />,
                       <LayerImageRenderer
@@ -309,8 +307,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                             order
                           );
                           data.layerImageShown = value;
-
-                          onActiveLayer(store.discreteLayersStore.getActiveLayersImages().length > 0);
                         }}
                       />,
                       <ProductTypeRenderer

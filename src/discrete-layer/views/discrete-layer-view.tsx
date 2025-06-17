@@ -585,7 +585,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         value: RecordType[value]
       };
     });
-  
   }, []);
 
   const PanelExpanderButton: React.FC = () => {
@@ -818,6 +817,14 @@ const DiscreteLayerView: React.FC = observer(() => {
     }
   }, [store.userStore.user]);
 
+  useEffect(() => {
+    const isActive = store.discreteLayersStore.isActiveLayersImages;
+    const isEnabled = isActive || (catalogFilter && !isActive);
+    if (isActiveLayersFilterEnabled !== isEnabled) {
+      setIsActiveLayersFilterEnabled(isEnabled);
+    }
+  }, [store.discreteLayersStore.isActiveLayersImages, catalogFilter]);
+
   const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
     // Should add global flag or find the proper condition to whether show the context menu or not.
     return <ActionsContextMenu {...props} />;
@@ -949,11 +956,7 @@ const DiscreteLayerView: React.FC = observer(() => {
                 <CatalogTreeComponent
                   refresh={catalogRefresh}
                   isFiltered={catalogFilter}
-                  onActiveLayer={(value: boolean) => {
-                    if (!(catalogFilter && !value)) {
-                      setIsActiveLayersFilterEnabled(value);
-                    }
-                  }} />
+                />
               </Box>
             </Box>
             {

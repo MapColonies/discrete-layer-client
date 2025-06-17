@@ -132,6 +132,42 @@ export const catalogTreeStore = ModelBase.props({
       self.isLoading = isLoading;
     }
 
+    function getFilteredTreeData(tree: TreeItem): TreeItem | null {
+      if (!tree.children || !Array.isArray(tree.children) || tree.children.length === 0) {
+        return null;
+      }
+
+      const filteredChildren = tree.children
+        .map((child: any) => {
+          if (child.isGroup) {
+            const filteredGroup = getFilteredTreeData(child);
+            return filteredGroup ? { ...child, children: filteredGroup.children } : null;
+          }
+          return child.layerImageShown || child.footprintShown || child.polygonPartsShown ? child : null;
+        })
+        .filter(Boolean); // Remove null values
+
+        if (filteredChildren.length > 0) {
+          return {
+            ...tree,
+            children: filteredChildren
+          };
+        }
+
+        return null;
+    }
+
+    function getFilteredCatalogTreeData(): TreeItem[] {
+      let filteredCatalogTreeData: TreeItem[] = [];
+      (self.catalogTreeData ?? []).forEach((tree: TreeItem) => {
+        const filteredTree = getFilteredTreeData(tree);
+        if (filteredTree !== null) {
+          filteredCatalogTreeData.push(filteredTree);
+        }
+      });
+      return filteredCatalogTreeData;
+    }
+
     function countTreeItems(tree: TreeItem[]): number {
       let count = 0;
       tree.forEach(item => {
@@ -242,42 +278,6 @@ export const catalogTreeStore = ModelBase.props({
       ]);
 
     };
-
-    function getFilteredTreeData(tree: TreeItem): TreeItem | null {
-      if (!tree.children || !Array.isArray(tree.children) || tree.children.length === 0) {
-        return null;
-      }
-
-      const filteredChildren = tree.children
-        .map((child: any) => {
-          if (child.isGroup) {
-            const filteredGroup = getFilteredTreeData(child);
-            return filteredGroup ? { ...child, children: filteredGroup.children } : null;
-          }
-          return child.layerImageShown || child.footprintShown || child.polygonPartsShown ? child : null;
-        })
-        .filter(Boolean); // Remove null values
-
-        if (filteredChildren.length > 0) {
-          return {
-            ...tree,
-            children: filteredChildren
-          };
-        }
-
-        return null;
-    }
-
-    function getFilteredCatalogTreeData(): TreeItem[] {
-      let filteredCatalogTreeData: TreeItem[] = [];
-      (self.catalogTreeData ?? []).forEach((tree: TreeItem) => {
-        const filteredTree = getFilteredTreeData(tree);
-        if (filteredTree !== null) {
-          filteredCatalogTreeData.push(filteredTree);
-        }
-      });
-      return filteredCatalogTreeData;
-    }
 
     /**
      * Fetch new catalog data
@@ -612,19 +612,19 @@ export const catalogTreeStore = ModelBase.props({
     }
 
     return {
+      setIsDataLoading,
+      getFilteredCatalogTreeData,
+      setCatalogTreeData,
+      resetCatalogTreeData,
       catalogSearch,
       capabilitiesFetch,
       initTree,
-      getFilteredCatalogTreeData,
-      setCatalogTreeData,
-      setIsDataLoading,
-      resetCatalogTreeData,
-      addNodeToParent,
-      updateNodeById,
-      findNodeById,
+      changeNodeByPath,
       findNodeByTitle,
+      addNodeToParent,
+      findNodeById,
+      updateNodeById,
       removeNodeFromTree,
       removeChildFromParent,
-      changeNodeByPath,
     };
   });
