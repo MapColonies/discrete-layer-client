@@ -16,8 +16,8 @@ import {
   ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
@@ -26,7 +26,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
-import { getStatusColoredText } from '../../../common/helpers/style';
+import { getTextStyle } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -53,6 +53,7 @@ interface CatalogTreeComponentProps {
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(
   ({ refresh }) => {
     const store = useStore();
+    const theme = useTheme();
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
     const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(
@@ -200,7 +201,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const dispatchAction = (action: Record<string, unknown>): void => {
       store.actionDispatcherStore.dispatchAction({
         action: action.action,
-        data: action.data,
+        data: action.data
       } as IDispatchAction);
     };
 
@@ -262,7 +263,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     setHoveredNode(undefined);
                   }
                 },
-                style: getStatusColoredText(rowInfo.node),
+                style: rowInfo.node.isGroup ? (()=> {
+                  return (rowInfo?.node.children as ILayerImage[]).some((elem) => elem.footprintShown || elem.layerImageShown || (elem as any).polygonPartsShown ) ? {color: theme.primary, fontWeight: '600'} : {};
+              })() : getTextStyle(rowInfo.node, 'color'),
                 icons: rowInfo.node.isGroup
                   ? []
                   : [
@@ -272,7 +275,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           dispatchAction({
                             action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
                             data: { selectedLayer: {...data, footprintShown: value } }
-                          })
+                          });
                         }}
                       />,
                       <LayerImageRenderer
@@ -314,6 +317,12 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           rowInfo.node.links,
                           LinkType.THUMBNAIL_S
                         )}
+                        onClick={(data: ILayerImage, value: boolean) => {
+                          dispatchAction({
+                            action: UserAction.SYSTEM_CALLBACK_SHOWPOLYGONPARTS,
+                            data: { selectedLayer: {...data, polygonPartsShown: value } }
+                          });
+                        }}
                       />,
                     ],
                 buttons: [

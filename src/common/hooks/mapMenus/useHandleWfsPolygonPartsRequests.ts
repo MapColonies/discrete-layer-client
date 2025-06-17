@@ -1,12 +1,12 @@
 import { cloneDeep } from 'lodash';
 import { useEffect, useState } from 'react';
+import bbox from '@turf/bbox';
 import {
   GetFeatureModelType,
   useQuery,
   useStore,
 } from '../../../discrete-layer/models';
 import { WfsPolygonPartsGetFeatureParams } from '../../../discrete-layer/models/RootStore.base';
-import bbox from '@turf/bbox';
 
 type HandlerGetFeatureOptions = WfsPolygonPartsGetFeatureParams & { onDataResolved?: (data?: GetFeatureModelType) => void, shouldFlyToFeatures?: boolean };
 

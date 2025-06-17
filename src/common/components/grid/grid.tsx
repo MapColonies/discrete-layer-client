@@ -144,7 +144,7 @@ export const GridComponent: React.FC<GridComponentProps> = (props) => {
       }
     });
     return res;
-  }
+  };
 
 
   useEffect(() => {

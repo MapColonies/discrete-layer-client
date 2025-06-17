@@ -1,9 +1,9 @@
+import { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { ICesiumImageryLayer, useCesiumMap } from '@map-colonies/react-components';
+import { ContextActions } from '../../../common/actions/context.actions';
 import { useStore } from '../../models';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
-import { ContextActions } from '../../../common/actions/context.actions';
-import { ICesiumImageryLayer, useCesiumMap } from '@map-colonies/react-components';
-import { useEffect, useRef, useState } from 'react';
 
 export const DEFAULT_LAYER_HUE_FACTOR = 0.0;
 
@@ -25,7 +25,7 @@ export const MapActionResolver: React.FC = observer(() => {
         prevHighlightedLayer.current = undefined;
       }
     }
-  }, [highlightedLayer])
+  }, [highlightedLayer]);
 
   useEffect(() => {
     if (typeof store.actionDispatcherStore?.action === 'undefined') return;
