@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.0...v2.22.1) (2025-06-18)
+
+
+### Bug Fixes
+
+* for wfs ([6f61223](https://github.com/MapColonies/discrete-layer-client/commit/6f61223dea2df74fdc3d9bcdb447884c74b6d0c3))
+
 ## [2.22.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.2...v2.22.0) (2025-06-18)
 
 
