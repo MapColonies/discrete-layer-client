@@ -23,6 +23,7 @@ const ACTIONS_TO_SERVICES_PATH_MAP: UserActionToService | ContextActionToService
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: 'catalogServices.raster',
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: 'catalogServices.3d',
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: 'catalogServices.dem',
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_PUBLISH]: 'catalogServices.raster',
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: 'catalogServices.3d',
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_EXPORT]: 'exportLayerServices.raster',
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_EXPORT]: 'exportLayerServices.3d',
