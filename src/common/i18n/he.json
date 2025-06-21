@@ -700,6 +700,7 @@
   "debug-panel.wfs.title": "שכבות מידע",
   "debug-panel.wfs.cache": "בזכרון",
   "debug-panel.wfs.extent": "בתצוגה",
+  "debug-panel.empty": "לא נמצאו שכבות",
 
   "user-role.switch.user.text": "משתמש",
   "user-role.switch.admin.text": "מנהל",
