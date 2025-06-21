@@ -696,6 +696,7 @@
   "debug-panel.wfs.title": "Data Layers",
   "debug-panel.wfs.cache": "Cache",
   "debug-panel.wfs.extent": "Extent",
+  "debug-panel.empty": "No layers found",
 
   "user-role.switch.user.text": "User",
   "user-role.switch.admin.text": "Admin",
