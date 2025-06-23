@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { Feature, Polygon, BBox, Point } from 'geojson';
 import { Properties, Geometry } from '@turf/helpers';
 import area from '@turf/area';
@@ -70,7 +71,6 @@ export const PolygonParts: React.FC = observer(() => {
 
   useEffect(() => {
     if (activeLayer) {
-      // TODO: (instead of optionsPolygonParts.zoomLevel should come from some CONFIG) OR (make CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL = 14)
       if (zoomLevel && zoomLevel < optionsPolygonParts.zoomLevel) {
         setShowFootprint(false);
       } else {
@@ -106,16 +106,18 @@ export const PolygonParts: React.FC = observer(() => {
     return res;
   };
 
-  const POINT_STROKE = '#FFFF00';
-  const BRIGHT_GREEN = '#01FF1F';
-  const LIGHT_BLUE = '#24AEE9';
+  const POINT_STROKE = CONFIG.POLYGON_PARTS.STYLE.billBoardStrokeColor;//'#FFFF00';
+  const BRIGHT_GREEN = CONFIG.POLYGON_PARTS.STYLE.highResolutionColor;//'#01FF1F';
+  const LIGHT_BLUE = CONFIG.POLYGON_PARTS.STYLE.hoverColor;//'#24AEE9';
+  const LABEL_INTERSECTION_RATIO = 0.7;
+  const SHOW_PP_ZOOM_LEVEL = 7;
 
   const metaPolygonParts = {
     ...activeLayer,
     id: `virt-PP_${activeLayer?.id}`,
     featureStructure: {
       layerName: 'polygonParts:layer',
-      aliasLayerName: `${activeLayer?.productName}`,
+      aliasLayerName: `${activeLayer?.productName} (${intl.formatMessage({ id: 'field-names.dem.layerPolygonParts' })})`,
       fields: [
         // {
         //   fieldName: 'id',
@@ -244,9 +246,9 @@ export const PolygonParts: React.FC = observer(() => {
       color: BRIGHT_GREEN,
       hover: LIGHT_BLUE,
     },
-    pageSize: 300,
-    zoomLevel: 7,
-    maxCacheSize: 6000,
+    pageSize: CONFIG.WFS.MAX.PAGE_SIZE,//300,
+    zoomLevel: SHOW_PP_ZOOM_LEVEL,//7
+    maxCacheSize: CONFIG.WFS.MAX.CACHE_SIZE,//6000
     keyField: 'id',
     labeling: {
       dataSourcePrefix: 'labels_',
@@ -380,19 +382,19 @@ export const PolygonParts: React.FC = observer(() => {
   
     const categoriesColorPalete = [
       {
-        minRes: 1.67638063430786e-7, // 22
-        maxRes: 0.00000268220901489258, // 18
-        color: '#01FF1F', // BRIGHT_GREEN
+        minRes: ZOOM_LEVELS_TABLE[22],//1.67638063430786e-7, // 22
+        maxRes: ZOOM_LEVELS_TABLE[18],//0.00000268220901489258, // 18
+        color: CONFIG.POLYGON_PARTS.STYLE.highResolutionColor, //'#01FF1F', // BRIGHT_GREEN
       },
       {
-        minRes: 0.00000536441802978516, // 17
-        maxRes: 0.0000107288360595703, // 16
-        color: '#fbff01', // BRIGHT_YELLOW
+        minRes: ZOOM_LEVELS_TABLE[17],//0.00000536441802978516, // 17
+        maxRes: ZOOM_LEVELS_TABLE[16],//0.0000107288360595703, // 16
+        color: CONFIG.POLYGON_PARTS.STYLE.mediumResolutionColor,//'#fbff01', // BRIGHT_YELLOW
       },
       {
-        minRes: 0.0000214576721191406, // 15
-        maxRes: 0.703125, // 0
-        color: '#ff3401', // BRIGHT_RED
+        minRes: ZOOM_LEVELS_TABLE[15],//0.0000214576721191406, // 15
+        maxRes: ZOOM_LEVELS_TABLE[0],//0.703125, // 0
+        color: CONFIG.POLYGON_PARTS.STYLE.lowResolutionColor,//'#ff3401', // BRIGHT_RED
       },
     ];
   
@@ -425,7 +427,7 @@ export const PolygonParts: React.FC = observer(() => {
                 geometry: labelRect,
               });
               const intersectionRatio = calcIntersectionRation(labelIntersection?.geometry as Geometry, labelRect);
-              if (intersectionRatio > 0.7) {
+              if (intersectionRatio > LABEL_INTERSECTION_RATIO) {
                 labelPos.push(featureClippedPolygonCenter);
               }
             }
@@ -490,8 +492,8 @@ export const PolygonParts: React.FC = observer(() => {
   
     const labelsCollectionName = `labels_${dataSource.name}`;
     const deselectLabelEntities = (entity: CesiumCesiumEntity) => {
-      //@ts-ignore
-      if (entity && entity.entityCollection.owner.name === labelsCollectionName) {
+      // @ts-ignore
+      if (!isEmpty(entity?.entityCollection) && entity.entityCollection.owner.name === labelsCollectionName) {
         mapViewer.selectedEntity = undefined;
       }
     };

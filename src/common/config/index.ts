@@ -31,7 +31,14 @@ const PROJECT_VERSION = (window as any)._env_.PROJECT_VERSION;
 const WHATSNEW_URL = (window as any)._env_.WHATSNEW_URL;
 const SITES_CONFIG = JSON.parse((window as any)._env_.SITES_CONFIG);
 const BFF_PATH = (window as any)._env_.BFF_PATH;
-const POLYGON_PARTS = (window as any)._env_.POLYGON_PARTS;
+const POLYGON_PARTS = {
+  ...(window as any)._env_.POLYGON_PARTS,
+  highResolutionColor: '#01FF1F',
+  mediumResolutionColor: '#fbff01',
+  lowResolutionColor: '#ff3401',
+  hoverColor: '#24AEE9',
+  billBoardStrokeColor: '#FFFF00'
+};
 const WFS = (window as any)._env_.WFS;
 
 const enrichBaseMaps = (baseMaps: IBaseMaps): IBaseMaps => {
@@ -189,8 +196,8 @@ const APP_CONFIG = {
     MAP: {
       MAX_ACTIVE_LAYERS_TO_PRESENT: 5,
       POLYGON_PARTS_FEATURE_CONFIG: {
-        color: '#00ff0030',//'#BF40BF',
-        outlineColor: '#00FF00',
+        color: `${POLYGON_PARTS.highResolutionColor}50`, //'#00ff0030',//'#BF40BF',
+        outlineColor: POLYGON_PARTS.highResolutionColor,//'#00FF00',
         outlineWidth: 8
       }
     }
@@ -199,6 +206,13 @@ const APP_CONFIG = {
   SITES_CONFIG: SITES_CONFIG,
   BFF_PATH: BFF_PATH,
   POLYGON_PARTS: {
+    STYLE: {
+      highResolutionColor: POLYGON_PARTS.highResolutionColor,
+      mediumResolutionColor: POLYGON_PARTS.mediumResolutionColor,
+      lowResolutionColor: POLYGON_PARTS.lowResolutionColor,
+      hoverColor: POLYGON_PARTS.hoverColor,
+      billBoardStrokeColor: POLYGON_PARTS.billBoardStrokeColor
+    },
     FEATURE_TYPE_PREFIX: POLYGON_PARTS.featureTypePrefix,
     DENSITY_FACTOR: POLYGON_PARTS.densityFactor,
     GEOMETRY_ERRORS_THRESHOLD: POLYGON_PARTS.geometryErrorsThreshold,
