@@ -225,21 +225,19 @@ export const PolygonParts: React.FC = observer(() => {
 
   const buildFeatureType = (layer: ILayerImage) => {
     if(layer){
+      // `${CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX}${(layer as LayerRasterRecordModelType).productId}-${ENUMS[(layer as LayerRasterRecordModelType).productType as string].realValue}`
       let featureType = '';
       featureType += CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX;
       featureType += (layer as LayerRasterRecordModelType).productId;
       featureType += '-';
       featureType += ENUMS[(layer as LayerRasterRecordModelType).productType as string].realValue;
       return featureType;
-      // return `${CONFIG.POLYGON_PARTS.FEATURE_TYPE_PREFIX}${(layer as LayerRasterRecordModelType).productId}-${ENUMS[(layer as LayerRasterRecordModelType).productType as string].realValue}`
     } else {
       return 'NO_CURRENT_LAYER';
     }
   };
 
   const optionsPolygonParts = {
-    // url: "https://raster-serving-int-pp-geoserver-nginx-route-manual-integration.apps.j1lk3njp.eastus.aroapp.io/geoserver/wfs?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hcC1jb2xvbmllcy1pbnQifQ.eyJkIjpbInJhc3RlciIsInJhc3RlcldtcyIsInJhc3RlckV4cG9ydCIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTY3NDYzMjM0Niwic3ViIjoibWFwY29sb25pZXMtYXBwIiwiaXNzIjoibWFwY29sb25pZXMtdG9rZW4tY2xpIn0.D1u28gFlxf_Z1bzIiRHZonUgrdWwhZy8DtmQj15cIzaABRUrGV2n_OJlgWTuNfrao0SbUZb_s0_qUUW6Gz_zO3ET2bVx5xQjBu0CaIWdmUPDjEYr6tw-eZx8EjFFIyq3rs-Fo0daVY9cX1B2aGW_GeJir1oMnJUURhABYRoh60azzl_utee9UdhDpnr_QElNtzJZIKogngsxCWp7tI7wkTuNCBaQM7aLEcymk0ktxlWEAt1E0nGt1R-bx-HnPeeQyZlxx4UQ1nuYTijpz7N8poaCCExOFeafj9T7megv2BzTrKWgfM1eai8srSgNa3I5wKuW0EyYnGZxdbJe8aseZg",
-    // featureType: 'polygonParts:ME_UPDATE_TESTS-Orthophoto',
     url: buildWFSUrl(activeLayer as ILayerImage),
     featureType: buildFeatureType(activeLayer as ILayerImage),
     style: {
@@ -345,7 +343,7 @@ export const PolygonParts: React.FC = observer(() => {
       const lon = centerCartographic.longitude;
   
       const metersPerDegreeLat = (Math.PI / 180) * ellipsoid.maximumRadius;
-      const metersPerDegreeLon = (Math.PI / 180) * ellipsoid.maximumRadius; /** Math.cos(lat)*/
+      const metersPerDegreeLon = (Math.PI / 180) * ellipsoid.maximumRadius;
   
       const dLat = heightMeters / 2 / metersPerDegreeLat;
       const dLon = widthMeters / 2 / metersPerDegreeLon;
