@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.0...v2.22.1) (2025-06-18)
+
+
+### Bug Fixes
+
+* for wfs ([6f61223](https://github.com/MapColonies/discrete-layer-client/commit/6f61223dea2df74fdc3d9bcdb447884c74b6d0c3))
+
+## [2.22.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.2...v2.22.0) (2025-06-18)
+
+
+### Features
+
+* add vector catalog to the tree ([#595](https://github.com/MapColonies/discrete-layer-client/issues/595)) ([24ab9f6](https://github.com/MapColonies/discrete-layer-client/commit/24ab9f602ca52ae0df494f0a079debb3a0350855))
+* raster product status publish unpublish ([#606](https://github.com/MapColonies/discrete-layer-client/issues/606)) ([785b8f8](https://github.com/MapColonies/discrete-layer-client/commit/785b8f80a5368ab9e58c20eac256af37a56ae8c1))
+
+
+### Bug Fixes
+
+* add backend_local to confEnvShim ([#603](https://github.com/MapColonies/discrete-layer-client/issues/603)) ([d254d2c](https://github.com/MapColonies/discrete-layer-client/commit/d254d2c56c252269b7c5060a6e6e51f28ea9bb63))
+* add feature structure table presentor ([#599](https://github.com/MapColonies/discrete-layer-client/issues/599)) ([ad51d7a](https://github.com/MapColonies/discrete-layer-client/commit/ad51d7a02c7459f11e1c3da2b04ed46582e28ce2))
+* build errors and file picker btn does not work ([#602](https://github.com/MapColonies/discrete-layer-client/issues/602)) ([66e94e5](https://github.com/MapColonies/discrete-layer-client/commit/66e94e5b4f55c217cc93f0878441a6260d011c1d))
+* dialogs transparency ([#598](https://github.com/MapColonies/discrete-layer-client/issues/598)) ([5df0d8c](https://github.com/MapColonies/discrete-layer-client/commit/5df0d8cf6bf9fa9d0baffcf2e1646785e0e83ec6))
+* download linkes bug ([#607](https://github.com/MapColonies/discrete-layer-client/issues/607)) ([22da473](https://github.com/MapColonies/discrete-layer-client/commit/22da4730878707d591477dc7889901b20241cfe9))
+* eslint ([#601](https://github.com/MapColonies/discrete-layer-client/issues/601)) ([117e2bd](https://github.com/MapColonies/discrete-layer-client/commit/117e2bd18219cc6d26c7c3f925d08edfb1e46e8c))
+* manual part vertex density tollerance in degrees ([#609](https://github.com/MapColonies/discrete-layer-client/issues/609)) ([da3c495](https://github.com/MapColonies/discrete-layer-client/commit/da3c495250345f5702b42d3f074feeb079c54774))
+* remove vector record from bests ([#604](https://github.com/MapColonies/discrete-layer-client/issues/604)) ([ffd286d](https://github.com/MapColonies/discrete-layer-client/commit/ffd286dff09789f8b032511cf0fd6939681d556a))
+
 ### [2.21.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.1...v2.21.2) (2025-03-20)
 
 
