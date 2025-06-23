@@ -180,11 +180,23 @@ export const catalogTreeStore = ModelBase.props({
       return count;
     }
 
-    function setCatalogTreeData(catalogTreeData: TreeItem[]): void {
-      if (countTreeItems(self.catalogTreeData ?? []) !== countTreeItems(catalogTreeData)) {
-        self.catalogTreeData = [...(self.catalogTreeData ?? []), ...catalogTreeData];
-      } else {
+    function updateExpandedTreeItems(newTree: TreeItem[], oldTree: TreeItem[]): TreeItem[] {
+      return oldTree.map(oldNode => {
+        const matchingNewNode = newTree.find(newNode => newNode.title === oldNode.title);
+        let updatedNode = { ...oldNode };
+        if (matchingNewNode && matchingNewNode.children && Array.isArray(matchingNewNode.children)) {
+          updatedNode.expanded = matchingNewNode.expanded;
+          updatedNode.children = updateExpandedTreeItems(matchingNewNode.children, oldNode.children as TreeItem[]);
+        }
+        return updatedNode;
+      });
+    }
+
+    function setCatalogTreeData(catalogTreeData: TreeItem[], isFiltered: boolean = false): void {
+      if (!isFiltered) {
         self.catalogTreeData = catalogTreeData;
+      } else {
+        self.catalogTreeData = updateExpandedTreeItems(catalogTreeData, self.catalogTreeData ?? []);
       }
     }
 

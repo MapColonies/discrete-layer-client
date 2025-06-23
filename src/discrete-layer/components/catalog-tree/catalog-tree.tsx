@@ -226,7 +226,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
               treeData={!isFiltered ? treeRawData : getFilteredCatalogTreeData()}
               onChange={treeData => {
                 console.log('****** UPDATE TREE DATA ******');
-                setCatalogTreeData(treeData);
+                setCatalogTreeData(treeData, isFiltered);
               }}
               canDrag={({ node }) => {
                 return false;
