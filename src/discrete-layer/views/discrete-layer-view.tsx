@@ -259,6 +259,7 @@ const DiscreteLayerView: React.FC = observer(() => {
     WFS_TITLE: intl.formatMessage({ id: 'debug-panel.wfs.title' }),
     WFS_CACHE: intl.formatMessage({ id: 'debug-panel.wfs.cache' }),
     WFS_EXTENT: intl.formatMessage({ id: 'debug-panel.wfs.extent' }),
+    NO_DATA_LAYERS: intl.formatMessage({ id: 'debug-panel.empty' }),
   }), [intl]);
   /* eslint-enable */
 

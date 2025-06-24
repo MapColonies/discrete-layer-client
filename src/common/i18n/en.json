@@ -283,6 +283,7 @@
   "field-names.raster.producerName": "Producer Name",
   "field-names.raster.layerPolygonParts": "Polygon Parts",
   "field-names.raster.transparency": "Transparency",
+  "field-names.raster.productStatus": "Product Status",
   "field-names.polygon-parts.countries": "Counties",
   "field-names.polygon-parts.cities": "Cities",
   "field-names.polygon-parts.sourceResolutionMeter": "Source res (m)",
@@ -696,6 +697,7 @@
   "debug-panel.wfs.title": "Data Layers",
   "debug-panel.wfs.cache": "Cache",
   "debug-panel.wfs.extent": "Extent",
+  "debug-panel.empty": "No layers found",
 
   "user-role.switch.user.text": "User",
   "user-role.switch.admin.text": "Admin",

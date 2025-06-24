@@ -8,6 +8,7 @@ import { ModelBase } from "./ModelBase"
 import { LinkModel, LinkModelType } from "./LinkModel"
 import { LinkModelSelector, linkModelPrimitives } from "./LinkModel.base"
 import { ProductTypeEnumType } from "./ProductTypeEnum"
+import { RecordStatusEnumType } from "./RecordStatusEnum"
 import { RecordTypeEnumType } from "./RecordTypeEnum"
 import { TransparencyEnumType } from "./TransparencyEnum"
 import { RootStoreType } from "./index"
@@ -51,6 +52,7 @@ export const LayerRasterRecordModelBase = ModelBase
     scale: types.union(types.undefined, types.null, types.number),
     footprint: types.union(types.undefined, types.frozen()),
     productBoundingBox: types.union(types.undefined, types.null, types.string),
+    productStatus: types.union(types.undefined, types.null, RecordStatusEnumType),
     transparency: types.union(types.undefined, TransparencyEnumType),
     insertDate: types.union(types.undefined, types.null, types.frozen()),
     keywords: types.union(types.undefined, types.null, types.string),
@@ -92,6 +94,7 @@ export class LayerRasterRecordModelSelector extends QueryBuilder {
   get scale() { return this.__attr(`scale`) }
   get footprint() { return this.__attr(`footprint`) }
   get productBoundingBox() { return this.__attr(`productBoundingBox`) }
+  get productStatus() { return this.__attr(`productStatus`) }
   get transparency() { return this.__attr(`transparency`) }
   get insertDate() { return this.__attr(`insertDate`) }
   get keywords() { return this.__attr(`keywords`) }
@@ -101,4 +104,4 @@ export function selectFromLayerRasterRecord() {
   return new LayerRasterRecordModelSelector()
 }
 
-export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srs.producerName.creationDateUTC.ingestionDate.updateDateUTC.imagingTimeBeginUTC.imagingTimeEndUTC.maxHorizontalAccuracyCE90.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.minResolutionDeg.maxResolutionMeter.minResolutionMeter.rms.scale.footprint.productBoundingBox.transparency.insertDate.keywords.id.links(linkModelPrimitives)
+export const layerRasterRecordModelPrimitives = selectFromLayerRasterRecord().type.classification.productName.description.srs.producerName.creationDateUTC.ingestionDate.updateDateUTC.imagingTimeBeginUTC.imagingTimeEndUTC.maxHorizontalAccuracyCE90.minHorizontalAccuracyCE90.sensors.region.productId.productVersion.productType.productSubType.srsName.maxResolutionDeg.minResolutionDeg.maxResolutionMeter.minResolutionMeter.rms.scale.footprint.productBoundingBox.productStatus.transparency.insertDate.keywords.id.links(linkModelPrimitives)

@@ -7,21 +7,21 @@ import {
   GridComponentOptions,
   GridReadyEvent,
 } from '../../../../common/components/grid';
-import { JobModelType, ProductType } from '../../../models';
-import { getProductDomain } from '../../layer-details/utils';
 import EnumsMapContext from '../../../../common/contexts/enumsMap.context';
 import { IActionGroup } from '../../../../common/actions/entity.actions';
-import { JOB_ENTITY } from '../job.types';
-import { JobDetailsStatusFilter } from '../../system-status/cell-renderer/job-details.status.filter';
-import { JobDetailsRenderer } from '../../system-status/cell-renderer/job-details.cell-renderer';
-import { StatusRenderer } from '../../system-status/cell-renderer/status.cell-renderer';
 import { ActionsRenderer } from '../../../../common/components/grid/cell-renderer/actions.cell-renderer';
-import { PriorityRenderer } from '../../system-status/cell-renderer/priority.cell-renderer';
 import { JobProductTypeRenderer } from '../../../../common/components/grid/cell-renderer/job-product-type.cell-renderer';
-import { DateCellRenderer } from '../../system-status/cell-renderer/date.cell-renderer';
-import { TooltippedCellRenderer } from '../../system-status/cell-renderer/tool-tipped.cell-renderer';
-import PlaceholderCellRenderer from '../../system-status/cell-renderer/placeholder.cell-renderer';
 import { Loading } from '../../../../common/components/tree/statuses/loading';
+import { JobModelType, ProductType } from '../../../models';
+import { getProductDomain } from '../../layer-details/utils';
+import { DateCellRenderer } from '../../system-status/cell-renderer/date.cell-renderer';
+import { JobDetailsRenderer } from '../../system-status/cell-renderer/job-details.cell-renderer';
+import { JobDetailsStatusFilter } from '../../system-status/cell-renderer/job-details.status.filter';
+import { PriorityRenderer } from '../../system-status/cell-renderer/priority.cell-renderer';
+import PlaceholderCellRenderer from '../../system-status/cell-renderer/placeholder.cell-renderer';
+import { StatusRenderer } from '../../system-status/cell-renderer/status.cell-renderer';
+import { TooltippedCellRenderer } from '../../system-status/cell-renderer/tool-tipped.cell-renderer';
+import { JOB_ENTITY } from '../job.types';
 
 export interface ICommonJobManagerGridProps {
   rowData: unknown[];
