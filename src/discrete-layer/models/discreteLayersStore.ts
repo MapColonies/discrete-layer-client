@@ -68,7 +68,6 @@ const INITIAL_STATE = {
 
 export type PolygonPartsWfsFeatureInfo = GetFeatureModelType & Pick<WfsPolygonPartsGetFeatureParams, 'feature'>;
 
-
 export const discreteLayersStore = ModelBase
   .props({
     state: types.enumeration<ResponseState>(
@@ -440,7 +439,7 @@ export const discreteLayersStore = ModelBase
       self.polygonPartsLayer = undefined;
       resetPolygonPartsInfo();
     }
-    
+
     function setIsActiveLayersImages(): void {
       const activeLayersImages = self.layersImages?.filter(layer => layer.layerImageShown || layer.footprintShown || (layer as any).polygonPartsShown) ?? [];
       const isActiveLayersImages = activeLayersImages.length > 0;
