@@ -118,7 +118,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
               })
               .map((action) => {
                 return {
-                ...action,
+                  ...action,
                   titleTranslationId: intl.formatMessage({
                     id: action.titleTranslationId,
                   }),
@@ -258,22 +258,22 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                 icons: rowInfo.node.isGroup
                   ? []
                   : [
-                  <FootprintRenderer
-                    data={(rowInfo.node as any) as ILayerImage}
-                    onClick={(data, value) => {
-                      dispatchAction({
-                        action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
-                        data: { selectedLayer: { ...data, footprintShown: value } }
-                      });
-                    }}
-                  />,
-                  <LayerImageRenderer
-                    data={(rowInfo.node as any) as ILayerImage}
-                    onClick={(data, value) => {
-                      if (value) {
-                        selectedLayersRef.current++;
-                      } else {
-                        const orders: number[] = [];
+                      <FootprintRenderer
+                        data={(rowInfo.node as any) as ILayerImage}
+                        onClick={(data, value) => {
+                          dispatchAction({
+                            action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
+                            data: { selectedLayer: { ...data, footprintShown: value } }
+                          });
+                        }}
+                      />,
+                      <LayerImageRenderer
+                        data={(rowInfo.node as any) as ILayerImage}
+                        onClick={(data, value) => {
+                          if (value) {
+                            selectedLayersRef.current++;
+                          } else {
+                            const orders: number[] = [];
                             // eslint-disable-next-line
                             store.discreteLayersStore.layersImages?.forEach(
                               (item: ILayerImage) => {
@@ -281,14 +281,14 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                                   item.layerImageShown === true &&
                                   data.id !== item.id
                                 ) {
-                            orders.push(item.order as number);
-                          }
+                                  orders.push(item.order as number);
+                                }
                               }
                             );
                             selectedLayersRef.current = orders.length
                               ? getMax(orders)
                               : selectedLayersRef.current - 1;
-                      }
+                          }
                           const order = value
                             ? selectedLayersRef.current
                             : null;
@@ -297,17 +297,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                             value,
                             order
                           );
-                      data.layerImageShown = value;
-                    }}
-                  />,
-                  <ProductTypeRenderer
-                    data={(rowInfo.node as any) as ILayerImage}
+                          data.layerImageShown = value;
+                        }}
+                      />,
+                      <ProductTypeRenderer
+                        data={(rowInfo.node as any) as ILayerImage}
                         thumbnailUrl={getLinkUrlWithToken(
                           rowInfo.node.links,
                           LinkType.THUMBNAIL_S
                         )}
-                  />,
-                ],
+                      />,
+                    ],
                 buttons: [
                   <>
                     {
