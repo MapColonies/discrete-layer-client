@@ -11,7 +11,7 @@ import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
-import { getStatusColoredBackground } from '../../../../common/helpers/style';
+import { getTextStyle } from '../../../../common/helpers/style';
 import { Mode } from '../../../../common/models/mode.enum';
 import { removePropertiesWithPrefix } from '../../../../common/helpers/object';
 import {
@@ -515,7 +515,7 @@ export const EntityRasterDialog: React.FC<EntityRasterDialogProps> = observer(
     return (
       <div id="entityRasterDialog" ref={dialogContainerRef}>
         <Dialog open={isOpen} preventOutsideDismiss={true}>
-          <DialogTitle style={mode !== Mode.NEW ? getStatusColoredBackground(layerRecord as any) : undefined}>
+          <DialogTitle style={mode !== Mode.NEW ? getTextStyle(layerRecord as any, 'backgroundColor') : undefined}>
             {dialogTitle}
             <IconButton
               className="closeIcon mc-icon-Close"

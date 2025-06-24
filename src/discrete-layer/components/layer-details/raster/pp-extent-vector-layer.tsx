@@ -27,8 +27,7 @@ interface PolygonPartsVectorLayerProps {
 }
 
 const START_OFFSET = 0;
-const START_PAGE = 0;
-const ZOOM_LEVEL_STOP_FETCHING_PP = 7; // TODO: to take from configuration
+const STARTING_PAGE = 0;
 const DEBOUNCE_MOUSE_INTERVAL = 500;
 
 export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord}) => {
@@ -36,8 +35,8 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   const mapOl = useMap();
   const intl = useIntl();
 
-  const [existingPolygoParts, setExistingPolygoParts] = useState<Feature[]>([]);
-  const [page, setPage] = useState(START_PAGE);
+  const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
+  const [page, setPage] = useState(STARTING_PAGE);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
@@ -50,8 +49,8 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
   
   useEffect(() => {
     const handleMoveEndEvent = (e: MapEvent): void => {
-      setPage(START_PAGE);
-      setExistingPolygoParts([
+      setPage(STARTING_PAGE);
+      setExistingPolygonParts([
         {
           type: 'Feature',
           geometry: {
@@ -62,13 +61,13 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
           }
         }
       ]);
-      getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
+      getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
     };
 
     const debounceCall = debounce(handleMoveEndEvent, DEBOUNCE_MOUSE_INTERVAL);
     mapOl.on('moveend', debounceCall);
 
-    getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
+    getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, START_OFFSET);
     
     return (): void => {
       try {
@@ -77,51 +76,49 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
         console.log('OL "moveEnd" remove listener failed', e);
       }
     };
-  },[]);
+  }, []);
   
   useEffect(() => {
     if (!loading && data) {
-      setExistingPolygoParts([
-        ...(page === 0 ? existingPolygoParts.slice(1) : existingPolygoParts),
+      setExistingPolygonParts([
+        ...(page === 0 ? existingPolygonParts.slice(1) : existingPolygonParts),
         ...data.getPolygonPartsFeature.features as Feature<Geometry, GeoJsonProperties>[]
       ]);
       if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
-        getExistingPolygoParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
+        getExistingPolygonParts(mapOl.getView().calculateExtent() as BBox, (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
       }
     } 
-    if (loading){
+    if (loading) {
       showLoadingSpinner(true);
-    }else{
+    } else {
       showLoadingSpinner(false);
     }
   }, [data, loading]);
 
   useEffect(() => {
     if (!loading && error) {
-      store.actionDispatcherStore.dispatchAction(
-        {
-          action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
-          data: {
-            error: [
-              intl.formatMessage(
-                {id: 'validation-general.polygonParts.wfsServerError'}
-            )]
-          },
-        } as IDispatchAction
-      );
+      store.actionDispatcherStore.dispatchAction({
+        action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
+        data: {
+          error: [
+            intl.formatMessage({ id: 'validation-general.polygonParts.wfsServerError' })
+          ]
+        },
+      } as IDispatchAction);
     }
   }, [error, loading]);
 
-  const getExistingPolygoParts = (bbox: BBox, startIndex: number) => {
+  const getExistingPolygonParts = (bbox: BBox, startIndex: number) => {
     // const fakePP = squareGrid(bbox, 10, {units: 'miles'});
     // console.log(fakePP);
-    // setExistingPolygoParts(fakePP.features);
+    // setExistingPolygonParts(fakePP.features);
 
     const currentZoomLevel = mapOl.getView().getZoom();
 
-    if (currentZoomLevel && currentZoomLevel < ZOOM_LEVEL_STOP_FETCHING_PP) {
-      setExistingPolygoParts([
+    // TODO SEPARATE ZOOM VALUES
+    if (currentZoomLevel && currentZoomLevel < (CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL - 3)) {
+      setExistingPolygonParts([
         {
           type: 'Feature',
           geometry: {
@@ -139,14 +136,15 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
           count: CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES,
           startIndex
         } 
-    }));
+      }));
     }
   };
     
   return (
     <VectorLayer>
       <VectorSource>
-        {existingPolygoParts.map((feat, idx) => {
+        {
+          existingPolygonParts.map((feat, idx) => {
             const greenStyle = new Style({
               text: createTextStyle(feat, 4, FEATURE_LABEL_CONFIG.polygons, ZOOM_LEVELS_TABLE, intl.formatMessage({id: 'polygon-parts.map-preview.zoom-before-fetch'})),
               stroke: PPMapStyles.get(FeatureType.EXISTING_PP)?.getStroke(),

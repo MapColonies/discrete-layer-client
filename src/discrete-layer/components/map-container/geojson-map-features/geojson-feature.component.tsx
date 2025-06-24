@@ -71,33 +71,32 @@ export const GeojsonFeature: React.FC<GeojsonFeatureProps> = ({ feature, feature
 
   if (!featureWithHeight) return null;
 
-  return (
-    <CesiumGeojsonLayer
-      clampToGround={true}
-      key={featureWithHeight.id}
-      data={featureWithHeight.geometry}
-      onLoad={(geoJsonDataSource): void => {
-        const featureFillColor = featureConfig?.color;
-        const featureOutlineColor = featureConfig?.outlineColor;
-        const lineWidth = featureConfig?.outlineWidth;
+  return <CesiumGeojsonLayer
+              clampToGround={true}
+              key={featureWithHeight.id}
+              data={featureWithHeight.geometry}
+              onLoad={(geoJsonDataSource): void => {
+                const featureFillColor = featureConfig?.color;
+                const featureOutlineColor = featureConfig?.outlineColor;
+                const lineWidth = featureConfig?.outlineWidth;
 
-        geoJsonDataSource.entities.values.forEach((item) => {
-          if (item.polyline) {
-            // @ts-ignore
-            item.polyline.material = CesiumColor.fromCssColorString(featureFillColor);
-            (item.polyline.width as CesiumConstantProperty).setValue(lineWidth);
-            (item.polyline.clampToGround as CesiumConstantProperty).setValue(true);
-          }
-          
-          if (item.polygon) {  
-            // @ts-ignore
-            (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(featureOutlineColor));
-            // @ts-ignore
-            item.polygon.material = CesiumColor.fromCssColorString(featureFillColor);
-            (item.polygon.outline as CesiumConstantProperty).setValue(true);
-          }
-        });
-      }}                    
-    />
-  );
-};
+                geoJsonDataSource.entities.values.forEach((item) => {
+                  if (item.polyline) {
+                    // @ts-ignore
+                    item.polyline.material = CesiumColor.fromCssColorString(featureFillColor);
+                    (item.polyline.width as CesiumConstantProperty).setValue(lineWidth);
+                    (item.polyline.clampToGround as CesiumConstantProperty).setValue(true);
+                  }
+                  
+                  if (item.polygon) {  
+                    // @ts-ignore
+                    (item.polygon.outlineColor as CesiumConstantProperty).setValue(CesiumColor.fromCssColorString(featureOutlineColor));
+                    // @ts-ignore
+                    item.polygon.material = CesiumColor.fromCssColorString(featureFillColor);
+                    (item.polygon.outline as CesiumConstantProperty).setValue(true);
+                  }
+                });
+              }}                    
+            />
+
+  }

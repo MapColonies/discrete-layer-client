@@ -54,14 +54,11 @@ export const servicesAvailabilityStore = ModelBase
     },
   }))
   .actions((self) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const store = self.root;
 
     function isActionAvailable(action: UserActionToService | ContextActionToService  | string): boolean | undefined {
       const servicePath = ACTIONS_TO_SERVICES_PATH_MAP[action as keyof (UserActionToService | ContextActionToService)];
 
       return self.servicesAvailability?.[servicePath as string] ?? true;
-      
     }
 
     function setServicesAvailabilities(servicesAvailabilities: Record<string, boolean>): void {

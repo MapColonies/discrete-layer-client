@@ -11,7 +11,7 @@ import { DialogContent } from '@material-ui/core';
 import { Dialog, DialogTitle, IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { emphasizeByHTML } from '../../../common/helpers/formatters';
-import { getStatusColoredBackground } from '../../../common/helpers/style';
+import { getTextStyle } from '../../../common/helpers/style';
 import { Mode } from '../../../common/models/mode.enum';
 import {
   EntityDescriptorModelType,
@@ -57,7 +57,7 @@ import suite from './validate';
 import './entity.dialog.css';
 
 const IS_EDITABLE = 'isManuallyEditable';
-const DEFAULT_ID = 'DEFAULT_UI_ID';
+export const DEFAULT_ID = 'DEFAULT_UI_ID';
 const NONE = 0;
 const START = 0;
 
@@ -456,7 +456,7 @@ export const EntityDialog: React.FC<EntityDialogProps> = observer(
     return (
       <div id="entityDialog" ref={dialogContainerRef}>
         <Dialog open={isOpen} preventOutsideDismiss={true}>
-          <DialogTitle style={mode !== Mode.NEW ? getStatusColoredBackground(layerRecord as any) : undefined}>
+          <DialogTitle style={mode !== Mode.NEW ? getTextStyle(layerRecord as any, 'backgroundColor') : undefined}>
             {dialogTitle}
             <IconButton
               className="closeIcon mc-icon-Close"

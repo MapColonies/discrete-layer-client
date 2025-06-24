@@ -89,8 +89,7 @@ const pickPropertiesFromResponse = (
     (prop: string) => {
       if (partialResponse !== undefined && get(response,`${relevantQuery?.queryName}.${prop}`) !== undefined) {
         partialResponse[prop] = get(response,`${relevantQuery?.queryName}.${prop}`);
-      }
-      else {
+      } else {
         partialResponse = undefined;
       }
     }
@@ -131,8 +130,7 @@ const syncSlaves = (isRawRequest: boolean, masterResponse: any, query: string, v
       if (relevantQuery?.equalCheck && masterResponse) {
         if (!slaveResponse) {
           sessionStore.setObject( relevantQuery.queryName, { code: relevantQuery?.errorMessageCode, severity: 'error' } );
-        }
-        else {
+        } else {
           if (JSON.stringify(slaveResponse) !== JSON.stringify(masterResponse)) {
             sessionStore.setObject( relevantQuery.queryName, relevantQuery?.warningMessageCode
               ? { code: relevantQuery?.warningMessageCode }

@@ -69,7 +69,13 @@ import 'react-virtualized/styles.css';
 
 const NONE = 0;
 
-// Shape of form values - a bit problematic because we cant extend union type.
+enum CUSTOM_VALIDATION_ERROR_CODES {
+  SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
+  POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
+  POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
+} 
+
+// Shape of form values - a bit problematic because we cannot extend union type
 export interface FormValues {
   directory: string;
   fileNames: string;
@@ -275,7 +281,7 @@ export const InnerRasterForm = (
 
     Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
       features.push({
-        type: "Feature",
+        type: 'Feature',
         properties: {key},
         // @ts-ignore
         geometry: values[key].footprint
@@ -320,8 +326,7 @@ export const InnerRasterForm = (
               const error = intl.formatMessage({ id: err });
               return footprintErrors.includes(error);
             });
-          }
-          else {
+          } else {
             hasOneOrMoreError = true;
           }
   
@@ -432,7 +437,7 @@ export const InnerRasterForm = (
         set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
         setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
         setOutlinedPerimeterMarker({
-          type: "Feature",
+          type: 'Feature',
           properties: {
             featureType: FeatureType.PP_PERIMETER_MARKER
           },
@@ -507,11 +512,6 @@ export const InnerRasterForm = (
     });
   }, []);
 
-  enum CUSTOM_VALIDATION_ERROR_CODES {
-    SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
-    POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
-    POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
-  } 
   // ****** Verification of GPKG extent vs. PP perimeter is disabled
   // useEffect(() => {
   //   if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
@@ -524,7 +524,6 @@ export const InnerRasterForm = (
   //     setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG));
   //   }
   // }, [sourceExtent, outlinedPerimeter]);
-  
   
   const exceededFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
@@ -659,7 +658,7 @@ export const InnerRasterForm = (
     const validationResults = metadata.recordModel as unknown as SourceValidationModelType;
 
     setSourceExtent({
-      type: "Feature",
+      type: 'Feature',
       properties: {
         featureType: FeatureType.SOURCE_EXTENT
       },
@@ -668,7 +667,7 @@ export const InnerRasterForm = (
 
     if (validationResults.extentPolygon) {
       setSourceExtentMarker({
-        type: "Feature",
+        type: 'Feature',
         properties: {
           featureType: FeatureType.SOURCE_EXTENT_MARKER
         },
@@ -733,7 +732,7 @@ export const InnerRasterForm = (
 
   const transformShapeFeatureToEntity = (polygonPartDescriptors: FieldConfigModelType[], feature: Feature<Geometry, GeoJsonProperties>, provider: string, fileName?: string) => {
     let ret = {} as ParsedPolygonPart;
-    switch(provider){
+    switch (provider) {
       case ProviderType.SYNERGY:
         ret = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);  
         break;
@@ -782,7 +781,7 @@ export const InnerRasterForm = (
               set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
               setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
               setOutlinedPerimeterMarker({
-                type: "Feature",
+                type: 'Feature',
                 properties: {
                   featureType: FeatureType.PP_PERIMETER_MARKER
                 },
@@ -1204,23 +1203,23 @@ export const InnerRasterForm = (
                 disabled={faultyPolygonParts.length === 0}
                 label={intl.formatMessage({ id: 'polygon-parts.show-parts-with-errors-on-map.label' })}
                 checked={isFaultyPPVisible}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setShowFaultyPolygonParts(evt.currentTarget.checked);
-                  }}
+                onClick={(evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowFaultyPolygonParts(evt.currentTarget.checked);
+                }}
               />
             </Box>
             <Box className='displayFlex'>
-            { mode === Mode.UPDATE && <Checkbox
+            {
+              mode === Mode.UPDATE &&
+              <Checkbox
                 className='flexCheckItem showOnMapContainer'
                 label={intl.formatMessage({id: 'polygon-parts.show-exisitng-parts-on-map.label'})}
                 checked={showExisitngLayerPartsOnMap}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
-                  }}
-                  />
-                }
+                onClick={(evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
+                }}
+              />
+            }
             </Box>
           </Box>
           <Box className="polygonPartsContainer">
