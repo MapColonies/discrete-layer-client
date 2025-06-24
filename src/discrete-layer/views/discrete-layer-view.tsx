@@ -818,12 +818,14 @@ const DiscreteLayerView: React.FC = observer(() => {
   }, [store.userStore.user]);
 
   useEffect(() => {
-    const isActive = store.discreteLayersStore.isActiveLayersImages;
-    const isEnabled = isActive || (catalogFilter && !isActive);
-    if (isActiveLayersFilterEnabled !== isEnabled) {
-      setIsActiveLayersFilterEnabled(isEnabled);
+    const isActive = store.discreteLayersStore.isActiveLayersImages as boolean;
+    if (!isActive) {
+      setCatalogFilter(false);
     }
-  }, [store.discreteLayersStore.isActiveLayersImages, catalogFilter]);
+    if (isActiveLayersFilterEnabled !== isActive) {
+      setIsActiveLayersFilterEnabled(isActive);
+    }
+  }, [store.discreteLayersStore.isActiveLayersImages]);
 
   const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
     // Should add global flag or find the proper condition to whether show the context menu or not.
