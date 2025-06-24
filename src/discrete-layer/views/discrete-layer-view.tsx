@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { MapMode2D } from 'cesium';
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { find, get, isEmpty } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Geometry, Feature, FeatureCollection, Polygon, Point } from 'geojson';
-import { MapMode2D } from 'cesium';
 import { lineString } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import { 
-  IconButton,
-  useTheme,
-  Typography,
-  MenuSurfaceAnchor,
-  MenuSurface,
-  Tooltip,
   Avatar,
-  Select
+  Icon,
+  IconButton,
+  MenuSurface,
+  MenuSurfaceAnchor,
+  Select,
+  Tooltip,
+  Typography,
+  useTheme
 } from '@map-colonies/react-core';
 import {
   BboxCorner,
@@ -39,6 +40,7 @@ import { currentSite } from '../../common/helpers/siteUrl';
 import { localStore } from '../../common/helpers/storage';
 import { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
 import { LinkType } from '../../common/models/link-type.enum';
+import { ActiveLayersIcon } from '../../icons/4font/ActiveLayers';
 import { SelectedLayersContainer } from '../components/map-container/selected-layers-container';
 import { HighlightedLayer } from '../components/map-container/highlighted-layer';
 import { LayersFootprints } from '../components/map-container/layers-footprints';
@@ -140,6 +142,8 @@ const DiscreteLayerView: React.FC = observer(() => {
   const [activeTabView, setActiveTabView] = useState(TabViews.CATALOG);
   const [drawPrimitive, setDrawPrimitive] = useState<IDrawingObject>(noDrawing);
   const [catalogRefresh, setCatalogRefresh] = useState<number>(START_IDX);
+  const [isActiveLayersFilterEnabled, setIsActiveLayersFilterEnabled] = useState<boolean>(false);
+  const [catalogFilter, setCatalogFilter] = useState<boolean>(false);
   const [rect, setRect] = useState<CesiumRectangle | undefined>(undefined);
   const [poi, setPoi] = useState<IPOI | undefined>(undefined);
   const [isPoiSearchActive, setIsPoiSearchActive] = useState(false);
@@ -581,7 +585,6 @@ const DiscreteLayerView: React.FC = observer(() => {
         value: RecordType[value]
       };
     });
-  
   }, []);
 
   const PanelExpanderButton: React.FC = () => {
@@ -600,7 +603,7 @@ const DiscreteLayerView: React.FC = observer(() => {
         />
       </Tooltip>
     );
-  }
+  };
 
   const getActiveTabHeader = (tabIdx: number, site: string): JSX.Element => {
 
@@ -655,20 +658,51 @@ const DiscreteLayerView: React.FC = observer(() => {
                   onChange={
                     (evt: React.ChangeEvent<HTMLSelectElement>): void => {
                       store.discreteLayersStore.searchParams.setRecordType(get(evt,'currentTarget.value'));
+                      setCatalogFilter(false);
+                      setIsActiveLayersFilterEnabled(false);
                       setCatalogRefresh(catalogRefresh + 1);
                     }
                   }
                 />
               </Box>
             }
-
+            {
+              tabIdx === TabViews.CATALOG &&
+              <Tooltip content={intl.formatMessage({ id: catalogFilter ? 'action.show-all.tooltip' : 'action.filter-nonactive.tooltip' })}>
+                <Icon
+                  className="operationIcon"
+                  disabled={!isActiveLayersFilterEnabled}
+                  label="ACTIVE"
+                  onClick={(): void => {
+                    if (isActiveLayersFilterEnabled) {
+                      setCatalogFilter(prev => !prev);
+                    }
+                  }}
+                  icon={
+                    <ActiveLayersIcon
+                      isFiltered={catalogFilter}
+                      color={{
+                        active: theme.primary,
+                        inactive: theme.textIconOnBackground,
+                      }}
+                    />
+                  }
+                />
+              </Tooltip>
+            }
             {
               tabIdx === TabViews.CATALOG && 
               <Tooltip content={intl.formatMessage({ id: 'action.refresh.tooltip' })}>
-                <IconButton className="operationIcon mc-icon-Refresh" onClick={(): void => { setCatalogRefresh(catalogRefresh + 1) }}/>
+                <IconButton
+                  className="operationIcon mc-icon-Refresh"
+                  onClick={(): void => {
+                    setCatalogFilter(false);
+                    setIsActiveLayersFilterEnabled(false);
+                    setCatalogRefresh(catalogRefresh + 1);
+                  }}
+                />
               </Tooltip>
             }
-
             {
               tabIdx === TabViews.CATALOG && 
               (permissions.isLayerRasterRecordIngestAllowed as boolean || permissions.isLayer3DRecordIngestAllowed || permissions.isLayerDemRecordIngestAllowed) && 
@@ -782,6 +816,16 @@ const DiscreteLayerView: React.FC = observer(() => {
       setUserRole(store.userStore.user.role);
     }
   }, [store.userStore.user]);
+
+  useEffect(() => {
+    const isActive = store.discreteLayersStore.isActiveLayersImages as boolean;
+    if (!isActive) {
+      setCatalogFilter(false);
+    }
+    if (isActiveLayersFilterEnabled !== isActive) {
+      setIsActiveLayersFilterEnabled(isActive);
+    }
+  }, [store.discreteLayersStore.isActiveLayersImages]);
 
   const ContextMenuByTab: React.FC<IContextMenuData> = (props) => {
     // Should add global flag or find the proper condition to whether show the context menu or not.
@@ -911,7 +955,10 @@ const DiscreteLayerView: React.FC = observer(() => {
                 getActiveTabHeader(activeTabView, site)
               }
               <Box className="panelContent" style={{ overflow: 'hidden' }}>
-                <CatalogTreeComponent refresh={catalogRefresh}/>
+                <CatalogTreeComponent
+                  refresh={catalogRefresh}
+                  isFiltered={catalogFilter}
+                />
               </Box>
             </Box>
             {
@@ -966,7 +1013,7 @@ const DiscreteLayerView: React.FC = observer(() => {
           }
         </Box>
         <Box className="mapAppContainer">
-        <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
+          <ActionsMenuDimensionsContext.Provider value={{actionsMenuDimensions, setActionsMenuDimensions}}>
             <CesiumMap
               mapMode2D={mapMode2D}
               projection={CONFIG.MAP.PROJECTION}  

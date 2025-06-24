@@ -155,7 +155,7 @@ body[dir='rtl'] .tabTitle {
 }
 
 .tabOperationsContainer {
-  flex-grow: 1;
+  flex-grow: 2;
   flex-basis: 0;
   border-top-right-radius: 8px;
 }
@@ -223,6 +223,12 @@ body[dir='rtl'] .sideDetailsPanel {
   width: 130px;
   padding: 0 6px 0 6px;
   align-self: center;
+  margin-right: auto;
+}
+
+body[dir='rtl'] .tabHeaderContainer .filterByCatalogEntitySelect {
+  margin-right: unset;
+  margin-left: auto;
 }
 
 .tabHeaderContainer .mdc-select__anchor {
