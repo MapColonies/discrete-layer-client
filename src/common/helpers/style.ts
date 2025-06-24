@@ -47,14 +47,15 @@ export const getIconStyle = (
   data: Record<string, unknown>, 
   colorProperty: 'color' | 'backgroundColor'
 ): Record<string, unknown> | undefined => {
+  let resStyle = undefined;
   if (data.layerURLMissing) {
     return { [colorProperty]: ERROR_COLOR };
   }
   if (existStatus(data) && isUnpublished(data)) {
-    return { [colorProperty]: UNPUBLISHED_COLOR };
+    resStyle = { [colorProperty]: UNPUBLISHED_COLOR };
   }
   if (existPolygonParts(data) && isPolygonPartsShown(data)) {
-    return { [colorProperty]: POLYGON_PARTS_SHOWN_COLOR };
+    resStyle = { [colorProperty]: POLYGON_PARTS_SHOWN_COLOR };
   }
-  return undefined;
+  return resStyle;
 };
