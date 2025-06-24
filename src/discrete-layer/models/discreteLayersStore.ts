@@ -57,6 +57,7 @@ const INITIAL_STATE = {
   mapViewerExtentPolygon: undefined,
   customValidationError: undefined,
   ppCollisionCheckInProgress: undefined,
+  isActiveLayersImages: false,
 }
 
 export const discreteLayersStore = ModelBase
@@ -79,6 +80,7 @@ export const discreteLayersStore = ModelBase
     mapViewerExtentPolygon: types.maybe(types.frozen<Feature|undefined>(INITIAL_STATE.mapViewerExtentPolygon)),
     customValidationError: types.maybe(types.frozen<Record<string,string[]>|undefined>(INITIAL_STATE.customValidationError)),
     ppCollisionCheckInProgress: types.maybe(types.frozen<boolean|undefined>(INITIAL_STATE.ppCollisionCheckInProgress)),
+    isActiveLayersImages: types.maybe(types.frozen<boolean>(INITIAL_STATE.isActiveLayersImages)),
     
     // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
@@ -220,10 +222,12 @@ export const discreteLayersStore = ModelBase
 
     function showLayer(id: string, isShow: boolean, order: number | null): void {
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, layerImageShown: isShow, order} : el);
+      setIsActiveLayersImages();
     }
 
     function showFootprint(id: string, isShow: boolean): void {
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, footprintShown: isShow} : el);
+      setIsActiveLayersImages();
     }
 
     function highlightLayer(layer: ILayerImage | undefined): void {
@@ -396,6 +400,14 @@ export const discreteLayersStore = ModelBase
 
     function setPPCollisionCheckInProgress(val: boolean | undefined): void {
       self.ppCollisionCheckInProgress = val;
+    }
+
+    function setIsActiveLayersImages(): void {
+      const activeLayersImages = self.layersImages?.filter(layer => layer.layerImageShown || layer.footprintShown || (layer as any).polygonPartsShown) ?? [];
+      const isActiveLayersImages = activeLayersImages.length > 0;
+      if (self.isActiveLayersImages !== isActiveLayersImages) {
+        self.isActiveLayersImages = isActiveLayersImages;
+      }
     }
 
 
