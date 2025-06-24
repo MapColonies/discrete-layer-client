@@ -168,18 +168,6 @@ export const catalogTreeStore = ModelBase.props({
       return filteredCatalogTreeData;
     }
 
-    function countTreeItems(tree: TreeItem[]): number {
-      let count = 0;
-      tree.forEach(item => {
-        if (!item.children || !Array.isArray(item.children) || item.children.length === 0) {
-          count++;
-        } else {
-          count += countTreeItems(item.children);
-        }
-      });
-      return count;
-    }
-
     function updateExpandedTreeItems(newTree: TreeItem[], oldTree: TreeItem[]): TreeItem[] {
       return oldTree.map(oldNode => {
         const matchingNewNode = newTree.find(newNode => newNode.title === oldNode.title);
