@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.1...v2.23.0) (2025-06-24)
+
+
+### Features
+
+* active layers catalog filter ([#610](https://github.com/MapColonies/discrete-layer-client/issues/610)) ([4861cad](https://github.com/MapColonies/discrete-layer-client/commit/4861cadbfa4f7a566adbe9491ae08250aa6d2457))
+* cesium polygon parts ([#605](https://github.com/MapColonies/discrete-layer-client/issues/605)) ([be5052d](https://github.com/MapColonies/discrete-layer-client/commit/be5052db3bdec78b5535341bc55b935dc047fd5e))
+
+
+### Bug Fixes
+
+* debug panel should be removed from dom on dialog close instead of hidden ([#612](https://github.com/MapColonies/discrete-layer-client/issues/612)) ([795beb6](https://github.com/MapColonies/discrete-layer-client/commit/795beb6fa703fb425f0d365f460d5d0eb9dd5944))
+
 ### [2.22.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.0...v2.22.1) (2025-06-18)
 
 
