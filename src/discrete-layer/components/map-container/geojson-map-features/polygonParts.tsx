@@ -34,12 +34,12 @@ import {
   ICesiumWFSLayerLabelTextField,
   CesiumViewer,
   useCesiumMapViewstate,
+  CesiumGeojsonLayer,
  } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
 import { EntityDescriptorModelType, LayerRasterRecordModelType, useStore } from '../../../models';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
-import { GeojsonFeatureWithInfoBox } from './geojson-feature-with-infobox.component';
 import { getFlatEntityDescriptors } from '../../layer-details/utils';
 import { ILayerImage } from '../../../models/layerImage';
 
@@ -544,21 +544,35 @@ export const PolygonParts: React.FC = observer(() => {
               meta={metaPolygonParts}
               visualizationHandler={handleVisualizationPolygonParts}
             /> : 
-            <GeojsonFeatureWithInfoBox
-              feature={{
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  ...activeLayer?.footprint,
-                },
+            <CesiumGeojsonLayer
+              clampToGround={true}
+              data={{
+                type: 'FeatureCollection',
+                features: [
+                  {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      ...activeLayer?.footprint,
+                    },
+                  }
+                ]
               }}
-              featureConfig={CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG}
-              isPolylined={false}
-              infoBoxTitle={intl.formatMessage({ id: 'map-context-menu.polygon-parts.title' })}
-              noInfoMessage={intl.formatMessage({ id: 'polygonParts-info.no-data.message' })}
-              markerIconPath={''}
-              shouldFocusOnCreation={false}
-              shouldVisualize={true}
+              onLoad={(geoJsonDataSouce): void => {
+                geoJsonDataSouce.entities.values.forEach(item => {
+                  if (item.polygon) {
+                    item.polygon = new CesiumCesiumPolygonGraphics({
+                      hierarchy: item.polygon.hierarchy,
+                      material: CesiumColor.fromCssColorString(CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.color),
+                      outline: true,
+                      outlineColor: CesiumColor.fromCssColorString(CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.outlineColor),
+                      outlineWidth: CONFIG.CONTEXT_MENUS.MAP.POLYGON_PARTS_FEATURE_CONFIG.outlineWidth,
+                      height: 10000,
+                      perPositionHeight: false,
+                    });
+                  }
+                })
+              }}
             />
         )
       }
