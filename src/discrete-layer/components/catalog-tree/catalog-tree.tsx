@@ -4,7 +4,6 @@
 import React, {
   useEffect,
   useState,
-  useRef,
   useMemo,
   useCallback,
 } from 'react';
@@ -41,8 +40,6 @@ import './catalog-tree.css';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
-const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current ? prev : current));
-const initialOrder = 0;
 const actionDismissibleRegex = new RegExp('actionDismissible');
 const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 
@@ -58,7 +55,6 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
     const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
-    const selectedLayersRef = useRef(initialOrder);
     const intl = useIntl();
     const {
       isLoading: loading,
@@ -284,34 +280,10 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       <LayerImageRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          if (value) {
-                            selectedLayersRef.current++;
-                          } else {
-                            const orders: number[] = [];
-                            // eslint-disable-next-line
-                            store.discreteLayersStore.layersImages?.forEach(
-                              (item: ILayerImage) => {
-                                if (
-                                  item.layerImageShown === true &&
-                                  data.id !== item.id
-                                ) {
-                                  orders.push(item.order as number);
-                                }
-                              }
-                            );
-                            selectedLayersRef.current = orders.length
-                              ? getMax(orders)
-                              : selectedLayersRef.current - 1;
-                          }
-                          const order = value
-                            ? selectedLayersRef.current
-                            : null;
-                          store.discreteLayersStore.showLayer(
-                            data.id,
-                            value,
-                            order
-                          );
-                          data.layerImageShown = value;
+                          dispatchAction({
+                            action: UserAction.SYSTEM_CALLBACK_SHOWLAYERIMAGE,
+                            data: { selectedLayer: { ...data, layerImageShown: value } }
+                          });
                         }}
                       />,
                       <ProductTypeRenderer

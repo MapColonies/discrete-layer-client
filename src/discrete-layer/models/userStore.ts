@@ -64,6 +64,7 @@ export enum UserAction {
   SYSTEM_CALLBACK_PUBLISH = 'system_callback.publish',
   SYSTEM_CALLBACK_FLYTO = 'system_callback.flyToEntity',
   SYSTEM_CALLBACK_SHOWFOOTPRINT = 'system_callback.showFootprint',
+  SYSTEM_CALLBACK_SHOWLAYERIMAGE = 'system_callback.showLayerImage',
   SYSTEM_CALLBACK_SHOWPOLYGONPARTS = 'system_callback.showPolygonParts',
   SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE = 'system_callback.showPPErrorOnUpdate',
 }

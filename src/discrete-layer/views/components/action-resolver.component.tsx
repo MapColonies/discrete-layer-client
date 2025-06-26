@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { NodeData } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
 import { Feature } from 'geojson';
@@ -20,16 +20,19 @@ import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel'
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
+import CONFIG from '../../../common/config';
+import { getMax } from '../../../common/helpers/array';
 import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
 import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
 import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
 import { useEnums } from '../../../common/hooks/useEnum.hook';
-import CONFIG from '../../../common/config';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
 import { LayerMetadataMixedUnion } from '../../models';
 import { TabViews } from '../tab-views';
+
+const initialOrder = 0;
 
 interface ActionResolverProps {
   handleOpenEntityDialog: (open: boolean) => void;
@@ -43,6 +46,8 @@ export const ActionResolver: React.FC<ActionResolverProps> = observer((props) =>
 
   const store = useStore();
   const ENUMS = useEnums();
+
+  const selectedLayersRef = useRef(initialOrder);
 
   const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
   
@@ -91,7 +96,44 @@ export const ActionResolver: React.FC<ActionResolverProps> = observer((props) =>
     ]
   );
 
-  const polygonPartsShow = useCallback(
+  const baseLayerImageShow = useCallback(
+    (isShown: boolean, selectedLayer: ILayerImage) => {
+      if (!isEmpty(selectedLayer)) {
+        if (isShown) {
+          selectedLayersRef.current++;
+        } else {
+          const orders: number[] = [];
+          store.discreteLayersStore.layersImages?.forEach((item: ILayerImage) => {
+            if (item.layerImageShown && selectedLayer.id !== item.id) {
+              orders.push(item.order as number);
+            }
+          });
+          selectedLayersRef.current = orders.length
+            ? getMax(orders)
+            : selectedLayersRef.current - 1;
+        }
+        const order = isShown ? selectedLayersRef.current : null;
+
+        store.discreteLayersStore.showLayer(selectedLayer.id, isShown, order);
+
+        const shouldUpdateTreeNode = activeTabView === TabViews.CATALOG;
+
+        if (shouldUpdateTreeNode) {
+          store.catalogTreeStore.updateNodeById(selectedLayer.id, {
+            ...selectedLayer,
+            layerImageShown: isShown,
+          });
+        }
+      }
+    },
+    [
+      store.discreteLayersStore.showLayer,
+      store.catalogTreeStore.updateNodeById,
+      activeTabView
+    ]
+  );
+
+  const basePolygonPartsShow = useCallback(
     (isShown: boolean, selectedLayer: ILayerImage) => {
       if (!isEmpty(selectedLayer) && activeTabView === TabViews.CATALOG) {
         const activePPLayer = store.discreteLayersStore.layersImages?.find(layer => isPolygonPartsShown(layer as unknown as Record<string, unknown>)) as LayerRasterRecordModelType;
@@ -366,9 +408,14 @@ export const ActionResolver: React.FC<ActionResolverProps> = observer((props) =>
           baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
           break;
         }
+        case UserAction.SYSTEM_CALLBACK_SHOWLAYERIMAGE: {
+          const selectedLayer = data.selectedLayer as ILayerImage;
+          baseLayerImageShow(selectedLayer.layerImageShown as boolean, selectedLayer);
+          break;
+        }
         case UserAction.SYSTEM_CALLBACK_SHOWPOLYGONPARTS: {
           const selectedLayer = data.selectedLayer as LayerRasterRecordModelType;
-          polygonPartsShow(selectedLayer.polygonPartsShown as boolean, selectedLayer);
+          basePolygonPartsShow(selectedLayer.polygonPartsShown as boolean, selectedLayer);
           if (selectedLayer.polygonPartsShown) {
             store.discreteLayersStore.resetPolygonPartsInfo();
             store.discreteLayersStore.setPolygonPartsLayer(selectedLayer);
