@@ -172,9 +172,13 @@ export const catalogTreeStore = ModelBase.props({
       return oldTree.map(oldNode => {
         const matchingNewNode = newTree.find(newNode => newNode.title === oldNode.title);
         let updatedNode = { ...oldNode };
-        if (matchingNewNode && matchingNewNode.children && Array.isArray(matchingNewNode.children)) {
-          updatedNode.expanded = matchingNewNode.expanded;
-          updatedNode.children = updateExpandedTreeItems(matchingNewNode.children, oldNode.children as TreeItem[]);
+        if (matchingNewNode) {
+          if (matchingNewNode.children && Array.isArray(matchingNewNode.children)) {
+            updatedNode.expanded = matchingNewNode.expanded;
+            updatedNode.children = updateExpandedTreeItems(matchingNewNode.children, oldNode.children as TreeItem[]);
+          } else {
+            updatedNode.isSelected = matchingNewNode.isSelected;
+          }
         }
         return updatedNode;
       });

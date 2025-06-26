@@ -139,9 +139,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       }
     });
 
+    const currentTreeData = useMemo(() => {
+      return !isFiltered 
+        ? treeRawData 
+        : getFilteredCatalogTreeData().length > 0 
+          ? getFilteredCatalogTreeData() 
+          : treeRawData;
+    }, [treeRawData, isFiltered]);
+
     const handleRowClick = useCallback((evt: MouseEvent, rowInfo: ExtendedNodeData) => {
       if (!rowInfo.node.isGroup) {
-        let newTreeData = treeRawData;
+        let newTreeData = currentTreeData;
         if (!evt.ctrlKey) {
           // Remove prev selection
           const selection = find({
@@ -186,12 +194,12 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           setIsHoverAllowed(false);
         }
 
-        setCatalogTreeData(newTreeData);
+        setCatalogTreeData(newTreeData, isFiltered);
         store.discreteLayersStore.selectLayer(
           rowInfo.node as ILayerImage
         );
       }
-    }, [treeRawData]);
+    }, [treeRawData, isFiltered]);
 
     const dispatchAction = (action: Record<string, unknown>): void => {
       store.actionDispatcherStore.dispatchAction({
@@ -216,9 +224,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         <Box id="catalogContainer" className="catalogContainer">
           {!loading && (
             <TreeComponent
-              treeData={!isFiltered ? treeRawData : getFilteredCatalogTreeData().length > 0 ? getFilteredCatalogTreeData() : treeRawData}
+              treeData={currentTreeData}
               onChange={treeData => {
-                console.log('****** UPDATE TREE DATA ******');
+                // console.log('****** UPDATE TREE DATA ******');
                 setCatalogTreeData(treeData, isFiltered);
               }}
               canDrag={({ node }) => {
@@ -230,7 +238,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                 // return !nextParent || nextParent.isDirectory
               }}
               generateNodeProps={rowInfo => ({
-                onClick: (e: MouseEvent) => handleRowClick(e, rowInfo),
+                onClick: (e: MouseEvent) => {
+                  handleRowClick(e, rowInfo)
+                },
                 onMouseOver: (evt: MouseEvent) => {
                   if (!rowInfo.node.isGroup && isHoverAllowed) {
                     store.discreteLayersStore.highlightLayer(
