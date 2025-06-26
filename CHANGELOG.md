@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.1...v2.23.2) (2025-06-26)
+
+
+### Bug Fixes
+
+* pp ol from config ([#616](https://github.com/MapColonies/discrete-layer-client/issues/616)) ([0b61ef1](https://github.com/MapColonies/discrete-layer-client/commit/0b61ef1e7e109107a9ab20354ea7b0b2b86a65d8))
+
 ### [2.23.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.0...v2.23.1) (2025-06-26)
 
 
