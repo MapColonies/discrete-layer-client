@@ -116,8 +116,7 @@ export const PolygonPartsVectorLayer: React.FC<PolygonPartsVectorLayerProps> = o
 
     const currentZoomLevel = mapOl.getView().getZoom();
 
-    // TODO SEPARATE ZOOM VALUES
-    if (currentZoomLevel && currentZoomLevel < (CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL - 3)) {
+    if (currentZoomLevel && currentZoomLevel < (CONFIG.POLYGON_PARTS.MAX.SHOW_FOOTPRINT_ZOOM_LEVEL)) {
       setExistingPolygonParts([
         {
           type: 'Feature',
