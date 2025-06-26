@@ -5,3 +5,5 @@ export const isArrayEqual = (x: Array<unknown>, y: Array<unknown>) => {
 };
 
 export const is2dArray = (array: [] | [][]) =>  array.every(item => Array.isArray(item));
+
+export const getMax = (array: number[]): number => array.reduce((prev, current) => (prev > current) ? prev : current);

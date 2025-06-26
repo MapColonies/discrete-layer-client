@@ -170,7 +170,7 @@ export const discreteLayersStore = ModelBase
 
     function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
       self.layersImages = getPreparedLayersImages(data, showFootprint);
-
+      setIsActiveLayersImages();
       return self.layersImages;
     }
 

@@ -26,6 +26,7 @@ import CustomTooltip from '../../../common/components/grid/tooltip-renderer/name
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
 import CONFIG from '../../../common/config';
+import { getMax } from '../../../common/helpers/array';
 import { dateFormatter } from '../../../common/helpers/formatters';
 import { isPolygonPartsShown } from '../../../common/helpers/style';
 import { usePrevious } from '../../../common/hooks/previous.hook';
@@ -94,8 +95,6 @@ export const LayersResults: React.FC<LayersResultsProps> = observer((props) => {
       return cacheRef.current;
     }
   };
-
-  const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current) ? prev : current);
 
   const entityPermittedActions = useMemo(() => {
     const entityActions: Record<string, unknown> = {};
