@@ -5,7 +5,8 @@ import { observer } from 'mobx-react';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
-import booleanIntersects from '@turf/boolean-intersects';
+import intersect from '@turf/intersect';
+import buffer from '@turf/buffer';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
 import { Style } from 'ol/style';
 import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
@@ -29,6 +30,7 @@ interface PolygonPartsVectorLayerProps {
 }
 
 const START_PAGE = 0;
+const EXISTING_PART_BUFFER_METERS_TOLLERANCE = -1;
 
 export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerProps> = observer(({layerRecord, maskFeature, partsToCheck, ingestionResolutionMeter}) => {
   const store = useStore();
@@ -129,8 +131,9 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     if (ingestionResolutionMeter) {
       partsToCheck?.forEach((part) => {
         existingPolygonParts?.forEach((eixstingPart) => {
-          const intersection = booleanIntersects( 
-            part.geometry as Polygon, 
+          const bufferedPart = buffer(part as Feature<Polygon>, EXISTING_PART_BUFFER_METERS_TOLLERANCE, {units: 'meters'});
+          const intersection = intersect( 
+            bufferedPart.geometry as Polygon, 
             eixstingPart.geometry as Polygon
           );
           if (intersection && ingestionResolutionMeter > eixstingPart.properties?.resolutionMeter) {
