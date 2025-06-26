@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.0...v2.23.1) (2025-06-26)
+
+
+### Bug Fixes
+
+* active layers filter button does not work properly ([#614](https://github.com/MapColonies/discrete-layer-client/issues/614)) ([a267c0d](https://github.com/MapColonies/discrete-layer-client/commit/a267c0d6ec6c5ef49341e5fb6ac1f2ff502a516e))
+* mutual border of exisitng and inserting parts ( MAPCO-8075 ) ([#615](https://github.com/MapColonies/discrete-layer-client/issues/615)) ([e784ee6](https://github.com/MapColonies/discrete-layer-client/commit/e784ee67cba730210193c56269cc75c8e8f308d0))
+* polygon parts low zoom multypolygon footprint ([#613](https://github.com/MapColonies/discrete-layer-client/issues/613)) ([b242335](https://github.com/MapColonies/discrete-layer-client/commit/b242335e805b0b3c07efd143ff4b87a653556ddf))
+
 ## [2.23.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.1...v2.23.0) (2025-06-24)
 
 
