@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.3...v2.23.4) (2025-06-29)
+
+
+### Bug Fixes
+
+* eslint ([#618](https://github.com/MapColonies/discrete-layer-client/issues/618)) ([e82ef34](https://github.com/MapColonies/discrete-layer-client/commit/e82ef340dc8ce243f46c2ea95cf2a41f949fc2b6))
+
 ### [2.23.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.2...v2.23.3) (2025-06-29)
 
 
