@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { observer } from 'mobx-react';
 import { Checkbox } from '@map-colonies/react-core';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
 
@@ -10,12 +9,12 @@ interface IFootprintCellRendererParams {
   data: ILayerImage;
 }
 
-export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = observer((props) => {
+export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = (props) => {
   const [checked, setChecked] = useState<boolean>(props.data.footprintShown as boolean);
 
   useEffect(() => {
-    setChecked(props.data.footprintShown as boolean)
-  }, [props.data.footprintShown])
+    setChecked(props.data.footprintShown as boolean);
+  }, [props.data.footprintShown]);
 
   return (
     <Checkbox
@@ -30,4 +29,4 @@ export const FootprintRenderer: React.FC<IFootprintCellRendererParams> = observe
       }
     />
   );
-});
+};

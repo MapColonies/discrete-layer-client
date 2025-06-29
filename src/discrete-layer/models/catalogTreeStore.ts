@@ -28,19 +28,20 @@ import { LayerMetadataMixedUnion, RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
-const INNER_SORT_FIELD = 'productName';
+const TITLE_PROPERTY = 'productName';
 
 const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
 const intl = createIntl({ locale, messages: MESSAGES[locale] as Record<string, string> });
 
 const getLayerTitle = (product: ILayerImage): string => {
-  const PRODUCT_TITLE_PROPERTY = 'productName';
-
-  return product[PRODUCT_TITLE_PROPERTY] as string;
+  return product[TITLE_PROPERTY] as string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string)?.localeCompare(b[sortByField] as string);
+const alphabeticalSort = (sortByField = TITLE_PROPERTY) => (a: ILayerImage, b: ILayerImage): number => {
+  const aValue = get(a, `${sortByField}`);
+  const bValue = get(b, `${sortByField}`);
+  return aValue?.localeCompare(bValue);
+};
 
 interface IGetParentNode {
   parentNode: NodeData | undefined;
@@ -214,11 +215,13 @@ export const catalogTreeStore = ModelBase.props({
         isGroup: true,
         expanded,
         children: [
-          ...arrUnpublished.map((item) => ({
-            ...item,
-            title: getLayerTitle(item),
-            isSelected: false,
-          })),
+          ...arrUnpublished
+            .sort(alphabeticalSort())
+            .map((item) => ({
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            })),
         ],
       };
 
@@ -232,11 +235,13 @@ export const catalogTreeStore = ModelBase.props({
         isGroup: true,
         expanded,
         children: [
-          ...arrBests.map((item) => ({
-            ...item,
-            title: getLayerTitle(item),
-            isSelected: false,
-          })),
+          ...arrBests
+            .sort(alphabeticalSort())
+            .map((item) => ({
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            })),
         ],
       };
 
@@ -250,11 +255,13 @@ export const catalogTreeStore = ModelBase.props({
         isGroup: true,
         expanded,
         children: [
-          ...arrVector.map((item) => ({
-            ...item,
-            title: getLayerTitle(item),
-            isSelected: false,
-          })),
+          ...arrVector
+            .sort(alphabeticalSort())
+            .map((item) => ({
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            })),
         ],
       };
 
@@ -493,12 +500,10 @@ export const catalogTreeStore = ModelBase.props({
 
     function sortGroupChildrenByFieldValue(
       parentNode: TreeItem,
-      sortByField = INNER_SORT_FIELD
+      sortByField = TITLE_PROPERTY
     ): TreeItem | null {
       const parent = { ...parentNode };
-
-      (parent.children as TreeItem[]).sort(alphabeticalSort(sortByField));
-
+      (parent.children as ILayerImage[]).sort(alphabeticalSort(sortByField));
       return parent;
     }
 
