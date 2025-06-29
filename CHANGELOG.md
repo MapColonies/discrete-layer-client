@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.2...v2.23.3) (2025-06-29)
+
+
+### Bug Fixes
+
+* eye of current layer should be turned off in all branches of catalog tree ([#617](https://github.com/MapColonies/discrete-layer-client/issues/617)) ([b141648](https://github.com/MapColonies/discrete-layer-client/commit/b1416480c94b4f4544a4c12a1874f22380edc29c))
+
 ### [2.23.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.1...v2.23.2) (2025-06-26)
 
 
