@@ -1,17 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
 import { Feature, Polygon, BBox, Point } from 'geojson';
+import { isEmpty } from 'lodash';
+import { observer } from 'mobx-react-lite';
 import { Properties, Geometry } from '@turf/helpers';
 import area from '@turf/area';
 import intersect from '@turf/intersect';
 import centroid from '@turf/centroid';
 import bboxPolygon from '@turf/bbox-polygon';
-
-import { observer } from 'mobx-react-lite';
 import { 
   CesiumWFSLayer,
-  useCesiumMap,
   CesiumMath,
   CesiumSceneMode,
   CesiumGeoJsonDataSource,
@@ -251,6 +249,7 @@ export const PolygonParts: React.FC = observer(() => {
     labeling: {
       dataSourcePrefix: 'labels_',
       text: {
+        // eslint-disable-next-line no-template-curly-in-string
         pattern: '${imagingTimeEndUTC}\n v${productVersion} (${resolutionDegree})',
         fields: [
           {
