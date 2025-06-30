@@ -131,13 +131,13 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
     if (doneFetchingPP && ingestionResolutionMeter) {
       partsToCheck?.forEach((part) => {
-        existingPolygonParts?.forEach((eixstingPart) => {
+        existingPolygonParts?.forEach((existingPart) => {
           const bufferedPart = buffer(part as Feature<Polygon>, EXISTING_PART_BUFFER_METERS_TOLLERANCE, {units: 'meters'});
           const intersection = intersect( 
             bufferedPart.geometry as Polygon, 
-            eixstingPart.geometry as Polygon
+            existingPart.geometry as Polygon
           );
-          if (intersection && ingestionResolutionMeter > eixstingPart.properties?.resolutionMeter) {
+          if (intersection && ingestionResolutionMeter > existingPart.properties?.resolutionMeter) {
             interPartsSet.add(part);
           }
         });
