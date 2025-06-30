@@ -38,6 +38,8 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const mapOl = useMap();
 
   const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
+  const [doneFetchingPP, setDoneFetchingPP] = useState<boolean>(false);
+
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const [page, setPage] = useState(START_PAGE);
@@ -98,13 +100,12 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
       if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
         getExistingPolygoParts(convertFeatureToPolygon(maskFeature), (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
+      } else {
+        setDoneFetchingPP(true);
       }
     } 
     if (loading){
       showLoadingSpinner(true);
-    } else{
-      showLoadingSpinner(false);
-      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
     }
   }, [data, loading]);
 
@@ -128,15 +129,15 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
 
   useEffect(() => {
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
-    if (ingestionResolutionMeter) {
+    if (doneFetchingPP && ingestionResolutionMeter) {
       partsToCheck?.forEach((part) => {
-        existingPolygonParts?.forEach((eixstingPart) => {
+        existingPolygonParts?.forEach((existingPart) => {
           const bufferedPart = buffer(part as Feature<Polygon>, EXISTING_PART_BUFFER_METERS_TOLLERANCE, {units: 'meters'});
           const intersection = intersect( 
             bufferedPart.geometry as Polygon, 
-            eixstingPart.geometry as Polygon
+            existingPart.geometry as Polygon
           );
-          if (intersection && ingestionResolutionMeter > eixstingPart.properties?.resolutionMeter) {
+          if (intersection && ingestionResolutionMeter > existingPart.properties?.resolutionMeter) {
             interPartsSet.add(part);
           }
         });
@@ -157,8 +158,10 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
             } : undefined,
         }
       );
+      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
+      showLoadingSpinner(false);
     }
-  }, [existingPolygonParts, ingestionResolutionMeter]);
+  }, [doneFetchingPP, ingestionResolutionMeter]);
 
 
 
