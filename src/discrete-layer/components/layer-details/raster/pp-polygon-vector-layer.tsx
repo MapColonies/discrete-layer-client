@@ -38,6 +38,8 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const mapOl = useMap();
 
   const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
+  const [donePolygonPartsFetch, setDonePolygonPartsFetch] = useState<boolean>(false);
+
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const [page, setPage] = useState(START_PAGE);
@@ -98,14 +100,18 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
       if (data.getPolygonPartsFeature.numberReturned as number !== 0) {
         getExistingPolygoParts(convertFeatureToPolygon(maskFeature), (page+1) * CONFIG.POLYGON_PARTS.MAX.WFS_FEATURES);
         setPage(page+1);
+      } else {
+        console.log('in zeroooooooooo')
+        setDonePolygonPartsFetch(true);
       }
     } 
     if (loading){
       showLoadingSpinner(true);
-    } else{
-      showLoadingSpinner(false);
-      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
-    }
+    } 
+    // else{
+      // showLoadingSpinner(false);
+          //  store.discreteLayersStore.setPPCollisionCheckInProgress(false);
+    // }
   }, [data, loading]);
 
   useEffect(() => {
@@ -128,7 +134,10 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
 
   useEffect(() => {
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
-    if (ingestionResolutionMeter) {
+    if (donePolygonPartsFetch && ingestionResolutionMeter) {
+      const startTime = performance.now();
+      console.log('start timer')
+      // showLoadingSpinner(true);
       partsToCheck?.forEach((part) => {
         existingPolygonParts?.forEach((eixstingPart) => {
           const bufferedPart = buffer(part as Feature<Polygon>, EXISTING_PART_BUFFER_METERS_TOLLERANCE, {units: 'meters'});
@@ -157,8 +166,13 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
             } : undefined,
         }
       );
+      const endTime = performance.now();
+      console.log("finish: ", endTime-startTime)
+  
+      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
+      showLoadingSpinner(false);
     }
-  }, [existingPolygonParts, ingestionResolutionMeter]);
+  }, [donePolygonPartsFetch, ingestionResolutionMeter]);
 
 
 
