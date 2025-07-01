@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.5...v2.23.6) (2025-07-01)
+
+
+### Bug Fixes
+
+* cesium workers cache ([a4797ae](https://github.com/MapColonies/discrete-layer-client/commit/a4797aea8cf6698541e85fac43789eb80ca39c71))
+
 ### [2.23.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.4...v2.23.5) (2025-07-01)
 
 
