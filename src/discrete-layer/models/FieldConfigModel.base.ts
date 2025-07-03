@@ -45,7 +45,7 @@ export const FieldConfigModelBase = withTypedRefs<Refs>()(ModelBase
     fieldName: types.union(types.undefined, types.string),
     queryableName: types.union(types.undefined, types.string),
     label: types.union(types.undefined, types.string),
-    order: types.union(types.undefined, types.string),
+    order: types.union(types.undefined, types.number),
     fullWidth: types.union(types.undefined, types.null, types.boolean),
     isManuallyEditable: types.union(types.undefined, types.null, types.boolean),
     isFilterable: types.union(types.undefined, types.null, types.late((): any => FilterableFieldConfigModel)),
