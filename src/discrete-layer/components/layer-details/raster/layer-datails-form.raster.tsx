@@ -1107,7 +1107,7 @@ export const InnerRasterForm = (
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
             manageMetadata={false}
-            onFetchDir={(isOnFetchDir) => {
+            isOnValidatingSource={(isOnFetchDir) => {
               setIsOnFetchDir(isOnFetchDir);
             }}
           >
