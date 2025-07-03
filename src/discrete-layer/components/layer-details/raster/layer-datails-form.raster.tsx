@@ -185,7 +185,7 @@ export const InnerRasterForm = (
   const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
   const [isThresholdErrorsCleaned, setIsThresholdErrorsCleaned] = useState(false);
-  const [isOnFetchDir, setIsOnFetchDir] = useState(false);
+  const [isValidatingSource, setIsValidatingSource] = useState(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     const customValidationErrors = Object.values(clientCustomValidationErrors);
@@ -707,7 +707,7 @@ export const InnerRasterForm = (
   useEffect(() => {
     const resVal = (values as unknown as Record<string, unknown>)["resolutionDegree"];
     if(resVal) {
-      setIsOnFetchDir(false);
+      setIsValidatingSource(false);
     }
   }, [(values as unknown as Record<string, unknown>)["resolutionDegree"]])
   
@@ -1107,8 +1107,8 @@ export const InnerRasterForm = (
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
             manageMetadata={false}
-            isOnValidatingSource={(isOnFetchDir) => {
-              setIsOnFetchDir(isOnFetchDir);
+            setValidatingSource={(isOnFetchDir) => {
+              setIsValidatingSource(isOnFetchDir);
             }}
           >
             <Select
@@ -1116,7 +1116,7 @@ export const InnerRasterForm = (
               enhanced
               placeholder={intl.formatMessage({ id: `polygon-parts.button.load-from-shapeFile` })}
               options={shapeFileProviders}
-              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain || isOnFetchDir}
+              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain || isValidatingSource}
 
               onClick={(e): void => {
 
