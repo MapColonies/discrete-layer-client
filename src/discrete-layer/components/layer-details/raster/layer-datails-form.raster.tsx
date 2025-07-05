@@ -185,6 +185,7 @@ export const InnerRasterForm = (
   const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
   const [isThresholdErrorsCleaned, setIsThresholdErrorsCleaned] = useState(false);
+  const [isValidatingSource, setIsValidatingSource] = useState(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     const customValidationErrors = Object.values(clientCustomValidationErrors);
@@ -703,6 +704,14 @@ export const InnerRasterForm = (
     setGraphQLError(metadata.error);
   };
 
+  useEffect(() => {
+    const resVal = (values as unknown as Record<string, unknown>)["resolutionDegree"];
+    if(resVal) {
+      setIsValidatingSource(false);
+    }
+  }, [(values as unknown as Record<string, unknown>)["resolutionDegree"]])
+  
+
   const isShapeFileValid = (featuresArr: Feature<Geometry, GeoJsonProperties>[]): boolean | Error => {
     let verticesNum = 0;
     featuresArr?.forEach(f => {
@@ -1098,13 +1107,16 @@ export const InnerRasterForm = (
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
             manageMetadata={false}
+            setValidatingSource={(isOnFetchDir) => {
+              setIsValidatingSource(isOnFetchDir);
+            }}
           >
             <Select
               className={'selectButtonFlavor'}
               enhanced
               placeholder={intl.formatMessage({ id: `polygon-parts.button.load-from-shapeFile` })}
               options={shapeFileProviders}
-              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain}
+              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain || isValidatingSource}
 
               onClick={(e): void => {
 
