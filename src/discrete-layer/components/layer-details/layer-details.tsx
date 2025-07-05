@@ -357,6 +357,7 @@ export const LayersDetailsComponent: React.FC<LayersDetailsComponentProps> = obs
     const fullArray = layerRecord && getEntityDescriptors(layerRecord.__typename, entityDescriptors);
     return (
       fullArray?.map((category) => {
+        category.fields = category.fields?.sort((first, second) => first.order - second.order);
         return renderCategory(category);
       })
     );

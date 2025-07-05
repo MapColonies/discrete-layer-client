@@ -6,7 +6,7 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { FieldFeatureTypeModel, FieldFeatureTypeModelType } from "./FieldFeatureTypeModel"
-import { fieldFeatureTypeModelPrimitives, FieldFeatureTypeModelSelector } from "./FieldFeatureTypeModel.base"
+import { FieldFeatureTypeModelSelector, fieldFeatureTypeModelPrimitives } from "./FieldFeatureTypeModel.base"
 import { RootStoreType } from "./index"
 
 

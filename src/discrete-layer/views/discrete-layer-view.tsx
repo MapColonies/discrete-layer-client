@@ -34,8 +34,9 @@ import {
   IDrawingEvent
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
-import CONFIG from '../../common/config';
+import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
+import CONFIG from '../../common/config';
 import { currentSite } from '../../common/helpers/siteUrl';
 import { localStore } from '../../common/helpers/storage';
 import { MenuDimensions } from '../../common/hooks/mapMenus/useGetMenuDimensions';
@@ -53,7 +54,6 @@ import { JobsDialog } from '../components/job-manager/jobs.dialog';
 import {
   LayerMetadataMixedUnion,
   LinkModelType,
-  // ProductType,
   RecordType
 } from '../models';
 import { ILayerImage } from '../models/layerImage';
@@ -62,27 +62,27 @@ import { FilterField } from '../models/RootStore.base';
 import { UserAction, UserRole } from '../models/userStore';
 import { BBoxCorners } from '../components/map-container/bbox.dialog';
 import { FlyTo } from '../components/map-container/fly-to';
-import { ActionResolver } from './components/action-resolver.component';
-import { DetailsPanel } from './components/details-panel.component';
 import { IPOI } from '../components/map-container/poi.dialog';
 import { PoiEntity } from '../components/map-container/poi-entity';
 import { Terrain } from '../components/map-container/terrain';
 import ActionsMenuDimensionsContext from '../components/map-container/contextMenus/contexts/actionsMenuDimensionsContext';
 import { SystemCoreInfoDialog } from '../components/system-status/system-core-info/system-core-info.dialog';
 import { IDispatchAction } from '../models/actionDispatcherStore';
-import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
 import { ExportLayerComponent } from '../components/export-layer/export-layer.component';
 import ExportDrawingHandler from '../components/export-layer/export-drawing-handler.component';
 import ExportPolygonsRenderer from '../components/export-layer/export-polygons-renderer.component';
-import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
-import { MapActionResolver } from './components/map-action-resolver.component';
-import { WfsFeature } from '../components/map-container/geojson-map-features/wfs-feature.component';
-import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
-import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
-import { ExtentUpdater } from '../components/map-container/extent-updater';
 import { EntityRasterDialog } from '../components/layer-details/raster/entity.raster.dialog';
-import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
+import { MapActionResolver } from './components/map-action-resolver.component';
+import { ActionsContextMenu } from '../components/map-container/contextMenus/actions.context-menu';
+import { ExtentUpdater } from '../components/map-container/extent-updater';
+import DemHeightsFeatureComponent from '../components/map-container/geojson-map-features/dem-heights-feature.component';
+import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts';
+import { PolygonPartsFeature } from '../components/map-container/geojson-map-features/polygonParts-feature.component';
+import { WfsFeature } from '../components/map-container/geojson-map-features/wfs-feature.component';
+import { ActionResolver } from './components/action-resolver.component';
 import AppTitle from './components/app-title/app-title.component';
+import { DetailsPanel } from './components/details-panel.component';
+import { TabViewsSwitcher } from './components/tabs-views-switcher.component';
 import UserModeSwitch from './components/user-mode-switch/user-mode-switch.component';
 import { TabViews } from './tab-views';
 
@@ -92,8 +92,6 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
-// import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts-NOT-IN-USE-AS-EXAMPLE';
-import { PolygonParts } from '../components/map-container/geojson-map-features/polygonParts';
 
 const EXPANDED_PANEL_WIDTH = '28%';
 const COLLAPSED_PANEL_WIDTH = '40px';

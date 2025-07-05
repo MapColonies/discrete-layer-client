@@ -20,6 +20,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         fieldName
         queryableName
         label
+        order
         fullWidth
         rows
         infoMsgCode
@@ -53,6 +54,7 @@ export const EntityDescriptorsFetcher: React.FC = observer(() => {
         subFields {
           fieldName
           label
+          order
           fullWidth
           isManuallyEditable
           isRequired
