@@ -22,6 +22,8 @@ import { useIntl } from 'react-intl';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
 
+import './pp-polygon-vector-layer.css';
+
 interface PolygonPartsVectorLayerProps {
   layerRecord?: ILayerImage | null;
   maskFeature?: Feature | null;
@@ -45,6 +47,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const [page, setPage] = useState(START_PAGE);
   const ZOOM_LEVELS_TABLE = useZoomLevelsTable();
   const ENUMS = useEnums();
+  const [progress, setProgress] = useState<number | null>(null);
 
   const convertFeatureToPolygon = (feature: Feature) => {
     switch(feature.geometry.type){
@@ -129,58 +132,71 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
 
   useEffect(() => {
     const interPartsSet = new SetWithContentEquality<Feature>(part => part.properties?.key);  
-    if (doneFetchingPP && ingestionResolutionMeter) {
-      partsToCheck?.forEach((part) => {
-        existingPolygonParts?.forEach((existingPart) => {
-          const bufferedPart = buffer(part as Feature<Polygon>, EXISTING_PART_BUFFER_METERS_TOLLERANCE, {units: 'meters'});
-          const intersection = intersect( 
-            bufferedPart.geometry as Polygon, 
-            existingPart.geometry as Polygon
-          );
-          if (intersection && ingestionResolutionMeter > existingPart.properties?.resolutionMeter) {
-            interPartsSet.add(part);
-          }
-        });
-      });
+    if (doneFetchingPP && ingestionResolutionMeter && partsToCheck?.length) {
+      const check = async () => {
+        const totalParts = partsToCheck?.length;
+  
+        for (let idx = 0; idx < totalParts; idx++) {
+          const part = partsToCheck[idx];
+          setProgress(idx + 1);
+ 
+          // Force browser to paint
+          await new Promise(resolve => setTimeout(resolve, 0));
 
-      setIllegalParts(interPartsSet.values());
-      
-      dispatchAction(
-        {
-          action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
-          data: (interPartsSet.values().length > 0) ? 
-            {
-              error: [
-                intl.formatMessage(
-                  {id: 'validation-general.polygonParts.resolutionCollision'},
-                  {numErrorParts: emphasizeByHTML(`${interPartsSet.values().length}`)}
-              )]
-            } : undefined,
+          // check if map exists against the real DOM (dialog might be closed)
+          if (!document.getElementsByClassName('olSpinner').length){
+            return;
+          }
+  
+          existingPolygonParts.forEach((existingPart: Feature) => {
+            const bufferedPart = buffer(part as Feature<Polygon>, EXISTING_PART_BUFFER_METERS_TOLLERANCE, { units: 'meters' });
+            const intersection = intersect(
+              bufferedPart.geometry as Polygon,
+              existingPart.geometry as Polygon
+            );
+            if (intersection && ingestionResolutionMeter > existingPart.properties?.resolutionMeter) {
+              interPartsSet.add(part);
+            }
+          })
         }
-      );
-      store.discreteLayersStore.setPPCollisionCheckInProgress(false);
-      showLoadingSpinner(false);
+  
+        setProgress(null);
+  
+        setIllegalParts(interPartsSet.values());
+  
+        dispatchAction({
+          action: UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE,
+          data: interPartsSet.values().length > 0
+            ? {
+                error: [
+                  intl.formatMessage(
+                    { id: 'validation-general.polygonParts.resolutionCollision' },
+                    { numErrorParts: emphasizeByHTML(`${interPartsSet.values().length}`) }
+                  )
+                ]
+              }
+            : undefined
+        });
+  
+        store.discreteLayersStore.setPPCollisionCheckInProgress(false);
+        showLoadingSpinner(false);
+      };
+  
+      check();
     }
   }, [doneFetchingPP, ingestionResolutionMeter]);
 
 
 
   return (
+    <>
+    {progress !== null && (
+      <div className='chechProgress'>
+        {progress} / {partsToCheck?.length}
+      </div>
+    )}
     <VectorLayer>
       <VectorSource>
-        {illegalParts.map((feat, idx) => {
-            const illegalStyle = new Style({
-              stroke: PPMapStyles.get(FeatureType.ILLEGAL_PP)?.getStroke(),
-              fill: PPMapStyles.get(FeatureType.ILLEGAL_PP)?.getFill(),
-            });
-
-            return feat ? <GeoJSONFeature 
-              geometry={{...feat.geometry}} 
-              fit={false}
-              featureStyle={illegalStyle}
-            /> : <></>
-          }
-        )}
         {
           existingPolygonParts.map((feat, idx) => {
             const greenStyle = new Style({
@@ -196,7 +212,21 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
             /> : <></>
           })
         }
+        {illegalParts.map((feat, idx) => {
+            const illegalStyle = new Style({
+              stroke: PPMapStyles.get(FeatureType.ILLEGAL_PP)?.getStroke(),
+              fill: PPMapStyles.get(FeatureType.ILLEGAL_PP)?.getFill(),
+            });
+
+            return feat ? <GeoJSONFeature 
+              geometry={{...feat.geometry}} 
+              fit={false}
+              featureStyle={illegalStyle}
+            /> : <></>
+          }
+        )}
       </VectorSource>
     </VectorLayer>
+    </>
   );
 })
