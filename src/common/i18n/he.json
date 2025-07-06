@@ -395,7 +395,7 @@
   "field-names.vector.producerName": "יצרן",
   "field-names.vector.productType": "סוג",
   "field-names.vector.srsName": "מערכת ייחוס",
-  "field-names.vector.footprint": "עקבה",
+  "field-names.vector.footprint": "תיחום גאוגרפי",
   "field-names.vector.id": "מזהה",
   "field-names.vector.keywords": "מילות מפתח",
   "field-names.vector.links": "קישורים",
