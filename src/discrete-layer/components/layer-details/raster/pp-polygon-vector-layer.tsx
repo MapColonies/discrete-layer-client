@@ -1,26 +1,26 @@
 
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { Feature, GeoJsonProperties, Geometry, LineString, MultiLineString, Polygon } from 'geojson';
 import { observer } from 'mobx-react';
+import { Style } from 'ol/style';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import intersect from '@turf/intersect';
 import buffer from '@turf/buffer';
 import { GeoJSONFeature, useMap, VectorLayer, VectorSource } from '@map-colonies/react-components';
-import { Style } from 'ol/style';
-import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
 import CONFIG from '../../../../common/config';
-import { GetFeatureModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../../models';
-import { GeojsonFeatureInput } from '../../../models/RootStore.base';
-import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
-import { ILayerImage } from '../../../models/layerImage';
-import { SetWithContentEquality } from '../../../../common/helpers/set';
-import { UserAction } from '../../../models/userStore';
-import { IDispatchAction } from '../../../models/actionDispatcherStore';
-import { useIntl } from 'react-intl';
 import { emphasizeByHTML } from '../../../../common/helpers/formatters';
+import { SetWithContentEquality } from '../../../../common/helpers/set';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
+import { GetFeatureModelType, LayerRasterRecordModelType, useQuery, useStore } from '../../../models';
+import { IDispatchAction } from '../../../models/actionDispatcherStore';
+import { ILayerImage } from '../../../models/layerImage';
+import { GeojsonFeatureInput } from '../../../models/RootStore.base';
+import { UserAction } from '../../../models/userStore';
+import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
+import { createTextStyle, FeatureType, FEATURE_LABEL_CONFIG, getWFSFeatureTypeName, PPMapStyles } from './pp-map.utils';
 
 import './pp-polygon-vector-layer.css';
 
@@ -38,10 +38,8 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const store = useStore();
   const intl = useIntl();
   const mapOl = useMap();
-
   const [existingPolygonParts, setExistingPolygonParts] = useState<Feature[]>([]);
   const [doneFetchingPP, setDoneFetchingPP] = useState<boolean>(false);
-
   const [illegalParts, setIllegalParts] = useState<Feature[]>([]);
   const { data, error, loading, setQuery } = useQuery<{ getPolygonPartsFeature: GetFeatureModelType}>();
   const [page, setPage] = useState(START_PAGE);
@@ -50,7 +48,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   const [progress, setProgress] = useState<number | null>(null);
 
   const convertFeatureToPolygon = (feature: Feature) => {
-    switch(feature.geometry.type){
+    switch (feature.geometry.type) {
       case 'LineString':
         return lineStringToPolygon(feature as Feature<LineString | MultiLineString>);
       case 'MultiLineString':
@@ -107,7 +105,7 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
         setDoneFetchingPP(true);
       }
     } 
-    if (loading){
+    if (loading) {
       showLoadingSpinner(true);
     }
   }, [data, loading]);
@@ -187,7 +185,6 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
   }, [doneFetchingPP, ingestionResolutionMeter]);
 
 
-
   return (
     <>
     {progress !== null && (
@@ -229,4 +226,4 @@ export const PolygonPartsByPolygonVectorLayer: React.FC<PolygonPartsVectorLayerP
     </VectorLayer>
     </>
   );
-})
+});
