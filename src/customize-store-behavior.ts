@@ -18,7 +18,14 @@ export const customizeStoreBehavior = (store: StoreType) => {
       ...options,
     };
 
-    console.log(`[mst-gql] global no-cache applied to query:`, mergedOptions.fetchPolicy);
+    const regex = /query\W{1,2}[a-zA-Z]*/;
+
+    if (typeof queryStr === 'string') {
+      const matched = queryStr.match(regex)?.[0];
+      const queryNameSplited = matched?.split('(');
+      const queryName = queryNameSplited?.[0].replace('query ', '');
+      console.log(`[mst-gql] global no-cache applied to query: ${queryName}`);
+    }
 
     return originalQuery.call(this, queryStr, variables, mergedOptions);
   };
