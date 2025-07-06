@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.6...v2.23.7) (2025-07-06)
+
+
+### Bug Fixes
+
+* entity fields order ([#625](https://github.com/MapColonies/discrete-layer-client/issues/625)) ([f5a4537](https://github.com/MapColonies/discrete-layer-client/commit/f5a4537bc63bfd27d206d04b4ebf153ac5467c62))
+* low resolution collision long check progress ([#624](https://github.com/MapColonies/discrete-layer-client/issues/624)) ([0e62be9](https://github.com/MapColonies/discrete-layer-client/commit/0e62be93293df59508461b4410a56b299afd42b8))
+* shape button disabled when performing GPKG validation( MAPCO-8143 )  ([#622](https://github.com/MapColonies/discrete-layer-client/issues/622)) ([d41e840](https://github.com/MapColonies/discrete-layer-client/commit/d41e8400752d11378d50da209e15831b6aa8f31c))
+
 ### [2.23.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.5...v2.23.6) (2025-07-01)
 
 
