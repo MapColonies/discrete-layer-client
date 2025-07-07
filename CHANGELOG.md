@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.6...v2.23.7) (2025-07-06)
+
+
+### Bug Fixes
+
+* entity fields order ([#625](https://github.com/MapColonies/discrete-layer-client/issues/625)) ([f5a4537](https://github.com/MapColonies/discrete-layer-client/commit/f5a4537bc63bfd27d206d04b4ebf153ac5467c62))
+* low resolution collision long check progress ([#624](https://github.com/MapColonies/discrete-layer-client/issues/624)) ([0e62be9](https://github.com/MapColonies/discrete-layer-client/commit/0e62be93293df59508461b4410a56b299afd42b8))
+* shape button disabled when performing GPKG validation( MAPCO-8143 )  ([#622](https://github.com/MapColonies/discrete-layer-client/issues/622)) ([d41e840](https://github.com/MapColonies/discrete-layer-client/commit/d41e8400752d11378d50da209e15831b6aa8f31c))
+
+### [2.23.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.5...v2.23.6) (2025-07-01)
+
+
+### Bug Fixes
+
+* cesium workers cache ([a4797ae](https://github.com/MapColonies/discrete-layer-client/commit/a4797aea8cf6698541e85fac43789eb80ca39c71))
+
+### [2.23.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.4...v2.23.5) (2025-07-01)
+
+
+### Bug Fixes
+
+* update pp check process improved ([#620](https://github.com/MapColonies/discrete-layer-client/issues/620)) ([ff235d0](https://github.com/MapColonies/discrete-layer-client/commit/ff235d0d72bbbe8643ec05e44ab60ec86349a071))
+
+### [2.23.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.3...v2.23.4) (2025-06-29)
+
+
+### Bug Fixes
+
+* eslint ([#618](https://github.com/MapColonies/discrete-layer-client/issues/618)) ([e82ef34](https://github.com/MapColonies/discrete-layer-client/commit/e82ef340dc8ce243f46c2ea95cf2a41f949fc2b6))
+
+### [2.23.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.2...v2.23.3) (2025-06-29)
+
+
+### Bug Fixes
+
+* eye of current layer should be turned off in all branches of catalog tree ([#617](https://github.com/MapColonies/discrete-layer-client/issues/617)) ([b141648](https://github.com/MapColonies/discrete-layer-client/commit/b1416480c94b4f4544a4c12a1874f22380edc29c))
+
 ### [2.23.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.1...v2.23.2) (2025-06-26)
 
 
