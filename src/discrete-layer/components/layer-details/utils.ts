@@ -269,9 +269,10 @@ export const isMultiSelection = (recordType: RecordType): boolean => {
   return recordType !== RecordType.RECORD_3D && recordType !== RecordType.RECORD_RASTER;
 };
 
-export const cleanFields = (fields: Record<string, unknown>, layerRecord: LayerMetadataMixedUnion | LinkModelType) => {
+export const prepareEntityForSubmit = (fields: Record<string, unknown>, layerRecord: LayerMetadataMixedUnion | LinkModelType) => {
   const cleanObj = removeEmptyObjFields(fields);
-  return removeEmptyStrings(cleanObj, layerRecord);
+  const removeStrings =  removeEmptyStrings(cleanObj, layerRecord);
+  return transformFormFieldsToEntity(removeStrings, layerRecord);
 }
 
 const removeObjFields = (
