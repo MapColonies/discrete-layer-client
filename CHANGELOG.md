@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.8](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.7...v2.23.8) (2025-07-07)
+
+
+### Bug Fixes
+
+* fix ([#627](https://github.com/MapColonies/discrete-layer-client/issues/627)) ([6812c35](https://github.com/MapColonies/discrete-layer-client/commit/6812c35659402810a93921696f0dac30ad5973e9))
+* set empty numeric fields from string to undefined (MAPCO-8148) ([#626](https://github.com/MapColonies/discrete-layer-client/issues/626)) ([c120852](https://github.com/MapColonies/discrete-layer-client/commit/c1208525b14713e5afb861b862a3cbd1b0a32e90))
+* typo ([#628](https://github.com/MapColonies/discrete-layer-client/issues/628)) ([00d2f2f](https://github.com/MapColonies/discrete-layer-client/commit/00d2f2fe36726935f1a9d598d4fcb3be5734736f))
+
 ### [2.23.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.6...v2.23.7) (2025-07-06)
 
 
