@@ -178,6 +178,9 @@ export const getBasicType = (fieldName: FieldInfoName, typename: string, lookupT
     else if (fieldNameStr.toLowerCase().includes('maxresolutiondeg') || fieldNameStr.toLowerCase().includes('resolutiondegree') ) {
       return 'resolution';
     }
+    else if (typeString.toLowerCase().includes('number')) {
+      return 'number';
+    }
     else {
       return typeString.replaceAll('(','').replaceAll(')','').replaceAll(' | ','').replaceAll('null','').replaceAll('undefined','');
     }
@@ -266,6 +269,11 @@ export const isMultiSelection = (recordType: RecordType): boolean => {
   return recordType !== RecordType.RECORD_3D && recordType !== RecordType.RECORD_RASTER;
 };
 
+export const cleanFields = (fields: Record<string, unknown>, layerRecord: LayerMetadataMixedUnion | LinkModelType) => {
+  const cleanObj = removeEmptyObjFields(fields);
+  return removeEmptyStrings(cleanObj, layerRecord);
+}
+
 const removeObjFields = (
   obj: Record<string, unknown>,
   cbFn: (curVal: unknown) => boolean
@@ -284,6 +292,22 @@ export const removeEmptyObjFields = (
 ): Record<string, unknown> => {
   return removeObjFields(obj, (val) => typeof val === 'object' && isEmpty(val));
 };
+
+export const removeEmptyStrings = (fields: Record<string, unknown>, layerRecord: LayerMetadataMixedUnion | LinkModelType): Record<string, unknown> => {
+  const cleanFields = {...fields};
+  for (const fieldName of Object.keys(fields)) {
+    const basicType = getBasicType(fieldName as FieldInfoName, layerRecord.__typename);
+    switch (basicType) {
+      case 'resolution':
+      case 'number':
+        cleanFields[fieldName] = cleanFields[fieldName] || undefined;
+        break;
+      default:
+        break;
+    }
+  }
+  return cleanFields;
+}
 
 export const getYupFieldConfig = (
   field: FieldConfigModelType,

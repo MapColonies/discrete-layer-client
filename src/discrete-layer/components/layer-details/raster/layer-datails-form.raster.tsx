@@ -46,7 +46,6 @@ import {
 import { LayersDetailsComponent } from '../layer-details';
 import { IngestionFields } from '../ingestion-fields';
 import {
-  removeEmptyObjFields,
   transformFormFieldsToEntity,
   extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
@@ -58,6 +57,7 @@ import {
   getEnumKeys,
   transformTeraNovaShapeFeatureToEntity,
   transformMaxarShapeFeatureToEntity,
+  cleanFields,
 } from '../utils';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
@@ -1464,8 +1464,9 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     values,
     formikBag: FormikBag<LayerDetailsFormProps, FormValues>
   ) => {
-    formikBag.props.onSubmit(
-      transformFormFieldsToEntity(removeEmptyObjFields(values as unknown as Record<string, unknown>), formikBag.props.layerRecord)
-    );
+    const cleanedValues = cleanFields(values as unknown as Record<string, unknown>, formikBag.props.layerRecord);
+    const transformedValues = transformFormFieldsToEntity(cleanedValues, formikBag.props.layerRecord);
+        
+    formikBag.props.onSubmit(transformedValues);
   },
 })(InnerRasterForm);
