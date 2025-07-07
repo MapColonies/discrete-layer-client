@@ -34,6 +34,7 @@ import {
   IDrawingEvent
 } from '@map-colonies/react-components';
 import { IMapLegend } from '@map-colonies/react-components/dist/cesium-map/map-legend';
+import { GeocoderPanelProps } from '@map-colonies/react-components/dist/cesium-map/geocoder/geocoder-panel';
 import GPUInsufficiencyDetector from '../../common/components/gpu-insufficiency-detector/gpu-insufficiency-detector';
 // import { BrowserCompatibilityChecker } from '../../common/components/browser-compatibility-checker/browser-compatibility-checker';
 import CONFIG from '../../common/config';
@@ -92,7 +93,6 @@ import '@material/tab-scroller/dist/mdc.tab-scroller.css';
 import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 
 import './discrete-layer-view.css';
-import { GeocoderPanelProps } from '@map-colonies/react-components/dist/cesium-map/geocoder/geocoder-panel';
 
 const EXPANDED_PANEL_WIDTH = '28%';
 const COLLAPSED_PANEL_WIDTH = '40px';
