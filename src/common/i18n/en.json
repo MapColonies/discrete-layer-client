@@ -399,7 +399,7 @@
   "field-names.vector.link.description": "Description",
   "field-names.vector.link.protocol": "Protocol",
   "field-names.vector.link.url": "URL",
-  "field-names.vector.featureStructure": "Feature Structure",
+  "field-names.vector.featureStructure": "Entity Structure",
   "field-names.vector.featureStructure.type": "Type",
   "field-names.vector.featureStructure.fieldName": "Field Name",
 

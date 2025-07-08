@@ -29,11 +29,10 @@ import {
 import { LayersDetailsComponent } from './layer-details';
 import { IngestionFields } from './ingestion-fields';
 import {
-  removeEmptyObjFields,
-  transformFormFieldsToEntity,
   extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
   transformEntityToFormFields,
+  prepareEntityForSubmit,
 } from './utils';
 
 import './layer-details-form.css';
@@ -340,8 +339,8 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     values,
     formikBag: FormikBag<LayerDetailsFormProps, FormValues>
   ) => {
-    formikBag.props.onSubmit(
-      transformFormFieldsToEntity(removeEmptyObjFields(values as unknown as Record<string, unknown>), formikBag.props.layerRecord)
-    );
+    const entityForSubmit = prepareEntityForSubmit(values as unknown as Record<string, unknown>, formikBag.props.layerRecord);
+
+    formikBag.props.onSubmit(entityForSubmit);
   },
 })(InnerForm);

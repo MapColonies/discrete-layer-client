@@ -46,8 +46,6 @@ import {
 import { LayersDetailsComponent } from '../layer-details';
 import { IngestionFields } from '../ingestion-fields';
 import {
-  removeEmptyObjFields,
-  transformFormFieldsToEntity,
   extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
   transformEntityToFormFields,
@@ -58,6 +56,7 @@ import {
   getEnumKeys,
   transformTeraNovaShapeFeatureToEntity,
   transformMaxarShapeFeatureToEntity,
+  prepareEntityForSubmit,
 } from '../utils';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
@@ -706,11 +705,10 @@ export const InnerRasterForm = (
 
   useEffect(() => {
     const resVal = (values as unknown as Record<string, unknown>)["resolutionDegree"];
-    if(resVal) {
+    if (resVal) {
       setIsValidatingSource(false);
     }
-  }, [(values as unknown as Record<string, unknown>)["resolutionDegree"]])
-  
+  }, [(values as unknown as Record<string, unknown>)["resolutionDegree"]]);
 
   const isShapeFileValid = (featuresArr: Feature<Geometry, GeoJsonProperties>[]): boolean | Error => {
     let verticesNum = 0;
@@ -1107,8 +1105,8 @@ export const InnerRasterForm = (
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
             manageMetadata={false}
-            setValidatingSource={(isOnFetchDir) => {
-              setIsValidatingSource(isOnFetchDir);
+            setValidatingSource={() => {
+              setIsValidatingSource(true);
             }}
           >
             <Select
@@ -1465,8 +1463,8 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     values,
     formikBag: FormikBag<LayerDetailsFormProps, FormValues>
   ) => {
-    formikBag.props.onSubmit(
-      transformFormFieldsToEntity(removeEmptyObjFields(values as unknown as Record<string, unknown>), formikBag.props.layerRecord)
-    );
+    const entityForSubmit = prepareEntityForSubmit(values as unknown as Record<string, unknown>, formikBag.props.layerRecord);
+        
+    formikBag.props.onSubmit(entityForSubmit);
   },
 })(InnerRasterForm);
