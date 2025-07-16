@@ -28,19 +28,20 @@ import { LayerMetadataMixedUnion, RecordType } from './';
 
 const NONE = 0;
 const TOP_LEVEL_GROUP_BY_FIELD = 'region';
-const INNER_SORT_FIELD = 'productName';
+const TITLE_PROPERTY = 'productName';
 
 const locale = CONFIG.I18N.DEFAULT_LANGUAGE;
 const intl = createIntl({ locale, messages: MESSAGES[locale] as Record<string, string> });
 
 const getLayerTitle = (product: ILayerImage): string => {
-  const PRODUCT_TITLE_PROPERTY = 'productName';
-
-  return product[PRODUCT_TITLE_PROPERTY] as string;
+  return product[TITLE_PROPERTY] as string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-const alphabeticalSort = (sortByField = INNER_SORT_FIELD) => (a: Record<string, unknown>, b: Record<string, unknown>): number => (a[sortByField] as string)?.localeCompare(b[sortByField] as string);
+const alphabeticalSort = (sortByField = TITLE_PROPERTY) => (a: ILayerImage, b: ILayerImage): number => {
+  const aValue = get(a, `${sortByField}`);
+  const bValue = get(b, `${sortByField}`);
+  return aValue?.localeCompare(bValue);
+};
 
 interface IGetParentNode {
   parentNode: NodeData | undefined;
@@ -52,10 +53,12 @@ interface IGetParentNode {
 const buildParentTreeNode = (
   arr: ILayerImage[],
   title: string,
-  groupByParams: GroupBy
+  groupByParams: GroupBy,
+  expanded: boolean
 ): {
   title: string;
   isGroup: boolean;
+  expanded: boolean;
   children: TreeItem[];
 } => {
   const regionPredicate = (groupByParams.keys.find(
@@ -65,6 +68,7 @@ const buildParentTreeNode = (
   return {
     title: title,
     isGroup: true,
+    expanded,
     children: treeData
       .sort((a, b) =>
         regionPredicate(a.key[TOP_LEVEL_GROUP_BY_FIELD]).localeCompare(
@@ -75,6 +79,7 @@ const buildParentTreeNode = (
         return {
           title: regionPredicate(item.key[TOP_LEVEL_GROUP_BY_FIELD]),
           isGroup: true,
+          expanded,
           children: [
             ...item.items
               .sort(alphabeticalSort())
@@ -128,8 +133,64 @@ export const catalogTreeStore = ModelBase.props({
       self.isLoading = isLoading;
     }
 
-    function setCatalogTreeData(catalogTreeData: TreeItem[]): void {
-      self.catalogTreeData = catalogTreeData;
+    function getFilteredTreeData(tree: TreeItem): TreeItem | null {
+      if (!tree.children || !Array.isArray(tree.children) || tree.children.length === 0) {
+        return null;
+      }
+
+      const filteredChildren = tree.children
+        .map((child: any) => {
+          if (child.isGroup) {
+            const filteredGroup = getFilteredTreeData(child);
+            return filteredGroup ? { ...child, children: filteredGroup.children } : null;
+          }
+          return child.layerImageShown || child.footprintShown || child.polygonPartsShown ? child : null;
+        })
+        .filter(Boolean); // Remove null values
+
+        if (filteredChildren.length > 0) {
+          return {
+            ...tree,
+            children: filteredChildren
+          };
+        }
+
+        return null;
+    }
+
+    function getFilteredCatalogTreeData(): TreeItem[] {
+      let filteredCatalogTreeData: TreeItem[] = [];
+      (self.catalogTreeData ?? []).forEach((tree: TreeItem) => {
+        const filteredTree = getFilteredTreeData(tree);
+        if (filteredTree !== null) {
+          filteredCatalogTreeData.push(filteredTree);
+        }
+      });
+      return filteredCatalogTreeData;
+    }
+
+    function updateExpandedTreeItems(newTree: TreeItem[], oldTree: TreeItem[]): TreeItem[] {
+      return oldTree.map(oldNode => {
+        const matchingNewNode = newTree.find(newNode => newNode.title === oldNode.title);
+        let updatedNode = { ...oldNode };
+        if (matchingNewNode) {
+          if (matchingNewNode.children && Array.isArray(matchingNewNode.children)) {
+            updatedNode.expanded = matchingNewNode.expanded;
+            updatedNode.children = updateExpandedTreeItems(matchingNewNode.children, oldNode.children as TreeItem[]);
+          } else {
+            updatedNode.isSelected = matchingNewNode.isSelected;
+          }
+        }
+        return updatedNode;
+      });
+    }
+
+    function setCatalogTreeData(catalogTreeData: TreeItem[], isFiltered: boolean = false): void {
+      if (!isFiltered) {
+        self.catalogTreeData = catalogTreeData;
+      } else {
+        self.catalogTreeData = updateExpandedTreeItems(catalogTreeData, self.catalogTreeData ?? []);
+      }
     }
 
     function resetCatalogTreeData(): void {
@@ -137,6 +198,97 @@ export const catalogTreeStore = ModelBase.props({
       store.discreteLayersStore.setCapabilities([]);
       setCatalogTreeData([]);
     }
+
+    const createCatalogTree = (layersList: ILayerImage[], expanded: boolean = false): void => {
+
+      // Get unpublished/new discretes
+
+      const arrUnpublished = layersList.filter((item) => {
+        // @ts-ignore
+        const itemObjectBag = item as Record<string, unknown>;
+        return existStatus(itemObjectBag) && isUnpublished(itemObjectBag);
+      });
+      const parentUnpublished = {
+        title: intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.unpublished',
+        }),
+        isGroup: true,
+        expanded,
+        children: [
+          ...arrUnpublished
+            .sort(alphabeticalSort())
+            .map((item) => ({
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            })),
+        ],
+      };
+
+      // Get BESTs shortcuts
+
+      const arrBests = layersList.filter(isBest);
+      const parentBests = {
+        title: intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.bests',
+        }),
+        isGroup: true,
+        expanded,
+        children: [
+          ...arrBests
+            .sort(alphabeticalSort())
+            .map((item) => ({
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            })),
+        ],
+      };
+
+      // Get vector data layers
+
+      const arrVector = layersList.filter(isVector);
+      const vectorCatalog = {
+        title: intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.vector',
+        }),
+        isGroup: true,
+        expanded,
+        children: [
+          ...arrVector
+            .sort(alphabeticalSort())
+            .map((item) => ({
+              ...item,
+              title: getLayerTitle(item),
+              isSelected: false,
+            })),
+        ],
+      };
+
+      // Whole catalog as is
+
+      const layersListWithoutVector = layersList.filter(layer => !isVector(layer));
+      const parentCatalog = buildParentTreeNode(
+        layersListWithoutVector,
+        intl.formatMessage({
+          id: 'tab-views.catalog.top-categories.catalog',
+        }),
+        /* eslint-disable */
+        { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] },
+        /* eslint-enable */
+        expanded
+      );
+
+      const isUserAdmin = store.userStore.isUserAdmin();
+
+      setCatalogTreeData([
+        parentCatalog,
+        parentBests,
+        vectorCatalog,
+        ...(isUserAdmin ? [parentUnpublished] : [])
+      ]);
+
+    };
 
     /**
      * Fetch new catalog data
@@ -177,6 +329,9 @@ export const catalogTreeStore = ModelBase.props({
       }
     });
 
+    /***
+     * Fetch capabilities for the layers in the catalog
+     */
     const capabilitiesFetch = flow(function* capabilitiesFetchGen(layers?: LayerMetadataMixedUnion[]): Generator<
       Promise<{ capabilities: CapabilityModelType[] }>,
       CapabilityModelType[],
@@ -266,102 +421,14 @@ export const catalogTreeStore = ModelBase.props({
         if (typeof layersListResults !== 'undefined' && (layersListResults as ILayerImage[] | null) !== null) {
 
           yield capabilitiesFetch();
+
           store.discreteLayersStore.setLayersImages(layersListResults, false);
           const layersList = store.discreteLayersStore.layersImages as ILayerImage[];
 
-          // get unlinked/new discretes shortcuts
-          /*const arrUnlinked = arr.filter((item) => {
-            // @ts-ignore
-            const itemObjectBag = item as Record<string,unknown>;
-            return ('includedInBests' in itemObjectBag) && itemObjectBag.includedInBests === null;
-          });
-          const parentUnlinked = buildParentTreeNode(
-            arrUnlinked,
-            intl.formatMessage({ id: 'tab-views.catalog.top-categories.unlinked' }),
-            {keys: [{ name: 'region', predicate: (val) => val?.join(',') }]}
-          );*/
+          createCatalogTree(layersList);
 
-          // get unpublished/new discretes
-          const arrUnpublished = layersList.filter((item) => {
-            // @ts-ignore
-            const itemObjectBag = item as Record<string, unknown>;
-            return (
-              existStatus(itemObjectBag) && isUnpublished(itemObjectBag)
-            );
-          });
-
-          const parentUnpublished = {
-            title: intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.unpublished',
-            }),
-            isGroup: true,
-            children: [
-              ...arrUnpublished.map((item) => {
-                return {
-                  ...item,
-                  title: getLayerTitle(item),
-                  isSelected: false,
-                };
-              }),
-            ],
-          };
-
-          // get BESTs shortcuts
-          const arrBests = layersList.filter(isBest);
-          const parentBests = {
-            title: intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.bests',
-            }),
-            isGroup: true,
-            children: [
-              ...arrBests.map((item) => {
-                return {
-                  ...item,
-                  title: getLayerTitle(item),
-                  isSelected: false,
-                };
-              }),
-            ],
-          };
-
-          // whole catalog as is
-          const layersListWithoutVector = layersList.filter(layer => !isVector(layer));
-          const parentCatalog = buildParentTreeNode(
-            layersListWithoutVector,
-            intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.catalog',
-            }),
-            /* eslint-disable */
-            { keys: [{ name: 'region', predicate: (val) => val?.join(',') }] }
-            /* eslint-enable */
-          );
-
-          const arrVector = layersList.filter(isVector);
-          const vectorCatalog = {
-            title: intl.formatMessage({
-              id: 'tab-views.catalog.top-categories.vector',
-            }),
-            isGroup: true,
-            children: [
-              ...arrVector.map((item) => {
-                return {
-                  ...item,
-                  title: getLayerTitle(item),
-                  isSelected: false,
-                };
-              }),
-            ],
-          };
-
-          const isUserAdmin = store.userStore.isUserAdmin();
-
-          setCatalogTreeData([
-            parentCatalog,
-            parentBests, 
-            vectorCatalog,
-            ...(isUserAdmin ? [parentUnpublished] : [])
-          ]);
           setIsDataLoading(false);
+
         }
       } catch (e) {
         setIsDataLoading(false);
@@ -433,12 +500,10 @@ export const catalogTreeStore = ModelBase.props({
 
     function sortGroupChildrenByFieldValue(
       parentNode: TreeItem,
-      sortByField = INNER_SORT_FIELD
+      sortByField = TITLE_PROPERTY
     ): TreeItem | null {
       const parent = { ...parentNode };
-
-      (parent.children as TreeItem[]).sort(alphabeticalSort(sortByField));
-
+      (parent.children as ILayerImage[]).sort(alphabeticalSort(sortByField));
       return parent;
     }
 
@@ -556,18 +621,19 @@ export const catalogTreeStore = ModelBase.props({
     }
 
     return {
-      catalogSearch,
-      initTree,
-      capabilitiesFetch,
-      setCatalogTreeData,
       setIsDataLoading,
+      getFilteredCatalogTreeData,
+      setCatalogTreeData,
       resetCatalogTreeData,
-      addNodeToParent,
-      updateNodeById,
-      findNodeById,
+      catalogSearch,
+      capabilitiesFetch,
+      initTree,
+      changeNodeByPath,
       findNodeByTitle,
+      addNodeToParent,
+      findNodeById,
+      updateNodeById,
       removeNodeFromTree,
       removeChildFromParent,
-      changeNodeByPath,
     };
   });

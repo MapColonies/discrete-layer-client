@@ -4,7 +4,6 @@
 import React, {
   useEffect,
   useState,
-  useRef,
   useMemo,
   useCallback,
 } from 'react';
@@ -16,8 +15,8 @@ import {
   ExtendedNodeData,
 } from 'react-sortable-tree';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
 import { Box } from '@map-colonies/react-components';
+import { useTheme } from '@map-colonies/react-core';
 import { IActionGroup } from '../../../common/actions/entity.actions';
 import { TreeComponent, TreeItem } from '../../../common/components/tree';
 import { ActionsRenderer } from '../../../common/components/tree/icon-renderers/actions.button-renderer';
@@ -26,7 +25,7 @@ import { LayerImageRenderer } from '../../../common/components/tree/icon-rendere
 import { ProductTypeRenderer } from '../../../common/components/tree/icon-renderers/product-type.icon-renderer';
 import { Error } from '../../../common/components/tree/statuses/error';
 import { Loading } from '../../../common/components/tree/statuses/loading';
-import { getStatusColoredText } from '../../../common/helpers/style';
+import { getTextStyle } from '../../../common/helpers/style';
 import { LinkType } from '../../../common/models/link-type.enum';
 import { IDispatchAction } from '../../models/actionDispatcherStore';
 import { ILayerImage } from '../../models/layerImage';
@@ -41,27 +40,25 @@ import './catalog-tree.css';
 
 // @ts-ignore
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
-const getMax = (valuesArr: number[]): number => valuesArr.reduce((prev, current) => (prev > current ? prev : current));
-const intialOrder = 0;
 const actionDismissibleRegex = new RegExp('actionDismissible');
 const nodeOutRegex = new RegExp('toolbarButton|rowContents');
 
 interface CatalogTreeComponentProps {
-  refresh?: number;
+  refresh: number;
+  isFiltered: boolean;
 }
 
 export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observer(
-  ({ refresh }) => {
+  ({ refresh, isFiltered }) => {
     const store = useStore();
+    const theme = useTheme();
     const [hoveredNode, setHoveredNode] = useState<TreeItem>();
     const [isHoverAllowed, setIsHoverAllowed] = useState<boolean>(true);
-    const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(
-      false
-    );
-    const selectedLayersRef = useRef(intialOrder);
+    const [isBestInEditDialogOpen, setBestInEditDialogOpen] = useState<boolean>(false);
     const intl = useIntl();
     const {
       isLoading: loading,
+      getFilteredCatalogTreeData,
       setCatalogTreeData,
       setIsDataLoading,
       errorSearch,
@@ -76,10 +73,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
             <Error
               className="errorNotification"
               message={errorCapabilities.response?.errors[0].message}
-              details={
-                errorCapabilities.response?.errors[0].extensions?.exception
-                  ?.config?.url
-              }
+              details={errorCapabilities.response?.errors[0].extensions?.exception?.config?.url}
             />
           ),
         });
@@ -108,9 +102,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         'VectorBestRecord',
         'QuantizedMeshBestRecord',
       ].forEach((entityName) => {
-        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(
-          entityName
-        );
+        const allGroupsActions = store.actionDispatcherStore.getEntityActionGroups(entityName);
         const permittedGroupsActions = allGroupsActions.map((actionGroup) => {
           return {
             titleTranslationId: actionGroup.titleTranslationId,
@@ -143,9 +135,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
       }
     });
 
+    const currentTreeData = useMemo(() => {
+      return !isFiltered 
+        ? treeRawData 
+        : getFilteredCatalogTreeData().length > 0 
+          ? getFilteredCatalogTreeData() 
+          : treeRawData;
+    }, [treeRawData, isFiltered]);
+
     const handleRowClick = useCallback((evt: MouseEvent, rowInfo: ExtendedNodeData) => {
       if (!rowInfo.node.isGroup) {
-        let newTreeData = treeRawData;
+        let newTreeData = currentTreeData;
         if (!evt.ctrlKey) {
           // Remove prev selection
           const selection = find({
@@ -190,17 +190,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
           setIsHoverAllowed(false);
         }
 
-        setCatalogTreeData(newTreeData);
+        setCatalogTreeData(newTreeData, isFiltered);
         store.discreteLayersStore.selectLayer(
           rowInfo.node as ILayerImage
         );
       }
-    }, [treeRawData]);
+    }, [treeRawData, isFiltered]);
 
     const dispatchAction = (action: Record<string, unknown>): void => {
       store.actionDispatcherStore.dispatchAction({
         action: action.action,
-        data: action.data,
+        data: action.data
       } as IDispatchAction);
     };
 
@@ -209,9 +209,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         <Error
           className="errorMessage"
           message={errorSearch.response?.errors[0].message}
-          details={
-            errorSearch.response?.errors[0].extensions?.exception?.config?.url
-          }
+          details={errorSearch.response?.errors[0].extensions?.exception?.config?.url}
         />
       );
     }
@@ -222,10 +220,10 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
         <Box id="catalogContainer" className="catalogContainer">
           {!loading && (
             <TreeComponent
-              treeData={treeRawData}
+              treeData={currentTreeData}
               onChange={treeData => {
-                console.log('****** UPDATE TREE DATA ******');
-                setCatalogTreeData(treeData);
+                // console.log('****** UPDATE TREE DATA ******');
+                setCatalogTreeData(treeData, isFiltered);
               }}
               canDrag={({ node }) => {
                 return false;
@@ -236,7 +234,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                 // return !nextParent || nextParent.isDirectory
               }}
               generateNodeProps={rowInfo => ({
-                onClick: (e: MouseEvent) => handleRowClick(e, rowInfo),
+                onClick: (e: MouseEvent) => {
+                  handleRowClick(e, rowInfo)
+                },
                 onMouseOver: (evt: MouseEvent) => {
                   if (!rowInfo.node.isGroup && isHoverAllowed) {
                     store.discreteLayersStore.highlightLayer(
@@ -262,7 +262,9 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                     setHoveredNode(undefined);
                   }
                 },
-                style: getStatusColoredText(rowInfo.node),
+                style: rowInfo.node.isGroup ? (()=> {
+                  return (rowInfo?.node.children as ILayerImage[]).some((elem) => elem.footprintShown || elem.layerImageShown || (elem as any).polygonPartsShown ) ? {color: theme.primary, fontWeight: '600'} : {};
+              })() : getTextStyle(rowInfo.node, 'color'),
                 icons: rowInfo.node.isGroup
                   ? []
                   : [
@@ -271,41 +273,17 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                         onClick={(data, value) => {
                           dispatchAction({
                             action: UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT,
-                            data: { selectedLayer: {...data, footprintShown: value } }
-                          })
+                            data: { selectedLayer: { ...data, footprintShown: value } }
+                          });
                         }}
                       />,
                       <LayerImageRenderer
                         data={(rowInfo.node as any) as ILayerImage}
                         onClick={(data, value) => {
-                          if (value) {
-                            selectedLayersRef.current++;
-                          } else {
-                            const orders: number[] = [];
-                            // eslint-disable-next-line
-                            store.discreteLayersStore.layersImages?.forEach(
-                              (item: ILayerImage) => {
-                                if (
-                                  item.layerImageShown === true &&
-                                  data.id !== item.id
-                                ) {
-                                  orders.push(item.order as number);
-                                }
-                              }
-                            );
-                            selectedLayersRef.current = orders.length
-                              ? getMax(orders)
-                              : selectedLayersRef.current - 1;
-                          }
-                          const order = value
-                            ? selectedLayersRef.current
-                            : null;
-                          store.discreteLayersStore.showLayer(
-                            data.id,
-                            value,
-                            order
-                          );
-                          data.layerImageShown = value;
+                          dispatchAction({
+                            action: UserAction.SYSTEM_CALLBACK_SHOWLAYERIMAGE,
+                            data: { selectedLayer: { ...data, layerImageShown: value } }
+                          });
                         }}
                       />,
                       <ProductTypeRenderer
@@ -314,6 +292,12 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                           rowInfo.node.links,
                           LinkType.THUMBNAIL_S
                         )}
+                        onClick={(data: ILayerImage, value: boolean) => {
+                          dispatchAction({
+                            action: UserAction.SYSTEM_CALLBACK_SHOWPOLYGONPARTS,
+                            data: { selectedLayer: {...data, polygonPartsShown: value } }
+                          });
+                        }}
                       />,
                     ],
                 buttons: [
@@ -322,7 +306,7 @@ export const CatalogTreeComponent: React.FC<CatalogTreeComponentProps> = observe
                       !rowInfo.node.layerURLMissing &&
                       hoveredNode !== undefined &&
                       hoveredNode.id === rowInfo.node.id && 
-                      hoveredNode.parentPath === rowInfo.path.slice(0, -1).toString() && (                      
+                      hoveredNode.parentPath === rowInfo.path.slice(0, -1).toString() && (
                         <ActionsRenderer
                           node={rowInfo.node}
                           actions={

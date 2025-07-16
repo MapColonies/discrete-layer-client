@@ -199,7 +199,7 @@ export const JobDetailsRenderer: React.FC<ICellRendererParams> = observer((props
 
   return (
     <Box className="jobDetailsContainer">
-     <JobDetailsHeader job={props.data as JobModelType} /> 
+      <JobDetailsHeader job={props.data as JobModelType} /> 
       <JobDetailsExportJobData key={jobId} {...propsWithJobParams} />
       <Box className="gridContainer">
         {taskFields.map((field) => (

@@ -75,6 +75,8 @@
   "action.clear.tooltip": "Clear",
   "action.delete.tooltip": "Delete",
   "action.filter.tooltip": "Advanced Search",
+  "action.filter-nonactive.tooltip": "Show only active layers in catalog tree",
+  "action.show-all.tooltip": "Show ALL in catalog tree",
   "action.system-jobs.tooltip": "Display System Jobs",
   "action.system-core-info.tooltip": "Display system core info",
   "action.web-tools.tooltip": "Go to Web Tools",
@@ -179,7 +181,6 @@
   "tab-views.create-best": "BEST edit",
   "tab-views.export-layer": "Export Layer",
 
-  "tab-views.catalog.top-categories.unlinked": "Unlinked",
   "tab-views.catalog.top-categories.unpublished": "Unpublished",
   "tab-views.catalog.top-categories.bests": "BESTs",
   "tab-views.catalog.top-categories.catalog": "Catalog",
@@ -226,7 +227,7 @@
   "polygon-parts.map-preview-legend.EXISTING_PP": "Existing polygon part",
   "polygon-parts.map-preview-legend.SELECTED_FILL": "Selected polygon part",
   "polygon-parts.map-preview-legend.ILLEGAL_PP": "Polygon part with illegal resolution",
-  "polygon-parts.map-preview.zoom-before-fetch": "Zoom-in to see the parts",
+  "polygon-parts.map-preview.zoom-before-fetch": "Zoom in to see the parts",
 
   "field.actions.edit-draft": "Edit draft",
   "field.actions.more": "More options",
@@ -282,6 +283,7 @@
   "field-names.raster.producerName": "Producer Name",
   "field-names.raster.layerPolygonParts": "Polygon Parts",
   "field-names.raster.transparency": "Transparency",
+  "field-names.raster.productStatus": "Product Status",
   "field-names.polygon-parts.countries": "Counties",
   "field-names.polygon-parts.cities": "Cities",
   "field-names.polygon-parts.sourceResolutionMeter": "Source res (m)",
@@ -397,7 +399,7 @@
   "field-names.vector.link.description": "Description",
   "field-names.vector.link.protocol": "Protocol",
   "field-names.vector.link.url": "URL",
-  "field-names.vector.featureStructure": "Feature Structure",
+  "field-names.vector.featureStructure": "Entity Structure",
   "field-names.vector.featureStructure.type": "Type",
   "field-names.vector.featureStructure.fieldName": "Field Name",
 
@@ -695,6 +697,7 @@
   "debug-panel.wfs.title": "Data Layers",
   "debug-panel.wfs.cache": "Cache",
   "debug-panel.wfs.extent": "Extent",
+  "debug-panel.empty": "No layers found",
 
   "user-role.switch.user.text": "User",
   "user-role.switch.admin.text": "Admin",

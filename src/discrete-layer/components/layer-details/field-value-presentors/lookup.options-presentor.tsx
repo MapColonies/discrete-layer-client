@@ -67,7 +67,7 @@ export const LookupOptionsPresentorComponent: React.FC<LookupTablesPresentorProp
       menuList: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
           return {
               ...styles,
-              maxHeight: mode === Mode.EDIT ? '160px' : '80px',
+              maxHeight: '160px',
               backgroundColor: 'var(--mdc-theme-surface)',
               scrollbarColor: 'var(--mdc-theme-surface)',
               paddingTop: 0,

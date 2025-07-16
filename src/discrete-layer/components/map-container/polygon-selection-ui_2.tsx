@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { IconButton, Tooltip, useTheme } from '@map-colonies/react-core';
 import { Box, DrawType, IDrawingEvent } from '@map-colonies/react-components';
@@ -156,9 +156,7 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             }}
           />
         </Tooltip>
-        <Tooltip
-          content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}
-        >
+        <Tooltip content={intl.formatMessage({ id: 'action.bbox-corners.tooltip' })}>
           <IconButton
             className={getActiveClass(
               'mc-icon-Coordinates',
@@ -191,23 +189,24 @@ export const PolygonSelectionUi: React.FC<PolygonSelectionUiProps> = (props) => 
             onFiltersApply(filters);
           }}
         />
-        {open && (
+        {
+          open &&
           <BBoxDialog
             isOpen={open}
             onSetOpen={setOpen}
             onPolygonUpdate={onPolygonUpdate}
             corners={corners}
           />
-        )}
-        {openPoiDialog && (
+        }
+        {
+          openPoiDialog &&
           <PoiDialog
             isOpen={openPoiDialog}
             onSetOpen={setOpenPoiDialog}
             onPoiUpdate={onPoiUpdate}
             poi={poi}
           />
-        )}
-
+        }
         <CatalogFilterPanel
           onFiltersReset={() => {
             setIsCatalogFiltersEnabled(false);

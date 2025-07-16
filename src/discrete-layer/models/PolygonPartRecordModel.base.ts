@@ -18,7 +18,7 @@ export const PolygonPartRecordModelBase = ModelBase
     __typename: types.optional(types.literal("PolygonPartRecord"), "PolygonPartRecord"),
     partId: types.union(types.undefined, types.string),
     productId: types.union(types.undefined, types.string),
-    sourceId: types.union(types.undefined, types.null, types.string),
+    sourceId: types.union(types.undefined, types.string),
     sourceName: types.union(types.undefined, types.string),
     description: types.union(types.undefined, types.null, types.string),
     resolutionDegree: types.union(types.undefined, types.number),

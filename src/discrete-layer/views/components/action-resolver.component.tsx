@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { NodeData } from 'react-sortable-tree';
 import { observer } from 'mobx-react-lite';
 import { Feature } from 'geojson';
 import { isEmpty } from 'lodash';
 import { DrawType } from '@map-colonies/react-components';
-import { existStatus, isUnpublished } from '../../../common/helpers/style';
+import { existStatus, isPolygonPartsShown, isUnpublished } from '../../../common/helpers/style';
 import {
   LayerRasterRecordModelKeys,
   LayerDemRecordModelKeys,
@@ -20,35 +20,40 @@ import { LayerRasterRecordModelType } from '../../models/LayerRasterRecordModel'
 import { useStore } from '../../models/RootStore';
 import { UserAction } from '../../models/userStore';
 import { ContextActions } from '../../../common/actions/context.actions';
-import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
-import { LayerMetadataMixedUnion } from '../../models';
-import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
-import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
 import CONFIG from '../../../common/config';
+import { getMax } from '../../../common/helpers/array';
+import useHandleDemHeightsRequests from '../../../common/hooks/mapMenus/useHandleDemHeightsRequests';
+import useHandleWfsGetFeatureRequests from '../../../common/hooks/mapMenus/useHandleWfsGetFeatureRequests';
+import useHandleWfsPolygonPartsRequests from '../../../common/hooks/mapMenus/useHandleWfsPolygonPartsRequests';
+import { useEnums } from '../../../common/hooks/useEnum.hook';
 import { ExportActions } from '../../components/export-layer/hooks/useDomainExportActionsConfig';
 import useAddFeatureWithProps from '../../components/export-layer/hooks/useAddFeatureWithProps';
 import { getWFSFeatureTypeName } from '../../components/layer-details/raster/pp-map.utils';
+import { LayerMetadataMixedUnion } from '../../models';
 import { TabViews } from '../tab-views';
-import { useEnums } from '../../../common/hooks/useEnum.hook';
 
-interface ActionResolverComponentProps {
+const initialOrder = 0;
+
+interface ActionResolverProps {
   handleOpenEntityDialog: (open: boolean) => void;
   handleFlyTo: () => void;
   handleTabViewChange: (tabView: TabViews) => void;
   activeTabView: TabViews;
 }
 
-export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((props) => {
+export const ActionResolver: React.FC<ActionResolverProps> = observer((props) => {
   const { handleOpenEntityDialog, handleFlyTo, handleTabViewChange, activeTabView } = props;
 
   const store = useStore();
   const ENUMS = useEnums();
 
+  const selectedLayersRef = useRef(initialOrder);
+
   const {internalFields: exportDomainInternalFields} = useAddFeatureWithProps(false);
   
   const { setGetFeatureOptions } = useHandleWfsGetFeatureRequests();
   const { setDemHeightsOptions } = useHandleDemHeightsRequests();
-  const { setGetPolygonPartsFeatureOptions } = useHandleWfsPolygonPartsRequests();
+  const { setGetPolygonPartsFeatureOptions } = useHandleWfsPolygonPartsRequests(); //<-from context menu
   
   const baseUpdateEntity = useCallback(
     (updatedValue: ILayerImage) => {
@@ -91,13 +96,68 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
     ]
   );
 
+  const baseLayerImageShow = useCallback(
+    (isShown: boolean, selectedLayer: ILayerImage) => {
+      if (!isEmpty(selectedLayer)) {
+        if (isShown) {
+          selectedLayersRef.current++;
+        } else {
+          const orders: number[] = [];
+          store.discreteLayersStore.layersImages?.forEach((item: ILayerImage) => {
+            if (item.layerImageShown && selectedLayer.id !== item.id) {
+              orders.push(item.order as number);
+            }
+          });
+          selectedLayersRef.current = orders.length
+            ? getMax(orders)
+            : selectedLayersRef.current - 1;
+        }
+        const order = isShown ? selectedLayersRef.current : null;
+
+        store.discreteLayersStore.showLayer(selectedLayer.id, isShown, order);
+
+        const shouldUpdateTreeNode = activeTabView === TabViews.CATALOG;
+
+        if (shouldUpdateTreeNode) {
+          store.catalogTreeStore.updateNodeById(selectedLayer.id, {
+            ...selectedLayer,
+            layerImageShown: isShown,
+          });
+        }
+      }
+    },
+    [
+      store.discreteLayersStore.showLayer,
+      store.catalogTreeStore.updateNodeById,
+      activeTabView
+    ]
+  );
+
+  const basePolygonPartsShow = useCallback(
+    (isShown: boolean, selectedLayer: ILayerImage) => {
+      if (!isEmpty(selectedLayer) && activeTabView === TabViews.CATALOG) {
+        const activePPLayer = store.discreteLayersStore.layersImages?.find(layer => isPolygonPartsShown(layer as unknown as Record<string, unknown>)) as LayerRasterRecordModelType;
+        store.discreteLayersStore.showPolygonParts(selectedLayer.id, isShown);
+        if (activePPLayer) {
+          store.catalogTreeStore.updateNodeById(activePPLayer.id, {...activePPLayer, polygonPartsShown: false});
+        }
+        store.catalogTreeStore.updateNodeById(selectedLayer.id, {...selectedLayer});
+      }
+    },
+    [
+      store.discreteLayersStore.showPolygonParts,
+      store.catalogTreeStore.updateNodeById,
+      activeTabView
+    ]
+  );
+
   const basePPUpdateErrorShow = useCallback(
     (ppResolutionsUpdateError: Record<string,string[]>) => {
       store.discreteLayersStore.setCustomValidationError(ppResolutionsUpdateError);
     },
     []
   );
-  
+
   useEffect(() => {
     if (store.actionDispatcherStore.action !== undefined) {
       const { action, data } = store.actionDispatcherStore.action as IDispatchAction;
@@ -225,19 +285,18 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
 
           setGetPolygonPartsFeatureOptions({
             feature: {
-              "type": "Feature",
-              "properties": {},
-              "geometry": {
-                "coordinates": [
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                coordinates: [
                   coordinates.longitude.toString(),
                   coordinates.latitude.toString()
                 ],
-                "type": "Point"
+                type: 'Point'
               }
             },
             typeName: getWFSFeatureTypeName(data?.layerRecord as LayerRasterRecordModelType, ENUMS),
             shouldFlyToFeatures: true,
-            // filterProperties: [{ propertyName: "recordId", propertyValue: _.get(data?.layerRecord, 'id') as string }],
             onDataResolved: closeMenu,
             dWithin: 0
           });
@@ -347,6 +406,23 @@ export const ActionResolver: React.FC<ActionResolverComponentProps> = observer((
         case UserAction.SYSTEM_CALLBACK_SHOWFOOTPRINT: {
           const selectedLayer = data.selectedLayer as ILayerImage;
           baseFootprintShow(selectedLayer.footprintShown as boolean, selectedLayer);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_SHOWLAYERIMAGE: {
+          const selectedLayer = data.selectedLayer as ILayerImage;
+          baseLayerImageShow(selectedLayer.layerImageShown as boolean, selectedLayer);
+          break;
+        }
+        case UserAction.SYSTEM_CALLBACK_SHOWPOLYGONPARTS: {
+          const selectedLayer = data.selectedLayer as LayerRasterRecordModelType;
+          basePolygonPartsShow(selectedLayer.polygonPartsShown as boolean, selectedLayer);
+          if (selectedLayer.polygonPartsShown) {
+            store.discreteLayersStore.resetPolygonPartsInfo();
+            store.discreteLayersStore.setPolygonPartsLayer(selectedLayer);
+            // PP query moved to polygonParts.tsx
+          } else {
+            store.discreteLayersStore.resetPolygonParts();
+          }
           break;
         }
         case UserAction.SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE: {

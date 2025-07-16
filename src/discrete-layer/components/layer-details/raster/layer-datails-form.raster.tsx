@@ -46,8 +46,6 @@ import {
 import { LayersDetailsComponent } from '../layer-details';
 import { IngestionFields } from '../ingestion-fields';
 import {
-  removeEmptyObjFields,
-  transformFormFieldsToEntity,
   extractDescriptorRelatedFieldNames,
   getFlatEntityDescriptors,
   transformEntityToFormFields,
@@ -58,6 +56,7 @@ import {
   getEnumKeys,
   transformTeraNovaShapeFeatureToEntity,
   transformMaxarShapeFeatureToEntity,
+  prepareEntityForSubmit,
 } from '../utils';
 import { GeoFeaturesPresentorComponent } from './pp-map';
 import { getUIIngestionFieldDescriptors } from './ingestion.utils';
@@ -69,7 +68,13 @@ import 'react-virtualized/styles.css';
 
 const NONE = 0;
 
-// Shape of form values - a bit problematic because we cant extend union type.
+enum CUSTOM_VALIDATION_ERROR_CODES {
+  SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
+  POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
+  POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
+} 
+
+// Shape of form values - a bit problematic because we cannot extend union type
 export interface FormValues {
   directory: string;
   fileNames: string;
@@ -179,6 +184,7 @@ export const InnerRasterForm = (
   const [graphQLPayloadObjectErrors, setGraphQLPayloadObjectErrors] = useState<number[]>([]);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
   const [isThresholdErrorsCleaned, setIsThresholdErrorsCleaned] = useState(false);
+  const [isValidatingSource, setIsValidatingSource] = useState(false);
 
   const getStatusErrors = useCallback((): StatusError | Record<string, unknown> => {
     const customValidationErrors = Object.values(clientCustomValidationErrors);
@@ -275,7 +281,7 @@ export const InnerRasterForm = (
 
     Object.keys(values).filter(key=>key.includes(NESTED_FORMS_PRFIX)).forEach(key=>{
       features.push({
-        type: "Feature",
+        type: 'Feature',
         properties: {key},
         // @ts-ignore
         geometry: values[key].footprint
@@ -320,8 +326,7 @@ export const InnerRasterForm = (
               const error = intl.formatMessage({ id: err });
               return footprintErrors.includes(error);
             });
-          }
-          else {
+          } else {
             hasOneOrMoreError = true;
           }
   
@@ -432,7 +437,7 @@ export const InnerRasterForm = (
         set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
         setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
         setOutlinedPerimeterMarker({
-          type: "Feature",
+          type: 'Feature',
           properties: {
             featureType: FeatureType.PP_PERIMETER_MARKER
           },
@@ -507,11 +512,6 @@ export const InnerRasterForm = (
     });
   }, []);
 
-  enum CUSTOM_VALIDATION_ERROR_CODES {
-    SHAPE_VS_GPKG = 'SHAPE_VS_GPKG',
-    POLYGON_PARTS_NOT_VALID_GEOMETRY = 'POLYGON_PARTS_NOT_VALID_GEOMETRY',
-    POLYGON_PARTS_NOT_VALID_FOOTPRINT = 'POLYGON_PARTS_NOT_VALID_FOOTPRINT'
-  } 
   // ****** Verification of GPKG extent vs. PP perimeter is disabled
   // useEffect(() => {
   //   if (sourceExtent?.geometry && outlinedPerimeter && !isPolygonContainsPolygon(sourceExtent as  Feature<any>, outlinedPerimeter as Feature<any>)){
@@ -524,7 +524,6 @@ export const InnerRasterForm = (
   //     setClientCustomValidationErrors(omit(clientCustomValidationErrors,CUSTOM_VALIDATION_ERROR_CODES.SHAPE_VS_GPKG));
   //   }
   // }, [sourceExtent, outlinedPerimeter]);
-  
   
   const exceededFeaturesNumberError = useMemo(() => new Error(
     intl.formatMessage(
@@ -659,7 +658,7 @@ export const InnerRasterForm = (
     const validationResults = metadata.recordModel as unknown as SourceValidationModelType;
 
     setSourceExtent({
-      type: "Feature",
+      type: 'Feature',
       properties: {
         featureType: FeatureType.SOURCE_EXTENT
       },
@@ -668,7 +667,7 @@ export const InnerRasterForm = (
 
     if (validationResults.extentPolygon) {
       setSourceExtentMarker({
-        type: "Feature",
+        type: 'Feature',
         properties: {
           featureType: FeatureType.SOURCE_EXTENT_MARKER
         },
@@ -704,6 +703,13 @@ export const InnerRasterForm = (
     setGraphQLError(metadata.error);
   };
 
+  useEffect(() => {
+    const resVal = (values as unknown as Record<string, unknown>)["resolutionDegree"];
+    if (resVal) {
+      setIsValidatingSource(false);
+    }
+  }, [(values as unknown as Record<string, unknown>)["resolutionDegree"]]);
+
   const isShapeFileValid = (featuresArr: Feature<Geometry, GeoJsonProperties>[]): boolean | Error => {
     let verticesNum = 0;
     featuresArr?.forEach(f => {
@@ -733,7 +739,7 @@ export const InnerRasterForm = (
 
   const transformShapeFeatureToEntity = (polygonPartDescriptors: FieldConfigModelType[], feature: Feature<Geometry, GeoJsonProperties>, provider: string, fileName?: string) => {
     let ret = {} as ParsedPolygonPart;
-    switch(provider){
+    switch (provider) {
       case ProviderType.SYNERGY:
         ret = transformSynergyShapeFeatureToEntity(polygonPartDescriptors, feature, provider, fileName);  
         break;
@@ -782,7 +788,7 @@ export const InnerRasterForm = (
               set(outlinedPolygon,'properties.featureType', FeatureType.PP_PERIMETER);
               setOutlinedPerimeter(outlinedPolygon as Feature<Geometry, GeoJsonProperties>);
               setOutlinedPerimeterMarker({
-                type: "Feature",
+                type: 'Feature',
                 properties: {
                   featureType: FeatureType.PP_PERIMETER_MARKER
                 },
@@ -1099,13 +1105,16 @@ export const InnerRasterForm = (
             isError={showCurtain}
             onErrorCallback={setShowCurtain}
             manageMetadata={false}
+            setValidatingSource={() => {
+              setIsValidatingSource(true);
+            }}
           >
             <Select
               className={'selectButtonFlavor'}
               enhanced
               placeholder={intl.formatMessage({ id: `polygon-parts.button.load-from-shapeFile` })}
               options={shapeFileProviders}
-              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain}
+              disabled={/*!isIngestedSourceSelected() &&*/ showCurtain || isValidatingSource}
 
               onClick={(e): void => {
 
@@ -1204,23 +1213,23 @@ export const InnerRasterForm = (
                 disabled={faultyPolygonParts.length === 0}
                 label={intl.formatMessage({ id: 'polygon-parts.show-parts-with-errors-on-map.label' })}
                 checked={isFaultyPPVisible}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setShowFaultyPolygonParts(evt.currentTarget.checked);
-                  }}
+                onClick={(evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowFaultyPolygonParts(evt.currentTarget.checked);
+                }}
               />
             </Box>
             <Box className='displayFlex'>
-            { mode === Mode.UPDATE && <Checkbox
+            {
+              mode === Mode.UPDATE &&
+              <Checkbox
                 className='flexCheckItem showOnMapContainer'
                 label={intl.formatMessage({id: 'polygon-parts.show-exisitng-parts-on-map.label'})}
                 checked={showExisitngLayerPartsOnMap}
-                onClick={
-                  (evt: React.MouseEvent<HTMLInputElement>): void => {
-                    setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
-                  }}
-                  />
-                }
+                onClick={(evt: React.MouseEvent<HTMLInputElement>): void => {
+                  setShowExisitngLayerPartsOnMap(evt.currentTarget.checked);
+                }}
+              />
+            }
             </Box>
           </Box>
           <Box className="polygonPartsContainer">
@@ -1454,8 +1463,8 @@ export default withFormik<LayerDetailsFormProps, FormValues>({
     values,
     formikBag: FormikBag<LayerDetailsFormProps, FormValues>
   ) => {
-    formikBag.props.onSubmit(
-      transformFormFieldsToEntity(removeEmptyObjFields(values as unknown as Record<string, unknown>), formikBag.props.layerRecord)
-    );
+    const entityForSubmit = prepareEntityForSubmit(values as unknown as Record<string, unknown>, formikBag.props.layerRecord);
+        
+    formikBag.props.onSubmit(entityForSubmit);
   },
 })(InnerRasterForm);

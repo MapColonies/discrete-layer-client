@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconButton } from '@map-colonies/react-core';
 import { Box } from '@map-colonies/react-components';
 import { ILayerImage } from '../../../../discrete-layer/models/layerImage';
@@ -13,6 +13,11 @@ interface ILayerImageCellRendererParams {
 
 export const LayerImageRenderer: React.FC<ILayerImageCellRendererParams> = (props) => {
   const [layerImageShown, setLayerImageShown] = useState<boolean>(props.data.layerImageShown as boolean);
+
+  useEffect(() => {
+    setLayerImageShown(props.data.layerImageShown as boolean);
+  }, [props.data.layerImageShown]);
+
   return (
     <Box>
       <IconButton 

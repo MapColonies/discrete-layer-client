@@ -17,11 +17,7 @@ import { Mode } from '../../../common/models/mode.enum';
 import { MetadataFile } from '../../../common/components/file-picker';
 import { RecordType, LayerMetadataMixedUnion, useQuery, useStore, SourceValidationModelType } from '../../models';
 import { FilePickerDialog } from '../dialogs/file-picker.dialog';
-import {
-  Layer3DRecordModelKeys,
-  LayerDemRecordModelKeys,
-  LayerRasterRecordModelKeys,
-} from './entity-types-keys';
+import { Layer3DRecordModelKeys, LayerDemRecordModelKeys, LayerRasterRecordModelKeys} from './entity-types-keys';
 import { StringValuePresentorComponent } from './field-value-presentors/string.value-presentor';
 import { IRecordFieldInfo } from './layer-details.field-info';
 import { EntityFormikHandlers, FormValues } from './layer-datails-form';
@@ -47,6 +43,7 @@ interface IngestionFieldsProps {
   ) => void;
   formik?: EntityFormikHandlers;
   manageMetadata?: boolean;
+  setValidatingSource?: () => void;
 }
 
 const FileItem: React.FC<{ file: FileData }> = ({ file }) => {
@@ -171,6 +168,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
   formik,
   children,
   manageMetadata=true,
+  setValidatingSource,
 }) => {
   const intl = useIntl();
   const store = useStore();
@@ -340,6 +338,7 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
     const fileNames = selected.files.map((file: FileData) => file.name);
 
     if (validateSources) {
+      setValidatingSource?.();
       queryValidateSource.setQuery(
         store.queryValidateSource(
           {
@@ -348,6 +347,10 @@ export const IngestionFields: React.FC<PropsWithChildren<IngestionFieldsProps>> 
               fileNames: fileNames,
               type: recordType,
             }
+          },
+          undefined,
+          {
+            fetchPolicy: 'no-cache'
           }
         )
       )

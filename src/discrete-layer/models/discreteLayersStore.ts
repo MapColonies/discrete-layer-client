@@ -1,30 +1,32 @@
 /* eslint-disable camelcase */
 import { types, Instance, flow, getParent } from 'mobx-state-tree';
+import { cloneDeep, set, get } from 'lodash';
+import { Feature, GeoJsonProperties, Geometry, Polygon } from 'geojson';
 import lineStringToPolygon from '@turf/linestring-to-polygon';
 import intersect from '@turf/intersect';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
 import { IBaseMaps } from '@map-colonies/react-components/dist/cesium-map/settings/settings';
-import { cloneDeep, set, get } from 'lodash';
-import { Feature, Geometry, Polygon } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { ResponseState } from '../../common/models/response-state.enum';
 import { MOCK_DATA_IMAGERY_LAYERS_ISRAEL } from '../../__mocks-data__/search-results.mock';
 import CONFIG from '../../common/config';
+import { isUnpublished } from '../../common/helpers/style';
+import { LinkType } from '../../common/models/link-type.enum';
+import { getLayerLink } from '../components/helpers/layersUtils';
+import { LayerMetadataMixedUnionKeys, LayerRecordTypes, LayerRecordTypesKeys } from '../components/layer-details/entity-types-keys';
+import { extractDescriptorRelatedFieldNames, getFlatEntityDescriptors } from '../components/layer-details/utils';
 import { TabViews } from '../views/tab-views';
 import { searchParams } from './search-params';
 import { IRootStore, RootStoreType } from './RootStore';
 import { ILayerImage } from './layerImage';
 import { ModelBase } from './ModelBase';
 import { EntityDescriptorModelType } from './EntityDescriptorModel';
-import { isUnpublished } from '../../common/helpers/style';
-import { LinkType } from '../../common/models/link-type.enum';
-import { getLayerLink } from '../components/helpers/layersUtils';
-import { LayerMetadataMixedUnionKeys, LayerRecordTypes, LayerRecordTypesKeys } from '../components/layer-details/entity-types-keys';
-import { extractDescriptorRelatedFieldNames, getFlatEntityDescriptors } from '../components/layer-details/utils';
 import { CapabilityModelType } from './CapabilityModel';
 import { FieldConfigModelType } from './FieldConfigModel';
+import { GetFeatureModelType } from './GetFeatureModel';
 import { RecordType } from './RecordTypeEnum';
+import { WfsPolygonPartsGetFeatureParams } from './RootStore.base';
 
 export type LayersImagesResponse = ILayerImage[];
 
@@ -40,6 +42,8 @@ export interface ITabViewData {
   selectedLayer?: ILayerImage;
   layersImages?: ILayerImage[];
   filters?: unknown;
+  polygonPartsLayer?: ILayerImage;
+  polygonPartsInfo?: Feature<Geometry, GeoJsonProperties>[];
 }
 
 const INITIAL_STATE = {
@@ -57,7 +61,12 @@ const INITIAL_STATE = {
   mapViewerExtentPolygon: undefined,
   customValidationError: undefined,
   ppCollisionCheckInProgress: undefined,
-}
+  polygonPartsLayer: undefined,
+  polygonPartsInfo: [],
+  isActiveLayersImages: false,
+};
+
+export type PolygonPartsWfsFeatureInfo = GetFeatureModelType & Pick<WfsPolygonPartsGetFeatureParams, 'feature'>;
 
 export const discreteLayersStore = ModelBase
   .props({
@@ -79,6 +88,9 @@ export const discreteLayersStore = ModelBase
     mapViewerExtentPolygon: types.maybe(types.frozen<Feature|undefined>(INITIAL_STATE.mapViewerExtentPolygon)),
     customValidationError: types.maybe(types.frozen<Record<string,string[]>|undefined>(INITIAL_STATE.customValidationError)),
     ppCollisionCheckInProgress: types.maybe(types.frozen<boolean|undefined>(INITIAL_STATE.ppCollisionCheckInProgress)),
+    polygonPartsLayer: types.maybe(types.frozen<ILayerImage>(INITIAL_STATE.polygonPartsLayer as unknown as ILayerImage)),
+    polygonPartsInfo: types.maybe(types.frozen<Feature<Geometry, GeoJsonProperties>[]>(INITIAL_STATE.polygonPartsInfo)),
+    isActiveLayersImages: types.maybe(types.frozen<boolean>(INITIAL_STATE.isActiveLayersImages)),
     
     // Don't forget to update INITIAL_STATE as well when adding new state value.
   })
@@ -137,19 +149,19 @@ export const discreteLayersStore = ModelBase
       const filteredLayersImages = data.filter(layer => isUserAdmin || !isUnpublished(layer as unknown as Record<string, unknown>));
       
       const preparedLayersImages = filteredLayersImages.map(item => {
-        let validations = {};
+        let additional = {};
         if (item.type === RecordType.RECORD_RASTER) {
           const layerLink = getLayerLink(item);
           const hasCapabilities = self.capabilities?.find(item => layerLink.name === item.id);
           const hasWMTSUrl = layerLink.protocol === LinkType.WMTS;
-          validations = { layerURLMissing: !hasCapabilities && hasWMTSUrl };
+          additional = { layerURLMissing: !hasCapabilities && hasWMTSUrl };
         }
         return {
           ...item,
           footprintShown: showFootprint,
           layerImageShown: false,
           order: null,
-          ...validations
+          ...additional
         };
       });
 
@@ -158,7 +170,7 @@ export const discreteLayersStore = ModelBase
 
     function setLayersImages(data: ILayerImage[], showFootprint = true): LayersImagesResponse {
       self.layersImages = getPreparedLayersImages(data, showFootprint);
-
+      setIsActiveLayersImages();
       return self.layersImages;
     }
 
@@ -218,20 +230,27 @@ export const discreteLayersStore = ModelBase
       self.layersImages = [];
     }
 
+    function showPolygonParts(id: string, isShow: boolean): void {
+      self.layersImages = self.layersImages?.map(el => {return {...el, polygonPartsShown: (el.id === id && isShow)};});
+      setIsActiveLayersImages();
+    }
+
     function showLayer(id: string, isShow: boolean, order: number | null): void {
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, layerImageShown: isShow, order} : el);
+      setIsActiveLayersImages();
     }
 
     function showFootprint(id: string, isShow: boolean): void {
       self.layersImages = self.layersImages?.map(el => el.id === id ? {...el, footprintShown: isShow} : el);
+      setIsActiveLayersImages();
     }
 
     function highlightLayer(layer: ILayerImage | undefined): void {
-      self.highlightedLayer =  layer ? {...layer} : undefined;
+      self.highlightedLayer = layer ? {...layer} : undefined;
     }
 
     function selectLayer(layer: ILayerImage | undefined, isUpdateMode: boolean | undefined = undefined): void {
-      self.selectedLayer =  layer ? {...layer} : undefined;
+      self.selectedLayer = layer ? {...layer} : undefined;
       self.selectedLayerIsUpdateMode = isUpdateMode;
     }
 
@@ -243,7 +262,7 @@ export const discreteLayersStore = ModelBase
 
     function selectLayerByID(layerID: string): void {
       const layer = self.layersImages?.find(layer => layer.id === layerID);
-      self.selectedLayer =  layer ? {...layer} : undefined;
+      self.selectedLayer = layer ? {...layer} : undefined;
     }
 
     function setTabviewData(tabView: TabViews, customLayersImages?: ILayerImage[]): void {
@@ -254,20 +273,24 @@ export const discreteLayersStore = ModelBase
           const preparedLayersImages = getPreparedLayersImages([...customLayersImages]);
           self.tabViews[idxTabViewToUpdate].layersImages = preparedLayersImages;
           self.tabViews[idxTabViewToUpdate].selectedLayer = undefined;
+          self.tabViews[idxTabViewToUpdate].polygonPartsLayer = undefined;
+          self.tabViews[idxTabViewToUpdate].polygonPartsInfo = [];
         } else {
           self.tabViews[idxTabViewToUpdate].selectedLayer = self.selectedLayer ? { ...self.selectedLayer } : undefined;
-          self.tabViews[idxTabViewToUpdate].layersImages = self.layersImages ? [ ...self.layersImages ]: [];
+          self.tabViews[idxTabViewToUpdate].polygonPartsLayer = self.polygonPartsLayer ? { ...self.polygonPartsLayer } : undefined;
+          self.tabViews[idxTabViewToUpdate].polygonPartsInfo = [ ...(self.polygonPartsInfo ?? []) ];
+          self.tabViews[idxTabViewToUpdate].layersImages = [ ...(self.layersImages ?? []) ];
         }
-
       } 
     }
 
     function restoreTabviewData(tabView: TabViews): void {
       if (self.tabViews) {
         const idxTabViewToUpdate = self.tabViews.findIndex((tab) => tab.idx === tabView);
-
         self.selectedLayer = self.tabViews[idxTabViewToUpdate].selectedLayer;
-        self.layersImages = self.tabViews[idxTabViewToUpdate].layersImages??[];
+        self.polygonPartsLayer = self.tabViews[idxTabViewToUpdate].polygonPartsLayer;
+        self.polygonPartsInfo = self.tabViews[idxTabViewToUpdate].polygonPartsInfo ?? [];
+        self.layersImages = self.tabViews[idxTabViewToUpdate].layersImages ?? [];
       } 
     }
 
@@ -340,7 +363,7 @@ export const discreteLayersStore = ModelBase
     function resetAppState(withoutFields: string[] = []): void {
       Object.entries(INITIAL_STATE).forEach(([statekey, initialVal]) => {
         if (!withoutFields.includes(statekey)) {
-         set(self, statekey, initialVal);
+          set(self, statekey, initialVal);
         }
       })
     }
@@ -358,12 +381,10 @@ export const discreteLayersStore = ModelBase
             idx: tab.idx
           });
         }
-
         return tab;
-      }) 
+      });
 
       self.tabViews = resetTabs;
-
     }
 
     function resetSelectedLayer(): void {
@@ -398,6 +419,35 @@ export const discreteLayersStore = ModelBase
       self.ppCollisionCheckInProgress = val;
     }
 
+    function setPolygonPartsLayer(layer: ILayerImage | undefined): void {
+      self.polygonPartsLayer = layer ? {...layer} : undefined;
+    }
+
+    function setPolygonPartsInfo(polygonPartsInfo: Feature<Geometry, GeoJsonProperties>[]): void {
+      self.polygonPartsInfo = [ ...(polygonPartsInfo ?? []) ];
+    }
+
+    function addPolygonPartsInfo(polygonPartsInfo: Feature<Geometry, GeoJsonProperties>[]): void {
+      self.polygonPartsInfo = [ ...(self.polygonPartsInfo ?? []), ...(polygonPartsInfo ?? []) ];
+    }
+
+    function resetPolygonPartsInfo(): void {
+      self.polygonPartsInfo = [];
+    }
+
+    function resetPolygonParts(): void {
+      self.polygonPartsLayer = undefined;
+      resetPolygonPartsInfo();
+    }
+
+    function setIsActiveLayersImages(): void {
+      const activeLayersImages = self.layersImages?.filter(layer => layer.layerImageShown || layer.footprintShown || (layer as any).polygonPartsShown) ?? [];
+      const isActiveLayersImages = activeLayersImages.length > 0;
+      if (self.isActiveLayersImages !== isActiveLayersImages) {
+        self.isActiveLayersImages = isActiveLayersImages;
+      }
+    }
+
 
     return {
       getLayersImages,
@@ -406,7 +456,9 @@ export const discreteLayersStore = ModelBase
       setLayersImagesData,
       refreshLayersImages,
       clearLayersImages,
+      showPolygonParts,
       showLayer,
+      showFootprint,
       highlightLayer,
       selectLayer,
       selectLayerByID,
@@ -414,7 +466,6 @@ export const discreteLayersStore = ModelBase
       resetSelectedLayer,
       restoreTabviewData,
       updateTabviewsData,
-      showFootprint,
       setEntityDescriptors,
       updateLayer,
       addPreviewedLayer,
@@ -431,7 +482,12 @@ export const discreteLayersStore = ModelBase
       setMapViewerExtentPolygon,
       setCustomValidationError,
       clearCustomValidationError,
-      setPPCollisionCheckInProgress
+      setPPCollisionCheckInProgress,
+      setPolygonPartsLayer,
+      setPolygonPartsInfo,
+      addPolygonPartsInfo,
+      resetPolygonPartsInfo,
+      resetPolygonParts
     };
   });
 

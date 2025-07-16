@@ -8,14 +8,14 @@ import { types } from "mobx-state-tree"
  */
 
 export enum Transparency {
-  TRANSPARENT="TRANSPARENT",
-OPAQUE="OPAQUE"
+  OPAQUE="OPAQUE",
+TRANSPARENT="TRANSPARENT"
 }
 
 /**
 * Transparency
 */
 export const TransparencyEnumType = types.enumeration("Transparency", [
-        "TRANSPARENT",
-  "OPAQUE",
+        "OPAQUE",
+  "TRANSPARENT",
       ])

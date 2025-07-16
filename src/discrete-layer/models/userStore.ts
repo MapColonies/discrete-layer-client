@@ -32,6 +32,7 @@ export enum UserAction {
   ENTITY_ACTION_LAYERRASTERRECORD_DELETE = 'entity_action.LayerRasterRecord.delete',
   ENTITY_ACTION_LAYER3DRECORD_DELETE = 'entity_action.Layer3DRecord.delete',
   ENTITY_ACTION_LAYERDEMRECORD_DELETE = 'entity_action.LayerDemRecord.delete',
+  ENTITY_ACTION_LAYERRASTERRECORD_PUBLISH = 'entity_action.LayerRasterRecord.publish',
   ENTITY_ACTION_LAYER3DRECORD_PUBLISH = 'entity_action.Layer3DRecord.publish',
   ENTITY_ACTION_LAYERRASTERRECORD_VIEWER = 'entity_action.LayerRasterRecord.viewer',
   ENTITY_ACTION_LAYER3DRECORD_VIEWER = 'entity_action.Layer3DRecord.viewer',
@@ -63,6 +64,8 @@ export enum UserAction {
   SYSTEM_CALLBACK_PUBLISH = 'system_callback.publish',
   SYSTEM_CALLBACK_FLYTO = 'system_callback.flyToEntity',
   SYSTEM_CALLBACK_SHOWFOOTPRINT = 'system_callback.showFootprint',
+  SYSTEM_CALLBACK_SHOWLAYERIMAGE = 'system_callback.showLayerImage',
+  SYSTEM_CALLBACK_SHOWPOLYGONPARTS = 'system_callback.showPolygonParts',
   SYSTEM_CALLBACK_SHOW_PPERROR_ON_UPDATE = 'system_callback.showPPErrorOnUpdate',
 }
 export type site = {dns: string, isAlias: boolean};
@@ -113,6 +116,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: {enabled: true},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_PUBLISH]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: {enabled: true},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_VIEWER]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_VIEWER]: {enabled: true},
@@ -169,6 +173,7 @@ const ROLES: IRole[] = [
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_DELETE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_DELETE]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERDEMRECORD_DELETE]: {enabled: false},
+      [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_PUBLISH]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_PUBLISH]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYERRASTERRECORD_VIEWER]: {enabled: false},
       [UserAction.ENTITY_ACTION_LAYER3DRECORD_VIEWER]: {enabled: true},

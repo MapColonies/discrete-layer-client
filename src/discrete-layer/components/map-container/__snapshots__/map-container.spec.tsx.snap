@@ -50,7 +50,7 @@ exports[`MapContainer component renders correctly 1`] = `
       </div>
     </div>
   </div>
-  <Ni
+  <Ji
     center={
       Array [
         34.811,
@@ -68,7 +68,7 @@ exports[`MapContainer component renders correctly 1`] = `
     <Memo(observerComponent) />
     <Memo(observerComponent) />
     <Memo(observerComponent) />
-    <Yi
+    <ho
       drawState={
         Object {
           "drawing": false,
@@ -95,6 +95,6 @@ exports[`MapContainer component renders correctly 1`] = `
         ]
       }
     />
-  </Ni>
+  </Ji>
 </div>
 `;

@@ -2,6 +2,108 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.8](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.7...v2.23.8) (2025-07-07)
+
+
+### Bug Fixes
+
+* fix ([#627](https://github.com/MapColonies/discrete-layer-client/issues/627)) ([6812c35](https://github.com/MapColonies/discrete-layer-client/commit/6812c35659402810a93921696f0dac30ad5973e9))
+* set empty numeric fields from string to undefined (MAPCO-8148) ([#626](https://github.com/MapColonies/discrete-layer-client/issues/626)) ([c120852](https://github.com/MapColonies/discrete-layer-client/commit/c1208525b14713e5afb861b862a3cbd1b0a32e90))
+* typo ([#628](https://github.com/MapColonies/discrete-layer-client/issues/628)) ([00d2f2f](https://github.com/MapColonies/discrete-layer-client/commit/00d2f2fe36726935f1a9d598d4fcb3be5734736f))
+
+### [2.23.7](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.6...v2.23.7) (2025-07-06)
+
+
+### Bug Fixes
+
+* entity fields order ([#625](https://github.com/MapColonies/discrete-layer-client/issues/625)) ([f5a4537](https://github.com/MapColonies/discrete-layer-client/commit/f5a4537bc63bfd27d206d04b4ebf153ac5467c62))
+* low resolution collision long check progress ([#624](https://github.com/MapColonies/discrete-layer-client/issues/624)) ([0e62be9](https://github.com/MapColonies/discrete-layer-client/commit/0e62be93293df59508461b4410a56b299afd42b8))
+* shape button disabled when performing GPKG validation( MAPCO-8143 )  ([#622](https://github.com/MapColonies/discrete-layer-client/issues/622)) ([d41e840](https://github.com/MapColonies/discrete-layer-client/commit/d41e8400752d11378d50da209e15831b6aa8f31c))
+
+### [2.23.6](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.5...v2.23.6) (2025-07-01)
+
+
+### Bug Fixes
+
+* cesium workers cache ([a4797ae](https://github.com/MapColonies/discrete-layer-client/commit/a4797aea8cf6698541e85fac43789eb80ca39c71))
+
+### [2.23.5](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.4...v2.23.5) (2025-07-01)
+
+
+### Bug Fixes
+
+* update pp check process improved ([#620](https://github.com/MapColonies/discrete-layer-client/issues/620)) ([ff235d0](https://github.com/MapColonies/discrete-layer-client/commit/ff235d0d72bbbe8643ec05e44ab60ec86349a071))
+
+### [2.23.4](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.3...v2.23.4) (2025-06-29)
+
+
+### Bug Fixes
+
+* eslint ([#618](https://github.com/MapColonies/discrete-layer-client/issues/618)) ([e82ef34](https://github.com/MapColonies/discrete-layer-client/commit/e82ef340dc8ce243f46c2ea95cf2a41f949fc2b6))
+
+### [2.23.3](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.2...v2.23.3) (2025-06-29)
+
+
+### Bug Fixes
+
+* eye of current layer should be turned off in all branches of catalog tree ([#617](https://github.com/MapColonies/discrete-layer-client/issues/617)) ([b141648](https://github.com/MapColonies/discrete-layer-client/commit/b1416480c94b4f4544a4c12a1874f22380edc29c))
+
+### [2.23.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.1...v2.23.2) (2025-06-26)
+
+
+### Bug Fixes
+
+* pp ol from config ([#616](https://github.com/MapColonies/discrete-layer-client/issues/616)) ([0b61ef1](https://github.com/MapColonies/discrete-layer-client/commit/0b61ef1e7e109107a9ab20354ea7b0b2b86a65d8))
+
+### [2.23.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.0...v2.23.1) (2025-06-26)
+
+
+### Bug Fixes
+
+* active layers filter button does not work properly ([#614](https://github.com/MapColonies/discrete-layer-client/issues/614)) ([a267c0d](https://github.com/MapColonies/discrete-layer-client/commit/a267c0d6ec6c5ef49341e5fb6ac1f2ff502a516e))
+* mutual border of exisitng and inserting parts ( MAPCO-8075 ) ([#615](https://github.com/MapColonies/discrete-layer-client/issues/615)) ([e784ee6](https://github.com/MapColonies/discrete-layer-client/commit/e784ee67cba730210193c56269cc75c8e8f308d0))
+* polygon parts low zoom multypolygon footprint ([#613](https://github.com/MapColonies/discrete-layer-client/issues/613)) ([b242335](https://github.com/MapColonies/discrete-layer-client/commit/b242335e805b0b3c07efd143ff4b87a653556ddf))
+
+## [2.23.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.1...v2.23.0) (2025-06-24)
+
+
+### Features
+
+* active layers catalog filter ([#610](https://github.com/MapColonies/discrete-layer-client/issues/610)) ([4861cad](https://github.com/MapColonies/discrete-layer-client/commit/4861cadbfa4f7a566adbe9491ae08250aa6d2457))
+* cesium polygon parts ([#605](https://github.com/MapColonies/discrete-layer-client/issues/605)) ([be5052d](https://github.com/MapColonies/discrete-layer-client/commit/be5052db3bdec78b5535341bc55b935dc047fd5e))
+
+
+### Bug Fixes
+
+* debug panel should be removed from dom on dialog close instead of hidden ([#612](https://github.com/MapColonies/discrete-layer-client/issues/612)) ([795beb6](https://github.com/MapColonies/discrete-layer-client/commit/795beb6fa703fb425f0d365f460d5d0eb9dd5944))
+
+### [2.22.1](https://github.com/MapColonies/discrete-layer-client/compare/v2.22.0...v2.22.1) (2025-06-18)
+
+
+### Bug Fixes
+
+* for wfs ([6f61223](https://github.com/MapColonies/discrete-layer-client/commit/6f61223dea2df74fdc3d9bcdb447884c74b6d0c3))
+
+## [2.22.0](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.2...v2.22.0) (2025-06-18)
+
+
+### Features
+
+* add vector catalog to the tree ([#595](https://github.com/MapColonies/discrete-layer-client/issues/595)) ([24ab9f6](https://github.com/MapColonies/discrete-layer-client/commit/24ab9f602ca52ae0df494f0a079debb3a0350855))
+* raster product status publish unpublish ([#606](https://github.com/MapColonies/discrete-layer-client/issues/606)) ([785b8f8](https://github.com/MapColonies/discrete-layer-client/commit/785b8f80a5368ab9e58c20eac256af37a56ae8c1))
+
+
+### Bug Fixes
+
+* add backend_local to confEnvShim ([#603](https://github.com/MapColonies/discrete-layer-client/issues/603)) ([d254d2c](https://github.com/MapColonies/discrete-layer-client/commit/d254d2c56c252269b7c5060a6e6e51f28ea9bb63))
+* add feature structure table presentor ([#599](https://github.com/MapColonies/discrete-layer-client/issues/599)) ([ad51d7a](https://github.com/MapColonies/discrete-layer-client/commit/ad51d7a02c7459f11e1c3da2b04ed46582e28ce2))
+* build errors and file picker btn does not work ([#602](https://github.com/MapColonies/discrete-layer-client/issues/602)) ([66e94e5](https://github.com/MapColonies/discrete-layer-client/commit/66e94e5b4f55c217cc93f0878441a6260d011c1d))
+* dialogs transparency ([#598](https://github.com/MapColonies/discrete-layer-client/issues/598)) ([5df0d8c](https://github.com/MapColonies/discrete-layer-client/commit/5df0d8cf6bf9fa9d0baffcf2e1646785e0e83ec6))
+* download linkes bug ([#607](https://github.com/MapColonies/discrete-layer-client/issues/607)) ([22da473](https://github.com/MapColonies/discrete-layer-client/commit/22da4730878707d591477dc7889901b20241cfe9))
+* eslint ([#601](https://github.com/MapColonies/discrete-layer-client/issues/601)) ([117e2bd](https://github.com/MapColonies/discrete-layer-client/commit/117e2bd18219cc6d26c7c3f925d08edfb1e46e8c))
+* manual part vertex density tollerance in degrees ([#609](https://github.com/MapColonies/discrete-layer-client/issues/609)) ([da3c495](https://github.com/MapColonies/discrete-layer-client/commit/da3c495250345f5702b42d3f074feeb079c54774))
+* remove vector record from bests ([#604](https://github.com/MapColonies/discrete-layer-client/issues/604)) ([ffd286d](https://github.com/MapColonies/discrete-layer-client/commit/ffd286dff09789f8b032511cf0fd6939681d556a))
+
 ### [2.21.2](https://github.com/MapColonies/discrete-layer-client/compare/v2.21.1...v2.21.2) (2025-03-20)
 
 
