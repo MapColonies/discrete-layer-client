@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.9](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.8...v2.23.9) (2025-07-20)
+
+
+### Bug Fixes
+
+* small polygon collapsed after buffer in res collision check ([#629](https://github.com/MapColonies/discrete-layer-client/issues/629)) ([21fcf4d](https://github.com/MapColonies/discrete-layer-client/commit/21fcf4d1125efd958ea36a238a535dcf47ee8871))
+* wfs layer key field should be configurable ([#630](https://github.com/MapColonies/discrete-layer-client/issues/630)) ([262ed5c](https://github.com/MapColonies/discrete-layer-client/commit/262ed5c789ac4420708eca4654a91afee674a5dc))
+
 ### [2.23.8](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.7...v2.23.8) (2025-07-07)
 
 
