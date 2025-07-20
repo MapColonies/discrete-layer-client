@@ -245,7 +245,6 @@ export const PolygonParts: React.FC = observer(() => {
     pageSize: CONFIG.WFS.MAX.PAGE_SIZE,//300,
     zoomLevel: SHOW_PP_ZOOM_LEVEL,//7
     maxCacheSize: CONFIG.WFS.MAX.CACHE_SIZE,//6000
-    keyField: 'id',
     labeling: {
       dataSourcePrefix: 'labels_',
       text: {
