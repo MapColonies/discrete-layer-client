@@ -36,6 +36,7 @@ import {
  } from '@map-colonies/react-components';
 import CONFIG from '../../../../common/config';
 import { useEnums } from '../../../../common/hooks/useEnum.hook';
+import { shrinkExtremeCoordinatesInOuterRing } from '../../../../common/utils/geo.tools';
 import { EntityDescriptorModelType, LayerRasterRecordModelType, useStore } from '../../../models';
 import useZoomLevelsTable from '../../export-layer/hooks/useZoomLevelsTable';
 import { getFlatEntityDescriptors } from '../../layer-details/utils';
@@ -551,7 +552,7 @@ export const PolygonParts: React.FC = observer(() => {
                     type: 'Feature',
                     properties: {},
                     geometry: {
-                      ...activeLayer?.footprint,
+                      ...shrinkExtremeCoordinatesInOuterRing(activeLayer?.footprint,0.999),
                     },
                   }
                 ]
