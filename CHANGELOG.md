@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.10](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.9...v2.23.10) (2025-07-22)
+
+
+### Bug Fixes
+
+* near world wide pp geometry undefined after buufer is applied ([#631](https://github.com/MapColonies/discrete-layer-client/issues/631)) ([2b0c729](https://github.com/MapColonies/discrete-layer-client/commit/2b0c729405937fbb3d414e4aa2abba34efa65fda))
+* uncleaned labels ([#633](https://github.com/MapColonies/discrete-layer-client/issues/633)) ([d5de9c0](https://github.com/MapColonies/discrete-layer-client/commit/d5de9c01e555767954fb54af83b5b36ad1d95217))
+* whole world footrpint with holes ([#632](https://github.com/MapColonies/discrete-layer-client/issues/632)) ([065df65](https://github.com/MapColonies/discrete-layer-client/commit/065df65cb16ae2a4e1a374ae9fae553e3bcce97c))
+
 ### [2.23.9](https://github.com/MapColonies/discrete-layer-client/compare/v2.23.8...v2.23.9) (2025-07-20)
 
 
