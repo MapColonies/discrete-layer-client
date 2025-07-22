@@ -394,7 +394,11 @@ export const PolygonParts: React.FC = observer(() => {
         color: CONFIG.POLYGON_PARTS.STYLE.lowResolutionColor,//'#ff3401', // BRIGHT_RED
       },
     ];
-  
+
+    if (!mapViewer.dataSources.getByName(dataSource.name)[0]) {
+      return;
+    }
+
     const labelPos = [] as Feature<Point>[];
   
     dataSource?.entities.values.forEach((entity: CesiumCesiumEntity) => {
